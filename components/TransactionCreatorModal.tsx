@@ -1,6 +1,13 @@
 'use client'
 
-import { CSSProperties, RefObject } from 'react'
+import { CSSProperties, KeyboardEvent, RefObject, useEffect, useRef, useState } from 'react'
+import DescriptionSuggestionDeleteMenu from './DescriptionSuggestionDeleteMenu'
+import PaymentSplitEditor from './PaymentSplitEditor'
+import { getDayInputFromDate, normalizeDayInput } from '../lib/dateUtils'
+import { DescriptionSuggestion, DescriptionSuggestionSet } from '../lib/suggestionUtils'
+import { useDescriptionSuggestions } from '../lib/useDescriptionSuggestions'
+import { splitTagInput } from '../lib/tagUtils'
+import { PaymentSplitInput } from '../lib/paymentSplitUtils'
 
 type Category = {
   id: string
@@ -29,6 +36,7 @@ type Props = {
   lockedLevel1Id: string | null
   topShortcutCategories: TransactionShortcut[]
   recentShortcutCategories: TransactionShortcut[]
+  descriptionSuggestions: DescriptionSuggestionSet
   onSelectShortcutCategory: (categoryId: string) => void
   selectedLevel1Id: string | null
   setSelectedLevel1Id: (value: string | null) => void
@@ -42,6 +50,33 @@ type Props = {
   setAmount: (value: string) => void
   description: string
   setDescription: (value: string) => void
+  transactionDate: string
+  setTransactionDate: (value: string) => void
+  selectedTagNames: string[]
+  setSelectedTagNames: (value: string[]) => void
+  selectedPaymentSourceId: string
+  setSelectedPaymentSourceId: (value: string) => void
+  isPaymentSourceVisible: boolean
+  paymentSourceOptions: Array<{
+    id: string
+    name: string
+    type: string
+    optionLabel?: string
+  }>
+  paymentSplitItems: PaymentSplitInput[]
+  setPaymentSplitItems: (
+    value: PaymentSplitInput[] | ((prev: PaymentSplitInput[]) => PaymentSplitInput[])
+  ) => void
+  selectedRecurringTransactionId: string
+  setSelectedRecurringTransactionId: (value: string) => void
+  recurringOptions: Array<{
+    id: string
+    label: string
+  }>
+  recurringSuggestions: Array<{
+    id: string
+    label: string
+  }>
   isSaving: boolean
   onClose: () => void
   onSave: () => Promise<void>
@@ -49,6 +84,10 @@ type Props = {
   amountInputRef: RefObject<HTMLInputElement | null>
   descriptionInputRef: RefObject<HTMLInputElement | null>
   styles: Record<string, CSSProperties>
+  onDeleteDescriptionSuggestion?: (
+    categoryId: string | null | undefined,
+    suggestion: DescriptionSuggestion
+  ) => void
 }
 
 const overlayStyle = {
@@ -64,7 +103,7 @@ const overlayStyle = {
 
 const modalStyle = {
   width: '100%',
-  maxWidth: 760,
+  maxWidth: 860,
   maxHeight: '85vh',
   overflowY: 'auto' as const,
   background: '#ffffff',
@@ -134,6 +173,126 @@ const serialToggleStyle = {
   color: '#374151',
 } as const
 
+const dateFieldStyle = {
+  display: 'flex',
+  flexDirection: 'column' as const,
+  gap: 6,
+} as const
+
+const dateLabelStyle = {
+  fontSize: 13,
+  fontWeight: 600,
+  color: '#374151',
+} as const
+
+const descriptionFieldWrapStyle = {
+  flex: 1,
+  minWidth: 260,
+  display: 'flex',
+  flexDirection: 'column' as const,
+  gap: 8,
+} as const
+
+const descriptionInputWrapStyle = {
+  position: 'relative' as const,
+  width: '100%',
+} as const
+
+const suggestionsDropdownStyle = {
+  position: 'absolute' as const,
+  top: 'calc(100% + 6px)',
+  left: 0,
+  right: 0,
+  zIndex: 30,
+  background: '#ffffff',
+  border: '1px solid #d1d5db',
+  borderRadius: 12,
+  boxShadow: '0 12px 24px rgba(15, 23, 42, 0.12)',
+  overflow: 'hidden',
+} as const
+
+const suggestionButtonStyle = {
+  width: '100%',
+  textAlign: 'left' as const,
+  background: '#ffffff',
+  border: 'none',
+  borderBottom: '1px solid #f1f5f9',
+  padding: '10px 12px',
+  cursor: 'pointer',
+  fontSize: 14,
+  color: '#111827',
+} as const
+
+const activeSuggestionButtonStyle = {
+  ...suggestionButtonStyle,
+  background: '#eff6ff',
+} as const
+
+const helperTextStyle = {
+  fontSize: 13,
+  color: '#6b7280',
+  lineHeight: 1.45,
+} as const
+
+const finalCategoryInfoStyle = {
+  marginTop: 12,
+  padding: 12,
+  borderRadius: 12,
+  border: '1px solid #dbeafe',
+  background: '#eff6ff',
+} as const
+
+const finalCategoryInfoTitleStyle = {
+  fontSize: 12,
+  fontWeight: 700,
+  color: '#1d4ed8',
+  letterSpacing: 0.3,
+  textTransform: 'uppercase' as const,
+  marginBottom: 4,
+} as const
+
+const finalCategoryInfoValueStyle = {
+  fontSize: 14,
+  fontWeight: 600,
+  color: '#111827',
+} as const
+
+const tagInputWrapStyle = {
+  marginTop: 12,
+  display: 'flex',
+  flexDirection: 'column' as const,
+  gap: 8,
+} as const
+
+const tagBadgesWrapStyle = {
+  display: 'flex',
+  gap: 8,
+  flexWrap: 'wrap' as const,
+} as const
+
+const tagBadgeStyle = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 6,
+  padding: '6px 10px',
+  borderRadius: 999,
+  border: '1px solid #bfdbfe',
+  background: '#eff6ff',
+  color: '#1d4ed8',
+  fontSize: 13,
+  fontWeight: 600,
+} as const
+
+const tagRemoveButtonStyle = {
+  border: 'none',
+  background: 'transparent',
+  color: '#1d4ed8',
+  cursor: 'pointer',
+  fontSize: 14,
+  lineHeight: 1,
+  padding: 0,
+} as const
+
 const getCategoryPathLabel = (
   categoryId: string,
   categoriesById: Record<string, Category>
@@ -177,6 +336,7 @@ export default function TransactionCreatorModal(props: Props) {
     lockedLevel1Id,
     topShortcutCategories,
     recentShortcutCategories,
+    descriptionSuggestions,
     onSelectShortcutCategory,
     selectedLevel1Id,
     setSelectedLevel1Id,
@@ -190,6 +350,20 @@ export default function TransactionCreatorModal(props: Props) {
     setAmount,
     description,
     setDescription,
+    transactionDate,
+    setTransactionDate,
+    selectedTagNames,
+    setSelectedTagNames,
+    selectedPaymentSourceId,
+    setSelectedPaymentSourceId,
+    isPaymentSourceVisible,
+    paymentSourceOptions,
+    paymentSplitItems,
+    setPaymentSplitItems,
+    selectedRecurringTransactionId,
+    setSelectedRecurringTransactionId,
+    recurringOptions,
+    recurringSuggestions,
     isSaving,
     onClose,
     onSave,
@@ -197,19 +371,17 @@ export default function TransactionCreatorModal(props: Props) {
     amountInputRef,
     descriptionInputRef,
     styles,
+    onDeleteDescriptionSuggestion,
   } = props
 
-  if (!isOpen) {
-    return null
-  }
+  const [tagInputValue, setTagInputValue] = useState('')
+  const [isDescriptionFocused, setIsDescriptionFocused] = useState(false)
+  const tagInputRef = useRef<HTMLInputElement | null>(null)
+  const dayInputRef = useRef<HTMLInputElement | null>(null)
+  const saveButtonRef = useRef<HTMLButtonElement | null>(null)
 
-  const availableLevel2Categories = selectedLevel1Id
-    ? level2ByParentId[selectedLevel1Id] || []
-    : []
-
-  const availableLevel3Categories = selectedLevel2Id
-    ? level3ByParentId[selectedLevel2Id] || []
-    : []
+  const availableLevel2Categories = selectedLevel1Id ? level2ByParentId[selectedLevel1Id] || [] : []
+  const availableLevel3Categories = selectedLevel2Id ? level3ByParentId[selectedLevel2Id] || [] : []
 
   const allVisibleFinalCategories = Object.values(level3ByParentId).flat()
   const duplicateFinalCategoryNames = allVisibleFinalCategories.reduce<Record<string, number>>(
@@ -220,6 +392,18 @@ export default function TransactionCreatorModal(props: Props) {
     {}
   )
 
+  const canSaveOnLevel1 = Boolean(selectedLevel1Id) && availableLevel2Categories.length === 0
+  const canSaveOnLevel2 = Boolean(selectedLevel2Id) && availableLevel3Categories.length === 0
+
+  const effectiveCategoryId =
+    selectedCategoryId ||
+    (canSaveOnLevel2 ? selectedLevel2Id : null) ||
+    (canSaveOnLevel1 ? selectedLevel1Id : null)
+
+  const effectiveCategoryLabel = effectiveCategoryId
+    ? getCategoryPathLabel(effectiveCategoryId, categoriesById)
+    : ''
+
   const getLevel3ButtonLabel = (category: Category) => {
     if ((duplicateFinalCategoryNames[category.name] || 0) > 1) {
       return getCategoryPathLabel(category.id, categoriesById)
@@ -228,12 +412,132 @@ export default function TransactionCreatorModal(props: Props) {
     return category.name
   }
 
-  const handleShortcutClick = (categoryId: string) => {
-    onSelectShortcutCategory(categoryId)
-
+  const focusAmountInput = () => {
     window.setTimeout(() => {
       amountInputRef.current?.focus()
     }, 0)
+  }
+
+  const handleShortcutClick = (categoryId: string) => {
+    onSelectShortcutCategory(categoryId)
+    focusAmountInput()
+  }
+
+  const handleLevel1Click = (category: Category) => {
+    const level2Children = level2ByParentId[category.id] || []
+    const isFinalHere = level2Children.length === 0
+
+    setSelectedLevel1Id(category.id)
+    setSelectedLevel2Id(null)
+    setSelectedCategoryId(isFinalHere ? category.id : null)
+
+    if (isFinalHere) {
+      focusAmountInput()
+    }
+  }
+
+  const handleLevel2Click = (level2Category: Category) => {
+    const level3Children = level3ByParentId[level2Category.id] || []
+    const isFinalHere = level3Children.length === 0
+
+    setSelectedLevel2Id(level2Category.id)
+    setSelectedCategoryId(isFinalHere ? level2Category.id : null)
+
+    if (isFinalHere) {
+      focusAmountInput()
+    }
+  }
+
+  const handleLevel3Click = (level3Category: Category) => {
+    setSelectedCategoryId(level3Category.id)
+    focusAmountInput()
+  }
+
+  const handleTagInputChange = (value: string) => {
+    setTagInputValue(value)
+    setSelectedTagNames(splitTagInput(value))
+  }
+
+  const handleRemoveTag = (tagName: string) => {
+    const nextTagNames = selectedTagNames.filter((item) => item !== tagName)
+    setSelectedTagNames(nextTagNames)
+    setTagInputValue(nextTagNames.join(', '))
+  }
+
+  useEffect(() => {
+    setTagInputValue(selectedTagNames.join(', '))
+  }, [selectedTagNames])
+
+  const dayInputValue = getDayInputFromDate(transactionDate, selectedMonth)
+  const {
+    filteredSuggestions,
+    activeSuggestionIndex,
+    applySuggestion,
+    handleKeyDown,
+    handleSuggestionContextMenu,
+    handleSuggestionPointerDown,
+    handleSuggestionPointerUp,
+    handleSuggestionPointerLeave,
+    suggestionToDelete,
+    deletePromptPosition,
+    closeDeletePrompt,
+    confirmDeleteSuggestion,
+  } = useDescriptionSuggestions({
+    query: description,
+    setQuery: setDescription,
+    categoryId: effectiveCategoryId,
+    isEnabled: isDescriptionFocused,
+    descriptionSuggestions,
+    inputRef: descriptionInputRef,
+    onDeleteSuggestion: onDeleteDescriptionSuggestion,
+  })
+
+  const handleSaveFromKeyboard = async () => {
+    if (isSaving || !selectedLevel1Id || !effectiveCategoryId) {
+      return
+    }
+
+    await onSave()
+  }
+
+  const handleDescriptionKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
+    if (handleKeyDown(event)) {
+      return
+    }
+
+    if (event.key === 'Tab' && !event.shiftKey) {
+      event.preventDefault()
+      amountInputRef.current?.focus()
+      return
+    }
+
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      await handleSaveFromKeyboard()
+    }
+  }
+
+  const handleTagsKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Tab') {
+      event.preventDefault()
+
+      if (event.shiftKey) {
+        dayInputRef.current?.focus()
+      } else {
+        saveButtonRef.current?.focus()
+      }
+
+      return
+    }
+
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      await handleSaveFromKeyboard()
+    }
+  }
+
+  if (!isOpen) {
+    return null
   }
 
   return (
@@ -263,7 +567,7 @@ export default function TransactionCreatorModal(props: Props) {
 
             <div style={shortcutListStyle}>
               {topShortcutCategories.map((shortcut) => {
-                const isSelected = selectedCategoryId === shortcut.id
+                const isSelected = effectiveCategoryId === shortcut.id
 
                 return (
                   <button
@@ -272,9 +576,7 @@ export default function TransactionCreatorModal(props: Props) {
                       ...(isSelected ? styles.primaryButton : styles.secondaryButton),
                       ...shortcutButtonStyle,
                     }}
-                    onClick={() => {
-                      handleShortcutClick(shortcut.id)
-                    }}
+                    onClick={() => handleShortcutClick(shortcut.id)}
                   >
                     <span>najczęstsze</span>
                     <span>{shortcut.label}</span>
@@ -291,7 +593,7 @@ export default function TransactionCreatorModal(props: Props) {
 
             <div style={shortcutListStyle}>
               {recentShortcutCategories.map((shortcut) => {
-                const isSelected = selectedCategoryId === shortcut.id
+                const isSelected = effectiveCategoryId === shortcut.id
 
                 return (
                   <button
@@ -300,9 +602,7 @@ export default function TransactionCreatorModal(props: Props) {
                       ...(isSelected ? styles.primaryButton : styles.secondaryButton),
                       ...shortcutButtonStyle,
                     }}
-                    onClick={() => {
-                      handleShortcutClick(shortcut.id)
-                    }}
+                    onClick={() => handleShortcutClick(shortcut.id)}
                   >
                     <span>ostatnie</span>
                     <span>{shortcut.label}</span>
@@ -320,18 +620,17 @@ export default function TransactionCreatorModal(props: Props) {
             <div style={{ ...styles.actions, marginTop: 10 }}>
               {level1Categories.map((category) => {
                 const isSelected = selectedLevel1Id === category.id
+                const level2Children = level2ByParentId[category.id] || []
+                const isFinalHere = level2Children.length === 0
 
                 return (
                   <button
                     key={category.id}
                     style={isSelected ? styles.primaryButton : styles.secondaryButton}
-                    onClick={() => {
-                      setSelectedLevel1Id(category.id)
-                      setSelectedLevel2Id(null)
-                      setSelectedCategoryId(null)
-                    }}
+                    onClick={() => handleLevel1Click(category)}
                   >
                     {category.name}
+                    {isFinalHere ? ' (końcowy)' : ''}
                   </button>
                 )
               })}
@@ -342,27 +641,25 @@ export default function TransactionCreatorModal(props: Props) {
         <div style={sectionStyle}>
           <div style={styles.l2Name}>Kategoria poziom 2</div>
 
-          {!selectedLevel1Id && (
-            <div style={styles.emptyText}>
-              Najpierw wybierz typ wpisu.
-            </div>
-          )}
+          {!selectedLevel1Id && <div style={styles.emptyText}>Najpierw wybierz typ wpisu.</div>}
 
           {selectedLevel1Id && availableLevel2Categories.length > 0 && (
             <div style={treeLevel2WrapStyle}>
               {availableLevel2Categories.map((level2Category) => {
-                const isSelected = selectedLevel2Id === level2Category.id
+                const level3Children = level3ByParentId[level2Category.id] || []
+                const isFinalHere = level3Children.length === 0
+                const isSelected =
+                  selectedLevel2Id === level2Category.id ||
+                  (availableLevel3Categories.length === 0 && effectiveCategoryId === level2Category.id)
 
                 return (
                   <button
                     key={level2Category.id}
                     style={isSelected ? styles.primaryButton : styles.secondaryButton}
-                    onClick={() => {
-                      setSelectedLevel2Id(level2Category.id)
-                      setSelectedCategoryId(null)
-                    }}
+                    onClick={() => handleLevel2Click(level2Category)}
                   >
                     {level2Category.name}
+                    {isFinalHere ? ' (końcowy)' : ''}
                   </button>
                 )
               })}
@@ -371,7 +668,7 @@ export default function TransactionCreatorModal(props: Props) {
 
           {selectedLevel1Id && availableLevel2Categories.length === 0 && (
             <div style={styles.emptyText}>
-              Brak dostępnych kategorii dla wybranego typu.
+              Ten typ nie ma poziomu 2 — wpis zapisze się bezpośrednio na tym poziomie.
             </div>
           )}
         </div>
@@ -379,11 +676,20 @@ export default function TransactionCreatorModal(props: Props) {
         <div style={sectionStyle}>
           <div style={styles.l2Name}>Kategoria końcowa</div>
 
-          {!selectedLevel2Id && (
+          {!selectedLevel2Id && availableLevel2Categories.length > 0 && (
             <div style={disabledLevel3WrapStyle}>
               <div style={styles.l2Name}>Najpierw wybierz kategorię poziomu 2</div>
               <div style={styles.emptyText}>
                 Wybór kategorii końcowej odblokuje się po wskazaniu poziomu 2.
+              </div>
+            </div>
+          )}
+
+          {selectedLevel1Id && availableLevel2Categories.length === 0 && (
+            <div style={treeLevel3WrapStyle}>
+              <div style={styles.l2Name}>Poziom końcowy</div>
+              <div style={styles.emptyText}>
+                W tym typie nie ma niższych poziomów — wpis zapisze się na poziomie 1.
               </div>
             </div>
           )}
@@ -394,19 +700,13 @@ export default function TransactionCreatorModal(props: Props) {
 
               <div style={treeLevel3ButtonsStyle}>
                 {availableLevel3Categories.map((level3Category) => {
-                  const isSelected = selectedCategoryId === level3Category.id
+                  const isSelected = effectiveCategoryId === level3Category.id
 
                   return (
                     <button
                       key={level3Category.id}
                       style={isSelected ? styles.primaryButton : styles.secondaryButton}
-                      onClick={() => {
-                        setSelectedCategoryId(level3Category.id)
-
-                        window.setTimeout(() => {
-                          amountInputRef.current?.focus()
-                        }, 0)
-                      }}
+                      onClick={() => handleLevel3Click(level3Category)}
                     >
                       {getLevel3ButtonLabel(level3Category)}
                     </button>
@@ -417,8 +717,18 @@ export default function TransactionCreatorModal(props: Props) {
           )}
 
           {selectedLevel2Id && availableLevel3Categories.length === 0 && (
-            <div style={styles.emptyText}>
-              Brak dostępnych kategorii końcowych dla wybranego poziomu 2.
+            <div style={treeLevel3WrapStyle}>
+              <div style={styles.l2Name}>{categoriesById[selectedLevel2Id]?.name || ''}</div>
+              <div style={styles.emptyText}>
+                Ta kategoria nie ma poziomu 3 — wpis zapisze się na poziomie 2.
+              </div>
+            </div>
+          )}
+
+          {effectiveCategoryId && (
+            <div style={finalCategoryInfoStyle}>
+              <div style={finalCategoryInfoTitleStyle}>Zapis trafi do</div>
+              <div style={finalCategoryInfoValueStyle}>{effectiveCategoryLabel}</div>
             </div>
           )}
         </div>
@@ -426,7 +736,59 @@ export default function TransactionCreatorModal(props: Props) {
         <div style={sectionStyle}>
           <div style={styles.l2Name}>Dane wpisu</div>
 
-          <div style={{ ...styles.formRow, marginTop: 10 }}>
+          <div style={{ ...styles.formRow, marginTop: 10, alignItems: 'flex-start' }}>
+            <div style={descriptionFieldWrapStyle}>
+              <div style={descriptionInputWrapStyle}>
+                <input
+                  ref={descriptionInputRef}
+                  style={styles.input}
+                  placeholder="opis"
+                  value={description}
+                  autoComplete="off"
+                  autoCorrect="off"
+                  spellCheck={false}
+                  onFocus={() => setIsDescriptionFocused(true)}
+                  onBlur={() => setIsDescriptionFocused(false)}
+                  onChange={(event) => setDescription(event.target.value)}
+                  onKeyDown={handleDescriptionKeyDown}
+                />
+
+                {filteredSuggestions.length > 0 && (
+                  <div style={suggestionsDropdownStyle}>
+                    {filteredSuggestions.map((suggestion, index) => {
+                      const isActive = index === activeSuggestionIndex
+                      const isLast = index === filteredSuggestions.length - 1
+
+                      return (
+                        <button
+                          key={suggestion.text}
+                          type="button"
+                          style={{
+                            ...(isActive ? activeSuggestionButtonStyle : suggestionButtonStyle),
+                            borderBottom: isLast ? 'none' : suggestionButtonStyle.borderBottom,
+                          }}
+                          onMouseDown={(event) => event.preventDefault()}
+                          onClick={() => applySuggestion(suggestion.text)}
+                          onContextMenu={(event) => handleSuggestionContextMenu(event, suggestion)}
+                          onPointerDown={(event) => handleSuggestionPointerDown(suggestion, event)}
+                          onPointerUp={handleSuggestionPointerUp}
+                          onPointerLeave={handleSuggestionPointerLeave}
+                          onPointerCancel={handleSuggestionPointerLeave}
+                        >
+                          {suggestion.text}
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+
+              <div style={helperTextStyle}>
+                Sugestie filtrują się na żywo po całym wpisanym tekście. Możesz wybrać je strzałkami
+                i Enterem, a ukryć prawym przyciskiem albo długim przytrzymaniem.
+              </div>
+            </div>
+
             <input
               ref={amountInputRef}
               style={styles.smallInput}
@@ -436,43 +798,45 @@ export default function TransactionCreatorModal(props: Props) {
               onKeyDown={(event) => {
                 if (event.key === 'Enter') {
                   event.preventDefault()
-                  descriptionInputRef.current?.focus()
+                  dayInputRef.current?.focus()
                 }
               }}
             />
 
-            <input
-              ref={descriptionInputRef}
-              style={styles.input}
-              placeholder="opis"
-              value={description}
-              onChange={(event) => setDescription(event.target.value)}
-              onKeyDown={async (event) => {
-                if (event.key === 'Enter') {
-                  event.preventDefault()
-
-                  if (isSaving || !selectedLevel1Id || !selectedLevel2Id || !selectedCategoryId) {
-                    return
+            <label style={dateFieldStyle}>
+              <span style={dateLabelStyle}>dzień</span>
+              <input
+                ref={dayInputRef}
+                style={styles.smallInput}
+                value={dayInputValue}
+                placeholder="dzień"
+                inputMode="numeric"
+                onChange={(event) => {
+                  const nextDay = normalizeDayInput(event.target.value, selectedMonth)
+                  setTransactionDate(nextDay ? `${selectedMonth}-${nextDay}` : '')
+                }}
+                onBlur={(event) => {
+                  const nextDay = normalizeDayInput(event.target.value, selectedMonth)
+                  setTransactionDate(nextDay ? `${selectedMonth}-${nextDay}` : '')
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault()
+                    tagInputRef.current?.focus()
                   }
-
-                  await onSave()
-                }
-              }}
-            />
+                }}
+              />
+            </label>
 
             <button
+              ref={saveButtonRef}
               style={{
                 ...styles.primaryButton,
-                opacity:
-                  isSaving || !selectedLevel1Id || !selectedLevel2Id || !selectedCategoryId
-                    ? 0.6
-                    : 1,
+                opacity: isSaving || !selectedLevel1Id || !effectiveCategoryId ? 0.6 : 1,
                 cursor:
-                  isSaving || !selectedLevel1Id || !selectedLevel2Id || !selectedCategoryId
-                    ? 'not-allowed'
-                    : 'pointer',
+                  isSaving || !selectedLevel1Id || !effectiveCategoryId ? 'not-allowed' : 'pointer',
               }}
-              disabled={isSaving || !selectedLevel1Id || !selectedLevel2Id || !selectedCategoryId}
+              disabled={isSaving || !selectedLevel1Id || !effectiveCategoryId}
               onClick={async () => {
                 await onSave()
               }}
@@ -484,7 +848,7 @@ export default function TransactionCreatorModal(props: Props) {
               <>
                 <button
                   style={styles.secondaryButton}
-                  disabled={isSaving || !selectedLevel1Id || !selectedLevel2Id || !selectedCategoryId}
+                  disabled={isSaving || !selectedLevel1Id || !effectiveCategoryId}
                   onClick={async () => {
                     await onSaveAndClose()
                   }}
@@ -503,6 +867,108 @@ export default function TransactionCreatorModal(props: Props) {
             )}
           </div>
 
+          <div style={tagInputWrapStyle}>
+            <label style={dateLabelStyle} htmlFor="transaction-tags-input">
+              Tagi
+            </label>
+
+            <input
+              ref={tagInputRef}
+              id="transaction-tags-input"
+              style={styles.input}
+              placeholder="np. sklep, dom, jedzenie"
+              value={tagInputValue}
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck={false}
+              onChange={(event) => {
+                handleTagInputChange(event.target.value)
+              }}
+              onKeyDown={handleTagsKeyDown}
+            />
+
+            <div style={helperTextStyle}>
+              Wpisuj tagi po przecinku. Zostaną zapisane i będzie można po nich filtrować w
+              wyszukiwarce.
+            </div>
+
+            {selectedTagNames.length > 0 && (
+              <div style={tagBadgesWrapStyle}>
+                {selectedTagNames.map((tagName) => (
+                  <span key={tagName} style={tagBadgeStyle}>
+                    #{tagName}
+                    <button
+                      type="button"
+                      style={tagRemoveButtonStyle}
+                      onClick={() => handleRemoveTag(tagName)}
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {isPaymentSourceVisible && (
+              <>
+                <label style={dateLabelStyle}>Źródło płatności</label>
+                <PaymentSplitEditor
+                  amount={amount}
+                  isVisible={isPaymentSourceVisible}
+                  selectedPaymentSourceId={selectedPaymentSourceId}
+                  setSelectedPaymentSourceId={setSelectedPaymentSourceId}
+                  paymentSourceOptions={paymentSourceOptions}
+                  paymentSplitItems={paymentSplitItems}
+                  setPaymentSplitItems={setPaymentSplitItems}
+                  styles={styles}
+                />
+
+                <div style={helperTextStyle}>
+                  To pole jest opcjonalne i zapisuje powiązanie wpisu z gotówką, kartą albo kontem.
+                  Jeśli dodasz kolejne źródło, zapisze się pełny split płatności.
+                </div>
+              </>
+            )}
+
+
+            <label style={dateLabelStyle} htmlFor="transaction-recurring-link">
+              Powiązane przypomnienie / rata
+            </label>
+
+            <select
+              id="transaction-recurring-link"
+              style={styles.input}
+              value={selectedRecurringTransactionId}
+              onChange={(event) => setSelectedRecurringTransactionId(event.target.value)}
+            >
+              <option value="">Brak powiązania</option>
+              {recurringOptions.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+
+            {recurringSuggestions.length > 0 && (
+              <div style={{ ...styles.actions, marginTop: 4 }}>
+                {recurringSuggestions.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    style={styles.secondaryButton}
+                    onClick={() => setSelectedRecurringTransactionId(item.id)}
+                  >
+                    Sugestia: {item.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <div style={helperTextStyle}>
+              Nic nie zostanie oznaczone automatycznie. Po zapisie pokażemy osobne potwierdzenie.
+            </div>
+          </div>
+
           <label style={serialToggleStyle}>
             <input
               type="checkbox"
@@ -512,13 +978,22 @@ export default function TransactionCreatorModal(props: Props) {
             dodawaj seryjnie
           </label>
 
-          {(!selectedLevel1Id || !selectedLevel2Id || !selectedCategoryId) && (
+          {(!selectedLevel1Id || !effectiveCategoryId) && (
             <div style={styles.emptyText}>
-              Aby zapisać wpis, wybierz typ, kategorię poziomu 2 oraz kategorię końcową.
+              Aby zapisać wpis, wybierz typ oraz najniższy dostępny poziom kategorii.
             </div>
           )}
         </div>
       </div>
+
+      <DescriptionSuggestionDeleteMenu
+        isOpen={Boolean(suggestionToDelete)}
+        x={deletePromptPosition.x}
+        y={deletePromptPosition.y}
+        onConfirm={confirmDeleteSuggestion}
+        onCancel={closeDeletePrompt}
+      />
     </div>
   )
 }
+

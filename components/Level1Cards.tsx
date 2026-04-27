@@ -1,12 +1,36 @@
 'use client'
 
-import { CSSProperties } from 'react'
+import { CSSProperties, ReactNode } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Level1CardBaseProps, SortableLevel1CardProps } from '../lib/budgetPageTypes'
 
-function Level1CardBase(props: Level1CardBaseProps) {
-  const { level1Category, isOpen, onToggle, children, styles, dragHandle } = props
+type Category = {
+  id: string
+  name: string
+  parent_id: string | null
+  level: number
+  default_order?: number | null
+  sort_order?: number | null
+  active_to?: string | null
+  reactivate_from?: string | null
+}
+
+type BaseProps = {
+  level1Category: Category
+  isOpen: boolean
+  onToggle: () => void
+  children?: ReactNode
+  styles: Record<string, CSSProperties>
+  dragHandle?: ReactNode
+  extraActions?: ReactNode
+}
+
+type SortableProps = BaseProps & {
+  isSortable: boolean
+}
+
+function Level1CardBase(props: BaseProps) {
+  const { level1Category, isOpen, onToggle, children, styles, dragHandle, extraActions } = props
 
   return (
     <>
@@ -16,6 +40,12 @@ function Level1CardBase(props: Level1CardBaseProps) {
           <div style={styles.arrow}>{isOpen ? '▼' : '▶'}</div>
           <div>{level1Category.name}</div>
         </div>
+
+        {extraActions && (
+          <div style={styles.actions} onClick={(event) => event.stopPropagation()}>
+            {extraActions}
+          </div>
+        )}
       </div>
 
       {children}
@@ -23,7 +53,7 @@ function Level1CardBase(props: Level1CardBaseProps) {
   )
 }
 
-export function StaticLevel1Card(props: Level1CardBaseProps) {
+export function StaticLevel1Card(props: BaseProps) {
   return (
     <div style={props.styles.l1Card}>
       <Level1CardBase {...props} />
@@ -31,12 +61,14 @@ export function StaticLevel1Card(props: Level1CardBaseProps) {
   )
 }
 
-export function SortableLevel1Card(props: SortableLevel1CardProps) {
-  const { level1Category, isSortable, isOpen, onToggle, children, styles } = props
+export function SortableLevel1Card(props: SortableProps) {
+  const { level1Category, isSortable, isOpen, onToggle, children, styles, extraActions } = props
+
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: level1Category.id,
     disabled: !isSortable,
   })
+
   const wrapStyle: CSSProperties = {
     ...styles.l1Card,
     transform: CSS.Transform.toString(transform),
@@ -45,6 +77,7 @@ export function SortableLevel1Card(props: SortableLevel1CardProps) {
     position: 'relative',
     zIndex: isDragging ? 1 : 'auto',
   }
+
   const dragHandleStyle: CSSProperties = {
     ...(styles.dragHandle || {}),
     cursor: 'grab',
@@ -61,6 +94,7 @@ export function SortableLevel1Card(props: SortableLevel1CardProps) {
           }
         }}
         styles={styles}
+        extraActions={extraActions}
         dragHandle={
           isSortable ? (
             <button

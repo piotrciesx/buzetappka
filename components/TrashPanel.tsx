@@ -7,15 +7,48 @@ type Props = {
   categoriesById: Record<string, Category>
   getAmountNumber: (value: unknown) => number
   onRestoreTransaction: (transactionId: string) => Promise<void>
+  onPermanentDeleteTransaction: (transactionId: string) => Promise<void>
+  onEmptyTrash: () => Promise<void>
   styles: Record<string, CSSProperties>
 }
 
 export default function TrashPanel(props: Props) {
-  const { transactions, categoriesById, getAmountNumber, onRestoreTransaction, styles } = props
+  const {
+    transactions,
+    categoriesById,
+    getAmountNumber,
+    onRestoreTransaction,
+    onPermanentDeleteTransaction,
+    onEmptyTrash,
+    styles,
+  } = props
 
   return (
     <div style={styles.topPanel}>
-      <div style={styles.sectionTitle}>Kosz</div>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          gap: 12,
+          flexWrap: 'wrap',
+          alignItems: 'center',
+        }}
+      >
+        <div style={styles.sectionTitle}>Kosz</div>
+
+        {transactions.length > 0 && (
+          <button
+            type="button"
+            style={styles.dangerButton}
+            onClick={async () => {
+              await onEmptyTrash()
+            }}
+          >
+            Opróżnij kosz
+          </button>
+        )}
+      </div>
+
       <div style={{ ...styles.infoBox, marginBottom: 12 }}>
         {transactions.length === 0
           ? 'Brak usuniętych wpisów.'
@@ -52,6 +85,16 @@ export default function TrashPanel(props: Props) {
                     }}
                   >
                     przywróć
+                  </button>
+
+                  <button
+                    type="button"
+                    style={styles.dangerButton}
+                    onClick={async () => {
+                      await onPermanentDeleteTransaction(transaction.id)
+                    }}
+                  >
+                    usuń na stałe
                   </button>
                 </div>
               </div>

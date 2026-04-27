@@ -1,6 +1,6 @@
 'use client'
 
-import { CSSProperties } from 'react'
+import { CSSProperties, useState } from 'react'
 import {
   closestCenter,
   DndContext,
@@ -11,7 +11,10 @@ import {
 } from '@dnd-kit/core'
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import MonthCalendarPanel from './MonthCalendarPanel'
 import Level3Section from './Level3Section'
+import { DescriptionSuggestion } from '../lib/suggestionUtils'
+import { Tag, TransactionPaymentSplit } from '../lib/budgetPageTypes'
 
 type Category = {
   id: string
@@ -30,6 +33,7 @@ type Transaction = {
   amount: number | string
   description: string | null
   date: string
+  payment_source_id?: string | null
   created_at?: string
   is_deleted?: boolean
   deleted_at?: string | null
@@ -42,13 +46,12 @@ type MoveTarget = {
 
 type HideMode = 'now' | 'next'
 type RestoreMode = 'now' | 'next'
-type SortMode = 'default' | 'manual' | 'sum' | 'frequency'
-type SortDirection = 'asc' | 'desc'
 
 type Props = {
   l2: Category
-  level3Children: Category[]
+  sortedLevel3Children: Category[]
   selectedMonth: string
+  isSelectedMonthLocked: boolean
   isClosingAfterSelectedMonth: boolean
   openLevel2Ids: string[]
   toggleLevel2: (id: string) => void
@@ -67,26 +70,59 @@ type Props = {
   handleInlineSaveTransaction: (
     categoryId: string,
     amountText: string,
-    descriptionText: string
+    descriptionText: string,
+    dayText: string,
+    tagNames?: string[],
+    paymentSourceId?: string | null,
+    paymentSplitItems?: Array<{ paymentSourceId: string; amount: string }>
   ) => Promise<void>
   handleHideCategory: (id: string, mode?: HideMode) => Promise<void>
   handleRestoreCategory: (id: string, mode?: RestoreMode) => Promise<void>
   handleUndoScheduledHide: (id: string) => Promise<void>
   handleDeleteTransaction: (id: string) => Promise<void>
-  handleUpdateTransaction: (id: string, amount: string, description: string) => Promise<void>
+  handleUpdateTransaction: (
+    id: string,
+    amount: string,
+    description: string,
+    date: string,
+    tagNames?: string[],
+    dayIsNullOverride?: boolean,
+    paymentSourceId?: string | null,
+    paymentSplitItems?: Array<{ paymentSourceId: string; amount: string }>
+  ) => Promise<void>
   handleMoveTransaction: (id: string, targetCategoryId: string) => Promise<void>
+  handleOpenCalendarAddForDay: (categoryId: string, dayText: string) => void
   selectedTransactionIds: string[]
   onToggleTransactionSelection: (transactionId: string) => void
   getMoveTargetsForTransaction: (transaction: Transaction) => MoveTarget[]
+  getSignedAmountForTransaction: (transaction: Transaction) => number
+  calendarHeatmapVariant: 'balance' | 'income' | 'expense'
+  heatmapStorageKey: string
+  descriptionSuggestions: {
+    global: DescriptionSuggestion[]
+    byCategory: Record<string, DescriptionSuggestion[]>
+  }
+  getPaymentSourceOptionsForCategoryId?: (
+    categoryId: string
+  ) => Array<{
+    id: string
+    name: string
+    type: string
+    optionLabel?: string
+  }>
+  transactionTagsMap: Record<string, Tag[]>
+  transactionPaymentSplitsMap?: Record<string, TransactionPaymentSplit[]>
+  onTagClick?: (tagId: string) => void
+  onDeleteDescriptionSuggestion?: (
+    categoryId: string | null | undefined,
+    suggestion: DescriptionSuggestion
+  ) => void
   isSortable?: boolean
   isDragDisabled?: boolean
-  level3SortMode: SortMode
-  level3SortDirection: SortDirection
   handleLevel3DragStart: (activeId: string) => void
   handleReorderLevel3: (level2Id: string, activeId: string, overId: string) => Promise<void>
   isReorderingLevel2: boolean
   isReorderingLevel3: boolean
-  getCountForCategory: (id: string) => number
   getAmountNumber: (value: unknown) => number
   styles: Record<string, CSSProperties>
 }
@@ -94,8 +130,9 @@ type Props = {
 export default function Level2Section(props: Props) {
   const {
     l2,
-    level3Children,
+    sortedLevel3Children,
     selectedMonth,
+    isSelectedMonthLocked,
     isClosingAfterSelectedMonth,
     openLevel2Ids,
     toggleLevel2,
@@ -117,25 +154,35 @@ export default function Level2Section(props: Props) {
     handleDeleteTransaction,
     handleUpdateTransaction,
     handleMoveTransaction,
+    handleOpenCalendarAddForDay,
     selectedTransactionIds,
     onToggleTransactionSelection,
     getMoveTargetsForTransaction,
+    getSignedAmountForTransaction,
+    calendarHeatmapVariant,
+    heatmapStorageKey,
+    descriptionSuggestions,
+    getPaymentSourceOptionsForCategoryId,
+    transactionTagsMap,
+    transactionPaymentSplitsMap = {},
+    onTagClick,
+    onDeleteDescriptionSuggestion,
     isSortable = false,
     isDragDisabled = false,
-    level3SortMode,
-    level3SortDirection,
     handleLevel3DragStart,
     handleReorderLevel3,
     isReorderingLevel2,
     isReorderingLevel3,
-    getCountForCategory,
     getAmountNumber,
     styles,
   } = props
 
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+
   const isOpen = openLevel2Ids.includes(l2.id)
-  const hasChildren = level3Children.length > 0
+  const hasChildren = sortedLevel3Children.length > 0
   const isLevel2DragBlocked = isDragDisabled || isOpen
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -143,71 +190,17 @@ export default function Level2Section(props: Props) {
       },
     })
   )
-  const sortedLevel3Children = [...level3Children].sort((a, b) => {
-    if (level3SortMode === 'sum') {
-      const difference =
-        level3SortDirection === 'asc'
-          ? getSumForCategory(a.id) - getSumForCategory(b.id)
-          : getSumForCategory(b.id) - getSumForCategory(a.id)
 
-      if (difference !== 0) {
-        return difference
-      }
-
-      return a.name.localeCompare(b.name)
-    }
-
-    if (level3SortMode === 'frequency') {
-      const difference =
-        level3SortDirection === 'asc'
-          ? getCountForCategory(a.id) - getCountForCategory(b.id)
-          : getCountForCategory(b.id) - getCountForCategory(a.id)
-
-      if (difference !== 0) {
-        return difference
-      }
-
-      return a.name.localeCompare(b.name)
-    }
-
-    if (level3SortMode === 'default') {
-      const aDefaultOrder =
-        typeof a.default_order === 'number'
-          ? a.default_order
-          : typeof a.sort_order === 'number'
-            ? a.sort_order
-            : Number.MAX_SAFE_INTEGER
-      const bDefaultOrder =
-        typeof b.default_order === 'number'
-          ? b.default_order
-          : typeof b.sort_order === 'number'
-            ? b.sort_order
-            : Number.MAX_SAFE_INTEGER
-
-      if (aDefaultOrder !== bDefaultOrder) {
-        return aDefaultOrder - bDefaultOrder
-      }
-
-      return a.name.localeCompare(b.name)
-    }
-
-    const aSortOrder = typeof a.sort_order === 'number' ? a.sort_order : Number.MAX_SAFE_INTEGER
-    const bSortOrder = typeof b.sort_order === 'number' ? b.sort_order : Number.MAX_SAFE_INTEGER
-
-    if (aSortOrder !== bSortOrder) {
-      return aSortOrder - bSortOrder
-    }
-
-    return a.name.localeCompare(b.name)
-  })
   const hasVisibleOpenLevel3 = sortedLevel3Children.some((category) =>
     openLevel3Ids.includes(category.id)
   )
   const isLevel3DndBlocked = isReorderingLevel2 || isReorderingLevel3 || hasVisibleOpenLevel3
+
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: l2.id,
     disabled: !isSortable || isLevel2DragBlocked,
   })
+
   const wrapStyle: CSSProperties = {
     ...styles.l2Wrap,
     transform: CSS.Transform.toString(transform),
@@ -216,12 +209,14 @@ export default function Level2Section(props: Props) {
     position: 'relative',
     zIndex: isDragging ? 1 : 'auto',
   }
+
   const dragHandleStyle: CSSProperties = {
     ...(styles.dragHandle || {}),
     ...(isLevel2DragBlocked ? styles.dragHandleDisabled || {} : {}),
     cursor: isLevel2DragBlocked ? 'not-allowed' : 'grab',
     opacity: isLevel2DragBlocked ? 0.45 : styles.dragHandle?.opacity,
   }
+
   const dragHandleTitle = isLevel2DragBlocked
     ? 'Aby przenosić, najpierw zwiń kategorię'
     : undefined
@@ -283,6 +278,10 @@ export default function Level2Section(props: Props) {
     await handleReorderLevel3(l2.id, String(active.id), String(over.id))
   }
 
+  const level2Transactions = hasChildren
+    ? sortedLevel3Children.flatMap((child) => getTransactionsForCategoryAndMonth(child.id))
+    : getTransactionsForCategoryAndMonth(l2.id)
+
   const renderLevel3List = () => {
     return (
       <DndContext
@@ -306,6 +305,7 @@ export default function Level2Section(props: Props) {
               categorySum={getSumForCategory(l3.id)}
               transactions={getTransactionsForCategoryAndMonth(l3.id)}
               canAddHere={true}
+              isSelectedMonthLocked={isSelectedMonthLocked}
               isOpen={openLevel3Ids.includes(l3.id)}
               toggleLevel3={toggleLevel3}
               handleLevel3DragStart={handleLevel3DragStart}
@@ -316,9 +316,19 @@ export default function Level2Section(props: Props) {
               handleDeleteTransaction={handleDeleteTransaction}
               handleUpdateTransaction={handleUpdateTransaction}
               handleMoveTransaction={handleMoveTransaction}
+              handleOpenCalendarAddForDay={handleOpenCalendarAddForDay}
               selectedTransactionIds={selectedTransactionIds}
               onToggleTransactionSelection={onToggleTransactionSelection}
               getMoveTargetsForTransaction={getMoveTargetsForTransaction}
+              getSignedAmountForTransaction={getSignedAmountForTransaction}
+              calendarHeatmapVariant={calendarHeatmapVariant}
+              heatmapStorageKey={`budget-app-tree-calendar-${l3.id}`}
+              descriptionSuggestions={descriptionSuggestions}
+              getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
+              transactionTagsMap={transactionTagsMap}
+              transactionPaymentSplitsMap={transactionPaymentSplitsMap}
+              onTagClick={onTagClick}
+              onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
               isSortable={sortedLevel3Children.length > 1}
               isDragDisabled={isLevel3DndBlocked}
               getAmountNumber={getAmountNumber}
@@ -367,19 +377,30 @@ export default function Level2Section(props: Props) {
             <div style={styles.l2Name}>{l2.name}</div>
 
             <div style={styles.l2Meta}>
-              Podkategorie: {level3Children.length} • Wpisy: {getCountForLevel2(l2.id)} • Suma:{' '}
+              Podkategorie: {sortedLevel3Children.length} • Wpisy: {getCountForLevel2(l2.id)} • Suma:{' '}
               {getSumForLevel2(l2.id)}
             </div>
 
             {isClosingAfterSelectedMonth && (
-              <div style={styles.closingBadge}>
-                zamknie się z końcem tego miesiąca
-              </div>
+              <div style={styles.closingBadge}>zamknie się z końcem tego miesiąca</div>
             )}
           </div>
         </div>
 
         <div style={styles.actions} onClick={(event) => event.stopPropagation()}>
+          <button
+            type="button"
+            style={styles.secondaryButton}
+            onMouseDown={(event) => event.stopPropagation()}
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={(event) => {
+              event.stopPropagation()
+              setIsCalendarOpen((prev) => !prev)
+            }}
+          >
+            {isCalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
+          </button>
+
           <button
             style={styles.primaryButton}
             onClick={() => {
@@ -427,6 +448,32 @@ export default function Level2Section(props: Props) {
         </div>
       </div>
 
+      {isCalendarOpen && (
+        <MonthCalendarPanel
+          selectedMonth={selectedMonth}
+          transactions={level2Transactions}
+          styles={styles}
+          isSelectedMonthLocked={isSelectedMonthLocked}
+          getAmountNumber={getAmountNumber}
+          getMoveTargetsForTransaction={getMoveTargetsForTransaction}
+          getSignedAmountForTransaction={getSignedAmountForTransaction}
+          onUpdateTransaction={handleUpdateTransaction}
+          onDeleteTransaction={handleDeleteTransaction}
+          onMoveTransaction={handleMoveTransaction}
+          heatmapVariant={calendarHeatmapVariant}
+          heatmapStorageKey={heatmapStorageKey}
+          descriptionSuggestions={descriptionSuggestions}
+          getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
+          transactionTagsMap={transactionTagsMap}
+          transactionPaymentSplitsMap={transactionPaymentSplitsMap}
+          onTagClick={onTagClick}
+          onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
+          onAddTransactionForDay={(dayText) => handleOpenCalendarAddForDay(l2.id, dayText)}
+          calendarTitle={`Kalendarz • ${l2.name}`}
+          calendarSubtitle="Kliknij dzień, aby zobaczyć wpisy z tego Level 2 lub dodać nowy wpis."
+        />
+      )}
+
       {openAddSubcategoryFor === l2.id && (
         <div style={styles.formRow}>
           <input
@@ -464,7 +511,8 @@ export default function Level2Section(props: Props) {
           isClosingAfterSelectedMonth={isClosingAfterSelectedMonth}
           categorySum={getSumForCategory(l2.id)}
           transactions={getTransactionsForCategoryAndMonth(l2.id)}
-          canAddHere={false}
+          canAddHere={true}
+          isSelectedMonthLocked={isSelectedMonthLocked}
           isOpen={openLevel3Ids.includes(l2.id)}
           toggleLevel3={toggleLevel3}
           handleLevel3DragStart={handleLevel3DragStart}
@@ -475,9 +523,18 @@ export default function Level2Section(props: Props) {
           handleDeleteTransaction={handleDeleteTransaction}
           handleUpdateTransaction={handleUpdateTransaction}
           handleMoveTransaction={handleMoveTransaction}
+          handleOpenCalendarAddForDay={handleOpenCalendarAddForDay}
           selectedTransactionIds={selectedTransactionIds}
           onToggleTransactionSelection={onToggleTransactionSelection}
           getMoveTargetsForTransaction={getMoveTargetsForTransaction}
+          getSignedAmountForTransaction={getSignedAmountForTransaction}
+          calendarHeatmapVariant={calendarHeatmapVariant}
+          heatmapStorageKey={heatmapStorageKey}
+          descriptionSuggestions={descriptionSuggestions}
+          getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
+          transactionTagsMap={transactionTagsMap}
+          onTagClick={onTagClick}
+          onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
           getAmountNumber={getAmountNumber}
           styles={styles}
         />

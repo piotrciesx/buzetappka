@@ -51,6 +51,54 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     borderRadius: 10,
   } as const,
 
+  monthNavigationSettingsCard: {
+    marginBottom: 14,
+    padding: 14,
+    background: '#f9fafb',
+    border: '1px solid #e5e7eb',
+    borderRadius: 12,
+  } as const,
+
+  monthNavigationSettingsTitle: {
+    fontSize: 15,
+    fontWeight: 700,
+    marginBottom: 10,
+  } as const,
+
+  monthNavigationSettingsRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    flexWrap: 'wrap' as const,
+  } as const,
+
+  monthNavigationField: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: 6,
+  } as const,
+
+  monthNavigationFieldLabel: {
+    fontSize: 13,
+    fontWeight: 600,
+    color: '#374151',
+  } as const,
+
+  monthNavigationCheckboxLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    fontSize: 14,
+    fontWeight: 600,
+    color: '#111827',
+  } as const,
+
+  monthNavigationHint: {
+    marginTop: 10,
+    fontSize: 13,
+    color: '#4b5563',
+  } as const,
+
   infoRow: {
     display: 'flex',
     gap: 12,
