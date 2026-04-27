@@ -1,7 +1,6 @@
 ﻿'use client'
 
-import { CSSProperties, KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
-import { Tag } from '../lib/budgetPageTypes'
+import { CSSProperties, KeyboardEvent, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import DescriptionSuggestionDeleteMenu from './DescriptionSuggestionDeleteMenu'
 import PaymentSplitEditor from './PaymentSplitEditor'
 import {
@@ -10,7 +9,6 @@ import {
   getDaysInMonth,
   normalizeDayInput,
 } from '../lib/dateUtils'
-import { DescriptionSuggestion, DescriptionSuggestionSet } from '../lib/suggestionUtils'
 import { splitTagInput } from '../lib/tagUtils'
 import { useDescriptionSuggestions } from '../lib/useDescriptionSuggestions'
 import {
@@ -19,511 +17,48 @@ import {
   PaymentSplitInput,
 } from '../lib/paymentSplitUtils'
 
-type Transaction = {
-  id: string
-  category_id: string
-  amount: number | string
-  description: string | null
-  date: string
-  day_is_null?: boolean
-  payment_source_id?: string | null
-  created_at?: string
-  is_deleted?: boolean
-  deleted_at?: string | null
-}
-
-type TransactionPaymentSplit = {
-  id: string
-  transaction_id: string
-  payment_source_id: string
-  amount: number
-  created_at?: string
-}
-
-type MoveTarget = {
-  id: string
-  label: string
-}
-
-type HeatmapMode = 'normal' | 'balance'
-type HeatmapVariant = 'balance' | 'income' | 'expense'
-
-type Props = {
-  selectedMonth: string
-  transactions: Transaction[]
-  styles: Record<string, CSSProperties>
-  isSelectedMonthLocked: boolean
-  getAmountNumber: (value: unknown) => number
-  getMoveTargetsForTransaction: (transaction: Transaction) => MoveTarget[]
-  getSignedAmountForTransaction: (transaction: Transaction) => number
-  onUpdateTransaction: (
-    transactionId: string,
-    amountText: string,
-    descriptionText: string,
-    dateText: string,
-    tagNames?: string[],
-    dayIsNullOverride?: boolean,
-    paymentSourceId?: string | null,
-    paymentSplitItems?: PaymentSplitInput[]
-  ) => Promise<void>
-  onDeleteTransaction: (transactionId: string) => Promise<void>
-  onMoveTransaction: (transactionId: string, targetCategoryId: string) => Promise<void>
-  onAddTransactionForDay?: (dayText: string) => void
-  calendarTitle?: string
-  calendarSubtitle?: string
-  heatmapVariant?: HeatmapVariant
-  heatmapMode?: HeatmapMode
-  onHeatmapModeChange?: (value: HeatmapMode) => void
-  heatmapInverted?: boolean
-  onHeatmapInvertedChange?: (value: boolean) => void
-  defaultHeatmapMode?: HeatmapMode
-  defaultHeatmapInverted?: boolean
-  heatmapStorageKey?: string
-  showHeatmapControls?: boolean
-  descriptionSuggestions: DescriptionSuggestionSet
-  getPaymentSourceOptionsForCategoryId?: (
-    categoryId: string
-  ) => Array<{
-    id: string
-    name: string
-    type: string
-    optionLabel?: string
-  }>
-  transactionTagsMap?: Record<string, Tag[]>
-  transactionPaymentSplitsMap?: Record<string, TransactionPaymentSplit[]>
-  onTagClick?: (tagId: string) => void
-  onDeleteDescriptionSuggestion?: (
-    categoryId: string | null | undefined,
-    suggestion: DescriptionSuggestion
-  ) => void
-}
-
-const calendarPanelStyle = {
-  marginBottom: 20,
-  background: '#ffffff',
-  border: '1px solid #e5e7eb',
-  borderRadius: 14,
-  padding: 16,
-  boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
-} as const
-
-const calendarWeekdaysStyle = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
-  gap: 8,
-  marginTop: 12,
-} as const
-
-const calendarWeekdayStyle = {
-  padding: '8px 10px',
-  fontSize: 12,
-  fontWeight: 700,
-  textTransform: 'uppercase' as const,
-  color: '#6b7280',
-} as const
-
-const calendarGridStyle = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
-  gap: 8,
-  marginTop: 8,
-} as const
-
-const calendarDayCellStyle = {
-  minHeight: 108,
-  border: '1px solid #e5e7eb',
-  borderRadius: 12,
-  padding: 10,
-  background: '#f8fafc',
-  display: 'flex',
-  flexDirection: 'column' as const,
-  gap: 8,
-  cursor: 'pointer',
-  position: 'relative' as const,
-  textAlign: 'left' as const,
-} as const
-
-const calendarExpandBadgeStyle = {
-  position: 'absolute' as const,
-  top: 8,
-  right: 8,
-  width: 18,
-  height: 18,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontSize: 11,
-  fontWeight: 700,
-  color: '#475569',
-  border: '1px solid #cbd5e1',
-  borderRadius: 6,
-  background: '#ffffff',
-  lineHeight: 1,
-  pointerEvents: 'none' as const,
-} as const
-
-const calendarEmptyCellStyle = {
-  minHeight: 108,
-  border: '1px dashed #e5e7eb',
-  borderRadius: 12,
-  padding: 10,
-  background: '#f9fafb',
-} as const
-
-const calendarDayNumberStyle = {
-  fontSize: 14,
-  fontWeight: 700,
-  color: '#111827',
-} as const
-
-const calendarDayMetaStyle = {
-  fontSize: 12,
-  color: '#4b5563',
-  lineHeight: 1.4,
-} as const
-
-const calendarDayCountStyle = {
-  fontSize: 12,
-  color: '#6b7280',
-} as const
-
-const overlayStyle = {
-  position: 'fixed' as const,
-  inset: 0,
-  background: 'rgba(15, 23, 42, 0.35)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: 16,
-  zIndex: 1000,
-} as const
-
-const modalStyle = {
-  width: 'min(860px, 100%)',
-  maxHeight: '85vh',
-  overflowY: 'auto' as const,
-  background: '#ffffff',
-  borderRadius: 16,
-  border: '1px solid #dbeafe',
-  boxShadow: '0 20px 40px rgba(15, 23, 42, 0.18)',
-  padding: 18,
-} as const
-
-const modalHeaderStyle = {
-  display: 'flex',
-  alignItems: 'flex-start',
-  justifyContent: 'space-between',
-  gap: 12,
-  marginBottom: 14,
-} as const
-
-const modalTitleStyle = {
-  fontSize: 18,
-  fontWeight: 700,
-  color: '#111827',
-  marginBottom: 4,
-} as const
-
-const modalSubtitleStyle = {
-  fontSize: 13,
-  color: '#6b7280',
-} as const
-
-const closeButtonStyle = {
-  border: '1px solid #d1d5db',
-  background: '#ffffff',
-  borderRadius: 10,
-  padding: '8px 10px',
-  cursor: 'pointer',
-  fontSize: 13,
-  fontWeight: 600,
-} as const
-
-const daySummaryCardStyle = {
-  border: '1px solid #e5e7eb',
-  borderRadius: 12,
-  padding: 12,
-  background: '#f8fafc',
-  marginBottom: 14,
-} as const
-
-const transactionsListStyle = {
-  display: 'flex',
-  flexDirection: 'column' as const,
-  gap: 10,
-} as const
-
-const transactionCardStyle = {
-  border: '1px solid #e5e7eb',
-  borderRadius: 12,
-  padding: 12,
-  background: '#ffffff',
-} as const
-
-const transactionTopRowStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  gap: 12,
-  marginBottom: 8,
-} as const
-
-const transactionAmountStyle = {
-  fontSize: 15,
-  fontWeight: 700,
-  color: '#111827',
-} as const
-
-const transactionDescriptionStyle = {
-  fontSize: 14,
-  color: '#374151',
-} as const
-
-const transactionTagsStyle = {
-  display: 'flex',
-  gap: 6,
-  flexWrap: 'wrap' as const,
-  marginTop: 8,
-} as const
-
-const transactionTagBadgeStyle = {
-  fontSize: 12,
-  padding: '4px 8px',
-  borderRadius: 999,
-  background: '#eff6ff',
-  border: '1px solid #bfdbfe',
-  color: '#1d4ed8',
-  cursor: 'pointer',
-} as const
-
-const emptyDayStyle = {
-  border: '1px dashed #d1d5db',
-  borderRadius: 12,
-  padding: 14,
-  background: '#f9fafb',
-  color: '#6b7280',
-  fontSize: 14,
-} as const
-
-const transactionActionsStyle = {
-  display: 'flex',
-  flexWrap: 'wrap' as const,
-  gap: 8,
-  marginTop: 10,
-} as const
-
-const formRowStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: 8,
-  flexWrap: 'wrap' as const,
-  marginTop: 8,
-} as const
-
-const inputStyle = {
-  border: '1px solid #d1d5db',
-  borderRadius: 10,
-  padding: '8px 10px',
-  fontSize: 14,
-  minHeight: 38,
-} as const
-
-const smallInputStyle = {
-  ...inputStyle,
-  width: 90,
-} as const
-
-const wideInputStyle = {
-  ...inputStyle,
-  flex: 1,
-  minWidth: 180,
-} as const
-
-const descriptionFieldWrapStyle = {
-  flex: 1,
-  minWidth: 220,
-  position: 'relative' as const,
-  display: 'flex',
-  flexDirection: 'column' as const,
-  gap: 0,
-} as const
-
-const suggestionsDropdownStyle = {
-  position: 'absolute' as const,
-  top: 'calc(100% + 4px)',
-  left: 0,
-  right: 0,
-  zIndex: 20,
-  background: '#ffffff',
-  border: '1px solid #d1d5db',
-  borderRadius: 10,
-  boxShadow: '0 10px 24px rgba(15, 23, 42, 0.12)',
-  overflow: 'hidden' as const,
-} as const
-
-const suggestionButtonBaseStyle = {
-  width: '100%',
-  textAlign: 'left' as const,
-  border: 'none',
-  background: '#ffffff',
-  padding: '10px 12px',
-  cursor: 'pointer',
-  fontSize: 13,
-  color: '#111827',
-} as const
-
-const tagFieldWrapStyle = {
-  marginTop: 8,
-  display: 'flex',
-  flexDirection: 'column' as const,
-  gap: 8,
-} as const
-
-const tagBadgesWrapStyle = {
-  display: 'flex',
-  gap: 6,
-  flexWrap: 'wrap' as const,
-} as const
-
-const tagBadgeStyle = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 6,
-  padding: '4px 8px',
-  borderRadius: 999,
-  background: '#eff6ff',
-  border: '1px solid #bfdbfe',
-  color: '#1d4ed8',
-  fontSize: 12,
-  fontWeight: 600,
-} as const
-
-const tagRemoveButtonStyle = {
-  border: 'none',
-  background: 'transparent',
-  color: '#1d4ed8',
-  cursor: 'pointer',
-  fontSize: 14,
-  lineHeight: 1,
-  padding: 0,
-} as const
-
-const primaryButtonStyle = {
-  border: '1px solid #2563eb',
-  background: '#2563eb',
-  color: '#ffffff',
-  borderRadius: 10,
-  padding: '8px 10px',
-  cursor: 'pointer',
-  fontSize: 13,
-  fontWeight: 600,
-} as const
-
-const secondaryButtonStyle = {
-  border: '1px solid #d1d5db',
-  background: '#ffffff',
-  color: '#111827',
-  borderRadius: 10,
-  padding: '8px 10px',
-  cursor: 'pointer',
-  fontSize: 13,
-  fontWeight: 600,
-} as const
-
-const dangerButtonStyle = {
-  border: '1px solid #fecaca',
-  background: '#fff1f2',
-  color: '#b91c1c',
-  borderRadius: 10,
-  padding: '8px 10px',
-  cursor: 'pointer',
-  fontSize: 13,
-  fontWeight: 600,
-} as const
-
-const heatmapBarStyle = {
-  display: 'flex',
-  gap: 8,
-  flexWrap: 'wrap' as const,
-  marginTop: 14,
-  marginBottom: 8,
-} as const
-
-const heatmapLegendStyle = {
-  display: 'flex',
-  flexDirection: 'column' as const,
-  gap: 8,
-  marginBottom: 8,
-  fontSize: 12,
-  color: '#4b5563',
-} as const
-
-const heatmapLegendLabelsStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  gap: 12,
-  fontSize: 12,
-  fontWeight: 600,
-  color: '#4b5563',
-} as const
-
-const heatmapLegendBarStyle = {
-  width: '100%',
-  height: 14,
-  borderRadius: 999,
-  border: '1px solid #d8dee8',
-  background:
-    'linear-gradient(90deg, rgb(204, 62, 47) 0%, rgb(239, 208, 124) 50%, rgb(44, 163, 92) 100%)',
-  boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.5)',
-} as const
-
-const heatmapSwitchRowStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: 8,
-  flexWrap: 'wrap' as const,
-  marginBottom: 8,
-  fontSize: 12,
-  color: '#4b5563',
-} as const
-
-const noDaySectionStyle = {
-  marginTop: 18,
-  borderTop: '1px solid #e5e7eb',
-  paddingTop: 16,
-} as const
-
-const noDaySummaryStyle = {
-  marginTop: 8,
-  marginBottom: 12,
-  padding: 12,
-  border: '1px solid #e5e7eb',
-  borderRadius: 12,
-  background: '#f8fafc',
-} as const
-
-const noDayHintStyle = {
-  fontSize: 12,
-  color: '#6b7280',
-  marginTop: 6,
-  lineHeight: 1.4,
-} as const
-
-const badgeStyle = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 6,
-  border: '1px solid #cbd5e1',
-  background: '#f8fafc',
-  color: '#475569',
-  borderRadius: 999,
-  padding: '4px 8px',
-  fontSize: 12,
-  fontWeight: 600,
-} as const
-
-const weekdayLabels = ['pon', 'wt', 'śr', 'czw', 'pt', 'sob', 'ndz']
+import type {
+  HeatmapMode,
+  MonthCalendarPanelProps,
+  Transaction,
+} from './month-calendar/monthCalendarTypes'
+import MonthCalendarDayModal from './month-calendar/MonthCalendarDayModal'
+import MonthCalendarGrid from './month-calendar/MonthCalendarGrid'
+import MonthCalendarHeader from './month-calendar/MonthCalendarHeader'
+import MonthCalendarHeatmapControls from './month-calendar/MonthCalendarHeatmapControls'
+import MonthCalendarTransactionList from './month-calendar/MonthCalendarTransactionList'
+import {
+  badgeStyle,
+  calendarDayCellStyle,
+  calendarDayCountStyle,
+  calendarDayMetaStyle,
+  calendarDayNumberStyle,
+  calendarExpandBadgeStyle,
+  calendarPanelStyle,
+  dangerButtonStyle,
+  descriptionFieldWrapStyle,
+  formRowStyle,
+  noDayHintStyle,
+  noDaySectionStyle,
+  noDaySummaryStyle,
+  primaryButtonStyle,
+  secondaryButtonStyle,
+  smallInputStyle,
+  suggestionButtonBaseStyle,
+  suggestionsDropdownStyle,
+  tagBadgeStyle,
+  tagBadgesWrapStyle,
+  tagFieldWrapStyle,
+  tagRemoveButtonStyle,
+  transactionActionsStyle,
+  transactionAmountStyle,
+  transactionCardStyle,
+  transactionDescriptionStyle,
+  transactionTagBadgeStyle,
+  transactionTagsStyle,
+  transactionTopRowStyle,
+  wideInputStyle,
+} from './month-calendar/monthCalendarStyles'
 
 const formatAmount = (value: number) => {
   return new Intl.NumberFormat('pl-PL', {
@@ -747,7 +282,7 @@ const getDirectionalHeatmapVisual = (
   }
 }
 
-export default function MonthCalendarPanel(props: Props) {
+export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
   const {
     selectedMonth,
     transactions,
@@ -1480,9 +1015,7 @@ export default function MonthCalendarPanel(props: Props) {
     )
   }
 
-  const dayCells = Array.from({ length: firstDayOffset }, (_, index) => (
-    <div key={`empty-${index}`} style={calendarEmptyCellStyle} />
-  ))
+  const dayCells: ReactNode[] = []
 
   for (let day = 1; day <= daysInMonth; day += 1) {
     const dayKey = String(day).padStart(2, '0')
@@ -1584,59 +1117,18 @@ export default function MonthCalendarPanel(props: Props) {
   return (
     <>
       <section style={calendarPanelStyle}>
-        <div style={styles.sectionTitle}>{calendarTitle}</div>
-        <div style={{ ...styles.pageSubtitle, marginBottom: 0 }}>{calendarSubtitle}</div>
+        <MonthCalendarHeader title={calendarTitle} subtitle={calendarSubtitle} styles={styles} />
 
-        {showHeatmapControls && (
-          <>
-            <div style={heatmapBarStyle}>
-              <button
-                type="button"
-                style={heatmapMode === 'normal' ? primaryButtonStyle : secondaryButtonStyle}
-                onClick={() => handleHeatmapModeChange('normal')}
-              >
-                zwykły
-              </button>
+        <MonthCalendarHeatmapControls
+          heatmapMode={heatmapMode}
+          heatmapInverted={heatmapInverted}
+          showHeatmapControls={showHeatmapControls}
+          legendLabels={legendLabels}
+          onHeatmapModeChange={handleHeatmapModeChange}
+          onHeatmapInvertedChange={handleHeatmapInvertedChange}
+        />
 
-              <button
-                type="button"
-                style={heatmapMode === 'balance' ? primaryButtonStyle : secondaryButtonStyle}
-                onClick={() => handleHeatmapModeChange('balance')}
-              >
-                heatmapa
-              </button>
-            </div>
-
-            <label style={heatmapSwitchRowStyle}>
-              <input
-                type="checkbox"
-                checked={heatmapInverted}
-                onChange={(event) => handleHeatmapInvertedChange(event.target.checked)}
-              />
-              <span>Odwróć kierunek kolorów</span>
-            </label>
-          </>
-        )}
-
-        {heatmapMode === 'balance' && (
-          <div style={heatmapLegendStyle}>
-            <div style={heatmapLegendLabelsStyle}>
-              <span>{legendLabels.left}</span>
-              <span>{legendLabels.right}</span>
-            </div>
-            <div style={heatmapLegendBarStyle} />
-          </div>
-        )}
-
-        <div style={calendarWeekdaysStyle}>
-          {weekdayLabels.map((label) => (
-            <div key={label} style={calendarWeekdayStyle}>
-              {label}
-            </div>
-          ))}
-        </div>
-
-        <div style={calendarGridStyle}>{dayCells}</div>
+        <MonthCalendarGrid firstDayOffset={firstDayOffset}>{dayCells}</MonthCalendarGrid>
 
         <div style={noDaySectionStyle}>
           <div style={styles.sectionTitle}>Bez dnia / pozostałe</div>
@@ -1658,11 +1150,11 @@ export default function MonthCalendarPanel(props: Props) {
           {transactionsWithoutDay.length === 0 ? (
             <div style={styles.emptyStateCard}>Brak wpisów bez dnia w tym miesiącu.</div>
           ) : (
-            <div style={transactionsListStyle}>
-              {transactionsWithoutDay.map((transaction) =>
-                renderTransactionCard(transaction, 'no-day')
-              )}
-            </div>
+            <MonthCalendarTransactionList
+              transactions={transactionsWithoutDay}
+              context="no-day"
+              renderTransactionCard={renderTransactionCard}
+            />
           )}
         </div>
       </section>
@@ -1676,84 +1168,21 @@ export default function MonthCalendarPanel(props: Props) {
       />
 
       {selectedDay && (
-        <div style={overlayStyle} onClick={closeModal}>
-          <div style={modalStyle} onClick={(event) => event.stopPropagation()}>
-            <div style={modalHeaderStyle}>
-              <div>
-                <div style={modalTitleStyle}>
-                  Wpisy z dnia {selectedDay}.{selectedMonth.slice(5, 7)}.{selectedMonth.slice(0, 4)}
-                </div>
-                <div style={modalSubtitleStyle}>
-                  Podgląd i operacje dla wpisów z wybranego dnia.
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                {!isSelectedMonthLocked && onAddTransactionForDay && (
-                  <button
-                    type="button"
-                    style={primaryButtonStyle}
-                    onClick={() => {
-                      onAddTransactionForDay(selectedDay)
-                      closeModal()
-                    }}
-                  >
-                    dodaj wpis
-                  </button>
-                )}
-
-                <button type="button" style={closeButtonStyle} onClick={closeModal}>
-                  zamknij
-                </button>
-              </div>
-            </div>
-
-            <div style={daySummaryCardStyle}>
-              <div style={styles.l2Name}>Podsumowanie dnia</div>
-              <div style={{ ...calendarDayMetaStyle, marginTop: 6 }}>
-                {getDayMetricLabel()}:{' '}
-                <strong>
-                  {heatmapVariant === 'balance' && selectedDayPrimaryValue > 0 ? '+' : ''}
-                  {formatAmount(selectedDayPrimaryValue)} zł
-                </strong>
-              </div>
-              {heatmapVariant === 'balance' && (
-                <div style={{ ...calendarDayMetaStyle, marginTop: 4 }}>
-                  Suma nominalna wpisów: <strong>{formatAmount(selectedDayRawSum)} zł</strong>
-                </div>
-              )}
-              <div style={{ ...calendarDayMetaStyle, marginTop: 4 }}>
-                Liczba wpisów: <strong>{selectedDayTransactions.length}</strong>
-              </div>
-            </div>
-
-            {selectedDayTransactions.length === 0 ? (
-              <div style={emptyDayStyle}>
-                Brak wpisów w tym dniu.
-                {!isSelectedMonthLocked && onAddTransactionForDay && (
-                  <div style={{ marginTop: 12 }}>
-                    <button
-                      type="button"
-                      style={primaryButtonStyle}
-                      onClick={() => {
-                        onAddTransactionForDay(selectedDay)
-                        closeModal()
-                      }}
-                    >
-                      dodaj pierwszy wpis z tego dnia
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div style={transactionsListStyle}>
-                {selectedDayTransactions.map((transaction) =>
-                  renderTransactionCard(transaction, 'day')
-                )}
-              </div>
-            )}
-          </div>
-        </div>
+        <MonthCalendarDayModal
+          selectedDay={selectedDay}
+          selectedMonth={selectedMonth}
+          selectedDayTransactions={selectedDayTransactions}
+          selectedDayPrimaryValue={selectedDayPrimaryValue}
+          selectedDayRawSum={selectedDayRawSum}
+          heatmapVariant={heatmapVariant}
+          isSelectedMonthLocked={isSelectedMonthLocked}
+          styles={styles}
+          getDayMetricLabel={getDayMetricLabel}
+          formatAmount={formatAmount}
+          renderTransactionCard={renderTransactionCard}
+          onAddTransactionForDay={onAddTransactionForDay}
+          onClose={closeModal}
+        />
       )}
     </>
   )

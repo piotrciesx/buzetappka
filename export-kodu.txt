@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
-Liczba plików: 100
-Data: 2026-04-27T21:15:57.317Z
+Liczba plików: 118
+Data: 2026-04-27T23:34:29.545Z
 
 
 ==================================================
@@ -143,26 +143,23 @@ PLIK: app\page.tsx
 
 'use client'
 
-import { SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import BudgetHeaderPanel from '../components/BudgetHeaderPanel'
-import BudgetCategoryTree from '../components/BudgetCategoryTree'
 import BulkActionsBar from '../components/BulkActionsBar'
 import CategoryMigrationPrompt from '../components/CategoryMigrationPrompt'
-import DraftPromptModal from '../components/DraftPromptModal'
 import DraftsPanel from '../components/DraftsPanel'
 import DashboardPanel from '../components/DashboardPanel'
-import FloatingActionButtons from '../components/FloatingActionButtons'
 import HiddenCategoriesPanel from '../components/HiddenCategoriesPanel'
 import ImportExportPanel from '../components/ImportExportPanel'
 import MonthCalendarPanel from '../components/MonthCalendarPanel'
 import PaymentSourcesPanel from '../components/PaymentSourcesPanel'
-import RecurringExecutionConfirmModal from '../components/RecurringExecutionConfirmModal'
 import RecurringTransactionsPanel from '../components/RecurringTransactionsPanel'
 import SearchPanel from '../components/SearchPanel'
 import TrashPanel from '../components/TrashPanel'
-import TransactionCreatorModal from '../components/TransactionCreatorModal'
 import UndoBanner from '../components/UndoBanner'
-import FinancialGoalsPanel from '../components/FinancialGoalsPanel'
+import BudgetTreeSection from '../components/BudgetTreeSection'
+import BudgetPageOverlays from '../components/BudgetPageOverlays'
+import FinancialGoalsContainer from '../components/FinancialGoalsContainer'
 import { useTransactionOperations } from '../lib/useTransactionOperations'
 import { useTransactionCreatorOpeners } from '../lib/useTransactionCreatorOpeners'
 import { useCategoryVisibilityActions } from '../lib/useCategoryVisibilityActions'
@@ -179,10 +176,7 @@ import {
 } from '../lib/budgetPageTypes'
 import { useSelectedMonthTransactions } from '../lib/useSelectedMonthTransactions'
 import { useBudgetPageDrafts } from '../lib/useBudgetPageDrafts'
-import {
-  getHiddenCategoryLabel,
-  isCategoryClosingAfterSelectedMonth,
-} from '../lib/categoryUtils'
+import { getHiddenCategoryLabel } from '../lib/categoryUtils'
 import { supabase } from '../lib/supabaseClient'
 import { getAmountNumber } from '../lib/transactionUtils'
 import { useBudgetMonthNavigation } from '../lib/useBudgetMonthNavigation'
@@ -206,6 +200,7 @@ import { isAllowedMoveTarget as checkIsAllowedMoveTarget } from '../lib/isAllowe
 import { useBudgetPageData } from '../lib/useBudgetPageData'
 import { useRecurringOptions } from '../lib/useRecurringOptions'
 import { useOpenSearchForTag } from '../lib/useOpenSearchForTag'
+import { useBudgetPageOverlayProps } from '../lib/useBudgetPageOverlayProps'
 
 type MigrationPromptState = {
   categoryId: string
@@ -757,10 +752,7 @@ export default function Home() {
     }
   }, [loadData])
 
-  const isAllowedMoveTarget = (
-    transaction: Transaction,
-    targetCategoryId: string
-  ) => {
+  const isAllowedMoveTarget = (transaction: Transaction, targetCategoryId: string) => {
     return checkIsAllowedMoveTarget(
       transaction,
       targetCategoryId,
@@ -898,9 +890,9 @@ export default function Home() {
       setMigrationPromptState((prev) =>
         prev
           ? {
-            ...prev,
-            targetCategoryId: '',
-          }
+              ...prev,
+              targetCategoryId: '',
+            }
           : null
       )
     }
@@ -945,21 +937,82 @@ export default function Home() {
     getCategoryCountForSelectedMonth,
   })
 
-  const {
-    finalCategoryOptions,
+  const { finalCategoryOptions, recurringOptionItems, recurringSuggestionItems } =
+    useRecurringOptions({
+      visibleCategories,
+      recurringTransactions,
+      recurringExecutions,
+      selectedMonth,
+      selectedTransactionCategoryId,
+      selectedLevel2Id,
+      selectedTransactionTypeId,
+      newAmount,
+      newDescription,
+      categoriesById,
+    })
+
+  const budgetPageOverlayProps = useBudgetPageOverlayProps({
+    canCreateTransactions,
+    expenseLevel1Id,
+    incomeLevel1Id,
+    openFloatingTransactionCreator,
+
+    isTransactionCreatorOpen,
+    selectedMonth,
+    level1,
+    sortedLevel2ByParentIdForModal,
+    sortedLevel3ByParentIdForModal,
+    categoriesById,
+    transactionCreatorSuggestionId,
+    transactionCreatorLockedLevel1Id,
+    topTransactionShortcutCategoriesByType,
+    recentTransactionShortcutCategoriesByType,
+    descriptionSuggestions,
+    applyTransactionCategorySelection,
+    selectedTransactionTypeId,
+    setSelectedTransactionTypeIdWithPaymentSource,
+    selectedLevel2Id,
+    setSelectedLevel2Id,
+    selectedTransactionCategoryId,
+    setSelectedTransactionCategoryId,
+    isSerialTransactionCreatorEnabled,
+    setIsSerialTransactionCreatorEnabled,
+    newAmount,
+    setNewAmount,
+    newDescription,
+    setNewDescription,
+    newTransactionDate,
+    setNewTransactionDate,
+    selectedTagNames,
+    setSelectedTagNames,
+    selectedPaymentSourceId,
+    setSelectedPaymentSourceId,
+    currentTransactionCreatorPaymentSourceOptions,
+    isTransactionCreatorPaymentSourceVisible,
+    selectedPaymentSplitItems,
+    setSelectedPaymentSplitItems,
+    selectedRecurringTransactionId,
+    setSelectedRecurringTransactionId,
     recurringOptionItems,
     recurringSuggestionItems,
-  } = useRecurringOptions({
-    visibleCategories,
-    recurringTransactions,
-    recurringExecutions,
-    selectedMonth,
-    selectedTransactionCategoryId,
-    selectedLevel2Id,
-    selectedTransactionTypeId,
-    newAmount,
-    newDescription,
-    categoriesById,
+    isSaving,
+    resetTransactionCreator,
+    handleSaveTransaction,
+    amountInputRef,
+    descriptionInputRef,
+    styles,
+    handleDeleteDescriptionSuggestion,
+
+    draftPromptState,
+    setDraftPromptState,
+    applyDraftToTransactionCreator,
+    deleteDraft,
+    openBlankFloatingTransactionCreator,
+
+    SHOW_RECURRING_STAGE_15,
+    recurringCompletionPrompt,
+    handleConfirmRecurringCompletion,
+    setRecurringCompletionPrompt,
   })
 
   return (
@@ -1056,10 +1109,10 @@ export default function Home() {
             setMigrationPromptState((prev) =>
               prev
                 ? {
-                  ...prev,
-                  targetCategoryId: value,
-                  errorText: '',
-                }
+                    ...prev,
+                    targetCategoryId: value,
+                    errorText: '',
+                  }
                 : null
             )
           }}
@@ -1228,7 +1281,7 @@ export default function Home() {
         />
       )}
 
-      <FinancialGoalsPanel
+      <FinancialGoalsContainer
         selectedMonth={selectedMonth}
         goals={financialGoals}
         goalPriorities={financialGoalPriorities}
@@ -1292,141 +1345,72 @@ export default function Home() {
         onDeleteDescriptionSuggestion={handleDeleteDescriptionSuggestion}
       />
 
-      <div>
-        <div style={styles.sectionTitle}>Drzewo kategorii</div>
-
-        <div style={styles.sortBar}>
-          <div style={styles.sortGroup}>
-            <label htmlFor="level2-sort-mode" style={styles.sortLabel}>
-              Sortowanie L2
-            </label>
-            <select
-              id="level2-sort-mode"
-              value={level2SortMode}
-              onChange={(event) => setLevel2SortMode(event.target.value as typeof level2SortMode)}
-              style={styles.input}
-            >
-              <option value="default">domyślne</option>
-              <option value="manual">ręczne</option>
-              <option value="sum">według sumy</option>
-              <option value="frequency">według częstotliwości</option>
-            </select>
-
-            <label htmlFor="level2-sort-direction" style={styles.sortLabel}>
-              Kierunek L2
-            </label>
-            <select
-              id="level2-sort-direction"
-              value={level2SortDirection}
-              onChange={(event) =>
-                setLevel2SortDirection(event.target.value as typeof level2SortDirection)
-              }
-              style={styles.input}
-              disabled={level2SortMode !== 'sum' && level2SortMode !== 'frequency'}
-            >
-              <option value="asc">rosnąco</option>
-              <option value="desc">malejąco</option>
-            </select>
-          </div>
-
-          <div style={styles.sortGroup}>
-            <label htmlFor="level3-sort-mode" style={styles.sortLabel}>
-              Sortowanie L3
-            </label>
-            <select
-              id="level3-sort-mode"
-              value={level3SortMode}
-              onChange={(event) => setLevel3SortMode(event.target.value as typeof level3SortMode)}
-              style={styles.input}
-            >
-              <option value="default">domyślne</option>
-              <option value="manual">ręczne</option>
-              <option value="sum">według sumy</option>
-              <option value="frequency">według częstotliwości</option>
-            </select>
-
-            <label htmlFor="level3-sort-direction" style={styles.sortLabel}>
-              Kierunek L3
-            </label>
-            <select
-              id="level3-sort-direction"
-              value={level3SortDirection}
-              onChange={(event) =>
-                setLevel3SortDirection(event.target.value as typeof level3SortDirection)
-              }
-              style={styles.input}
-              disabled={level3SortMode !== 'sum' && level3SortMode !== 'frequency'}
-            >
-              <option value="asc">rosnąco</option>
-              <option value="desc">malejąco</option>
-            </select>
-          </div>
-        </div>
-
-        {sortedLevel1.length === 0 && (
-          <div style={styles.emptyStateCard}>Brak widocznych kategorii w wybranym miesiącu</div>
-        )}
-
-        <BudgetCategoryTree
-          sortedLevel1={sortedLevel1}
-          openLevel1Ids={openLevel1Ids}
-          openLevel1CalendarIds={openLevel1CalendarIds}
-          openLevel2Ids={openLevel2Ids}
-          openLevel3Ids={openLevel3Ids}
-          selectedMonth={selectedMonth}
-          isSelectedMonthLocked={isSelectedMonthLocked}
-          openAddSubcategoryFor={openAddSubcategoryFor}
-          newSubcategoryName={newSubcategoryName}
-          selectedTransactionIds={selectedTransactionIds}
-          isReorderingLevel1={isReorderingLevel1}
-          reorderingLevel1Id={reorderingLevel1Id}
-          reorderingLevel2Id={reorderingLevel2Id}
-          styles={styles}
-          toggleLevel1={toggleLevel1}
-          toggleLevel1Calendar={toggleLevel1Calendar}
-          toggleLevel2={toggleLevel2}
-          toggleLevel3={toggleLevel3}
-          setOpenAddSubcategoryFor={setOpenAddSubcategoryFor}
-          setNewSubcategoryName={setNewSubcategoryName}
-          getSortedLevel2Children={getSortedLevel2Children}
-          getSortedLevel3Children={getSortedLevel3Children}
-          getTransactionsForLevel1AndMonth={getTransactionsForLevel1AndMonth}
-          getTransactionsForCategoryAndMonthForSelectedMonth={
-            getTransactionsForCategoryAndMonthForSelectedMonth
-          }
-          getSumForCategoryForSelectedMonth={getSumForCategoryForSelectedMonth}
-          getSumForLevel2ForSelectedMonth={getSumForLevel2ForSelectedMonth}
-          getCountForLevel2ForSelectedMonth={getCountForLevel2ForSelectedMonth}
-          getAmountNumber={getAmountNumber}
-          getMoveTargetsForTransaction={getMoveTargetsForTransaction}
-          getSignedAmountForTransaction={getSignedAmountForTransaction}
-          getCalendarHeatmapVariantForLevel1Id={getCalendarHeatmapVariantForLevel1Id}
-          isCategoryClosingAfterSelectedMonth={isCategoryClosingAfterSelectedMonth}
-          handleAddSubcategory={handleAddSubcategory}
-          openTransactionCreator={openTransactionCreator}
-          handleInlineSaveTransaction={handleInlineSaveTransaction}
-          handleHideCategory={handleHideCategory}
-          handleRestoreCategory={handleRestoreCategory}
-          handleUndoScheduledHide={handleUndoScheduledHide}
-          handleDeleteTransaction={handleDeleteTransaction}
-          handleUpdateTransaction={handleUpdateTransaction}
-          handleMoveTransaction={handleMoveTransaction}
-          handleOpenCategoryCalendarAddForDay={handleOpenCategoryCalendarAddForDay}
-          handleOpenLevel1CalendarAddForDay={handleOpenLevel1CalendarAddForDay}
-          toggleTransactionSelection={toggleTransactionSelection}
-          handleLevel3DragStart={handleLevel3DragStart}
-          handleReorderLevel3={handleReorderLevel3}
-          handleLevel1DragStart={handleLevel1DragStart}
-          handleReorderLevel1={handleReorderLevel1}
-          handleReorderLevel2={handleReorderLevel2}
-          descriptionSuggestions={descriptionSuggestions}
-          getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
-          transactionTagsMap={transactionTagsMap}
-          transactionPaymentSplitsMap={transactionPaymentSplitsMap}
-          onTagClick={handleOpenSearchForTag}
-          onDeleteDescriptionSuggestion={handleDeleteDescriptionSuggestion}
-        />
-      </div>
+      <BudgetTreeSection
+        sortedLevel1={sortedLevel1}
+        openLevel1Ids={openLevel1Ids}
+        openLevel1CalendarIds={openLevel1CalendarIds}
+        openLevel2Ids={openLevel2Ids}
+        openLevel3Ids={openLevel3Ids}
+        selectedMonth={selectedMonth}
+        isSelectedMonthLocked={isSelectedMonthLocked}
+        openAddSubcategoryFor={openAddSubcategoryFor}
+        newSubcategoryName={newSubcategoryName}
+        selectedTransactionIds={selectedTransactionIds}
+        isReorderingLevel1={isReorderingLevel1}
+        reorderingLevel1Id={reorderingLevel1Id}
+        reorderingLevel2Id={reorderingLevel2Id}
+        styles={styles}
+        level2SortMode={level2SortMode}
+        setLevel2SortMode={setLevel2SortMode}
+        level2SortDirection={level2SortDirection}
+        setLevel2SortDirection={setLevel2SortDirection}
+        level3SortMode={level3SortMode}
+        setLevel3SortMode={setLevel3SortMode}
+        level3SortDirection={level3SortDirection}
+        setLevel3SortDirection={setLevel3SortDirection}
+        toggleLevel1={toggleLevel1}
+        toggleLevel1Calendar={toggleLevel1Calendar}
+        toggleLevel2={toggleLevel2}
+        toggleLevel3={toggleLevel3}
+        setOpenAddSubcategoryFor={setOpenAddSubcategoryFor}
+        setNewSubcategoryName={setNewSubcategoryName}
+        getSortedLevel2Children={getSortedLevel2Children}
+        getSortedLevel3Children={getSortedLevel3Children}
+        getTransactionsForLevel1AndMonth={getTransactionsForLevel1AndMonth}
+        getTransactionsForCategoryAndMonthForSelectedMonth={
+          getTransactionsForCategoryAndMonthForSelectedMonth
+        }
+        getSumForCategoryForSelectedMonth={getSumForCategoryForSelectedMonth}
+        getSumForLevel2ForSelectedMonth={getSumForLevel2ForSelectedMonth}
+        getCountForLevel2ForSelectedMonth={getCountForLevel2ForSelectedMonth}
+        getAmountNumber={getAmountNumber}
+        getMoveTargetsForTransaction={getMoveTargetsForTransaction}
+        getSignedAmountForTransaction={getSignedAmountForTransaction}
+        getCalendarHeatmapVariantForLevel1Id={getCalendarHeatmapVariantForLevel1Id}
+        handleAddSubcategory={handleAddSubcategory}
+        openTransactionCreator={openTransactionCreator}
+        handleInlineSaveTransaction={handleInlineSaveTransaction}
+        handleHideCategory={handleHideCategory}
+        handleRestoreCategory={handleRestoreCategory}
+        handleUndoScheduledHide={handleUndoScheduledHide}
+        handleDeleteTransaction={handleDeleteTransaction}
+        handleUpdateTransaction={handleUpdateTransaction}
+        handleMoveTransaction={handleMoveTransaction}
+        handleOpenCategoryCalendarAddForDay={handleOpenCategoryCalendarAddForDay}
+        handleOpenLevel1CalendarAddForDay={handleOpenLevel1CalendarAddForDay}
+        toggleTransactionSelection={toggleTransactionSelection}
+        handleLevel3DragStart={handleLevel3DragStart}
+        handleReorderLevel3={handleReorderLevel3}
+        handleLevel1DragStart={handleLevel1DragStart}
+        handleReorderLevel1={handleReorderLevel1}
+        handleReorderLevel2={handleReorderLevel2}
+        descriptionSuggestions={descriptionSuggestions}
+        getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
+        transactionTagsMap={transactionTagsMap}
+        transactionPaymentSplitsMap={transactionPaymentSplitsMap}
+        onTagClick={handleOpenSearchForTag}
+        onDeleteDescriptionSuggestion={handleDeleteDescriptionSuggestion}
+      />
 
       <HiddenCategoriesPanel
         categories={hiddenCategoriesInSelectedMonth}
@@ -1447,113 +1431,10 @@ export default function Home() {
         styles={styles}
       />
 
-      {canCreateTransactions && (
-        <FloatingActionButtons
-          expenseLevel1Id={expenseLevel1Id}
-          incomeLevel1Id={incomeLevel1Id}
-          onOpenExpense={() => {
-            openFloatingTransactionCreator(expenseLevel1Id)
-          }}
-          onOpenIncome={() => {
-            openFloatingTransactionCreator(incomeLevel1Id)
-          }}
-          styles={styles}
-        />
-      )}
-
-      <TransactionCreatorModal
-        isOpen={isTransactionCreatorOpen}
-        selectedMonth={selectedMonth}
-        level1Categories={level1}
-        level2ByParentId={sortedLevel2ByParentIdForModal}
-        level3ByParentId={sortedLevel3ByParentIdForModal}
-        categoriesById={categoriesById}
-        suggestedCategoryId={transactionCreatorSuggestionId}
-        lockedLevel1Id={transactionCreatorLockedLevel1Id}
-        topShortcutCategories={
-          (transactionCreatorLockedLevel1Id
-            ? topTransactionShortcutCategoriesByType[transactionCreatorLockedLevel1Id]
-            : selectedTransactionTypeId
-              ? topTransactionShortcutCategoriesByType[selectedTransactionTypeId]
-              : []) || []
-        }
-        recentShortcutCategories={
-          (transactionCreatorLockedLevel1Id
-            ? recentTransactionShortcutCategoriesByType[transactionCreatorLockedLevel1Id]
-            : selectedTransactionTypeId
-              ? recentTransactionShortcutCategoriesByType[selectedTransactionTypeId]
-              : []) || []
-        }
-        descriptionSuggestions={descriptionSuggestions}
-        onSelectShortcutCategory={applyTransactionCategorySelection}
-        selectedLevel1Id={selectedTransactionTypeId}
-        setSelectedLevel1Id={setSelectedTransactionTypeIdWithPaymentSource}
-        selectedLevel2Id={selectedLevel2Id}
-        setSelectedLevel2Id={setSelectedLevel2Id}
-        selectedCategoryId={selectedTransactionCategoryId}
-        setSelectedCategoryId={setSelectedTransactionCategoryId}
-        isSerialModeEnabled={isSerialTransactionCreatorEnabled}
-        setIsSerialModeEnabled={setIsSerialTransactionCreatorEnabled}
-        amount={newAmount}
-        setAmount={setNewAmount}
-        description={newDescription}
-        setDescription={setNewDescription}
-        transactionDate={newTransactionDate}
-        setTransactionDate={setNewTransactionDate}
-        selectedTagNames={selectedTagNames}
-        setSelectedTagNames={setSelectedTagNames}
-        selectedPaymentSourceId={selectedPaymentSourceId}
-        setSelectedPaymentSourceId={setSelectedPaymentSourceId}
-        paymentSourceOptions={currentTransactionCreatorPaymentSourceOptions}
-        isPaymentSourceVisible={isTransactionCreatorPaymentSourceVisible}
-        paymentSplitItems={selectedPaymentSplitItems}
-        setPaymentSplitItems={setSelectedPaymentSplitItems}
-        selectedRecurringTransactionId={selectedRecurringTransactionId}
-        setSelectedRecurringTransactionId={setSelectedRecurringTransactionId}
-        recurringOptions={recurringOptionItems}
-        recurringSuggestions={recurringSuggestionItems}
-        isSaving={isSaving}
-        onClose={resetTransactionCreator}
-        onSave={handleSaveTransaction}
-        onSaveAndClose={async () => {
-          await handleSaveTransaction(true)
-        }}
-        amountInputRef={amountInputRef}
-        descriptionInputRef={descriptionInputRef}
-        styles={styles}
-        onDeleteDescriptionSuggestion={handleDeleteDescriptionSuggestion}
-      />
-
-      <DraftPromptModal
-        draftPromptState={draftPromptState}
-        setDraftPromptState={setDraftPromptState}
-        applyDraftToTransactionCreator={applyDraftToTransactionCreator}
-        deleteDraft={deleteDraft}
-        openBlankFloatingTransactionCreator={openBlankFloatingTransactionCreator}
-        styles={styles}
-      />
-
-      {SHOW_RECURRING_STAGE_15 && (
-        <RecurringExecutionConfirmModal
-          isOpen={Boolean(recurringCompletionPrompt)}
-          candidates={recurringCompletionPrompt?.candidates || []}
-          onConfirm={(recurring) => {
-            void handleConfirmRecurringCompletion(recurring.id, recurringCompletionPrompt).catch(
-              (error) => {
-                if (error instanceof Error) {
-                  alert(`Błąd oznaczania przypomnienia: ${error.message}`)
-                }
-              }
-            )
-          }}
-          onClose={() => setRecurringCompletionPrompt(null)}
-          styles={styles}
-        />
-      )}
+      <BudgetPageOverlays {...budgetPageOverlayProps} />
     </main>
   )
 }
-
 
 
 ==================================================
@@ -2395,6 +2276,554 @@ export default function BudgetHeaderPanel(props: Props) {
 
 
 ==================================================
+PLIK: components\BudgetPageOverlays.tsx
+==================================================
+
+'use client'
+
+import type { Dispatch, SetStateAction } from 'react'
+import FloatingActionButtons from './FloatingActionButtons'
+import TransactionCreatorModal from './TransactionCreatorModal'
+import DraftPromptModal from './DraftPromptModal'
+import RecurringExecutionConfirmModal from './RecurringExecutionConfirmModal'
+
+type PaymentSplitInput = {
+  paymentSourceId: string
+  amount: string
+}
+
+type Props = {
+  // FAB
+  canCreateTransactions: boolean
+  expenseLevel1Id: string | null
+  incomeLevel1Id: string | null
+  openFloatingTransactionCreator: (level1Id: string) => void
+
+  // Transaction modal
+  isTransactionCreatorOpen: boolean
+  selectedMonth: string
+  level1: any[]
+  sortedLevel2ByParentIdForModal: any
+  sortedLevel3ByParentIdForModal: any
+  categoriesById: Record<string, any>
+  transactionCreatorSuggestionId: string | null
+  transactionCreatorLockedLevel1Id: string | null
+  topShortcutCategories: any[]
+  recentShortcutCategories: any[]
+  descriptionSuggestions: any
+  applyTransactionCategorySelection: (id: string) => void
+  selectedTransactionTypeId: string | null
+  setSelectedTransactionTypeIdWithPaymentSource: (id: string | null) => void
+  selectedLevel2Id: string | null
+  setSelectedLevel2Id: (id: string | null) => void
+  selectedTransactionCategoryId: string | null
+  setSelectedTransactionCategoryId: (id: string | null) => void
+  isSerialTransactionCreatorEnabled: boolean
+  setIsSerialTransactionCreatorEnabled: (v: boolean) => void
+  newAmount: string
+  setNewAmount: (v: string) => void
+  newDescription: string
+  setNewDescription: (v: string) => void
+  newTransactionDate: string
+  setNewTransactionDate: (v: string) => void
+  selectedTagNames: string[]
+  setSelectedTagNames: Dispatch<SetStateAction<string[]>>
+  selectedPaymentSourceId: string
+  setSelectedPaymentSourceId: (v: string) => void
+  currentTransactionCreatorPaymentSourceOptions: any[]
+  isTransactionCreatorPaymentSourceVisible: boolean
+  selectedPaymentSplitItems: PaymentSplitInput[]
+  setSelectedPaymentSplitItems: Dispatch<SetStateAction<PaymentSplitInput[]>>
+  selectedRecurringTransactionId: string
+  setSelectedRecurringTransactionId: (v: string) => void
+  recurringOptionItems: any[]
+  recurringSuggestionItems: any[]
+  isSaving: boolean
+  resetTransactionCreator: () => void
+  handleSaveTransaction: (close?: boolean) => Promise<void>
+  amountInputRef: any
+  descriptionInputRef: any
+  styles: any
+  handleDeleteDescriptionSuggestion: any
+
+  // Draft modal
+  draftPromptState: any
+  setDraftPromptState: any
+  applyDraftToTransactionCreator: any
+  deleteDraft: any
+  openBlankFloatingTransactionCreator: any
+
+  // Recurring modal
+  SHOW_RECURRING_STAGE_15: boolean
+  recurringCompletionPrompt: any
+  handleConfirmRecurringCompletion: any
+  setRecurringCompletionPrompt: any
+}
+
+export default function BudgetPageOverlays(props: Props) {
+  const {
+    canCreateTransactions,
+    expenseLevel1Id,
+    incomeLevel1Id,
+    openFloatingTransactionCreator,
+
+    isTransactionCreatorOpen,
+    selectedMonth,
+    level1,
+    sortedLevel2ByParentIdForModal,
+    sortedLevel3ByParentIdForModal,
+    categoriesById,
+    transactionCreatorSuggestionId,
+    transactionCreatorLockedLevel1Id,
+    topShortcutCategories,
+    recentShortcutCategories,
+    descriptionSuggestions,
+    applyTransactionCategorySelection,
+    selectedTransactionTypeId,
+    setSelectedTransactionTypeIdWithPaymentSource,
+    selectedLevel2Id,
+    setSelectedLevel2Id,
+    selectedTransactionCategoryId,
+    setSelectedTransactionCategoryId,
+    isSerialTransactionCreatorEnabled,
+    setIsSerialTransactionCreatorEnabled,
+    newAmount,
+    setNewAmount,
+    newDescription,
+    setNewDescription,
+    newTransactionDate,
+    setNewTransactionDate,
+    selectedTagNames,
+    setSelectedTagNames,
+    selectedPaymentSourceId,
+    setSelectedPaymentSourceId,
+    currentTransactionCreatorPaymentSourceOptions,
+    isTransactionCreatorPaymentSourceVisible,
+    selectedPaymentSplitItems,
+    setSelectedPaymentSplitItems,
+    selectedRecurringTransactionId,
+    setSelectedRecurringTransactionId,
+    recurringOptionItems,
+    recurringSuggestionItems,
+    isSaving,
+    resetTransactionCreator,
+    handleSaveTransaction,
+    amountInputRef,
+    descriptionInputRef,
+    styles,
+    handleDeleteDescriptionSuggestion,
+
+    draftPromptState,
+    setDraftPromptState,
+    applyDraftToTransactionCreator,
+    deleteDraft,
+    openBlankFloatingTransactionCreator,
+
+    SHOW_RECURRING_STAGE_15,
+    recurringCompletionPrompt,
+    handleConfirmRecurringCompletion,
+    setRecurringCompletionPrompt,
+  } = props
+
+  return (
+    <>
+      {canCreateTransactions && expenseLevel1Id && incomeLevel1Id && (
+        <FloatingActionButtons
+          expenseLevel1Id={expenseLevel1Id}
+          incomeLevel1Id={incomeLevel1Id}
+          onOpenExpense={() => openFloatingTransactionCreator(expenseLevel1Id)}
+          onOpenIncome={() => openFloatingTransactionCreator(incomeLevel1Id)}
+          styles={styles}
+        />
+      )}
+
+      <TransactionCreatorModal
+        isOpen={isTransactionCreatorOpen}
+        selectedMonth={selectedMonth}
+        level1Categories={level1}
+        level2ByParentId={sortedLevel2ByParentIdForModal}
+        level3ByParentId={sortedLevel3ByParentIdForModal}
+        categoriesById={categoriesById}
+        suggestedCategoryId={transactionCreatorSuggestionId}
+        lockedLevel1Id={transactionCreatorLockedLevel1Id}
+        topShortcutCategories={topShortcutCategories}
+        recentShortcutCategories={recentShortcutCategories}
+        descriptionSuggestions={descriptionSuggestions}
+        onSelectShortcutCategory={applyTransactionCategorySelection}
+        selectedLevel1Id={selectedTransactionTypeId}
+        setSelectedLevel1Id={setSelectedTransactionTypeIdWithPaymentSource}
+        selectedLevel2Id={selectedLevel2Id}
+        setSelectedLevel2Id={setSelectedLevel2Id}
+        selectedCategoryId={selectedTransactionCategoryId}
+        setSelectedCategoryId={setSelectedTransactionCategoryId}
+        isSerialModeEnabled={isSerialTransactionCreatorEnabled}
+        setIsSerialModeEnabled={setIsSerialTransactionCreatorEnabled}
+        amount={newAmount}
+        setAmount={setNewAmount}
+        description={newDescription}
+        setDescription={setNewDescription}
+        transactionDate={newTransactionDate}
+        setTransactionDate={setNewTransactionDate}
+        selectedTagNames={selectedTagNames}
+        setSelectedTagNames={setSelectedTagNames}
+        selectedPaymentSourceId={selectedPaymentSourceId}
+        setSelectedPaymentSourceId={setSelectedPaymentSourceId}
+        paymentSourceOptions={currentTransactionCreatorPaymentSourceOptions}
+        isPaymentSourceVisible={isTransactionCreatorPaymentSourceVisible}
+        paymentSplitItems={selectedPaymentSplitItems}
+        setPaymentSplitItems={setSelectedPaymentSplitItems}
+        selectedRecurringTransactionId={selectedRecurringTransactionId}
+        setSelectedRecurringTransactionId={setSelectedRecurringTransactionId}
+        recurringOptions={recurringOptionItems}
+        recurringSuggestions={recurringSuggestionItems}
+        isSaving={isSaving}
+        onClose={resetTransactionCreator}
+        onSave={handleSaveTransaction}
+        onSaveAndClose={async () => {
+          await handleSaveTransaction(true)
+        }}
+        amountInputRef={amountInputRef}
+        descriptionInputRef={descriptionInputRef}
+        styles={styles}
+        onDeleteDescriptionSuggestion={handleDeleteDescriptionSuggestion}
+      />
+
+      <DraftPromptModal
+        draftPromptState={draftPromptState}
+        setDraftPromptState={setDraftPromptState}
+        applyDraftToTransactionCreator={applyDraftToTransactionCreator}
+        deleteDraft={deleteDraft}
+        openBlankFloatingTransactionCreator={openBlankFloatingTransactionCreator}
+        styles={styles}
+      />
+
+      {SHOW_RECURRING_STAGE_15 && (
+        <RecurringExecutionConfirmModal
+          isOpen={Boolean(recurringCompletionPrompt)}
+          candidates={recurringCompletionPrompt?.candidates || []}
+          onConfirm={(recurring: any) => {
+            void handleConfirmRecurringCompletion(recurring.id, recurringCompletionPrompt)
+          }}
+          onClose={() => setRecurringCompletionPrompt(null)}
+          styles={styles}
+        />
+      )}
+    </>
+  )
+}
+
+
+==================================================
+PLIK: components\BudgetTreeSection.tsx
+==================================================
+
+'use client'
+
+import type { ComponentProps, CSSProperties } from 'react'
+import BudgetCategoryTree from './BudgetCategoryTree'
+import {
+  Category,
+  HideMode,
+  MoveTarget,
+  RestoreMode,
+  Tag,
+  Transaction,
+  TransactionPaymentSplit,
+} from '../lib/budgetPageTypes'
+import { isCategoryClosingAfterSelectedMonth } from '../lib/categoryUtils'
+
+type BudgetCategoryTreeProps = ComponentProps<typeof BudgetCategoryTree>
+
+type Props = {
+  sortedLevel1: Category[]
+  openLevel1Ids: string[]
+  openLevel1CalendarIds: string[]
+  openLevel2Ids: string[]
+  openLevel3Ids: string[]
+  selectedMonth: string
+  isSelectedMonthLocked: boolean
+  openAddSubcategoryFor: string | null
+  newSubcategoryName: string
+  selectedTransactionIds: string[]
+  isReorderingLevel1: boolean
+  reorderingLevel1Id: string | null
+  reorderingLevel2Id: string | null
+  styles: Record<string, CSSProperties>
+
+  level2SortMode: string
+  setLevel2SortMode: (value: any) => void
+  level2SortDirection: string
+  setLevel2SortDirection: (value: any) => void
+  level3SortMode: string
+  setLevel3SortMode: (value: any) => void
+  level3SortDirection: string
+  setLevel3SortDirection: (value: any) => void
+
+  toggleLevel1: (id: string) => void
+  toggleLevel1Calendar: (level1Id: string) => void
+  toggleLevel2: (id: string) => void
+  toggleLevel3: (id: string) => void
+  setOpenAddSubcategoryFor: (id: string | null) => void
+  setNewSubcategoryName: (value: string) => void
+
+  getSortedLevel2Children: (level1Id: string) => Category[]
+  getSortedLevel3Children: (level2Id: string) => Category[]
+  getTransactionsForLevel1AndMonth: (level1Id: string) => Transaction[]
+  getTransactionsForCategoryAndMonthForSelectedMonth: (categoryId: string) => Transaction[]
+  getSumForCategoryForSelectedMonth: (categoryId: string) => number
+  getSumForLevel2ForSelectedMonth: (level2Id: string) => number
+  getCountForLevel2ForSelectedMonth: (level2Id: string) => number
+  getAmountNumber: (value: unknown) => number
+  getMoveTargetsForTransaction: (transaction: Transaction) => MoveTarget[]
+  getSignedAmountForTransaction: (transaction: Transaction) => number
+  getCalendarHeatmapVariantForLevel1Id: (
+    level1Id: string | null
+  ) => 'balance' | 'income' | 'expense'
+
+  handleAddSubcategory: (level2Id: string) => Promise<void>
+  openTransactionCreator: (suggestedCategoryId: string) => void
+  handleInlineSaveTransaction: (
+    categoryId: string,
+    amountText: string,
+    descriptionText: string,
+    dayText: string,
+    tagNames?: string[],
+    paymentSourceId?: string | null,
+    paymentSplitItems?: Array<{ paymentSourceId: string; amount: string }>
+  ) => Promise<void>
+  handleHideCategory: (id: string, mode?: HideMode) => Promise<void>
+  handleRestoreCategory: (id: string, mode?: RestoreMode) => Promise<void>
+  handleUndoScheduledHide: (id: string) => Promise<void>
+  handleDeleteTransaction: (id: string) => Promise<void>
+  handleUpdateTransaction: (
+    id: string,
+    amount: string,
+    description: string,
+    date: string,
+    tagNames?: string[],
+    dayIsNullOverride?: boolean,
+    paymentSourceId?: string | null,
+    paymentSplitItems?: Array<{ paymentSourceId: string; amount: string }>
+  ) => Promise<void>
+  handleMoveTransaction: (id: string, targetCategoryId: string) => Promise<void>
+  handleOpenCategoryCalendarAddForDay: (categoryId: string, dayText: string) => void
+  handleOpenLevel1CalendarAddForDay: (level1Id: string, dayText: string) => void
+  toggleTransactionSelection: (transactionId: string) => void
+  handleLevel3DragStart: BudgetCategoryTreeProps['handleLevel3DragStart']
+  handleReorderLevel3: BudgetCategoryTreeProps['handleReorderLevel3']
+  handleLevel1DragStart: BudgetCategoryTreeProps['handleLevel1DragStart']
+  handleReorderLevel1: BudgetCategoryTreeProps['handleReorderLevel1']
+  handleReorderLevel2: BudgetCategoryTreeProps['handleReorderLevel2']
+
+  descriptionSuggestions: BudgetCategoryTreeProps['descriptionSuggestions']
+  getPaymentSourceOptionsForCategoryId: BudgetCategoryTreeProps['getPaymentSourceOptionsForCategoryId']
+  transactionTagsMap: Record<string, Tag[]>
+  transactionPaymentSplitsMap: Record<string, TransactionPaymentSplit[]>
+  onTagClick: BudgetCategoryTreeProps['onTagClick']
+  onDeleteDescriptionSuggestion: BudgetCategoryTreeProps['onDeleteDescriptionSuggestion']
+}
+
+export default function BudgetTreeSection({
+  sortedLevel1,
+  openLevel1Ids,
+  openLevel1CalendarIds,
+  openLevel2Ids,
+  openLevel3Ids,
+  selectedMonth,
+  isSelectedMonthLocked,
+  openAddSubcategoryFor,
+  newSubcategoryName,
+  selectedTransactionIds,
+  isReorderingLevel1,
+  reorderingLevel1Id,
+  reorderingLevel2Id,
+  styles,
+  level2SortMode,
+  setLevel2SortMode,
+  level2SortDirection,
+  setLevel2SortDirection,
+  level3SortMode,
+  setLevel3SortMode,
+  level3SortDirection,
+  setLevel3SortDirection,
+  toggleLevel1,
+  toggleLevel1Calendar,
+  toggleLevel2,
+  toggleLevel3,
+  setOpenAddSubcategoryFor,
+  setNewSubcategoryName,
+  getSortedLevel2Children,
+  getSortedLevel3Children,
+  getTransactionsForLevel1AndMonth,
+  getTransactionsForCategoryAndMonthForSelectedMonth,
+  getSumForCategoryForSelectedMonth,
+  getSumForLevel2ForSelectedMonth,
+  getCountForLevel2ForSelectedMonth,
+  getAmountNumber,
+  getMoveTargetsForTransaction,
+  getSignedAmountForTransaction,
+  getCalendarHeatmapVariantForLevel1Id,
+  handleAddSubcategory,
+  openTransactionCreator,
+  handleInlineSaveTransaction,
+  handleHideCategory,
+  handleRestoreCategory,
+  handleUndoScheduledHide,
+  handleDeleteTransaction,
+  handleUpdateTransaction,
+  handleMoveTransaction,
+  handleOpenCategoryCalendarAddForDay,
+  handleOpenLevel1CalendarAddForDay,
+  toggleTransactionSelection,
+  handleLevel3DragStart,
+  handleReorderLevel3,
+  handleLevel1DragStart,
+  handleReorderLevel1,
+  handleReorderLevel2,
+  descriptionSuggestions,
+  getPaymentSourceOptionsForCategoryId,
+  transactionTagsMap,
+  transactionPaymentSplitsMap,
+  onTagClick,
+  onDeleteDescriptionSuggestion,
+}: Props) {
+  return (
+    <div>
+      <div style={styles.sectionTitle}>Drzewo kategorii</div>
+
+      <div style={styles.sortBar}>
+        <div style={styles.sortGroup}>
+          <label htmlFor="level2-sort-mode" style={styles.sortLabel}>
+            Sortowanie L2
+          </label>
+          <select
+            id="level2-sort-mode"
+            value={level2SortMode}
+            onChange={(event) => setLevel2SortMode(event.target.value)}
+            style={styles.input}
+          >
+            <option value="default">domyślne</option>
+            <option value="manual">ręczne</option>
+            <option value="sum">według sumy</option>
+            <option value="frequency">według częstotliwości</option>
+          </select>
+
+          <label htmlFor="level2-sort-direction" style={styles.sortLabel}>
+            Kierunek L2
+          </label>
+          <select
+            id="level2-sort-direction"
+            value={level2SortDirection}
+            onChange={(event) => setLevel2SortDirection(event.target.value)}
+            style={styles.input}
+            disabled={level2SortMode !== 'sum' && level2SortMode !== 'frequency'}
+          >
+            <option value="asc">rosnąco</option>
+            <option value="desc">malejąco</option>
+          </select>
+        </div>
+
+        <div style={styles.sortGroup}>
+          <label htmlFor="level3-sort-mode" style={styles.sortLabel}>
+            Sortowanie L3
+          </label>
+          <select
+            id="level3-sort-mode"
+            value={level3SortMode}
+            onChange={(event) => setLevel3SortMode(event.target.value)}
+            style={styles.input}
+          >
+            <option value="default">domyślne</option>
+            <option value="manual">ręczne</option>
+            <option value="sum">według sumy</option>
+            <option value="frequency">według częstotliwości</option>
+          </select>
+
+          <label htmlFor="level3-sort-direction" style={styles.sortLabel}>
+            Kierunek L3
+          </label>
+          <select
+            id="level3-sort-direction"
+            value={level3SortDirection}
+            onChange={(event) => setLevel3SortDirection(event.target.value)}
+            style={styles.input}
+            disabled={level3SortMode !== 'sum' && level3SortMode !== 'frequency'}
+          >
+            <option value="asc">rosnąco</option>
+            <option value="desc">malejąco</option>
+          </select>
+        </div>
+      </div>
+
+      {sortedLevel1.length === 0 && (
+        <div style={styles.emptyStateCard}>Brak widocznych kategorii w wybranym miesiącu</div>
+      )}
+
+      <BudgetCategoryTree
+        sortedLevel1={sortedLevel1}
+        openLevel1Ids={openLevel1Ids}
+        openLevel1CalendarIds={openLevel1CalendarIds}
+        openLevel2Ids={openLevel2Ids}
+        openLevel3Ids={openLevel3Ids}
+        selectedMonth={selectedMonth}
+        isSelectedMonthLocked={isSelectedMonthLocked}
+        openAddSubcategoryFor={openAddSubcategoryFor}
+        newSubcategoryName={newSubcategoryName}
+        selectedTransactionIds={selectedTransactionIds}
+        isReorderingLevel1={isReorderingLevel1}
+        reorderingLevel1Id={reorderingLevel1Id}
+        reorderingLevel2Id={reorderingLevel2Id}
+        styles={styles}
+        toggleLevel1={toggleLevel1}
+        toggleLevel1Calendar={toggleLevel1Calendar}
+        toggleLevel2={toggleLevel2}
+        toggleLevel3={toggleLevel3}
+        setOpenAddSubcategoryFor={setOpenAddSubcategoryFor}
+        setNewSubcategoryName={setNewSubcategoryName}
+        getSortedLevel2Children={getSortedLevel2Children}
+        getSortedLevel3Children={getSortedLevel3Children}
+        getTransactionsForLevel1AndMonth={getTransactionsForLevel1AndMonth}
+        getTransactionsForCategoryAndMonthForSelectedMonth={
+          getTransactionsForCategoryAndMonthForSelectedMonth
+        }
+        getSumForCategoryForSelectedMonth={getSumForCategoryForSelectedMonth}
+        getSumForLevel2ForSelectedMonth={getSumForLevel2ForSelectedMonth}
+        getCountForLevel2ForSelectedMonth={getCountForLevel2ForSelectedMonth}
+        getAmountNumber={getAmountNumber}
+        getMoveTargetsForTransaction={getMoveTargetsForTransaction}
+        getSignedAmountForTransaction={getSignedAmountForTransaction}
+        getCalendarHeatmapVariantForLevel1Id={getCalendarHeatmapVariantForLevel1Id}
+        isCategoryClosingAfterSelectedMonth={isCategoryClosingAfterSelectedMonth}
+        handleAddSubcategory={handleAddSubcategory}
+        openTransactionCreator={openTransactionCreator}
+        handleInlineSaveTransaction={handleInlineSaveTransaction}
+        handleHideCategory={handleHideCategory}
+        handleRestoreCategory={handleRestoreCategory}
+        handleUndoScheduledHide={handleUndoScheduledHide}
+        handleDeleteTransaction={handleDeleteTransaction}
+        handleUpdateTransaction={handleUpdateTransaction}
+        handleMoveTransaction={handleMoveTransaction}
+        handleOpenCategoryCalendarAddForDay={handleOpenCategoryCalendarAddForDay}
+        handleOpenLevel1CalendarAddForDay={handleOpenLevel1CalendarAddForDay}
+        toggleTransactionSelection={toggleTransactionSelection}
+        handleLevel3DragStart={handleLevel3DragStart}
+        handleReorderLevel3={handleReorderLevel3}
+        handleLevel1DragStart={handleLevel1DragStart}
+        handleReorderLevel1={handleReorderLevel1}
+        handleReorderLevel2={handleReorderLevel2}
+        descriptionSuggestions={descriptionSuggestions}
+        getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
+        transactionTagsMap={transactionTagsMap}
+        transactionPaymentSplitsMap={transactionPaymentSplitsMap}
+        onTagClick={onTagClick}
+        onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
+      />
+    </div>
+  )
+}
+
+
+==================================================
 PLIK: components\BulkActionsBar.tsx
 ==================================================
 
@@ -2729,709 +3158,14 @@ export default function CategoryMigrationPrompt(props: Props) {
 
 
 ==================================================
-PLIK: components\DashboardGrid.tsx
+PLIK: components\dashboard-widget\DashboardWidgetContent.tsx
 ==================================================
 
 'use client'
 
-import { CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
-import {
-  DndContext,
-  DragMoveEvent,
-  DragStartEvent,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core'
-import DashboardWidgetTile, { DashboardResizeEdges } from './DashboardWidgetTile'
-import { DASHBOARD_GRID_COLUMNS, DASHBOARD_GRID_MAX_ROWS } from '../lib/dashboardWidgetConfig'
-import {
-  getDashboardLayoutHeight,
-  projectDashboardWidgets,
-} from '../lib/dashboardLayout'
-import { DashboardWidgetLayoutItem, DashboardWidgetType } from '../lib/dashboardTypes'
-import { DashboardStats, TopCategory } from '../lib/dashboardStats'
-import { Category, Transaction } from '../lib/budgetPageTypes'
-
-const DASHBOARD_GRID_GAP = 12
-const DASHBOARD_GRID_ROW_HEIGHT = 132
-
-type WidgetPixelRect = {
-  left: number
-  top: number
-  width: number
-  height: number
-}
-
-type DragSession = {
-  id: string
-  targetX: number
-  targetY: number
-}
-
-type ResizeSession = {
-  id: string
-  edges: DashboardResizeEdges
-  startClientX: number
-  startClientY: number
-  startLayout: DashboardWidgetLayoutItem
-  startRect: WidgetPixelRect
-  previewRect: WidgetPixelRect
-}
-
-const gridOuterStyle: CSSProperties = {
-  position: 'relative',
-  width: '100%',
-}
-
-const gridCanvasStyle: CSSProperties = {
-  position: 'relative',
-  width: '100%',
-  minHeight: DASHBOARD_GRID_ROW_HEIGHT,
-}
-
-const ghostStyle: CSSProperties = {
-  position: 'absolute',
-  borderRadius: 16,
-  border: '1px dashed #60a5fa',
-  background: 'rgba(96, 165, 250, 0.12)',
-  boxShadow: 'inset 0 0 0 1px rgba(96, 165, 250, 0.16)',
-  transition: 'transform 180ms ease, width 180ms ease, height 180ms ease',
-  pointerEvents: 'none',
-  zIndex: 1,
-}
-
-const getColumnWidth = (gridWidth: number) => {
-  if (gridWidth <= 0) return 0
-  return (gridWidth - DASHBOARD_GRID_GAP * (DASHBOARD_GRID_COLUMNS - 1)) / DASHBOARD_GRID_COLUMNS
-}
-
-const getPixelsForColumnSpan = (span: number, columnWidth: number) => {
-  if (span <= 0) return 0
-  return columnWidth * span + DASHBOARD_GRID_GAP * (span - 1)
-}
-
-const getPixelsForRowSpan = (span: number) => {
-  if (span <= 0) return 0
-  return DASHBOARD_GRID_ROW_HEIGHT * span + DASHBOARD_GRID_GAP * (span - 1)
-}
-
-const getGridHeightInPixels = (rows: number) => {
-  if (rows <= 0) return 0
-  return DASHBOARD_GRID_ROW_HEIGHT * rows + DASHBOARD_GRID_GAP * (rows - 1)
-}
-
-const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
-
-const getWidgetPixelRect = (
-  widget: DashboardWidgetLayoutItem,
-  columnWidth: number
-): WidgetPixelRect => {
-  return {
-    left: widget.x * (columnWidth + DASHBOARD_GRID_GAP),
-    top: widget.y * (DASHBOARD_GRID_ROW_HEIGHT + DASHBOARD_GRID_GAP),
-    width: getPixelsForColumnSpan(widget.width, columnWidth),
-    height: getPixelsForRowSpan(widget.height),
-  }
-}
-
-const getNearestSpanFromPixels = (
-  pixels: number,
-  maxSpan: number,
-  getPixelsForSpan: (span: number) => number
-) => {
-  let winner = 1
-  let minDistance = Number.POSITIVE_INFINITY
-
-  for (let span = 1; span <= maxSpan; span += 1) {
-    const distance = Math.abs(getPixelsForSpan(span) - pixels)
-
-    if (distance < minDistance) {
-      minDistance = distance
-      winner = span
-    }
-  }
-
-  return winner
-}
-
-type Props = {
-  widgets: DashboardWidgetLayoutItem[]
-  transactions: Transaction[]
-  selectedMonth: string
-  dashboardStats: DashboardStats
-  topExpenseCategories: TopCategory[]
-  latestTransactions: Transaction[]
-  categoriesById: Record<string, Category>
-  getSignedAmountForTransaction: (transaction: Transaction) => number
-  onWidgetTypeChange: (id: string, type: DashboardWidgetType) => void
-  onMoveWidget: (id: string, x: number, y: number) => void
-  onRemoveWidget: (id: string) => void
-  onResizeWidget: (
-    id: string,
-    nextLayout: { x: number; y: number; width: number; height: number }
-  ) => void
-  styles: Record<string, CSSProperties>
-}
-
-export default function DashboardGrid(props: Props) {
-  const {
-    widgets,
-    transactions,
-    selectedMonth,
-    dashboardStats,
-    topExpenseCategories,
-    latestTransactions,
-    categoriesById,
-    getSignedAmountForTransaction,
-    onWidgetTypeChange,
-    onMoveWidget,
-    onRemoveWidget,
-    onResizeWidget,
-    styles,
-  } = props
-
-  const gridRef = useRef<HTMLDivElement | null>(null)
-  const resizeSessionRef = useRef<ResizeSession | null>(null)
-
-  const [isMounted, setIsMounted] = useState(false)
-  const [gridWidth, setGridWidth] = useState(0)
-  const [dragSession, setDragSession] = useState<DragSession | null>(null)
-  const [resizeSession, setResizeSession] = useState<ResizeSession | null>(null)
-
-  const columnWidth = getColumnWidth(gridWidth)
-
-  const widgetsById = useMemo(() => {
-    return new Map(widgets.map((widget) => [widget.id, widget]))
-  }, [widgets])
-
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
-
-  useEffect(() => {
-    resizeSessionRef.current = resizeSession
-  }, [resizeSession])
-
-  useEffect(() => {
-    if (!isMounted) return
-
-    const element = gridRef.current
-    if (!element || typeof ResizeObserver === 'undefined') return
-
-    const updateWidth = (nextWidth: number) => {
-      setGridWidth((prev) => {
-        if (Math.round(prev) === Math.round(nextWidth)) return prev
-        return nextWidth
-      })
-    }
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      const nextWidth = entries[0]?.contentRect.width ?? 0
-      updateWidth(nextWidth)
-    })
-
-    resizeObserver.observe(element)
-    updateWidth(element.getBoundingClientRect().width)
-
-    return () => {
-      resizeObserver.disconnect()
-    }
-  }, [isMounted])
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 6,
-      },
-    })
-  )
-
-  const previewWidgets = useMemo(() => {
-    if (!dragSession) return widgets
-
-    const activeWidget = widgetsById.get(dragSession.id)
-    if (!activeWidget) return widgets
-
-    return projectDashboardWidgets(widgets, {
-      id: activeWidget.id,
-      x: dragSession.targetX,
-      y: dragSession.targetY,
-      width: activeWidget.width,
-      height: activeWidget.height,
-    })
-  }, [dragSession, widgets, widgetsById])
-
-  const previewWidgetsById = useMemo(() => {
-    return new Map(previewWidgets.map((widget) => [widget.id, widget]))
-  }, [previewWidgets])
-
-  const activeDragWidget = dragSession ? widgetsById.get(dragSession.id) ?? null : null
-  const activePreviewWidget = dragSession ? previewWidgetsById.get(dragSession.id) ?? null : null
-  const activeDragGhostRect =
-    activePreviewWidget && columnWidth > 0
-      ? getWidgetPixelRect(activePreviewWidget, columnWidth)
-      : null
-
-  const layoutHeightRows = getDashboardLayoutHeight(previewWidgets)
-  const layoutHeightPixels = getGridHeightInPixels(layoutHeightRows)
-  const resizeHeightPixels = resizeSession
-    ? resizeSession.previewRect.top + resizeSession.previewRect.height
-    : 0
-  const gridHeight = Math.max(layoutHeightPixels, resizeHeightPixels, DASHBOARD_GRID_ROW_HEIGHT)
-
-  const handleDragStart = (event: DragStartEvent) => {
-    if (resizeSessionRef.current || columnWidth <= 0) return
-
-    const activeWidget = widgetsById.get(String(event.active.id))
-    if (!activeWidget) return
-
-    setDragSession({
-      id: activeWidget.id,
-      targetX: activeWidget.x,
-      targetY: activeWidget.y,
-    })
-  }
-
-  const handleDragMove = (event: DragMoveEvent) => {
-    if (!columnWidth) return
-
-    setDragSession((currentSession) => {
-      if (!currentSession) return currentSession
-
-      const activeWidget = widgetsById.get(currentSession.id)
-      if (!activeWidget) return currentSession
-
-      const rect = getWidgetPixelRect(activeWidget, columnWidth)
-      const left = rect.left + event.delta.x
-      const top = rect.top + event.delta.y
-      const nextTargetX = clamp(
-        Math.round(left / (columnWidth + DASHBOARD_GRID_GAP)),
-        0,
-        DASHBOARD_GRID_COLUMNS - activeWidget.width
-      )
-      const nextTargetY = Math.max(
-        0,
-        Math.round(top / (DASHBOARD_GRID_ROW_HEIGHT + DASHBOARD_GRID_GAP))
-      )
-
-      if (currentSession.targetX === nextTargetX && currentSession.targetY === nextTargetY) {
-        return currentSession
-      }
-
-      return {
-        ...currentSession,
-        targetX: nextTargetX,
-        targetY: nextTargetY,
-      }
-    })
-  }
-
-  const stopDragging = () => {
-    setDragSession(null)
-  }
-
-  const handleDragEnd = () => {
-    if (!dragSession) return
-
-    const activeWidget = widgetsById.get(dragSession.id)
-
-    if (
-      activeWidget &&
-      (activeWidget.x !== dragSession.targetX || activeWidget.y !== dragSession.targetY)
-    ) {
-      onMoveWidget(dragSession.id, dragSession.targetX, dragSession.targetY)
-    }
-
-    stopDragging()
-  }
-
-  const handleResizeStart = (
-    id: string,
-    edges: DashboardResizeEdges,
-    event: { clientX: number; clientY: number }
-  ) => {
-    if (columnWidth <= 0) return
-
-    const widget = widgetsById.get(id)
-    if (!widget) return
-
-    const nextSession = {
-      id,
-      edges,
-      startClientX: event.clientX,
-      startClientY: event.clientY,
-      startLayout: widget,
-      startRect: getWidgetPixelRect(widget, columnWidth),
-      previewRect: getWidgetPixelRect(widget, columnWidth),
-    }
-
-    resizeSessionRef.current = nextSession
-    setResizeSession(nextSession)
-  }
-
-  useEffect(() => {
-    if (!resizeSession || columnWidth <= 0) return
-
-    const sessionAtStart = resizeSession
-    const maxRightWidth = getPixelsForColumnSpan(
-      DASHBOARD_GRID_COLUMNS - sessionAtStart.startLayout.x,
-      columnWidth
-    )
-    const maxLeftWidth = getPixelsForColumnSpan(
-      Math.min(
-        DASHBOARD_GRID_COLUMNS,
-        sessionAtStart.startLayout.x + sessionAtStart.startLayout.width
-      ),
-      columnWidth
-    )
-    const maxBottomHeight = getPixelsForRowSpan(DASHBOARD_GRID_MAX_ROWS)
-    const maxTopHeight = getPixelsForRowSpan(
-      Math.min(
-        DASHBOARD_GRID_MAX_ROWS,
-        sessionAtStart.startLayout.y + sessionAtStart.startLayout.height
-      )
-    )
-
-    const handlePointerMove = (event: globalThis.PointerEvent) => {
-      const currentSession = resizeSessionRef.current
-      if (!currentSession) return
-
-      const deltaX = event.clientX - currentSession.startClientX
-      const deltaY = event.clientY - currentSession.startClientY
-      const nextRect = { ...currentSession.startRect }
-
-      if (currentSession.edges.right) {
-        nextRect.width = clamp(
-          currentSession.startRect.width + deltaX,
-          getPixelsForColumnSpan(1, columnWidth),
-          maxRightWidth
-        )
-      }
-
-      if (currentSession.edges.left) {
-        nextRect.width = clamp(
-          currentSession.startRect.width - deltaX,
-          getPixelsForColumnSpan(1, columnWidth),
-          maxLeftWidth
-        )
-        nextRect.left =
-          currentSession.startRect.left + (currentSession.startRect.width - nextRect.width)
-      }
-
-      if (currentSession.edges.bottom) {
-        nextRect.height = clamp(
-          currentSession.startRect.height + deltaY,
-          getPixelsForRowSpan(1),
-          maxBottomHeight
-        )
-      }
-
-      if (currentSession.edges.top) {
-        nextRect.height = clamp(
-          currentSession.startRect.height - deltaY,
-          getPixelsForRowSpan(1),
-          maxTopHeight
-        )
-        nextRect.top =
-          currentSession.startRect.top + (currentSession.startRect.height - nextRect.height)
-      }
-
-      setResizeSession((prev) => {
-        if (!prev) return null
-
-        if (
-          prev.previewRect.left === nextRect.left &&
-          prev.previewRect.top === nextRect.top &&
-          prev.previewRect.width === nextRect.width &&
-          prev.previewRect.height === nextRect.height
-        ) {
-          return prev
-        }
-
-        const updatedSession = {
-          ...prev,
-          previewRect: nextRect,
-        }
-
-        resizeSessionRef.current = updatedSession
-        return updatedSession
-      })
-    }
-
-    const handlePointerUp = () => {
-      const currentSession = resizeSessionRef.current
-      if (!currentSession) return
-
-      const rightEdge = currentSession.startLayout.x + currentSession.startLayout.width
-      const bottomEdge = currentSession.startLayout.y + currentSession.startLayout.height
-      const maxWidthForSnap = currentSession.edges.left
-        ? rightEdge
-        : DASHBOARD_GRID_COLUMNS - currentSession.startLayout.x
-      const maxHeightForSnap = currentSession.edges.top
-        ? Math.min(DASHBOARD_GRID_MAX_ROWS, bottomEdge)
-        : DASHBOARD_GRID_MAX_ROWS
-      const nextWidth = getNearestSpanFromPixels(
-        currentSession.previewRect.width,
-        maxWidthForSnap,
-        (span) => getPixelsForColumnSpan(span, columnWidth)
-      )
-      const nextHeight = getNearestSpanFromPixels(
-        currentSession.previewRect.height,
-        maxHeightForSnap,
-        (span) => getPixelsForRowSpan(span)
-      )
-      const nextX = currentSession.edges.left ? rightEdge - nextWidth : currentSession.startLayout.x
-      const nextY = currentSession.edges.top ? bottomEdge - nextHeight : currentSession.startLayout.y
-
-      if (
-        nextX !== currentSession.startLayout.x ||
-        nextY !== currentSession.startLayout.y ||
-        nextWidth !== currentSession.startLayout.width ||
-        nextHeight !== currentSession.startLayout.height
-      ) {
-        onResizeWidget(currentSession.id, {
-          x: nextX,
-          y: nextY,
-          width: nextWidth,
-          height: nextHeight,
-        })
-      }
-
-      resizeSessionRef.current = null
-      setResizeSession(null)
-    }
-
-    window.addEventListener('pointermove', handlePointerMove)
-    window.addEventListener('pointerup', handlePointerUp, { once: true })
-    window.addEventListener('pointercancel', handlePointerUp, { once: true })
-
-    return () => {
-      window.removeEventListener('pointermove', handlePointerMove)
-      window.removeEventListener('pointerup', handlePointerUp)
-      window.removeEventListener('pointercancel', handlePointerUp)
-    }
-  }, [columnWidth, onResizeWidget, resizeSession])
-
-  if (!isMounted) {
-    return <div style={gridOuterStyle} suppressHydrationWarning />
-  }
-
-  if (widgets.length === 0) {
-    return (
-      <div style={styles.emptyStateCard}>
-        Dashboard jest pusty. Dodaj pierwszy kafel, a potem wybierz statystykę na samym kaflu.
-      </div>
-    )
-  }
-
-  return (
-    <DndContext
-      sensors={sensors}
-      onDragStart={handleDragStart}
-      onDragMove={handleDragMove}
-      onDragEnd={handleDragEnd}
-      onDragCancel={stopDragging}
-    >
-      <div ref={gridRef} style={gridOuterStyle} suppressHydrationWarning>
-        <div style={{ ...gridCanvasStyle, height: gridHeight }}>
-          {dragSession && activeDragGhostRect && activeDragWidget && (
-            <div
-              aria-hidden="true"
-              style={{
-                ...ghostStyle,
-                width: activeDragGhostRect.width,
-                height: activeDragGhostRect.height,
-                transform: `translate(${activeDragGhostRect.left}px, ${activeDragGhostRect.top}px)`,
-              }}
-            />
-          )}
-
-          {columnWidth > 0 &&
-            widgets.map((widget) => {
-              const previewWidget = previewWidgetsById.get(widget.id) ?? widget
-              const isActiveDragWidget = dragSession?.id === widget.id
-              const isActiveResizeWidget = resizeSession?.id === widget.id
-              const rect =
-                isActiveResizeWidget && resizeSession
-                  ? resizeSession.previewRect
-                  : getWidgetPixelRect(isActiveDragWidget ? widget : previewWidget, columnWidth)
-
-              return (
-                <DashboardWidgetTile
-                  key={widget.id}
-                  widget={
-                    isActiveResizeWidget && resizeSession
-                      ? {
-                          ...widget,
-                          x: resizeSession.startLayout.x,
-                          y: resizeSession.startLayout.y,
-                          width: widget.width,
-                          height: widget.height,
-                        }
-                      : previewWidget
-                  }
-                  rect={rect}
-                  transactions={transactions}
-                  selectedMonth={selectedMonth}
-                  dashboardStats={dashboardStats}
-                  topExpenseCategories={topExpenseCategories}
-                  latestTransactions={latestTransactions}
-                  categoriesById={categoriesById}
-                  getSignedAmountForTransaction={getSignedAmountForTransaction}
-                  isDragging={isActiveDragWidget}
-                  isDropBlocked={false}
-                  isInteractionLocked={resizeSession !== null}
-                  isResizeActive={isActiveResizeWidget}
-                  onWidgetTypeChange={onWidgetTypeChange}
-                  onRemove={onRemoveWidget}
-                  onResizeStart={handleResizeStart}
-                  styles={styles}
-                />
-              )
-            })}
-        </div>
-      </div>
-    </DndContext>
-  )
-}
-
-
-
-==================================================
-PLIK: components\DashboardPanel.tsx
-==================================================
-
-'use client'
-
-import { CSSProperties, useMemo } from 'react'
-import DashboardGrid from './DashboardGrid'
-import { Category, Transaction } from '../lib/budgetPageTypes'
-import {
-  getDashboardStats,
-  getLatestTransactions,
-  getTopExpenseCategories,
-} from '../lib/dashboardStats'
-import { useDashboardLayout } from '../lib/useDashboardLayout'
-
-const panelStyle: CSSProperties = {
-  marginBottom: 20,
-  background: '#ffffff',
-  border: '1px solid #e5e7eb',
-  borderRadius: 18,
-  padding: 16,
-  boxShadow: '0 8px 24px rgba(15, 23, 42, 0.05)',
-}
-
-const headerStyle: CSSProperties = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  gap: 12,
-  flexWrap: 'wrap',
-  alignItems: 'flex-start',
-  marginBottom: 14,
-}
-
-type Props = {
-  profileId: string
-  styles: Record<string, CSSProperties>
-  transactions: Transaction[]
-  categoriesById: Record<string, Category>
-  selectedMonth: string
-  getSignedAmountForTransaction: (transaction: Transaction) => number
-}
-
-export default function DashboardPanel({
-  profileId,
-  styles,
-  transactions,
-  categoriesById,
-  selectedMonth,
-  getSignedAmountForTransaction,
-}: Props) {
-  const { widgets, addWidget, updateWidgetType, removeWidget, resizeWidget, moveWidget } =
-    useDashboardLayout({
-      profileId,
-    })
-
-  const dashboardStats = useMemo(
-    () =>
-      getDashboardStats(
-        transactions,
-        categoriesById,
-        selectedMonth,
-        getSignedAmountForTransaction
-      ),
-    [transactions, categoriesById, selectedMonth, getSignedAmountForTransaction]
-  )
-
-  const topExpenseCategories = useMemo(
-    () =>
-      getTopExpenseCategories(
-        transactions,
-        categoriesById,
-        selectedMonth,
-        getSignedAmountForTransaction
-      ),
-    [transactions, categoriesById, selectedMonth, getSignedAmountForTransaction]
-  )
-
-  const latestTransactions = useMemo(
-    () => getLatestTransactions(transactions, selectedMonth, 8),
-    [transactions, selectedMonth]
-  )
-
-  return (
-    <section style={panelStyle}>
-      <div style={headerStyle}>
-        <div>
-          <div style={styles.sectionTitle}>Dashboard</div>
-          <div style={{ ...styles.pageSubtitle, marginBottom: 0 }}>
-            Dodaj kafel, a potem na samym kaflu wybierz, jaką statystykę ma pokazywać.
-          </div>
-        </div>
-
-        <button type="button" style={styles.primaryButton} onClick={addWidget}>
-          Dodaj kafel
-        </button>
-      </div>
-
-      <DashboardGrid
-        widgets={widgets}
-        transactions={transactions}
-        selectedMonth={selectedMonth}
-        dashboardStats={dashboardStats}
-        topExpenseCategories={topExpenseCategories}
-        latestTransactions={latestTransactions}
-        categoriesById={categoriesById}
-        getSignedAmountForTransaction={getSignedAmountForTransaction}
-        onWidgetTypeChange={updateWidgetType}
-        onMoveWidget={moveWidget}
-        onRemoveWidget={removeWidget}
-        onResizeWidget={resizeWidget}
-        styles={styles}
-      />
-    </section>
-  )
-}
-
-
-
-==================================================
-PLIK: components\DashboardWidgetTile.tsx
-==================================================
-
-'use client'
-
-import { CSSProperties, PointerEvent, useMemo, useState } from 'react'
-import { useDraggable } from '@dnd-kit/core'
-import { CSS } from '@dnd-kit/utilities'
-import {
-  DASHBOARD_WIDGET_DEFINITION_BY_TYPE,
-  DASHBOARD_WIDGET_DEFINITIONS,
-} from '../lib/dashboardWidgetConfig'
-import { DashboardWidgetLayoutItem, DashboardWidgetType } from '../lib/dashboardTypes'
-import { Category, Transaction } from '../lib/budgetPageTypes'
+import { useMemo, useState } from 'react'
+import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
+import type { Category, Transaction } from '../../lib/budgetPageTypes'
 import {
   DashboardCategoryTrend,
   DashboardDailyCashflowPoint,
@@ -3445,325 +3179,44 @@ import {
   getDashboardForecastStats,
   getDashboardMonthOverMonthStats,
   getDashboardTrendStats,
-} from '../lib/dashboardStats'
-
-const RESIZE_HIT_AREA = 12
-const GREEN = '#15803d'
-const RED = '#b91c1c'
-const NEUTRAL = '#111827'
-const MUTED = '#64748b'
-const SOFT_TEXT = '#6b7280'
-const SOFT_BORDER = '#e5e7eb'
-const BLUE = '#2563eb'
-const SERIES_COLORS = [RED, GREEN, BLUE, '#7c3aed', '#ea580c']
-
-export type DashboardResizeEdges = {
-  left: boolean
-  right: boolean
-  top: boolean
-  bottom: boolean
-}
-
-type DashboardWidgetPixelRect = {
-  left: number
-  top: number
-  width: number
-  height: number
-}
-
-type DayMetric = {
-  day: number
-  date: string
-  income: number
-  expense: number
-  balance: number
-  count: number
-}
-
-type CategoryBreakdown = {
-  id: string
-  name: string
-  total: number
-}
-
-type MonthMetrics = {
-  days: DayMetric[]
-  topIncomeCategories: CategoryBreakdown[]
-  topExpenseCategories: CategoryBreakdown[]
-  mostExpensiveDay: DayMetric | null
-  topExpenseCategory: CategoryBreakdown | null
-  daysWithEntries: number
-  daysWithoutEntries: number
-  averageDailyIncome: number
-  averageDailyExpense: number
-}
-
-type LineSeries = {
-  id: string
-  label: string
-  color: string
-  values: number[]
-}
-
-const tileStyle: CSSProperties = {
-  position: 'relative',
-  width: '100%',
-  height: '100%',
-  minHeight: 132,
-  background: '#ffffff',
-  borderWidth: 1,
-  borderStyle: 'solid',
-  borderColor: SOFT_BORDER,
-  borderRadius: 16,
-  boxShadow: '0 8px 22px rgba(15, 23, 42, 0.06)',
-  padding: 12,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 8,
-  transition: 'box-shadow 180ms ease, border-color 180ms ease',
-}
-
-const tileHeaderStyle: CSSProperties = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'flex-start',
-  gap: 8,
-}
-
-const selectStyle: CSSProperties = {
-  width: '100%',
-  borderWidth: 1,
-  borderStyle: 'solid',
-  borderColor: '#d1d5db',
-  borderRadius: 10,
-  padding: '7px 9px',
-  fontSize: 13,
-  fontWeight: 600,
-  background: '#ffffff',
-  color: NEUTRAL,
-}
-
-const metaStyle: CSSProperties = {
-  marginTop: 4,
-  fontSize: 11,
-  lineHeight: 1.35,
-  color: '#9ca3af',
-}
-
-const contentStyle: CSSProperties = {
-  flex: 1,
-  borderRadius: 12,
-  background: '#f9fafb',
-  padding: 12,
-  color: NEUTRAL,
-  overflow: 'hidden',
-  minHeight: 0,
-}
-
-const valueStyle: CSSProperties = {
-  fontSize: 26,
-  fontWeight: 700,
-  lineHeight: 1.08,
-  letterSpacing: 0,
-}
-
-const compactValueStyle: CSSProperties = {
-  ...valueStyle,
-  fontSize: 22,
-}
-
-const smallTextStyle: CSSProperties = {
-  color: SOFT_TEXT,
-  fontSize: 12,
-  lineHeight: 1.35,
-}
-
-const labelStyle: CSSProperties = {
-  color: MUTED,
-  fontSize: 11,
-  lineHeight: 1.25,
-}
-
-const listStyle: CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 7,
-}
-
-const listRowStyle: CSSProperties = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'baseline',
-  gap: 10,
-  fontSize: 13,
-  lineHeight: 1.25,
-}
-
-const metricGridStyle: CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-  gap: 8,
-}
-
-const metricBoxStyle: CSSProperties = {
-  border: `1px solid ${SOFT_BORDER}`,
-  borderRadius: 10,
-  background: '#ffffff',
-  padding: 9,
-  minWidth: 0,
-}
-
-const progressTrackStyle: CSSProperties = {
-  width: '100%',
-  height: 7,
-  borderRadius: 999,
-  background: '#e5e7eb',
-  overflow: 'hidden',
-  marginTop: 5,
-}
-
-const heatmapStyle: CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
-  gap: 4,
-}
-
-const controlsStyle: CSSProperties = {
-  display: 'flex',
-  gap: 8,
-  alignItems: 'center',
-  justifyContent: 'space-between',
-}
-
-const dragHandleStyle: CSSProperties = {
-  width: 32,
-  height: 32,
-  borderRadius: 10,
-  borderWidth: 1,
-  borderStyle: 'solid',
-  borderColor: '#d1d5db',
-  background: '#f9fafb',
-  color: '#374151',
-  cursor: 'grab',
-  touchAction: 'none',
-  fontWeight: 700,
-  lineHeight: 1,
-}
-
-const resizeHintStyle: CSSProperties = {
-  fontSize: 11,
-  color: '#94a3b8',
-}
-
-const formatMoney = (value: number) => `${value.toFixed(2)} zł`
-
-const formatPercent = (value: number) => `${value.toFixed(1)}%`
-
-const formatChange = (percent: number | null) => (percent === null ? 'brak bazy' : formatPercent(percent))
-
-const getColorForMoney = (value: number) => {
-  if (value > 0) return GREEN
-  if (value < 0) return RED
-  return NEUTRAL
-}
-
-const getExpenseChangeColor = (value: number) => {
-  if (value > 0) return RED
-  if (value < 0) return GREEN
-  return MUTED
-}
-
-const getPaceLabel = (status: 'calm' | 'watch' | 'fast') => {
-  if (status === 'fast') return 'Za szybko'
-  if (status === 'watch') return 'Uważaj'
-  return 'Spokojnie'
-}
-
-const getPaceColor = (status: 'calm' | 'watch' | 'fast') => {
-  if (status === 'fast') return RED
-  if (status === 'watch') return '#b45309'
-  return GREEN
-}
-
-const getRiskColor = (level: 'none' | 'low' | 'medium' | 'high') => {
-  if (level === 'high') return RED
-  if (level === 'medium') return '#b45309'
-  if (level === 'low') return GREEN
-  return MUTED
-}
-
-const clampPercent = (value: number) => {
-  if (!Number.isFinite(value)) return 0
-  return Math.max(0, Math.min(100, value))
-}
-
-const getTransactionTime = (transaction: Transaction) => transaction.created_at ?? ''
-
-const compareTransactionsByDate = (left: Transaction, right: Transaction) => {
-  const dateCompare = right.date.localeCompare(left.date)
-  if (dateCompare !== 0) return dateCompare
-
-  return getTransactionTime(right).localeCompare(getTransactionTime(left))
-}
-
-const isTransactionInMonth = (transaction: Transaction, selectedMonth: string) => {
-  return transaction.date.startsWith(selectedMonth)
-}
-
-const getDayFromDate = (date: string) => {
-  const day = Number(date.slice(8, 10))
-  return Number.isFinite(day) ? day : 0
-}
-
-const getDaysInMonth = (selectedMonth: string) => {
-  const [year, month] = selectedMonth.split('-').map(Number)
-  if (!year || !month) return 31
-
-  return new Date(year, month, 0).getDate()
-}
-
-const areResizeEdgesEqual = (
-  left: DashboardResizeEdges | null,
-  right: DashboardResizeEdges | null
-) => {
-  if (left === right) return true
-  if (!left || !right) return false
-
-  return (
-    left.left === right.left &&
-    left.right === right.right &&
-    left.top === right.top &&
-    left.bottom === right.bottom
-  )
-}
-
-const getResizeEdgesFromPointer = (
-  rect: DOMRect,
-  clientX: number,
-  clientY: number
-): DashboardResizeEdges | null => {
-  const nearLeft = clientX - rect.left <= RESIZE_HIT_AREA
-  const nearRight = rect.right - clientX <= RESIZE_HIT_AREA
-  const nearTop = clientY - rect.top <= RESIZE_HIT_AREA
-  const nearBottom = rect.bottom - clientY <= RESIZE_HIT_AREA
-
-  if (!nearLeft && !nearRight && !nearTop && !nearBottom) return null
-
-  return {
-    left: nearLeft,
-    right: nearRight,
-    top: nearTop,
-    bottom: nearBottom,
-  }
-}
-
-const getCursorForResizeEdges = (edges: DashboardResizeEdges | null) => {
-  if (!edges) return 'default'
-  if ((edges.left && edges.top) || (edges.right && edges.bottom)) return 'nwse-resize'
-  if ((edges.right && edges.top) || (edges.left && edges.bottom)) return 'nesw-resize'
-  if (edges.left || edges.right) return 'ew-resize'
-  return 'ns-resize'
-}
+} from '../../lib/dashboardStats'
+import type { CategoryBreakdown, DayMetric, LineSeries, MonthMetrics } from './dashboardWidgetTileTypes'
+import {
+  BLUE,
+  GREEN,
+  MUTED,
+  NEUTRAL,
+  RED,
+  SERIES_COLORS,
+  SOFT_BORDER,
+  SOFT_TEXT,
+  contentStyle,
+  compactValueStyle,
+  heatmapStyle,
+  labelStyle,
+  listRowStyle,
+  listStyle,
+  metricBoxStyle,
+  metricGridStyle,
+  progressTrackStyle,
+  smallTextStyle,
+  valueStyle,
+} from './dashboardWidgetTileStyles'
+import {
+  clampPercent,
+  compareTransactionsByDate,
+  formatChange,
+  formatMoney,
+  formatPercent,
+  getColorForMoney,
+  getDayFromDate,
+  getDaysInMonth,
+  getExpenseChangeColor,
+  getPaceColor,
+  getPaceLabel,
+  getRiskColor,
+  isTransactionInMonth,
+} from './dashboardWidgetTileUtils'
 
 const getTransactionLabel = (
   transaction: Transaction,
@@ -4334,7 +3787,7 @@ type WidgetContentProps = {
   getSignedAmountForTransaction: (transaction: Transaction) => number
 }
 
-function DashboardWidgetContent({
+export default function DashboardWidgetContent({
   widget,
   transactions,
   selectedMonth,
@@ -5423,7 +4876,410 @@ function DashboardWidgetContent({
   )
 }
 
-type Props = {
+
+
+==================================================
+PLIK: components\dashboard-widget\DashboardWidgetControls.tsx
+==================================================
+
+import type { CSSProperties } from 'react'
+import { controlsStyle, resizeHintStyle } from './dashboardWidgetTileStyles'
+
+type DashboardWidgetControlsProps = {
+  widgetId: string
+  widgetWidth: number
+  styles: Record<string, CSSProperties>
+  onRemove: (id: string) => void
+}
+
+export default function DashboardWidgetControls({
+  widgetId,
+  widgetWidth,
+  styles,
+  onRemove,
+}: DashboardWidgetControlsProps) {
+  return (
+    <div style={controlsStyle}>
+      <div style={resizeHintStyle}>{widgetWidth > 1 ? 'Zmień rozmiar krawędzią.' : ''}</div>
+
+      <button
+        type="button"
+        data-dashboard-ignore-resize="true"
+        style={styles.dangerButton}
+        onClick={() => onRemove(widgetId)}
+      >
+        Usuń
+      </button>
+    </div>
+  )
+}
+
+
+
+==================================================
+PLIK: components\dashboard-widget\DashboardWidgetFrame.tsx
+==================================================
+
+import type { CSSProperties, PointerEventHandler, ReactNode } from 'react'
+import { BLUE, tileStyle } from './dashboardWidgetTileStyles'
+import type { DashboardResizeEdges } from './dashboardWidgetTileTypes'
+
+type DashboardWidgetFrameProps = {
+  wrapperRef: (element: HTMLElement | null) => void
+  wrapperStyle: CSSProperties
+  cursor: string
+  isDragging: boolean
+  isResizeActive: boolean
+  isDropBlocked: boolean
+  hoveredResizeEdges: DashboardResizeEdges | null
+  onPointerMove: PointerEventHandler<HTMLElement>
+  onPointerLeave: PointerEventHandler<HTMLElement>
+  onPointerDown: PointerEventHandler<HTMLElement>
+  children: ReactNode
+}
+
+export default function DashboardWidgetFrame({
+  wrapperRef,
+  wrapperStyle,
+  cursor,
+  isDragging,
+  isResizeActive,
+  isDropBlocked,
+  hoveredResizeEdges,
+  onPointerMove,
+  onPointerLeave,
+  onPointerDown,
+  children,
+}: DashboardWidgetFrameProps) {
+  return (
+    <article ref={wrapperRef} style={wrapperStyle}>
+      <div
+        style={{
+          ...tileStyle,
+          cursor,
+          borderColor:
+            isDragging || isResizeActive
+              ? BLUE
+              : hoveredResizeEdges
+                ? '#60a5fa'
+                : tileStyle.borderColor,
+          boxShadow:
+            isDragging || isResizeActive
+              ? '0 18px 36px rgba(37, 99, 235, 0.16)'
+              : tileStyle.boxShadow,
+          opacity: isDropBlocked ? 0.82 : 1,
+        }}
+        onPointerMove={onPointerMove}
+        onPointerLeave={onPointerLeave}
+        onPointerDown={onPointerDown}
+      >
+        {children}
+      </div>
+    </article>
+  )
+}
+
+
+
+==================================================
+PLIK: components\dashboard-widget\DashboardWidgetHeader.tsx
+==================================================
+
+import type { ButtonHTMLAttributes } from 'react'
+import { DASHBOARD_WIDGET_DEFINITIONS } from '../../lib/dashboardWidgetConfig'
+import type {
+  DashboardWidgetDefinition,
+  DashboardWidgetLayoutItem,
+  DashboardWidgetType,
+} from '../../lib/dashboardTypes'
+import {
+  dragHandleStyle,
+  metaStyle,
+  selectStyle,
+  tileHeaderStyle,
+} from './dashboardWidgetTileStyles'
+
+type DashboardWidgetHeaderProps = {
+  widget: DashboardWidgetLayoutItem
+  safeDefinition: DashboardWidgetDefinition
+  hasKnownDefinition: boolean
+  dragHandleProps: ButtonHTMLAttributes<HTMLButtonElement>
+  onWidgetTypeChange: (id: string, type: DashboardWidgetType) => void
+}
+
+export default function DashboardWidgetHeader({
+  widget,
+  safeDefinition,
+  hasKnownDefinition,
+  dragHandleProps,
+  onWidgetTypeChange,
+}: DashboardWidgetHeaderProps) {
+  return (
+    <div style={tileHeaderStyle}>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <select
+          data-dashboard-ignore-resize="true"
+          value={hasKnownDefinition ? widget.type : safeDefinition.type}
+          onChange={(event) =>
+            onWidgetTypeChange(widget.id, event.target.value as DashboardWidgetType)
+          }
+          style={selectStyle}
+          aria-label="Wybierz statystykę na kaflu"
+        >
+          {DASHBOARD_WIDGET_DEFINITIONS.map((item) => (
+            <option key={item.type} value={item.type}>
+              {item.title}
+            </option>
+          ))}
+        </select>
+
+        {widget.width > 1 && (
+          <div style={metaStyle}>
+            {safeDefinition.description} · {widget.width}x{widget.height}
+          </div>
+        )}
+      </div>
+
+      <button
+        type="button"
+        data-dashboard-ignore-resize="true"
+        style={dragHandleStyle}
+        aria-label={`Przeciągnij widget ${safeDefinition.title}`}
+        {...dragHandleProps}
+      >
+        ⋮⋮
+      </button>
+    </div>
+  )
+}
+
+
+
+==================================================
+PLIK: components\dashboard-widget\dashboardWidgetTileStyles.ts
+==================================================
+
+import type { CSSProperties } from 'react'
+
+export const RESIZE_HIT_AREA = 12
+export const GREEN = '#15803d'
+export const RED = '#b91c1c'
+export const NEUTRAL = '#111827'
+export const MUTED = '#64748b'
+export const SOFT_TEXT = '#6b7280'
+export const SOFT_BORDER = '#e5e7eb'
+export const BLUE = '#2563eb'
+export const SERIES_COLORS = [RED, GREEN, BLUE, '#7c3aed', '#ea580c']
+export const tileStyle: CSSProperties = {
+  position: 'relative',
+  width: '100%',
+  height: '100%',
+  minHeight: 132,
+  background: '#ffffff',
+  borderWidth: 1,
+  borderStyle: 'solid',
+  borderColor: SOFT_BORDER,
+  borderRadius: 16,
+  boxShadow: '0 8px 22px rgba(15, 23, 42, 0.06)',
+  padding: 12,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 8,
+  transition: 'box-shadow 180ms ease, border-color 180ms ease',
+}
+
+export const tileHeaderStyle: CSSProperties = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  gap: 8,
+}
+
+export const selectStyle: CSSProperties = {
+  width: '100%',
+  borderWidth: 1,
+  borderStyle: 'solid',
+  borderColor: '#d1d5db',
+  borderRadius: 10,
+  padding: '7px 9px',
+  fontSize: 13,
+  fontWeight: 600,
+  background: '#ffffff',
+  color: NEUTRAL,
+}
+
+export const metaStyle: CSSProperties = {
+  marginTop: 4,
+  fontSize: 11,
+  lineHeight: 1.35,
+  color: '#9ca3af',
+}
+
+export const contentStyle: CSSProperties = {
+  flex: 1,
+  borderRadius: 12,
+  background: '#f9fafb',
+  padding: 12,
+  color: NEUTRAL,
+  overflow: 'hidden',
+  minHeight: 0,
+}
+
+export const valueStyle: CSSProperties = {
+  fontSize: 26,
+  fontWeight: 700,
+  lineHeight: 1.08,
+  letterSpacing: 0,
+}
+
+export const compactValueStyle: CSSProperties = {
+  ...valueStyle,
+  fontSize: 22,
+}
+
+export const smallTextStyle: CSSProperties = {
+  color: SOFT_TEXT,
+  fontSize: 12,
+  lineHeight: 1.35,
+}
+
+export const labelStyle: CSSProperties = {
+  color: MUTED,
+  fontSize: 11,
+  lineHeight: 1.25,
+}
+
+export const listStyle: CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 7,
+}
+
+export const listRowStyle: CSSProperties = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'baseline',
+  gap: 10,
+  fontSize: 13,
+  lineHeight: 1.25,
+}
+
+export const metricGridStyle: CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+  gap: 8,
+}
+
+export const metricBoxStyle: CSSProperties = {
+  border: `1px solid ${SOFT_BORDER}`,
+  borderRadius: 10,
+  background: '#ffffff',
+  padding: 9,
+  minWidth: 0,
+}
+
+export const progressTrackStyle: CSSProperties = {
+  width: '100%',
+  height: 7,
+  borderRadius: 999,
+  background: '#e5e7eb',
+  overflow: 'hidden',
+  marginTop: 5,
+}
+
+export const heatmapStyle: CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
+  gap: 4,
+}
+
+export const controlsStyle: CSSProperties = {
+  display: 'flex',
+  gap: 8,
+  alignItems: 'center',
+  justifyContent: 'space-between',
+}
+
+export const dragHandleStyle: CSSProperties = {
+  width: 32,
+  height: 32,
+  borderRadius: 10,
+  borderWidth: 1,
+  borderStyle: 'solid',
+  borderColor: '#d1d5db',
+  background: '#f9fafb',
+  color: '#374151',
+  cursor: 'grab',
+  touchAction: 'none',
+  fontWeight: 700,
+  lineHeight: 1,
+}
+
+export const resizeHintStyle: CSSProperties = {
+  fontSize: 11,
+  color: '#94a3b8',
+}
+
+
+
+==================================================
+PLIK: components\dashboard-widget\dashboardWidgetTileTypes.ts
+==================================================
+
+import type { CSSProperties } from 'react'
+import type { DashboardWidgetLayoutItem, DashboardWidgetType } from '../../lib/dashboardTypes'
+import type { Category, Transaction } from '../../lib/budgetPageTypes'
+import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
+
+export type DashboardResizeEdges = {
+  left: boolean
+  right: boolean
+  top: boolean
+  bottom: boolean
+}
+
+export type DashboardWidgetPixelRect = {
+  left: number
+  top: number
+  width: number
+  height: number
+}
+
+export type DayMetric = {
+  day: number
+  date: string
+  income: number
+  expense: number
+  balance: number
+  count: number
+}
+
+export type CategoryBreakdown = {
+  id: string
+  name: string
+  total: number
+}
+
+export type MonthMetrics = {
+  days: DayMetric[]
+  topIncomeCategories: CategoryBreakdown[]
+  topExpenseCategories: CategoryBreakdown[]
+  mostExpensiveDay: DayMetric | null
+  topExpenseCategory: CategoryBreakdown | null
+  daysWithEntries: number
+  daysWithoutEntries: number
+  averageDailyIncome: number
+  averageDailyExpense: number
+}
+
+export type LineSeries = {
+  id: string
+  label: string
+  color: string
+  values: number[]
+}
+
+export type DashboardWidgetTileProps = {
   widget: DashboardWidgetLayoutItem
   rect: DashboardWidgetPixelRect
   transactions: Transaction[]
@@ -5447,6 +5303,842 @@ type Props = {
   styles: Record<string, CSSProperties>
 }
 
+
+
+==================================================
+PLIK: components\dashboard-widget\dashboardWidgetTileUtils.ts
+==================================================
+
+import type { Transaction } from '../../lib/budgetPageTypes'
+import { GREEN, MUTED, NEUTRAL, RED } from './dashboardWidgetTileStyles'
+
+export const formatMoney = (value: number) => `${value.toFixed(2)} zł`
+
+export const formatPercent = (value: number) => `${value.toFixed(1)}%`
+
+export const formatChange = (percent: number | null) => (percent === null ? 'brak bazy' : formatPercent(percent))
+
+export const getColorForMoney = (value: number) => {
+  if (value > 0) return GREEN
+  if (value < 0) return RED
+  return NEUTRAL
+}
+
+export const getExpenseChangeColor = (value: number) => {
+  if (value > 0) return RED
+  if (value < 0) return GREEN
+  return MUTED
+}
+
+export const getPaceLabel = (status: 'calm' | 'watch' | 'fast') => {
+  if (status === 'fast') return 'Za szybko'
+  if (status === 'watch') return 'Uważaj'
+  return 'Spokojnie'
+}
+
+export const getPaceColor = (status: 'calm' | 'watch' | 'fast') => {
+  if (status === 'fast') return RED
+  if (status === 'watch') return '#b45309'
+  return GREEN
+}
+
+export const getRiskColor = (level: 'none' | 'low' | 'medium' | 'high') => {
+  if (level === 'high') return RED
+  if (level === 'medium') return '#b45309'
+  if (level === 'low') return GREEN
+  return MUTED
+}
+
+export const clampPercent = (value: number) => {
+  if (!Number.isFinite(value)) return 0
+  return Math.max(0, Math.min(100, value))
+}
+
+export const getTransactionTime = (transaction: Transaction) => transaction.created_at ?? ''
+
+export const compareTransactionsByDate = (left: Transaction, right: Transaction) => {
+  const dateCompare = right.date.localeCompare(left.date)
+  if (dateCompare !== 0) return dateCompare
+
+  return getTransactionTime(right).localeCompare(getTransactionTime(left))
+}
+
+export const isTransactionInMonth = (transaction: Transaction, selectedMonth: string) => {
+  return transaction.date.startsWith(selectedMonth)
+}
+
+export const getDayFromDate = (date: string) => {
+  const day = Number(date.slice(8, 10))
+  return Number.isFinite(day) ? day : 0
+}
+
+export const getDaysInMonth = (selectedMonth: string) => {
+  const [year, month] = selectedMonth.split('-').map(Number)
+  if (!year || !month) return 31
+
+  return new Date(year, month, 0).getDate()
+}
+
+
+
+==================================================
+PLIK: components\DashboardGrid.tsx
+==================================================
+
+'use client'
+
+import { CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  DndContext,
+  DragMoveEvent,
+  DragStartEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
+import DashboardWidgetTile, { DashboardResizeEdges } from './DashboardWidgetTile'
+import { DASHBOARD_GRID_COLUMNS, DASHBOARD_GRID_MAX_ROWS } from '../lib/dashboardWidgetConfig'
+import {
+  getDashboardLayoutHeight,
+  projectDashboardWidgets,
+} from '../lib/dashboardLayout'
+import { DashboardWidgetLayoutItem, DashboardWidgetType } from '../lib/dashboardTypes'
+import { DashboardStats, TopCategory } from '../lib/dashboardStats'
+import { Category, Transaction } from '../lib/budgetPageTypes'
+
+const DASHBOARD_GRID_GAP = 12
+const DASHBOARD_GRID_ROW_HEIGHT = 132
+
+type WidgetPixelRect = {
+  left: number
+  top: number
+  width: number
+  height: number
+}
+
+type DragSession = {
+  id: string
+  targetX: number
+  targetY: number
+}
+
+type ResizeSession = {
+  id: string
+  edges: DashboardResizeEdges
+  startClientX: number
+  startClientY: number
+  startLayout: DashboardWidgetLayoutItem
+  startRect: WidgetPixelRect
+  previewRect: WidgetPixelRect
+}
+
+const gridOuterStyle: CSSProperties = {
+  position: 'relative',
+  width: '100%',
+}
+
+const gridCanvasStyle: CSSProperties = {
+  position: 'relative',
+  width: '100%',
+  minHeight: DASHBOARD_GRID_ROW_HEIGHT,
+}
+
+const ghostStyle: CSSProperties = {
+  position: 'absolute',
+  borderRadius: 16,
+  border: '1px dashed #60a5fa',
+  background: 'rgba(96, 165, 250, 0.12)',
+  boxShadow: 'inset 0 0 0 1px rgba(96, 165, 250, 0.16)',
+  transition: 'transform 180ms ease, width 180ms ease, height 180ms ease',
+  pointerEvents: 'none',
+  zIndex: 1,
+}
+
+const getColumnWidth = (gridWidth: number) => {
+  if (gridWidth <= 0) return 0
+  return (gridWidth - DASHBOARD_GRID_GAP * (DASHBOARD_GRID_COLUMNS - 1)) / DASHBOARD_GRID_COLUMNS
+}
+
+const getPixelsForColumnSpan = (span: number, columnWidth: number) => {
+  if (span <= 0) return 0
+  return columnWidth * span + DASHBOARD_GRID_GAP * (span - 1)
+}
+
+const getPixelsForRowSpan = (span: number) => {
+  if (span <= 0) return 0
+  return DASHBOARD_GRID_ROW_HEIGHT * span + DASHBOARD_GRID_GAP * (span - 1)
+}
+
+const getGridHeightInPixels = (rows: number) => {
+  if (rows <= 0) return 0
+  return DASHBOARD_GRID_ROW_HEIGHT * rows + DASHBOARD_GRID_GAP * (rows - 1)
+}
+
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
+
+const getWidgetPixelRect = (
+  widget: DashboardWidgetLayoutItem,
+  columnWidth: number
+): WidgetPixelRect => {
+  return {
+    left: widget.x * (columnWidth + DASHBOARD_GRID_GAP),
+    top: widget.y * (DASHBOARD_GRID_ROW_HEIGHT + DASHBOARD_GRID_GAP),
+    width: getPixelsForColumnSpan(widget.width, columnWidth),
+    height: getPixelsForRowSpan(widget.height),
+  }
+}
+
+const getNearestSpanFromPixels = (
+  pixels: number,
+  maxSpan: number,
+  getPixelsForSpan: (span: number) => number
+) => {
+  let winner = 1
+  let minDistance = Number.POSITIVE_INFINITY
+
+  for (let span = 1; span <= maxSpan; span += 1) {
+    const distance = Math.abs(getPixelsForSpan(span) - pixels)
+
+    if (distance < minDistance) {
+      minDistance = distance
+      winner = span
+    }
+  }
+
+  return winner
+}
+
+type Props = {
+  widgets: DashboardWidgetLayoutItem[]
+  transactions: Transaction[]
+  selectedMonth: string
+  dashboardStats: DashboardStats
+  topExpenseCategories: TopCategory[]
+  latestTransactions: Transaction[]
+  categoriesById: Record<string, Category>
+  getSignedAmountForTransaction: (transaction: Transaction) => number
+  onWidgetTypeChange: (id: string, type: DashboardWidgetType) => void
+  onMoveWidget: (id: string, x: number, y: number) => void
+  onRemoveWidget: (id: string) => void
+  onResizeWidget: (
+    id: string,
+    nextLayout: { x: number; y: number; width: number; height: number }
+  ) => void
+  styles: Record<string, CSSProperties>
+}
+
+export default function DashboardGrid(props: Props) {
+  const {
+    widgets,
+    transactions,
+    selectedMonth,
+    dashboardStats,
+    topExpenseCategories,
+    latestTransactions,
+    categoriesById,
+    getSignedAmountForTransaction,
+    onWidgetTypeChange,
+    onMoveWidget,
+    onRemoveWidget,
+    onResizeWidget,
+    styles,
+  } = props
+
+  const gridRef = useRef<HTMLDivElement | null>(null)
+  const resizeSessionRef = useRef<ResizeSession | null>(null)
+
+  const [isMounted, setIsMounted] = useState(false)
+  const [gridWidth, setGridWidth] = useState(0)
+  const [dragSession, setDragSession] = useState<DragSession | null>(null)
+  const [resizeSession, setResizeSession] = useState<ResizeSession | null>(null)
+
+  const columnWidth = getColumnWidth(gridWidth)
+
+  const widgetsById = useMemo(() => {
+    return new Map(widgets.map((widget) => [widget.id, widget]))
+  }, [widgets])
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  useEffect(() => {
+    resizeSessionRef.current = resizeSession
+  }, [resizeSession])
+
+  useEffect(() => {
+    if (!isMounted) return
+
+    const element = gridRef.current
+    if (!element || typeof ResizeObserver === 'undefined') return
+
+    const updateWidth = (nextWidth: number) => {
+      setGridWidth((prev) => {
+        if (Math.round(prev) === Math.round(nextWidth)) return prev
+        return nextWidth
+      })
+    }
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      const nextWidth = entries[0]?.contentRect.width ?? 0
+      updateWidth(nextWidth)
+    })
+
+    resizeObserver.observe(element)
+    updateWidth(element.getBoundingClientRect().width)
+
+    return () => {
+      resizeObserver.disconnect()
+    }
+  }, [isMounted])
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 6,
+      },
+    })
+  )
+
+  const previewWidgets = useMemo(() => {
+    if (!dragSession) return widgets
+
+    const activeWidget = widgetsById.get(dragSession.id)
+    if (!activeWidget) return widgets
+
+    return projectDashboardWidgets(widgets, {
+      id: activeWidget.id,
+      x: dragSession.targetX,
+      y: dragSession.targetY,
+      width: activeWidget.width,
+      height: activeWidget.height,
+    })
+  }, [dragSession, widgets, widgetsById])
+
+  const previewWidgetsById = useMemo(() => {
+    return new Map(previewWidgets.map((widget) => [widget.id, widget]))
+  }, [previewWidgets])
+
+  const activeDragWidget = dragSession ? widgetsById.get(dragSession.id) ?? null : null
+  const activePreviewWidget = dragSession ? previewWidgetsById.get(dragSession.id) ?? null : null
+  const activeDragGhostRect =
+    activePreviewWidget && columnWidth > 0
+      ? getWidgetPixelRect(activePreviewWidget, columnWidth)
+      : null
+
+  const layoutHeightRows = getDashboardLayoutHeight(previewWidgets)
+  const layoutHeightPixels = getGridHeightInPixels(layoutHeightRows)
+  const resizeHeightPixels = resizeSession
+    ? resizeSession.previewRect.top + resizeSession.previewRect.height
+    : 0
+  const gridHeight = Math.max(layoutHeightPixels, resizeHeightPixels, DASHBOARD_GRID_ROW_HEIGHT)
+
+  const handleDragStart = (event: DragStartEvent) => {
+    if (resizeSessionRef.current || columnWidth <= 0) return
+
+    const activeWidget = widgetsById.get(String(event.active.id))
+    if (!activeWidget) return
+
+    setDragSession({
+      id: activeWidget.id,
+      targetX: activeWidget.x,
+      targetY: activeWidget.y,
+    })
+  }
+
+  const handleDragMove = (event: DragMoveEvent) => {
+    if (!columnWidth) return
+
+    setDragSession((currentSession) => {
+      if (!currentSession) return currentSession
+
+      const activeWidget = widgetsById.get(currentSession.id)
+      if (!activeWidget) return currentSession
+
+      const rect = getWidgetPixelRect(activeWidget, columnWidth)
+      const left = rect.left + event.delta.x
+      const top = rect.top + event.delta.y
+      const nextTargetX = clamp(
+        Math.round(left / (columnWidth + DASHBOARD_GRID_GAP)),
+        0,
+        DASHBOARD_GRID_COLUMNS - activeWidget.width
+      )
+      const nextTargetY = Math.max(
+        0,
+        Math.round(top / (DASHBOARD_GRID_ROW_HEIGHT + DASHBOARD_GRID_GAP))
+      )
+
+      if (currentSession.targetX === nextTargetX && currentSession.targetY === nextTargetY) {
+        return currentSession
+      }
+
+      return {
+        ...currentSession,
+        targetX: nextTargetX,
+        targetY: nextTargetY,
+      }
+    })
+  }
+
+  const stopDragging = () => {
+    setDragSession(null)
+  }
+
+  const handleDragEnd = () => {
+    if (!dragSession) return
+
+    const activeWidget = widgetsById.get(dragSession.id)
+
+    if (
+      activeWidget &&
+      (activeWidget.x !== dragSession.targetX || activeWidget.y !== dragSession.targetY)
+    ) {
+      onMoveWidget(dragSession.id, dragSession.targetX, dragSession.targetY)
+    }
+
+    stopDragging()
+  }
+
+  const handleResizeStart = (
+    id: string,
+    edges: DashboardResizeEdges,
+    event: { clientX: number; clientY: number }
+  ) => {
+    if (columnWidth <= 0) return
+
+    const widget = widgetsById.get(id)
+    if (!widget) return
+
+    const nextSession = {
+      id,
+      edges,
+      startClientX: event.clientX,
+      startClientY: event.clientY,
+      startLayout: widget,
+      startRect: getWidgetPixelRect(widget, columnWidth),
+      previewRect: getWidgetPixelRect(widget, columnWidth),
+    }
+
+    resizeSessionRef.current = nextSession
+    setResizeSession(nextSession)
+  }
+
+  useEffect(() => {
+    if (!resizeSession || columnWidth <= 0) return
+
+    const sessionAtStart = resizeSession
+    const maxRightWidth = getPixelsForColumnSpan(
+      DASHBOARD_GRID_COLUMNS - sessionAtStart.startLayout.x,
+      columnWidth
+    )
+    const maxLeftWidth = getPixelsForColumnSpan(
+      Math.min(
+        DASHBOARD_GRID_COLUMNS,
+        sessionAtStart.startLayout.x + sessionAtStart.startLayout.width
+      ),
+      columnWidth
+    )
+    const maxBottomHeight = getPixelsForRowSpan(DASHBOARD_GRID_MAX_ROWS)
+    const maxTopHeight = getPixelsForRowSpan(
+      Math.min(
+        DASHBOARD_GRID_MAX_ROWS,
+        sessionAtStart.startLayout.y + sessionAtStart.startLayout.height
+      )
+    )
+
+    const handlePointerMove = (event: globalThis.PointerEvent) => {
+      const currentSession = resizeSessionRef.current
+      if (!currentSession) return
+
+      const deltaX = event.clientX - currentSession.startClientX
+      const deltaY = event.clientY - currentSession.startClientY
+      const nextRect = { ...currentSession.startRect }
+
+      if (currentSession.edges.right) {
+        nextRect.width = clamp(
+          currentSession.startRect.width + deltaX,
+          getPixelsForColumnSpan(1, columnWidth),
+          maxRightWidth
+        )
+      }
+
+      if (currentSession.edges.left) {
+        nextRect.width = clamp(
+          currentSession.startRect.width - deltaX,
+          getPixelsForColumnSpan(1, columnWidth),
+          maxLeftWidth
+        )
+        nextRect.left =
+          currentSession.startRect.left + (currentSession.startRect.width - nextRect.width)
+      }
+
+      if (currentSession.edges.bottom) {
+        nextRect.height = clamp(
+          currentSession.startRect.height + deltaY,
+          getPixelsForRowSpan(1),
+          maxBottomHeight
+        )
+      }
+
+      if (currentSession.edges.top) {
+        nextRect.height = clamp(
+          currentSession.startRect.height - deltaY,
+          getPixelsForRowSpan(1),
+          maxTopHeight
+        )
+        nextRect.top =
+          currentSession.startRect.top + (currentSession.startRect.height - nextRect.height)
+      }
+
+      setResizeSession((prev) => {
+        if (!prev) return null
+
+        if (
+          prev.previewRect.left === nextRect.left &&
+          prev.previewRect.top === nextRect.top &&
+          prev.previewRect.width === nextRect.width &&
+          prev.previewRect.height === nextRect.height
+        ) {
+          return prev
+        }
+
+        const updatedSession = {
+          ...prev,
+          previewRect: nextRect,
+        }
+
+        resizeSessionRef.current = updatedSession
+        return updatedSession
+      })
+    }
+
+    const handlePointerUp = () => {
+      const currentSession = resizeSessionRef.current
+      if (!currentSession) return
+
+      const rightEdge = currentSession.startLayout.x + currentSession.startLayout.width
+      const bottomEdge = currentSession.startLayout.y + currentSession.startLayout.height
+      const maxWidthForSnap = currentSession.edges.left
+        ? rightEdge
+        : DASHBOARD_GRID_COLUMNS - currentSession.startLayout.x
+      const maxHeightForSnap = currentSession.edges.top
+        ? Math.min(DASHBOARD_GRID_MAX_ROWS, bottomEdge)
+        : DASHBOARD_GRID_MAX_ROWS
+      const nextWidth = getNearestSpanFromPixels(
+        currentSession.previewRect.width,
+        maxWidthForSnap,
+        (span) => getPixelsForColumnSpan(span, columnWidth)
+      )
+      const nextHeight = getNearestSpanFromPixels(
+        currentSession.previewRect.height,
+        maxHeightForSnap,
+        (span) => getPixelsForRowSpan(span)
+      )
+      const nextX = currentSession.edges.left ? rightEdge - nextWidth : currentSession.startLayout.x
+      const nextY = currentSession.edges.top ? bottomEdge - nextHeight : currentSession.startLayout.y
+
+      if (
+        nextX !== currentSession.startLayout.x ||
+        nextY !== currentSession.startLayout.y ||
+        nextWidth !== currentSession.startLayout.width ||
+        nextHeight !== currentSession.startLayout.height
+      ) {
+        onResizeWidget(currentSession.id, {
+          x: nextX,
+          y: nextY,
+          width: nextWidth,
+          height: nextHeight,
+        })
+      }
+
+      resizeSessionRef.current = null
+      setResizeSession(null)
+    }
+
+    window.addEventListener('pointermove', handlePointerMove)
+    window.addEventListener('pointerup', handlePointerUp, { once: true })
+    window.addEventListener('pointercancel', handlePointerUp, { once: true })
+
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove)
+      window.removeEventListener('pointerup', handlePointerUp)
+      window.removeEventListener('pointercancel', handlePointerUp)
+    }
+  }, [columnWidth, onResizeWidget, resizeSession])
+
+  if (!isMounted) {
+    return <div style={gridOuterStyle} suppressHydrationWarning />
+  }
+
+  if (widgets.length === 0) {
+    return (
+      <div style={styles.emptyStateCard}>
+        Dashboard jest pusty. Dodaj pierwszy kafel, a potem wybierz statystykę na samym kaflu.
+      </div>
+    )
+  }
+
+  return (
+    <DndContext
+      sensors={sensors}
+      onDragStart={handleDragStart}
+      onDragMove={handleDragMove}
+      onDragEnd={handleDragEnd}
+      onDragCancel={stopDragging}
+    >
+      <div ref={gridRef} style={gridOuterStyle} suppressHydrationWarning>
+        <div style={{ ...gridCanvasStyle, height: gridHeight }}>
+          {dragSession && activeDragGhostRect && activeDragWidget && (
+            <div
+              aria-hidden="true"
+              style={{
+                ...ghostStyle,
+                width: activeDragGhostRect.width,
+                height: activeDragGhostRect.height,
+                transform: `translate(${activeDragGhostRect.left}px, ${activeDragGhostRect.top}px)`,
+              }}
+            />
+          )}
+
+          {columnWidth > 0 &&
+            widgets.map((widget) => {
+              const previewWidget = previewWidgetsById.get(widget.id) ?? widget
+              const isActiveDragWidget = dragSession?.id === widget.id
+              const isActiveResizeWidget = resizeSession?.id === widget.id
+              const rect =
+                isActiveResizeWidget && resizeSession
+                  ? resizeSession.previewRect
+                  : getWidgetPixelRect(isActiveDragWidget ? widget : previewWidget, columnWidth)
+
+              return (
+                <DashboardWidgetTile
+                  key={widget.id}
+                  widget={
+                    isActiveResizeWidget && resizeSession
+                      ? {
+                          ...widget,
+                          x: resizeSession.startLayout.x,
+                          y: resizeSession.startLayout.y,
+                          width: widget.width,
+                          height: widget.height,
+                        }
+                      : previewWidget
+                  }
+                  rect={rect}
+                  transactions={transactions}
+                  selectedMonth={selectedMonth}
+                  dashboardStats={dashboardStats}
+                  topExpenseCategories={topExpenseCategories}
+                  latestTransactions={latestTransactions}
+                  categoriesById={categoriesById}
+                  getSignedAmountForTransaction={getSignedAmountForTransaction}
+                  isDragging={isActiveDragWidget}
+                  isDropBlocked={false}
+                  isInteractionLocked={resizeSession !== null}
+                  isResizeActive={isActiveResizeWidget}
+                  onWidgetTypeChange={onWidgetTypeChange}
+                  onRemove={onRemoveWidget}
+                  onResizeStart={handleResizeStart}
+                  styles={styles}
+                />
+              )
+            })}
+        </div>
+      </div>
+    </DndContext>
+  )
+}
+
+
+
+==================================================
+PLIK: components\DashboardPanel.tsx
+==================================================
+
+'use client'
+
+import { CSSProperties, useMemo } from 'react'
+import DashboardGrid from './DashboardGrid'
+import { Category, Transaction } from '../lib/budgetPageTypes'
+import {
+  getDashboardStats,
+  getLatestTransactions,
+  getTopExpenseCategories,
+} from '../lib/dashboardStats'
+import { useDashboardLayout } from '../lib/useDashboardLayout'
+
+const panelStyle: CSSProperties = {
+  marginBottom: 20,
+  background: '#ffffff',
+  border: '1px solid #e5e7eb',
+  borderRadius: 18,
+  padding: 16,
+  boxShadow: '0 8px 24px rgba(15, 23, 42, 0.05)',
+}
+
+const headerStyle: CSSProperties = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  gap: 12,
+  flexWrap: 'wrap',
+  alignItems: 'flex-start',
+  marginBottom: 14,
+}
+
+type Props = {
+  profileId: string
+  styles: Record<string, CSSProperties>
+  transactions: Transaction[]
+  categoriesById: Record<string, Category>
+  selectedMonth: string
+  getSignedAmountForTransaction: (transaction: Transaction) => number
+}
+
+export default function DashboardPanel({
+  profileId,
+  styles,
+  transactions,
+  categoriesById,
+  selectedMonth,
+  getSignedAmountForTransaction,
+}: Props) {
+  const { widgets, addWidget, updateWidgetType, removeWidget, resizeWidget, moveWidget } =
+    useDashboardLayout({
+      profileId,
+    })
+
+  const dashboardStats = useMemo(
+    () =>
+      getDashboardStats(
+        transactions,
+        categoriesById,
+        selectedMonth,
+        getSignedAmountForTransaction
+      ),
+    [transactions, categoriesById, selectedMonth, getSignedAmountForTransaction]
+  )
+
+  const topExpenseCategories = useMemo(
+    () =>
+      getTopExpenseCategories(
+        transactions,
+        categoriesById,
+        selectedMonth,
+        getSignedAmountForTransaction
+      ),
+    [transactions, categoriesById, selectedMonth, getSignedAmountForTransaction]
+  )
+
+  const latestTransactions = useMemo(
+    () => getLatestTransactions(transactions, selectedMonth, 8),
+    [transactions, selectedMonth]
+  )
+
+  return (
+    <section style={panelStyle}>
+      <div style={headerStyle}>
+        <div>
+          <div style={styles.sectionTitle}>Dashboard</div>
+          <div style={{ ...styles.pageSubtitle, marginBottom: 0 }}>
+            Dodaj kafel, a potem na samym kaflu wybierz, jaką statystykę ma pokazywać.
+          </div>
+        </div>
+
+        <button type="button" style={styles.primaryButton} onClick={addWidget}>
+          Dodaj kafel
+        </button>
+      </div>
+
+      <DashboardGrid
+        widgets={widgets}
+        transactions={transactions}
+        selectedMonth={selectedMonth}
+        dashboardStats={dashboardStats}
+        topExpenseCategories={topExpenseCategories}
+        latestTransactions={latestTransactions}
+        categoriesById={categoriesById}
+        getSignedAmountForTransaction={getSignedAmountForTransaction}
+        onWidgetTypeChange={updateWidgetType}
+        onMoveWidget={moveWidget}
+        onRemoveWidget={removeWidget}
+        onResizeWidget={resizeWidget}
+        styles={styles}
+      />
+    </section>
+  )
+}
+
+
+
+==================================================
+PLIK: components\DashboardWidgetTile.tsx
+==================================================
+
+'use client'
+
+import { ButtonHTMLAttributes, CSSProperties, PointerEvent, useMemo, useState } from 'react'
+import { useDraggable } from '@dnd-kit/core'
+import { CSS } from '@dnd-kit/utilities'
+import {
+  DASHBOARD_WIDGET_DEFINITION_BY_TYPE,
+  DASHBOARD_WIDGET_DEFINITIONS,
+} from '../lib/dashboardWidgetConfig'
+import DashboardWidgetControls from './dashboard-widget/DashboardWidgetControls'
+import DashboardWidgetFrame from './dashboard-widget/DashboardWidgetFrame'
+import DashboardWidgetHeader from './dashboard-widget/DashboardWidgetHeader'
+import DashboardWidgetContent from './dashboard-widget/DashboardWidgetContent'
+
+import type {
+  DashboardResizeEdges,
+  DashboardWidgetTileProps,
+} from './dashboard-widget/dashboardWidgetTileTypes'
+import { RESIZE_HIT_AREA } from './dashboard-widget/dashboardWidgetTileStyles'
+
+export type { DashboardResizeEdges } from './dashboard-widget/dashboardWidgetTileTypes'
+
+const areResizeEdgesEqual = (
+  left: DashboardResizeEdges | null,
+  right: DashboardResizeEdges | null
+) => {
+  if (left === right) return true
+  if (!left || !right) return false
+
+  return (
+    left.left === right.left &&
+    left.right === right.right &&
+    left.top === right.top &&
+    left.bottom === right.bottom
+  )
+}
+
+const getResizeEdgesFromPointer = (
+  rect: DOMRect,
+  clientX: number,
+  clientY: number
+): DashboardResizeEdges | null => {
+  const nearLeft = clientX - rect.left <= RESIZE_HIT_AREA
+  const nearRight = rect.right - clientX <= RESIZE_HIT_AREA
+  const nearTop = clientY - rect.top <= RESIZE_HIT_AREA
+  const nearBottom = rect.bottom - clientY <= RESIZE_HIT_AREA
+
+  if (!nearLeft && !nearRight && !nearTop && !nearBottom) return null
+
+  return {
+    left: nearLeft,
+    right: nearRight,
+    top: nearTop,
+    bottom: nearBottom,
+  }
+}
+
+const getCursorForResizeEdges = (edges: DashboardResizeEdges | null) => {
+  if (!edges) return 'default'
+  if ((edges.left && edges.top) || (edges.right && edges.bottom)) return 'nwse-resize'
+  if ((edges.right && edges.top) || (edges.left && edges.bottom)) return 'nesw-resize'
+  if (edges.left || edges.right) return 'ew-resize'
+  return 'ns-resize'
+}
+
 export default function DashboardWidgetTile({
   widget,
   rect,
@@ -5465,7 +6157,7 @@ export default function DashboardWidgetTile({
   onRemove,
   onResizeStart,
   styles,
-}: Props) {
+}: DashboardWidgetTileProps) {
   const [hoveredResizeEdges, setHoveredResizeEdges] = useState<DashboardResizeEdges | null>(null)
   const definition = DASHBOARD_WIDGET_DEFINITION_BY_TYPE[widget.type]
 
@@ -5546,91 +6238,50 @@ export default function DashboardWidgetTile({
     definition ??
     DASHBOARD_WIDGET_DEFINITIONS.find((item) => item.type === 'monthly-balance') ??
     DASHBOARD_WIDGET_DEFINITIONS[0]
+  const dragHandleProps = {
+    ...attributes,
+    ...listeners,
+  } as ButtonHTMLAttributes<HTMLButtonElement>
 
   return (
-    <article ref={setNodeRef} style={wrapperStyle}>
-      <div
-        style={{
-          ...tileStyle,
-          cursor,
-          borderColor:
-            isDragging || isResizeActive
-              ? BLUE
-              : hoveredResizeEdges
-                ? '#60a5fa'
-                : tileStyle.borderColor,
-          boxShadow:
-            isDragging || isResizeActive
-              ? '0 18px 36px rgba(37, 99, 235, 0.16)'
-              : tileStyle.boxShadow,
-          opacity: isDropBlocked ? 0.82 : 1,
-        }}
-        onPointerMove={handlePointerMove}
-        onPointerLeave={handlePointerLeave}
-        onPointerDown={handlePointerDown}
-      >
-        <div style={tileHeaderStyle}>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <select
-              data-dashboard-ignore-resize="true"
-              value={definition ? widget.type : safeDefinition.type}
-              onChange={(event) =>
-                onWidgetTypeChange(widget.id, event.target.value as DashboardWidgetType)
-              }
-              style={selectStyle}
-              aria-label="Wybierz statystykę na kaflu"
-            >
-              {DASHBOARD_WIDGET_DEFINITIONS.map((item) => (
-                <option key={item.type} value={item.type}>
-                  {item.title}
-                </option>
-              ))}
-            </select>
+    <DashboardWidgetFrame
+      wrapperRef={setNodeRef}
+      wrapperStyle={wrapperStyle}
+      cursor={cursor}
+      isDragging={isDragging}
+      isResizeActive={isResizeActive}
+      isDropBlocked={isDropBlocked}
+      hoveredResizeEdges={hoveredResizeEdges}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      onPointerDown={handlePointerDown}
+    >
+      <DashboardWidgetHeader
+        widget={widget}
+        safeDefinition={safeDefinition}
+        hasKnownDefinition={Boolean(definition)}
+        dragHandleProps={dragHandleProps}
+        onWidgetTypeChange={onWidgetTypeChange}
+      />
 
-            {widget.width > 1 && (
-              <div style={metaStyle}>
-                {safeDefinition.description} · {widget.width}x{widget.height}
-              </div>
-            )}
-          </div>
+      <DashboardWidgetContent
+        widget={widget}
+        transactions={transactions}
+        selectedMonth={selectedMonth}
+        dashboardStats={dashboardStats}
+        topExpenseCategories={topExpenseCategories}
+        latestTransactions={latestTransactions}
+        categoriesById={categoriesById}
+        getSignedAmountForTransaction={getSignedAmountForTransaction}
+      />
 
-          <button
-            type="button"
-            data-dashboard-ignore-resize="true"
-            style={dragHandleStyle}
-            aria-label={`Przeciągnij widget ${safeDefinition.title}`}
-            {...attributes}
-            {...listeners}
-          >
-            ⋮⋮
-          </button>
-        </div>
-
-        <DashboardWidgetContent
-          widget={widget}
-          transactions={transactions}
-          selectedMonth={selectedMonth}
-          dashboardStats={dashboardStats}
-          topExpenseCategories={topExpenseCategories}
-          latestTransactions={latestTransactions}
-          categoriesById={categoriesById}
-          getSignedAmountForTransaction={getSignedAmountForTransaction}
-        />
-
-        <div style={controlsStyle}>
-          <div style={resizeHintStyle}>{widget.width > 1 ? 'Zmień rozmiar krawędzią.' : ''}</div>
-
-          <button
-            type="button"
-            data-dashboard-ignore-resize="true"
-            style={styles.dangerButton}
-            onClick={() => onRemove(widget.id)}
-          >
-            Usuń
-          </button>
-        </div>
-      </div>
-    </article>
+      <DashboardWidgetControls
+        widgetId={widget.id}
+        widgetWidth={widget.width}
+        styles={styles}
+        onRemove={onRemove}
+      />
+    </DashboardWidgetFrame>
   )
 }
 
@@ -6006,6 +6657,76 @@ export default function DraftsPanel(props: Props) {
   )
 }
 
+
+
+==================================================
+PLIK: components\FinancialGoalsContainer.tsx
+==================================================
+
+'use client'
+
+import { CSSProperties } from 'react'
+import FinancialGoalsPanel from './FinancialGoalsPanel'
+import {
+  FinancialGoal,
+  FinancialGoalAllocationMode,
+  FinancialGoalMonthConfig,
+  FinancialGoalMonthPriority,
+  Transaction,
+} from '../lib/budgetPageTypes'
+
+type Props = {
+  selectedMonth: string
+  goals?: FinancialGoal[]
+  goalPriorities?: FinancialGoalMonthPriority[]
+  goalMonthConfigs?: FinancialGoalMonthConfig[]
+  transactions?: Transaction[]
+  lockedMonthsSet: Set<string>
+  getSignedAmountForTransaction: (transaction: Transaction) => number
+  onSaveGoal: (input: Omit<FinancialGoal, 'id' | 'profile_id' | 'created_at'>) => Promise<void>
+  onDeleteGoal: (goalId: string) => Promise<void>
+  onSetGoalModeForMonth: (month: string, mode: FinancialGoalAllocationMode) => Promise<void>
+  onSaveGoalAllocationsForMonth: (
+    month: string,
+    allocationsByGoalId: Record<string, number>
+  ) => Promise<void>
+  onReorderGoalsForMonth: (month: string, orderedGoalIds: string[]) => Promise<void>
+  styles: Record<string, CSSProperties>
+}
+
+export default function FinancialGoalsContainer({
+  selectedMonth,
+  goals = [],
+  goalPriorities = [],
+  goalMonthConfigs = [],
+  transactions = [],
+  lockedMonthsSet,
+  getSignedAmountForTransaction,
+  onSaveGoal,
+  onDeleteGoal,
+  onSetGoalModeForMonth,
+  onSaveGoalAllocationsForMonth,
+  onReorderGoalsForMonth,
+  styles,
+}: Props) {
+  return (
+    <FinancialGoalsPanel
+      selectedMonth={selectedMonth}
+      goals={goals}
+      goalPriorities={goalPriorities}
+      goalMonthConfigs={goalMonthConfigs}
+      transactions={transactions}
+      lockedMonthsSet={lockedMonthsSet}
+      getSignedAmountForTransaction={getSignedAmountForTransaction}
+      onSaveGoal={onSaveGoal}
+      onDeleteGoal={onDeleteGoal}
+      onSetGoalModeForMonth={onSetGoalModeForMonth}
+      onSaveGoalAllocationsForMonth={onSaveGoalAllocationsForMonth}
+      onReorderGoalsForMonth={onReorderGoalsForMonth}
+      styles={styles}
+    />
+  )
+}
 
 
 ==================================================
@@ -10005,31 +10726,760 @@ export default function Level3Section(props: Props) {
 
 
 ==================================================
-PLIK: components\MonthCalendarPanel.tsx
+PLIK: components\month-calendar\MonthCalendarDayModal.tsx
 ==================================================
 
-﻿'use client'
-
-import { CSSProperties, KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
-import { Tag } from '../lib/budgetPageTypes'
-import DescriptionSuggestionDeleteMenu from './DescriptionSuggestionDeleteMenu'
-import PaymentSplitEditor from './PaymentSplitEditor'
+import type { CSSProperties, ReactNode } from 'react'
+import type { HeatmapVariant, Transaction } from './monthCalendarTypes'
 import {
-  buildDateFromDayInput,
-  getDayInputFromDate,
-  getDaysInMonth,
-  normalizeDayInput,
-} from '../lib/dateUtils'
-import { DescriptionSuggestion, DescriptionSuggestionSet } from '../lib/suggestionUtils'
-import { splitTagInput } from '../lib/tagUtils'
-import { useDescriptionSuggestions } from '../lib/useDescriptionSuggestions'
-import {
-  createPaymentSplitItemsFromStoredSplits,
-  getTransactionPaymentSourceDisplayLines,
-  PaymentSplitInput,
-} from '../lib/paymentSplitUtils'
+  calendarDayMetaStyle,
+  closeButtonStyle,
+  daySummaryCardStyle,
+  emptyDayStyle,
+  modalHeaderStyle,
+  modalStyle,
+  modalSubtitleStyle,
+  modalTitleStyle,
+  overlayStyle,
+  primaryButtonStyle,
+} from './monthCalendarStyles'
+import MonthCalendarTransactionList from './MonthCalendarTransactionList'
 
-type Transaction = {
+type MonthCalendarDayModalProps = {
+  selectedDay: string
+  selectedMonth: string
+  selectedDayTransactions: Transaction[]
+  selectedDayPrimaryValue: number
+  selectedDayRawSum: number
+  heatmapVariant: HeatmapVariant
+  isSelectedMonthLocked: boolean
+  styles: Record<string, CSSProperties>
+  getDayMetricLabel: () => string
+  formatAmount: (value: number) => string
+  renderTransactionCard: (transaction: Transaction, context: 'day' | 'no-day') => ReactNode
+  onAddTransactionForDay?: (dayText: string) => void
+  onClose: () => void
+}
+
+export default function MonthCalendarDayModal({
+  selectedDay,
+  selectedMonth,
+  selectedDayTransactions,
+  selectedDayPrimaryValue,
+  selectedDayRawSum,
+  heatmapVariant,
+  isSelectedMonthLocked,
+  styles,
+  getDayMetricLabel,
+  formatAmount,
+  renderTransactionCard,
+  onAddTransactionForDay,
+  onClose,
+}: MonthCalendarDayModalProps) {
+  return (
+    <div style={overlayStyle} onClick={onClose}>
+      <div style={modalStyle} onClick={(event) => event.stopPropagation()}>
+        <div style={modalHeaderStyle}>
+          <div>
+            <div style={modalTitleStyle}>
+              Wpisy z dnia {selectedDay}.{selectedMonth.slice(5, 7)}.{selectedMonth.slice(0, 4)}
+            </div>
+            <div style={modalSubtitleStyle}>Podgląd i operacje dla wpisów z wybranego dnia.</div>
+          </div>
+
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {!isSelectedMonthLocked && onAddTransactionForDay && (
+              <button
+                type="button"
+                style={primaryButtonStyle}
+                onClick={() => {
+                  onAddTransactionForDay(selectedDay)
+                  onClose()
+                }}
+              >
+                dodaj wpis
+              </button>
+            )}
+
+            <button type="button" style={closeButtonStyle} onClick={onClose}>
+              zamknij
+            </button>
+          </div>
+        </div>
+
+        <div style={daySummaryCardStyle}>
+          <div style={styles.l2Name}>Podsumowanie dnia</div>
+          <div style={{ ...calendarDayMetaStyle, marginTop: 6 }}>
+            {getDayMetricLabel()}:{' '}
+            <strong>
+              {heatmapVariant === 'balance' && selectedDayPrimaryValue > 0 ? '+' : ''}
+              {formatAmount(selectedDayPrimaryValue)} zł
+            </strong>
+          </div>
+          {heatmapVariant === 'balance' && (
+            <div style={{ ...calendarDayMetaStyle, marginTop: 4 }}>
+              Suma nominalna wpisów: <strong>{formatAmount(selectedDayRawSum)} zł</strong>
+            </div>
+          )}
+          <div style={{ ...calendarDayMetaStyle, marginTop: 4 }}>
+            Liczba wpisów: <strong>{selectedDayTransactions.length}</strong>
+          </div>
+        </div>
+
+        {selectedDayTransactions.length === 0 ? (
+          <div style={emptyDayStyle}>
+            Brak wpisów w tym dniu.
+            {!isSelectedMonthLocked && onAddTransactionForDay && (
+              <div style={{ marginTop: 12 }}>
+                <button
+                  type="button"
+                  style={primaryButtonStyle}
+                  onClick={() => {
+                    onAddTransactionForDay(selectedDay)
+                    onClose()
+                  }}
+                >
+                  dodaj pierwszy wpis z tego dnia
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <MonthCalendarTransactionList
+            transactions={selectedDayTransactions}
+            context="day"
+            renderTransactionCard={renderTransactionCard}
+          />
+        )}
+      </div>
+    </div>
+  )
+}
+
+
+
+==================================================
+PLIK: components\month-calendar\MonthCalendarGrid.tsx
+==================================================
+
+import type { ReactNode } from 'react'
+import {
+  calendarEmptyCellStyle,
+  calendarGridStyle,
+  calendarWeekdayStyle,
+  calendarWeekdaysStyle,
+  weekdayLabels,
+} from './monthCalendarStyles'
+
+type MonthCalendarGridProps = {
+  firstDayOffset: number
+  children: ReactNode
+}
+
+export default function MonthCalendarGrid({ firstDayOffset, children }: MonthCalendarGridProps) {
+  return (
+    <>
+      <div style={calendarWeekdaysStyle}>
+        {weekdayLabels.map((label) => (
+          <div key={label} style={calendarWeekdayStyle}>
+            {label}
+          </div>
+        ))}
+      </div>
+
+      <div style={calendarGridStyle}>
+        {Array.from({ length: firstDayOffset }, (_, index) => (
+          <div key={`empty-${index}`} style={calendarEmptyCellStyle} />
+        ))}
+        {children}
+      </div>
+    </>
+  )
+}
+
+
+
+==================================================
+PLIK: components\month-calendar\MonthCalendarHeader.tsx
+==================================================
+
+import type { CSSProperties } from 'react'
+
+type MonthCalendarHeaderProps = {
+  title: string
+  subtitle: string
+  styles: Record<string, CSSProperties>
+}
+
+export default function MonthCalendarHeader({
+  title,
+  subtitle,
+  styles,
+}: MonthCalendarHeaderProps) {
+  return (
+    <>
+      <div style={styles.sectionTitle}>{title}</div>
+      <div style={{ ...styles.pageSubtitle, marginBottom: 0 }}>{subtitle}</div>
+    </>
+  )
+}
+
+
+
+==================================================
+PLIK: components\month-calendar\MonthCalendarHeatmapControls.tsx
+==================================================
+
+import type { HeatmapMode } from './monthCalendarTypes'
+import {
+  heatmapBarStyle,
+  heatmapLegendBarStyle,
+  heatmapLegendLabelsStyle,
+  heatmapLegendStyle,
+  heatmapSwitchRowStyle,
+  primaryButtonStyle,
+  secondaryButtonStyle,
+} from './monthCalendarStyles'
+
+type MonthCalendarHeatmapControlsProps = {
+  heatmapMode: HeatmapMode
+  heatmapInverted: boolean
+  showHeatmapControls: boolean
+  legendLabels: {
+    left: string
+    right: string
+  }
+  onHeatmapModeChange: (value: HeatmapMode) => void
+  onHeatmapInvertedChange: (value: boolean) => void
+}
+
+export default function MonthCalendarHeatmapControls({
+  heatmapMode,
+  heatmapInverted,
+  showHeatmapControls,
+  legendLabels,
+  onHeatmapModeChange,
+  onHeatmapInvertedChange,
+}: MonthCalendarHeatmapControlsProps) {
+  return (
+    <>
+      {showHeatmapControls && (
+        <>
+          <div style={heatmapBarStyle}>
+            <button
+              type="button"
+              style={heatmapMode === 'normal' ? primaryButtonStyle : secondaryButtonStyle}
+              onClick={() => onHeatmapModeChange('normal')}
+            >
+              zwykły
+            </button>
+
+            <button
+              type="button"
+              style={heatmapMode === 'balance' ? primaryButtonStyle : secondaryButtonStyle}
+              onClick={() => onHeatmapModeChange('balance')}
+            >
+              heatmapa
+            </button>
+          </div>
+
+          <label style={heatmapSwitchRowStyle}>
+            <input
+              type="checkbox"
+              checked={heatmapInverted}
+              onChange={(event) => onHeatmapInvertedChange(event.target.checked)}
+            />
+            <span>Odwróć kierunek kolorów</span>
+          </label>
+        </>
+      )}
+
+      {heatmapMode === 'balance' && (
+        <div style={heatmapLegendStyle}>
+          <div style={heatmapLegendLabelsStyle}>
+            <span>{legendLabels.left}</span>
+            <span>{legendLabels.right}</span>
+          </div>
+          <div style={heatmapLegendBarStyle} />
+        </div>
+      )}
+    </>
+  )
+}
+
+
+
+==================================================
+PLIK: components\month-calendar\monthCalendarStyles.ts
+==================================================
+
+export const calendarPanelStyle = {
+  marginBottom: 20,
+  background: '#ffffff',
+  border: '1px solid #e5e7eb',
+  borderRadius: 14,
+  padding: 16,
+  boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+} as const
+
+export const calendarWeekdaysStyle = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
+  gap: 8,
+  marginTop: 12,
+} as const
+
+export const calendarWeekdayStyle = {
+  padding: '8px 10px',
+  fontSize: 12,
+  fontWeight: 700,
+  textTransform: 'uppercase' as const,
+  color: '#6b7280',
+} as const
+
+export const calendarGridStyle = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
+  gap: 8,
+  marginTop: 8,
+} as const
+
+export const calendarDayCellStyle = {
+  minHeight: 108,
+  border: '1px solid #e5e7eb',
+  borderRadius: 12,
+  padding: 10,
+  background: '#f8fafc',
+  display: 'flex',
+  flexDirection: 'column' as const,
+  gap: 8,
+  cursor: 'pointer',
+  position: 'relative' as const,
+  textAlign: 'left' as const,
+} as const
+
+export const calendarExpandBadgeStyle = {
+  position: 'absolute' as const,
+  top: 8,
+  right: 8,
+  width: 18,
+  height: 18,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: 11,
+  fontWeight: 700,
+  color: '#475569',
+  border: '1px solid #cbd5e1',
+  borderRadius: 6,
+  background: '#ffffff',
+  lineHeight: 1,
+  pointerEvents: 'none' as const,
+} as const
+
+export const calendarEmptyCellStyle = {
+  minHeight: 108,
+  border: '1px dashed #e5e7eb',
+  borderRadius: 12,
+  padding: 10,
+  background: '#f9fafb',
+} as const
+
+export const calendarDayNumberStyle = {
+  fontSize: 14,
+  fontWeight: 700,
+  color: '#111827',
+} as const
+
+export const calendarDayMetaStyle = {
+  fontSize: 12,
+  color: '#4b5563',
+  lineHeight: 1.4,
+} as const
+
+export const calendarDayCountStyle = {
+  fontSize: 12,
+  color: '#6b7280',
+} as const
+
+export const overlayStyle = {
+  position: 'fixed' as const,
+  inset: 0,
+  background: 'rgba(15, 23, 42, 0.35)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: 16,
+  zIndex: 1000,
+} as const
+
+export const modalStyle = {
+  width: 'min(860px, 100%)',
+  maxHeight: '85vh',
+  overflowY: 'auto' as const,
+  background: '#ffffff',
+  borderRadius: 16,
+  border: '1px solid #dbeafe',
+  boxShadow: '0 20px 40px rgba(15, 23, 42, 0.18)',
+  padding: 18,
+} as const
+
+export const modalHeaderStyle = {
+  display: 'flex',
+  alignItems: 'flex-start',
+  justifyContent: 'space-between',
+  gap: 12,
+  marginBottom: 14,
+} as const
+
+export const modalTitleStyle = {
+  fontSize: 18,
+  fontWeight: 700,
+  color: '#111827',
+  marginBottom: 4,
+} as const
+
+export const modalSubtitleStyle = {
+  fontSize: 13,
+  color: '#6b7280',
+} as const
+
+export const closeButtonStyle = {
+  border: '1px solid #d1d5db',
+  background: '#ffffff',
+  borderRadius: 10,
+  padding: '8px 10px',
+  cursor: 'pointer',
+  fontSize: 13,
+  fontWeight: 600,
+} as const
+
+export const daySummaryCardStyle = {
+  border: '1px solid #e5e7eb',
+  borderRadius: 12,
+  padding: 12,
+  background: '#f8fafc',
+  marginBottom: 14,
+} as const
+
+export const transactionsListStyle = {
+  display: 'flex',
+  flexDirection: 'column' as const,
+  gap: 10,
+} as const
+
+export const transactionCardStyle = {
+  border: '1px solid #e5e7eb',
+  borderRadius: 12,
+  padding: 12,
+  background: '#ffffff',
+} as const
+
+export const transactionTopRowStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: 12,
+  marginBottom: 8,
+} as const
+
+export const transactionAmountStyle = {
+  fontSize: 15,
+  fontWeight: 700,
+  color: '#111827',
+} as const
+
+export const transactionDescriptionStyle = {
+  fontSize: 14,
+  color: '#374151',
+} as const
+
+export const transactionTagsStyle = {
+  display: 'flex',
+  gap: 6,
+  flexWrap: 'wrap' as const,
+  marginTop: 8,
+} as const
+
+export const transactionTagBadgeStyle = {
+  fontSize: 12,
+  padding: '4px 8px',
+  borderRadius: 999,
+  background: '#eff6ff',
+  border: '1px solid #bfdbfe',
+  color: '#1d4ed8',
+  cursor: 'pointer',
+} as const
+
+export const emptyDayStyle = {
+  border: '1px dashed #d1d5db',
+  borderRadius: 12,
+  padding: 14,
+  background: '#f9fafb',
+  color: '#6b7280',
+  fontSize: 14,
+} as const
+
+export const transactionActionsStyle = {
+  display: 'flex',
+  flexWrap: 'wrap' as const,
+  gap: 8,
+  marginTop: 10,
+} as const
+
+export const formRowStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 8,
+  flexWrap: 'wrap' as const,
+  marginTop: 8,
+} as const
+
+export const inputStyle = {
+  border: '1px solid #d1d5db',
+  borderRadius: 10,
+  padding: '8px 10px',
+  fontSize: 14,
+  minHeight: 38,
+} as const
+
+export const smallInputStyle = {
+  ...inputStyle,
+  width: 90,
+} as const
+
+export const wideInputStyle = {
+  ...inputStyle,
+  flex: 1,
+  minWidth: 180,
+} as const
+
+export const descriptionFieldWrapStyle = {
+  flex: 1,
+  minWidth: 220,
+  position: 'relative' as const,
+  display: 'flex',
+  flexDirection: 'column' as const,
+  gap: 0,
+} as const
+
+export const suggestionsDropdownStyle = {
+  position: 'absolute' as const,
+  top: 'calc(100% + 4px)',
+  left: 0,
+  right: 0,
+  zIndex: 20,
+  background: '#ffffff',
+  border: '1px solid #d1d5db',
+  borderRadius: 10,
+  boxShadow: '0 10px 24px rgba(15, 23, 42, 0.12)',
+  overflow: 'hidden' as const,
+} as const
+
+export const suggestionButtonBaseStyle = {
+  width: '100%',
+  textAlign: 'left' as const,
+  border: 'none',
+  background: '#ffffff',
+  padding: '10px 12px',
+  cursor: 'pointer',
+  fontSize: 13,
+  color: '#111827',
+} as const
+
+export const tagFieldWrapStyle = {
+  marginTop: 8,
+  display: 'flex',
+  flexDirection: 'column' as const,
+  gap: 8,
+} as const
+
+export const tagBadgesWrapStyle = {
+  display: 'flex',
+  gap: 6,
+  flexWrap: 'wrap' as const,
+} as const
+
+export const tagBadgeStyle = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 6,
+  padding: '4px 8px',
+  borderRadius: 999,
+  background: '#eff6ff',
+  border: '1px solid #bfdbfe',
+  color: '#1d4ed8',
+  fontSize: 12,
+  fontWeight: 600,
+} as const
+
+export const tagRemoveButtonStyle = {
+  border: 'none',
+  background: 'transparent',
+  color: '#1d4ed8',
+  cursor: 'pointer',
+  fontSize: 14,
+  lineHeight: 1,
+  padding: 0,
+} as const
+
+export const primaryButtonStyle = {
+  border: '1px solid #2563eb',
+  background: '#2563eb',
+  color: '#ffffff',
+  borderRadius: 10,
+  padding: '8px 10px',
+  cursor: 'pointer',
+  fontSize: 13,
+  fontWeight: 600,
+} as const
+
+export const secondaryButtonStyle = {
+  border: '1px solid #d1d5db',
+  background: '#ffffff',
+  color: '#111827',
+  borderRadius: 10,
+  padding: '8px 10px',
+  cursor: 'pointer',
+  fontSize: 13,
+  fontWeight: 600,
+} as const
+
+export const dangerButtonStyle = {
+  border: '1px solid #fecaca',
+  background: '#fff1f2',
+  color: '#b91c1c',
+  borderRadius: 10,
+  padding: '8px 10px',
+  cursor: 'pointer',
+  fontSize: 13,
+  fontWeight: 600,
+} as const
+
+export const heatmapBarStyle = {
+  display: 'flex',
+  gap: 8,
+  flexWrap: 'wrap' as const,
+  marginTop: 14,
+  marginBottom: 8,
+} as const
+
+export const heatmapLegendStyle = {
+  display: 'flex',
+  flexDirection: 'column' as const,
+  gap: 8,
+  marginBottom: 8,
+  fontSize: 12,
+  color: '#4b5563',
+} as const
+
+export const heatmapLegendLabelsStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: 12,
+  fontSize: 12,
+  fontWeight: 600,
+  color: '#4b5563',
+} as const
+
+export const heatmapLegendBarStyle = {
+  width: '100%',
+  height: 14,
+  borderRadius: 999,
+  border: '1px solid #d8dee8',
+  background:
+    'linear-gradient(90deg, rgb(204, 62, 47) 0%, rgb(239, 208, 124) 50%, rgb(44, 163, 92) 100%)',
+  boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.5)',
+} as const
+
+export const heatmapSwitchRowStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 8,
+  flexWrap: 'wrap' as const,
+  marginBottom: 8,
+  fontSize: 12,
+  color: '#4b5563',
+} as const
+
+export const noDaySectionStyle = {
+  marginTop: 18,
+  borderTop: '1px solid #e5e7eb',
+  paddingTop: 16,
+} as const
+
+export const noDaySummaryStyle = {
+  marginTop: 8,
+  marginBottom: 12,
+  padding: 12,
+  border: '1px solid #e5e7eb',
+  borderRadius: 12,
+  background: '#f8fafc',
+} as const
+
+export const noDayHintStyle = {
+  fontSize: 12,
+  color: '#6b7280',
+  marginTop: 6,
+  lineHeight: 1.4,
+} as const
+
+export const badgeStyle = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 6,
+  border: '1px solid #cbd5e1',
+  background: '#f8fafc',
+  color: '#475569',
+  borderRadius: 999,
+  padding: '4px 8px',
+  fontSize: 12,
+  fontWeight: 600,
+} as const
+
+export const weekdayLabels = ['pon', 'wt', 'śr', 'czw', 'pt', 'sob', 'ndz']
+
+
+
+==================================================
+PLIK: components\month-calendar\MonthCalendarTransactionList.tsx
+==================================================
+
+import type { ReactNode } from 'react'
+import type { Transaction } from './monthCalendarTypes'
+import { transactionsListStyle } from './monthCalendarStyles'
+
+type MonthCalendarTransactionListProps = {
+  transactions: Transaction[]
+  context: 'day' | 'no-day'
+  renderTransactionCard: (transaction: Transaction, context: 'day' | 'no-day') => ReactNode
+}
+
+export default function MonthCalendarTransactionList({
+  transactions,
+  context,
+  renderTransactionCard,
+}: MonthCalendarTransactionListProps) {
+  return (
+    <div style={transactionsListStyle}>
+      {transactions.map((transaction) => renderTransactionCard(transaction, context))}
+    </div>
+  )
+}
+
+
+
+==================================================
+PLIK: components\month-calendar\monthCalendarTypes.ts
+==================================================
+
+import type { CSSProperties } from 'react'
+import type { Tag } from '../../lib/budgetPageTypes'
+import type { DescriptionSuggestion, DescriptionSuggestionSet } from '../../lib/suggestionUtils'
+import type { PaymentSplitInput } from '../../lib/paymentSplitUtils'
+
+export type Transaction = {
   id: string
   category_id: string
   amount: number | string
@@ -10042,7 +11492,7 @@ type Transaction = {
   deleted_at?: string | null
 }
 
-type TransactionPaymentSplit = {
+export type TransactionPaymentSplit = {
   id: string
   transaction_id: string
   payment_source_id: string
@@ -10050,15 +11500,15 @@ type TransactionPaymentSplit = {
   created_at?: string
 }
 
-type MoveTarget = {
+export type MoveTarget = {
   id: string
   label: string
 }
 
-type HeatmapMode = 'normal' | 'balance'
-type HeatmapVariant = 'balance' | 'income' | 'expense'
+export type HeatmapMode = 'normal' | 'balance'
+export type HeatmapVariant = 'balance' | 'income' | 'expense'
 
-type Props = {
+export type MonthCalendarPanelProps = {
   selectedMonth: string
   transactions: Transaction[]
   styles: Record<string, CSSProperties>
@@ -10108,432 +11558,73 @@ type Props = {
   ) => void
 }
 
-const calendarPanelStyle = {
-  marginBottom: 20,
-  background: '#ffffff',
-  border: '1px solid #e5e7eb',
-  borderRadius: 14,
-  padding: 16,
-  boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
-} as const
 
-const calendarWeekdaysStyle = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
-  gap: 8,
-  marginTop: 12,
-} as const
 
-const calendarWeekdayStyle = {
-  padding: '8px 10px',
-  fontSize: 12,
-  fontWeight: 700,
-  textTransform: 'uppercase' as const,
-  color: '#6b7280',
-} as const
+==================================================
+PLIK: components\MonthCalendarPanel.tsx
+==================================================
 
-const calendarGridStyle = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
-  gap: 8,
-  marginTop: 8,
-} as const
+﻿'use client'
 
-const calendarDayCellStyle = {
-  minHeight: 108,
-  border: '1px solid #e5e7eb',
-  borderRadius: 12,
-  padding: 10,
-  background: '#f8fafc',
-  display: 'flex',
-  flexDirection: 'column' as const,
-  gap: 8,
-  cursor: 'pointer',
-  position: 'relative' as const,
-  textAlign: 'left' as const,
-} as const
+import { CSSProperties, KeyboardEvent, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import DescriptionSuggestionDeleteMenu from './DescriptionSuggestionDeleteMenu'
+import PaymentSplitEditor from './PaymentSplitEditor'
+import {
+  buildDateFromDayInput,
+  getDayInputFromDate,
+  getDaysInMonth,
+  normalizeDayInput,
+} from '../lib/dateUtils'
+import { splitTagInput } from '../lib/tagUtils'
+import { useDescriptionSuggestions } from '../lib/useDescriptionSuggestions'
+import {
+  createPaymentSplitItemsFromStoredSplits,
+  getTransactionPaymentSourceDisplayLines,
+  PaymentSplitInput,
+} from '../lib/paymentSplitUtils'
 
-const calendarExpandBadgeStyle = {
-  position: 'absolute' as const,
-  top: 8,
-  right: 8,
-  width: 18,
-  height: 18,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontSize: 11,
-  fontWeight: 700,
-  color: '#475569',
-  border: '1px solid #cbd5e1',
-  borderRadius: 6,
-  background: '#ffffff',
-  lineHeight: 1,
-  pointerEvents: 'none' as const,
-} as const
-
-const calendarEmptyCellStyle = {
-  minHeight: 108,
-  border: '1px dashed #e5e7eb',
-  borderRadius: 12,
-  padding: 10,
-  background: '#f9fafb',
-} as const
-
-const calendarDayNumberStyle = {
-  fontSize: 14,
-  fontWeight: 700,
-  color: '#111827',
-} as const
-
-const calendarDayMetaStyle = {
-  fontSize: 12,
-  color: '#4b5563',
-  lineHeight: 1.4,
-} as const
-
-const calendarDayCountStyle = {
-  fontSize: 12,
-  color: '#6b7280',
-} as const
-
-const overlayStyle = {
-  position: 'fixed' as const,
-  inset: 0,
-  background: 'rgba(15, 23, 42, 0.35)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: 16,
-  zIndex: 1000,
-} as const
-
-const modalStyle = {
-  width: 'min(860px, 100%)',
-  maxHeight: '85vh',
-  overflowY: 'auto' as const,
-  background: '#ffffff',
-  borderRadius: 16,
-  border: '1px solid #dbeafe',
-  boxShadow: '0 20px 40px rgba(15, 23, 42, 0.18)',
-  padding: 18,
-} as const
-
-const modalHeaderStyle = {
-  display: 'flex',
-  alignItems: 'flex-start',
-  justifyContent: 'space-between',
-  gap: 12,
-  marginBottom: 14,
-} as const
-
-const modalTitleStyle = {
-  fontSize: 18,
-  fontWeight: 700,
-  color: '#111827',
-  marginBottom: 4,
-} as const
-
-const modalSubtitleStyle = {
-  fontSize: 13,
-  color: '#6b7280',
-} as const
-
-const closeButtonStyle = {
-  border: '1px solid #d1d5db',
-  background: '#ffffff',
-  borderRadius: 10,
-  padding: '8px 10px',
-  cursor: 'pointer',
-  fontSize: 13,
-  fontWeight: 600,
-} as const
-
-const daySummaryCardStyle = {
-  border: '1px solid #e5e7eb',
-  borderRadius: 12,
-  padding: 12,
-  background: '#f8fafc',
-  marginBottom: 14,
-} as const
-
-const transactionsListStyle = {
-  display: 'flex',
-  flexDirection: 'column' as const,
-  gap: 10,
-} as const
-
-const transactionCardStyle = {
-  border: '1px solid #e5e7eb',
-  borderRadius: 12,
-  padding: 12,
-  background: '#ffffff',
-} as const
-
-const transactionTopRowStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  gap: 12,
-  marginBottom: 8,
-} as const
-
-const transactionAmountStyle = {
-  fontSize: 15,
-  fontWeight: 700,
-  color: '#111827',
-} as const
-
-const transactionDescriptionStyle = {
-  fontSize: 14,
-  color: '#374151',
-} as const
-
-const transactionTagsStyle = {
-  display: 'flex',
-  gap: 6,
-  flexWrap: 'wrap' as const,
-  marginTop: 8,
-} as const
-
-const transactionTagBadgeStyle = {
-  fontSize: 12,
-  padding: '4px 8px',
-  borderRadius: 999,
-  background: '#eff6ff',
-  border: '1px solid #bfdbfe',
-  color: '#1d4ed8',
-  cursor: 'pointer',
-} as const
-
-const emptyDayStyle = {
-  border: '1px dashed #d1d5db',
-  borderRadius: 12,
-  padding: 14,
-  background: '#f9fafb',
-  color: '#6b7280',
-  fontSize: 14,
-} as const
-
-const transactionActionsStyle = {
-  display: 'flex',
-  flexWrap: 'wrap' as const,
-  gap: 8,
-  marginTop: 10,
-} as const
-
-const formRowStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: 8,
-  flexWrap: 'wrap' as const,
-  marginTop: 8,
-} as const
-
-const inputStyle = {
-  border: '1px solid #d1d5db',
-  borderRadius: 10,
-  padding: '8px 10px',
-  fontSize: 14,
-  minHeight: 38,
-} as const
-
-const smallInputStyle = {
-  ...inputStyle,
-  width: 90,
-} as const
-
-const wideInputStyle = {
-  ...inputStyle,
-  flex: 1,
-  minWidth: 180,
-} as const
-
-const descriptionFieldWrapStyle = {
-  flex: 1,
-  minWidth: 220,
-  position: 'relative' as const,
-  display: 'flex',
-  flexDirection: 'column' as const,
-  gap: 0,
-} as const
-
-const suggestionsDropdownStyle = {
-  position: 'absolute' as const,
-  top: 'calc(100% + 4px)',
-  left: 0,
-  right: 0,
-  zIndex: 20,
-  background: '#ffffff',
-  border: '1px solid #d1d5db',
-  borderRadius: 10,
-  boxShadow: '0 10px 24px rgba(15, 23, 42, 0.12)',
-  overflow: 'hidden' as const,
-} as const
-
-const suggestionButtonBaseStyle = {
-  width: '100%',
-  textAlign: 'left' as const,
-  border: 'none',
-  background: '#ffffff',
-  padding: '10px 12px',
-  cursor: 'pointer',
-  fontSize: 13,
-  color: '#111827',
-} as const
-
-const tagFieldWrapStyle = {
-  marginTop: 8,
-  display: 'flex',
-  flexDirection: 'column' as const,
-  gap: 8,
-} as const
-
-const tagBadgesWrapStyle = {
-  display: 'flex',
-  gap: 6,
-  flexWrap: 'wrap' as const,
-} as const
-
-const tagBadgeStyle = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 6,
-  padding: '4px 8px',
-  borderRadius: 999,
-  background: '#eff6ff',
-  border: '1px solid #bfdbfe',
-  color: '#1d4ed8',
-  fontSize: 12,
-  fontWeight: 600,
-} as const
-
-const tagRemoveButtonStyle = {
-  border: 'none',
-  background: 'transparent',
-  color: '#1d4ed8',
-  cursor: 'pointer',
-  fontSize: 14,
-  lineHeight: 1,
-  padding: 0,
-} as const
-
-const primaryButtonStyle = {
-  border: '1px solid #2563eb',
-  background: '#2563eb',
-  color: '#ffffff',
-  borderRadius: 10,
-  padding: '8px 10px',
-  cursor: 'pointer',
-  fontSize: 13,
-  fontWeight: 600,
-} as const
-
-const secondaryButtonStyle = {
-  border: '1px solid #d1d5db',
-  background: '#ffffff',
-  color: '#111827',
-  borderRadius: 10,
-  padding: '8px 10px',
-  cursor: 'pointer',
-  fontSize: 13,
-  fontWeight: 600,
-} as const
-
-const dangerButtonStyle = {
-  border: '1px solid #fecaca',
-  background: '#fff1f2',
-  color: '#b91c1c',
-  borderRadius: 10,
-  padding: '8px 10px',
-  cursor: 'pointer',
-  fontSize: 13,
-  fontWeight: 600,
-} as const
-
-const heatmapBarStyle = {
-  display: 'flex',
-  gap: 8,
-  flexWrap: 'wrap' as const,
-  marginTop: 14,
-  marginBottom: 8,
-} as const
-
-const heatmapLegendStyle = {
-  display: 'flex',
-  flexDirection: 'column' as const,
-  gap: 8,
-  marginBottom: 8,
-  fontSize: 12,
-  color: '#4b5563',
-} as const
-
-const heatmapLegendLabelsStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  gap: 12,
-  fontSize: 12,
-  fontWeight: 600,
-  color: '#4b5563',
-} as const
-
-const heatmapLegendBarStyle = {
-  width: '100%',
-  height: 14,
-  borderRadius: 999,
-  border: '1px solid #d8dee8',
-  background:
-    'linear-gradient(90deg, rgb(204, 62, 47) 0%, rgb(239, 208, 124) 50%, rgb(44, 163, 92) 100%)',
-  boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.5)',
-} as const
-
-const heatmapSwitchRowStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: 8,
-  flexWrap: 'wrap' as const,
-  marginBottom: 8,
-  fontSize: 12,
-  color: '#4b5563',
-} as const
-
-const noDaySectionStyle = {
-  marginTop: 18,
-  borderTop: '1px solid #e5e7eb',
-  paddingTop: 16,
-} as const
-
-const noDaySummaryStyle = {
-  marginTop: 8,
-  marginBottom: 12,
-  padding: 12,
-  border: '1px solid #e5e7eb',
-  borderRadius: 12,
-  background: '#f8fafc',
-} as const
-
-const noDayHintStyle = {
-  fontSize: 12,
-  color: '#6b7280',
-  marginTop: 6,
-  lineHeight: 1.4,
-} as const
-
-const badgeStyle = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 6,
-  border: '1px solid #cbd5e1',
-  background: '#f8fafc',
-  color: '#475569',
-  borderRadius: 999,
-  padding: '4px 8px',
-  fontSize: 12,
-  fontWeight: 600,
-} as const
-
-const weekdayLabels = ['pon', 'wt', 'śr', 'czw', 'pt', 'sob', 'ndz']
+import type {
+  HeatmapMode,
+  MonthCalendarPanelProps,
+  Transaction,
+} from './month-calendar/monthCalendarTypes'
+import MonthCalendarDayModal from './month-calendar/MonthCalendarDayModal'
+import MonthCalendarGrid from './month-calendar/MonthCalendarGrid'
+import MonthCalendarHeader from './month-calendar/MonthCalendarHeader'
+import MonthCalendarHeatmapControls from './month-calendar/MonthCalendarHeatmapControls'
+import MonthCalendarTransactionList from './month-calendar/MonthCalendarTransactionList'
+import {
+  badgeStyle,
+  calendarDayCellStyle,
+  calendarDayCountStyle,
+  calendarDayMetaStyle,
+  calendarDayNumberStyle,
+  calendarExpandBadgeStyle,
+  calendarPanelStyle,
+  dangerButtonStyle,
+  descriptionFieldWrapStyle,
+  formRowStyle,
+  noDayHintStyle,
+  noDaySectionStyle,
+  noDaySummaryStyle,
+  primaryButtonStyle,
+  secondaryButtonStyle,
+  smallInputStyle,
+  suggestionButtonBaseStyle,
+  suggestionsDropdownStyle,
+  tagBadgeStyle,
+  tagBadgesWrapStyle,
+  tagFieldWrapStyle,
+  tagRemoveButtonStyle,
+  transactionActionsStyle,
+  transactionAmountStyle,
+  transactionCardStyle,
+  transactionDescriptionStyle,
+  transactionTagBadgeStyle,
+  transactionTagsStyle,
+  transactionTopRowStyle,
+  wideInputStyle,
+} from './month-calendar/monthCalendarStyles'
 
 const formatAmount = (value: number) => {
   return new Intl.NumberFormat('pl-PL', {
@@ -10757,7 +11848,7 @@ const getDirectionalHeatmapVisual = (
   }
 }
 
-export default function MonthCalendarPanel(props: Props) {
+export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
   const {
     selectedMonth,
     transactions,
@@ -11490,9 +12581,7 @@ export default function MonthCalendarPanel(props: Props) {
     )
   }
 
-  const dayCells = Array.from({ length: firstDayOffset }, (_, index) => (
-    <div key={`empty-${index}`} style={calendarEmptyCellStyle} />
-  ))
+  const dayCells: ReactNode[] = []
 
   for (let day = 1; day <= daysInMonth; day += 1) {
     const dayKey = String(day).padStart(2, '0')
@@ -11594,59 +12683,18 @@ export default function MonthCalendarPanel(props: Props) {
   return (
     <>
       <section style={calendarPanelStyle}>
-        <div style={styles.sectionTitle}>{calendarTitle}</div>
-        <div style={{ ...styles.pageSubtitle, marginBottom: 0 }}>{calendarSubtitle}</div>
+        <MonthCalendarHeader title={calendarTitle} subtitle={calendarSubtitle} styles={styles} />
 
-        {showHeatmapControls && (
-          <>
-            <div style={heatmapBarStyle}>
-              <button
-                type="button"
-                style={heatmapMode === 'normal' ? primaryButtonStyle : secondaryButtonStyle}
-                onClick={() => handleHeatmapModeChange('normal')}
-              >
-                zwykły
-              </button>
+        <MonthCalendarHeatmapControls
+          heatmapMode={heatmapMode}
+          heatmapInverted={heatmapInverted}
+          showHeatmapControls={showHeatmapControls}
+          legendLabels={legendLabels}
+          onHeatmapModeChange={handleHeatmapModeChange}
+          onHeatmapInvertedChange={handleHeatmapInvertedChange}
+        />
 
-              <button
-                type="button"
-                style={heatmapMode === 'balance' ? primaryButtonStyle : secondaryButtonStyle}
-                onClick={() => handleHeatmapModeChange('balance')}
-              >
-                heatmapa
-              </button>
-            </div>
-
-            <label style={heatmapSwitchRowStyle}>
-              <input
-                type="checkbox"
-                checked={heatmapInverted}
-                onChange={(event) => handleHeatmapInvertedChange(event.target.checked)}
-              />
-              <span>Odwróć kierunek kolorów</span>
-            </label>
-          </>
-        )}
-
-        {heatmapMode === 'balance' && (
-          <div style={heatmapLegendStyle}>
-            <div style={heatmapLegendLabelsStyle}>
-              <span>{legendLabels.left}</span>
-              <span>{legendLabels.right}</span>
-            </div>
-            <div style={heatmapLegendBarStyle} />
-          </div>
-        )}
-
-        <div style={calendarWeekdaysStyle}>
-          {weekdayLabels.map((label) => (
-            <div key={label} style={calendarWeekdayStyle}>
-              {label}
-            </div>
-          ))}
-        </div>
-
-        <div style={calendarGridStyle}>{dayCells}</div>
+        <MonthCalendarGrid firstDayOffset={firstDayOffset}>{dayCells}</MonthCalendarGrid>
 
         <div style={noDaySectionStyle}>
           <div style={styles.sectionTitle}>Bez dnia / pozostałe</div>
@@ -11668,11 +12716,11 @@ export default function MonthCalendarPanel(props: Props) {
           {transactionsWithoutDay.length === 0 ? (
             <div style={styles.emptyStateCard}>Brak wpisów bez dnia w tym miesiącu.</div>
           ) : (
-            <div style={transactionsListStyle}>
-              {transactionsWithoutDay.map((transaction) =>
-                renderTransactionCard(transaction, 'no-day')
-              )}
-            </div>
+            <MonthCalendarTransactionList
+              transactions={transactionsWithoutDay}
+              context="no-day"
+              renderTransactionCard={renderTransactionCard}
+            />
           )}
         </div>
       </section>
@@ -11686,84 +12734,21 @@ export default function MonthCalendarPanel(props: Props) {
       />
 
       {selectedDay && (
-        <div style={overlayStyle} onClick={closeModal}>
-          <div style={modalStyle} onClick={(event) => event.stopPropagation()}>
-            <div style={modalHeaderStyle}>
-              <div>
-                <div style={modalTitleStyle}>
-                  Wpisy z dnia {selectedDay}.{selectedMonth.slice(5, 7)}.{selectedMonth.slice(0, 4)}
-                </div>
-                <div style={modalSubtitleStyle}>
-                  Podgląd i operacje dla wpisów z wybranego dnia.
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                {!isSelectedMonthLocked && onAddTransactionForDay && (
-                  <button
-                    type="button"
-                    style={primaryButtonStyle}
-                    onClick={() => {
-                      onAddTransactionForDay(selectedDay)
-                      closeModal()
-                    }}
-                  >
-                    dodaj wpis
-                  </button>
-                )}
-
-                <button type="button" style={closeButtonStyle} onClick={closeModal}>
-                  zamknij
-                </button>
-              </div>
-            </div>
-
-            <div style={daySummaryCardStyle}>
-              <div style={styles.l2Name}>Podsumowanie dnia</div>
-              <div style={{ ...calendarDayMetaStyle, marginTop: 6 }}>
-                {getDayMetricLabel()}:{' '}
-                <strong>
-                  {heatmapVariant === 'balance' && selectedDayPrimaryValue > 0 ? '+' : ''}
-                  {formatAmount(selectedDayPrimaryValue)} zł
-                </strong>
-              </div>
-              {heatmapVariant === 'balance' && (
-                <div style={{ ...calendarDayMetaStyle, marginTop: 4 }}>
-                  Suma nominalna wpisów: <strong>{formatAmount(selectedDayRawSum)} zł</strong>
-                </div>
-              )}
-              <div style={{ ...calendarDayMetaStyle, marginTop: 4 }}>
-                Liczba wpisów: <strong>{selectedDayTransactions.length}</strong>
-              </div>
-            </div>
-
-            {selectedDayTransactions.length === 0 ? (
-              <div style={emptyDayStyle}>
-                Brak wpisów w tym dniu.
-                {!isSelectedMonthLocked && onAddTransactionForDay && (
-                  <div style={{ marginTop: 12 }}>
-                    <button
-                      type="button"
-                      style={primaryButtonStyle}
-                      onClick={() => {
-                        onAddTransactionForDay(selectedDay)
-                        closeModal()
-                      }}
-                    >
-                      dodaj pierwszy wpis z tego dnia
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div style={transactionsListStyle}>
-                {selectedDayTransactions.map((transaction) =>
-                  renderTransactionCard(transaction, 'day')
-                )}
-              </div>
-            )}
-          </div>
-        </div>
+        <MonthCalendarDayModal
+          selectedDay={selectedDay}
+          selectedMonth={selectedMonth}
+          selectedDayTransactions={selectedDayTransactions}
+          selectedDayPrimaryValue={selectedDayPrimaryValue}
+          selectedDayRawSum={selectedDayRawSum}
+          heatmapVariant={heatmapVariant}
+          isSelectedMonthLocked={isSelectedMonthLocked}
+          styles={styles}
+          getDayMetricLabel={getDayMetricLabel}
+          formatAmount={formatAmount}
+          renderTransactionCard={renderTransactionCard}
+          onAddTransactionForDay={onAddTransactionForDay}
+          onClose={closeModal}
+        />
       )}
     </>
   )
@@ -17881,7 +18866,7 @@ const getMonthSequence = (fromMonth: string, toMonth: string) => {
   return months
 }
 
-const getMonthPriorityMap = (priorities: FinancialGoalMonthPriority[]) => {
+const getMonthPriorityMap = (priorities: FinancialGoalMonthPriority[] = []) => {
   return priorities.reduce<Record<string, FinancialGoalMonthPriority[]>>((acc, priority) => {
     if (!acc[priority.month]) {
       acc[priority.month] = []
@@ -17892,14 +18877,14 @@ const getMonthPriorityMap = (priorities: FinancialGoalMonthPriority[]) => {
   }, {})
 }
 
-const getMonthConfigMap = (configs: FinancialGoalMonthConfig[]) => {
+const getMonthConfigMap = (configs: FinancialGoalMonthConfig[] = []) => {
   return configs.reduce<Record<string, FinancialGoalMonthConfig>>((acc, config) => {
     acc[config.month] = config
     return acc
   }, {})
 }
 
-const sortGoalsByBaseOrder = (goals: FinancialGoal[]) => {
+const sortGoalsByBaseOrder = (goals: FinancialGoal[] = []) => {
   return [...goals].sort((left, right) => {
     const createdAtCompare = (left.created_at || '').localeCompare(right.created_at || '')
 
@@ -17914,8 +18899,8 @@ const sortGoalsByBaseOrder = (goals: FinancialGoal[]) => {
 const roundToTwo = (value: number) => Math.round(value * 100) / 100
 
 const normalizeAllocationWeights = (
-  goalIds: string[],
-  rawWeights: Record<string, number>
+  goalIds: string[] = [],
+  rawWeights: Record<string, number> = {}
 ): Record<string, number> => {
   if (goalIds.length === 0) {
     return {}
@@ -17962,7 +18947,7 @@ const normalizeAllocationWeights = (
 
 export const getFinancialGoalModeForMonth = (
   month: string,
-  configs: FinancialGoalMonthConfig[]
+  configs: FinancialGoalMonthConfig[] = []
 ): FinancialGoalAllocationMode => {
   const configMap = getMonthConfigMap(configs)
   const availableMonths = Object.keys(configMap)
@@ -17982,7 +18967,7 @@ export const getFinancialGoalModeForMonth = (
 
 export const getEffectiveMonthPriorityRowsForMonth = (
   month: string,
-  priorities: FinancialGoalMonthPriority[]
+  priorities: FinancialGoalMonthPriority[] = []
 ) => {
   const priorityMap = getMonthPriorityMap(priorities)
   const availableMonths = Object.keys(priorityMap)
@@ -17990,14 +18975,11 @@ export const getEffectiveMonthPriorityRowsForMonth = (
     .sort(compareMonths)
 
   for (let index = availableMonths.length - 1; index >= 0; index -= 1) {
-    const currentMonth = availableMonths[index]
-    const priorityRows = priorityMap[currentMonth]
+    const currentRows = priorityMap[availableMonths[index]] || []
 
-    if (!priorityRows || priorityRows.length === 0) {
-      continue
+    if (currentRows.length > 0) {
+      return currentRows.slice().sort((left, right) => left.sort_order - right.sort_order)
     }
-
-    return priorityRows.slice().sort((left, right) => left.sort_order - right.sort_order)
   }
 
   return []
@@ -18005,26 +18987,24 @@ export const getEffectiveMonthPriorityRowsForMonth = (
 
 export const getFinancialGoalAllocationPercentagesForMonth = ({
   month,
-  goals,
-  priorities,
+  goals = [],
+  priorities = [],
 }: {
   month: string
-  goals: FinancialGoal[]
-  priorities: FinancialGoalMonthPriority[]
+  goals?: FinancialGoal[]
+  priorities?: FinancialGoalMonthPriority[]
 }) => {
   const sortedGoals = sortGoalsByBaseOrder(goals)
   const goalIds = sortedGoals.map((goal) => goal.id)
   const effectivePriorityRows = getEffectiveMonthPriorityRowsForMonth(month, priorities)
-  const priorityRowMap = Object.fromEntries(effectivePriorityRows.map((row) => [row.goal_id, row]))
+  const priorityRowMap = Object.fromEntries(
+    effectivePriorityRows.map((priority) => [priority.goal_id, priority])
+  )
 
+  const fallbackWeight = goalIds.length > 0 ? FULL_PERCENT / goalIds.length : 0
   const rawWeights = Object.fromEntries(
     sortedGoals.map((goal) => {
       const priorityRow = priorityRowMap[goal.id]
-      const fallbackWeight =
-        goal.allocation_percent === null || goal.allocation_percent === undefined
-          ? 0
-          : Math.max(Math.round(goal.allocation_percent), 0)
-
       return [goal.id, priorityRow?.allocation_percent ?? fallbackWeight]
     })
   )
@@ -18032,25 +19012,25 @@ export const getFinancialGoalAllocationPercentagesForMonth = ({
   return normalizeAllocationWeights(goalIds, rawWeights)
 }
 
-const getInheritedOrderIds = (month: string, priorities: FinancialGoalMonthPriority[]) => {
+const getInheritedOrderIds = (month: string, priorities: FinancialGoalMonthPriority[] = []) => {
   return getEffectiveMonthPriorityRowsForMonth(month, priorities).map((priority) => priority.goal_id)
 }
 
-const getInheritedOrderIndex = (goalId: string, inheritedOrderIds: string[]) => {
+const getInheritedOrderIndex = (goalId: string, inheritedOrderIds: string[] = []) => {
   const index = inheritedOrderIds.indexOf(goalId)
   return index >= 0 ? index : Number.MAX_SAFE_INTEGER
 }
 
 const getOrderedGoalIdsForMonth = ({
   month,
-  goals,
-  priorities,
-  monthConfigs,
+  goals = [],
+  priorities = [],
+  monthConfigs = [],
 }: {
   month: string
-  goals: FinancialGoal[]
-  priorities: FinancialGoalMonthPriority[]
-  monthConfigs: FinancialGoalMonthConfig[]
+  goals?: FinancialGoal[]
+  priorities?: FinancialGoalMonthPriority[]
+  monthConfigs?: FinancialGoalMonthConfig[]
 }) => {
   const orderedBaseGoals = sortGoalsByBaseOrder(goals)
   const inheritedOrderIds = getInheritedOrderIds(month, priorities)
@@ -18155,18 +19135,18 @@ export const getGoalProgressBarColor = (percentage: number) => {
 }
 
 export const buildFinancialGoalsPlan = ({
-  goals,
-  priorities,
-  monthConfigs,
-  transactions,
+  goals = [],
+  priorities = [],
+  monthConfigs = [],
+  transactions = [],
   selectedMonth,
   lockedMonthsSet,
   getSignedAmountForTransaction,
 }: {
-  goals: FinancialGoal[]
-  priorities: FinancialGoalMonthPriority[]
-  monthConfigs: FinancialGoalMonthConfig[]
-  transactions: Transaction[]
+  goals?: FinancialGoal[]
+  priorities?: FinancialGoalMonthPriority[]
+  monthConfigs?: FinancialGoalMonthConfig[]
+  transactions?: Transaction[]
   selectedMonth: string
   lockedMonthsSet: Set<string>
   getSignedAmountForTransaction: (transaction: Transaction) => number
@@ -18208,31 +19188,18 @@ export const buildFinancialGoalsPlan = ({
     const monthBalance = monthlyBalances[month] || 0
     const monthSurplus = Math.max(monthBalance, 0)
     const mode = getFinancialGoalModeForMonth(month, monthConfigs)
-
     monthlySurplus[month] = monthSurplus
 
-    if (monthSurplus <= 0) {
-      return
-    }
-
     let remainingSurplus = monthSurplus
+
     const activeGoals = baseGoals.filter((goal) => {
       if (compareMonths(goal.start_month, month) > 0) {
         return false
       }
 
-      if (goal.deadline_month && compareMonths(month, goal.deadline_month) > 0) {
-        return false
-      }
+      const completionMonth = completionMonthByGoalId[goal.id]
 
-      return true
-    })
-
-    const orderedGoalIds = getOrderedGoalIdsForMonth({
-      month,
-      goals: activeGoals,
-      priorities,
-      monthConfigs,
+      return !completionMonth || compareMonths(completionMonth, month) >= 0
     })
 
     if (mode === 'allocation') {
@@ -18242,45 +19209,93 @@ export const buildFinancialGoalsPlan = ({
         priorities,
       })
 
-      orderedGoalIds.forEach((goalId, index) => {
+      activeGoals.forEach((goal) => {
         if (remainingSurplus <= 0) {
           return
         }
 
-        const goal = activeGoals.find((item) => item.id === goalId)
+        const currentCollected = collectedByGoalId[goal.id] || 0
+        const missingAmount = Math.max(goal.target_amount - currentCollected, 0)
 
-        if (!goal) {
+        if (missingAmount <= 0) {
           return
         }
 
-        const alreadyCollected = collectedByGoalId[goalId] || 0
-        const remainingTarget = Math.max(goal.target_amount - alreadyCollected, 0)
+        const allocationPercent = allocationByGoalId[goal.id] || 0
+        const allocatedAmount = roundToTwo((monthSurplus * allocationPercent) / FULL_PERCENT)
+        const appliedAmount = Math.min(allocatedAmount, missingAmount, remainingSurplus)
 
-        if (remainingTarget <= 0) {
+        if (appliedAmount <= 0) {
           return
         }
 
-        const rawShare = monthSurplus * ((allocationByGoalId[goalId] || 0) / FULL_PERCENT)
-        const targetShare = index === orderedGoalIds.length - 1 ? remainingSurplus : rawShare
-        const allocation = Math.min(remainingTarget, remainingSurplus, targetShare)
-
-        if (allocation <= 0) {
-          return
-        }
-
-        collectedByGoalId[goalId] = roundToTwo(alreadyCollected + allocation)
-        allocationsByGoalId[goalId][month] = roundToTwo(
-          (allocationsByGoalId[goalId][month] || 0) + allocation
+        collectedByGoalId[goal.id] = roundToTwo(currentCollected + appliedAmount)
+        allocationsByGoalId[goal.id][month] = roundToTwo(
+          (allocationsByGoalId[goal.id][month] || 0) + appliedAmount
         )
-        remainingSurplus = roundToTwo(remainingSurplus - allocation)
+        remainingSurplus = roundToTwo(remainingSurplus - appliedAmount)
 
-        if (!completionMonthByGoalId[goalId] && collectedByGoalId[goalId] >= goal.target_amount) {
-          completionMonthByGoalId[goalId] = month
+        if (
+          collectedByGoalId[goal.id] >= goal.target_amount &&
+          lockedMonthsSet.has(month) &&
+          !completionMonthByGoalId[goal.id]
+        ) {
+          completionMonthByGoalId[goal.id] = month
         }
       })
 
+      if (remainingSurplus > 0) {
+        const orderedActiveGoalIds = getOrderedGoalIdsForMonth({
+          month,
+          goals: activeGoals,
+          priorities,
+          monthConfigs,
+        })
+
+        orderedActiveGoalIds.forEach((goalId) => {
+          if (remainingSurplus <= 0) {
+            return
+          }
+
+          const goal = activeGoals.find((item) => item.id === goalId)
+
+          if (!goal) {
+            return
+          }
+
+          const currentCollected = collectedByGoalId[goal.id] || 0
+          const missingAmount = Math.max(goal.target_amount - currentCollected, 0)
+          const appliedAmount = Math.min(missingAmount, remainingSurplus)
+
+          if (appliedAmount <= 0) {
+            return
+          }
+
+          collectedByGoalId[goal.id] = roundToTwo(currentCollected + appliedAmount)
+          allocationsByGoalId[goal.id][month] = roundToTwo(
+            (allocationsByGoalId[goal.id][month] || 0) + appliedAmount
+          )
+          remainingSurplus = roundToTwo(remainingSurplus - appliedAmount)
+
+          if (
+            collectedByGoalId[goal.id] >= goal.target_amount &&
+            lockedMonthsSet.has(month) &&
+            !completionMonthByGoalId[goal.id]
+          ) {
+            completionMonthByGoalId[goal.id] = month
+          }
+        })
+      }
+
       return
     }
+
+    const orderedGoalIds = getOrderedGoalIdsForMonth({
+      month,
+      goals: activeGoals,
+      priorities,
+      monthConfigs,
+    })
 
     orderedGoalIds.forEach((goalId) => {
       if (remainingSurplus <= 0) {
@@ -18293,61 +19308,58 @@ export const buildFinancialGoalsPlan = ({
         return
       }
 
-      const alreadyCollected = collectedByGoalId[goalId] || 0
-      const remainingTarget = Math.max(goal.target_amount - alreadyCollected, 0)
+      const currentCollected = collectedByGoalId[goal.id] || 0
+      const missingAmount = Math.max(goal.target_amount - currentCollected, 0)
+      const appliedAmount = Math.min(missingAmount, remainingSurplus)
 
-      if (remainingTarget <= 0) {
+      if (appliedAmount <= 0) {
         return
       }
 
-      const allocation = Math.min(remainingTarget, remainingSurplus)
+      collectedByGoalId[goal.id] = roundToTwo(currentCollected + appliedAmount)
+      allocationsByGoalId[goal.id][month] = roundToTwo(
+        (allocationsByGoalId[goal.id][month] || 0) + appliedAmount
+      )
+      remainingSurplus = roundToTwo(remainingSurplus - appliedAmount)
 
-      if (allocation <= 0) {
-        return
-      }
-
-      collectedByGoalId[goalId] = roundToTwo(alreadyCollected + allocation)
-      allocationsByGoalId[goalId][month] = roundToTwo(allocation)
-      remainingSurplus = roundToTwo(remainingSurplus - allocation)
-
-      if (!completionMonthByGoalId[goalId] && collectedByGoalId[goalId] >= goal.target_amount) {
-        completionMonthByGoalId[goalId] = month
+      if (
+        collectedByGoalId[goal.id] >= goal.target_amount &&
+        lockedMonthsSet.has(month) &&
+        !completionMonthByGoalId[goal.id]
+      ) {
+        completionMonthByGoalId[goal.id] = month
       }
     })
   })
 
-  const orderedGoalIds = getOrderedGoalIdsForMonth({
-    month: selectedMonth,
+  const orderedGoals = getFinancialGoalPriorityItemsForMonth({
     goals: baseGoals,
     priorities,
     monthConfigs,
+    month: selectedMonth,
   })
-  const goalsById = Object.fromEntries(baseGoals.map((goal) => [goal.id, goal]))
-  const orderedGoals = [
-    ...orderedGoalIds
-      .map((goalId) => goalsById[goalId])
-      .filter((goal): goal is FinancialGoal => Boolean(goal)),
-    ...baseGoals.filter((goal) => !orderedGoalIds.includes(goal.id)),
-  ]
 
   const progressByGoalId = Object.fromEntries(
     baseGoals.map((goal) => {
-      const collectedAmount = Math.min(collectedByGoalId[goal.id] || 0, goal.target_amount)
-      const remainingAmount = Math.max(goal.target_amount - collectedAmount, 0)
+      const collectedAmount = roundToTwo(collectedByGoalId[goal.id] || 0)
+      const remainingAmount = roundToTwo(Math.max(goal.target_amount - collectedAmount, 0))
       const percentage =
         goal.target_amount > 0 ? Math.min((collectedAmount / goal.target_amount) * 100, 100) : 0
       const completionMonth = completionMonthByGoalId[goal.id]
-      const isClosedCompletionMonth = completionMonth ? lockedMonthsSet.has(completionMonth) : false
+      const isCompleted = Boolean(completionMonth)
       const deadlineMonth = goal.deadline_month || null
-      const isPastDeadline =
-        Boolean(deadlineMonth) && compareMonths(selectedMonth, deadlineMonth as string) > 0
-      const isDeadlineClosed = Boolean(deadlineMonth) && lockedMonthsSet.has(deadlineMonth as string)
-      const statusLabel: FinancialGoalComputedStatus =
-        collectedAmount >= goal.target_amount && isClosedCompletionMonth
-          ? 'zrealizowany'
-          : isPastDeadline && isDeadlineClosed
-            ? 'niezrealizowany'
-            : 'w trakcie'
+      const isDeadlinePassed =
+        Boolean(deadlineMonth) &&
+        compareMonths(deadlineMonth as string, selectedMonth) < 0 &&
+        !isCompleted
+      const isArchived =
+        isCompleted && completionMonth ? compareMonths(completionMonth, selectedMonth) < 0 : false
+
+      const statusLabel: FinancialGoalComputedStatus = isCompleted
+        ? 'zrealizowany'
+        : isDeadlinePassed
+          ? 'niezrealizowany'
+          : 'w trakcie'
 
       return [
         goal.id,
@@ -18358,10 +19370,10 @@ export const buildFinancialGoalsPlan = ({
           percentage,
           statusLabel,
           completionMonth,
-          allocationsByMonth: allocationsByGoalId[goal.id],
+          allocationsByMonth: allocationsByGoalId[goal.id] || {},
           deadlineMonth,
-          isArchived: statusLabel !== 'w trakcie',
-        } satisfies FinancialGoalProgress,
+          isArchived,
+        },
       ]
     })
   )
@@ -18375,14 +19387,14 @@ export const buildFinancialGoalsPlan = ({
 }
 
 export const getFinancialGoalPriorityItemsForMonth = ({
-  goals,
-  priorities,
-  monthConfigs,
+  goals = [],
+  priorities = [],
+  monthConfigs = [],
   month,
 }: {
-  goals: FinancialGoal[]
-  priorities: FinancialGoalMonthPriority[]
-  monthConfigs: FinancialGoalMonthConfig[]
+  goals?: FinancialGoal[]
+  priorities?: FinancialGoalMonthPriority[]
+  monthConfigs?: FinancialGoalMonthConfig[]
   month: string
 }) => {
   const orderedBaseGoals = sortGoalsByBaseOrder(goals)
@@ -18401,7 +19413,6 @@ export const getFinancialGoalPriorityItemsForMonth = ({
     ...orderedBaseGoals.filter((goal) => !orderedGoalIds.includes(goal.id)),
   ]
 }
-
 
 
 ==================================================
@@ -23355,6 +24366,209 @@ export const useBudgetPageDrafts = ({
 
 
 ==================================================
+PLIK: lib\useBudgetPageOverlayProps.ts
+==================================================
+
+type UseBudgetPageOverlayPropsParams = {
+  canCreateTransactions: boolean
+  expenseLevel1Id: string | null
+  incomeLevel1Id: string | null
+  openFloatingTransactionCreator: (level1Id: string) => void
+
+  isTransactionCreatorOpen: boolean
+  selectedMonth: string
+  level1: any[]
+  sortedLevel2ByParentIdForModal: any
+  sortedLevel3ByParentIdForModal: any
+  categoriesById: Record<string, any>
+  transactionCreatorSuggestionId: string | null
+  transactionCreatorLockedLevel1Id: string | null
+  topTransactionShortcutCategoriesByType: Record<string, any[]>
+  recentTransactionShortcutCategoriesByType: Record<string, any[]>
+  descriptionSuggestions: any
+  applyTransactionCategorySelection: (id: string) => void
+  selectedTransactionTypeId: string | null
+  setSelectedTransactionTypeIdWithPaymentSource: (id: string | null) => void
+  selectedLevel2Id: string | null
+  setSelectedLevel2Id: (id: string | null) => void
+  selectedTransactionCategoryId: string | null
+  setSelectedTransactionCategoryId: (id: string | null) => void
+  isSerialTransactionCreatorEnabled: boolean
+  setIsSerialTransactionCreatorEnabled: (value: boolean) => void
+  newAmount: string
+  setNewAmount: (value: string) => void
+  newDescription: string
+  setNewDescription: (value: string) => void
+  newTransactionDate: string
+  setNewTransactionDate: (value: string) => void
+  selectedTagNames: string[]
+  setSelectedTagNames: any
+  selectedPaymentSourceId: string
+  setSelectedPaymentSourceId: (value: string) => void
+  currentTransactionCreatorPaymentSourceOptions: any[]
+  isTransactionCreatorPaymentSourceVisible: boolean
+  selectedPaymentSplitItems: Array<{ paymentSourceId: string; amount: string }>
+  setSelectedPaymentSplitItems: any
+  selectedRecurringTransactionId: string
+  setSelectedRecurringTransactionId: (value: string) => void
+  recurringOptionItems: any[]
+  recurringSuggestionItems: any[]
+  isSaving: boolean
+  resetTransactionCreator: () => void
+  handleSaveTransaction: (close?: boolean) => Promise<void>
+  amountInputRef: any
+  descriptionInputRef: any
+  styles: any
+  handleDeleteDescriptionSuggestion: any
+
+  draftPromptState: any
+  setDraftPromptState: any
+  applyDraftToTransactionCreator: any
+  deleteDraft: any
+  openBlankFloatingTransactionCreator: any
+
+  SHOW_RECURRING_STAGE_15: boolean
+  recurringCompletionPrompt: any
+  handleConfirmRecurringCompletion: any
+  setRecurringCompletionPrompt: any
+}
+
+export function useBudgetPageOverlayProps({
+  canCreateTransactions,
+  expenseLevel1Id,
+  incomeLevel1Id,
+  openFloatingTransactionCreator,
+
+  isTransactionCreatorOpen,
+  selectedMonth,
+  level1,
+  sortedLevel2ByParentIdForModal,
+  sortedLevel3ByParentIdForModal,
+  categoriesById,
+  transactionCreatorSuggestionId,
+  transactionCreatorLockedLevel1Id,
+  topTransactionShortcutCategoriesByType,
+  recentTransactionShortcutCategoriesByType,
+  descriptionSuggestions,
+  applyTransactionCategorySelection,
+  selectedTransactionTypeId,
+  setSelectedTransactionTypeIdWithPaymentSource,
+  selectedLevel2Id,
+  setSelectedLevel2Id,
+  selectedTransactionCategoryId,
+  setSelectedTransactionCategoryId,
+  isSerialTransactionCreatorEnabled,
+  setIsSerialTransactionCreatorEnabled,
+  newAmount,
+  setNewAmount,
+  newDescription,
+  setNewDescription,
+  newTransactionDate,
+  setNewTransactionDate,
+  selectedTagNames,
+  setSelectedTagNames,
+  selectedPaymentSourceId,
+  setSelectedPaymentSourceId,
+  currentTransactionCreatorPaymentSourceOptions,
+  isTransactionCreatorPaymentSourceVisible,
+  selectedPaymentSplitItems,
+  setSelectedPaymentSplitItems,
+  selectedRecurringTransactionId,
+  setSelectedRecurringTransactionId,
+  recurringOptionItems,
+  recurringSuggestionItems,
+  isSaving,
+  resetTransactionCreator,
+  handleSaveTransaction,
+  amountInputRef,
+  descriptionInputRef,
+  styles,
+  handleDeleteDescriptionSuggestion,
+
+  draftPromptState,
+  setDraftPromptState,
+  applyDraftToTransactionCreator,
+  deleteDraft,
+  openBlankFloatingTransactionCreator,
+
+  SHOW_RECURRING_STAGE_15,
+  recurringCompletionPrompt,
+  handleConfirmRecurringCompletion,
+  setRecurringCompletionPrompt,
+}: UseBudgetPageOverlayPropsParams) {
+  const shortcutBaseLevel1Id = transactionCreatorLockedLevel1Id || selectedTransactionTypeId
+
+  return {
+    canCreateTransactions,
+    expenseLevel1Id,
+    incomeLevel1Id,
+    openFloatingTransactionCreator,
+
+    isTransactionCreatorOpen,
+    selectedMonth,
+    level1,
+    sortedLevel2ByParentIdForModal,
+    sortedLevel3ByParentIdForModal,
+    categoriesById,
+    transactionCreatorSuggestionId,
+    transactionCreatorLockedLevel1Id,
+    topShortcutCategories: shortcutBaseLevel1Id
+      ? topTransactionShortcutCategoriesByType[shortcutBaseLevel1Id] || []
+      : [],
+    recentShortcutCategories: shortcutBaseLevel1Id
+      ? recentTransactionShortcutCategoriesByType[shortcutBaseLevel1Id] || []
+      : [],
+    descriptionSuggestions,
+    applyTransactionCategorySelection,
+    selectedTransactionTypeId,
+    setSelectedTransactionTypeIdWithPaymentSource,
+    selectedLevel2Id,
+    setSelectedLevel2Id,
+    selectedTransactionCategoryId,
+    setSelectedTransactionCategoryId,
+    isSerialTransactionCreatorEnabled,
+    setIsSerialTransactionCreatorEnabled,
+    newAmount,
+    setNewAmount,
+    newDescription,
+    setNewDescription,
+    newTransactionDate,
+    setNewTransactionDate,
+    selectedTagNames,
+    setSelectedTagNames,
+    selectedPaymentSourceId,
+    setSelectedPaymentSourceId,
+    currentTransactionCreatorPaymentSourceOptions,
+    isTransactionCreatorPaymentSourceVisible,
+    selectedPaymentSplitItems,
+    setSelectedPaymentSplitItems,
+    selectedRecurringTransactionId,
+    setSelectedRecurringTransactionId,
+    recurringOptionItems,
+    recurringSuggestionItems,
+    isSaving,
+    resetTransactionCreator,
+    handleSaveTransaction,
+    amountInputRef,
+    descriptionInputRef,
+    styles,
+    handleDeleteDescriptionSuggestion,
+
+    draftPromptState,
+    setDraftPromptState,
+    applyDraftToTransactionCreator,
+    deleteDraft,
+    openBlankFloatingTransactionCreator,
+
+    SHOW_RECURRING_STAGE_15,
+    recurringCompletionPrompt,
+    handleConfirmRecurringCompletion,
+    setRecurringCompletionPrompt,
+  }
+}
+
+
+==================================================
 PLIK: lib\useBudgetTreeMetrics.ts
 ==================================================
 
@@ -28003,7 +29217,7 @@ PLIK: next-env.d.ts
 
 /// <reference types="next" />
 /// <reference types="next/image-types/global" />
-import "./.next/dev/types/routes.d.ts";
+import "./.next/types/routes.d.ts";
 
 // NOTE: This file should not be edited
 // see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
