@@ -82,6 +82,8 @@ export type RecurringTransaction = {
   category_id: string
   payment_source_id?: string | null
   amount: number | null
+  use_amount_when_creating?: boolean
+  initial_payment_amount?: number | null
   description: string | null
   frequency: RecurringTransactionFrequency
   custom_interval_months?: number | null
@@ -101,6 +103,17 @@ export type RecurringTransactionExecution = {
   status: 'completed' | 'skipped'
   marked_at?: string
   created_at?: string
+}
+
+export type RecurringReminderMonthStatus = {
+  id: string
+  profile_id: string
+  reminder_id: string
+  month: string
+  status: 'read' | 'linked'
+  transaction_id: string | null
+  created_at?: string
+  updated_at?: string
 }
 
 export type FinancialGoal = {

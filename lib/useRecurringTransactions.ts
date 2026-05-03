@@ -2,16 +2,19 @@
 
 import { useCallback, useState } from 'react'
 import { supabase } from './supabaseClient'
-import { RecurringTransaction, RecurringTransactionExecution } from './budgetPageTypes'
 import {
-  getPastDueCycleDates,
+  RecurringReminderMonthStatus,
+  RecurringTransaction,
+  RecurringTransactionExecution,
+} from './budgetPageTypes'
+import {
   mapRecurringExecutionRow,
+  mapRecurringReminderMonthStatusRow,
   mapRecurringTransactionRow,
 } from './recurringTransactions'
 
 type SaveRecurringInput = Omit<RecurringTransaction, 'id' | 'profile_id' | 'created_at'> & {
-  createPastExecutions?: boolean
-  referenceMonth?: string
+  id?: string
 }
 
 type UseRecurringTransactionsParams = {
@@ -21,6 +24,9 @@ type UseRecurringTransactionsParams = {
 export function useRecurringTransactions({ profileId }: UseRecurringTransactionsParams) {
   const [recurringTransactions, setRecurringTransactions] = useState<RecurringTransaction[]>([])
   const [recurringExecutions, setRecurringExecutions] = useState<RecurringTransactionExecution[]>([])
+  const [recurringReminderMonthStatuses, setRecurringReminderMonthStatuses] = useState<
+    RecurringReminderMonthStatus[]
+  >([])
 
   const loadRecurringTransactions = useCallback(async () => {
     const { data: recurringData, error: recurringError } = await supabase
@@ -37,12 +43,12 @@ export function useRecurringTransactions({ profileId }: UseRecurringTransactions
       mapRecurringTransactionRow(row as Record<string, unknown>)
     )
 
-    setRecurringTransactions(mappedRecurring)
-
     const recurringIds = mappedRecurring.map((row) => row.id)
 
     if (recurringIds.length === 0) {
+      setRecurringTransactions([])
       setRecurringExecutions([])
+      setRecurringReminderMonthStatuses([])
       return
     }
 
@@ -56,13 +62,35 @@ export function useRecurringTransactions({ profileId }: UseRecurringTransactions
       throw executionsError
     }
 
-    setRecurringExecutions(
-      (executionsData || []).map((row) => mapRecurringExecutionRow(row as Record<string, unknown>))
+    const mappedExecutions = (executionsData || []).map((row) =>
+      mapRecurringExecutionRow(row as Record<string, unknown>)
     )
+
+    const { data: statusesData, error: statusesError } = await supabase
+      .from('recurring_reminder_month_statuses')
+      .select('*')
+      .eq('profile_id', profileId)
+      .in('reminder_id', recurringIds)
+      .order('month', { ascending: false })
+
+    if (statusesError) {
+      setRecurringTransactions(mappedRecurring)
+      setRecurringExecutions(mappedExecutions)
+      setRecurringReminderMonthStatuses([])
+      return
+    }
+
+    const mappedStatuses = (statusesData || []).map((row) =>
+      mapRecurringReminderMonthStatusRow(row as Record<string, unknown>)
+    )
+
+    setRecurringTransactions(mappedRecurring)
+    setRecurringExecutions(mappedExecutions)
+    setRecurringReminderMonthStatuses(mappedStatuses)
   }, [profileId])
 
   const saveRecurringTransaction = useCallback(
-    async (input: SaveRecurringInput & { id?: string }) => {
+    async (input: SaveRecurringInput) => {
       const normalizedAmount =
         input.amount === null || input.amount === undefined || Number.isNaN(Number(input.amount))
           ? null
@@ -74,6 +102,8 @@ export function useRecurringTransactions({ profileId }: UseRecurringTransactions
         category_id: input.category_id,
         payment_source_id: input.payment_source_id || null,
         amount: normalizedAmount,
+        use_amount_when_creating: Boolean(input.use_amount_when_creating),
+        initial_payment_amount: input.initial_payment_amount ?? null,
         description: input.description?.trim() || null,
         frequency: input.frequency,
         custom_interval_months: input.frequency === 'custom' ? input.custom_interval_months || 1 : null,
@@ -89,38 +119,79 @@ export function useRecurringTransactions({ profileId }: UseRecurringTransactions
         ? supabase.from('recurring_transactions').update(payload).eq('id', input.id).select('*').single()
         : supabase.from('recurring_transactions').insert(payload).select('*').single()
 
-      const { data, error } = await query
+      const { error } = await query
 
       if (error) {
         throw new Error(error.message)
       }
 
-      const savedRecurring = data
-        ? mapRecurringTransactionRow(data as Record<string, unknown>)
-        : null
+      await loadRecurringTransactions()
+    },
+    [loadRecurringTransactions, profileId]
+  )
 
-      if (savedRecurring && input.createPastExecutions && input.referenceMonth) {
-        const dueDates = getPastDueCycleDates(savedRecurring, input.referenceMonth)
+  const deleteRecurringTransaction = useCallback(
+    async (recurringId: string) => {
+      const { error } = await supabase.from('recurring_transactions').delete().eq('id', recurringId)
 
-        if (dueDates.length > 0) {
-          const { error: seedError } = await supabase.from('recurring_transaction_executions').upsert(
-            dueDates.map((generatedForDate) => ({
-              recurring_transaction_id: savedRecurring.id,
-              generated_for_date: generatedForDate,
-              status: 'skipped',
-              marked_at: new Date().toISOString(),
-            })),
-            {
-              onConflict: 'recurring_transaction_id,generated_for_date',
-            }
-          )
-
-          if (seedError) {
-            throw new Error(seedError.message)
-          }
-        }
+      if (error) {
+        throw new Error(error.message)
       }
 
+      await loadRecurringTransactions()
+    },
+    [loadRecurringTransactions]
+  )
+
+  const saveRecurringReminderMonthStatus = useCallback(
+    async ({
+      reminderId,
+      month,
+      status,
+      transactionId,
+    }: {
+      reminderId: string
+      month: string
+      status: RecurringReminderMonthStatus['status']
+      transactionId?: string | null
+    }) => {
+      const { error } = await supabase.from('recurring_reminder_month_statuses').upsert(
+        {
+          profile_id: profileId,
+          reminder_id: reminderId,
+          month: `${month}-01`,
+          status,
+          transaction_id: transactionId || null,
+          updated_at: new Date().toISOString(),
+        },
+        {
+          onConflict: 'profile_id,reminder_id,month',
+        }
+      )
+
+      if (error) {
+        throw new Error(error.message)
+      }
+
+      setRecurringReminderMonthStatuses((prev) => {
+        const normalizedMonth = month.slice(0, 7)
+        const nextStatus: RecurringReminderMonthStatus = {
+          id: `${reminderId}-${normalizedMonth}`,
+          profile_id: profileId,
+          reminder_id: reminderId,
+          month: normalizedMonth,
+          status,
+          transaction_id: transactionId || null,
+          updated_at: new Date().toISOString(),
+        }
+
+        return [
+          nextStatus,
+          ...prev.filter(
+            (item) => !(item.reminder_id === reminderId && item.month === normalizedMonth)
+          ),
+        ]
+      })
       await loadRecurringTransactions()
     },
     [loadRecurringTransactions, profileId]
@@ -163,8 +234,11 @@ export function useRecurringTransactions({ profileId }: UseRecurringTransactions
   return {
     recurringTransactions,
     recurringExecutions,
+    recurringReminderMonthStatuses,
     loadRecurringTransactions,
     saveRecurringTransaction,
+    deleteRecurringTransaction,
     saveRecurringExecution,
+    saveRecurringReminderMonthStatus,
   }
 }

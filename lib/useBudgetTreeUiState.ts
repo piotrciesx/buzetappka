@@ -6,15 +6,17 @@ type UseBudgetTreeUiStateParams = {
 }
 
 export function useBudgetTreeUiState({ initialOpenLevel1Id }: UseBudgetTreeUiStateParams) {
-  const [openLevel1Ids, setOpenLevel1Ids] = useState<string[]>(
-    initialOpenLevel1Id ? [initialOpenLevel1Id] : []
-  )
+  void initialOpenLevel1Id
+
+  const [openLevel1Ids, setOpenLevel1Ids] = useState<string[]>([])
   const [openLevel1CalendarIds, setOpenLevel1CalendarIds] = useState<string[]>([])
   const [openLevel2Ids, setOpenLevel2Ids] = useState<string[]>([])
   const [openLevel3Ids, setOpenLevel3Ids] = useState<string[]>([])
 
   const resetTreeOpenState = useCallback((nextOpenLevel1Id: string | null) => {
-    setOpenLevel1Ids(nextOpenLevel1Id ? [nextOpenLevel1Id] : [])
+    void nextOpenLevel1Id
+
+    setOpenLevel1Ids([])
     setOpenLevel2Ids([])
     setOpenLevel3Ids([])
   }, [])

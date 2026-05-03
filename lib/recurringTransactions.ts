@@ -1,10 +1,12 @@
 import {
   Category,
   PaymentSource,
+  RecurringReminderMonthStatus,
   RecurringTransaction,
   RecurringTransactionExecution,
   Transaction,
 } from './budgetPageTypes'
+import { getUniqueCategoryLabel } from './categoryUtils'
 import { getDaysInMonth } from './dateUtils'
 import { getPaymentSourceOptionLabel } from './paymentSources'
 
@@ -45,19 +47,19 @@ const getIntervalInMonths = (recurring: RecurringTransaction) => {
   return 1
 }
 
-const getElapsedRecurringCycles = (recurring: RecurringTransaction, referenceMonth: string) => {
-  if (!recurring.start_date) {
-    return null
-  }
+const getAnchorDate = (recurring: RecurringTransaction, fallbackMonth: string) => {
+  return recurring.start_date || recurring.created_at?.slice(0, 10) || `${fallbackMonth}-01`
+}
 
-  const monthsDelta = diffInMonths(recurring.start_date, referenceMonth)
+const getElapsedRecurringCycles = (recurring: RecurringTransaction, referenceMonth: string) => {
+  const anchorDate = getAnchorDate(recurring, referenceMonth)
+  const monthsDelta = diffInMonths(anchorDate, referenceMonth)
 
   if (monthsDelta < 0) {
     return 0
   }
 
-  const intervalInMonths = getIntervalInMonths(recurring)
-  return Math.floor(monthsDelta / intervalInMonths) + 1
+  return Math.floor(monthsDelta / getIntervalInMonths(recurring)) + 1
 }
 
 export const mapRecurringTransactionRow = (row: Record<string, unknown>): RecurringTransaction => {
@@ -76,6 +78,13 @@ export const mapRecurringTransactionRow = (row: Record<string, unknown>): Recurr
       row.amount === null || row.amount === undefined || row.amount === ''
         ? null
         : Number(row.amount),
+    use_amount_when_creating: Boolean(row.use_amount_when_creating),
+    initial_payment_amount:
+      row.initial_payment_amount === null ||
+      row.initial_payment_amount === undefined ||
+      row.initial_payment_amount === ''
+        ? null
+        : Number(row.initial_payment_amount),
     description: typeof row.description === 'string' ? row.description : null,
     frequency: rawFrequency === 'yearly' || rawFrequency === 'custom' ? rawFrequency : 'monthly',
     custom_interval_months:
@@ -93,6 +102,23 @@ export const mapRecurringTransactionRow = (row: Record<string, unknown>): Recurr
     kind: rawKind === 'installment' ? 'installment' : 'open',
     status: rawStatus === 'paused' || rawStatus === 'completed' ? rawStatus : 'active',
     created_at: typeof row.created_at === 'string' ? row.created_at : undefined,
+  }
+}
+
+export const mapRecurringReminderMonthStatusRow = (
+  row: Record<string, unknown>
+): RecurringReminderMonthStatus => {
+  const rawStatus = typeof row.status === 'string' ? row.status : 'read'
+
+  return {
+    id: String(row.id || ''),
+    profile_id: String(row.profile_id || ''),
+    reminder_id: String(row.reminder_id || row.recurring_transaction_id || ''),
+    month: String(row.month || '').slice(0, 7),
+    status: rawStatus === 'linked' ? 'linked' : 'read',
+    transaction_id: typeof row.transaction_id === 'string' ? row.transaction_id : null,
+    created_at: typeof row.created_at === 'string' ? row.created_at : undefined,
+    updated_at: typeof row.updated_at === 'string' ? row.updated_at : undefined,
   }
 }
 
@@ -119,20 +145,19 @@ export const mapRecurringExecutionRow = (
 
 export const getRecurringFrequencyLabel = (recurring: RecurringTransaction) => {
   if (recurring.frequency === 'yearly') {
-    return 'Roczna'
+    return 'co rok'
   }
 
   if (recurring.frequency === 'custom') {
-    const interval = Math.max(recurring.custom_interval_months || 1, 1)
-    return `Interwał w miesiącach: ${interval}`
+    return `co ${Math.max(recurring.custom_interval_months || 1, 1)} mies.`
   }
 
-  return 'Miesięczna'
+  return 'co miesiąc'
 }
 
 export const getRecurringStatusLabel = (status: RecurringTransaction['status']) => {
   if (status === 'paused') {
-    return 'Wstrzymane'
+    return 'Wyłączone'
   }
 
   if (status === 'completed') {
@@ -143,16 +168,23 @@ export const getRecurringStatusLabel = (status: RecurringTransaction['status']) 
 }
 
 export const getRecurringKindLabel = (kind: RecurringTransaction['kind']) => {
-  return kind === 'installment' ? 'Ratalne / zamknięte' : 'Otwarte'
+  return kind === 'installment' ? 'ratalne' : 'ciągłe'
 }
 
 export const isRecurringOpenEnded = (recurring: RecurringTransaction) => {
   return recurring.kind === 'open' && !recurring.end_date && !recurring.installment_total_count
 }
 
+export const getRecurringReminderDay = (recurring: RecurringTransaction) => {
+  const storedDay = recurring.start_date ? Number(recurring.start_date.slice(8, 10)) : null
+  const fallbackDay = recurring.created_at ? Number(recurring.created_at.slice(8, 10)) : null
+  const day = storedDay || fallbackDay || 1
+
+  return Math.min(Math.max(day, 1), 31)
+}
+
 export const getMonthCycleDate = (recurring: RecurringTransaction, monthText: string) => {
-  const startDay = recurring.start_date ? Number(recurring.start_date.slice(8, 10)) || 1 : 1
-  const cycleDay = Math.min(startDay, getDaysInMonth(monthText))
+  const cycleDay = Math.min(getRecurringReminderDay(recurring), getDaysInMonth(monthText))
   return `${monthText}-${String(cycleDay).padStart(2, '0')}`
 }
 
@@ -164,7 +196,7 @@ export const isRecurringExpectedInMonth = (
     return false
   }
 
-  const startMonth = recurring.start_date?.slice(0, 7) || null
+  const startMonth = recurring.start_date?.slice(0, 7) || recurring.created_at?.slice(0, 7) || null
 
   if (startMonth && monthText < startMonth) {
     return false
@@ -174,17 +206,19 @@ export const isRecurringExpectedInMonth = (
     return false
   }
 
-  const monthsDelta = startMonth
-    ? diffInMonths(recurring.start_date || `${monthText}-01`, monthText)
-    : 0
+  const monthsDelta = diffInMonths(getAnchorDate(recurring, monthText), monthText)
 
-  if (monthsDelta < 0) {
+  if (monthsDelta < 0 || monthsDelta % getIntervalInMonths(recurring) !== 0) {
     return false
   }
 
-  const intervalInMonths = getIntervalInMonths(recurring)
+  if (recurring.kind === 'installment') {
+    const totalInstallments = recurring.installment_total_count || 0
+    const installmentIndex = Math.floor(monthsDelta / getIntervalInMonths(recurring)) + 1
+    return totalInstallments > 0 && installmentIndex <= totalInstallments
+  }
 
-  return monthsDelta % intervalInMonths === 0
+  return true
 }
 
 export const findExecutionForMonth = (
@@ -246,9 +280,9 @@ export const getInstallmentSummary = (
       : null)
   const elapsedCycles =
     totalInstallments !== null && referenceMonth
-      ? Math.min(getElapsedRecurringCycles(recurring, referenceMonth) || 0, totalInstallments)
+      ? Math.min(getElapsedRecurringCycles(recurring, referenceMonth), totalInstallments)
       : null
-  const effectiveCompletedCount = elapsedCycles ?? completedCount
+  const effectiveCompletedCount = completedCount
   const effectiveStatus =
     recurring.status === 'paused' || recurring.status === 'completed'
       ? recurring.status
@@ -260,9 +294,7 @@ export const getInstallmentSummary = (
     completedCount,
     skippedCount,
     remainingCount:
-      totalInstallments === null
-        ? null
-        : Math.max(totalInstallments - effectiveCompletedCount, 0),
+      totalInstallments === null ? null : Math.max(totalInstallments - effectiveCompletedCount, 0),
     totalInstallments,
     totalPlannedAmount:
       totalInstallments === null || recurring.amount === null
@@ -282,49 +314,53 @@ export const getRecurringEffectiveStatus = (
   return getInstallmentSummary(recurring, executions, referenceMonth).effectiveStatus
 }
 
-export const getPastDueCycleDates = (
-  recurring: RecurringTransaction,
-  referenceMonth: string
-) => {
-  if (!recurring.start_date) {
-    return []
-  }
-
-  const startMonth = recurring.start_date.slice(0, 7)
-
-  if (referenceMonth <= startMonth) {
-    return []
-  }
-
-  const dates: string[] = []
-  let currentMonth = startMonth
-
-  while (currentMonth < referenceMonth) {
-    if (isRecurringExpectedInMonth(recurring, currentMonth)) {
-      dates.push(getMonthCycleDate(recurring, currentMonth))
-    }
-
-    const [year, month] = currentMonth.split('-').map(Number)
-    const nextMonth = month === 12 ? 1 : month + 1
-    const nextYear = month === 12 ? year + 1 : year
-    currentMonth = `${nextYear}-${String(nextMonth).padStart(2, '0')}`
-  }
-
-  return dates
+export const getPastDueCycleDates = () => {
+  return []
 }
 
 export const getPendingRecurringTransactions = (
   recurringTransactions: RecurringTransaction[],
-  executions: RecurringTransactionExecution[],
-  monthText: string
+  _executions: RecurringTransactionExecution[],
+  monthText: string,
+  monthStatuses: RecurringReminderMonthStatus[] = []
 ) => {
+  const today = new Date()
+  const currentMonthText = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`
+
   return recurringTransactions.filter((recurring) => {
     if (!isRecurringExpectedInMonth(recurring, monthText)) {
       return false
     }
 
-    return !findExecutionForMonth(recurring.id, executions, monthText)
+    if (monthText === currentMonthText && today.getDate() < getRecurringReminderDay(recurring)) {
+      return false
+    }
+
+    return !monthStatuses.some(
+      (status) => status.reminder_id === recurring.id && status.month === monthText
+    )
   })
+}
+
+export const getInstallmentNumberForMonth = (
+  recurring: RecurringTransaction,
+  monthText: string
+) => {
+  if (recurring.kind !== 'installment') {
+    return null
+  }
+
+  const elapsed = getElapsedRecurringCycles(recurring, monthText)
+  const total = recurring.installment_total_count || null
+
+  if (!elapsed || elapsed < 1) {
+    return null
+  }
+
+  return {
+    current: total ? Math.min(elapsed, total) : elapsed,
+    total,
+  }
 }
 
 export const getRecurringPaymentSourceLabel = (
@@ -343,13 +379,14 @@ export const getRecurringDisplayLabel = (
   recurring: RecurringTransaction,
   categoriesById: Record<string, Category>
 ) => {
-  const category = categoriesById[recurring.category_id]
-  return category ? `${recurring.name} • ${category.name}` : recurring.name
+  const categoryLabel = getUniqueCategoryLabel(recurring.category_id, categoriesById)
+  return categoryLabel ? `${recurring.name} • ${categoryLabel}` : recurring.name
 }
 
 export const buildRecurringSuggestions = ({
   recurringTransactions,
   executions,
+  monthStatuses = [],
   selectedMonth,
   categoryId,
   amountText,
@@ -357,6 +394,7 @@ export const buildRecurringSuggestions = ({
 }: {
   recurringTransactions: RecurringTransaction[]
   executions: RecurringTransactionExecution[]
+  monthStatuses?: RecurringReminderMonthStatus[]
   selectedMonth: string
   categoryId: string | null
   amountText: string
@@ -365,9 +403,13 @@ export const buildRecurringSuggestions = ({
   const normalizedAmount = Number(String(amountText).replace(',', '.'))
   const normalizedDescription = description.trim().toLocaleLowerCase('pl')
 
-  return getPendingRecurringTransactions(recurringTransactions, executions, selectedMonth)
+  if (!categoryId) {
+    return []
+  }
+
+  return getPendingRecurringTransactions(recurringTransactions, executions, selectedMonth, monthStatuses)
     .filter((recurring) => {
-      if (categoryId && recurring.category_id !== categoryId) {
+      if (recurring.category_id !== categoryId) {
         return false
       }
 
@@ -424,7 +466,7 @@ export const buildRecurringCompletionCandidates = ({
 }
 
 export const getRecurringExecutionStatusLabel = (status: RecurringExecutionStatus) => {
-  return status === 'skipped' ? 'Pominięto' : 'Wykonano'
+  return status === 'skipped' ? 'Przypomnienie przeczytane' : 'Powiązane z wpisem'
 }
 
 export const getDaysDifference = (fromDateText: string, toDateText: string) => {

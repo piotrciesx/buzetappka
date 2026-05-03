@@ -1,10 +1,11 @@
 'use client'
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import type { Dispatch, SetStateAction } from 'react'
 import FloatingActionButtons from './FloatingActionButtons'
 import TransactionCreatorModal from './TransactionCreatorModal'
 import DraftPromptModal from './DraftPromptModal'
-import RecurringExecutionConfirmModal from './RecurringExecutionConfirmModal'
 
 type PaymentSplitInput = {
   paymentSourceId: string
@@ -71,12 +72,6 @@ type Props = {
   applyDraftToTransactionCreator: any
   deleteDraft: any
   openBlankFloatingTransactionCreator: any
-
-  // Recurring modal
-  SHOW_RECURRING_STAGE_15: boolean
-  recurringCompletionPrompt: any
-  handleConfirmRecurringCompletion: any
-  setRecurringCompletionPrompt: any
 }
 
 export default function BudgetPageOverlays(props: Props) {
@@ -137,11 +132,6 @@ export default function BudgetPageOverlays(props: Props) {
     applyDraftToTransactionCreator,
     deleteDraft,
     openBlankFloatingTransactionCreator,
-
-    SHOW_RECURRING_STAGE_15,
-    recurringCompletionPrompt,
-    handleConfirmRecurringCompletion,
-    setRecurringCompletionPrompt,
   } = props
 
   return (
@@ -215,18 +205,6 @@ export default function BudgetPageOverlays(props: Props) {
         openBlankFloatingTransactionCreator={openBlankFloatingTransactionCreator}
         styles={styles}
       />
-
-      {SHOW_RECURRING_STAGE_15 && (
-        <RecurringExecutionConfirmModal
-          isOpen={Boolean(recurringCompletionPrompt)}
-          candidates={recurringCompletionPrompt?.candidates || []}
-          onConfirm={(recurring: any) => {
-            void handleConfirmRecurringCompletion(recurring.id, recurringCompletionPrompt)
-          }}
-          onClose={() => setRecurringCompletionPrompt(null)}
-          styles={styles}
-        />
-      )}
     </>
   )
 }

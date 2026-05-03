@@ -13,6 +13,7 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import Level2Section from './Level2Section'
 import Level3Section from './Level3Section'
 import MonthCalendarPanel from './MonthCalendarPanel'
+import type { HeatmapMode } from './month-calendar/monthCalendarTypes'
 import { SortableLevel1Card, StaticLevel1Card } from './Level1Cards'
 import {
   Category,
@@ -59,8 +60,14 @@ type Props = {
   getCalendarHeatmapVariantForLevel1Id: (
     level1Id: string | null
   ) => 'balance' | 'income' | 'expense'
+  heatmapMode: HeatmapMode
+  heatmapInverted: boolean
+  onHeatmapModeChange: (value: HeatmapMode) => void
+  onHeatmapInvertedChange: (value: boolean) => void
   isCategoryClosingAfterSelectedMonth: (category: Category, selectedMonth: string) => boolean
   handleAddSubcategory: (level2Id: string) => Promise<void>
+  handleRenameCategory: (categoryId: string) => Promise<void>
+  handleDeleteCategory: (categoryId: string) => Promise<void>
   openTransactionCreator: (suggestedCategoryId: string) => void
   handleInlineSaveTransaction: (
     categoryId: string,
@@ -69,7 +76,8 @@ type Props = {
     dayText: string,
     tagNames?: string[],
     paymentSourceId?: string | null,
-    paymentSplitItems?: Array<{ paymentSourceId: string; amount: string }>
+    paymentSplitItems?: Array<{ paymentSourceId: string; amount: string }>,
+    recurringTransactionId?: string | null
   ) => Promise<void>
   handleHideCategory: (id: string, mode?: HideMode) => Promise<void>
   handleRestoreCategory: (id: string, mode?: RestoreMode) => Promise<void>
@@ -105,6 +113,14 @@ type Props = {
     name: string
     type: string
     optionLabel?: string
+  }>
+  getRecurringOptionsForCategoryId?: (categoryId: string) => Array<{
+    id: string
+    label: string
+    description?: string
+    amount?: number | null
+    useAmountWhenCreating?: boolean
+    hasTransactionInMonth?: boolean
   }>
   transactionTagsMap: Record<string, Tag[]>
   transactionPaymentSplitsMap?: Record<string, TransactionPaymentSplit[]>
@@ -148,8 +164,14 @@ export default function BudgetCategoryTree(props: Props) {
     getMoveTargetsForTransaction,
     getSignedAmountForTransaction,
     getCalendarHeatmapVariantForLevel1Id,
+    heatmapMode,
+    heatmapInverted,
+    onHeatmapModeChange,
+    onHeatmapInvertedChange,
     isCategoryClosingAfterSelectedMonth,
     handleAddSubcategory,
+    handleRenameCategory,
+    handleDeleteCategory,
     openTransactionCreator,
     handleInlineSaveTransaction,
     handleHideCategory,
@@ -168,6 +190,7 @@ export default function BudgetCategoryTree(props: Props) {
     handleReorderLevel2,
     descriptionSuggestions,
     getPaymentSourceOptionsForCategoryId,
+    getRecurringOptionsForCategoryId,
     transactionTagsMap,
     transactionPaymentSplitsMap = {},
     onTagClick,
@@ -222,6 +245,8 @@ export default function BudgetCategoryTree(props: Props) {
         newSubcategoryName={newSubcategoryName}
         setNewSubcategoryName={setNewSubcategoryName}
         handleAddSubcategory={handleAddSubcategory}
+        handleRenameCategory={handleRenameCategory}
+        handleDeleteCategory={handleDeleteCategory}
         openTransactionCreator={openTransactionCreator}
         handleInlineSaveTransaction={handleInlineSaveTransaction}
         handleHideCategory={handleHideCategory}
@@ -236,9 +261,14 @@ export default function BudgetCategoryTree(props: Props) {
         getMoveTargetsForTransaction={getMoveTargetsForTransaction}
         getSignedAmountForTransaction={getSignedAmountForTransaction}
         calendarHeatmapVariant={calendarHeatmapVariant}
+        heatmapMode={heatmapMode}
+        heatmapInverted={heatmapInverted}
+        onHeatmapModeChange={onHeatmapModeChange}
+        onHeatmapInvertedChange={onHeatmapInvertedChange}
         heatmapStorageKey={`budget-app-tree-calendar-${level2Category.id}`}
         descriptionSuggestions={descriptionSuggestions}
         getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
+        getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}
         transactionTagsMap={transactionTagsMap}
         transactionPaymentSplitsMap={transactionPaymentSplitsMap}
         onTagClick={onTagClick}
@@ -262,6 +292,7 @@ export default function BudgetCategoryTree(props: Props) {
       <Level3Section
         key={level1Category.id}
         l3={level1Category}
+        showCategoryActions={false}
         selectedMonth={selectedMonth}
         isClosingAfterSelectedMonth={isCategoryClosingAfterSelectedMonth(
           level1Category,
@@ -277,6 +308,8 @@ export default function BudgetCategoryTree(props: Props) {
         openTransactionCreator={openTransactionCreator}
         handleInlineSaveTransaction={handleInlineSaveTransaction}
         handleHideCategory={handleHideCategory}
+        handleRenameCategory={handleRenameCategory}
+        handleDeleteCategory={handleDeleteCategory}
         handleUndoScheduledHide={handleUndoScheduledHide}
         handleDeleteTransaction={handleDeleteTransaction}
         handleUpdateTransaction={handleUpdateTransaction}
@@ -289,8 +322,14 @@ export default function BudgetCategoryTree(props: Props) {
         getMoveTargetsForTransaction={getMoveTargetsForTransaction}
         getSignedAmountForTransaction={getSignedAmountForTransaction}
         calendarHeatmapVariant={calendarHeatmapVariant}
+        heatmapMode={heatmapMode}
+        heatmapInverted={heatmapInverted}
+        onHeatmapModeChange={onHeatmapModeChange}
+        onHeatmapInvertedChange={onHeatmapInvertedChange}
         heatmapStorageKey={`budget-app-tree-calendar-${level1Category.id}`}
         descriptionSuggestions={descriptionSuggestions}
+        getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
+        getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}
         transactionTagsMap={transactionTagsMap}
         transactionPaymentSplitsMap={transactionPaymentSplitsMap}
         onTagClick={onTagClick}
@@ -388,20 +427,74 @@ export default function BudgetCategoryTree(props: Props) {
     )
   }
 
-  const renderLevel1CalendarButton = (level1Category: Category, isLevel1CalendarOpen: boolean) => {
+  const renderLevel1Actions = (level1Category: Category, isLevel1CalendarOpen: boolean) => {
     return (
-      <button
-        type="button"
-        style={styles.secondaryButton}
-        onMouseDown={(event) => event.stopPropagation()}
-        onPointerDown={(event) => event.stopPropagation()}
-        onClick={(event) => {
-          event.stopPropagation()
-          toggleLevel1Calendar(level1Category.id)
-        }}
-      >
-        {isLevel1CalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
-      </button>
+      <>
+        <button
+          type="button"
+          style={styles.secondaryButton}
+          onMouseDown={(event) => event.stopPropagation()}
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={(event) => {
+            event.stopPropagation()
+            toggleLevel1Calendar(level1Category.id)
+          }}
+        >
+          {isLevel1CalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
+        </button>
+
+        <button
+          type="button"
+          style={styles.primaryButton}
+          onMouseDown={(event) => event.stopPropagation()}
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={(event) => {
+            event.stopPropagation()
+            setOpenAddSubcategoryFor(level1Category.id)
+            setNewSubcategoryName('')
+
+            if (!openLevel1Ids.includes(level1Category.id)) {
+              toggleLevel1(level1Category.id)
+            }
+          }}
+        >
+          Dodaj kategorię
+        </button>
+      </>
+    )
+  }
+
+  const renderAddSubcategoryForm = (parentId: string, placeholder: string) => {
+    if (openAddSubcategoryFor !== parentId) {
+      return null
+    }
+
+    return (
+      <div style={styles.formRow}>
+        <input
+          style={styles.input}
+          placeholder={placeholder}
+          value={newSubcategoryName}
+          onChange={(event) => setNewSubcategoryName(event.target.value)}
+        />
+        <button
+          style={styles.primaryButton}
+          onClick={async () => {
+            await handleAddSubcategory(parentId)
+          }}
+        >
+          zapisz
+        </button>
+        <button
+          style={styles.secondaryButton}
+          onClick={() => {
+            setOpenAddSubcategoryFor(null)
+            setNewSubcategoryName('')
+          }}
+        >
+          anuluj
+        </button>
+      </div>
     )
   }
 
@@ -421,6 +514,10 @@ export default function BudgetCategoryTree(props: Props) {
         onDeleteTransaction={handleDeleteTransaction}
         onMoveTransaction={handleMoveTransaction}
         heatmapVariant={calendarHeatmapVariant}
+        heatmapMode={heatmapMode}
+        heatmapInverted={heatmapInverted}
+        onHeatmapModeChange={onHeatmapModeChange}
+        onHeatmapInvertedChange={onHeatmapInvertedChange}
         heatmapStorageKey={`budget-app-tree-calendar-${level1Category.id}`}
         descriptionSuggestions={descriptionSuggestions}
         getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
@@ -431,7 +528,7 @@ export default function BudgetCategoryTree(props: Props) {
           handleOpenLevel1CalendarAddForDay(level1Category.id, dayText)
         }
         calendarTitle={`Kalendarz • ${level1Category.name}`}
-        calendarSubtitle="Kliknij dzień, aby zobaczyć wpisy z tego Level 1 lub dodać nowy wpis."
+        calendarSubtitle="Kliknij dzień, aby zobaczyć wpisy z tej kategorii głównej lub dodać nowy wpis."
       />
     )
   }
@@ -455,9 +552,10 @@ export default function BudgetCategoryTree(props: Props) {
               onToggle={() => toggleLevel1(level1Category.id)}
               styles={styles}
               dragHandle={renderBlockedLevel1DragHandle(level1Category, isLevel1Sortable)}
-              extraActions={renderLevel1CalendarButton(level1Category, isLevel1CalendarOpen)}
+              extraActions={renderLevel1Actions(level1Category, isLevel1CalendarOpen)}
             >
               {isLevel1CalendarOpen && renderLevel1CalendarPanel(level1Category)}
+              {renderAddSubcategoryForm(level1Category.id, 'Nazwa kategorii')}
               {isLevel1Open ? renderLevel2List(level1Category) : null}
             </StaticLevel1Card>
           )
@@ -499,9 +597,10 @@ export default function BudgetCategoryTree(props: Props) {
               onToggle={() => toggleLevel1(level1Category.id)}
               isSortable={isLevel1Sortable}
               styles={styles}
-              extraActions={renderLevel1CalendarButton(level1Category, isLevel1CalendarOpen)}
+              extraActions={renderLevel1Actions(level1Category, isLevel1CalendarOpen)}
             >
               {isLevel1CalendarOpen && renderLevel1CalendarPanel(level1Category)}
+              {renderAddSubcategoryForm(level1Category.id, 'Nazwa kategorii')}
               {isLevel1Open ? renderLevel2List(level1Category) : null}
             </SortableLevel1Card>
           )

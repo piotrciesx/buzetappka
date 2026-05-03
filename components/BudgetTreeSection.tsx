@@ -7,6 +7,8 @@ import {
   HideMode,
   MoveTarget,
   RestoreMode,
+  SortDirection,
+  SortMode,
   Tag,
   Transaction,
   TransactionPaymentSplit,
@@ -32,13 +34,13 @@ type Props = {
   styles: Record<string, CSSProperties>
 
   level2SortMode: string
-  setLevel2SortMode: (value: any) => void
+  setLevel2SortMode: (value: SortMode) => void
   level2SortDirection: string
-  setLevel2SortDirection: (value: any) => void
+  setLevel2SortDirection: (value: SortDirection) => void
   level3SortMode: string
-  setLevel3SortMode: (value: any) => void
+  setLevel3SortMode: (value: SortMode) => void
   level3SortDirection: string
-  setLevel3SortDirection: (value: any) => void
+  setLevel3SortDirection: (value: SortDirection) => void
 
   toggleLevel1: (id: string) => void
   toggleLevel1Calendar: (level1Id: string) => void
@@ -60,8 +62,14 @@ type Props = {
   getCalendarHeatmapVariantForLevel1Id: (
     level1Id: string | null
   ) => 'balance' | 'income' | 'expense'
+  heatmapMode: BudgetCategoryTreeProps['heatmapMode']
+  heatmapInverted: boolean
+  onHeatmapModeChange: BudgetCategoryTreeProps['onHeatmapModeChange']
+  onHeatmapInvertedChange: BudgetCategoryTreeProps['onHeatmapInvertedChange']
 
   handleAddSubcategory: (level2Id: string) => Promise<void>
+  handleRenameCategory: (categoryId: string) => Promise<void>
+  handleDeleteCategory: (categoryId: string) => Promise<void>
   openTransactionCreator: (suggestedCategoryId: string) => void
   handleInlineSaveTransaction: (
     categoryId: string,
@@ -70,7 +78,8 @@ type Props = {
     dayText: string,
     tagNames?: string[],
     paymentSourceId?: string | null,
-    paymentSplitItems?: Array<{ paymentSourceId: string; amount: string }>
+    paymentSplitItems?: Array<{ paymentSourceId: string; amount: string }>,
+    recurringTransactionId?: string | null
   ) => Promise<void>
   handleHideCategory: (id: string, mode?: HideMode) => Promise<void>
   handleRestoreCategory: (id: string, mode?: RestoreMode) => Promise<void>
@@ -98,6 +107,7 @@ type Props = {
 
   descriptionSuggestions: BudgetCategoryTreeProps['descriptionSuggestions']
   getPaymentSourceOptionsForCategoryId: BudgetCategoryTreeProps['getPaymentSourceOptionsForCategoryId']
+  getRecurringOptionsForCategoryId: BudgetCategoryTreeProps['getRecurringOptionsForCategoryId']
   transactionTagsMap: Record<string, Tag[]>
   transactionPaymentSplitsMap: Record<string, TransactionPaymentSplit[]>
   onTagClick: BudgetCategoryTreeProps['onTagClick']
@@ -144,7 +154,13 @@ export default function BudgetTreeSection({
   getMoveTargetsForTransaction,
   getSignedAmountForTransaction,
   getCalendarHeatmapVariantForLevel1Id,
+  heatmapMode,
+  heatmapInverted,
+  onHeatmapModeChange,
+  onHeatmapInvertedChange,
   handleAddSubcategory,
+  handleRenameCategory,
+  handleDeleteCategory,
   openTransactionCreator,
   handleInlineSaveTransaction,
   handleHideCategory,
@@ -163,6 +179,7 @@ export default function BudgetTreeSection({
   handleReorderLevel2,
   descriptionSuggestions,
   getPaymentSourceOptionsForCategoryId,
+  getRecurringOptionsForCategoryId,
   transactionTagsMap,
   transactionPaymentSplitsMap,
   onTagClick,
@@ -180,7 +197,7 @@ export default function BudgetTreeSection({
           <select
             id="level2-sort-mode"
             value={level2SortMode}
-            onChange={(event) => setLevel2SortMode(event.target.value)}
+            onChange={(event) => setLevel2SortMode(event.target.value as SortMode)}
             style={styles.input}
           >
             <option value="default">domyślne</option>
@@ -195,7 +212,7 @@ export default function BudgetTreeSection({
           <select
             id="level2-sort-direction"
             value={level2SortDirection}
-            onChange={(event) => setLevel2SortDirection(event.target.value)}
+            onChange={(event) => setLevel2SortDirection(event.target.value as SortDirection)}
             style={styles.input}
             disabled={level2SortMode !== 'sum' && level2SortMode !== 'frequency'}
           >
@@ -211,7 +228,7 @@ export default function BudgetTreeSection({
           <select
             id="level3-sort-mode"
             value={level3SortMode}
-            onChange={(event) => setLevel3SortMode(event.target.value)}
+            onChange={(event) => setLevel3SortMode(event.target.value as SortMode)}
             style={styles.input}
           >
             <option value="default">domyślne</option>
@@ -226,7 +243,7 @@ export default function BudgetTreeSection({
           <select
             id="level3-sort-direction"
             value={level3SortDirection}
-            onChange={(event) => setLevel3SortDirection(event.target.value)}
+            onChange={(event) => setLevel3SortDirection(event.target.value as SortDirection)}
             style={styles.input}
             disabled={level3SortMode !== 'sum' && level3SortMode !== 'frequency'}
           >
@@ -274,8 +291,14 @@ export default function BudgetTreeSection({
         getMoveTargetsForTransaction={getMoveTargetsForTransaction}
         getSignedAmountForTransaction={getSignedAmountForTransaction}
         getCalendarHeatmapVariantForLevel1Id={getCalendarHeatmapVariantForLevel1Id}
+        heatmapMode={heatmapMode}
+        heatmapInverted={heatmapInverted}
+        onHeatmapModeChange={onHeatmapModeChange}
+        onHeatmapInvertedChange={onHeatmapInvertedChange}
         isCategoryClosingAfterSelectedMonth={isCategoryClosingAfterSelectedMonth}
         handleAddSubcategory={handleAddSubcategory}
+        handleRenameCategory={handleRenameCategory}
+        handleDeleteCategory={handleDeleteCategory}
         openTransactionCreator={openTransactionCreator}
         handleInlineSaveTransaction={handleInlineSaveTransaction}
         handleHideCategory={handleHideCategory}
@@ -294,6 +317,7 @@ export default function BudgetTreeSection({
         handleReorderLevel2={handleReorderLevel2}
         descriptionSuggestions={descriptionSuggestions}
         getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
+        getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}
         transactionTagsMap={transactionTagsMap}
         transactionPaymentSplitsMap={transactionPaymentSplitsMap}
         onTagClick={onTagClick}

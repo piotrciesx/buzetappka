@@ -13,6 +13,7 @@ import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-
 import { CSS } from '@dnd-kit/utilities'
 import MonthCalendarPanel from './MonthCalendarPanel'
 import Level3Section from './Level3Section'
+import type { HeatmapMode } from './month-calendar/monthCalendarTypes'
 import { DescriptionSuggestion } from '../lib/suggestionUtils'
 import { Tag, TransactionPaymentSplit } from '../lib/budgetPageTypes'
 
@@ -44,6 +45,15 @@ type MoveTarget = {
   label: string
 }
 
+type RecurringLinkOption = {
+  id: string
+  label: string
+  description?: string
+  amount?: number | null
+  useAmountWhenCreating?: boolean
+  hasTransactionInMonth?: boolean
+}
+
 type HideMode = 'now' | 'next'
 type RestoreMode = 'now' | 'next'
 
@@ -66,6 +76,8 @@ type Props = {
   newSubcategoryName: string
   setNewSubcategoryName: (value: string) => void
   handleAddSubcategory: (level2Id: string) => Promise<void>
+  handleRenameCategory: (categoryId: string) => Promise<void>
+  handleDeleteCategory: (categoryId: string) => Promise<void>
   openTransactionCreator: (suggestedCategoryId: string) => void
   handleInlineSaveTransaction: (
     categoryId: string,
@@ -74,7 +86,8 @@ type Props = {
     dayText: string,
     tagNames?: string[],
     paymentSourceId?: string | null,
-    paymentSplitItems?: Array<{ paymentSourceId: string; amount: string }>
+    paymentSplitItems?: Array<{ paymentSourceId: string; amount: string }>,
+    recurringTransactionId?: string | null
   ) => Promise<void>
   handleHideCategory: (id: string, mode?: HideMode) => Promise<void>
   handleRestoreCategory: (id: string, mode?: RestoreMode) => Promise<void>
@@ -97,6 +110,10 @@ type Props = {
   getMoveTargetsForTransaction: (transaction: Transaction) => MoveTarget[]
   getSignedAmountForTransaction: (transaction: Transaction) => number
   calendarHeatmapVariant: 'balance' | 'income' | 'expense'
+  heatmapMode: HeatmapMode
+  heatmapInverted: boolean
+  onHeatmapModeChange: (value: HeatmapMode) => void
+  onHeatmapInvertedChange: (value: boolean) => void
   heatmapStorageKey: string
   descriptionSuggestions: {
     global: DescriptionSuggestion[]
@@ -110,6 +127,7 @@ type Props = {
     type: string
     optionLabel?: string
   }>
+  getRecurringOptionsForCategoryId?: (categoryId: string) => RecurringLinkOption[]
   transactionTagsMap: Record<string, Tag[]>
   transactionPaymentSplitsMap?: Record<string, TransactionPaymentSplit[]>
   onTagClick?: (tagId: string) => void
@@ -147,6 +165,8 @@ export default function Level2Section(props: Props) {
     newSubcategoryName,
     setNewSubcategoryName,
     handleAddSubcategory,
+    handleRenameCategory,
+    handleDeleteCategory,
     openTransactionCreator,
     handleInlineSaveTransaction,
     handleHideCategory,
@@ -160,9 +180,14 @@ export default function Level2Section(props: Props) {
     getMoveTargetsForTransaction,
     getSignedAmountForTransaction,
     calendarHeatmapVariant,
+    heatmapMode,
+    heatmapInverted,
+    onHeatmapModeChange,
+    onHeatmapInvertedChange,
     heatmapStorageKey,
     descriptionSuggestions,
     getPaymentSourceOptionsForCategoryId,
+    getRecurringOptionsForCategoryId,
     transactionTagsMap,
     transactionPaymentSplitsMap = {},
     onTagClick,
@@ -312,6 +337,8 @@ export default function Level2Section(props: Props) {
               openTransactionCreator={openTransactionCreator}
               handleInlineSaveTransaction={handleInlineSaveTransaction}
               handleHideCategory={handleHideCategory}
+              handleRenameCategory={handleRenameCategory}
+              handleDeleteCategory={handleDeleteCategory}
               handleUndoScheduledHide={handleUndoScheduledHide}
               handleDeleteTransaction={handleDeleteTransaction}
               handleUpdateTransaction={handleUpdateTransaction}
@@ -322,9 +349,14 @@ export default function Level2Section(props: Props) {
               getMoveTargetsForTransaction={getMoveTargetsForTransaction}
               getSignedAmountForTransaction={getSignedAmountForTransaction}
               calendarHeatmapVariant={calendarHeatmapVariant}
+              heatmapMode={heatmapMode}
+              heatmapInverted={heatmapInverted}
+              onHeatmapModeChange={onHeatmapModeChange}
+              onHeatmapInvertedChange={onHeatmapInvertedChange}
               heatmapStorageKey={`budget-app-tree-calendar-${l3.id}`}
               descriptionSuggestions={descriptionSuggestions}
               getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
+              getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}
               transactionTagsMap={transactionTagsMap}
               transactionPaymentSplitsMap={transactionPaymentSplitsMap}
               onTagClick={onTagClick}
@@ -371,7 +403,7 @@ export default function Level2Section(props: Props) {
             </button>
           )}
 
-          <div style={styles.arrow}>{isOpen ? '▼' : '▶'}</div>
+          <div style={styles.arrow}>{isOpen ? '▾' : '▸'}</div>
 
           <div>
             <div style={styles.l2Name}>{l2.name}</div>
@@ -402,6 +434,24 @@ export default function Level2Section(props: Props) {
           </button>
 
           <button
+            style={styles.secondaryButton}
+            onClick={async () => {
+              await handleRenameCategory(l2.id)
+            }}
+          >
+            zmień nazwę
+          </button>
+
+          <button
+            style={styles.dangerButton}
+            onClick={async () => {
+              await handleDeleteCategory(l2.id)
+            }}
+          >
+            usuń kategorię
+          </button>
+
+          <button
             style={styles.primaryButton}
             onClick={() => {
               setOpenAddSubcategoryFor(l2.id)
@@ -412,7 +462,7 @@ export default function Level2Section(props: Props) {
               }
             }}
           >
-            + podkategoria
+            Dodaj podkategorię
           </button>
 
           {isClosingAfterSelectedMonth ? (
@@ -461,6 +511,10 @@ export default function Level2Section(props: Props) {
           onDeleteTransaction={handleDeleteTransaction}
           onMoveTransaction={handleMoveTransaction}
           heatmapVariant={calendarHeatmapVariant}
+          heatmapMode={heatmapMode}
+          heatmapInverted={heatmapInverted}
+          onHeatmapModeChange={onHeatmapModeChange}
+          onHeatmapInvertedChange={onHeatmapInvertedChange}
           heatmapStorageKey={heatmapStorageKey}
           descriptionSuggestions={descriptionSuggestions}
           getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
@@ -470,7 +524,7 @@ export default function Level2Section(props: Props) {
           onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
           onAddTransactionForDay={(dayText) => handleOpenCalendarAddForDay(l2.id, dayText)}
           calendarTitle={`Kalendarz • ${l2.name}`}
-          calendarSubtitle="Kliknij dzień, aby zobaczyć wpisy z tego Level 2 lub dodać nowy wpis."
+          calendarSubtitle="Kliknij dzień, aby zobaczyć wpisy z tej kategorii lub dodać nowy wpis."
         />
       )}
 
@@ -507,6 +561,9 @@ export default function Level2Section(props: Props) {
       {isOpen && !hasChildren && (
         <Level3Section
           l3={l2}
+          headerName="Wpisy w kategorii"
+          showHeaderSum={false}
+          showCategoryActions={false}
           selectedMonth={selectedMonth}
           isClosingAfterSelectedMonth={isClosingAfterSelectedMonth}
           categorySum={getSumForCategory(l2.id)}
@@ -519,6 +576,8 @@ export default function Level2Section(props: Props) {
           openTransactionCreator={openTransactionCreator}
           handleInlineSaveTransaction={handleInlineSaveTransaction}
           handleHideCategory={handleHideCategory}
+          handleRenameCategory={handleRenameCategory}
+          handleDeleteCategory={handleDeleteCategory}
           handleUndoScheduledHide={handleUndoScheduledHide}
           handleDeleteTransaction={handleDeleteTransaction}
           handleUpdateTransaction={handleUpdateTransaction}
@@ -529,10 +588,16 @@ export default function Level2Section(props: Props) {
           getMoveTargetsForTransaction={getMoveTargetsForTransaction}
           getSignedAmountForTransaction={getSignedAmountForTransaction}
           calendarHeatmapVariant={calendarHeatmapVariant}
+          heatmapMode={heatmapMode}
+          heatmapInverted={heatmapInverted}
+          onHeatmapModeChange={onHeatmapModeChange}
+          onHeatmapInvertedChange={onHeatmapInvertedChange}
           heatmapStorageKey={heatmapStorageKey}
           descriptionSuggestions={descriptionSuggestions}
           getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
+          getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}
           transactionTagsMap={transactionTagsMap}
+          transactionPaymentSplitsMap={transactionPaymentSplitsMap}
           onTagClick={onTagClick}
           onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
           getAmountNumber={getAmountNumber}

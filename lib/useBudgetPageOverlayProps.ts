@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 type UseBudgetPageOverlayPropsParams = {
   canCreateTransactions: boolean
   expenseLevel1Id: string | null
@@ -55,11 +57,6 @@ type UseBudgetPageOverlayPropsParams = {
   applyDraftToTransactionCreator: any
   deleteDraft: any
   openBlankFloatingTransactionCreator: any
-
-  SHOW_RECURRING_STAGE_15: boolean
-  recurringCompletionPrompt: any
-  handleConfirmRecurringCompletion: any
-  setRecurringCompletionPrompt: any
 }
 
 export function useBudgetPageOverlayProps({
@@ -119,11 +116,6 @@ export function useBudgetPageOverlayProps({
   applyDraftToTransactionCreator,
   deleteDraft,
   openBlankFloatingTransactionCreator,
-
-  SHOW_RECURRING_STAGE_15,
-  recurringCompletionPrompt,
-  handleConfirmRecurringCompletion,
-  setRecurringCompletionPrompt,
 }: UseBudgetPageOverlayPropsParams) {
   const shortcutBaseLevel1Id = transactionCreatorLockedLevel1Id || selectedTransactionTypeId
 
@@ -188,10 +180,5 @@ export function useBudgetPageOverlayProps({
     applyDraftToTransactionCreator,
     deleteDraft,
     openBlankFloatingTransactionCreator,
-
-    SHOW_RECURRING_STAGE_15,
-    recurringCompletionPrompt,
-    handleConfirmRecurringCompletion,
-    setRecurringCompletionPrompt,
   }
 }

@@ -1,6 +1,6 @@
 import { getMonthNumber, getNextMonthText } from './dateUtils'
 
-type Category = {
+export type CategoryLabelCategory = {
   id: string
   name: string
   parent_id: string | null
@@ -8,6 +8,64 @@ type Category = {
   sort_order?: number | null
   active_to?: string | null
   reactivate_from?: string | null
+}
+
+type Category = CategoryLabelCategory
+
+const getCategoryPathParts = (
+  categoryId: string,
+  categoriesById: Record<string, CategoryLabelCategory>
+) => {
+  const parts: string[] = []
+  const visitedIds = new Set<string>()
+  let current: CategoryLabelCategory | undefined = categoriesById[categoryId]
+
+  while (current && !visitedIds.has(current.id)) {
+    visitedIds.add(current.id)
+    parts.unshift(current.name || 'Bez nazwy')
+    current = current.parent_id ? categoriesById[current.parent_id] : undefined
+  }
+
+  return parts
+}
+
+const getCategoryPathSuffix = (parts: string[], length: number) => {
+  return parts.slice(Math.max(0, parts.length - length)).join(' / ')
+}
+
+export const getUniqueCategoryLabel = (
+  categoryId: string,
+  categoriesById: Record<string, CategoryLabelCategory>,
+  scopeCategoryIds?: Iterable<string>
+) => {
+  const category = categoriesById[categoryId]
+
+  if (!category) {
+    return ''
+  }
+
+  const scopedIds = scopeCategoryIds ? [...scopeCategoryIds] : Object.keys(categoriesById)
+  const comparableIds = scopedIds.includes(categoryId) ? scopedIds : [...scopedIds, categoryId]
+  const scopedPaths = comparableIds
+    .filter((id) => Boolean(categoriesById[id]))
+    .map((id) => ({
+      id,
+      parts: getCategoryPathParts(id, categoriesById),
+    }))
+  const targetParts = getCategoryPathParts(categoryId, categoriesById)
+
+  for (let length = 1; length <= targetParts.length; length += 1) {
+    const label = getCategoryPathSuffix(targetParts, length)
+    const matchingIds = scopedPaths
+      .filter((item) => getCategoryPathSuffix(item.parts, length) === label)
+      .map((item) => item.id)
+
+    if (matchingIds.length === 1 && matchingIds[0] === categoryId) {
+      return label
+    }
+  }
+
+  return targetParts.join(' / ')
 }
 
 export const isCategoryVisibleInMonth = (category: Category, selectedMonth: string) => {
@@ -58,21 +116,7 @@ export const getHiddenCategoryLabel = (
   category: Category,
   categoriesById: Record<string, Category>
 ) => {
-  if (category.level === 2) {
-    return `${category.name} (poziom 2)`
-  }
-
-  if (category.level === 3) {
-    const parent = category.parent_id ? categoriesById[category.parent_id] : null
-
-    if (parent) {
-      return `${category.name} → ${parent.name} (poziom 3)`
-    }
-
-    return `${category.name} (poziom 3)`
-  }
-
-  return category.name
+  return getUniqueCategoryLabel(category.id, categoriesById)
 }
 
 export const getCategoryIdsCoveredByHide = (

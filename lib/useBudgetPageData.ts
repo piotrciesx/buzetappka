@@ -16,6 +16,7 @@ type UseBudgetPageDataParams = {
   resetTreeOpenState: (firstLevel1Id: string | null) => void
   loadMonthNavigationSettings: () => Promise<void>
   loadLockedMonths: () => Promise<void>
+  loadExcludedMonths: () => Promise<void>
   loadPaymentSources: () => Promise<void>
   loadRecurringTransactions: () => Promise<void>
   loadFinancialGoals: () => Promise<void>
@@ -34,6 +35,7 @@ export function useBudgetPageData({
   resetTreeOpenState,
   loadMonthNavigationSettings,
   loadLockedMonths,
+  loadExcludedMonths,
   loadPaymentSources,
   loadRecurringTransactions,
   loadFinancialGoals,
@@ -45,6 +47,7 @@ export function useBudgetPageData({
 
     await loadMonthNavigationSettings()
     await loadLockedMonths()
+    await loadExcludedMonths()
 
     const { data: categoriesData, error: categoriesError } = await supabase
       .from('categories')
@@ -184,6 +187,7 @@ export function useBudgetPageData({
     loadDrafts,
     loadFinancialGoals,
     loadLockedMonths,
+    loadExcludedMonths,
     loadMonthNavigationSettings,
     loadPaymentSources,
     loadRecurringTransactions,

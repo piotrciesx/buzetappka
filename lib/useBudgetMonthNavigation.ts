@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { getCurrentMonthText, getMonthNumber, getNextMonthText, getPrevMonthText } from './dateUtils'
+import {
+  getCurrentMonthText,
+  getMonthKeyFromDate,
+  getMonthNumber,
+  getNextMonthText,
+  getPrevMonthText,
+} from './dateUtils'
 import { supabase } from './supabaseClient'
 import {
   isMonthLocked as isMonthLockedHelper,
@@ -11,6 +17,7 @@ import {
 type MonthNavigationSettingsRow = {
   profile_id: string
   min_history_month: string | null
+  budget_start_date: string | null
   lock_future_months: boolean
 }
 
@@ -50,18 +57,45 @@ const isMissingBackendObjectError = (error: unknown) => {
 }
 
 export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigationParams) {
-  const [selectedMonth, setSelectedMonth] = useState(getCurrentMonthText)
+  const [selectedMonth, setSelectedMonth] = useState('')
   const [monthNavigationStartMonth, setMonthNavigationStartMonth] = useState(
     DEFAULT_MONTH_NAVIGATION_START_MONTH
   )
+  const [budgetStartDate, setBudgetStartDate] = useState('')
+  const [savedBudgetStartDate, setSavedBudgetStartDate] = useState('')
   const [isFutureMonthNavigationLocked, setIsFutureMonthNavigationLocked] = useState(true)
   const [isSavingMonthNavigationSettings, setIsSavingMonthNavigationSettings] = useState(false)
   const [monthNavigationErrorText, setMonthNavigationErrorText] = useState('')
   const [lockedMonths, setLockedMonths] = useState<string[]>([])
+  const [excludedMonths, setExcludedMonths] = useState<string[]>([])
+  const [isUpdatingSelectedMonthExclusion, setIsUpdatingSelectedMonthExclusion] = useState(false)
   const [isUpdatingSelectedMonthLock, setIsUpdatingSelectedMonthLock] = useState(false)
 
-  const currentMonth = useMemo(() => getCurrentMonthText(), [])
+  const [currentMonth, setCurrentMonth] = useState('')
   const lockedMonthsSet = useMemo(() => new Set(lockedMonths), [lockedMonths])
+  const excludedMonthsSet = useMemo(() => new Set(excludedMonths), [excludedMonths])
+
+  useEffect(() => {
+    const refreshCurrentMonth = () => {
+      const nextCurrentMonth = getCurrentMonthText()
+      setCurrentMonth((previousCurrentMonth) =>
+        previousCurrentMonth === nextCurrentMonth ? previousCurrentMonth : nextCurrentMonth
+      )
+      setSelectedMonth((previousSelectedMonth) => previousSelectedMonth || nextCurrentMonth)
+    }
+
+    refreshCurrentMonth()
+
+    const intervalId = window.setInterval(refreshCurrentMonth, 60 * 1000)
+    window.addEventListener('focus', refreshCurrentMonth)
+    document.addEventListener('visibilitychange', refreshCurrentMonth)
+
+    return () => {
+      window.clearInterval(intervalId)
+      window.removeEventListener('focus', refreshCurrentMonth)
+      document.removeEventListener('visibilitychange', refreshCurrentMonth)
+    }
+  }, [])
 
   const clampMonthToNavigationRange = useCallback(
     (monthText: string, minAllowedMonth: string | null, maxAllowedMonth: string | null) => {
@@ -90,12 +124,31 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
 
   const validateMonthNavigationStartMonth = useCallback(
     (monthText: string) => {
+      const effectiveCurrentMonth = currentMonth || getCurrentMonthText()
+
       if (!monthText) {
         return ''
       }
 
-      if (getMonthNumber(monthText) > getMonthNumber(currentMonth)) {
-        return `Start historii nie może być późniejszy niż bieżący miesiąc ${currentMonth}.`
+      if (getMonthNumber(monthText) > getMonthNumber(effectiveCurrentMonth)) {
+        return `Start historii nie może być późniejszy niż bieżący miesiąc ${effectiveCurrentMonth}.`
+      }
+
+      return ''
+    },
+    [currentMonth]
+  )
+
+  const validateBudgetStartDate = useCallback(
+    (dateText: string) => {
+      const effectiveCurrentMonth = currentMonth || getCurrentMonthText()
+
+      if (!dateText) {
+        return ''
+      }
+
+      if (getMonthNumber(getMonthKeyFromDate(dateText)) > getMonthNumber(effectiveCurrentMonth)) {
+        return `Data startowa budżetu nie może być późniejsza niż bieżący miesiąc ${effectiveCurrentMonth}.`
       }
 
       return ''
@@ -104,11 +157,13 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
   )
 
   const loadMonthNavigationSettings = useCallback(async () => {
+    const effectiveCurrentMonth = currentMonth || getCurrentMonthText()
+
     setMonthNavigationErrorText('')
 
     const { data, error } = await supabase
       .from('profile_month_navigation_settings')
-      .select('profile_id, min_history_month, lock_future_months')
+      .select('profile_id, min_history_month, budget_start_date, lock_future_months')
       .eq('profile_id', profileId)
       .maybeSingle()
 
@@ -121,23 +176,31 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
           : getErrorMessage(error, 'Nie udało się pobrać ustawień nawigacji miesięcy.')
       )
       setMonthNavigationStartMonth(DEFAULT_MONTH_NAVIGATION_START_MONTH)
+      setBudgetStartDate('')
+      setSavedBudgetStartDate('')
       setIsFutureMonthNavigationLocked(true)
       setSelectedMonth((prev) =>
-        clampMonthToNavigationRange(prev, DEFAULT_MONTH_NAVIGATION_START_MONTH, currentMonth)
+        clampMonthToNavigationRange(
+          prev || effectiveCurrentMonth,
+          DEFAULT_MONTH_NAVIGATION_START_MONTH,
+          effectiveCurrentMonth
+        )
       )
       return
     }
 
     const settings = data as MonthNavigationSettingsRow | null
-    const nextMinAllowedMonth =
-      settings?.min_history_month?.slice(0, 7) || DEFAULT_MONTH_NAVIGATION_START_MONTH
+    const nextBudgetStartDate = settings?.budget_start_date || settings?.min_history_month || ''
+    const nextMinAllowedMonth = getMonthKeyFromDate(nextBudgetStartDate) || DEFAULT_MONTH_NAVIGATION_START_MONTH
     const nextFutureLocked = settings?.lock_future_months ?? true
-    const nextMaxAllowedMonth = nextFutureLocked ? currentMonth : null
+    const nextMaxAllowedMonth = nextFutureLocked ? effectiveCurrentMonth : null
 
     setMonthNavigationStartMonth(nextMinAllowedMonth)
+    setBudgetStartDate(nextBudgetStartDate)
+    setSavedBudgetStartDate(nextBudgetStartDate)
     setIsFutureMonthNavigationLocked(nextFutureLocked)
     setSelectedMonth((prev) =>
-      clampMonthToNavigationRange(prev, nextMinAllowedMonth, nextMaxAllowedMonth)
+      clampMonthToNavigationRange(prev || effectiveCurrentMonth, nextMinAllowedMonth, nextMaxAllowedMonth)
     )
   }, [clampMonthToNavigationRange, currentMonth, profileId])
 
@@ -145,13 +208,33 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
     try {
       const months = await loadLockedMonthsHelper(supabase, profileId)
       setLockedMonths(months)
-    } catch (error) {
+    } catch {
       setLockedMonths([])
     }
   }, [profileId])
 
-  const minAllowedMonth = monthNavigationStartMonth || null
-  const maxAllowedMonth = isFutureMonthNavigationLocked ? currentMonth : null
+  const loadExcludedMonths = useCallback(async () => {
+    const { data, error } = await supabase
+      .from('profile_excluded_months')
+      .select('month')
+      .eq('profile_id', profileId)
+      .order('month', { ascending: true })
+
+    if (error) {
+      if (!isMissingBackendObjectError(error)) {
+        setMonthNavigationErrorText(
+          getErrorMessage(error, 'Nie udało się pobrać miesięcy wyłączonych ze statystyk.')
+        )
+      }
+      setExcludedMonths([])
+      return
+    }
+
+    setExcludedMonths((data || []).map((row) => String(row.month || '').slice(0, 7)).filter(Boolean))
+  }, [profileId])
+
+  const minAllowedMonth = getMonthKeyFromDate(budgetStartDate) || monthNavigationStartMonth || null
+  const maxAllowedMonth = isFutureMonthNavigationLocked && currentMonth ? currentMonth : null
 
   const isPrevMonthNavigationBlocked = minAllowedMonth
     ? getMonthNumber(selectedMonth) <= getMonthNumber(minAllowedMonth)
@@ -166,6 +249,10 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
   }, [lockedMonthsSet, selectedMonth])
 
   useEffect(() => {
+    if (!selectedMonth) {
+      return
+    }
+
     const clampedMonth = clampMonthToNavigationRange(selectedMonth, minAllowedMonth, maxAllowedMonth)
 
     if (clampedMonth !== selectedMonth) {
@@ -175,9 +262,10 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
 
   const handleSaveMonthNavigationSettings = useCallback(async () => {
     const validationError = validateMonthNavigationStartMonth(monthNavigationStartMonth)
+    const startDateValidationError = validateBudgetStartDate(budgetStartDate)
 
-    if (validationError) {
-      setMonthNavigationErrorText(validationError)
+    if (validationError || startDateValidationError) {
+      setMonthNavigationErrorText(startDateValidationError || validationError)
       return
     }
 
@@ -185,7 +273,8 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
     setMonthNavigationErrorText('')
 
     const payload = {
-      min_history_month: monthNavigationStartMonth ? `${monthNavigationStartMonth}-01` : null,
+      min_history_month: budgetStartDate ? `${getMonthKeyFromDate(budgetStartDate)}-01` : null,
+      budget_start_date: budgetStartDate || null,
       lock_future_months: isFutureMonthNavigationLocked,
       updated_at: new Date().toISOString(),
     }
@@ -222,20 +311,146 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
       }
     }
 
-    const nextMaxAllowedMonth = isFutureMonthNavigationLocked ? currentMonth : null
+    const effectiveCurrentMonth = currentMonth || getCurrentMonthText()
+    const nextMaxAllowedMonth = isFutureMonthNavigationLocked ? effectiveCurrentMonth : null
 
     setSelectedMonth((prev) =>
-      clampMonthToNavigationRange(prev, monthNavigationStartMonth, nextMaxAllowedMonth)
+      clampMonthToNavigationRange(
+        prev || effectiveCurrentMonth,
+        getMonthKeyFromDate(budgetStartDate),
+        nextMaxAllowedMonth
+      )
     )
+    setSavedBudgetStartDate(budgetStartDate)
     setIsSavingMonthNavigationSettings(false)
   }, [
     clampMonthToNavigationRange,
     currentMonth,
+    budgetStartDate,
     isFutureMonthNavigationLocked,
     monthNavigationStartMonth,
     profileId,
+    validateBudgetStartDate,
     validateMonthNavigationStartMonth,
   ])
+
+  const handleToggleSelectedMonthExcluded = useCallback(async () => {
+    setIsUpdatingSelectedMonthExclusion(true)
+    setMonthNavigationErrorText('')
+
+    try {
+      if (excludedMonthsSet.has(selectedMonth)) {
+        const { error } = await supabase
+          .from('profile_excluded_months')
+          .delete()
+          .eq('profile_id', profileId)
+          .eq('month', `${selectedMonth}-01`)
+
+        if (error) {
+          throw error
+        }
+      } else {
+        const { error } = await supabase.from('profile_excluded_months').upsert(
+          {
+            profile_id: profileId,
+            month: `${selectedMonth}-01`,
+          },
+          {
+            onConflict: 'profile_id,month',
+          }
+        )
+
+        if (error) {
+          throw error
+        }
+      }
+
+      await loadExcludedMonths()
+    } catch (error) {
+      setMonthNavigationErrorText(
+        getErrorMessage(error, 'Nie udało się zmienić wyłączenia miesiąca ze statystyk.')
+      )
+    } finally {
+      setIsUpdatingSelectedMonthExclusion(false)
+    }
+  }, [excludedMonthsSet, loadExcludedMonths, profileId, selectedMonth])
+
+  const getPastMonthsForBulkLock = useCallback(() => {
+    const startMonth = minAllowedMonth || getMonthKeyFromDate(budgetStartDate) || currentMonth
+    const months: string[] = []
+    let cursor = startMonth
+    let guard = 0
+
+    while (getMonthNumber(cursor) < getMonthNumber(currentMonth) && guard < 600) {
+      months.push(cursor)
+      cursor = getNextMonthText(cursor)
+      guard += 1
+    }
+
+    return months
+  }, [budgetStartDate, currentMonth, minAllowedMonth])
+
+  const handleLockAllPastMonths = useCallback(async () => {
+    const months = getPastMonthsForBulkLock()
+
+    if (months.length === 0) {
+      alert('Brak minionych miesięcy do zablokowania.')
+      return
+    }
+
+    const confirmed = confirm(
+      `Czy na pewno zablokować wszystkie minione miesiące (${months.length})? Aktualny miesiąc nie zostanie zablokowany.`
+    )
+
+    if (!confirmed) {
+      return
+    }
+
+    try {
+      for (const month of months) {
+        await lockMonthHelper(supabase, profileId, month)
+      }
+
+      await loadLockedMonths()
+      alert('Minione miesiące zostały zablokowane.')
+    } catch (error) {
+      alert(`Nie udało się zablokować miesięcy: ${getErrorMessage(error, 'Nieznany błąd.')}`)
+    }
+  }, [getPastMonthsForBulkLock, loadLockedMonths, profileId])
+
+  const handleUnlockAllPastMonths = useCallback(async () => {
+    const months = getPastMonthsForBulkLock()
+
+    if (months.length === 0) {
+      alert('Brak minionych miesięcy do odblokowania.')
+      return
+    }
+
+    const confirmed = confirm(`Czy na pewno odblokować wszystkie minione miesiące (${months.length})?`)
+
+    if (!confirmed) {
+      return
+    }
+
+    try {
+      for (const month of months) {
+        await unlockMonthHelper(supabase, profileId, month)
+      }
+
+      await loadLockedMonths()
+      alert('Minione miesiące zostały odblokowane.')
+    } catch (error) {
+      alert(`Nie udało się odblokować miesięcy: ${getErrorMessage(error, 'Nieznany błąd.')}`)
+    }
+  }, [getPastMonthsForBulkLock, loadLockedMonths, profileId])
+
+  const handleLockMonth = useCallback(
+    async (month: string) => {
+      await lockMonthHelper(supabase, profileId, month)
+      await loadLockedMonths()
+    },
+    [loadLockedMonths, profileId]
+  )
 
   const handleLockSelectedMonth = useCallback(async () => {
     if (isSelectedMonthLocked) {
@@ -307,6 +522,9 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
     currentMonth,
     monthNavigationStartMonth,
     setMonthNavigationStartMonth,
+    budgetStartDate,
+    savedBudgetStartDate,
+    setBudgetStartDate,
     isFutureMonthNavigationLocked,
     setIsFutureMonthNavigationLocked,
     isSavingMonthNavigationSettings,
@@ -314,6 +532,10 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
     setMonthNavigationErrorText,
     lockedMonths,
     lockedMonthsSet,
+    excludedMonths,
+    excludedMonthsSet,
+    isUpdatingSelectedMonthExclusion,
+    isSelectedMonthExcluded: excludedMonthsSet.has(selectedMonth),
     isUpdatingSelectedMonthLock,
     isSelectedMonthLocked,
     minAllowedMonth,
@@ -322,9 +544,14 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
     isNextMonthNavigationBlocked,
     loadMonthNavigationSettings,
     loadLockedMonths,
+    loadExcludedMonths,
     handleSaveMonthNavigationSettings,
     handleLockSelectedMonth,
     handleUnlockSelectedMonth,
+    handleToggleSelectedMonthExcluded,
+    handleLockAllPastMonths,
+    handleUnlockAllPastMonths,
+    handleLockMonth,
     goToPrevMonth,
     goToNextMonth,
   }

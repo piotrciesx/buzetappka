@@ -35,6 +35,10 @@ export type HeatmapVariant = 'balance' | 'income' | 'expense'
 export type MonthCalendarPanelProps = {
   selectedMonth: string
   transactions: Transaction[]
+  budgetStartDate?: string
+  isSelectedMonthExcluded?: boolean
+  isUpdatingSelectedMonthExclusion?: boolean
+  onToggleSelectedMonthExcluded?: () => Promise<void>
   styles: Record<string, CSSProperties>
   isSelectedMonthLocked: boolean
   getAmountNumber: (value: unknown) => number

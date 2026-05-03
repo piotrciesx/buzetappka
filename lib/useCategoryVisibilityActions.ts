@@ -194,7 +194,7 @@ export function useCategoryVisibilityActions({
       }
 
       if (category.level === 1) {
-        alert('Nie można ukryć kategorii głównej poziomu 1')
+        alert('Nie można ukryć kategorii głównej')
         return
       }
 

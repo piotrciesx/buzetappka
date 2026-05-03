@@ -4,8 +4,11 @@ import { CSSProperties, KeyboardEvent, useMemo, useRef, useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import DescriptionSuggestionDeleteMenu from './DescriptionSuggestionDeleteMenu'
-import MonthCalendarPanel from './MonthCalendarPanel'
 import PaymentSplitEditor from './PaymentSplitEditor'
+import Level3CalendarBlock from './category-tree/Level3CalendarBlock'
+import Level3InlineAddForm from './category-tree/Level3InlineAddForm'
+import Level3SectionHeader from './category-tree/Level3SectionHeader'
+import type { HeatmapMode } from './month-calendar/monthCalendarTypes'
 import { buildDateFromDayInput, getDayInputFromDate, normalizeDayInput } from '../lib/dateUtils'
 import { Tag, TransactionPaymentSplit } from '../lib/budgetPageTypes'
 import {
@@ -49,10 +52,22 @@ type MoveTarget = {
   label: string
 }
 
+type RecurringLinkOption = {
+  id: string
+  label: string
+  description?: string
+  amount?: number | null
+  useAmountWhenCreating?: boolean
+  hasTransactionInMonth?: boolean
+}
+
 type HideMode = 'now' | 'next'
 
 type Props = {
   l3: Category
+  headerName?: string
+  showHeaderSum?: boolean
+  showCategoryActions?: boolean
   selectedMonth: string
   isClosingAfterSelectedMonth: boolean
   categorySum: number
@@ -70,9 +85,12 @@ type Props = {
     dayText: string,
     tagNames?: string[],
     paymentSourceId?: string | null,
-    paymentSplitItems?: PaymentSplitInput[]
+    paymentSplitItems?: PaymentSplitInput[],
+    recurringTransactionId?: string | null
   ) => Promise<void>
   handleHideCategory: (id: string, mode?: HideMode) => Promise<void>
+  handleRenameCategory: (categoryId: string) => Promise<void>
+  handleDeleteCategory: (categoryId: string) => Promise<void>
   handleUndoScheduledHide: (id: string) => Promise<void>
   handleDeleteTransaction: (id: string) => Promise<void>
   handleUpdateTransaction: (
@@ -92,6 +110,10 @@ type Props = {
   getMoveTargetsForTransaction: (transaction: Transaction) => MoveTarget[]
   getSignedAmountForTransaction: (transaction: Transaction) => number
   calendarHeatmapVariant: 'balance' | 'income' | 'expense'
+  heatmapMode: HeatmapMode
+  heatmapInverted: boolean
+  onHeatmapModeChange: (value: HeatmapMode) => void
+  onHeatmapInvertedChange: (value: boolean) => void
   heatmapStorageKey: string
   descriptionSuggestions: DescriptionSuggestionSet
   getPaymentSourceOptionsForCategoryId?: (
@@ -102,6 +124,7 @@ type Props = {
     type: string
     optionLabel?: string
   }>
+  getRecurringOptionsForCategoryId?: (categoryId: string) => RecurringLinkOption[]
   transactionTagsMap: Record<string, Tag[]>
   transactionPaymentSplitsMap?: Record<string, TransactionPaymentSplit[]>
   onTagClick?: (tagId: string) => void
@@ -149,13 +172,6 @@ const suggestionButtonStyle = {
 const activeSuggestionButtonStyle = {
   ...suggestionButtonStyle,
   background: '#eff6ff',
-} as const
-
-const helperTextStyle = {
-  marginTop: 8,
-  fontSize: 13,
-  color: '#6b7280',
-  lineHeight: 1.45,
 } as const
 
 const tagFieldWrapStyle = {
@@ -214,6 +230,9 @@ const compactSecondaryButtonStyle = {
 export default function Level3Section(props: Props) {
   const {
     l3,
+    headerName,
+    showHeaderSum = true,
+    showCategoryActions = true,
     selectedMonth,
     isClosingAfterSelectedMonth,
     categorySum,
@@ -225,6 +244,8 @@ export default function Level3Section(props: Props) {
     handleLevel3DragStart,
     handleInlineSaveTransaction,
     handleHideCategory,
+    handleRenameCategory,
+    handleDeleteCategory,
     handleUndoScheduledHide,
     handleDeleteTransaction,
     handleUpdateTransaction,
@@ -235,9 +256,14 @@ export default function Level3Section(props: Props) {
     getMoveTargetsForTransaction,
     getSignedAmountForTransaction,
     calendarHeatmapVariant,
+    heatmapMode,
+    heatmapInverted,
+    onHeatmapModeChange,
+    onHeatmapInvertedChange,
     heatmapStorageKey,
     descriptionSuggestions,
     getPaymentSourceOptionsForCategoryId,
+    getRecurringOptionsForCategoryId,
     transactionTagsMap,
     transactionPaymentSplitsMap = {},
     onTagClick,
@@ -273,6 +299,7 @@ export default function Level3Section(props: Props) {
   const [inlineTagInput, setInlineTagInput] = useState('')
   const [inlinePaymentSourceId, setInlinePaymentSourceId] = useState('')
   const [inlinePaymentSplitItems, setInlinePaymentSplitItems] = useState<PaymentSplitInput[]>([])
+  const [inlineRecurringTransactionId, setInlineRecurringTransactionId] = useState('')
   const [isInlineSaving, setIsInlineSaving] = useState(false)
   const inlineAmountInputRef = useRef<HTMLInputElement | null>(null)
   const inlineDescriptionInputRef = useRef<HTMLInputElement | null>(null)
@@ -342,7 +369,7 @@ export default function Level3Section(props: Props) {
     opacity: isDragBlocked ? 0.45 : styles.dragHandle?.opacity,
   }
 
-  const dragHandleTitle = isDragBlocked ? 'Aby przenosić, najpierw zwiń kategorię' : undefined
+  const dragHandleTitle = isDragBlocked ? 'Aby przenosić, najpierw zwiń podkategorię' : undefined
 
   const getTransactionTagNames = (transactionId: string) => {
     return (transactionTagsMap[transactionId] || []).map((tag) => tag.name)
@@ -473,6 +500,7 @@ export default function Level3Section(props: Props) {
     setInlineTagInput('')
     setInlinePaymentSourceId('')
     setInlinePaymentSplitItems([])
+    setInlineRecurringTransactionId('')
 
     if (!isOpen) {
       toggleLevel3(l3.id)
@@ -492,6 +520,7 @@ export default function Level3Section(props: Props) {
     setInlineTagInput('')
     setInlinePaymentSourceId('')
     setInlinePaymentSplitItems([])
+    setInlineRecurringTransactionId('')
     setIsInlineSaving(false)
   }
 
@@ -510,7 +539,8 @@ export default function Level3Section(props: Props) {
         inlineDay,
         inlineTagNames,
         inlinePaymentSourceId || null,
-        inlinePaymentSplitItems
+        inlinePaymentSplitItems,
+        inlineRecurringTransactionId || null
       )
       cancelInlineAdd()
     } catch {
@@ -545,22 +575,31 @@ export default function Level3Section(props: Props) {
 
   return (
     <div ref={setNodeRef} style={wrapStyle}>
-      <div
-        style={{
-          ...styles.l3Header,
-          boxShadow: isDragging ? '0 12px 24px rgba(0, 0, 0, 0.12)' : styles.l3Header.boxShadow,
-        }}
-        onClick={() => {
-          if (!isDragging) {
-            toggleLevel3(l3.id)
-          }
-        }}
-      >
-        <div style={styles.l2Left}>
-          {isSortable && (
+      <Level3SectionHeader
+        name={headerName || l3.name}
+        categorySum={categorySum}
+        showCategorySum={showHeaderSum}
+        showCategoryActions={showCategoryActions}
+        isOpen={isOpen}
+        isDragging={isDragging}
+        isClosingAfterSelectedMonth={isClosingAfterSelectedMonth}
+        isCalendarOpen={isCalendarOpen}
+        canAddHere={canAddHere}
+        isSelectedMonthLocked={isSelectedMonthLocked}
+        styles={styles}
+        onToggle={() => toggleLevel3(l3.id)}
+        onToggleCalendar={() => setIsCalendarOpen((prev) => !prev)}
+        onInlineAdd={openInlineAdd}
+        onHideNow={() => handleHideCategory(l3.id, 'now')}
+        onHideNext={() => handleHideCategory(l3.id, 'next')}
+        onRenameCategory={() => handleRenameCategory(l3.id)}
+        onDeleteCategory={() => handleDeleteCategory(l3.id)}
+        onUndoScheduledHide={() => handleUndoScheduledHide(l3.id)}
+        dragHandle={
+          isSortable ? (
             <button
               type="button"
-              aria-label={`Przeciągnij kategorię ${l3.name}`}
+              aria-label={`Przeciągnij podkategorię ${l3.name}`}
               title={dragHandleTitle}
               style={dragHandleStyle}
               disabled={isDragBlocked}
@@ -575,102 +614,37 @@ export default function Level3Section(props: Props) {
             >
               ::
             </button>
-          )}
+          ) : null
+        }
+      />
 
-          <div style={styles.arrow}>{isOpen ? '▾' : '▸'}</div>
-
-          <div>
-            <div style={styles.l3Name}>
-              {l3.name} • {categorySum}
-            </div>
-
-            {isClosingAfterSelectedMonth && (
-              <div style={styles.closingBadge}>zamknie się z końcem tego miesiąca</div>
-            )}
-          </div>
-        </div>
-
-        <div style={styles.actions} onClick={(event) => event.stopPropagation()}>
-          <button
-            type="button"
-            style={styles.secondaryButton}
-            onMouseDown={(event) => event.stopPropagation()}
-            onPointerDown={(event) => event.stopPropagation()}
-            onClick={(event) => {
-              event.stopPropagation()
-              setIsCalendarOpen((prev) => !prev)
-            }}
-          >
-            {isCalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
-          </button>
-
-          {canAddHere && !isSelectedMonthLocked && (
-            <button
-              style={styles.primaryButton}
-              onClick={() => {
-                openInlineAdd()
-              }}
-            >
-              + wpis
-            </button>
-          )}
-
-          {isClosingAfterSelectedMonth ? (
-            <button
-              style={styles.secondaryButton}
-              onClick={async () => {
-                await handleUndoScheduledHide(l3.id)
-              }}
-            >
-              cofnij zamknięcie
-            </button>
-          ) : (
-            <>
-              <button
-                style={styles.dangerButton}
-                onClick={async () => {
-                  await handleHideCategory(l3.id, 'now')
-                }}
-              >
-                ukryj teraz
-              </button>
-
-              <button
-                style={styles.dangerButton}
-                onClick={async () => {
-                  await handleHideCategory(l3.id, 'next')
-                }}
-              >
-                ukryj od następnego
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-
-      {isCalendarOpen && (
-        <MonthCalendarPanel
-          selectedMonth={selectedMonth}
-          transactions={transactions}
-          styles={styles}
-          isSelectedMonthLocked={isSelectedMonthLocked}
-          getAmountNumber={getAmountNumber}
-          getMoveTargetsForTransaction={getMoveTargetsForTransaction}
-          getSignedAmountForTransaction={getSignedAmountForTransaction}
-          onUpdateTransaction={handleUpdateTransaction}
-          onDeleteTransaction={handleDeleteTransaction}
-          onMoveTransaction={handleMoveTransaction}
-          heatmapVariant={calendarHeatmapVariant}
-          heatmapStorageKey={heatmapStorageKey}
-          descriptionSuggestions={descriptionSuggestions}
-          transactionTagsMap={transactionTagsMap}
-          onTagClick={onTagClick}
-          onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
-          onAddTransactionForDay={(dayText) => handleOpenCalendarAddForDay(l3.id, dayText)}
-          calendarTitle={`Kalendarz • ${l3.name}`}
-          calendarSubtitle="Kliknij dzień, aby zobaczyć wpisy z tego Level 3 lub dodać nowy wpis."
-        />
-      )}
+      <Level3CalendarBlock
+        isOpen={isCalendarOpen}
+        selectedMonth={selectedMonth}
+        transactions={transactions}
+        styles={styles}
+        isSelectedMonthLocked={isSelectedMonthLocked}
+        getAmountNumber={getAmountNumber}
+        getMoveTargetsForTransaction={getMoveTargetsForTransaction}
+        getSignedAmountForTransaction={getSignedAmountForTransaction}
+        handleUpdateTransaction={handleUpdateTransaction}
+        handleDeleteTransaction={handleDeleteTransaction}
+        handleMoveTransaction={handleMoveTransaction}
+        calendarHeatmapVariant={calendarHeatmapVariant}
+        heatmapMode={heatmapMode}
+        heatmapInverted={heatmapInverted}
+        onHeatmapModeChange={onHeatmapModeChange}
+        onHeatmapInvertedChange={onHeatmapInvertedChange}
+        heatmapStorageKey={heatmapStorageKey}
+        descriptionSuggestions={descriptionSuggestions}
+        transactionTagsMap={transactionTagsMap}
+        transactionPaymentSplitsMap={transactionPaymentSplitsMap}
+        getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
+        onTagClick={onTagClick}
+        onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
+        onAddTransactionForDay={(dayText) => handleOpenCalendarAddForDay(l3.id, dayText)}
+        categoryName={l3.name}
+      />
 
       <DescriptionSuggestionDeleteMenu
         isOpen={Boolean(inlineSuggestionToDelete)}
@@ -683,180 +657,43 @@ export default function Level3Section(props: Props) {
       {isOpen && (
         <div style={styles.transactionsBox}>
           {isInlineAdding && !isSelectedMonthLocked && (
-            <div style={styles.formRow}>
-              <input
-                style={styles.smallInput}
-                value={inlineDay}
-                onChange={(event) =>
-                  setInlineDay(normalizeDayInput(event.target.value, selectedMonth))
-                }
-                placeholder="dzień"
-                inputMode="numeric"
-                onBlur={() => {
-                  setInlineDay((prev) => normalizeDayInput(prev, selectedMonth))
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter') {
-                    event.preventDefault()
-                    inlineAmountInputRef.current?.focus()
-                  }
-                }}
-              />
-
-              <input
-                ref={inlineAmountInputRef}
-                style={styles.smallInput}
-                value={inlineAmount}
-                onChange={(event) => setInlineAmount(normalizeAmountInput(event.target.value))}
-                placeholder="kwota"
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter') {
-                    event.preventDefault()
-                    inlineDescriptionInputRef.current?.focus()
-                  }
-                }}
-              />
-
-              <div style={inlineDescriptionFieldWrapStyle}>
-                <input
-                  ref={inlineDescriptionInputRef}
-                  style={styles.input}
-                  value={inlineDescription}
-                  onChange={(event) => setInlineDescription(event.target.value)}
-                  placeholder="opis"
-                  autoComplete="off"
-                  autoCorrect="off"
-                  spellCheck={false}
-                  onKeyDown={async (event) => {
-                    if (handleInlineSuggestionKeyDown(event)) {
-                      return
-                    }
-
-                    if (event.key === 'Enter') {
-                      event.preventDefault()
-                      await saveInlineAdd()
-                    }
-                  }}
-                />
-
-                {filteredInlineSuggestions.length > 0 && (
-                  <div style={suggestionsDropdownStyle}>
-                    {filteredInlineSuggestions.map((suggestion, index) => {
-                      const isActive = index === activeInlineSuggestionIndex
-                      const isLast = index === filteredInlineSuggestions.length - 1
-
-                      return (
-                        <button
-                          key={suggestion.text}
-                          type="button"
-                          style={{
-                            ...(isActive ? activeSuggestionButtonStyle : suggestionButtonStyle),
-                            borderBottom: isLast ? 'none' : suggestionButtonStyle.borderBottom,
-                          }}
-                          onMouseDown={(event) => event.preventDefault()}
-                          onClick={() => {
-                            applyInlineSuggestion(suggestion.text)
-                          }}
-                          onContextMenu={(event) => {
-                            handleInlineSuggestionContextMenu(event, suggestion)
-                          }}
-                          onPointerDown={(event) => {
-                            handleInlineSuggestionPointerDown(suggestion, event)
-                          }}
-                          onPointerUp={handleInlineSuggestionPointerUp}
-                          onPointerLeave={handleInlineSuggestionPointerLeave}
-                          onPointerCancel={handleInlineSuggestionPointerLeave}
-                        >
-                          {suggestion.text}
-                        </button>
-                      )
-                    })}
-                  </div>
-                )}
-
-                <div style={helperTextStyle}>
-                  Sugestie filtrują się na żywo po całym wpisanym tekście. Możesz wybrać je
-                  strzałkami i Enterem, a ukryć prawym przyciskiem albo długim przytrzymaniem.
-                </div>
-              </div>
-
-              <div style={{ ...inlineDescriptionFieldWrapStyle, minWidth: 180 }}>
-                <input
-                  style={styles.input}
-                  value={inlineTagInput}
-                  onChange={(event) => {
-                    const nextValue = event.target.value
-                    setInlineTagInput(nextValue)
-                    setInlineTagNames(splitTagInput(nextValue))
-                  }}
-                  placeholder="tagi, po przecinku"
-                  autoComplete="off"
-                  autoCorrect="off"
-                  spellCheck={false}
-                  onKeyDown={async (event) => {
-                    if (event.key === 'Enter') {
-                      event.preventDefault()
-                      await saveInlineAdd()
-                    }
-                  }}
-                />
-
-                {inlineTagNames.length > 0 && (
-                  <div style={{ ...tagBadgesWrapStyle, marginTop: 8 }}>
-                    {inlineTagNames.map((tagName) => (
-                      <span key={tagName} style={tagBadgeStyle}>
-                        #{tagName}
-                        <button
-                          type="button"
-                          style={tagRemoveButtonStyle}
-                          onClick={() => {
-                            const nextTagNames = inlineTagNames.filter((item) => item !== tagName)
-                            setInlineTagNames(nextTagNames)
-                            setInlineTagInput(nextTagNames.join(', '))
-                          }}
-                        >
-                          ×
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {(getPaymentSourceOptionsForCategoryId?.(l3.id) || []).length > 0 && (
-                <div style={{ minWidth: 280, flex: 1 }}>
-                  <PaymentSplitEditor
-                    amount={inlineAmount}
-                    isVisible
-                    selectedPaymentSourceId={inlinePaymentSourceId}
-                    setSelectedPaymentSourceId={setInlinePaymentSourceId}
-                    paymentSourceOptions={getPaymentSourceOptionsForCategoryId?.(l3.id) || []}
-                    paymentSplitItems={inlinePaymentSplitItems}
-                    setPaymentSplitItems={setInlinePaymentSplitItems}
-                    styles={styles}
-                  />
-                </div>
-              )}
-
-              <button
-                style={{ ...styles.primaryButton, ...compactPrimaryButtonStyle }}
-                disabled={isInlineSaving}
-                onClick={async () => {
-                  await saveInlineAdd()
-                }}
-              >
-                {isInlineSaving ? 'zapisywanie...' : 'zapisz'}
-              </button>
-
-              <button
-                style={{ ...styles.secondaryButton, ...compactSecondaryButtonStyle }}
-                onClick={() => {
-                  cancelInlineAdd()
-                }}
-              >
-                anuluj
-              </button>
-            </div>
+            <Level3InlineAddForm
+              categoryId={l3.id}
+              selectedMonth={selectedMonth}
+              inlineDay={inlineDay}
+              setInlineDay={setInlineDay}
+              inlineAmount={inlineAmount}
+              setInlineAmount={setInlineAmount}
+              inlineDescription={inlineDescription}
+              setInlineDescription={setInlineDescription}
+              inlineTagInput={inlineTagInput}
+              setInlineTagInput={setInlineTagInput}
+              inlineTagNames={inlineTagNames}
+              setInlineTagNames={setInlineTagNames}
+              inlinePaymentSourceId={inlinePaymentSourceId}
+              setInlinePaymentSourceId={setInlinePaymentSourceId}
+              inlinePaymentSplitItems={inlinePaymentSplitItems}
+              setInlinePaymentSplitItems={setInlinePaymentSplitItems}
+              isInlineSaving={isInlineSaving}
+              inlineAmountInputRef={inlineAmountInputRef}
+              inlineDescriptionInputRef={inlineDescriptionInputRef}
+              filteredInlineSuggestions={filteredInlineSuggestions}
+              activeInlineSuggestionIndex={activeInlineSuggestionIndex}
+              handleInlineSuggestionKeyDown={handleInlineSuggestionKeyDown}
+              applyInlineSuggestion={applyInlineSuggestion}
+              handleInlineSuggestionContextMenu={handleInlineSuggestionContextMenu}
+              handleInlineSuggestionPointerDown={handleInlineSuggestionPointerDown}
+              handleInlineSuggestionPointerUp={handleInlineSuggestionPointerUp}
+              handleInlineSuggestionPointerLeave={handleInlineSuggestionPointerLeave}
+              getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
+              recurringOptions={getRecurringOptionsForCategoryId?.(l3.id) || []}
+              selectedRecurringTransactionId={inlineRecurringTransactionId}
+              setSelectedRecurringTransactionId={setInlineRecurringTransactionId}
+              normalizeAmountInput={normalizeAmountInput}
+              saveInlineAdd={saveInlineAdd}
+              cancelInlineAdd={cancelInlineAdd}
+              styles={styles}
+            />
           )}
 
           {orderedTransactions.length === 0 && <div style={styles.emptyText}>Brak wpisów w tym miesiącu</div>}

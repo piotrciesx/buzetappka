@@ -8,6 +8,7 @@ import { DescriptionSuggestion, DescriptionSuggestionSet } from '../lib/suggesti
 import { useDescriptionSuggestions } from '../lib/useDescriptionSuggestions'
 import { splitTagInput } from '../lib/tagUtils'
 import { PaymentSplitInput } from '../lib/paymentSplitUtils'
+import { getUniqueCategoryLabel } from '../lib/categoryUtils'
 
 type Category = {
   id: string
@@ -72,10 +73,18 @@ type Props = {
   recurringOptions: Array<{
     id: string
     label: string
+    description?: string
+    amount?: number | null
+    useAmountWhenCreating?: boolean
+    hasTransactionInMonth?: boolean
   }>
   recurringSuggestions: Array<{
     id: string
     label: string
+    description?: string
+    amount?: number | null
+    useAmountWhenCreating?: boolean
+    hasTransactionInMonth?: boolean
   }>
   isSaving: boolean
   onClose: () => void
@@ -297,27 +306,7 @@ const getCategoryPathLabel = (
   categoryId: string,
   categoriesById: Record<string, Category>
 ) => {
-  const category = categoriesById[categoryId]
-
-  if (!category) {
-    return ''
-  }
-
-  const parts = [category.name]
-  let currentParentId = category.parent_id
-
-  while (currentParentId) {
-    const parent = categoriesById[currentParentId]
-
-    if (!parent) {
-      break
-    }
-
-    parts.unshift(parent.name)
-    currentParentId = parent.parent_id
-  }
-
-  return parts.join(' > ')
+  return getUniqueCategoryLabel(categoryId, categoriesById)
 }
 
 const normalizeAmountInput = (value: string) => {
@@ -383,15 +372,6 @@ export default function TransactionCreatorModal(props: Props) {
   const availableLevel2Categories = selectedLevel1Id ? level2ByParentId[selectedLevel1Id] || [] : []
   const availableLevel3Categories = selectedLevel2Id ? level3ByParentId[selectedLevel2Id] || [] : []
 
-  const allVisibleFinalCategories = Object.values(level3ByParentId).flat()
-  const duplicateFinalCategoryNames = allVisibleFinalCategories.reduce<Record<string, number>>(
-    (acc, category) => {
-      acc[category.name] = (acc[category.name] || 0) + 1
-      return acc
-    },
-    {}
-  )
-
   const canSaveOnLevel1 = Boolean(selectedLevel1Id) && availableLevel2Categories.length === 0
   const canSaveOnLevel2 = Boolean(selectedLevel2Id) && availableLevel3Categories.length === 0
 
@@ -405,11 +385,7 @@ export default function TransactionCreatorModal(props: Props) {
     : ''
 
   const getLevel3ButtonLabel = (category: Category) => {
-    if ((duplicateFinalCategoryNames[category.name] || 0) > 1) {
-      return getCategoryPathLabel(category.id, categoriesById)
-    }
-
-    return category.name
+    return getUniqueCategoryLabel(category.id, categoriesById, availableLevel3Categories.map((item) => item.id))
   }
 
   const focusAmountInput = () => {
@@ -453,6 +429,26 @@ export default function TransactionCreatorModal(props: Props) {
     focusAmountInput()
   }
 
+  const applyRecurringLink = (itemId: string) => {
+    setSelectedRecurringTransactionId(itemId)
+
+    const item = [...recurringOptions, ...recurringSuggestions].find(
+      (option) => option.id === itemId
+    )
+
+    if (!item) {
+      return
+    }
+
+    if (item.description) {
+      setDescription(item.description)
+    }
+
+    if (item.useAmountWhenCreating && item.amount !== null && item.amount !== undefined) {
+      setAmount(String(item.amount))
+    }
+  }
+
   const handleTagInputChange = (value: string) => {
     setTagInputValue(value)
     setSelectedTagNames(splitTagInput(value))
@@ -469,6 +465,9 @@ export default function TransactionCreatorModal(props: Props) {
   }, [selectedTagNames])
 
   const dayInputValue = getDayInputFromDate(transactionDate, selectedMonth)
+  const selectedRecurringOption = [...recurringOptions, ...recurringSuggestions].find(
+    (item) => item.id === selectedRecurringTransactionId
+  )
   const {
     filteredSuggestions,
     activeSuggestionIndex,
@@ -639,7 +638,7 @@ export default function TransactionCreatorModal(props: Props) {
         )}
 
         <div style={sectionStyle}>
-          <div style={styles.l2Name}>Kategoria poziom 2</div>
+          <div style={styles.l2Name}>Kategorie</div>
 
           {!selectedLevel1Id && <div style={styles.emptyText}>Najpierw wybierz typ wpisu.</div>}
 
@@ -668,28 +667,28 @@ export default function TransactionCreatorModal(props: Props) {
 
           {selectedLevel1Id && availableLevel2Categories.length === 0 && (
             <div style={styles.emptyText}>
-              Ten typ nie ma poziomu 2 — wpis zapisze się bezpośrednio na tym poziomie.
+              Ten typ nie ma dodatkowych kategorii — wpis zapisze się bezpośrednio tutaj.
             </div>
           )}
         </div>
 
         <div style={sectionStyle}>
-          <div style={styles.l2Name}>Kategoria końcowa</div>
+          <div style={styles.l2Name}>Podkategorie</div>
 
           {!selectedLevel2Id && availableLevel2Categories.length > 0 && (
             <div style={disabledLevel3WrapStyle}>
-              <div style={styles.l2Name}>Najpierw wybierz kategorię poziomu 2</div>
+              <div style={styles.l2Name}>Najpierw wybierz kategorię</div>
               <div style={styles.emptyText}>
-                Wybór kategorii końcowej odblokuje się po wskazaniu poziomu 2.
+                Wybór podkategorii odblokuje się po wskazaniu kategorii.
               </div>
             </div>
           )}
 
           {selectedLevel1Id && availableLevel2Categories.length === 0 && (
             <div style={treeLevel3WrapStyle}>
-              <div style={styles.l2Name}>Poziom końcowy</div>
+              <div style={styles.l2Name}>Kategoria końcowa</div>
               <div style={styles.emptyText}>
-                W tym typie nie ma niższych poziomów — wpis zapisze się na poziomie 1.
+                W tym typie nie ma niższych kategorii — wpis zapisze się tutaj.
               </div>
             </div>
           )}
@@ -720,7 +719,7 @@ export default function TransactionCreatorModal(props: Props) {
             <div style={treeLevel3WrapStyle}>
               <div style={styles.l2Name}>{categoriesById[selectedLevel2Id]?.name || ''}</div>
               <div style={styles.emptyText}>
-                Ta kategoria nie ma poziomu 3 — wpis zapisze się na poziomie 2.
+                Ta kategoria nie ma podkategorii — wpis zapisze się tutaj.
               </div>
             </div>
           )}
@@ -931,42 +930,38 @@ export default function TransactionCreatorModal(props: Props) {
             )}
 
 
-            <label style={dateLabelStyle} htmlFor="transaction-recurring-link">
-              Powiązane przypomnienie / rata
-            </label>
+            {(recurringOptions.length > 0 || recurringSuggestions.length > 0) && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <label style={dateLabelStyle} htmlFor="transaction-recurring-link">
+                  Powiąż z przypomnieniem
+                </label>
 
-            <select
-              id="transaction-recurring-link"
-              style={styles.input}
-              value={selectedRecurringTransactionId}
-              onChange={(event) => setSelectedRecurringTransactionId(event.target.value)}
-            >
-              <option value="">Brak powiązania</option>
-              {recurringOptions.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
+                <select
+                  id="transaction-recurring-link"
+                  style={styles.input}
+                  value={selectedRecurringTransactionId}
+                  onChange={(event) => applyRecurringLink(event.target.value)}
+                >
+                  <option value="">Brak powiązania</option>
+                  {recurringOptions.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.label}
+                    </option>
+                  ))}
+                  {recurringSuggestions.map((item) => (
+                    <option key={`suggestion-${item.id}`} value={item.id}>
+                      {item.label}
+                    </option>
+                  ))}
+                </select>
 
-            {recurringSuggestions.length > 0 && (
-              <div style={{ ...styles.actions, marginTop: 4 }}>
-                {recurringSuggestions.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    style={styles.secondaryButton}
-                    onClick={() => setSelectedRecurringTransactionId(item.id)}
-                  >
-                    Sugestia: {item.label}
-                  </button>
-                ))}
+                {selectedRecurringOption?.hasTransactionInMonth && (
+                  <div style={{ ...styles.emptyText, color: '#92400e' }}>
+                    To przypomnienie ma już wpis w tym miesiącu. Możesz dodać kolejny, jeśli to celowe.
+                  </div>
+                )}
               </div>
             )}
-
-            <div style={helperTextStyle}>
-              Nic nie zostanie oznaczone automatycznie. Po zapisie pokażemy osobne potwierdzenie.
-            </div>
           </div>
 
           <label style={serialToggleStyle}>
@@ -980,7 +975,7 @@ export default function TransactionCreatorModal(props: Props) {
 
           {(!selectedLevel1Id || !effectiveCategoryId) && (
             <div style={styles.emptyText}>
-              Aby zapisać wpis, wybierz typ oraz najniższy dostępny poziom kategorii.
+              Aby zapisać wpis, wybierz typ oraz najniższą dostępną kategorię.
             </div>
           )}
         </div>

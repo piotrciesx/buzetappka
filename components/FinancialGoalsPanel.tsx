@@ -1,6 +1,6 @@
 'use client'
 
-import { CSSProperties, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   closestCenter,
   DndContext,
@@ -12,16 +12,12 @@ import {
 import {
   arrayMove,
   SortableContext,
-  useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
 import {
   FinancialGoal,
   FinancialGoalAllocationMode,
-  FinancialGoalMonthConfig,
   FinancialGoalMonthPriority,
-  Transaction,
 } from '../lib/budgetPageTypes'
 import {
   buildFinancialGoalsPlan,
@@ -29,8 +25,13 @@ import {
   getFinancialGoalAllocationPercentagesForMonth,
   getFinancialGoalModeForMonth,
   getFinancialGoalPriorityItemsForMonth,
-  getGoalProgressBarColor,
 } from '../lib/financialGoals'
+import FinancialGoalEditModal from './financial-goals/FinancialGoalEditModal'
+import FinancialGoalForm from './financial-goals/FinancialGoalForm'
+import FinancialGoalsHeader from './financial-goals/FinancialGoalsHeader'
+import FinancialGoalsModeControls from './financial-goals/FinancialGoalsModeControls'
+import { SortableGoalCard, StaticGoalCard } from './financial-goals/FinancialGoalCard'
+import type { FinancialGoalsPanelProps, FormState } from './financial-goals/financialGoalsPanelTypes'
 
 const panelStyle = {
   marginBottom: 20,
@@ -46,85 +47,6 @@ const cardsWrapStyle = {
   gap: 12,
   marginTop: 12,
 } as const
-
-const cardStyle = {
-  border: '1px solid #e5e7eb',
-  borderRadius: 12,
-  padding: 14,
-  background: '#ffffff',
-} as const
-
-const overlayStyle = {
-  position: 'fixed',
-  inset: 0,
-  zIndex: 1000,
-  background: 'rgba(15, 23, 42, 0.45)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: 20,
-} as const
-
-const modalStyle = {
-  width: '100%',
-  maxWidth: 720,
-  background: '#ffffff',
-  borderRadius: 16,
-  border: '1px solid #e5e7eb',
-  boxShadow: '0 20px 40px rgba(0,0,0,0.16)',
-  padding: 20,
-} as const
-
-const modeButtonRowStyle = {
-  display: 'flex',
-  gap: 10,
-  flexWrap: 'wrap' as const,
-  marginTop: 12,
-} as const
-
-const sliderWrapStyle = {
-  display: 'grid',
-  gap: 10,
-  marginTop: 8,
-} as const
-
-const sliderRowStyle = {
-  display: 'grid',
-  gap: 8,
-  gridTemplateColumns: 'minmax(160px, 1fr) minmax(180px, 2fr) 88px 112px',
-  alignItems: 'center',
-} as const
-
-type FormState = {
-  id?: string
-  name: string
-  targetAmount: string
-  deadlineMonth: string
-  startMonth: string
-  allocationPercent: number | null
-}
-
-type Props = {
-  selectedMonth: string
-  goals: FinancialGoal[]
-  goalPriorities: FinancialGoalMonthPriority[]
-  goalMonthConfigs: FinancialGoalMonthConfig[]
-  transactions: Transaction[]
-  lockedMonthsSet: Set<string>
-  getSignedAmountForTransaction: (transaction: Transaction) => number
-  onSaveGoal: (
-    input: Omit<FinancialGoal, 'id' | 'profile_id' | 'created_at'> & { id?: string }
-  ) => Promise<void>
-  onDeleteGoal: (goalId: string) => Promise<void>
-  onSetGoalModeForMonth: (month: string, mode: FinancialGoalAllocationMode) => Promise<void>
-  onSaveGoalAllocationsForMonth: (
-    month: string,
-    allocationsByGoalId: Record<string, number>,
-    lockedGoalIds?: string[]
-  ) => Promise<void>
-  onReorderGoalsForMonth: (month: string, orderedGoalIds: string[]) => Promise<void>
-  styles: Record<string, CSSProperties>
-}
 
 const getInitialFormState = (selectedMonth: string): FormState => ({
   name: '',
@@ -333,230 +255,7 @@ const rebalanceAllocations = (
   return normalizeAllocationMap(goalIds, nextAllocations)
 }
 
-type GoalCardBaseProps = {
-  goal: FinancialGoal
-  collectedAmount: number
-  remainingAmount: number
-  percentage: number
-  statusLabel: string
-  completionMonth: string | null
-  deadlineMonth: string | null
-  waitingForLockedMonth: boolean
-  allocationPercent: number | null
-  isAllocationMode: boolean
-  isAllocationLocked?: boolean
-  sliderValue?: number
-  onAllocationChange?: (goalId: string, value: number) => void
-  onAllocationDragStart?: () => void
-  onAllocationCommit?: () => void
-  onToggleAllocationLock?: (goalId: string) => void
-  onEdit: (goal: FinancialGoal) => void
-  onDelete: (goalId: string) => void
-  styles: Record<string, CSSProperties>
-}
-
-function GoalCardContent(props: GoalCardBaseProps & { dragHandle?: ReactNode }) {
-  const {
-    goal,
-    collectedAmount,
-    remainingAmount,
-    percentage,
-    statusLabel,
-    completionMonth,
-    deadlineMonth,
-    waitingForLockedMonth,
-    allocationPercent,
-    isAllocationMode,
-    isAllocationLocked,
-    sliderValue,
-    onAllocationChange,
-    onAllocationDragStart,
-    onAllocationCommit,
-    onToggleAllocationLock,
-    onEdit,
-    onDelete,
-    styles,
-    dragHandle,
-  } = props
-
-  const isUnsuccessful = statusLabel === 'niezrealizowany'
-  const progressWidth = isUnsuccessful ? '100%' : `${Math.min(percentage, 100)}%`
-  const progressColor = isUnsuccessful ? getGoalProgressBarColor(0) : getGoalProgressBarColor(percentage)
-
-  return (
-    <>
-      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-          {dragHandle}
-
-          <div>
-            <div style={{ fontWeight: 700, fontSize: 16 }}>{goal.name}</div>
-            <div style={{ ...styles.pageSubtitle, margin: '4px 0 0' }}>
-              Start: {goal.start_month}
-              {deadlineMonth ? ` • deadline: ${deadlineMonth}` : ' • bez deadline’u'}
-            </div>
-          </div>
-        </div>
-
-        <div style={styles.actions}>
-          <button type="button" style={styles.secondaryButton} onClick={() => onEdit(goal)}>
-            Edytuj
-          </button>
-          <button type="button" style={styles.dangerButton} onClick={() => onDelete(goal.id)}>
-            Usuń
-          </button>
-        </div>
-      </div>
-
-      <div
-        style={{
-          display: 'grid',
-          gap: 8,
-          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-          marginTop: 12,
-        }}
-      >
-        <div style={styles.infoBox}>
-          <b>Kwota docelowa:</b> {goal.target_amount.toFixed(2)} zł
-        </div>
-        <div style={styles.infoBox}>
-          <b>Uzbierano:</b> {collectedAmount.toFixed(2)} zł
-        </div>
-        <div style={styles.infoBox}>
-          <b>Brakuje:</b> {remainingAmount.toFixed(2)} zł
-        </div>
-        <div style={styles.infoBox}>
-          <b>Status:</b> {statusLabel}
-        </div>
-        {isAllocationMode && (
-          <div style={styles.infoBox}>
-            <b>Alokacja:</b> {allocationPercent === null ? '0%' : `${allocationPercent}%`}
-            {isAllocationLocked ? ' • zablokowana' : ''}
-          </div>
-        )}
-      </div>
-
-      {isAllocationMode && typeof sliderValue === 'number' && onAllocationChange && (
-        <div style={sliderWrapStyle}>
-          <div style={sliderRowStyle}>
-            <div style={{ fontWeight: 600 }}>{goal.name}</div>
-            <input
-              type="range"
-              min={0}
-              max={100}
-              step={1}
-              value={sliderValue}
-              disabled={isAllocationLocked}
-              onPointerDown={onAllocationDragStart}
-              onPointerUp={onAllocationCommit}
-              onMouseUp={onAllocationCommit}
-              onTouchEnd={onAllocationCommit}
-              onKeyUp={onAllocationCommit}
-              onChange={(event) => onAllocationChange(goal.id, Number(event.target.value))}
-            />
-            <div style={{ fontWeight: 700, textAlign: 'right' }}>{sliderValue}%</div>
-            {onToggleAllocationLock && (
-              <button
-                type="button"
-                style={{
-                  ...(isAllocationLocked ? styles.primaryButton : styles.secondaryButton),
-                  minWidth: 104,
-                  justifyContent: 'center',
-                }}
-                onClick={() => onToggleAllocationLock(goal.id)}
-                title={
-                  isAllocationLocked
-                    ? 'Odblokuj procent tego celu'
-                    : 'Zablokuj procent tego celu'
-                }
-              >
-                {isAllocationLocked ? '🔒 Blokada' : '🔓 Blokuj'}
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-
-      <div
-        style={{
-          marginTop: 12,
-          height: 10,
-          borderRadius: 999,
-          background: '#e5e7eb',
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          style={{
-            width: progressWidth,
-            height: '100%',
-            background: progressColor,
-            transition: 'width 180ms ease, background-color 180ms ease',
-          }}
-        />
-      </div>
-
-      <div style={{ ...styles.pageSubtitle, margin: '8px 0 0' }}>
-        Progres: {percentage.toFixed(1)}%
-        {completionMonth ? ` • osiągnięcie: ${completionMonth}` : ''}
-        {waitingForLockedMonth ? ' • czeka na zamknięcie miesiąca' : ''}
-      </div>
-    </>
-  )
-}
-
-function SortableGoalCard(props: GoalCardBaseProps) {
-  const { goal } = props
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: goal.id,
-  })
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={{
-        ...cardStyle,
-        transform: CSS.Transform.toString(transform),
-        transition,
-        boxShadow: isDragging ? '0 12px 24px rgba(15, 23, 42, 0.12)' : 'none',
-        opacity: isDragging ? 0.82 : 1,
-      }}
-    >
-      <GoalCardContent
-        {...props}
-        dragHandle={
-          <button
-            type="button"
-            style={{
-              border: '1px solid #d1d5db',
-              background: '#f8fafc',
-              borderRadius: 10,
-              padding: '6px 10px',
-              cursor: 'grab',
-              fontWeight: 700,
-              color: '#475569',
-            }}
-            title="Przeciągnij, aby zmienić priorytet"
-            {...attributes}
-            {...listeners}
-          >
-            ⋮⋮
-          </button>
-        }
-      />
-    </div>
-  )
-}
-
-function StaticGoalCard(props: GoalCardBaseProps) {
-  return (
-    <div style={cardStyle}>
-      <GoalCardContent {...props} />
-    </div>
-  )
-}
-
-export default function FinancialGoalsPanel(props: Props) {
+export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
   const {
     selectedMonth,
     goals,
@@ -1027,34 +726,14 @@ export default function FinancialGoalsPanel(props: Props) {
 
   return (
     <section style={panelStyle}>
-      <div style={styles.sectionTitle}>Cele finansowe</div>
-      <div style={styles.pageSubtitle}>
-        Start celu ustawiamy na miesiąc utworzenia. Nadwyżka dodatnia jest rozdzielana według
-        aktywnego trybu z konfiguracją dziedziczoną od wybranego miesiąca do przodu, bez zmiany
-        historii wcześniejszych miesięcy.
-      </div>
+      <FinancialGoalsHeader styles={styles} />
 
-      <div style={modeButtonRowStyle}>
-        <button
-          type="button"
-          style={effectiveMode === 'priority' ? styles.primaryButton : styles.secondaryButton}
-          onClick={() => {
-            handleModeChange('priority')
-          }}
-        >
-          Tryb priorytet
-        </button>
-        <button
-          type="button"
-          style={effectiveMode === 'allocation' ? styles.primaryButton : styles.secondaryButton}
-          disabled={activeGoals.length === 0}
-          onClick={() => {
-            handleModeChange('allocation')
-          }}
-        >
-          Tryb alokacja
-        </button>
-      </div>
+      <FinancialGoalsModeControls
+        effectiveMode={effectiveMode}
+        activeGoalsCount={activeGoals.length}
+        styles={styles}
+        onModeChange={handleModeChange}
+      />
 
       <div style={styles.infoRow}>
         <div style={styles.infoBox}>
@@ -1068,52 +747,19 @@ export default function FinancialGoalsPanel(props: Props) {
         </div>
       </div>
 
-      <div style={{ ...styles.formRow, alignItems: 'flex-start', marginTop: 14 }}>
-        <input
-          style={styles.input}
-          placeholder="Nazwa celu"
-          value={createFormState.name}
-          onChange={(event) =>
-            setCreateFormState((prev) => ({ ...prev, name: event.target.value }))
-          }
-        />
-
-        <input
-          style={styles.smallInput}
-          placeholder="Kwota docelowa"
-          inputMode="decimal"
-          value={createFormState.targetAmount}
-          onChange={(event) =>
-            setCreateFormState((prev) => ({ ...prev, targetAmount: event.target.value }))
-          }
-        />
-
-        <input
-          style={styles.input}
-          type="month"
-          value={createFormState.deadlineMonth}
-          onChange={(event) =>
-            setCreateFormState((prev) => ({ ...prev, deadlineMonth: event.target.value }))
-          }
-        />
-
-        <div style={{ ...styles.infoBox, minWidth: 180 }}>
-          <b>Start:</b> {createFormState.startMonth}
-        </div>
-
-        <div style={styles.actions}>
-          <button
-            type="button"
-            style={styles.primaryButton}
-            disabled={isSaving || !createFormState.name.trim() || !createFormState.targetAmount}
-            onClick={() =>
-              void saveGoal(createFormState, () => setCreateFormState(getInitialFormState(selectedMonth)))
-            }
-          >
-            {isSaving ? 'Zapisywanie...' : 'Dodaj cel'}
-          </button>
-        </div>
-      </div>
+      <FinancialGoalForm
+        formState={createFormState}
+        isSaving={isSaving}
+        styles={styles}
+        submitLabel="Dodaj cel"
+        savingLabel="Zapisywanie..."
+        onFormStateChange={setCreateFormState}
+        onSubmit={() =>
+          void saveGoal(createFormState, () =>
+            setCreateFormState(getInitialFormState(selectedMonth))
+          )
+        }
+      />
 
       {effectiveMode === 'allocation' ? (
         <>
@@ -1260,70 +906,14 @@ export default function FinancialGoalsPanel(props: Props) {
       </div>
 
       {editFormState && (
-        <div style={overlayStyle} onClick={() => setEditFormState(null)}>
-          <div style={modalStyle} onClick={(event) => event.stopPropagation()}>
-            <div style={styles.sectionTitle}>Edytuj cel</div>
-            <div style={{ ...styles.pageSubtitle, marginBottom: 16 }}>
-              Możesz zmienić nazwę, kwotę docelową i deadline bez ręcznego przenoszenia celu między
-              listami.
-            </div>
-
-            <div style={{ display: 'grid', gap: 12 }}>
-              <div>
-                <label style={styles.sortLabel}>Nazwa</label>
-                <input
-                  style={styles.input}
-                  value={editFormState.name}
-                  onChange={(event) =>
-                    setEditFormState((prev) => (prev ? { ...prev, name: event.target.value } : prev))
-                  }
-                />
-              </div>
-
-              <div>
-                <label style={styles.sortLabel}>Kwota docelowa</label>
-                <input
-                  style={styles.input}
-                  inputMode="decimal"
-                  value={editFormState.targetAmount}
-                  onChange={(event) =>
-                    setEditFormState((prev) =>
-                      prev ? { ...prev, targetAmount: event.target.value } : prev
-                    )
-                  }
-                />
-              </div>
-
-              <div>
-                <label style={styles.sortLabel}>Deadline</label>
-                <input
-                  style={styles.input}
-                  type="month"
-                  value={editFormState.deadlineMonth}
-                  onChange={(event) =>
-                    setEditFormState((prev) =>
-                      prev ? { ...prev, deadlineMonth: event.target.value } : prev
-                    )
-                  }
-                />
-              </div>
-            </div>
-
-            <div style={{ ...styles.actions, marginTop: 16 }}>
-              <button
-                type="button"
-                style={styles.primaryButton}
-                disabled={isSaving || !editFormState.name.trim() || !editFormState.targetAmount}
-                onClick={() => void saveGoal(editFormState, () => setEditFormState(null))}
-              >
-                {isSaving ? 'Zapisywanie...' : 'Zapisz zmiany'}
-              </button>
-              <button type="button" style={styles.secondaryButton} onClick={() => setEditFormState(null)}>
-                Zamknij
-              </button>
-            </div>
-          </div>
-        </div>
+        <FinancialGoalEditModal
+          formState={editFormState}
+          isSaving={isSaving}
+          styles={styles}
+          onFormStateChange={setEditFormState}
+          onSave={() => void saveGoal(editFormState, () => setEditFormState(null))}
+          onClose={() => setEditFormState(null)}
+        />
       )}
     </section>
   )

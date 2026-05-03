@@ -1,37 +1,47 @@
 import type { CSSProperties } from 'react'
 
-export const RESIZE_HIT_AREA = 12
 export const GREEN = '#15803d'
-export const RED = '#b91c1c'
+export const RED = '#dc2626'
 export const NEUTRAL = '#111827'
 export const MUTED = '#64748b'
 export const SOFT_TEXT = '#6b7280'
-export const SOFT_BORDER = '#e5e7eb'
+export const SOFT_BORDER = 'rgba(148, 163, 184, 0.24)'
 export const BLUE = '#2563eb'
-export const SERIES_COLORS = [RED, GREEN, BLUE, '#7c3aed', '#ea580c']
+export const SERIES_COLORS = [GREEN, RED, BLUE, '#7c3aed', '#0f766e', '#ea580c', '#9333ea']
+
 export const tileStyle: CSSProperties = {
   position: 'relative',
   width: '100%',
   height: '100%',
-  minHeight: 132,
-  background: '#ffffff',
+  minWidth: 0,
+  minHeight: 0,
+  maxWidth: '100%',
+  maxHeight: '100%',
+  boxSizing: 'border-box',
+  overflow: 'hidden',
+  isolation: 'isolate',
+  background:
+    'linear-gradient(145deg, rgba(255,255,255,0.76), rgba(232,241,250,0.64)), radial-gradient(circle at 14% 0%, rgba(255,255,255,0.98), transparent 36%), radial-gradient(circle at 92% 8%, rgba(56,189,248,0.24), transparent 38%), radial-gradient(circle at 18% 88%, rgba(226,232,240,0.40), transparent 34%)',
   borderWidth: 1,
   borderStyle: 'solid',
-  borderColor: SOFT_BORDER,
-  borderRadius: 16,
-  boxShadow: '0 8px 22px rgba(15, 23, 42, 0.06)',
-  padding: 12,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 8,
-  transition: 'box-shadow 180ms ease, border-color 180ms ease',
+  borderColor: 'rgba(255, 255, 255, 0.78)',
+  borderRadius: 28,
+  boxShadow:
+    'inset 1px 1px 0 rgba(255,255,255,0.96), inset -1px -1px 0 rgba(100,116,139,0.10), 0 18px 36px rgba(15,23,42,0.10), 0 42px 80px rgba(15,23,42,0.12)',
+  padding: 14,
+  transition: 'box-shadow 180ms ease, border-color 180ms ease, transform 180ms ease, background 180ms ease',
+  backdropFilter: 'blur(30px) saturate(1.28)',
 }
 
 export const tileHeaderStyle: CSSProperties = {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'flex-start',
-  gap: 8,
+  gap: 10,
+  padding: '2px 2px 8px',
+  minWidth: 0,
+  minHeight: 0,
+  overflow: 'hidden',
 }
 
 export const selectStyle: CSSProperties = {
@@ -47,33 +57,100 @@ export const selectStyle: CSSProperties = {
   color: NEUTRAL,
 }
 
+export const tileTitleStyle: CSSProperties = {
+  color: NEUTRAL,
+  fontSize: 14,
+  fontWeight: 690,
+  lineHeight: 1.18,
+  letterSpacing: '-0.01em',
+  display: '-webkit-box',
+  WebkitLineClamp: 1,
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
+}
+
 export const metaStyle: CSSProperties = {
   marginTop: 4,
-  fontSize: 11,
-  lineHeight: 1.35,
-  color: '#9ca3af',
+  fontSize: 10.5,
+  lineHeight: 1.25,
+  color: '#64748b',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
 }
 
 export const contentStyle: CSSProperties = {
-  flex: 1,
-  borderRadius: 12,
-  background: '#f9fafb',
-  padding: 12,
+  width: '100%',
+  height: '100%',
+  borderRadius: 22,
+  background:
+    'linear-gradient(145deg, rgba(255,255,255,0.20), rgba(255,255,255,0.04))',
+  padding: 0,
   color: NEUTRAL,
   overflow: 'hidden',
+  minWidth: 0,
   minHeight: 0,
+  maxWidth: '100%',
+  maxHeight: '100%',
+  boxSizing: 'border-box',
+}
+
+export const dashboardWidgetViewport: CSSProperties = {
+  width: '100%',
+  height: '100%',
+  minWidth: 0,
+  minHeight: 0,
+  maxWidth: '100%',
+  maxHeight: '100%',
+  overflow: 'hidden',
+  boxSizing: 'border-box',
+}
+
+export const dashboardWidgetContent: CSSProperties = {
+  ...dashboardWidgetViewport,
+  display: 'grid',
+  alignContent: 'stretch',
+}
+
+export const dashboardChartBox: CSSProperties = {
+  ...dashboardWidgetViewport,
+  display: 'grid',
+  placeItems: 'stretch',
+}
+
+export const dashboardCalendarBox: CSSProperties = {
+  ...dashboardWidgetViewport,
+  display: 'grid',
+  placeItems: 'center',
+}
+
+export const dashboardMetricCard: CSSProperties = {
+  width: '100%',
+  minWidth: 0,
+  minHeight: 0,
+  maxWidth: '100%',
+  overflow: 'hidden',
+  boxSizing: 'border-box',
+  border: `1px solid rgba(255,255,255,0.62)`,
+  borderRadius: 18,
+  background:
+    'linear-gradient(145deg, rgba(255,255,255,0.70), rgba(255,255,255,0.34))',
+  padding: 8,
+  boxShadow:
+    'inset 1px 1px 0 rgba(255,255,255,0.86), inset -1px -1px 0 rgba(148,163,184,0.08), 0 10px 22px rgba(15,23,42,0.06)',
+  backdropFilter: 'blur(18px) saturate(1.18)',
 }
 
 export const valueStyle: CSSProperties = {
-  fontSize: 26,
-  fontWeight: 700,
+  fontSize: 24,
+  fontWeight: 680,
   lineHeight: 1.08,
-  letterSpacing: 0,
+  letterSpacing: '-0.03em',
 }
 
 export const compactValueStyle: CSSProperties = {
   ...valueStyle,
-  fontSize: 22,
+  fontSize: 20,
 }
 
 export const smallTextStyle: CSSProperties = {
@@ -111,8 +188,8 @@ export const metricGridStyle: CSSProperties = {
 
 export const metricBoxStyle: CSSProperties = {
   border: `1px solid ${SOFT_BORDER}`,
-  borderRadius: 10,
-  background: '#ffffff',
+  borderRadius: 14,
+  background: 'rgba(255, 255, 255, 0.78)',
   padding: 9,
   minWidth: 0,
 }
@@ -121,8 +198,7 @@ export const progressTrackStyle: CSSProperties = {
   width: '100%',
   height: 7,
   borderRadius: 999,
-  background: '#e5e7eb',
-  overflow: 'hidden',
+  background: 'rgba(203, 213, 225, 0.72)',
   marginTop: 5,
 }
 
@@ -140,21 +216,25 @@ export const controlsStyle: CSSProperties = {
 }
 
 export const dragHandleStyle: CSSProperties = {
-  width: 32,
-  height: 32,
-  borderRadius: 10,
+  width: 30,
+  height: 30,
+  borderRadius: 13,
   borderWidth: 1,
   borderStyle: 'solid',
-  borderColor: '#d1d5db',
-  background: '#f9fafb',
+  borderColor: 'rgba(148,163,184,0.32)',
+  background:
+    'linear-gradient(145deg, rgba(255,255,255,0.86), rgba(241,245,249,0.66))',
   color: '#374151',
   cursor: 'grab',
   touchAction: 'none',
   fontWeight: 700,
   lineHeight: 1,
+  boxShadow:
+    'inset 1px 1px 0 rgba(255,255,255,0.92), 0 6px 14px rgba(15,23,42,0.08)',
 }
 
-export const resizeHintStyle: CSSProperties = {
-  fontSize: 11,
-  color: '#94a3b8',
+export const iconButtonStyle: CSSProperties = {
+  ...dragHandleStyle,
+  cursor: 'pointer',
+  fontSize: 13,
 }

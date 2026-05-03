@@ -1,14 +1,12 @@
 import type { CSSProperties } from 'react'
-import type { DashboardWidgetLayoutItem, DashboardWidgetType } from '../../lib/dashboardTypes'
+import type {
+  DashboardModuleId,
+  DashboardTileMode,
+  DashboardWidgetLayoutItem,
+} from '../../lib/dashboardTypes'
 import type { Category, Transaction } from '../../lib/budgetPageTypes'
+import type { Tag } from '../../lib/budgetPageTypes'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
-
-export type DashboardResizeEdges = {
-  left: boolean
-  right: boolean
-  top: boolean
-  bottom: boolean
-}
 
 export type DashboardWidgetPixelRect = {
   left: number
@@ -56,21 +54,27 @@ export type DashboardWidgetTileProps = {
   rect: DashboardWidgetPixelRect
   transactions: Transaction[]
   selectedMonth: string
+  excludedMonthsSet: Set<string>
+  transactionTagsMap: Record<string, Tag[]>
   dashboardStats: DashboardStats
   topExpenseCategories: TopCategory[]
   latestTransactions: Transaction[]
   categoriesById: Record<string, Category>
   getSignedAmountForTransaction: (transaction: Transaction) => number
-  onWidgetTypeChange: (id: string, type: DashboardWidgetType) => void
+  onWidgetConfigChange: (
+    id: string,
+    update: {
+      mode: DashboardTileMode
+      enabledModules: DashboardModuleId[]
+      moduleOrder: DashboardModuleId[]
+    }
+  ) => void
   isDragging: boolean
   isDropBlocked: boolean
   isInteractionLocked: boolean
-  isResizeActive: boolean
+  isConfigOpen: boolean
+  onToggleConfig: (id: string) => void
+  onToggleSize: (id: string) => void
   onRemove: (id: string) => void
-  onResizeStart: (
-    id: string,
-    edges: DashboardResizeEdges,
-    event: { clientX: number; clientY: number }
-  ) => void
   styles: Record<string, CSSProperties>
 }

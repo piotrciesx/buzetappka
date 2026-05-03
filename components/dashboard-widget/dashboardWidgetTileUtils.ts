@@ -1,4 +1,5 @@
 import type { Transaction } from '../../lib/budgetPageTypes'
+export { getDaysInMonth } from '../../lib/dateUtils'
 import { GREEN, MUTED, NEUTRAL, RED } from './dashboardWidgetTileStyles'
 
 export const formatMoney = (value: number) => `${value.toFixed(2)} zł`
@@ -59,11 +60,4 @@ export const isTransactionInMonth = (transaction: Transaction, selectedMonth: st
 export const getDayFromDate = (date: string) => {
   const day = Number(date.slice(8, 10))
   return Number.isFinite(day) ? day : 0
-}
-
-export const getDaysInMonth = (selectedMonth: string) => {
-  const [year, month] = selectedMonth.split('-').map(Number)
-  if (!year || !month) return 31
-
-  return new Date(year, month, 0).getDate()
 }

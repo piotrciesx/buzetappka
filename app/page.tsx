@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import AppSettingsPanel from '../components/AppSettingsPanel'
 import BudgetHeaderPanel from '../components/BudgetHeaderPanel'
 import BulkActionsBar from '../components/BulkActionsBar'
 import CategoryMigrationPrompt from '../components/CategoryMigrationPrompt'
@@ -10,7 +11,7 @@ import HiddenCategoriesPanel from '../components/HiddenCategoriesPanel'
 import ImportExportPanel from '../components/ImportExportPanel'
 import MonthCalendarPanel from '../components/MonthCalendarPanel'
 import PaymentSourcesPanel from '../components/PaymentSourcesPanel'
-import RecurringTransactionsPanel from '../components/RecurringTransactionsPanel'
+import ReminderBellPanel from '../components/ReminderBellPanel'
 import SearchPanel from '../components/SearchPanel'
 import TrashPanel from '../components/TrashPanel'
 import UndoBanner from '../components/UndoBanner'
@@ -51,13 +52,19 @@ import { usePaymentSources } from '../lib/usePaymentSources'
 import { useTransactionPaymentSourceSelection } from '../lib/useTransactionPaymentSourceSelection'
 import { canCreateTransactionsInMonth } from '../lib/transactionCreationAvailability'
 import { useRecurringTransactions } from '../lib/useRecurringTransactions'
-import { buildRecurringCompletionCandidates } from '../lib/recurringTransactions'
+import {
+  getMonthCycleDate,
+  getRecurringDisplayLabel,
+  isRecurringExpectedInMonth,
+} from '../lib/recurringTransactions'
 import { useFinancialGoals } from '../lib/useFinancialGoals'
 import { isAllowedMoveTarget as checkIsAllowedMoveTarget } from '../lib/isAllowedMoveTarget'
 import { useBudgetPageData } from '../lib/useBudgetPageData'
 import { useRecurringOptions } from '../lib/useRecurringOptions'
 import { useOpenSearchForTag } from '../lib/useOpenSearchForTag'
 import { useBudgetPageOverlayProps } from '../lib/useBudgetPageOverlayProps'
+import { useAppModuleVisibility } from '../lib/useAppModuleVisibility'
+import { getNextMonthText, getPrevMonthText } from '../lib/dateUtils'
 
 type MigrationPromptState = {
   categoryId: string
@@ -114,10 +121,9 @@ export default function Home() {
   const [transactionPaymentSplitsMap, setTransactionPaymentSplitsMap] = useState<
     Record<string, TransactionPaymentSplit[]>
   >({})
-  const [recurringCompletionPrompt, setRecurringCompletionPrompt] = useState<{
-    transaction: Transaction
-    candidates: ReturnType<typeof buildRecurringCompletionCandidates>
-  } | null>(null)
+  const [isPreviousMonthCloseReminderHidden, setIsPreviousMonthCloseReminderHidden] =
+    useState(false)
+  const [currentDayOfMonth, setCurrentDayOfMonth] = useState<number | null>(null)
 
   const amountInputRef = useRef<HTMLInputElement | null>(null)
   const descriptionInputRef = useRef<HTMLInputElement | null>(null)
@@ -125,7 +131,14 @@ export default function Home() {
   const profileId = '4d206618-95ba-44e8-989b-90e139314ac9'
 
   const styles = budgetPageStyles
-  const SHOW_RECURRING_STAGE_15 = false
+  const {
+    visibleModules,
+    draftVisibleModules,
+    saveStatusText: moduleVisibilitySaveStatusText,
+    setDraftModuleVisibility,
+    saveVisibleModules,
+    resetDraftVisibleModules,
+  } = useAppModuleVisibility()
 
   const {
     selectedMonth,
@@ -133,23 +146,34 @@ export default function Home() {
     currentMonth,
     monthNavigationStartMonth,
     setMonthNavigationStartMonth,
+    budgetStartDate,
+    savedBudgetStartDate,
+    setBudgetStartDate,
     isFutureMonthNavigationLocked,
     setIsFutureMonthNavigationLocked,
     isSavingMonthNavigationSettings,
     monthNavigationErrorText,
     setMonthNavigationErrorText,
     lockedMonthsSet,
+    excludedMonthsSet,
     isUpdatingSelectedMonthLock,
     isSelectedMonthLocked,
+    isUpdatingSelectedMonthExclusion,
+    isSelectedMonthExcluded,
     minAllowedMonth,
     maxAllowedMonth,
     isPrevMonthNavigationBlocked,
     isNextMonthNavigationBlocked,
     loadMonthNavigationSettings,
     loadLockedMonths,
+    loadExcludedMonths,
     handleSaveMonthNavigationSettings,
     handleLockSelectedMonth,
     handleUnlockSelectedMonth,
+    handleToggleSelectedMonthExcluded,
+    handleLockAllPastMonths,
+    handleUnlockAllPastMonths,
+    handleLockMonth,
     goToPrevMonth,
     goToNextMonth,
   } = useBudgetMonthNavigation({ profileId })
@@ -405,9 +429,11 @@ export default function Home() {
   const {
     recurringTransactions,
     recurringExecutions,
+    recurringReminderMonthStatuses,
     loadRecurringTransactions,
     saveRecurringTransaction,
-    saveRecurringExecution,
+    deleteRecurringTransaction,
+    saveRecurringReminderMonthStatus,
   } = useRecurringTransactions({
     profileId,
   })
@@ -498,10 +524,6 @@ export default function Home() {
 
   const {
     resetTransactionCreator,
-    openRecurringTransactionCreator,
-    handleTransactionSaved,
-    handleConfirmRecurringCompletion,
-    handleSkipRecurringInMonth,
   } = useRecurringTransactionCreator({
     recurringTransactions,
     recurringExecutions,
@@ -509,13 +531,12 @@ export default function Home() {
     categoriesById,
     selectedMonth,
     selectedRecurringTransactionId,
-    newDescription,
     paymentSourceSettings,
     getRootLevel1IdForCategory,
     getDraftTypeForLevel1Id,
     getPaymentSourceKindForLevel1Id,
     applyTransactionCategorySelection,
-    saveRecurringExecution,
+    saveRecurringReminderMonthStatus,
     amountInputRef,
     setTransactionCreatorSuggestionId,
     setTransactionCreatorLockedLevel1Id,
@@ -534,9 +555,46 @@ export default function Home() {
     setTransactionDraftType,
     setTransactionCreatorInitialDate,
     setIsTransactionCreatorOpen,
-    setRecurringCompletionPrompt,
     restoreDescriptionSuggestion,
   })
+
+  const handleTransactionSavedWithReminderStatus = useCallback(
+    async (transaction: Transaction) => {
+      if (!visibleModules.recurringTransactions) {
+        return
+      }
+
+      const reminderId = selectedRecurringTransactionId || transaction.recurring_transaction_id
+
+      if (!reminderId) {
+        return
+      }
+
+      await saveRecurringReminderMonthStatus({
+        reminderId,
+        month: transaction.date.slice(0, 7),
+        status: 'linked',
+        transactionId: transaction.id,
+      })
+    },
+    [saveRecurringReminderMonthStatus, selectedRecurringTransactionId, visibleModules.recurringTransactions]
+  )
+
+  const openReminderTransactionCreator = useCallback(
+    (reminder: (typeof recurringTransactions)[number]) => {
+      applyTransactionCategorySelection(reminder.category_id)
+      setNewDescription(reminder.description || reminder.name)
+      setNewAmount(
+        reminder.use_amount_when_creating && reminder.amount !== null ? String(reminder.amount) : ''
+      )
+      setSelectedRecurringTransactionId(reminder.id)
+      setNewTransactionDate(getMonthCycleDate(reminder, currentMonth))
+      setTransactionCreatorSuggestionId(reminder.category_id)
+      setIsSerialTransactionCreatorEnabled(false)
+      setIsTransactionCreatorOpen(true)
+    },
+    [applyTransactionCategorySelection, currentMonth]
+  )
 
   const {
     openBlankFloatingTransactionCreator,
@@ -582,22 +640,153 @@ export default function Home() {
     resetTreeOpenState,
     loadMonthNavigationSettings,
     loadLockedMonths,
+    loadExcludedMonths,
     loadPaymentSources,
     loadRecurringTransactions,
     loadFinancialGoals,
     loadDrafts,
   })
 
-  const { handleImportTransactions, handleAddSubcategory } = useBudgetPageActions({
+  const {
+    handleImportTransactions,
+    handleAddSubcategory,
+    handleRenameCategory,
+    handleDeleteCategory,
+  } = useBudgetPageActions({
     profileId,
     selectedMonth,
     guardMonthUnlocked,
     categories,
+    transactions,
     newSubcategoryName,
     setOpenAddSubcategoryFor,
     setNewSubcategoryName,
     loadData,
   })
+
+  const handleSaveMonthNavigationSettingsWithStartDateWarning = useCallback(async () => {
+    const nextBudgetStartDate = budgetStartDate.slice(0, 10)
+    const previousBudgetStartDate = savedBudgetStartDate.slice(0, 10)
+
+    if (
+      nextBudgetStartDate &&
+      nextBudgetStartDate !== previousBudgetStartDate &&
+      transactions.some(
+        (transaction) =>
+          !transaction.is_deleted && transaction.date.slice(0, 10) < nextBudgetStartDate
+      )
+    ) {
+      const confirmed = confirm(
+        'Masz wpisy sprzed daty startowej. Te wpisy zostaną zachowane, ale nie będą liczone w statystykach. Czy na pewno chcesz zmienić datę startową?'
+      )
+
+      if (!confirmed) {
+        return
+      }
+    }
+
+    await handleSaveMonthNavigationSettings()
+  }, [budgetStartDate, handleSaveMonthNavigationSettings, savedBudgetStartDate, transactions])
+
+  const handleResetSelectedMonthData = useCallback(async () => {
+    const monthTransactions = transactions.filter(
+      (transaction) => transaction.date.slice(0, 7) === selectedMonth
+    )
+
+    if (monthTransactions.length === 0) {
+      alert('Ten miesiąc nie ma wpisów do resetu.')
+      return
+    }
+
+    const firstConfirmed = confirm(
+      `Czy na pewno zresetować dane miesiąca ${selectedMonth}? Wpisy zostaną przeniesione do kosza, a kategorie i ustawienia zostaną bez zmian.`
+    )
+
+    if (!firstConfirmed) {
+      return
+    }
+
+    const secondConfirmed = confirm(
+      'To działanie jest trudne do cofnięcia przy większej liczbie wpisów. Czy na pewno kontynuować?'
+    )
+
+    if (!secondConfirmed) {
+      return
+    }
+
+    const { error } = await supabase
+      .from('transactions')
+      .update({
+        is_deleted: true,
+        deleted_at: new Date().toISOString(),
+      })
+      .eq('profile_id', profileId)
+      .gte('date', `${selectedMonth}-01`)
+      .lt('date', `${getNextMonthText(selectedMonth)}-01`)
+
+    if (error) {
+      alert(`Błąd resetu miesiąca: ${error.message}`)
+      return
+    }
+
+    clearTransactionOperationUi()
+    clearTransactionSelection()
+    resetTransactionCreator()
+    await loadData()
+    alert(`Zresetowano wpisy z miesiąca ${selectedMonth}.`)
+  }, [
+    clearTransactionOperationUi,
+    clearTransactionSelection,
+    loadData,
+    profileId,
+    resetTransactionCreator,
+    selectedMonth,
+    transactions,
+  ])
+
+  const handleResetAllHistory = useCallback(async () => {
+    const firstConfirmed = confirm(
+      'Czy na pewno zresetować całą historię wpisów? Kategorie, ustawienia, źródła płatności, cele i przypomnienia zostaną bez zmian.'
+    )
+
+    if (!firstConfirmed) {
+      return
+    }
+
+    const confirmationText = prompt(
+      'To działanie jest nieodwracalne albo trudne do cofnięcia. Aby kontynuować, wpisz: USUŃ HISTORIĘ'
+    )
+
+    if (confirmationText !== 'USUŃ HISTORIĘ') {
+      alert('Reset całej historii anulowany.')
+      return
+    }
+
+    const { error } = await supabase
+      .from('transactions')
+      .update({
+        is_deleted: true,
+        deleted_at: new Date().toISOString(),
+      })
+      .eq('profile_id', profileId)
+
+    if (error) {
+      alert(`Błąd resetu historii: ${error.message}`)
+      return
+    }
+
+    clearTransactionOperationUi()
+    clearTransactionSelection()
+    resetTransactionCreator()
+    await loadData()
+    alert('Zresetowano całą historię wpisów.')
+  }, [
+    clearTransactionOperationUi,
+    clearTransactionSelection,
+    loadData,
+    profileId,
+    resetTransactionCreator,
+  ])
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -608,6 +797,24 @@ export default function Home() {
       window.clearTimeout(timeoutId)
     }
   }, [loadData])
+
+  useEffect(() => {
+    const refreshCurrentDay = () => {
+      setCurrentDayOfMonth(new Date().getDate())
+    }
+
+    refreshCurrentDay()
+
+    const intervalId = window.setInterval(refreshCurrentDay, 60 * 1000)
+    window.addEventListener('focus', refreshCurrentDay)
+    document.addEventListener('visibilitychange', refreshCurrentDay)
+
+    return () => {
+      window.clearInterval(intervalId)
+      window.removeEventListener('focus', refreshCurrentDay)
+      document.removeEventListener('visibilitychange', refreshCurrentDay)
+    }
+  }, [])
 
   const isAllowedMoveTarget = (transaction: Transaction, targetCategoryId: string) => {
     return checkIsAllowedMoveTarget(
@@ -684,7 +891,7 @@ export default function Home() {
     setSelectedPaymentSourceId,
     setSelectedPaymentSplitItems,
     defaultPaymentSourceId: currentTransactionCreatorDefaultPaymentSourceId,
-    onTransactionSaved: handleTransactionSaved,
+    onTransactionSaved: handleTransactionSavedWithReminderStatus,
     amountInputRef,
     selectedTagNames,
     selectedPaymentSourceId,
@@ -744,6 +951,7 @@ export default function Home() {
     )
 
     if (!isStillAvailable) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setMigrationPromptState((prev) =>
         prev
           ? {
@@ -799,6 +1007,8 @@ export default function Home() {
       visibleCategories,
       recurringTransactions,
       recurringExecutions,
+      recurringReminderMonthStatuses,
+      transactions,
       selectedMonth,
       selectedTransactionCategoryId,
       selectedLevel2Id,
@@ -806,10 +1016,107 @@ export default function Home() {
       newAmount,
       newDescription,
       categoriesById,
+      isEnabled: visibleModules.recurringTransactions,
     })
 
+  const getRecurringOptionsForCategoryId = useCallback(
+    (categoryId: string) => {
+      if (!visibleModules.recurringTransactions) {
+        return []
+      }
+
+      return recurringTransactions
+        .filter(
+          (reminder) =>
+            reminder.category_id === categoryId && isRecurringExpectedInMonth(reminder, selectedMonth)
+        )
+        .map((reminder) => {
+          const hasTransactionInMonth = transactions.some(
+            (transaction) =>
+              transaction.recurring_transaction_id === reminder.id &&
+              transaction.date.slice(0, 7) === selectedMonth
+          )
+
+          return {
+            id: reminder.id,
+            label: `${getRecurringDisplayLabel(reminder, categoriesById)}${
+              hasTransactionInMonth ? ' — już dodano wpis w tym miesiącu' : ''
+            }`,
+            description: reminder.description || reminder.name,
+            amount: reminder.amount,
+            useAmountWhenCreating: Boolean(reminder.use_amount_when_creating),
+            hasTransactionInMonth,
+          }
+        })
+        .sort((left, right) => Number(left.hasTransactionInMonth) - Number(right.hasTransactionInMonth))
+    },
+    [
+      categoriesById,
+      recurringTransactions,
+      selectedMonth,
+      transactions,
+      visibleModules.recurringTransactions,
+    ]
+  )
+
+  const handleToggleSelectedMonthExcludedWithConfirm = useCallback(async () => {
+    if (isSelectedMonthExcluded) {
+      const confirmed = confirm('Czy na pewno chcesz przywrócić ten miesiąc do statystyk?')
+
+      if (!confirmed) {
+        return
+      }
+
+      await handleToggleSelectedMonthExcluded()
+      return
+    }
+
+    const confirmed = confirm(
+      'Czy na pewno chcesz wyłączyć ten miesiąc ze statystyk? Dane nie zostaną usunięte.'
+    )
+
+    if (!confirmed) {
+      return
+    }
+
+    if (selectedMonthTransactions.length > 0) {
+      const confirmedWithEntries = confirm(
+        'Ten miesiąc zawiera wpisy. Wyłączenie miesiąca spowoduje, że nie będzie liczony w statystykach, trendach i dashboardzie. Dane nadal zostaną w historii. Czy na pewno?'
+      )
+
+      if (!confirmedWithEntries) {
+        return
+      }
+    }
+
+    await handleToggleSelectedMonthExcluded()
+  }, [
+    handleToggleSelectedMonthExcluded,
+    isSelectedMonthExcluded,
+    selectedMonthTransactions.length,
+  ])
+
+  const previousMonthCloseReminder = useMemo(() => {
+    if (
+      currentDayOfMonth === null ||
+      currentDayOfMonth < 5 ||
+      !currentMonth ||
+      isPreviousMonthCloseReminderHidden
+    ) {
+      return null
+    }
+
+    const previousMonth = getPrevMonthText(currentMonth)
+
+    if (lockedMonthsSet.has(previousMonth)) {
+      return null
+    }
+
+    return previousMonth
+  }, [currentDayOfMonth, currentMonth, isPreviousMonthCloseReminderHidden, lockedMonthsSet])
+
   const budgetPageOverlayProps = useBudgetPageOverlayProps({
-    canCreateTransactions,
+    canCreateTransactions: canCreateTransactions && visibleModules.floatingActions,
     expenseLevel1Id,
     incomeLevel1Id,
     openFloatingTransactionCreator,
@@ -865,11 +1172,6 @@ export default function Home() {
     applyDraftToTransactionCreator,
     deleteDraft,
     openBlankFloatingTransactionCreator,
-
-    SHOW_RECURRING_STAGE_15,
-    recurringCompletionPrompt,
-    handleConfirmRecurringCompletion,
-    setRecurringCompletionPrompt,
   })
 
   return (
@@ -890,6 +1192,7 @@ export default function Home() {
         minAllowedMonth={minAllowedMonth}
         maxAllowedMonth={maxAllowedMonth}
         monthNavigationStartMonth={monthNavigationStartMonth}
+        budgetStartDate={budgetStartDate}
         monthNavigationFutureLocked={isFutureMonthNavigationLocked}
         isSavingMonthNavigationSettings={isSavingMonthNavigationSettings}
         monthNavigationErrorText={monthNavigationErrorText}
@@ -897,6 +1200,8 @@ export default function Home() {
         isNextMonthNavigationBlocked={isNextMonthNavigationBlocked}
         isSelectedMonthLocked={isSelectedMonthLocked}
         isUpdatingSelectedMonthLock={isUpdatingSelectedMonthLock}
+        isSelectedMonthExcluded={isSelectedMonthExcluded}
+        isUpdatingSelectedMonthExclusion={isUpdatingSelectedMonthExclusion}
         heatmapMode={heatmapMode}
         heatmapInverted={heatmapInverted}
         onHeatmapModeChange={setHeatmapMode}
@@ -911,22 +1216,103 @@ export default function Home() {
           setMonthNavigationStartMonth(value)
           setMonthNavigationErrorText('')
         }}
+        onBudgetStartDateChange={(value) => {
+          setBudgetStartDate(value)
+          setMonthNavigationStartMonth(value.slice(0, 7))
+          setMonthNavigationErrorText('')
+        }}
         onMonthNavigationFutureLockedChange={(value) => {
           setIsFutureMonthNavigationLocked(value)
           setMonthNavigationErrorText('')
         }}
-        onSaveMonthNavigationSettings={handleSaveMonthNavigationSettings}
+        onSaveMonthNavigationSettings={handleSaveMonthNavigationSettingsWithStartDateWarning}
+        onToggleSelectedMonthExcluded={handleToggleSelectedMonthExcludedWithConfirm}
         styles={styles}
       />
 
-      <DashboardPanel
-        profileId={profileId}
+      {previousMonthCloseReminder && (
+        <div style={styles.infoBox}>
+          Poprzedni miesiąc {previousMonthCloseReminder} nie jest jeszcze zamknięty.
+          <div style={{ ...styles.actions, marginTop: 8 }}>
+            <button
+              type="button"
+              style={styles.primaryButton}
+              onClick={async () => {
+                const confirmed = confirm(
+                  `Czy na pewno zamknąć poprzedni miesiąc ${previousMonthCloseReminder}?`
+                )
+
+                if (!confirmed) {
+                  return
+                }
+
+                await handleLockMonth(previousMonthCloseReminder)
+              }}
+            >
+              Zamknij poprzedni miesiąc
+            </button>
+            <button
+              type="button"
+              style={styles.secondaryButton}
+              onClick={() => setIsPreviousMonthCloseReminderHidden(true)}
+            >
+              Przypomnij później
+            </button>
+          </div>
+        </div>
+      )}
+
+      {visibleModules.recurringTransactions && (
+        <div style={{ ...styles.topPanel, display: 'flex', justifyContent: 'flex-end' }}>
+          <ReminderBellPanel
+            selectedMonth={currentMonth}
+            recurringTransactions={recurringTransactions}
+            recurringReminderMonthStatuses={recurringReminderMonthStatuses}
+            transactions={transactions}
+            categoriesById={categoriesById}
+            styles={styles}
+            onAddFromReminder={openReminderTransactionCreator}
+            categoryOptions={finalCategoryOptions}
+            onSaveReminder={saveRecurringTransaction}
+            onDeleteReminder={deleteRecurringTransaction}
+            onMarkRead={(reminder) =>
+              saveRecurringReminderMonthStatus({
+                reminderId: reminder.id,
+                month: currentMonth,
+                status: 'read',
+              })
+            }
+          />
+        </div>
+      )}
+
+      <AppSettingsPanel
+        visibleModules={visibleModules}
+        draftVisibleModules={draftVisibleModules}
+        saveStatusText={moduleVisibilitySaveStatusText}
+        onChangeModuleVisibility={setDraftModuleVisibility}
+        onSave={saveVisibleModules}
+        onResetDraft={resetDraftVisibleModules}
+        onLockAllPastMonths={handleLockAllPastMonths}
+        onUnlockAllPastMonths={handleUnlockAllPastMonths}
+        onResetSelectedMonthData={handleResetSelectedMonthData}
+        onResetAllHistory={handleResetAllHistory}
         styles={styles}
-        transactions={transactions}
-        categoriesById={categoriesById}
-        selectedMonth={selectedMonth}
-        getSignedAmountForTransaction={getSignedAmountForTransaction}
       />
+
+      {visibleModules.dashboard && (
+        <DashboardPanel
+          profileId={profileId}
+          styles={styles}
+          transactions={transactions}
+          transactionTagsMap={transactionTagsMap}
+          categoriesById={categoriesById}
+          selectedMonth={selectedMonth}
+          budgetStartDate={budgetStartDate}
+          excludedMonthsSet={excludedMonthsSet}
+          getSignedAmountForTransaction={getSignedAmountForTransaction}
+        />
+      )}
 
       {lastUndoAction && selectedTransactionIds.length === 0 && !migrationPromptState && (
         <UndoBanner
@@ -979,7 +1365,7 @@ export default function Home() {
         />
       )}
 
-      {canCreateTransactions && (
+      {visibleModules.bulkActions && canCreateTransactions && (
         <BulkActionsBar
           selectedCount={selectedTransactionIds.length}
           targetCategoryId={bulkMoveTargetCategoryId}
@@ -1012,40 +1398,45 @@ export default function Home() {
         />
       )}
 
-      <DraftsPanel
-        draftsStatusText={draftsStatusText}
-        isDraftsLoading={isDraftsLoading}
-        drafts={drafts}
-        isCleaningAllDrafts={isCleaningAllDrafts}
-        cleanupAllDrafts={() => {
-          void cleanupAllDrafts()
-        }}
-        getDraftLevel1Id={getDraftLevel1Id}
-        formatDraftUpdatedAt={formatDraftUpdatedAt}
-        getDraftLocationLabel={getDraftLocationLabel}
-        applyDraftToTransactionCreator={applyDraftToTransactionCreator}
-        deleteDraft={deleteDraft}
-        styles={styles}
-      />
+      {visibleModules.drafts && (
+        <DraftsPanel
+          draftsStatusText={draftsStatusText}
+          isDraftsLoading={isDraftsLoading}
+          drafts={drafts}
+          isCleaningAllDrafts={isCleaningAllDrafts}
+          cleanupAllDrafts={() => {
+            void cleanupAllDrafts()
+          }}
+          getDraftLevel1Id={getDraftLevel1Id}
+          formatDraftUpdatedAt={formatDraftUpdatedAt}
+          getDraftLocationLabel={getDraftLocationLabel}
+          applyDraftToTransactionCreator={applyDraftToTransactionCreator}
+          deleteDraft={deleteDraft}
+          styles={styles}
+        />
+      )}
 
-      <ImportExportPanel
-        selectedMonth={selectedMonth}
-        categories={categories}
-        categoriesById={categoriesById}
-        transactions={transactions}
-        trashedTransactions={trashedTransactions}
-        transactionPaymentSplitsMap={transactionPaymentSplitsMap}
-        importableCategoryIds={addableTransactionCategoryIds}
-        categoryPathLabels={transactionCategoryPathLabels}
-        defaultCategoryId={selectedTransactionCategoryId}
-        isSelectedMonthLocked={isSelectedMonthLocked}
-        canCreateTransactions={canCreateTransactions}
-        getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
-        onImportRows={handleImportTransactions}
-        styles={styles}
-      />
+      {visibleModules.importExport && (
+        <ImportExportPanel
+          selectedMonth={selectedMonth}
+          categories={categories}
+          categoriesById={categoriesById}
+          transactions={transactions}
+          trashedTransactions={trashedTransactions}
+          transactionPaymentSplitsMap={transactionPaymentSplitsMap}
+          importableCategoryIds={addableTransactionCategoryIds}
+          categoryPathLabels={transactionCategoryPathLabels}
+          defaultCategoryId={selectedTransactionCategoryId}
+          isSelectedMonthLocked={isSelectedMonthLocked}
+          canCreateTransactions={canCreateTransactions}
+          getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
+          onImportRows={handleImportTransactions}
+          styles={styles}
+        />
+      )}
 
-      <PaymentSourcesPanel
+      {visibleModules.paymentSources && (
+        <PaymentSourcesPanel
         paymentSources={paymentSources}
         paymentSourceStats={paymentSourceStats}
         paymentSourceSettings={paymentSourceSettings}
@@ -1106,77 +1497,57 @@ export default function Home() {
           }
         }}
         styles={styles}
-      />
+        />
+      )}
 
-      {SHOW_RECURRING_STAGE_15 && (
-        <RecurringTransactionsPanel
+      {visibleModules.financialGoals && (
+        <FinancialGoalsContainer
           selectedMonth={selectedMonth}
-          isSelectedMonthLocked={isSelectedMonthLocked}
-          recurringTransactions={recurringTransactions}
-          recurringExecutions={recurringExecutions}
-          categoriesById={categoriesById}
-          paymentSources={paymentSources}
-          transactionsById={activeTransactionsById}
-          categoryOptions={finalCategoryOptions}
-          onSaveRecurringTransaction={saveRecurringTransaction}
-          onSkipRecurringInMonth={async (recurring, generatedForDate) => {
-            try {
-              await handleSkipRecurringInMonth(recurring.id, generatedForDate)
-            } catch (error) {
-              if (error instanceof Error) {
-                alert(`Błąd zapisu historii przypomnienia: ${error.message}`)
-              }
-            }
-          }}
-          onOpenCreateFromRecurring={(recurring) => {
-            openRecurringTransactionCreator(recurring.id)
-          }}
-          onOpenCreateFromExecution={(recurring, execution) => {
-            openRecurringTransactionCreator(recurring.id, execution.id)
-          }}
+          goals={financialGoals}
+          goalPriorities={financialGoalPriorities}
+          goalMonthConfigs={financialGoalMonthConfigs}
+          transactions={transactions}
+          lockedMonthsSet={lockedMonthsSet}
+          getSignedAmountForTransaction={getSignedAmountForTransaction}
+          onSaveGoal={saveFinancialGoal}
+          onDeleteGoal={deleteFinancialGoal}
+          onSetGoalModeForMonth={setGoalModeForMonth}
+          onSaveGoalAllocationsForMonth={saveGoalAllocationsForMonth}
+          onReorderGoalsForMonth={saveGoalPrioritiesForMonth}
           styles={styles}
         />
       )}
 
-      <FinancialGoalsContainer
-        selectedMonth={selectedMonth}
-        goals={financialGoals}
-        goalPriorities={financialGoalPriorities}
-        goalMonthConfigs={financialGoalMonthConfigs}
-        transactions={transactions}
-        lockedMonthsSet={lockedMonthsSet}
-        getSignedAmountForTransaction={getSignedAmountForTransaction}
-        onSaveGoal={saveFinancialGoal}
-        onDeleteGoal={deleteFinancialGoal}
-        onSetGoalModeForMonth={setGoalModeForMonth}
-        onSaveGoalAllocationsForMonth={saveGoalAllocationsForMonth}
-        onReorderGoalsForMonth={saveGoalPrioritiesForMonth}
-        styles={styles}
-      />
+      {visibleModules.bankSearch && (
+        <SearchPanel
+          ref={searchPanelRef}
+          isOpen={isBankSearchOpen}
+          setIsOpen={setIsBankSearchOpen}
+          searchState={bankSearchState}
+          onFieldChange={handleBankSearchFieldChange}
+          onToggleTagId={handleBankSearchToggleTagId}
+          onReset={resetBankSearch}
+          results={bankSearchResults}
+          summary={bankSearchSummary}
+          categoryOptions={bankSearchCategoryOptions}
+          paymentSourceOptions={bankSearchPaymentSourceOptions}
+          tagOptions={bankSearchTagOptions}
+          transactionTagsMap={transactionTagsMap}
+          transactionPaymentSplitsMap={transactionPaymentSplitsMap}
+          categoriesById={categoriesById}
+          onOpenSearchForTag={handleOpenSearchForTag}
+          styles={styles}
+        />
+      )}
 
-      <SearchPanel
-        ref={searchPanelRef}
-        isOpen={isBankSearchOpen}
-        setIsOpen={setIsBankSearchOpen}
-        searchState={bankSearchState}
-        onFieldChange={handleBankSearchFieldChange}
-        onToggleTagId={handleBankSearchToggleTagId}
-        onReset={resetBankSearch}
-        results={bankSearchResults}
-        summary={bankSearchSummary}
-        categoryOptions={bankSearchCategoryOptions}
-        paymentSourceOptions={bankSearchPaymentSourceOptions}
-        tagOptions={bankSearchTagOptions}
-        transactionTagsMap={transactionTagsMap}
-        transactionPaymentSplitsMap={transactionPaymentSplitsMap}
-        categoriesById={categoriesById}
-        onOpenSearchForTag={handleOpenSearchForTag}
-        styles={styles}
-      />
-
-      <MonthCalendarPanel
+      {visibleModules.monthCalendar && (
+        <MonthCalendarPanel
         selectedMonth={selectedMonth}
         transactions={selectedMonthTransactions}
+        budgetStartDate={budgetStartDate}
+        isSelectedMonthExcluded={isSelectedMonthExcluded}
+        onToggleSelectedMonthExcluded={handleToggleSelectedMonthExcludedWithConfirm}
+        isUpdatingSelectedMonthExclusion={isUpdatingSelectedMonthExclusion}
         styles={styles}
         isSelectedMonthLocked={isSelectedMonthLocked}
         getAmountNumber={getAmountNumber}
@@ -1200,9 +1571,11 @@ export default function Home() {
         transactionPaymentSplitsMap={transactionPaymentSplitsMap}
         onTagClick={handleOpenSearchForTag}
         onDeleteDescriptionSuggestion={handleDeleteDescriptionSuggestion}
-      />
+        />
+      )}
 
-      <BudgetTreeSection
+      {visibleModules.budgetTree && (
+        <BudgetTreeSection
         sortedLevel1={sortedLevel1}
         openLevel1Ids={openLevel1Ids}
         openLevel1CalendarIds={openLevel1CalendarIds}
@@ -1244,7 +1617,13 @@ export default function Home() {
         getMoveTargetsForTransaction={getMoveTargetsForTransaction}
         getSignedAmountForTransaction={getSignedAmountForTransaction}
         getCalendarHeatmapVariantForLevel1Id={getCalendarHeatmapVariantForLevel1Id}
+        heatmapMode={heatmapMode}
+        heatmapInverted={heatmapInverted}
+        onHeatmapModeChange={setHeatmapMode}
+        onHeatmapInvertedChange={setHeatmapInverted}
         handleAddSubcategory={handleAddSubcategory}
+        handleRenameCategory={handleRenameCategory}
+        handleDeleteCategory={handleDeleteCategory}
         openTransactionCreator={openTransactionCreator}
         handleInlineSaveTransaction={handleInlineSaveTransaction}
         handleHideCategory={handleHideCategory}
@@ -1263,30 +1642,36 @@ export default function Home() {
         handleReorderLevel2={handleReorderLevel2}
         descriptionSuggestions={descriptionSuggestions}
         getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
+        getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}
         transactionTagsMap={transactionTagsMap}
         transactionPaymentSplitsMap={transactionPaymentSplitsMap}
         onTagClick={handleOpenSearchForTag}
         onDeleteDescriptionSuggestion={handleDeleteDescriptionSuggestion}
-      />
+        />
+      )}
 
-      <HiddenCategoriesPanel
-        categories={hiddenCategoriesInSelectedMonth}
-        categoriesById={categoriesById}
-        showHiddenCategories={showHiddenCategories}
-        getHiddenCategoryLabel={getHiddenCategoryLabel}
-        handleRestoreCategory={handleRestoreCategory}
-        styles={styles}
-      />
+      {visibleModules.hiddenCategories && (
+        <HiddenCategoriesPanel
+          categories={hiddenCategoriesInSelectedMonth}
+          categoriesById={categoriesById}
+          showHiddenCategories={showHiddenCategories}
+          getHiddenCategoryLabel={getHiddenCategoryLabel}
+          handleRestoreCategory={handleRestoreCategory}
+          styles={styles}
+        />
+      )}
 
-      <TrashPanel
-        transactions={trashedTransactions}
-        categoriesById={categoriesById}
-        getAmountNumber={getAmountNumber}
-        onRestoreTransaction={handleRestoreTransaction}
-        onPermanentDeleteTransaction={handlePermanentDeleteTransaction}
-        onEmptyTrash={handleEmptyTrash}
-        styles={styles}
-      />
+      {visibleModules.trash && (
+        <TrashPanel
+          transactions={trashedTransactions}
+          categoriesById={categoriesById}
+          getAmountNumber={getAmountNumber}
+          onRestoreTransaction={handleRestoreTransaction}
+          onPermanentDeleteTransaction={handlePermanentDeleteTransaction}
+          onEmptyTrash={handleEmptyTrash}
+          styles={styles}
+        />
+      )}
 
       <BudgetPageOverlays {...budgetPageOverlayProps} />
     </main>

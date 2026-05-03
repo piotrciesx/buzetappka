@@ -1,5 +1,9 @@
 export const getMonthNumber = (monthText: string) => {
   const [year, month] = monthText.split('-').map(Number)
+  if (!Number.isFinite(year) || !Number.isFinite(month)) {
+    return 0
+  }
+
   return year * 100 + month
 }
 
@@ -8,6 +12,43 @@ export const getCurrentMonthText = () => {
   const year = now.getFullYear()
   const month = String(now.getMonth() + 1).padStart(2, '0')
   return `${year}-${month}`
+}
+
+export const getMonthKeyFromDate = (dateText: string | null | undefined) => {
+  if (!dateText || typeof dateText !== 'string') {
+    return ''
+  }
+
+  return dateText.slice(0, 7)
+}
+
+export const isDateBeforeBudgetStart = (
+  dateText: string | null | undefined,
+  budgetStartDate: string | null | undefined
+) => {
+  if (!dateText || !budgetStartDate) {
+    return false
+  }
+
+  return dateText.slice(0, 10) < budgetStartDate.slice(0, 10)
+}
+
+export const isMonthPartialByBudgetStart = (
+  monthText: string,
+  budgetStartDate: string | null | undefined
+) => {
+  if (!budgetStartDate) {
+    return false
+  }
+
+  return getMonthKeyFromDate(budgetStartDate) === monthText && budgetStartDate.slice(8, 10) !== '01'
+}
+
+export const isMonthExcludedFromStats = (
+  monthText: string,
+  excludedMonthsSet: Set<string> | null | undefined
+) => {
+  return Boolean(excludedMonthsSet?.has(monthText))
 }
 
 export const getNextMonthText = (monthText: string) => {
@@ -38,7 +79,43 @@ export const getActiveToForMonth = (monthText: string) => {
 
 export const getDaysInMonth = (monthText: string) => {
   const [year, month] = monthText.split('-').map(Number)
+  if (!Number.isFinite(year) || !Number.isFinite(month) || month < 1 || month > 12) {
+    return 31
+  }
+
   return new Date(year, month, 0).getDate()
+}
+
+const getCurrentDateText = () => {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+
+  return `${year}-${month}-${day}`
+}
+
+export const getExistingDaysInMonth = (monthText: string) => {
+  const currentMonth = getCurrentMonthText()
+  const daysInMonth = getDaysInMonth(monthText)
+
+  if (monthText < currentMonth) {
+    return daysInMonth
+  }
+
+  if (monthText > currentMonth) {
+    return 0
+  }
+
+  return Math.min(new Date().getDate(), daysInMonth)
+}
+
+export const isFutureDate = (dateText: string) => {
+  return dateText.slice(0, 10) > getCurrentDateText()
+}
+
+export const isExistingDate = (dateText: string) => {
+  return !isFutureDate(dateText)
 }
 
 export const getMonthDateFromDay = (monthText: string, day: number) => {

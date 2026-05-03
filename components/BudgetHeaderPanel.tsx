@@ -17,6 +17,7 @@ type Props = {
   minAllowedMonth: string | null
   maxAllowedMonth: string | null
   monthNavigationStartMonth: string
+  budgetStartDate: string
   monthNavigationFutureLocked: boolean
   isSavingMonthNavigationSettings: boolean
   monthNavigationErrorText: string
@@ -24,6 +25,8 @@ type Props = {
   isNextMonthNavigationBlocked: boolean
   isSelectedMonthLocked: boolean
   isUpdatingSelectedMonthLock: boolean
+  isSelectedMonthExcluded: boolean
+  isUpdatingSelectedMonthExclusion: boolean
   heatmapMode: HeatmapMode
   heatmapInverted: boolean
   onHeatmapModeChange: (value: HeatmapMode) => void
@@ -35,8 +38,10 @@ type Props = {
   onUnlockSelectedMonth: () => Promise<void>
   onToggleHidden: () => void
   onMonthNavigationStartMonthChange: (value: string) => void
+  onBudgetStartDateChange: (value: string) => void
   onMonthNavigationFutureLockedChange: (value: boolean) => void
   onSaveMonthNavigationSettings: () => void
+  onToggleSelectedMonthExcluded: () => Promise<void>
   styles: Record<string, CSSProperties>
 }
 
@@ -106,7 +111,7 @@ export default function BudgetHeaderPanel(props: Props) {
     errorText,
     minAllowedMonth,
     maxAllowedMonth,
-    monthNavigationStartMonth,
+    budgetStartDate,
     monthNavigationFutureLocked,
     isSavingMonthNavigationSettings,
     monthNavigationErrorText,
@@ -114,6 +119,8 @@ export default function BudgetHeaderPanel(props: Props) {
     isNextMonthNavigationBlocked,
     isSelectedMonthLocked,
     isUpdatingSelectedMonthLock,
+    isSelectedMonthExcluded,
+    isUpdatingSelectedMonthExclusion,
     heatmapMode,
     heatmapInverted,
     onHeatmapModeChange,
@@ -124,11 +131,15 @@ export default function BudgetHeaderPanel(props: Props) {
     onLockSelectedMonth,
     onUnlockSelectedMonth,
     onToggleHidden,
-    onMonthNavigationStartMonthChange,
+    onBudgetStartDateChange,
     onMonthNavigationFutureLockedChange,
     onSaveMonthNavigationSettings,
+    onToggleSelectedMonthExcluded,
     styles,
   } = props
+  const displayedSelectedMonth = selectedMonth || '---- --'
+  const displayedCurrentMonth = currentMonth || '---- --'
+  const budgetStartMaxDate = currentMonth ? `${currentMonth}-31` : undefined
 
   return (
     <div style={styles.topPanel}>
@@ -141,7 +152,7 @@ export default function BudgetHeaderPanel(props: Props) {
           ← Poprzedni miesiąc
         </button>
 
-        <div style={styles.monthLabel}>{selectedMonth}</div>
+        <div style={styles.monthLabel}>{displayedSelectedMonth}</div>
 
         <button
           onClick={onNextMonth}
@@ -173,6 +184,18 @@ export default function BudgetHeaderPanel(props: Props) {
               ? 'Odblokuj miesiąc'
               : 'Zamknij miesiąc'}
         </button>
+
+        <button
+          onClick={onToggleSelectedMonthExcluded}
+          style={isSelectedMonthExcluded ? styles.primaryButton : styles.secondaryButton}
+          disabled={isUpdatingSelectedMonthExclusion}
+        >
+          {isUpdatingSelectedMonthExclusion
+            ? 'Zapisywanie...'
+            : isSelectedMonthExcluded
+              ? 'Przywróć miesiąc do statystyk'
+              : 'Wyłącz miesiąc ze statystyk'}
+        </button>
       </div>
 
       <div style={styles.infoBox}>
@@ -184,12 +207,12 @@ export default function BudgetHeaderPanel(props: Props) {
 
         <div style={styles.monthNavigationSettingsRow}>
           <label style={styles.monthNavigationField}>
-            <span style={styles.monthNavigationFieldLabel}>Start historii</span>
+            <span style={styles.monthNavigationFieldLabel}>Data startowa budżetu</span>
             <input
-              type="month"
-              value={monthNavigationStartMonth}
-              max={currentMonth}
-              onChange={(event) => onMonthNavigationStartMonthChange(event.target.value)}
+              type="date"
+              value={budgetStartDate}
+              max={budgetStartMaxDate}
+              onChange={(event) => onBudgetStartDateChange(event.target.value)}
               style={styles.input}
             />
           </label>
@@ -213,7 +236,7 @@ export default function BudgetHeaderPanel(props: Props) {
         </div>
 
         <div style={styles.monthNavigationHint}>
-          Po wejściu aplikacja otwiera bieżący miesiąc: <b>{currentMonth}</b>. Dozwolony zakres
+          Po wejściu aplikacja otwiera bieżący miesiąc: <b>{displayedCurrentMonth}</b>. Dozwolony zakres
           nawigacji: <b>{minAllowedMonth || 'bez dolnego limitu'}</b>
           {maxAllowedMonth ? (
             <>

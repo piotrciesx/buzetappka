@@ -1,4 +1,15 @@
 import { Category, Transaction } from './budgetPageTypes'
+import { getUniqueCategoryLabel } from './categoryUtils'
+import {
+  getDaysInMonth,
+  getExistingDaysInMonth,
+  isExistingDate,
+  isMonthExcludedFromStats,
+} from './dateUtils'
+
+type DashboardStatsOptions = {
+  excludedMonthsSet?: Set<string>
+}
 
 export type DashboardStats = {
   income: number
@@ -149,6 +160,9 @@ export type DashboardMoneyLeak = {
   total: number
   count: number
   average: number
+  baseline: number
+  difference: number
+  percent: number | null
 }
 
 export type DashboardCategoryPatternStats = {
@@ -162,6 +176,10 @@ export type DashboardCategoryPatternStats = {
 
 const isTransactionInMonth = (transaction: Transaction, selectedMonth: string) => {
   return transaction.date.startsWith(selectedMonth)
+}
+
+const isTransactionInExistingStatsDate = (transaction: Transaction) => {
+  return isExistingDate(transaction.date)
 }
 
 const isDaylessTransaction = (transaction: Transaction) => {
@@ -180,28 +198,25 @@ const shiftMonth = (month: string, offset: number) => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
 }
 
-const getMonthRange = (selectedMonth: string, count: number) => {
-  return Array.from({ length: count }, (_, index) => shiftMonth(selectedMonth, index - count + 1))
-}
+const getIncludedMonthRange = (
+  selectedMonth: string,
+  count: number,
+  excludedMonthsSet?: Set<string>
+) => {
+  const months: string[] = []
+  let cursor = selectedMonth
+  let guard = 0
 
-const getDaysInMonth = (month: string) => {
-  const [year, monthNumber] = month.split('-').map(Number)
-  if (!year || !monthNumber) return 31
+  while (months.length < count && guard < count + 48) {
+    if (!isMonthExcludedFromStats(cursor, excludedMonthsSet)) {
+      months.unshift(cursor)
+    }
 
-  return new Date(year, monthNumber, 0).getDate()
-}
-
-const getElapsedDaysForForecast = (selectedMonth: string) => {
-  const [year, monthNumber] = selectedMonth.split('-').map(Number)
-  const daysInMonth = getDaysInMonth(selectedMonth)
-  const now = new Date()
-  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
-
-  if (!year || !monthNumber || selectedMonth !== currentMonth) {
-    return daysInMonth
+    cursor = shiftMonth(cursor, -1)
+    guard += 1
   }
 
-  return Math.max(1, Math.min(daysInMonth, now.getDate()))
+  return months
 }
 
 const getTransactionDay = (transaction: Transaction) => {
@@ -253,9 +268,10 @@ const getMonthlyTrendPoints = (
   transactions: Transaction[],
   categoriesById: Record<string, Category>,
   selectedMonth: string,
-  getSignedAmountForTransaction: (t: Transaction) => number
+  getSignedAmountForTransaction: (t: Transaction) => number,
+  options: DashboardStatsOptions = {}
 ) => {
-  const months = getMonthRange(selectedMonth, 6)
+  const months = getIncludedMonthRange(selectedMonth, 6, options.excludedMonthsSet)
   const monthSet = new Set(months)
   const pointsByMonth = Object.fromEntries(
     months.map((month) => [month, createEmptyMonthPoint(month)])
@@ -263,6 +279,7 @@ const getMonthlyTrendPoints = (
 
   for (const transaction of transactions) {
     const month = transaction.date.slice(0, 7)
+    if (!isTransactionInExistingStatsDate(transaction)) continue
     if (!monthSet.has(month) || !categoriesById[transaction.category_id]) continue
 
     const amount = getSignedAmountForTransaction(transaction)
@@ -288,8 +305,26 @@ export function getDashboardStats(
   transactions: Transaction[],
   categoriesById: Record<string, Category>,
   selectedMonth: string,
-  getSignedAmountForTransaction: (t: Transaction) => number
+  getSignedAmountForTransaction: (t: Transaction) => number,
+  options: DashboardStatsOptions = {}
 ): DashboardStats {
+  if (isMonthExcludedFromStats(selectedMonth, options.excludedMonthsSet)) {
+    return {
+      income: 0,
+      expense: 0,
+      balance: 0,
+      transactionCount: 0,
+      incomeCount: 0,
+      expenseCount: 0,
+      biggestExpense: 0,
+      biggestIncome: 0,
+      averageExpense: 0,
+      averageIncome: 0,
+      daylessCount: 0,
+      expenseShareOfIncome: 0,
+    }
+  }
+
   let income = 0
   let expense = 0
   let incomeCount = 0
@@ -299,7 +334,7 @@ export function getDashboardStats(
   let daylessCount = 0
 
   const filtered = transactions.filter((transaction) =>
-    isTransactionInMonth(transaction, selectedMonth)
+    isTransactionInMonth(transaction, selectedMonth) && isTransactionInExistingStatsDate(transaction)
   )
 
   for (const transaction of filtered) {
@@ -355,12 +390,17 @@ export function getTopExpenseCategories(
   transactions: Transaction[],
   categoriesById: Record<string, Category>,
   selectedMonth: string,
-  getSignedAmountForTransaction: (t: Transaction) => number
+  getSignedAmountForTransaction: (t: Transaction) => number,
+  options: DashboardStatsOptions = {}
 ): TopCategory[] {
+  if (isMonthExcludedFromStats(selectedMonth, options.excludedMonthsSet)) {
+    return []
+  }
+
   const map: Record<string, number> = {}
 
   const filtered = transactions.filter((transaction) =>
-    isTransactionInMonth(transaction, selectedMonth)
+    isTransactionInMonth(transaction, selectedMonth) && isTransactionInExistingStatsDate(transaction)
   )
 
   for (const transaction of filtered) {
@@ -386,7 +426,7 @@ export function getTopExpenseCategories(
   return Object.entries(map)
     .map(([categoryId, total]) => ({
       categoryId,
-      name: categoriesById[categoryId]?.name || 'Nieznana',
+      name: getUniqueCategoryLabel(categoryId, categoriesById, Object.keys(map)) || 'Nieznana',
       total,
     }))
     .sort((a, b) => b.total - a.total)
@@ -396,10 +436,19 @@ export function getTopExpenseCategories(
 export function getLatestTransactions(
   transactions: Transaction[],
   selectedMonth: string,
-  limit = 5
+  limit = 5,
+  options: DashboardStatsOptions = {}
 ): Transaction[] {
+  if (isMonthExcludedFromStats(selectedMonth, options.excludedMonthsSet)) {
+    return []
+  }
+
   return transactions
-    .filter((transaction) => isTransactionInMonth(transaction, selectedMonth))
+    .filter(
+      (transaction) =>
+        isTransactionInMonth(transaction, selectedMonth) &&
+        isTransactionInExistingStatsDate(transaction)
+    )
     .sort((a, b) => {
       const dateCompare = b.date.localeCompare(a.date)
       if (dateCompare !== 0) return dateCompare
@@ -413,13 +462,15 @@ export function getDashboardTrendStats(
   transactions: Transaction[],
   categoriesById: Record<string, Category>,
   selectedMonth: string,
-  getSignedAmountForTransaction: (t: Transaction) => number
+  getSignedAmountForTransaction: (t: Transaction) => number,
+  options: DashboardStatsOptions = {}
 ): DashboardTrendStats {
   const months = getMonthlyTrendPoints(
     transactions,
     categoriesById,
     selectedMonth,
-    getSignedAmountForTransaction
+    getSignedAmountForTransaction,
+    options
   )
   const current = months[months.length - 1] ?? createEmptyMonthPoint(selectedMonth)
   const previous = months[months.length - 2] ?? null
@@ -438,9 +489,10 @@ export function getDashboardDailyCashflowStats(
   transactions: Transaction[],
   categoriesById: Record<string, Category>,
   selectedMonth: string,
-  getSignedAmountForTransaction: (t: Transaction) => number
+  getSignedAmountForTransaction: (t: Transaction) => number,
+  options: DashboardStatsOptions = {}
 ): DashboardDailyCashflowStats {
-  const daysInMonth = getDaysInMonth(selectedMonth)
+  const daysInMonth = getExistingDaysInMonth(selectedMonth)
   const points = Array.from({ length: daysInMonth }, (_, index) => ({
     day: index + 1,
     label: String(index + 1),
@@ -451,8 +503,19 @@ export function getDashboardDailyCashflowStats(
   }))
   let daylessCount = 0
 
+  if (isMonthExcludedFromStats(selectedMonth, options.excludedMonthsSet)) {
+    return {
+      points,
+      finalBalance: 0,
+      minPoint: points[0] ?? null,
+      maxPoint: points[0] ?? null,
+      daylessCount: 0,
+    }
+  }
+
   for (const transaction of transactions) {
     if (!isTransactionInMonth(transaction, selectedMonth)) continue
+    if (!isTransactionInExistingStatsDate(transaction)) continue
     if (!categoriesById[transaction.category_id]) continue
 
     const day = getTransactionDay(transaction)
@@ -504,13 +567,15 @@ export function getDashboardMonthOverMonthStats(
   transactions: Transaction[],
   categoriesById: Record<string, Category>,
   selectedMonth: string,
-  getSignedAmountForTransaction: (t: Transaction) => number
+  getSignedAmountForTransaction: (t: Transaction) => number,
+  options: DashboardStatsOptions = {}
 ): DashboardMonthOverMonthStats {
   const trend = getDashboardTrendStats(
     transactions,
     categoriesById,
     selectedMonth,
-    getSignedAmountForTransaction
+    getSignedAmountForTransaction,
+    options
   )
   const current = trend.current
   const previous = trend.previous ?? createEmptyMonthPoint(shiftMonth(selectedMonth, -1))
@@ -548,15 +613,17 @@ export function getDashboardCategoryTrends(
   transactions: Transaction[],
   categoriesById: Record<string, Category>,
   selectedMonth: string,
-  getSignedAmountForTransaction: (t: Transaction) => number
+  getSignedAmountForTransaction: (t: Transaction) => number,
+  options: DashboardStatsOptions = {}
 ): DashboardCategoryTrend[] {
-  const months = getMonthRange(selectedMonth, 6)
+  const months = getIncludedMonthRange(selectedMonth, 6, options.excludedMonthsSet)
   const monthSet = new Set(months)
   const categoryMap: Record<string, DashboardCategoryTrend> = {}
 
   for (const transaction of transactions) {
     const month = transaction.date.slice(0, 7)
     const category = categoriesById[transaction.category_id]
+    if (!isTransactionInExistingStatsDate(transaction)) continue
     if (!monthSet.has(month) || !category) continue
 
     const amount = getSignedAmountForTransaction(transaction)
@@ -594,6 +661,7 @@ export function getDashboardCategoryTrends(
 
       return {
         ...category,
+        name: getUniqueCategoryLabel(category.categoryId, categoriesById, Object.keys(categoryMap)),
         change: getChange(current, previous),
       }
     })
@@ -604,16 +672,41 @@ export function getDashboardForecastStats(
   transactions: Transaction[],
   categoriesById: Record<string, Category>,
   selectedMonth: string,
-  getSignedAmountForTransaction: (t: Transaction) => number
+  getSignedAmountForTransaction: (t: Transaction) => number,
+  options: DashboardStatsOptions = {}
 ): DashboardForecastStats {
   const daysInMonth = getDaysInMonth(selectedMonth)
-  const elapsedDays = getElapsedDaysForForecast(selectedMonth)
+  const elapsedDays = getExistingDaysInMonth(selectedMonth)
   let incomeToDate = 0
   let expenseToDate = 0
   let daylessCount = 0
 
+  if (isMonthExcludedFromStats(selectedMonth, options.excludedMonthsSet)) {
+    return {
+      incomeToDate: 0,
+      expenseToDate: 0,
+      currentBalance: 0,
+      forecastExpense: 0,
+      forecastBalance: 0,
+      elapsedDays,
+      daysInMonth,
+      monthProgressPercent: 0,
+      spendingProgressPercent: 0,
+      spendingPaceStatus: 'calm',
+      spendingPaceDifference: 0,
+      budgetRiskLevel: 'none',
+      budgetRiskLabel: 'Brak danych',
+      budgetRiskDifference: 0,
+      budgetRiskDescription: 'Ten miesiąc jest wyłączony ze statystyk.',
+      savingsRate: 0,
+      savingsRateDescription: 'Miesiąc wyłączony ze statystyk',
+      daylessCount: 0,
+    }
+  }
+
   for (const transaction of transactions) {
     if (!isTransactionInMonth(transaction, selectedMonth)) continue
+    if (!isTransactionInExistingStatsDate(transaction)) continue
     if (!categoriesById[transaction.category_id]) continue
 
     const amount = getSignedAmountForTransaction(transaction)
@@ -629,11 +722,11 @@ export function getDashboardForecastStats(
     }
   }
 
-  const safeElapsedDays = Math.max(1, Math.min(elapsedDays, daysInMonth))
-  const forecastExpense = (expenseToDate / safeElapsedDays) * daysInMonth
+  const safeElapsedDays = Math.min(elapsedDays, daysInMonth)
+  const forecastExpense = safeElapsedDays > 0 ? (expenseToDate / safeElapsedDays) * daysInMonth : 0
   const currentBalance = incomeToDate - expenseToDate
   const forecastBalance = incomeToDate - forecastExpense
-  const monthProgressPercent = (safeElapsedDays / daysInMonth) * 100
+  const monthProgressPercent = daysInMonth > 0 ? (safeElapsedDays / daysInMonth) * 100 : 0
   const spendingProgressPercent =
     incomeToDate > 0
       ? (expenseToDate / incomeToDate) * 100
@@ -696,10 +789,17 @@ export function getDashboardCategoryPatternStats(
   transactions: Transaction[],
   categoriesById: Record<string, Category>,
   selectedMonth: string,
-  getSignedAmountForTransaction: (t: Transaction) => number
+  getSignedAmountForTransaction: (t: Transaction) => number,
+  options: DashboardStatsOptions = {}
 ): DashboardCategoryPatternStats {
-  const previousMonth = shiftMonth(selectedMonth, -1)
-  const daysInMonth = getDaysInMonth(selectedMonth)
+  const previousMonths = getIncludedMonthRange(
+    shiftMonth(selectedMonth, -1),
+    3,
+    options.excludedMonthsSet
+  )
+  const fallbackPreviousMonth = shiftMonth(selectedMonth, -1)
+  const baselineMonths = previousMonths.length > 0 ? previousMonths : [fallbackPreviousMonth]
+  const daysInMonth = getExistingDaysInMonth(selectedMonth)
   const dailyExpenses = Array.from({ length: daysInMonth }, () => 0)
   const weekdayLabels = ['pon', 'wt', 'śr', 'czw', 'pt', 'sob', 'niedz.']
   const weekdayPatterns = weekdayLabels.map((label, dayIndex) => ({
@@ -728,7 +828,7 @@ export function getDashboardCategoryPatternStats(
 
   const currentCategoryTotals: Record<string, DashboardCategoryMovement> = {}
   const previousCategoryTotals: Record<string, number> = {}
-  const leakMap: Record<string, DashboardMoneyLeak> = {}
+  const leakMap: Record<string, Omit<DashboardMoneyLeak, 'baseline' | 'difference' | 'percent'>> = {}
   const fixedVariable: DashboardFixedVariableStats = {
     fixed: 0,
     variable: 0,
@@ -737,9 +837,27 @@ export function getDashboardCategoryPatternStats(
     hasConfiguredGroups: fixedIds.size > 0 || variableIds.size > 0,
   }
 
+  if (isMonthExcludedFromStats(selectedMonth, options.excludedMonthsSet)) {
+    return {
+      fixedVariable,
+      fastestGrowing: null,
+      fastestFalling: null,
+      expenseStability: {
+        status: 'stable',
+        label: 'Brak danych',
+        averageDailyExpense: 0,
+        biggestDay: null,
+        dailyExpenses,
+      },
+      weekdayPatterns,
+      moneyLeaks: [],
+    }
+  }
+
   for (const transaction of transactions) {
     const month = transaction.date.slice(0, 7)
-    if (month !== selectedMonth && month !== previousMonth) continue
+    if (!isTransactionInExistingStatsDate(transaction)) continue
+    if (month !== selectedMonth && !baselineMonths.includes(month)) continue
 
     const category = categoriesById[transaction.category_id]
     if (!category) continue
@@ -749,7 +867,7 @@ export function getDashboardCategoryPatternStats(
 
     const expense = Math.abs(amount)
 
-    if (month === previousMonth) {
+    if (baselineMonths.includes(month)) {
       previousCategoryTotals[category.id] = (previousCategoryTotals[category.id] ?? 0) + expense
       continue
     }
@@ -838,20 +956,40 @@ export function getDashboardCategoryPatternStats(
   const biggestDayIndex = dailyExpenses.findIndex((value) => value === biggestDayTotal)
   const totalExpense = fixedVariable.total
   const leakNoticeableThreshold = Math.max(50, totalExpense * 0.03)
-  const leakSmallAverageThreshold = Math.max(40, totalExpense * 0.08)
-  const moneyLeaks = Object.values(leakMap)
-    .map((leak) => ({
-      ...leak,
-      average: leak.count > 0 ? leak.total / leak.count : 0,
-    }))
+  const hasEnoughLeakHistory = baselineMonths.some((month) =>
+    transactions.some((transaction) => {
+      const category = categoriesById[transaction.category_id]
+      return (
+        category &&
+        transaction.date.startsWith(month) &&
+        getSignedAmountForTransaction(transaction) < 0
+      )
+    })
+  )
+  const moneyLeaks = hasEnoughLeakHistory
+    ? Object.values(leakMap)
+    .map((leak) => {
+      const previousTotal = previousCategoryTotals[leak.categoryId] ?? 0
+      const baseline = previousTotal / Math.max(1, baselineMonths.length)
+      const difference = leak.total - baseline
+
+      return {
+        ...leak,
+        average: leak.count > 0 ? leak.total / leak.count : 0,
+        baseline,
+        difference,
+        percent: baseline > 0 ? (difference / baseline) * 100 : null,
+      }
+    })
     .filter(
       (leak) =>
-        leak.count >= 3 &&
         leak.total >= leakNoticeableThreshold &&
-        leak.average <= leakSmallAverageThreshold
+        leak.difference >= leakNoticeableThreshold &&
+        (leak.percent === null ? leak.baseline === 0 : leak.percent >= 40)
     )
-    .sort((left, right) => right.total - left.total)
+    .sort((left, right) => right.difference - left.difference)
     .slice(0, 3)
+    : []
 
   return {
     fixedVariable,

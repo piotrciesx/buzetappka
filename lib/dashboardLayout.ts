@@ -1,4 +1,4 @@
-import { DASHBOARD_GRID_COLUMNS, DASHBOARD_GRID_MAX_ROWS } from './dashboardWidgetConfig'
+import { DASHBOARD_GRID_COLUMNS } from './dashboardWidgetConfig'
 import { DashboardWidgetLayoutItem, DashboardWidgetSize } from './dashboardTypes'
 
 type DashboardAnchorLayout = DashboardWidgetSize & {
@@ -7,8 +7,23 @@ type DashboardAnchorLayout = DashboardWidgetSize & {
   y: number
 }
 
-const clampSpan = (value: number, maxSpan: number) =>
-  Math.max(1, Math.min(maxSpan, Math.round(value) || 1))
+const SMALL_WIDGET_SIZE: DashboardWidgetSize = {
+  width: 2,
+  height: 3,
+}
+
+const LARGE_WIDGET_SIZE: DashboardWidgetSize = {
+  width: 4,
+  height: 3,
+}
+
+const getDashboardWidgetModeSize = (size: DashboardWidgetSize): DashboardWidgetSize => {
+  if (size.width >= 4) {
+    return LARGE_WIDGET_SIZE
+  }
+
+  return SMALL_WIDGET_SIZE
+}
 
 const normalizeDashboardWidgetPosition = (
   x: number,
@@ -26,10 +41,16 @@ export const normalizeDashboardWidgetSize = (
   size: DashboardWidgetSize,
   columns = DASHBOARD_GRID_COLUMNS
 ): DashboardWidgetSize => {
-  const width = Math.min(columns, clampSpan(size.width, columns))
-  const height = clampSpan(size.height, DASHBOARD_GRID_MAX_ROWS)
+  const modeSize = getDashboardWidgetModeSize(size)
+  const width =
+    modeSize.width >= LARGE_WIDGET_SIZE.width && columns >= LARGE_WIDGET_SIZE.width
+      ? LARGE_WIDGET_SIZE.width
+      : SMALL_WIDGET_SIZE.width
 
-  return { width, height }
+  return {
+    width,
+    height: modeSize.height,
+  }
 }
 
 export const sortDashboardWidgetsByPosition = (widgets: DashboardWidgetLayoutItem[]) => {
@@ -87,30 +108,24 @@ const placeWidgetInNextFreeSpace = (
   columns: number
 ) => {
   const size = normalizeDashboardWidgetSize(widget, columns)
-  let y = 0
-  let x = 0
-  let hasPosition = false
 
-  while (!hasPosition) {
-    for (x = 0; x < columns; x += 1) {
+  let y = 0
+
+  while (true) {
+    for (let x = 0; x < columns; x += 1) {
       if (canPlaceWidget(occupiedCells, x, y, size, columns)) {
-        hasPosition = true
-        break
+        occupyWidgetCells(occupiedCells, x, y, size)
+
+        return {
+          ...widget,
+          ...size,
+          x,
+          y,
+        }
       }
     }
 
-    if (!hasPosition) {
-      y += 1
-    }
-  }
-
-  occupyWidgetCells(occupiedCells, x, y, size)
-
-  return {
-    ...widget,
-    ...size,
-    x,
-    y,
+    y += 1
   }
 }
 
@@ -128,9 +143,15 @@ const buildPackedDashboardLayout = (
 
     if (anchorWidget) {
       const size = normalizeDashboardWidgetSize(anchorLayout, columns)
-      const position = normalizeDashboardWidgetPosition(anchorLayout.x, anchorLayout.y, size.width, columns)
+      const position = normalizeDashboardWidgetPosition(
+        anchorLayout.x,
+        anchorLayout.y,
+        size.width,
+        columns
+      )
 
       occupyWidgetCells(occupiedCells, position.x, position.y, size)
+
       packedWidgets.set(anchorWidget.id, {
         ...anchorWidget,
         ...size,

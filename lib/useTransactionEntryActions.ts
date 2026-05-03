@@ -325,12 +325,12 @@ export function useTransactionEntryActions({
       }
 
       if (!effectiveCategoryId) {
-        alert('Wybierz najniższy dostępny poziom kategorii')
+        alert('Wybierz najniższą dostępną kategorię')
         return
       }
 
       if (!canAddTransactionToCategory(effectiveCategoryId)) {
-        alert('Wpis można dodać tylko do najniższego dostępnego poziomu, bez dzieci')
+        alert('Wpis można dodać tylko do najniższej dostępnej kategorii, bez dzieci')
         return
       }
 
@@ -350,19 +350,19 @@ export function useTransactionEntryActions({
 
       if (effectiveCategory.level === 3) {
         if (!selectedLevel2Id) {
-          alert('Wybierz kategorię poziomu 2')
+          alert('Wybierz kategorię')
           return
         }
 
         if (effectiveCategory.parent_id !== selectedLevel2Id) {
-          alert('Wybrana kategoria nie pasuje do wybranego poziomu 2')
+          alert('Wybrana podkategoria nie pasuje do wybranej kategorii')
           return
         }
       }
 
       if (effectiveCategory.level === 2) {
         if (!selectedLevel2Id || effectiveCategory.id !== selectedLevel2Id) {
-          alert('Wybrana kategoria poziomu 2 nie jest ustawiona poprawnie')
+          alert('Wybrana kategoria nie jest ustawiona poprawnie')
           return
         }
       }
@@ -465,7 +465,8 @@ export function useTransactionEntryActions({
       dayText: string,
       tagNames: string[] = [],
       paymentSourceId?: string | null,
-      paymentSplitItems?: PaymentSplitInput[]
+      paymentSplitItems?: PaymentSplitInput[],
+      recurringTransactionId?: string | null
     ) => {
       try {
         const trimmedDayText = dayText.trim()
@@ -480,7 +481,7 @@ export function useTransactionEntryActions({
           nextTransactionDate,
           nextDayIsNull,
           tagNames,
-          null,
+          recurringTransactionId || null,
           paymentSourceId,
           paymentSplitItems
         )

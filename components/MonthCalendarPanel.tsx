@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { CSSProperties, KeyboardEvent, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import DescriptionSuggestionDeleteMenu from './DescriptionSuggestionDeleteMenu'
@@ -7,6 +7,9 @@ import {
   buildDateFromDayInput,
   getDayInputFromDate,
   getDaysInMonth,
+  isFutureDate,
+  isDateBeforeBudgetStart,
+  isMonthPartialByBudgetStart,
   normalizeDayInput,
 } from '../lib/dateUtils'
 import { splitTagInput } from '../lib/tagUtils'
@@ -22,11 +25,10 @@ import type {
   MonthCalendarPanelProps,
   Transaction,
 } from './month-calendar/monthCalendarTypes'
+import MonthCalendarContainer from './month-calendar/MonthCalendarContainer'
 import MonthCalendarDayModal from './month-calendar/MonthCalendarDayModal'
-import MonthCalendarGrid from './month-calendar/MonthCalendarGrid'
-import MonthCalendarHeader from './month-calendar/MonthCalendarHeader'
-import MonthCalendarHeatmapControls from './month-calendar/MonthCalendarHeatmapControls'
-import MonthCalendarTransactionList from './month-calendar/MonthCalendarTransactionList'
+import MonthCalendarNoDaySection from './month-calendar/MonthCalendarNoDaySection'
+import MonthCalendarToolbar from './month-calendar/MonthCalendarToolbar'
 import {
   badgeStyle,
   calendarDayCellStyle,
@@ -34,13 +36,10 @@ import {
   calendarDayMetaStyle,
   calendarDayNumberStyle,
   calendarExpandBadgeStyle,
-  calendarPanelStyle,
   dangerButtonStyle,
   descriptionFieldWrapStyle,
   formRowStyle,
   noDayHintStyle,
-  noDaySectionStyle,
-  noDaySummaryStyle,
   primaryButtonStyle,
   secondaryButtonStyle,
   smallInputStyle,
@@ -286,6 +285,10 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
   const {
     selectedMonth,
     transactions,
+    budgetStartDate,
+    isSelectedMonthExcluded = false,
+    isUpdatingSelectedMonthExclusion = false,
+    onToggleSelectedMonthExcluded,
     styles,
     isSelectedMonthLocked,
     getAmountNumber,
@@ -387,12 +390,18 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
     return transactions.filter((transaction) => !transaction.day_is_null)
   }, [transactions])
 
+  const isSelectedMonthPartial = isMonthPartialByBudgetStart(selectedMonth, budgetStartDate)
+
   const transactionsWithoutDay = useMemo(() => {
     return transactions.filter((transaction) => transaction.day_is_null)
   }, [transactions])
 
   const transactionsByDay = useMemo(() => {
     return transactionsWithDay.reduce<Record<string, Transaction[]>>((acc, transaction) => {
+      if (isDateBeforeBudgetStart(transaction.date, budgetStartDate)) {
+        return acc
+      }
+
       const day = transaction.date.slice(8, 10)
 
       if (!day) {
@@ -406,7 +415,7 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
       acc[day].push(transaction)
       return acc
     }, {})
-  }, [transactionsWithDay])
+  }, [budgetStartDate, transactionsWithDay])
 
   const dayStats = useMemo(() => {
     return Object.entries(transactionsByDay).reduce<
@@ -431,29 +440,32 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
   }, [transactionsByDay, getAmountNumber, getSignedAmountForTransaction])
 
   const positiveHeatmapReference = useMemo(() => {
-    const values = Object.values(dayStats)
-      .map((item) => item.signedSum)
+    const values = Object.entries(dayStats)
+      .filter(([day]) => !isFutureDate(`${selectedMonth}-${day}`))
+      .map(([, item]) => item.signedSum)
       .filter((value) => value > 0)
 
     return getReferenceValue(values)
-  }, [dayStats])
+  }, [dayStats, selectedMonth])
 
   const negativeHeatmapReference = useMemo(() => {
-    const values = Object.values(dayStats)
-      .map((item) => item.signedSum)
+    const values = Object.entries(dayStats)
+      .filter(([day]) => !isFutureDate(`${selectedMonth}-${day}`))
+      .map(([, item]) => item.signedSum)
       .filter((value) => value < 0)
       .map((value) => Math.abs(value))
 
     return getReferenceValue(values)
-  }, [dayStats])
+  }, [dayStats, selectedMonth])
 
   const sumHeatmapReference = useMemo(() => {
-    const values = Object.values(dayStats)
-      .map((item) => item.rawSum)
+    const values = Object.entries(dayStats)
+      .filter(([day]) => !isFutureDate(`${selectedMonth}-${day}`))
+      .map(([, item]) => item.rawSum)
       .filter((value) => value > 0)
 
     return getReferenceValue(values)
-  }, [dayStats])
+  }, [dayStats, selectedMonth])
 
   const selectedDayTransactions = selectedDay ? transactionsByDay[selectedDay] || [] : []
 
@@ -982,6 +994,16 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
               </>
             ) : (
               <>
+                {context === 'no-day' && (
+                  <button
+                    type="button"
+                    style={primaryButtonStyle}
+                    onClick={() => startEditingTransaction(transaction)}
+                  >
+                    dodaj dzień
+                  </button>
+                )}
+
                 <button
                   type="button"
                   style={secondaryButtonStyle}
@@ -1019,13 +1041,32 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
 
   for (let day = 1; day <= daysInMonth; day += 1) {
     const dayKey = String(day).padStart(2, '0')
+    const dateText = `${selectedMonth}-${dayKey}`
     const stats = dayStats[dayKey]
     const isActive = selectedDay === dayKey
+    const isBeforeBudgetStart = isDateBeforeBudgetStart(dateText, budgetStartDate)
+    const isFuture = isFutureDate(dateText)
 
     let cellStyle: CSSProperties = calendarDayCellStyle
     let dynamicTextColor = '#111827'
 
-    if (heatmapMode === 'normal') {
+    if (isFuture) {
+      cellStyle = {
+        ...calendarDayCellStyle,
+        background: '#f1f5f9',
+        border: '1px solid #e2e8f0',
+        opacity: 0.62,
+      }
+      dynamicTextColor = '#64748b'
+    } else if (isBeforeBudgetStart) {
+      cellStyle = {
+        ...calendarDayCellStyle,
+        background: '#f3f4f6',
+        border: '1px dashed #d1d5db',
+        opacity: 0.58,
+      }
+      dynamicTextColor = '#6b7280'
+    } else if (heatmapMode === 'normal') {
       cellStyle = isActive
         ? {
             ...calendarDayCellStyle,
@@ -1067,7 +1108,13 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
     }
 
     dayCells.push(
-      <button key={dayKey} type="button" style={cellStyle} onClick={() => setSelectedDay(dayKey)}>
+      <button
+        key={dayKey}
+        type="button"
+        style={cellStyle}
+        disabled={isBeforeBudgetStart}
+        onClick={() => setSelectedDay(dayKey)}
+      >
         <div
           style={{
             ...calendarExpandBadgeStyle,
@@ -1084,7 +1131,11 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
 
         <div style={{ ...calendarDayNumberStyle, color: dynamicTextColor }}>{day}</div>
 
-        {stats ? (
+        {isBeforeBudgetStart ? (
+          <div style={{ ...calendarDayMetaStyle, color: dynamicTextColor }}>Poza zakresem</div>
+        ) : isFuture ? (
+          <div style={{ ...calendarDayMetaStyle, color: dynamicTextColor }}>Przyszłość</div>
+        ) : stats ? (
           <>
             <div
               style={{
@@ -1115,75 +1166,92 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
   }
 
   return (
-    <>
-      <section style={calendarPanelStyle}>
-        <MonthCalendarHeader title={calendarTitle} subtitle={calendarSubtitle} styles={styles} />
-
-        <MonthCalendarHeatmapControls
+    <MonthCalendarContainer
+      firstDayOffset={firstDayOffset}
+      dayCells={dayCells}
+      heatmapMode={heatmapMode}
+      legendLabels={legendLabels}
+      toolbar={
+        <MonthCalendarToolbar
+          title={calendarTitle}
+          subtitle={calendarSubtitle}
+          styles={styles}
           heatmapMode={heatmapMode}
           heatmapInverted={heatmapInverted}
           showHeatmapControls={showHeatmapControls}
-          legendLabels={legendLabels}
           onHeatmapModeChange={handleHeatmapModeChange}
           onHeatmapInvertedChange={handleHeatmapInvertedChange}
         />
-
-        <MonthCalendarGrid firstDayOffset={firstDayOffset}>{dayCells}</MonthCalendarGrid>
-
-        <div style={noDaySectionStyle}>
-          <div style={styles.sectionTitle}>Bez dnia / pozostałe</div>
-
-          <div style={noDaySummaryStyle}>
-            <div style={styles.l2Name}>Podsumowanie wpisów bez dnia</div>
-            <div style={{ ...calendarDayMetaStyle, marginTop: 6 }}>
-              Suma: <strong>{formatAmount(noDayTransactionsSum)} zł</strong>
+      }
+      notices={
+        <>
+          {isSelectedMonthPartial && (
+            <div style={{ ...styles.infoBox, marginBottom: 10 }}>
+              Ten miesiąc jest niepełny — dane przed datą startową nie są liczone.
             </div>
-            <div style={{ ...calendarDayMetaStyle, marginTop: 4 }}>
-              Liczba wpisów: <strong>{transactionsWithoutDay.length}</strong>
-            </div>
-            <div style={noDayHintStyle}>
-              Te wpisy należą do wybranego miesiąca, ale nie są przypisane do konkretnego dnia i
-              nie wpływają na heatmapę.
-            </div>
-          </div>
-
-          {transactionsWithoutDay.length === 0 ? (
-            <div style={styles.emptyStateCard}>Brak wpisów bez dnia w tym miesiącu.</div>
-          ) : (
-            <MonthCalendarTransactionList
-              transactions={transactionsWithoutDay}
-              context="no-day"
-              renderTransactionCard={renderTransactionCard}
-            />
           )}
-        </div>
-      </section>
-
-      <DescriptionSuggestionDeleteMenu
-        isOpen={Boolean(suggestionToDelete)}
-        x={deletePromptPosition.x}
-        y={deletePromptPosition.y}
-        onConfirm={confirmDeleteSuggestion}
-        onCancel={closeDeletePrompt}
-      />
-
-      {selectedDay && (
-        <MonthCalendarDayModal
-          selectedDay={selectedDay}
-          selectedMonth={selectedMonth}
-          selectedDayTransactions={selectedDayTransactions}
-          selectedDayPrimaryValue={selectedDayPrimaryValue}
-          selectedDayRawSum={selectedDayRawSum}
-          heatmapVariant={heatmapVariant}
-          isSelectedMonthLocked={isSelectedMonthLocked}
+          {isSelectedMonthExcluded && (
+            <div style={{ ...styles.infoBox, marginBottom: 10 }}>
+              Ten miesiąc jest wyłączony ze statystyk.
+            </div>
+          )}
+          {onToggleSelectedMonthExcluded && (
+            <div style={{ marginBottom: 10 }}>
+              <button
+                type="button"
+                style={isSelectedMonthExcluded ? styles.primaryButton : styles.secondaryButton}
+                disabled={isUpdatingSelectedMonthExclusion}
+                onClick={() => {
+                  void onToggleSelectedMonthExcluded()
+                }}
+              >
+                {isUpdatingSelectedMonthExclusion
+                  ? 'Zapisywanie...'
+                  : isSelectedMonthExcluded
+                    ? 'Przywróć miesiąc do statystyk'
+                    : 'Wyłącz miesiąc ze statystyk'}
+              </button>
+            </div>
+          )}
+        </>
+      }
+      noDaySection={
+        <MonthCalendarNoDaySection
+          transactionsWithoutDay={transactionsWithoutDay}
+          noDayTransactionsSum={noDayTransactionsSum}
           styles={styles}
-          getDayMetricLabel={getDayMetricLabel}
           formatAmount={formatAmount}
           renderTransactionCard={renderTransactionCard}
-          onAddTransactionForDay={onAddTransactionForDay}
-          onClose={closeModal}
         />
-      )}
-    </>
+      }
+      suggestionMenu={
+        <DescriptionSuggestionDeleteMenu
+          isOpen={Boolean(suggestionToDelete)}
+          x={deletePromptPosition.x}
+          y={deletePromptPosition.y}
+          onConfirm={confirmDeleteSuggestion}
+          onCancel={closeDeletePrompt}
+        />
+      }
+      dayModal={
+        selectedDay ? (
+          <MonthCalendarDayModal
+            selectedDay={selectedDay}
+            selectedMonth={selectedMonth}
+            selectedDayTransactions={selectedDayTransactions}
+            selectedDayPrimaryValue={selectedDayPrimaryValue}
+            selectedDayRawSum={selectedDayRawSum}
+            heatmapVariant={heatmapVariant}
+            isSelectedMonthLocked={isSelectedMonthLocked}
+            styles={styles}
+            getDayMetricLabel={getDayMetricLabel}
+            formatAmount={formatAmount}
+            renderTransactionCard={renderTransactionCard}
+            onAddTransactionForDay={onAddTransactionForDay}
+            onClose={closeModal}
+          />
+        ) : null
+      }
+    />
   )
 }

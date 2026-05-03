@@ -1,4 +1,5 @@
 import { Category, SortDirection, SortMode } from './budgetPageTypes'
+import { getUniqueCategoryLabel } from './categoryUtils'
 
 export const getCategorySortOrderValue = (category: Category) => {
   if (typeof category.sort_order === 'number') {
@@ -64,31 +65,7 @@ export const getCategoryPathLabel = (
   categoryId: string,
   categoriesById: Record<string, Category>
 ) => {
-  const category = categoriesById[categoryId]
-
-  if (!category) {
-    return ''
-  }
-
-  if (category.level === 2) {
-    return `${category.name} (poziom 2)`
-  }
-
-  const parts = [category.name]
-  let currentParentId = category.parent_id
-
-  while (currentParentId) {
-    const parent = categoriesById[currentParentId]
-
-    if (!parent || parent.level === 1) {
-      break
-    }
-
-    parts.unshift(parent.name)
-    currentParentId = parent.parent_id
-  }
-
-  return parts.join(' > ')
+  return getUniqueCategoryLabel(categoryId, categoriesById)
 }
 
 export const isSortModeValue = (value: string): value is SortMode => {

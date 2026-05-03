@@ -1,19 +1,12 @@
 import { useCallback } from 'react'
 import {
   Category,
+  RecurringReminderMonthStatus,
   RecurringTransaction,
   RecurringTransactionExecution,
   Transaction,
 } from './budgetPageTypes'
-import {
-  buildRecurringCompletionCandidates,
-  getMonthCycleDate,
-} from './recurringTransactions'
-
-type RecurringCompletionPromptState = {
-  transaction: Transaction
-  candidates: ReturnType<typeof buildRecurringCompletionCandidates>
-} | null
+import { getMonthCycleDate } from './recurringTransactions'
 
 type UseRecurringTransactionCreatorParams = {
   recurringTransactions: RecurringTransaction[]
@@ -22,7 +15,6 @@ type UseRecurringTransactionCreatorParams = {
   categoriesById: Record<string, Category>
   selectedMonth: string
   selectedRecurringTransactionId: string
-  newDescription: string
   paymentSourceSettings: {
     defaultIncomePaymentSourceId: string | null
     defaultExpensePaymentSourceId: string | null
@@ -31,11 +23,11 @@ type UseRecurringTransactionCreatorParams = {
   getDraftTypeForLevel1Id: (level1Id: string | null) => 'income' | 'expense' | null
   getPaymentSourceKindForLevel1Id: (level1Id: string | null) => 'income' | 'expense' | null
   applyTransactionCategorySelection: (categoryId: string) => void
-  saveRecurringExecution: (input: {
-    recurringTransactionId: string
-    generatedForDate: string
-    status: 'completed' | 'skipped'
-    transactionId?: string
+  saveRecurringReminderMonthStatus: (input: {
+    reminderId: string
+    month: string
+    status: RecurringReminderMonthStatus['status']
+    transactionId?: string | null
   }) => Promise<void>
   amountInputRef: React.RefObject<HTMLInputElement | null>
   setTransactionCreatorSuggestionId: (value: string | null) => void
@@ -55,7 +47,6 @@ type UseRecurringTransactionCreatorParams = {
   setTransactionDraftType: (value: 'income' | 'expense' | null) => void
   setTransactionCreatorInitialDate: (value: string | null) => void
   setIsTransactionCreatorOpen: (value: boolean) => void
-  setRecurringCompletionPrompt: (value: RecurringCompletionPromptState) => void
   restoreDescriptionSuggestion: (descriptionText: string, categoryId: string | null | undefined) => void
 }
 
@@ -66,13 +57,12 @@ export function useRecurringTransactionCreator({
   categoriesById,
   selectedMonth,
   selectedRecurringTransactionId,
-  newDescription,
   paymentSourceSettings,
   getRootLevel1IdForCategory,
   getDraftTypeForLevel1Id,
   getPaymentSourceKindForLevel1Id,
   applyTransactionCategorySelection,
-  saveRecurringExecution,
+  saveRecurringReminderMonthStatus,
   amountInputRef,
   setTransactionCreatorSuggestionId,
   setTransactionCreatorLockedLevel1Id,
@@ -91,7 +81,6 @@ export function useRecurringTransactionCreator({
   setTransactionDraftType,
   setTransactionCreatorInitialDate,
   setIsTransactionCreatorOpen,
-  setRecurringCompletionPrompt,
   restoreDescriptionSuggestion,
 }: UseRecurringTransactionCreatorParams) {
   const resetTransactionCreator = useCallback(() => {
@@ -161,7 +150,12 @@ export function useRecurringTransactionCreator({
         setSelectedTransactionCategoryId(null)
       }
 
-      setNewAmount(String(linkedTransaction?.amount ?? recurring.amount ?? ''))
+      setNewAmount(
+        String(
+          linkedTransaction?.amount ??
+            (recurring.use_amount_when_creating ? recurring.amount ?? '' : '')
+        )
+      )
       setNewDescription(linkedTransaction?.description || recurring.description || recurring.name)
       setNewTransactionDate(nextDate)
 
@@ -231,106 +225,28 @@ export function useRecurringTransactionCreator({
         restoreDescriptionSuggestion(transaction.description || '', transaction.category_id)
       }
 
-      const candidates = buildRecurringCompletionCandidates({
-        recurringTransactions,
-        executions: recurringExecutions,
-        transaction,
-        selectedRecurringTransactionId,
-        description: newDescription,
-      })
-
       const linkedRecurringId =
-        selectedRecurringTransactionId ||
-        transaction.recurring_transaction_id ||
-        candidates[0]?.id ||
-        null
+        selectedRecurringTransactionId || transaction.recurring_transaction_id || null
 
-      if (
-        linkedRecurringId &&
-        (selectedRecurringTransactionId || transaction.recurring_transaction_id)
-      ) {
-        const recurring = recurringTransactions.find((item) => item.id === linkedRecurringId)
-
-        if (recurring) {
-          await saveRecurringExecution({
-            recurringTransactionId: recurring.id,
-            generatedForDate: getMonthCycleDate(recurring, transaction.date.slice(0, 7)),
-            status: 'completed',
-            transactionId: transaction.id,
-          })
-          setRecurringCompletionPrompt(null)
-          return
-        }
-      }
-
-      if (candidates.length > 0) {
-        setRecurringCompletionPrompt({
-          transaction,
-          candidates,
+      if (linkedRecurringId) {
+        await saveRecurringReminderMonthStatus({
+          reminderId: linkedRecurringId,
+          month: transaction.date.slice(0, 7),
+          status: 'linked',
+          transactionId: transaction.id,
         })
       }
     },
     [
-      newDescription,
-      recurringExecutions,
-      recurringTransactions,
       restoreDescriptionSuggestion,
-      saveRecurringExecution,
+      saveRecurringReminderMonthStatus,
       selectedRecurringTransactionId,
-      setRecurringCompletionPrompt,
     ]
-  )
-
-  const handleConfirmRecurringCompletion = useCallback(
-    async (recurringId: string, recurringCompletionPrompt: RecurringCompletionPromptState) => {
-      if (!recurringCompletionPrompt) {
-        return
-      }
-
-      const recurring = recurringTransactions.find((item) => item.id === recurringId)
-
-      if (!recurring) {
-        setRecurringCompletionPrompt(null)
-        return
-      }
-
-      await saveRecurringExecution({
-        recurringTransactionId: recurring.id,
-        generatedForDate: getMonthCycleDate(
-          recurring,
-          recurringCompletionPrompt.transaction.date.slice(0, 7)
-        ),
-        status: 'completed',
-        transactionId: recurringCompletionPrompt.transaction.id,
-      })
-
-      setRecurringCompletionPrompt(null)
-    },
-    [recurringTransactions, saveRecurringExecution, setRecurringCompletionPrompt]
-  )
-
-  const handleSkipRecurringInMonth = useCallback(
-    async (recurringId: string, generatedForDate: string) => {
-      const recurring = recurringTransactions.find((item) => item.id === recurringId)
-
-      if (!recurring) {
-        return
-      }
-
-      await saveRecurringExecution({
-        recurringTransactionId: recurring.id,
-        generatedForDate,
-        status: 'skipped',
-      })
-    },
-    [recurringTransactions, saveRecurringExecution]
   )
 
   return {
     resetTransactionCreator,
     openRecurringTransactionCreator,
     handleTransactionSaved,
-    handleConfirmRecurringCompletion,
-    handleSkipRecurringInMonth,
   }
 }
