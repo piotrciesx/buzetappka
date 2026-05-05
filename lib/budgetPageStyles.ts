@@ -13,7 +13,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
 
   pageTitle: {
     fontSize: 32,
-    fontWeight: 700,
+    fontWeight: 600,
     marginBottom: 8,
   } as const,
 
@@ -43,7 +43,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   monthLabel: {
     minWidth: 110,
     textAlign: 'center' as const,
-    fontWeight: 700,
+    fontWeight: 600,
     fontSize: 18,
     padding: '10px 14px',
     background: '#eff6ff',
@@ -61,7 +61,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
 
   monthNavigationSettingsTitle: {
     fontSize: 15,
-    fontWeight: 700,
+    fontWeight: 600,
     marginBottom: 10,
   } as const,
 
@@ -115,7 +115,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
 
   sectionTitle: {
     fontSize: 20,
-    fontWeight: 700,
+    fontWeight: 600,
     marginBottom: 14,
   } as const,
 
@@ -142,7 +142,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     border: '1px solid #93c5fd',
     borderRadius: 12,
     padding: '14px 16px',
-    fontWeight: 700,
+    fontWeight: 600,
     fontSize: 18,
     marginBottom: 12,
     display: 'flex',
@@ -183,7 +183,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   l2Name: {
-    fontWeight: 700,
+    fontWeight: 600,
     fontSize: 16,
   } as const,
 
@@ -201,7 +201,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     border: '1px solid #fdba74',
     color: '#9a3412',
     fontSize: 12,
-    fontWeight: 700,
+    fontWeight: 600,
   } as const,
 
   l3Wrap: {
@@ -241,7 +241,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     cursor: 'grab',
     touchAction: 'none',
     fontSize: 18,
-    fontWeight: 700,
+    fontWeight: 600,
     padding: 0,
   } as const,
 
@@ -345,7 +345,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   amountText: {
-    fontWeight: 700,
+    fontWeight: 600,
     fontSize: 15,
   } as const,
 
@@ -387,7 +387,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
 
   sortLabel: {
     fontSize: 14,
-    fontWeight: 700,
+    fontWeight: 600,
     color: '#374151',
   } as const,
 
@@ -409,8 +409,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     background: '#2563eb',
     color: '#ffffff',
     fontSize: 18,
-    lineHeight: 1,
-    fontWeight: 700,
+    lineHeight: 1.2,
+    fontWeight: 600,
     cursor: 'pointer',
     boxShadow: '0 16px 32px rgba(37, 99, 235, 0.28)',
     padding: '0 18px',

@@ -13,7 +13,7 @@ export function MetricBox({
   return (
     <div style={metricBoxStyle}>
       <div style={labelStyle}>{label}</div>
-      <div style={{ marginTop: 3, fontSize: 14, fontWeight: 700, color, lineHeight: 1.2 }}>
+      <div style={{ marginTop: 3, fontSize: 14, fontWeight: 600, color, lineHeight: 1.2 }}>
         {value}
       </div>
     </div>
@@ -33,7 +33,7 @@ export function ProgressBar({
     <div>
       <div style={listRowStyle}>
         <span style={labelStyle}>{label}</span>
-        <strong style={{ color, fontWeight: 700 }}>{formatPercent(value)}</strong>
+        <strong style={{ color, fontWeight: 600 }}>{formatPercent(value)}</strong>
       </div>
       <div style={progressTrackStyle}>
         <div

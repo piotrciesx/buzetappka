@@ -498,7 +498,7 @@ export default function ImportExportPanel({
                         marginBottom: 10,
                       }}
                     >
-                      <label style={{ fontWeight: 700 }}>
+                      <label style={{ fontWeight: 600 }}>
                         <input
                           type="checkbox"
                           checked={row.isApproved}
@@ -513,9 +513,9 @@ export default function ImportExportPanel({
                       </label>
 
                       {row.errors.length === 0 ? (
-                        <span style={{ color: '#166534', fontWeight: 700 }}>OK</span>
+                        <span style={{ color: '#166534', fontWeight: 600 }}>OK</span>
                       ) : (
-                        <span style={{ color: '#b91c1c', fontWeight: 700 }}>
+                        <span style={{ color: '#b91c1c', fontWeight: 600 }}>
                           {row.errors.join(' | ')}
                         </span>
                       )}

@@ -13,6 +13,7 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import Level2Section from './Level2Section'
 import Level3Section from './Level3Section'
 import MonthCalendarPanel from './MonthCalendarPanel'
+import BudgetLimitIndicator, { BudgetLimitView } from './BudgetLimitIndicator'
 import type { HeatmapMode } from './month-calendar/monthCalendarTypes'
 import { SortableLevel1Card, StaticLevel1Card } from './Level1Cards'
 import {
@@ -40,6 +41,7 @@ type Props = {
   isReorderingLevel1: boolean
   reorderingLevel1Id: string | null
   reorderingLevel2Id: string | null
+  expenseLevel1Id: string | null
   styles: Record<string, CSSProperties>
   toggleLevel1: (id: string) => void
   toggleLevel1Calendar: (level1Id: string) => void
@@ -129,6 +131,8 @@ type Props = {
     categoryId: string | null | undefined,
     suggestion: DescriptionSuggestion
   ) => void
+  getBudgetLimitView?: (categoryId: string | null) => BudgetLimitView | null
+  onEditBudgetLimit?: (categoryId: string | null) => void
 }
 
 export default function BudgetCategoryTree(props: Props) {
@@ -146,6 +150,7 @@ export default function BudgetCategoryTree(props: Props) {
     isReorderingLevel1,
     reorderingLevel1Id,
     reorderingLevel2Id,
+    expenseLevel1Id,
     styles,
     toggleLevel1,
     toggleLevel1Calendar,
@@ -195,6 +200,8 @@ export default function BudgetCategoryTree(props: Props) {
     transactionPaymentSplitsMap = {},
     onTagClick,
     onDeleteDescriptionSuggestion,
+    getBudgetLimitView,
+    onEditBudgetLimit,
   } = props
 
   const level1Sensors = useSensors(
@@ -220,12 +227,18 @@ export default function BudgetCategoryTree(props: Props) {
     isLevel2DndBlocked: boolean
   ) => {
     const calendarHeatmapVariant = getCalendarHeatmapVariantForLevel1Id(level1Category.id)
+    const canUseBudgetLimit = level1Category.id === expenseLevel1Id
+    const budgetLimitView = canUseBudgetLimit ? getBudgetLimitView?.(level2Category.id) ?? null : null
 
     return (
       <Level2Section
         key={level2Category.id}
         l2={level2Category}
         sortedLevel3Children={sortedLevel3Children}
+        budgetLimitView={budgetLimitView}
+        canUseBudgetLimit={canUseBudgetLimit}
+        onEditBudgetLimit={onEditBudgetLimit}
+        getBudgetLimitView={getBudgetLimitView}
         selectedMonth={selectedMonth}
         isSelectedMonthLocked={isSelectedMonthLocked}
         isClosingAfterSelectedMonth={isCategoryClosingAfterSelectedMonth(
@@ -428,6 +441,9 @@ export default function BudgetCategoryTree(props: Props) {
   }
 
   const renderLevel1Actions = (level1Category: Category, isLevel1CalendarOpen: boolean) => {
+    const canUseBudgetLimit = level1Category.id === expenseLevel1Id
+    const budgetLimitView = canUseBudgetLimit ? getBudgetLimitView?.(null) ?? null : null
+
     return (
       <>
         <button
@@ -442,6 +458,21 @@ export default function BudgetCategoryTree(props: Props) {
         >
           {isLevel1CalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
         </button>
+
+        {canUseBudgetLimit && onEditBudgetLimit && (
+          <button
+            type="button"
+            style={styles.secondaryButton}
+            onMouseDown={(event) => event.stopPropagation()}
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={(event) => {
+              event.stopPropagation()
+              onEditBudgetLimit(null)
+            }}
+          >
+            {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
+          </button>
+        )}
 
         <button
           type="button"
@@ -553,6 +584,11 @@ export default function BudgetCategoryTree(props: Props) {
               styles={styles}
               dragHandle={renderBlockedLevel1DragHandle(level1Category, isLevel1Sortable)}
               extraActions={renderLevel1Actions(level1Category, isLevel1CalendarOpen)}
+              limitIndicator={
+                level1Category.id === expenseLevel1Id ? (
+                  <BudgetLimitIndicator view={getBudgetLimitView?.(null) ?? null} />
+                ) : null
+              }
             >
               {isLevel1CalendarOpen && renderLevel1CalendarPanel(level1Category)}
               {renderAddSubcategoryForm(level1Category.id, 'Nazwa kategorii')}
@@ -598,6 +634,11 @@ export default function BudgetCategoryTree(props: Props) {
               isSortable={isLevel1Sortable}
               styles={styles}
               extraActions={renderLevel1Actions(level1Category, isLevel1CalendarOpen)}
+              limitIndicator={
+                level1Category.id === expenseLevel1Id ? (
+                  <BudgetLimitIndicator view={getBudgetLimitView?.(null) ?? null} />
+                ) : null
+              }
             >
               {isLevel1CalendarOpen && renderLevel1CalendarPanel(level1Category)}
               {renderAddSubcategoryForm(level1Category.id, 'Nazwa kategorii')}

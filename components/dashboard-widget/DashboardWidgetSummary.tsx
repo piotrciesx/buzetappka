@@ -167,16 +167,16 @@ export default function DashboardWidgetSummary({
         <div style={listStyle}>
           <div style={listRowStyle}>
             <span>Przychody</span>
-            <strong style={{ color: GREEN, fontWeight: 700 }}>{formatMoney(dashboardStats.income)}</strong>
+            <strong style={{ color: GREEN, fontWeight: 600 }}>{formatMoney(dashboardStats.income)}</strong>
           </div>
           <div style={listRowStyle}>
             <span>Wydatki</span>
-            <strong style={{ color: RED, fontWeight: 700 }}>{formatMoney(dashboardStats.expense)}</strong>
+            <strong style={{ color: RED, fontWeight: 600 }}>{formatMoney(dashboardStats.expense)}</strong>
           </div>
           {isMedium && (
             <div style={listRowStyle}>
               <span>Bilans</span>
-              <strong style={{ color: getColorForMoney(dashboardStats.balance), fontWeight: 700 }}>
+              <strong style={{ color: getColorForMoney(dashboardStats.balance), fontWeight: 600 }}>
                 {formatMoney(dashboardStats.balance)}
               </strong>
             </div>
@@ -219,7 +219,7 @@ export default function DashboardWidgetSummary({
                   <span style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                     {getTransactionLabel(transaction, categoriesById)}
                   </span>
-                  <strong style={{ color: getColorForMoney(amount), fontWeight: 700 }}>
+                  <strong style={{ color: getColorForMoney(amount), fontWeight: 600 }}>
                     {formatMoney(amount)}
                   </strong>
                 </div>

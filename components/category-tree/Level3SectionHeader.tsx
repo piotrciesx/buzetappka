@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react'
+import BudgetLimitIndicator, { BudgetLimitView } from '../BudgetLimitIndicator'
 
 type Level3SectionHeaderProps = {
   name: string
@@ -21,6 +22,9 @@ type Level3SectionHeaderProps = {
   onRenameCategory: () => Promise<void>
   onDeleteCategory: () => Promise<void>
   onUndoScheduledHide: () => Promise<void>
+  budgetLimitView?: BudgetLimitView | null
+  canUseBudgetLimit?: boolean
+  onEditBudgetLimit?: () => void
 }
 
 export default function Level3SectionHeader({
@@ -44,6 +48,9 @@ export default function Level3SectionHeader({
   onRenameCategory,
   onDeleteCategory,
   onUndoScheduledHide,
+  budgetLimitView = null,
+  canUseBudgetLimit = false,
+  onEditBudgetLimit,
 }: Level3SectionHeaderProps) {
   return (
     <div
@@ -68,6 +75,8 @@ export default function Level3SectionHeader({
           {isClosingAfterSelectedMonth && (
             <div style={styles.closingBadge}>zamknie się z końcem tego miesiąca</div>
           )}
+
+          <BudgetLimitIndicator view={budgetLimitView} />
         </div>
       </div>
 
@@ -93,6 +102,21 @@ export default function Level3SectionHeader({
             }}
           >
             + wpis
+          </button>
+        )}
+
+        {showCategoryActions && canUseBudgetLimit && onEditBudgetLimit && (
+          <button
+            type="button"
+            style={styles.secondaryButton}
+            onMouseDown={(event) => event.stopPropagation()}
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={(event) => {
+              event.stopPropagation()
+              onEditBudgetLimit()
+            }}
+          >
+            {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
           </button>
         )}
 

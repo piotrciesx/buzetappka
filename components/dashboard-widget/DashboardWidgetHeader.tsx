@@ -12,7 +12,6 @@ type DashboardWidgetHeaderProps = {
   widget: DashboardWidgetLayoutItem
   safeDefinition: DashboardWidgetDefinition
   dragHandleProps: ButtonHTMLAttributes<HTMLButtonElement>
-  onConfigOpen: () => void
   onToggleSize: () => void
   onRemove: () => void
 }
@@ -21,7 +20,6 @@ export default function DashboardWidgetHeader({
   widget,
   safeDefinition,
   dragHandleProps,
-  onConfigOpen,
   onToggleSize,
   onRemove,
 }: DashboardWidgetHeaderProps) {
@@ -30,7 +28,16 @@ export default function DashboardWidgetHeader({
   const sizeButtonLabel = isLarge ? 'Mały' : 'Duży'
 
   return (
-    <div style={{ ...tileHeaderStyle, minWidth: 0, minHeight: 0, overflow: 'hidden' }}>
+    <div
+      style={{
+        ...tileHeaderStyle,
+        position: 'relative',
+        zIndex: 5,
+        minWidth: 0,
+        minHeight: 0,
+        overflow: 'hidden',
+      }}
+    >
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={tileTitleStyle}>{safeDefinition.title}</div>
         {widget.width > 1 && <div style={metaStyle}>{safeDefinition.description}</div>}
@@ -44,28 +51,16 @@ export default function DashboardWidgetHeader({
           style={{
             ...iconButtonStyle,
             width: 'auto',
-            minWidth: 54,
-            padding: '0 9px',
-            fontSize: 11,
-            fontWeight: 800,
+            minWidth: 34,
+            padding: '0 8px',
+            fontSize: 14,
+            fontWeight: 600,
           }}
           aria-label={`Przełącz kafel ${safeDefinition.title} na tryb ${sizeButtonLabel}`}
           onClick={onToggleSize}
           title={`Przełącz na tryb ${sizeButtonLabel}`}
         >
-          {sizeButtonLabel}
-        </button>
-
-        <button
-          type="button"
-          data-dashboard-ignore-drag="true"
-          data-dashboard-config-control="true"
-          style={iconButtonStyle}
-          aria-label={`Konfiguruj kafel ${safeDefinition.title}`}
-          onClick={onConfigOpen}
-          title="Konfiguruj"
-        >
-          ✎
+          ↔
         </button>
 
         <button

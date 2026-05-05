@@ -31,7 +31,7 @@ type AverageRow = {
 }
 
 const FONT_FAMILY =
-  'var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+  'var(--font-app-sans)'
 
 const rootStyle: CSSProperties = {
   width: '100%',
@@ -96,10 +96,10 @@ const summaryLabelStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
   fontSize: 10.5,
-  lineHeight: 1.15,
-  fontWeight: 650,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -107,10 +107,10 @@ const summaryValueStyle: CSSProperties = {
   minWidth: 0,
   color: '#111827',
   fontSize: 15,
-  lineHeight: 1.12,
-  fontWeight: 760,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -150,21 +150,21 @@ const rowLabelStyle: CSSProperties = {
   minWidth: 0,
   color: '#475569',
   fontSize: 10.5,
-  lineHeight: 1.15,
-  fontWeight: 700,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
 const rowValueStyle: CSSProperties = {
   minWidth: 0,
   fontSize: 11.5,
-  lineHeight: 1.15,
-  fontWeight: 760,
+  lineHeight: 1.2,
+  fontWeight: 600,
   textAlign: 'right',
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -205,10 +205,10 @@ const footerLabelStyle: CSSProperties = {
   minWidth: 0,
   color: MUTED,
   fontSize: 10,
-  lineHeight: 1.1,
-  fontWeight: 720,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -216,10 +216,10 @@ const footerValueStyle: CSSProperties = {
   minWidth: 0,
   color: '#111827',
   fontSize: 11.5,
-  lineHeight: 1.12,
-  fontWeight: 760,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 

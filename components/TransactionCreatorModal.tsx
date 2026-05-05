@@ -253,7 +253,7 @@ const finalCategoryInfoStyle = {
 
 const finalCategoryInfoTitleStyle = {
   fontSize: 12,
-  fontWeight: 700,
+  fontWeight: 600,
   color: '#1d4ed8',
   letterSpacing: 0.3,
   textTransform: 'uppercase' as const,
@@ -298,7 +298,7 @@ const tagRemoveButtonStyle = {
   color: '#1d4ed8',
   cursor: 'pointer',
   fontSize: 14,
-  lineHeight: 1,
+  lineHeight: 1.2,
   padding: 0,
 } as const
 

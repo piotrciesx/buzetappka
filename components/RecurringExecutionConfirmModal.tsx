@@ -58,7 +58,7 @@ export default function RecurringExecutionConfirmModal(props: Props) {
                 background: '#f8fafc',
               }}
             >
-              <div style={{ fontWeight: 700 }}>{candidate.name}</div>
+              <div style={{ fontWeight: 600 }}>{candidate.name}</div>
               <div style={{ ...styles.pageSubtitle, margin: '4px 0 0' }}>
                 Kwota domyślna:{' '}
                 {candidate.amount === null ? 'brak stałej kwoty' : `${candidate.amount.toFixed(2)} zł`}

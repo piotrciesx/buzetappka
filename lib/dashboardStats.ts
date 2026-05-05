@@ -632,7 +632,7 @@ export function getDashboardCategoryTrends(
     if (!categoryMap[category.id]) {
       categoryMap[category.id] = {
         categoryId: category.id,
-        name: category.name,
+        name: getUniqueCategoryLabel(category.id, categoriesById),
         total: 0,
         months: months.map((item) => ({
           month: item,
@@ -875,7 +875,7 @@ export function getDashboardCategoryPatternStats(
     if (!currentCategoryTotals[category.id]) {
       currentCategoryTotals[category.id] = {
         categoryId: category.id,
-        name: category.name,
+        name: getUniqueCategoryLabel(category.id, categoriesById),
         previous: 0,
         current: 0,
         difference: 0,
@@ -905,7 +905,7 @@ export function getDashboardCategoryPatternStats(
     if (!leakMap[category.id]) {
       leakMap[category.id] = {
         categoryId: category.id,
-        name: category.name,
+        name: getUniqueCategoryLabel(category.id, categoriesById),
         total: 0,
         count: 0,
         average: 0,
@@ -920,15 +920,15 @@ export function getDashboardCategoryPatternStats(
     ...Object.keys(currentCategoryTotals),
     ...Object.keys(previousCategoryTotals),
   ])
+  const scopedCategoryIds = [...categoryIds]
   const movements = [...categoryIds].map((categoryId) => {
-    const category = categoriesById[categoryId]
     const current = currentCategoryTotals[categoryId]?.current ?? 0
     const previous = previousCategoryTotals[categoryId] ?? 0
     const difference = current - previous
 
     return {
       categoryId,
-      name: category?.name ?? 'Nieznana',
+      name: getUniqueCategoryLabel(categoryId, categoriesById, scopedCategoryIds) || 'Nieznana',
       previous,
       current,
       difference,
@@ -975,6 +975,7 @@ export function getDashboardCategoryPatternStats(
 
       return {
         ...leak,
+        name: getUniqueCategoryLabel(leak.categoryId, categoriesById, Object.keys(leakMap)) || leak.name,
         average: leak.count > 0 ? leak.total / leak.count : 0,
         baseline,
         difference,

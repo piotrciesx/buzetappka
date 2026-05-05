@@ -54,6 +54,7 @@ export type DashboardWidgetTileProps = {
   rect: DashboardWidgetPixelRect
   transactions: Transaction[]
   selectedMonth: string
+  budgetStartDate: string
   excludedMonthsSet: Set<string>
   transactionTagsMap: Record<string, Tag[]>
   dashboardStats: DashboardStats

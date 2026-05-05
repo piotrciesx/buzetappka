@@ -129,7 +129,7 @@ const statLabelStyle = {
 
 const statValueStyle = {
   fontSize: 22,
-  fontWeight: 700,
+  fontWeight: 600,
 } as const
 
 const tagsWrapStyle = {
@@ -160,7 +160,7 @@ const historyHeaderStyle = {
   gap: 12,
   padding: '12px 14px',
   background: '#f8fafc',
-  fontWeight: 700,
+  fontWeight: 600,
   fontSize: 13,
   borderBottom: '1px solid #e2e8f0',
 } as const
@@ -479,7 +479,7 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                     <div>{getTransactionDateLabel(transaction.day_is_null, transaction.date)}</div>
                     <div
                       style={{
-                        fontWeight: 700,
+                        fontWeight: 600,
                         color:
                           effectiveSignedAmount > 0
                             ? '#15803d'

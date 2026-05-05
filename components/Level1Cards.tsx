@@ -23,6 +23,7 @@ type BaseProps = {
   styles: Record<string, CSSProperties>
   dragHandle?: ReactNode
   extraActions?: ReactNode
+  limitIndicator?: ReactNode
 }
 
 type SortableProps = BaseProps & {
@@ -30,7 +31,16 @@ type SortableProps = BaseProps & {
 }
 
 function Level1CardBase(props: BaseProps) {
-  const { level1Category, isOpen, onToggle, children, styles, dragHandle, extraActions } = props
+  const {
+    level1Category,
+    isOpen,
+    onToggle,
+    children,
+    styles,
+    dragHandle,
+    extraActions,
+    limitIndicator,
+  } = props
 
   return (
     <>
@@ -38,7 +48,10 @@ function Level1CardBase(props: BaseProps) {
         <div style={styles.l2Left}>
           {dragHandle}
           <div style={styles.arrow}>{isOpen ? '▼' : '▶'}</div>
-          <div>{level1Category.name}</div>
+          <div>
+            <div>{level1Category.name}</div>
+            {limitIndicator}
+          </div>
         </div>
 
         {extraActions && (
@@ -62,7 +75,16 @@ export function StaticLevel1Card(props: BaseProps) {
 }
 
 export function SortableLevel1Card(props: SortableProps) {
-  const { level1Category, isSortable, isOpen, onToggle, children, styles, extraActions } = props
+  const {
+    level1Category,
+    isSortable,
+    isOpen,
+    onToggle,
+    children,
+    styles,
+    extraActions,
+    limitIndicator,
+  } = props
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: level1Category.id,
@@ -95,6 +117,7 @@ export function SortableLevel1Card(props: SortableProps) {
         }}
         styles={styles}
         extraActions={extraActions}
+        limitIndicator={limitIndicator}
         dragHandle={
           isSortable ? (
             <button

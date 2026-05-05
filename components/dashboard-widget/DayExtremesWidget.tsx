@@ -31,7 +31,7 @@ type DayStats = {
 }
 
 const FONT_FAMILY =
-  'var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+  'var(--font-app-sans)'
 
 const rootStyle: CSSProperties = {
   width: '100%',
@@ -73,7 +73,7 @@ const labelStyle: CSSProperties = {
 
 const valueStyle: CSSProperties = {
   fontSize: 14,
-  fontWeight: 750,
+  fontWeight: 600,
 }
 
 const listStyle: CSSProperties = {
@@ -91,7 +91,7 @@ const rowStyle: CSSProperties = {
   alignItems: 'center',
   gap: 6,
   fontSize: 11.5,
-  fontWeight: 650,
+  fontWeight: 600,
 }
 
 const barTrackStyle: CSSProperties = {

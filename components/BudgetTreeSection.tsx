@@ -2,6 +2,7 @@
 
 import type { ComponentProps, CSSProperties } from 'react'
 import BudgetCategoryTree from './BudgetCategoryTree'
+import type { BudgetLimitView } from './BudgetLimitIndicator'
 import {
   Category,
   HideMode,
@@ -31,6 +32,7 @@ type Props = {
   isReorderingLevel1: boolean
   reorderingLevel1Id: string | null
   reorderingLevel2Id: string | null
+  expenseLevel1Id: string | null
   styles: Record<string, CSSProperties>
 
   level2SortMode: string
@@ -112,6 +114,8 @@ type Props = {
   transactionPaymentSplitsMap: Record<string, TransactionPaymentSplit[]>
   onTagClick: BudgetCategoryTreeProps['onTagClick']
   onDeleteDescriptionSuggestion: BudgetCategoryTreeProps['onDeleteDescriptionSuggestion']
+  getBudgetLimitView?: (categoryId: string | null) => BudgetLimitView | null
+  onEditBudgetLimit?: (categoryId: string | null) => void
 }
 
 export default function BudgetTreeSection({
@@ -128,6 +132,7 @@ export default function BudgetTreeSection({
   isReorderingLevel1,
   reorderingLevel1Id,
   reorderingLevel2Id,
+  expenseLevel1Id,
   styles,
   level2SortMode,
   setLevel2SortMode,
@@ -184,6 +189,8 @@ export default function BudgetTreeSection({
   transactionPaymentSplitsMap,
   onTagClick,
   onDeleteDescriptionSuggestion,
+  getBudgetLimitView,
+  onEditBudgetLimit,
 }: Props) {
   return (
     <div>
@@ -271,6 +278,7 @@ export default function BudgetTreeSection({
         isReorderingLevel1={isReorderingLevel1}
         reorderingLevel1Id={reorderingLevel1Id}
         reorderingLevel2Id={reorderingLevel2Id}
+        expenseLevel1Id={expenseLevel1Id}
         styles={styles}
         toggleLevel1={toggleLevel1}
         toggleLevel1Calendar={toggleLevel1Calendar}
@@ -322,6 +330,8 @@ export default function BudgetTreeSection({
         transactionPaymentSplitsMap={transactionPaymentSplitsMap}
         onTagClick={onTagClick}
         onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
+        getBudgetLimitView={getBudgetLimitView}
+        onEditBudgetLimit={onEditBudgetLimit}
       />
     </div>
   )

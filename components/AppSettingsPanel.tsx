@@ -15,22 +15,16 @@ type AppSettingsPanelProps = {
   onResetSelectedMonthData: () => Promise<void>
   onResetAllHistory: () => Promise<void>
   styles: Record<string, CSSProperties>
+  defaultOpen?: boolean
 }
 
 const moduleItems: Array<{ key: AppModuleKey; label: string }> = [
   { key: 'dashboard', label: 'Dashboard' },
-  { key: 'bulkActions', label: 'Pasek akcji grupowych' },
-  { key: 'drafts', label: 'Szkice' },
-  { key: 'importExport', label: 'Import / export' },
   { key: 'paymentSources', label: 'Źródła płatności' },
   { key: 'recurringTransactions', label: 'Przypomnienia / raty' },
   { key: 'financialGoals', label: 'Cele finansowe' },
-  { key: 'bankSearch', label: 'Wyszukiwarka bankowa' },
   { key: 'monthCalendar', label: 'Kalendarz miesiąca' },
-  { key: 'budgetTree', label: 'Drzewo kategorii' },
-  { key: 'hiddenCategories', label: 'Ukryte kategorie' },
-  { key: 'trash', label: 'Kosz' },
-  { key: 'floatingActions', label: 'Przyciski szybkiego dodawania' },
+  { key: 'budgetLimits', label: 'Limity i alerty budżetowe' },
 ]
 
 export default function AppSettingsPanel({
@@ -45,8 +39,9 @@ export default function AppSettingsPanel({
   onResetSelectedMonthData,
   onResetAllHistory,
   styles,
+  defaultOpen = false,
 }: AppSettingsPanelProps) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(defaultOpen)
   const hasUnsavedChanges = moduleItems.some(
     (item) => visibleModules[item.key] !== draftVisibleModules[item.key]
   )

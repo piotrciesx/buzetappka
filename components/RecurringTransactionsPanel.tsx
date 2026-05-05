@@ -438,7 +438,7 @@ export default function RecurringTransactionsPanel(props: Props) {
           ) : (
             pendingRecurring.map((recurring) => (
               <div key={`pending-${recurring.id}`} style={pendingCardStyle}>
-                <div style={{ fontWeight: 700 }}>{recurring.name}</div>
+                <div style={{ fontWeight: 600 }}>{recurring.name}</div>
                 <div style={{ ...styles.pageSubtitle, margin: '6px 0 0' }}>
                   Termin cyklu: {getMonthCycleDate(recurring, selectedMonth)}
                 </div>
@@ -494,7 +494,7 @@ export default function RecurringTransactionsPanel(props: Props) {
 
             return (
               <div key={execution.id} style={cardStyle}>
-                <div style={{ fontWeight: 700 }}>
+                <div style={{ fontWeight: 600 }}>
                   {getRecurringExecutionStatusLabel(execution.status)} • {recurring.name}
                 </div>
                 <div style={{ ...styles.pageSubtitle, marginTop: 4 }}>
@@ -515,7 +515,7 @@ export default function RecurringTransactionsPanel(props: Props) {
 
           {monthHistory.pending.map((recurring) => (
             <div key={`month-pending-${recurring.id}`} style={pendingCardStyle}>
-              <div style={{ fontWeight: 700 }}>{recurring.name}</div>
+              <div style={{ fontWeight: 600 }}>{recurring.name}</div>
               <div style={{ ...styles.pageSubtitle, marginTop: 4 }}>
                 Oczekuje na cykl z dnia {getMonthCycleDate(recurring, selectedMonth)}
               </div>
@@ -546,7 +546,7 @@ export default function RecurringTransactionsPanel(props: Props) {
                     }}
                   >
                     <div>
-                      <div style={{ fontWeight: 700, fontSize: 16 }}>{recurring.name}</div>
+                      <div style={{ fontWeight: 600, fontSize: 16 }}>{recurring.name}</div>
                       <div style={{ ...styles.pageSubtitle, margin: '4px 0 0' }}>
                         {getRecurringDisplayLabel(recurring, categoriesById)}
                       </div>
@@ -694,7 +694,7 @@ export default function RecurringTransactionsPanel(props: Props) {
 
               return (
                 <div key={`archived-${recurring.id}`} style={cardStyle}>
-                  <div style={{ fontWeight: 700, fontSize: 16 }}>{recurring.name}</div>
+                  <div style={{ fontWeight: 600, fontSize: 16 }}>{recurring.name}</div>
                   <div style={{ ...styles.pageSubtitle, marginTop: 4 }}>
                     {getRecurringDisplayLabel(recurring, categoriesById)}
                   </div>

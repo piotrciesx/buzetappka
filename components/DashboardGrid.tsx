@@ -100,6 +100,7 @@ type Props = {
   widgets: DashboardWidgetLayoutItem[]
   transactions: Transaction[]
   selectedMonth: string
+  budgetStartDate: string
   excludedMonthsSet: Set<string>
   transactionTagsMap: Record<string, Tag[]>
   dashboardStats: DashboardStats
@@ -126,6 +127,7 @@ export default function DashboardGrid(props: Props) {
     widgets,
     transactions,
     selectedMonth,
+    budgetStartDate,
     excludedMonthsSet,
     transactionTagsMap,
     dashboardStats,
@@ -396,6 +398,7 @@ export default function DashboardGrid(props: Props) {
                 rect={rect}
                 transactions={transactions}
                 selectedMonth={selectedMonth}
+                budgetStartDate={budgetStartDate}
                 excludedMonthsSet={excludedMonthsSet}
                 transactionTagsMap={transactionTagsMap}
                 dashboardStats={dashboardStats}

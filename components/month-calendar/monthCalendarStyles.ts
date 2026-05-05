@@ -17,7 +17,7 @@ export const calendarWeekdaysStyle = {
 export const calendarWeekdayStyle = {
   padding: '8px 10px',
   fontSize: 12,
-  fontWeight: 700,
+  fontWeight: 600,
   textTransform: 'uppercase' as const,
   color: '#6b7280',
 } as const
@@ -53,12 +53,12 @@ export const calendarExpandBadgeStyle = {
   alignItems: 'center',
   justifyContent: 'center',
   fontSize: 11,
-  fontWeight: 700,
+  fontWeight: 600,
   color: '#475569',
   border: '1px solid #cbd5e1',
   borderRadius: 6,
   background: '#ffffff',
-  lineHeight: 1,
+  lineHeight: 1.2,
   pointerEvents: 'none' as const,
 } as const
 
@@ -72,7 +72,7 @@ export const calendarEmptyCellStyle = {
 
 export const calendarDayNumberStyle = {
   fontSize: 14,
-  fontWeight: 700,
+  fontWeight: 600,
   color: '#111827',
 } as const
 
@@ -119,7 +119,7 @@ export const modalHeaderStyle = {
 
 export const modalTitleStyle = {
   fontSize: 18,
-  fontWeight: 700,
+  fontWeight: 600,
   color: '#111827',
   marginBottom: 4,
 } as const
@@ -170,7 +170,7 @@ export const transactionTopRowStyle = {
 
 export const transactionAmountStyle = {
   fontSize: 15,
-  fontWeight: 700,
+  fontWeight: 600,
   color: '#111827',
 } as const
 
@@ -304,7 +304,7 @@ export const tagRemoveButtonStyle = {
   color: '#1d4ed8',
   cursor: 'pointer',
   fontSize: 14,
-  lineHeight: 1,
+  lineHeight: 1.2,
   padding: 0,
 } as const
 

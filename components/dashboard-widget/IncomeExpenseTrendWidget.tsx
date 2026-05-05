@@ -14,6 +14,7 @@ type Props = {
   rect: DashboardWidgetPixelRect
   transactions: Transaction[]
   selectedMonth: string
+  budgetStartDate: string
   excludedMonthsSet: Set<string>
   transactionTagsMap: Record<string, Tag[]>
   dashboardStats: DashboardStats
@@ -29,12 +30,13 @@ type MonthPoint = {
   income: number
   expense: number
   existingDays: number
+  isExcluded: boolean
 }
 
 type LineType = 'income' | 'expense'
 
 const FONT =
-  'var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+  'var(--font-app-sans)'
 
 const rootStyle: CSSProperties = {
   width: '100%',
@@ -89,8 +91,8 @@ const scaleLabelBaseStyle: CSSProperties = {
   textAlign: 'right',
   color: 'rgba(100,116,139,0.52)',
   fontSize: 8.5,
-  lineHeight: 1,
-  fontWeight: 520,
+  lineHeight: 1.2,
+  fontWeight: 500,
   transform: 'translateY(-50%)',
   pointerEvents: 'none',
   userSelect: 'none',
@@ -101,8 +103,8 @@ const monthLabelBaseStyle: CSSProperties = {
   position: 'absolute',
   color: SOFT_TEXT,
   fontSize: 8.5,
-  lineHeight: 1,
-  fontWeight: 650,
+  lineHeight: 1.2,
+  fontWeight: 600,
   textAlign: 'center',
   transform: 'translateX(-50%)',
   pointerEvents: 'none',
@@ -133,7 +135,7 @@ const dropdownButtonStyle: CSSProperties = {
   background: 'rgba(255,255,255,0.86)',
   color: '#334155',
   fontSize: 10.5,
-  fontWeight: 650,
+  fontWeight: 600,
   padding: '2px 8px',
   display: 'flex',
   alignItems: 'center',
@@ -163,7 +165,7 @@ const checkboxRowStyle: CSSProperties = {
   gap: 7,
   color: '#334155',
   fontSize: 11,
-  fontWeight: 650,
+  fontWeight: 600,
   cursor: 'pointer',
 }
 
@@ -175,8 +177,8 @@ const legendStyle: CSSProperties = {
   gap: 10,
   color: SOFT_TEXT,
   fontSize: 10.5,
-  lineHeight: 1,
-  fontWeight: 650,
+  lineHeight: 1.2,
+  fontWeight: 600,
   overflow: 'hidden',
 }
 
@@ -218,6 +220,15 @@ function getMonthList(selectedMonth: string, count: number) {
   }
 
   return result
+}
+
+function getBudgetStartMonth(budgetStartDate: string) {
+  return budgetStartDate.slice(0, 7)
+}
+
+function isMonthBeforeBudgetStart(month: string, budgetStartDate: string) {
+  const budgetStartMonth = getBudgetStartMonth(budgetStartDate)
+  return Boolean(budgetStartMonth) && month < budgetStartMonth
 }
 
 function formatMonthLabel(month: string) {
@@ -288,6 +299,7 @@ export default function IncomeExpenseTrendWidget({
   rect,
   transactions,
   selectedMonth,
+  budgetStartDate,
   excludedMonthsSet,
   getSignedAmountForTransaction,
 }: Props) {
@@ -309,6 +321,7 @@ export default function IncomeExpenseTrendWidget({
         income: 0,
         expense: 0,
         existingDays: getExistingDaysInMonth(month),
+        isExcluded: excludedMonthsSet.has(month) || isMonthBeforeBudgetStart(month, budgetStartDate),
       }
     })
 
@@ -321,7 +334,7 @@ export default function IncomeExpenseTrendWidget({
       const day = getDayFromDate(transaction.date)
       const monthPoint = map[month]
 
-      if (!monthPoint || excludedMonthsSet.has(month) || monthPoint.existingDays === 0) {
+      if (!monthPoint || monthPoint.isExcluded || monthPoint.existingDays === 0) {
         return
       }
 
@@ -339,9 +352,14 @@ export default function IncomeExpenseTrendWidget({
     })
 
     return months.map((month) => map[month])
-  }, [transactions, months, excludedMonthsSet, getSignedAmountForTransaction])
+  }, [transactions, months, budgetStartDate, excludedMonthsSet, getSignedAmountForTransaction])
 
-  const rawMaxValue = Math.max(1, ...data.map((point) => Math.max(point.income, point.expense)))
+  const rawMaxValue = Math.max(
+    1,
+    ...data
+      .filter((point) => !point.isExcluded)
+      .map((point) => Math.max(point.income, point.expense))
+  )
   const scaleStep = getNiceStep(rawMaxValue)
   const scaleMaxValue = Math.max(scaleStep, Math.ceil(rawMaxValue / scaleStep) * scaleStep)
   const scaleValues = Array.from({ length: Math.floor(scaleMaxValue / scaleStep) + 1 }, (_, index) =>
@@ -376,11 +394,16 @@ export default function IncomeExpenseTrendWidget({
   const buildPath = (type: LineType) => {
     return data
       .map((point, index) => {
+        if (point.isExcluded) {
+          return ''
+        }
+
         const x = getPointX(index)
         const y = getPointY(point[type])
 
-        return `${index === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`
+        return `${index > 0 && !data[index - 1]?.isExcluded ? 'L' : 'M'} ${x.toFixed(2)} ${y.toFixed(2)}`
       })
+      .filter(Boolean)
       .join(' ')
   }
 

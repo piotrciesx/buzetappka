@@ -13,6 +13,7 @@ import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-
 import { CSS } from '@dnd-kit/utilities'
 import MonthCalendarPanel from './MonthCalendarPanel'
 import Level3Section from './Level3Section'
+import BudgetLimitIndicator, { BudgetLimitView } from './BudgetLimitIndicator'
 import type { HeatmapMode } from './month-calendar/monthCalendarTypes'
 import { DescriptionSuggestion } from '../lib/suggestionUtils'
 import { Tag, TransactionPaymentSplit } from '../lib/budgetPageTypes'
@@ -60,6 +61,10 @@ type RestoreMode = 'now' | 'next'
 type Props = {
   l2: Category
   sortedLevel3Children: Category[]
+  budgetLimitView?: BudgetLimitView | null
+  canUseBudgetLimit?: boolean
+  onEditBudgetLimit?: (categoryId: string | null) => void
+  getBudgetLimitView?: (categoryId: string | null) => BudgetLimitView | null
   selectedMonth: string
   isSelectedMonthLocked: boolean
   isClosingAfterSelectedMonth: boolean
@@ -149,6 +154,10 @@ export default function Level2Section(props: Props) {
   const {
     l2,
     sortedLevel3Children,
+    budgetLimitView = null,
+    canUseBudgetLimit = false,
+    onEditBudgetLimit,
+    getBudgetLimitView,
     selectedMonth,
     isSelectedMonthLocked,
     isClosingAfterSelectedMonth,
@@ -361,6 +370,9 @@ export default function Level2Section(props: Props) {
               transactionPaymentSplitsMap={transactionPaymentSplitsMap}
               onTagClick={onTagClick}
               onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
+              budgetLimitView={canUseBudgetLimit ? getBudgetLimitView?.(l3.id) ?? null : null}
+              canUseBudgetLimit={canUseBudgetLimit}
+              onEditBudgetLimit={onEditBudgetLimit}
               isSortable={sortedLevel3Children.length > 1}
               isDragDisabled={isLevel3DndBlocked}
               getAmountNumber={getAmountNumber}
@@ -416,6 +428,8 @@ export default function Level2Section(props: Props) {
             {isClosingAfterSelectedMonth && (
               <div style={styles.closingBadge}>zamknie się z końcem tego miesiąca</div>
             )}
+
+            <BudgetLimitIndicator view={budgetLimitView} />
           </div>
         </div>
 
@@ -432,6 +446,21 @@ export default function Level2Section(props: Props) {
           >
             {isCalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
           </button>
+
+          {canUseBudgetLimit && onEditBudgetLimit && (
+            <button
+              type="button"
+              style={styles.secondaryButton}
+              onMouseDown={(event) => event.stopPropagation()}
+              onPointerDown={(event) => event.stopPropagation()}
+              onClick={(event) => {
+                event.stopPropagation()
+                onEditBudgetLimit(l2.id)
+              }}
+            >
+              {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
+            </button>
+          )}
 
           <button
             style={styles.secondaryButton}
@@ -600,6 +629,9 @@ export default function Level2Section(props: Props) {
           transactionPaymentSplitsMap={transactionPaymentSplitsMap}
           onTagClick={onTagClick}
           onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
+          budgetLimitView={null}
+          canUseBudgetLimit={false}
+          onEditBudgetLimit={undefined}
           getAmountNumber={getAmountNumber}
           styles={styles}
         />

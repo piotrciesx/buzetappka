@@ -4,35 +4,21 @@ import { useEffect, useState } from 'react'
 
 export type AppModuleKey =
   | 'dashboard'
-  | 'bulkActions'
-  | 'drafts'
-  | 'importExport'
   | 'paymentSources'
   | 'recurringTransactions'
   | 'financialGoals'
-  | 'bankSearch'
+  | 'budgetLimits'
   | 'monthCalendar'
-  | 'budgetTree'
-  | 'hiddenCategories'
-  | 'trash'
-  | 'floatingActions'
 
 export type AppModuleVisibility = Record<AppModuleKey, boolean>
 
 export const DEFAULT_APP_MODULE_VISIBILITY: AppModuleVisibility = {
   dashboard: true,
-  bulkActions: true,
-  drafts: true,
-  importExport: true,
   paymentSources: true,
   recurringTransactions: false,
   financialGoals: true,
-  bankSearch: true,
+  budgetLimits: true,
   monthCalendar: true,
-  budgetTree: true,
-  hiddenCategories: true,
-  trash: true,
-  floatingActions: true,
 }
 
 const APP_MODULE_VISIBILITY_STORAGE_KEY = 'budget-app-visible-modules-v1'

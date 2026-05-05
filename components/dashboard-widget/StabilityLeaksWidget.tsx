@@ -56,7 +56,7 @@ const WARNING = '#ca8a04'
 const NEUTRAL_BAR = 'rgba(100,116,139,0.72)'
 
 const FONT =
-  'var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+  'var(--font-app-sans)'
 
 const rootStyle: CSSProperties = {
   width: '100%',
@@ -112,10 +112,10 @@ const titleStyle: CSSProperties = {
   minWidth: 0,
   color: '#172033',
   fontSize: 11,
-  lineHeight: 1,
-  fontWeight: 620,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -123,8 +123,8 @@ const metaStyle: CSSProperties = {
   flexShrink: 0,
   color: MUTED,
   fontSize: 9.8,
-  lineHeight: 1,
-  fontWeight: 520,
+  lineHeight: 1.2,
+  fontWeight: 500,
   whiteSpace: 'nowrap',
 }
 
@@ -150,17 +150,17 @@ const statusTextStyle: CSSProperties = {
   minWidth: 0,
   display: 'grid',
   gap: 5,
-  overflow: 'hidden',
+  overflow: 'visible',
 }
 
 const statusLabelStyle: CSSProperties = {
   minWidth: 0,
   fontSize: 24,
-  lineHeight: 1.02,
-  fontWeight: 650,
+  lineHeight: 1.2,
+  fontWeight: 600,
   letterSpacing: -0.45,
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -174,8 +174,8 @@ const statusDescriptionStyle: CSSProperties = {
   color: SOFT_TEXT,
   fontSize: 10.8,
   lineHeight: 1.3,
-  fontWeight: 430,
-  overflow: 'hidden',
+  fontWeight: 400,
+  overflow: 'visible',
   display: '-webkit-box',
   WebkitLineClamp: 2,
   WebkitBoxOrient: 'vertical',
@@ -185,7 +185,7 @@ const countBlockStyle: CSSProperties = {
   minWidth: 0,
   display: 'grid',
   gap: 4,
-  overflow: 'hidden',
+  overflow: 'visible',
 }
 
 const compactCountBlockStyle: CSSProperties = {
@@ -197,11 +197,11 @@ const compactCountBlockStyle: CSSProperties = {
 const countValueStyle: CSSProperties = {
   minWidth: 0,
   fontSize: 27,
-  lineHeight: 1,
-  fontWeight: 650,
+  lineHeight: 1.2,
+  fontWeight: 600,
   letterSpacing: -0.5,
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -215,8 +215,8 @@ const countLabelStyle: CSSProperties = {
   color: SOFT_TEXT,
   fontSize: 10,
   lineHeight: 1.2,
-  fontWeight: 430,
-  overflow: 'hidden',
+  fontWeight: 400,
+  overflow: 'visible',
   display: '-webkit-box',
   WebkitLineClamp: 2,
   WebkitBoxOrient: 'vertical',
@@ -242,10 +242,10 @@ const numberLabelStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
   fontSize: 10.4,
-  lineHeight: 1,
-  fontWeight: 470,
+  lineHeight: 1.2,
+  fontWeight: 400,
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -253,11 +253,11 @@ const numberValueStyle: CSSProperties = {
   minWidth: 0,
   color: '#172033',
   fontSize: 13,
-  lineHeight: 1,
-  fontWeight: 630,
+  lineHeight: 1.2,
+  fontWeight: 600,
   textAlign: 'right',
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -308,10 +308,10 @@ const leakNameStyle: CSSProperties = {
   minWidth: 0,
   color: '#172033',
   fontSize: 11,
-  lineHeight: 1.15,
-  fontWeight: 620,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -320,8 +320,8 @@ const leakMetaStyle: CSSProperties = {
   color: SOFT_TEXT,
   fontSize: 10,
   lineHeight: 1.2,
-  fontWeight: 430,
-  overflow: 'hidden',
+  fontWeight: 400,
+  overflow: 'visible',
   display: '-webkit-box',
   WebkitLineClamp: 1,
   WebkitBoxOrient: 'vertical',
@@ -330,11 +330,11 @@ const leakMetaStyle: CSSProperties = {
 const leakValueStyle: CSSProperties = {
   minWidth: 0,
   fontSize: 12,
-  lineHeight: 1,
-  fontWeight: 650,
+  lineHeight: 1.2,
+  fontWeight: 600,
   textAlign: 'right',
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -365,10 +365,10 @@ const barLabelStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
   fontSize: 9.8,
-  lineHeight: 1,
-  fontWeight: 430,
+  lineHeight: 1.2,
+  fontWeight: 400,
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -376,8 +376,8 @@ const barValueStyle: CSSProperties = {
   flexShrink: 0,
   color: MUTED,
   fontSize: 9.8,
-  lineHeight: 1,
-  fontWeight: 550,
+  lineHeight: 1.2,
+  fontWeight: 500,
   whiteSpace: 'nowrap',
 }
 

@@ -138,6 +138,26 @@ export type CategoryMonthlyLimit = {
   created_at?: string
 }
 
+export type BudgetLimitMode = 'normal' | 'strict'
+
+export type BudgetLimit = {
+  id: string
+  profile_id: string
+  category_id: string | null
+  amount: number
+  start_month: string
+  end_month?: string | null
+  mode: BudgetLimitMode
+  created_at?: string
+}
+
+export type BudgetLimitAlertLevel = 'none' | 'warning' | 'strong' | 'exceeded'
+
+export type BudgetLimitAlertState = {
+  level: BudgetLimitAlertLevel
+  text: string
+}
+
 export type FinancialGoalMonthPriority = {
   id: string
   profile_id: string

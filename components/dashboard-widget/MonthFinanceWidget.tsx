@@ -69,8 +69,8 @@ function BalanceBlock({
       <div
         style={{
           fontSize: compact ? 16 : 26,
-          lineHeight: 1.05,
-          fontWeight: 760,
+          lineHeight: 1.2,
+          fontWeight: 600,
           letterSpacing: '-0.04em',
           color: getColorForMoney(balance),
           whiteSpace: 'nowrap',
@@ -122,7 +122,7 @@ function MetricCard({
             placeItems: 'center',
             background: `${color}1f`,
             color,
-            fontWeight: 720,
+            fontWeight: 600,
             fontSize: 12,
           }}
         >
@@ -134,8 +134,8 @@ function MetricCard({
             style={{
               color: '#64748b',
               fontSize: 9.5,
-              lineHeight: 1.05,
-              fontWeight: 650,
+              lineHeight: 1.2,
+              fontWeight: 600,
               whiteSpace: 'nowrap',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
@@ -148,8 +148,8 @@ function MetricCard({
             style={{
               color,
               fontSize: 12.5,
-              lineHeight: 1.1,
-              fontWeight: 780,
+              lineHeight: 1.2,
+              fontWeight: 600,
               whiteSpace: 'nowrap',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
@@ -186,7 +186,7 @@ function MetricCard({
           placeItems: 'center',
           background: `${color}1f`,
           color,
-          fontWeight: 720,
+          fontWeight: 600,
           fontSize: 13,
         }}
       >
@@ -198,8 +198,8 @@ function MetricCard({
           minWidth: 0,
           color,
           fontSize: 14,
-          lineHeight: 1.1,
-          fontWeight: 760,
+          lineHeight: 1.2,
+          fontWeight: 600,
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',

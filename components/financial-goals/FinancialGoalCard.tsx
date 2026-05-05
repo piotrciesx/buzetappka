@@ -61,7 +61,7 @@ function GoalCardContent(props: GoalCardBaseProps & { dragHandle?: ReactNode }) 
           {dragHandle}
 
           <div>
-            <div style={{ fontWeight: 700, fontSize: 16 }}>{goal.name}</div>
+            <div style={{ fontWeight: 600, fontSize: 16 }}>{goal.name}</div>
             <div style={{ ...styles.pageSubtitle, margin: '4px 0 0' }}>
               Start: {goal.start_month}
               {deadlineMonth ? ` • deadline: ${deadlineMonth}` : ' • bez deadline’u'}
@@ -125,7 +125,7 @@ function GoalCardContent(props: GoalCardBaseProps & { dragHandle?: ReactNode }) 
               onKeyUp={onAllocationCommit}
               onChange={(event) => onAllocationChange(goal.id, Number(event.target.value))}
             />
-            <div style={{ fontWeight: 700, textAlign: 'right' }}>{sliderValue}%</div>
+            <div style={{ fontWeight: 600, textAlign: 'right' }}>{sliderValue}%</div>
             {onToggleAllocationLock && (
               <button
                 type="button"
@@ -204,7 +204,7 @@ export function SortableGoalCard(props: GoalCardBaseProps) {
               borderRadius: 10,
               padding: '6px 10px',
               cursor: 'grab',
-              fontWeight: 700,
+              fontWeight: 600,
               color: '#475569',
             }}
             title="Przeciągnij, aby zmienić priorytet"

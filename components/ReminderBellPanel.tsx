@@ -60,7 +60,7 @@ const countStyle: CSSProperties = {
   alignItems: 'center',
   justifyContent: 'center',
   fontSize: 12,
-  fontWeight: 800,
+  fontWeight: 600,
 }
 
 const popoverStyle: CSSProperties = {
@@ -108,7 +108,7 @@ const fieldLabelStyle: CSSProperties = {
   flexDirection: 'column',
   gap: 5,
   fontSize: 13,
-  fontWeight: 700,
+  fontWeight: 600,
   color: '#374151',
 }
 
@@ -171,7 +171,7 @@ const detailSectionStyle: CSSProperties = {
 
 const detailSectionTitleStyle: CSSProperties = {
   fontSize: 15,
-  fontWeight: 800,
+  fontWeight: 600,
   color: '#111827',
 }
 
@@ -478,7 +478,7 @@ export default function ReminderBellPanel({
 
                 return (
                   <div key={reminder.id} style={itemStyle}>
-                    <div style={{ fontWeight: 800 }}>{reminder.name}</div>
+                    <div style={{ fontWeight: 600 }}>{reminder.name}</div>
                     <div style={styles.emptyText}>
                       {category?.name || 'Kategoria usunięta'} · dzień {getRecurringReminderDay(reminder)}
                       {installment ? ` · ${installment.current} / ${installment.total || '?'}` : ''}
@@ -565,7 +565,7 @@ export default function ReminderBellPanel({
               ))}
             </select>
             {shouldHighlightCategory && (
-              <span style={{ color: '#dc2626', fontSize: 12, fontWeight: 700 }}>
+              <span style={{ color: '#dc2626', fontSize: 12, fontWeight: 600 }}>
                 Wybierz kategorię końcową.
               </span>
             )}
@@ -721,7 +721,7 @@ export default function ReminderBellPanel({
 
               return (
                 <div key={reminder.id} style={cardStyle}>
-                  <div style={{ fontWeight: 800 }}>{reminder.name}</div>
+                  <div style={{ fontWeight: 600 }}>{reminder.name}</div>
                   <div style={styles.emptyText}>
                     Kategoria: {category?.name || 'Kategoria usunięta'}
                   </div>

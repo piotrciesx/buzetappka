@@ -32,7 +32,7 @@ export default function DashboardWidgetTopCategories({
               <span style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                 {index + 1}. {category.name}
               </span>
-              <strong style={{ fontWeight: 700 }}>{formatMoney(category.total)}</strong>
+              <strong style={{ fontWeight: 600 }}>{formatMoney(category.total)}</strong>
             </div>
             {showBars && (
               <>

@@ -55,7 +55,7 @@ const heatmapSettingsCardStyle: CSSProperties = {
 
 const heatmapSettingsTitleStyle: CSSProperties = {
   fontSize: 15,
-  fontWeight: 700,
+  fontWeight: 600,
   marginBottom: 10,
   color: '#111827',
 }
@@ -85,7 +85,7 @@ const heatmapFieldStyle: CSSProperties = {
 
 const heatmapLabelStyle: CSSProperties = {
   fontSize: 12,
-  fontWeight: 700,
+  fontWeight: 600,
   color: '#374151',
 }
 

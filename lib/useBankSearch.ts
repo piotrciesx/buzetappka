@@ -386,13 +386,22 @@ export function useBankSearch(params: UseBankSearchParams) {
   }, [paymentSources])
 
   const tagOptions = useMemo<BankSearchTagOption[]>(() => {
+    const transactionIdsInScope = new Set(transactions.map((transaction) => transaction.id))
+
     return [...tags]
+      .filter((tag) =>
+        Object.entries(transactionTagsMap).some(
+          ([transactionId, transactionTags]) =>
+            transactionIdsInScope.has(transactionId) &&
+            transactionTags.some((transactionTag) => transactionTag.id === tag.id)
+        )
+      )
       .map((tag) => ({
         id: tag.id,
         label: tag.name,
       }))
       .sort((a, b) => a.label.localeCompare(b.label, 'pl', { sensitivity: 'base' }))
-  }, [tags])
+  }, [tags, transactionTagsMap, transactions])
 
   return {
     searchState,

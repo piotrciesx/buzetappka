@@ -187,7 +187,7 @@ export function SimpleBars({
             <span style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
               {item.label}
             </span>
-            <strong style={{ fontWeight: 700 }}>{formatMoney(item.value)}</strong>
+            <strong style={{ fontWeight: 600 }}>{formatMoney(item.value)}</strong>
           </div>
           <div style={progressTrackStyle}>
             <div
@@ -356,7 +356,7 @@ export function MonthOverMonthTable({
                 gap: 5,
               }}
             >
-              <div style={{ ...listRowStyle, fontWeight: 700 }}>
+              <div style={{ ...listRowStyle, fontWeight: 600 }}>
                 <span>{metric.label}</span>
                 <strong style={{ color }}>{formatChange(metric.change.percent)}</strong>
               </div>

@@ -215,7 +215,7 @@ export default function DashboardPanel({
                 top: isAddPanelOpen ? 180 : 42,
                 color: '#15803d',
                 fontSize: 12,
-                fontWeight: 700,
+                fontWeight: 600,
               }}
             >
               {addFeedbackText}
@@ -228,6 +228,7 @@ export default function DashboardPanel({
         widgets={widgets}
         transactions={scopedTransactions}
         selectedMonth={selectedMonth}
+        budgetStartDate={budgetStartDate}
         excludedMonthsSet={excludedMonthsSet}
         transactionTagsMap={transactionTagsMap}
         dashboardStats={dashboardStats}

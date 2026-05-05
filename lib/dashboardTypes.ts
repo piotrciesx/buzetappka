@@ -14,7 +14,6 @@ export type DashboardContainerType =
   | 'top-items'
   | 'trends-comparison'
   | 'budget-control'
-  | 'expense-structure'
   | 'stability-leaks'
   | 'lists-rankings'
 
@@ -50,7 +49,6 @@ export type DashboardModuleId =
   | 'month-forecast'
   | 'spending-pace'
   | 'budget-risk'
-  | 'fixed-vs-variable'
   | 'expense-stability'
   | 'money-leaks'
   | 'recent-transactions'

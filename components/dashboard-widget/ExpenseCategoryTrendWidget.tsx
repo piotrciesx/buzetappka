@@ -15,6 +15,7 @@ type Props = {
   rect: DashboardWidgetPixelRect
   transactions: Transaction[]
   selectedMonth: string
+  budgetStartDate: string
   excludedMonthsSet: Set<string>
   transactionTagsMap: Record<string, Tag[]>
   dashboardStats: DashboardStats
@@ -28,6 +29,7 @@ type MonthPoint = {
   key: string
   label: string
   existingDays: number
+  isExcluded: boolean
   valuesBySeriesId: Record<string, number>
 }
 
@@ -42,7 +44,7 @@ type CategoryOption = {
 }
 
 const FONT =
-  'var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+  'var(--font-app-sans)'
 
 const SERIES_COLORS = [
   '#0f766e',
@@ -110,8 +112,8 @@ const scaleLabelBaseStyle: CSSProperties = {
   textAlign: 'right',
   color: 'rgba(100,116,139,0.52)',
   fontSize: 8.5,
-  lineHeight: 1,
-  fontWeight: 520,
+  lineHeight: 1.2,
+  fontWeight: 500,
   transform: 'translateY(-50%)',
   pointerEvents: 'none',
   userSelect: 'none',
@@ -122,8 +124,8 @@ const monthLabelBaseStyle: CSSProperties = {
   position: 'absolute',
   color: SOFT_TEXT,
   fontSize: 8.5,
-  lineHeight: 1,
-  fontWeight: 650,
+  lineHeight: 1.2,
+  fontWeight: 600,
   textAlign: 'center',
   transform: 'translateX(-50%)',
   pointerEvents: 'none',
@@ -154,7 +156,7 @@ const dropdownButtonStyle: CSSProperties = {
   background: 'rgba(255,255,255,0.86)',
   color: '#334155',
   fontSize: 10.5,
-  fontWeight: 650,
+  fontWeight: 600,
   padding: '2px 8px',
   display: 'flex',
   alignItems: 'center',
@@ -183,8 +185,8 @@ const dropdownPanelStyle: CSSProperties = {
 const sectionTitleStyle: CSSProperties = {
   color: SOFT_TEXT,
   fontSize: 10,
-  lineHeight: 1,
-  fontWeight: 800,
+  lineHeight: 1.2,
+  fontWeight: 600,
   textTransform: 'uppercase',
   letterSpacing: 0.3,
   marginTop: 3,
@@ -197,7 +199,7 @@ const checkboxRowStyle: CSSProperties = {
   gap: 7,
   color: '#334155',
   fontSize: 11,
-  fontWeight: 650,
+  fontWeight: 600,
   cursor: 'pointer',
 }
 
@@ -215,8 +217,8 @@ const legendStyle: CSSProperties = {
   gap: 10,
   color: SOFT_TEXT,
   fontSize: 10.5,
-  lineHeight: 1,
-  fontWeight: 650,
+  lineHeight: 1.2,
+  fontWeight: 600,
   overflow: 'hidden',
 }
 
@@ -260,6 +262,15 @@ function getMonthList(selectedMonth: string, count: number) {
   }
 
   return result
+}
+
+function getBudgetStartMonth(budgetStartDate: string) {
+  return budgetStartDate.slice(0, 7)
+}
+
+function isMonthBeforeBudgetStart(month: string, budgetStartDate: string) {
+  const budgetStartMonth = getBudgetStartMonth(budgetStartDate)
+  return Boolean(budgetStartMonth) && month < budgetStartMonth
 }
 
 function formatMonthLabel(month: string) {
@@ -340,6 +351,7 @@ function buildCategoryOptions(
   categoriesById: Record<string, Category>,
   transactions: Transaction[],
   months: string[],
+  budgetStartDate: string,
   excludedMonthsSet: Set<string>,
   getSignedAmountForTransaction: (transaction: Transaction) => number
 ): CategoryOption[] {
@@ -367,7 +379,14 @@ function buildCategoryOptions(
       const day = getDayFromDate(transaction.date)
       const existingDays = getExistingDaysInMonth(month)
 
-      if (!allowedMonths.has(month) || excludedMonthsSet.has(month) || existingDays === 0 || day < 1 || day > existingDays) {
+      if (
+        !allowedMonths.has(month) ||
+        isMonthBeforeBudgetStart(month, budgetStartDate) ||
+        excludedMonthsSet.has(month) ||
+        existingDays === 0 ||
+        day < 1 ||
+        day > existingDays
+      ) {
         return sum
       }
 
@@ -409,6 +428,7 @@ export default function ExpenseCategoryTrendWidget({
   rect,
   transactions,
   selectedMonth,
+  budgetStartDate,
   excludedMonthsSet,
   categoriesById,
   getSignedAmountForTransaction,
@@ -421,8 +441,16 @@ export default function ExpenseCategoryTrendWidget({
   const months = useMemo(() => getMonthList(selectedMonth, monthsCount), [selectedMonth, monthsCount])
 
   const options = useMemo(
-    () => buildCategoryOptions(categoriesById, transactions, months, excludedMonthsSet, getSignedAmountForTransaction),
-    [categoriesById, transactions, months, excludedMonthsSet, getSignedAmountForTransaction]
+    () =>
+      buildCategoryOptions(
+        categoriesById,
+        transactions,
+        months,
+        budgetStartDate,
+        excludedMonthsSet,
+        getSignedAmountForTransaction
+      ),
+    [categoriesById, transactions, months, budgetStartDate, excludedMonthsSet, getSignedAmountForTransaction]
   )
 
   const defaultSelectedIds = useMemo(() => {
@@ -446,6 +474,7 @@ export default function ExpenseCategoryTrendWidget({
         key: month,
         label: formatMonthLabel(month),
         existingDays: getExistingDaysInMonth(month),
+        isExcluded: excludedMonthsSet.has(month) || isMonthBeforeBudgetStart(month, budgetStartDate),
         valuesBySeriesId: {},
       }
     })
@@ -457,7 +486,7 @@ export default function ExpenseCategoryTrendWidget({
       const day = getDayFromDate(transaction.date)
       const monthPoint = map[month]
 
-      if (!monthPoint || excludedMonthsSet.has(month) || monthPoint.existingDays === 0 || day < 1 || day > monthPoint.existingDays) {
+      if (!monthPoint || monthPoint.isExcluded || monthPoint.existingDays === 0 || day < 1 || day > monthPoint.existingDays) {
         return
       }
 
@@ -471,11 +500,13 @@ export default function ExpenseCategoryTrendWidget({
     })
 
     return months.map((month) => map[month])
-  }, [transactions, months, excludedMonthsSet, getSignedAmountForTransaction, selectedOptions])
+  }, [transactions, months, budgetStartDate, excludedMonthsSet, getSignedAmountForTransaction, selectedOptions])
 
   const rawMaxValue = Math.max(
     1,
-    ...data.flatMap((point) => selectedOptions.map((option) => point.valuesBySeriesId[option.id] ?? 0))
+    ...data
+      .filter((point) => !point.isExcluded)
+      .flatMap((point) => selectedOptions.map((option) => point.valuesBySeriesId[option.id] ?? 0))
   )
   const scaleStep = getNiceStep(rawMaxValue)
   const scaleMaxValue = Math.max(scaleStep, Math.ceil(rawMaxValue / scaleStep) * scaleStep)
@@ -500,10 +531,15 @@ export default function ExpenseCategoryTrendWidget({
   const buildPath = (seriesId: string) =>
     data
       .map((point, index) => {
+        if (point.isExcluded) {
+          return ''
+        }
+
         const x = getPointX(index)
         const y = getPointY(point.valuesBySeriesId[seriesId] ?? 0)
-        return `${index === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`
+        return `${index > 0 && !data[index - 1]?.isExcluded ? 'L' : 'M'} ${x.toFixed(2)} ${y.toFixed(2)}`
       })
+      .filter(Boolean)
       .join(' ')
 
   const toggleOption = (option: CategoryOption, checked: boolean) => {

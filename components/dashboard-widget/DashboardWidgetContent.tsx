@@ -11,7 +11,6 @@ import WeeklyTrendWidget from './WeeklyTrendWidget'
 import DayActivityWidget from './DayActivityWidget'
 import DayExtremesWidget from './DayExtremesWidget'
 import ExpenseCategoryTrendWidget from './ExpenseCategoryTrendWidget'
-import ExpenseStructureWidget from './ExpenseStructureWidget'
 import IncomeCategoryTrendWidget from './IncomeCategoryTrendWidget'
 import IncomeExpenseTrendWidget from './IncomeExpenseTrendWidget'
 import MonthFinanceWidget from './MonthFinanceWidget'
@@ -26,6 +25,7 @@ type WidgetContentProps = {
   rect: DashboardWidgetPixelRect
   transactions: Transaction[]
   selectedMonth: string
+  budgetStartDate: string
   excludedMonthsSet: Set<string>
   transactionTagsMap: Record<string, Tag[]>
   dashboardStats: DashboardStats
@@ -107,10 +107,6 @@ export default function DashboardWidgetContent(props: WidgetContentProps) {
 
   if (widget.containerType === 'budget-control') {
     return <BudgetControlWidget {...props} />
-  }
-
-  if (widget.containerType === 'expense-structure') {
-    return <ExpenseStructureWidget {...props} />
   }
 
   if (widget.containerType === 'stability-leaks') {

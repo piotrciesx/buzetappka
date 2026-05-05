@@ -36,7 +36,7 @@ type MetricCardProps = {
 }
 
 const FONT_FAMILY =
-  'var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+  'var(--font-app-sans)'
 
 const getDayFromDate = (date: string) => {
   const day = Number(date.slice(8, 10))
@@ -101,7 +101,7 @@ const labelStyle = {
   color: SOFT_TEXT,
   fontSize: 11,
   lineHeight: '15px',
-  fontWeight: 560,
+  fontWeight: 500,
   overflow: 'hidden',
   display: '-webkit-box',
   WebkitLineClamp: 2,
@@ -119,8 +119,8 @@ const valueStyle = {
   minWidth: 0,
   alignSelf: 'center',
   fontSize: 23,
-  lineHeight: 1,
-  fontWeight: 680,
+  lineHeight: 1.2,
+  fontWeight: 600,
   letterSpacing: '-0.035em',
   fontFamily: FONT_FAMILY,
 }
@@ -135,7 +135,7 @@ const percentStyle = {
   color: MUTED,
   fontSize: 10.5,
   lineHeight: '16px',
-  fontWeight: 520,
+  fontWeight: 500,
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap' as const,
@@ -160,7 +160,7 @@ const chartTitleStyle = {
   color: '#243041',
   fontSize: 12.5,
   lineHeight: 1.2,
-  fontWeight: 620,
+  fontWeight: 600,
   fontFamily: FONT_FAMILY,
 }
 
@@ -207,7 +207,7 @@ function BarRow({
           color: '#334155',
           fontSize: 12,
           lineHeight: 1.2,
-          fontWeight: 560,
+          fontWeight: 500,
           fontFamily: FONT_FAMILY,
         }}
       >
@@ -326,7 +326,7 @@ export default function DayActivityWidget({
             color: MUTED,
             fontSize: 13,
             lineHeight: 1.35,
-            fontWeight: 560,
+            fontWeight: 500,
           }}
         >
           Ten miesiąc jest wyłączony ze statystyk.

@@ -5,6 +5,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import DescriptionSuggestionDeleteMenu from './DescriptionSuggestionDeleteMenu'
 import PaymentSplitEditor from './PaymentSplitEditor'
+import type { BudgetLimitView } from './BudgetLimitIndicator'
 import Level3CalendarBlock from './category-tree/Level3CalendarBlock'
 import Level3InlineAddForm from './category-tree/Level3InlineAddForm'
 import Level3SectionHeader from './category-tree/Level3SectionHeader'
@@ -132,6 +133,9 @@ type Props = {
     categoryId: string | null | undefined,
     suggestion: DescriptionSuggestion
   ) => void
+  budgetLimitView?: BudgetLimitView | null
+  canUseBudgetLimit?: boolean
+  onEditBudgetLimit?: (categoryId: string | null) => void
   isSortable?: boolean
   isDragDisabled?: boolean
   getAmountNumber: (value: unknown) => number
@@ -211,7 +215,7 @@ const tagRemoveButtonStyle = {
   color: '#1d4ed8',
   cursor: 'pointer',
   fontSize: 14,
-  lineHeight: 1,
+  lineHeight: 1.2,
   padding: 0,
 } as const
 
@@ -268,6 +272,9 @@ export default function Level3Section(props: Props) {
     transactionPaymentSplitsMap = {},
     onTagClick,
     onDeleteDescriptionSuggestion,
+    budgetLimitView = null,
+    canUseBudgetLimit = false,
+    onEditBudgetLimit,
     isSortable = false,
     isDragDisabled = false,
     getAmountNumber,
@@ -595,6 +602,9 @@ export default function Level3Section(props: Props) {
         onRenameCategory={() => handleRenameCategory(l3.id)}
         onDeleteCategory={() => handleDeleteCategory(l3.id)}
         onUndoScheduledHide={() => handleUndoScheduledHide(l3.id)}
+        budgetLimitView={budgetLimitView}
+        canUseBudgetLimit={canUseBudgetLimit}
+        onEditBudgetLimit={() => onEditBudgetLimit?.(l3.id)}
         dragHandle={
           isSortable ? (
             <button

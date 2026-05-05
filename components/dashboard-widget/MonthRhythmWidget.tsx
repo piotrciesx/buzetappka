@@ -266,7 +266,7 @@ function MonthCalendarHeatmap({
               gap,
               color: MUTED,
               fontSize: 10.5,
-              fontWeight: 650,
+              fontWeight: 600,
               textAlign: 'center',
             }}
           >
@@ -309,7 +309,7 @@ function MonthCalendarHeatmap({
                   placeItems: 'center',
                   color: day.isFuture ? MUTED : visual.textColor,
                   fontSize: compact ? 10 : 10.5,
-                  fontWeight: 720,
+                  fontWeight: 600,
                   boxSizing: 'border-box',
                   overflow: 'hidden',
                   opacity: day.isFuture ? 0.62 : 1,
@@ -371,7 +371,7 @@ function CashflowChart({ days }: { days: DayPoint[] }) {
         overflow: 'hidden',
       }}
     >
-      <div style={{ color: '#111827', fontSize: 14, fontWeight: 740 }}>
+      <div style={{ color: '#111827', fontSize: 14, fontWeight: 600 }}>
         Trend
       </div>
 
@@ -408,7 +408,7 @@ function CashflowChart({ days }: { days: DayPoint[] }) {
               width: 90,
               color: MUTED,
               fontSize: 12,
-              fontWeight: 650,
+              fontWeight: 600,
               lineHeight: 1.2,
             }}
           >
@@ -533,7 +533,7 @@ export default function MonthRhythmWidget({
         }}
       >
         <div style={{ minWidth: 0 }}>
-          <div style={{ color: '#111827', fontSize: 13, fontWeight: 780, lineHeight: 1.1 }}>
+          <div style={{ color: '#111827', fontSize: 13, fontWeight: 600, lineHeight: 1.2 }}>
             Rytm dni
           </div>
         </div>
@@ -569,7 +569,7 @@ export default function MonthRhythmWidget({
         }}
       >
         <div>
-          <div style={{ color: '#111827', fontSize: 13, fontWeight: 780, lineHeight: 1.1 }}>
+          <div style={{ color: '#111827', fontSize: 13, fontWeight: 600, lineHeight: 1.2 }}>
             Rytm dni
           </div>
         </div>

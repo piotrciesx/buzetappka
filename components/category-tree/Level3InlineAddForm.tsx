@@ -73,7 +73,7 @@ const tagRemoveButtonStyle = {
   color: '#1d4ed8',
   cursor: 'pointer',
   fontSize: 14,
-  lineHeight: 1,
+  lineHeight: 1.2,
   padding: 0,
 } as const
 

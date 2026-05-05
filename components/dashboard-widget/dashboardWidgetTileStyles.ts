@@ -21,13 +21,13 @@ export const tileStyle: CSSProperties = {
   overflow: 'hidden',
   isolation: 'isolate',
   background:
-    'linear-gradient(145deg, rgba(255,255,255,0.76), rgba(232,241,250,0.64)), radial-gradient(circle at 14% 0%, rgba(255,255,255,0.98), transparent 36%), radial-gradient(circle at 92% 8%, rgba(56,189,248,0.24), transparent 38%), radial-gradient(circle at 18% 88%, rgba(226,232,240,0.40), transparent 34%)',
+    'linear-gradient(145deg, rgba(255,255,255,0.90), rgba(248,250,252,0.78))',
   borderWidth: 1,
   borderStyle: 'solid',
-  borderColor: 'rgba(255, 255, 255, 0.78)',
+  borderColor: 'rgba(148, 163, 184, 0.36)',
   borderRadius: 28,
   boxShadow:
-    'inset 1px 1px 0 rgba(255,255,255,0.96), inset -1px -1px 0 rgba(100,116,139,0.10), 0 18px 36px rgba(15,23,42,0.10), 0 42px 80px rgba(15,23,42,0.12)',
+    'inset 0 1px 0 rgba(255,255,255,0.92), 0 6px 18px rgba(0,0,0,0.06)',
   padding: 14,
   transition: 'box-shadow 180ms ease, border-color 180ms ease, transform 180ms ease, background 180ms ease',
   backdropFilter: 'blur(30px) saturate(1.28)',
@@ -60,13 +60,13 @@ export const selectStyle: CSSProperties = {
 export const tileTitleStyle: CSSProperties = {
   color: NEUTRAL,
   fontSize: 14,
-  fontWeight: 690,
-  lineHeight: 1.18,
-  letterSpacing: '-0.01em',
+  fontWeight: 600,
+  lineHeight: 1.2,
+  letterSpacing: 0,
   display: '-webkit-box',
   WebkitLineClamp: 1,
   WebkitBoxOrient: 'vertical',
-  overflow: 'hidden',
+  overflow: 'visible',
 }
 
 export const metaStyle: CSSProperties = {
@@ -75,7 +75,7 @@ export const metaStyle: CSSProperties = {
   lineHeight: 1.25,
   color: '#64748b',
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -137,15 +137,15 @@ export const dashboardMetricCard: CSSProperties = {
     'linear-gradient(145deg, rgba(255,255,255,0.70), rgba(255,255,255,0.34))',
   padding: 8,
   boxShadow:
-    'inset 1px 1px 0 rgba(255,255,255,0.86), inset -1px -1px 0 rgba(148,163,184,0.08), 0 10px 22px rgba(15,23,42,0.06)',
+    'inset 0 1px 0 rgba(255,255,255,0.82), 0 6px 14px rgba(15,23,42,0.05)',
   backdropFilter: 'blur(18px) saturate(1.18)',
 }
 
 export const valueStyle: CSSProperties = {
   fontSize: 24,
-  fontWeight: 680,
-  lineHeight: 1.08,
-  letterSpacing: '-0.03em',
+  fontWeight: 600,
+  lineHeight: 1.2,
+  letterSpacing: 0,
 }
 
 export const compactValueStyle: CSSProperties = {
@@ -227,8 +227,8 @@ export const dragHandleStyle: CSSProperties = {
   color: '#374151',
   cursor: 'grab',
   touchAction: 'none',
-  fontWeight: 700,
-  lineHeight: 1,
+  fontWeight: 600,
+  lineHeight: 1.2,
   boxShadow:
     'inset 1px 1px 0 rgba(255,255,255,0.92), 0 6px 14px rgba(15,23,42,0.08)',
 }

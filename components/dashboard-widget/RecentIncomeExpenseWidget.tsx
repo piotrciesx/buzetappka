@@ -2,11 +2,12 @@
 
 import type { CSSProperties } from 'react'
 import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
+import { getUniqueCategoryLabel } from '../../lib/categoryUtils'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
 import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
 import { getExistingDaysInMonth } from '../../lib/dateUtils'
 import type { DashboardWidgetPixelRect } from './dashboardWidgetTileTypes'
-import { GREEN, MUTED, RED, SOFT_BORDER, SOFT_TEXT } from './dashboardWidgetTileStyles'
+import { GREEN, MUTED, RED, SOFT_TEXT } from './dashboardWidgetTileStyles'
 import { formatMoney } from './dashboardWidgetTileUtils'
 
 type RecentIncomeExpenseWidgetProps = {
@@ -32,7 +33,7 @@ type RecentEntry = {
 }
 
 const FONT =
-  'var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+  'var(--font-app-sans)'
 
 const rootStyle: CSSProperties = {
   width: '100%',
@@ -90,10 +91,10 @@ const sectionHeaderStyle: CSSProperties = {
 const sectionTitleStyle: CSSProperties = {
   minWidth: 0,
   fontSize: 11.4,
-  lineHeight: 1,
-  fontWeight: 690,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -136,8 +137,8 @@ const dateStyle: CSSProperties = {
   minWidth: 0,
   color: MUTED,
   fontSize: 10.2,
-  lineHeight: 1,
-  fontWeight: 610,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -147,8 +148,8 @@ const descriptionStyle: CSSProperties = {
   minWidth: 0,
   color: '#172033',
   fontSize: 10.8,
-  lineHeight: 1.08,
-  fontWeight: 640,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -158,8 +159,8 @@ const categoryStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
   fontSize: 10.2,
-  lineHeight: 1.08,
-  fontWeight: 520,
+  lineHeight: 1.2,
+  fontWeight: 500,
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -175,11 +176,11 @@ const compactMiddleStyle: CSSProperties = {
 const amountStyle: CSSProperties = {
   minWidth: 0,
   fontSize: 10.7,
-  lineHeight: 1,
-  fontWeight: 700,
+  lineHeight: 1.2,
+  fontWeight: 600,
   textAlign: 'right',
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -215,12 +216,8 @@ const emptyStyle: CSSProperties = {
   fontFamily: FONT,
 }
 
-function getCategoryName(category: Category | undefined) {
-  if (!category) {
-    return 'Bez kategorii'
-  }
-
-  return String((category as Category & { name?: string }).name ?? 'Bez kategorii')
+function getCategoryName(categoryId: string, categoriesById: Record<string, Category>) {
+  return getUniqueCategoryLabel(categoryId, categoriesById) || 'Bez kategorii'
 }
 
 function getDayFromDate(date: string) {
@@ -347,7 +344,7 @@ export default function RecentIncomeExpenseWidget({
       id: transaction.id,
       date: transaction.date,
       description: getDescription(transaction),
-      categoryName: getCategoryName(categoriesById[transaction.category_id]),
+      categoryName: getCategoryName(transaction.category_id, categoriesById),
       amount: getSignedAmountForTransaction(transaction),
     }))
 

@@ -21,3 +21,6 @@ export function filterTransactionsInScope<T extends Pick<Transaction, 'date'>>(
 ) {
   return transactions.filter((transaction) => isTransactionInScope(transaction, budgetStartDate))
 }
+
+export const isTransactionInBudgetRange = isTransactionInScope
+export const filterTransactionsByBudgetStartDate = filterTransactionsInScope

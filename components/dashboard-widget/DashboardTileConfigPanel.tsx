@@ -88,7 +88,7 @@ export default function DashboardTileConfigPanel({ widget, onChange }: Props) {
             background: widget.mode === 'auto' ? '#0f172a' : '#ffffff',
             color: widget.mode === 'auto' ? '#ffffff' : '#334155',
             fontSize: 12,
-            fontWeight: 700,
+            fontWeight: 600,
           }}
         >
           Auto
@@ -104,7 +104,7 @@ export default function DashboardTileConfigPanel({ widget, onChange }: Props) {
             background: widget.mode === 'custom' ? '#0f172a' : '#ffffff',
             color: widget.mode === 'custom' ? '#ffffff' : '#334155',
             fontSize: 12,
-            fontWeight: 700,
+            fontWeight: 600,
           }}
         >
           Własne

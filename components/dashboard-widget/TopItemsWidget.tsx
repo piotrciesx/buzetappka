@@ -33,7 +33,7 @@ type TopEntry = {
 }
 
 const FONT =
-  'var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+  'var(--font-app-sans)'
 
 const rootStyle: CSSProperties = {
   width: '100%',
@@ -104,10 +104,10 @@ const sectionHeaderStyle: CSSProperties = {
 const sectionTitleStyle: CSSProperties = {
   minWidth: 0,
   fontSize: 11.4,
-  lineHeight: 1,
-  fontWeight: 690,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -115,8 +115,8 @@ const sectionMetaStyle: CSSProperties = {
   flexShrink: 0,
   color: MUTED,
   fontSize: 10,
-  lineHeight: 1,
-  fontWeight: 620,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'nowrap',
 }
 
@@ -180,8 +180,8 @@ const dateStyle: CSSProperties = {
   minWidth: 0,
   color: MUTED,
   fontSize: 10.2,
-  lineHeight: 1,
-  fontWeight: 610,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -191,8 +191,8 @@ const indexStyle: CSSProperties = {
   minWidth: 0,
   color: MUTED,
   fontSize: 10,
-  lineHeight: 1.15,
-  fontWeight: 720,
+  lineHeight: 1.2,
+  fontWeight: 600,
   textAlign: 'right',
   whiteSpace: 'nowrap',
   paddingTop: 1,
@@ -202,8 +202,8 @@ const descriptionStyle: CSSProperties = {
   minWidth: 0,
   color: '#172033',
   fontSize: 10.8,
-  lineHeight: 1.15,
-  fontWeight: 640,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'normal',
   overflow: 'hidden',
   display: '-webkit-box',
@@ -215,8 +215,8 @@ const categoryStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
   fontSize: 10.2,
-  lineHeight: 1.15,
-  fontWeight: 520,
+  lineHeight: 1.2,
+  fontWeight: 500,
   whiteSpace: 'normal',
   overflow: 'hidden',
   display: '-webkit-box',
@@ -234,11 +234,11 @@ const compactMiddleStyle: CSSProperties = {
 const amountStyle: CSSProperties = {
   minWidth: 0,
   fontSize: 10.7,
-  lineHeight: 1,
-  fontWeight: 700,
+  lineHeight: 1.2,
+  fontWeight: 600,
   textAlign: 'right',
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -246,11 +246,11 @@ const rankingAmountLineStyle: CSSProperties = {
   minWidth: 0,
   marginTop: 2,
   fontSize: 10.5,
-  lineHeight: 1,
-  fontWeight: 700,
+  lineHeight: 1.2,
+  fontWeight: 600,
   textAlign: 'left',
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -283,12 +283,12 @@ const highlightTopStyle: CSSProperties = {
 
 const highlightAmountStyle: CSSProperties = {
   minWidth: 0,
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
   fontSize: 22,
-  lineHeight: 1.04,
-  fontWeight: 720,
+  lineHeight: 1.2,
+  fontWeight: 600,
   letterSpacing: -0.45,
 }
 
@@ -296,8 +296,8 @@ const highlightDateStyle: CSSProperties = {
   flexShrink: 0,
   color: MUTED,
   fontSize: 10.5,
-  lineHeight: 1,
-  fontWeight: 620,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'nowrap',
 }
 
@@ -307,8 +307,8 @@ const highlightDescriptionStyle: CSSProperties = {
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
   fontSize: 12,
-  lineHeight: 1.15,
-  fontWeight: 690,
+  lineHeight: 1.2,
+  fontWeight: 600,
   color: '#172033',
 }
 
@@ -320,7 +320,7 @@ const highlightCategoryStyle: CSSProperties = {
   fontSize: 10.5,
   lineHeight: 1.2,
   color: SOFT_TEXT,
-  fontWeight: 520,
+  fontWeight: 500,
 }
 
 const secondaryListStyle: CSSProperties = {

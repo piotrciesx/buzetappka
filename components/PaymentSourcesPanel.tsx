@@ -140,7 +140,7 @@ export default function PaymentSourcesPanel(props: Props) {
 
       <div style={settingsGridStyle}>
         <div style={styles.infoBox}>
-          <div style={{ fontWeight: 700, marginBottom: 10 }}>Przychody</div>
+          <div style={{ fontWeight: 600, marginBottom: 10 }}>Przychody</div>
 
           <label style={styles.sortLabel}>
             <input
@@ -208,7 +208,7 @@ export default function PaymentSourcesPanel(props: Props) {
         </div>
 
         <div style={styles.infoBox}>
-          <div style={{ fontWeight: 700, marginBottom: 10 }}>Wydatki</div>
+          <div style={{ fontWeight: 600, marginBottom: 10 }}>Wydatki</div>
 
           <label style={styles.sortLabel}>
             <input
@@ -394,7 +394,7 @@ export default function PaymentSourcesPanel(props: Props) {
                   }}
                 >
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: 16 }}>
+                    <div style={{ fontWeight: 600, fontSize: 16 }}>
                       {getPaymentSourceOptionLabel(source)}
                     </div>
                     <div style={{ ...styles.pageSubtitle, margin: '4px 0 0' }}>

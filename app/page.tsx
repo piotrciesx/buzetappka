@@ -15,8 +15,12 @@ import ReminderBellPanel from '../components/ReminderBellPanel'
 import SearchPanel from '../components/SearchPanel'
 import TrashPanel from '../components/TrashPanel'
 import UndoBanner from '../components/UndoBanner'
+import UserProfileMenu from '../components/UserProfileMenu'
 import BudgetTreeSection from '../components/BudgetTreeSection'
 import BudgetPageOverlays from '../components/BudgetPageOverlays'
+import BudgetLimitEditorModal from '../components/BudgetLimitEditorModal'
+import BudgetLimitAlertsPanel from '../components/BudgetLimitAlertsPanel'
+import type { BudgetLimitView } from '../components/BudgetLimitIndicator'
 import FinancialGoalsContainer from '../components/FinancialGoalsContainer'
 import { useTransactionOperations } from '../lib/useTransactionOperations'
 import { useTransactionCreatorOpeners } from '../lib/useTransactionCreatorOpeners'
@@ -58,6 +62,8 @@ import {
   isRecurringExpectedInMonth,
 } from '../lib/recurringTransactions'
 import { useFinancialGoals } from '../lib/useFinancialGoals'
+import { useBudgetLimits } from '../lib/useBudgetLimits'
+import type { SaveBudgetLimitInput } from '../lib/useBudgetLimits'
 import { isAllowedMoveTarget as checkIsAllowedMoveTarget } from '../lib/isAllowedMoveTarget'
 import { useBudgetPageData } from '../lib/useBudgetPageData'
 import { useRecurringOptions } from '../lib/useRecurringOptions'
@@ -65,6 +71,9 @@ import { useOpenSearchForTag } from '../lib/useOpenSearchForTag'
 import { useBudgetPageOverlayProps } from '../lib/useBudgetPageOverlayProps'
 import { useAppModuleVisibility } from '../lib/useAppModuleVisibility'
 import { getNextMonthText, getPrevMonthText } from '../lib/dateUtils'
+import { filterTransactionsByBudgetStartDate } from '../lib/transactionScope'
+import { useAuthProfile } from '../lib/useAuthProfile'
+import { useInvitations } from '../lib/useInvitations'
 
 type MigrationPromptState = {
   categoryId: string
@@ -75,7 +84,306 @@ type MigrationPromptState = {
   errorText: string
 }
 
+const GLOBAL_BUDGET_LIMIT_KEY = '__global__'
+
+const getBudgetLimitKey = (categoryId: string | null) => categoryId || GLOBAL_BUDGET_LIMIT_KEY
+
+type AuthScreenProps = {
+  authErrorText: string
+  isAuthLoading: boolean
+  loginEmail: string
+  setLoginEmail: (value: string) => void
+  sendMagicLink: () => Promise<void>
+  signInWithGoogle: () => Promise<void>
+}
+
+function AuthScreen({
+  authErrorText,
+  isAuthLoading,
+  loginEmail,
+  setLoginEmail,
+  sendMagicLink,
+  signInWithGoogle,
+}: AuthScreenProps) {
+  const styles = budgetPageStyles
+
+  return (
+    <main style={styles.page}>
+      <section style={{ ...styles.card, maxWidth: 460, margin: '80px auto' }}>
+        <div style={styles.sectionTitle}>Logowanie</div>
+        <div style={{ ...styles.pageSubtitle, marginBottom: 16 }}>
+          Wpisz email, a wyślemy magic link do logowania.
+        </div>
+
+        <form
+          style={{ display: 'grid', gap: 12 }}
+          onSubmit={(event) => {
+            event.preventDefault()
+            void sendMagicLink()
+          }}
+        >
+          <label style={styles.sortLabel}>
+            Email
+            <input
+              type="email"
+              style={{ ...styles.input, marginTop: 6 }}
+              value={loginEmail}
+              onChange={(event) => setLoginEmail(event.target.value)}
+              placeholder="adres@email.pl"
+              disabled={isAuthLoading}
+            />
+          </label>
+
+          <button type="submit" style={styles.primaryButton} disabled={isAuthLoading}>
+            {isAuthLoading ? 'Wysyłanie...' : 'Wyślij magic link'}
+          </button>
+        </form>
+
+        <div style={{ ...styles.actions, marginTop: 12 }}>
+          <button
+            type="button"
+            style={styles.secondaryButton}
+            disabled={isAuthLoading}
+            onClick={() => void signInWithGoogle()}
+          >
+            Zaloguj przez Google
+          </button>
+        </div>
+
+        {authErrorText && <div style={{ ...styles.infoBox, marginTop: 14 }}>{authErrorText}</div>}
+      </section>
+    </main>
+  )
+}
+
+type MissingProfileScreenProps = {
+  authErrorText: string
+  isAuthLoading: boolean
+  userEmail: string
+  createFirstProfile: () => Promise<void>
+  signOut: () => Promise<void>
+}
+
+function MissingProfileScreen({
+  authErrorText,
+  isAuthLoading,
+  userEmail,
+  createFirstProfile,
+  signOut,
+}: MissingProfileScreenProps) {
+  const styles = budgetPageStyles
+
+  return (
+    <main style={styles.page}>
+      <section style={{ ...styles.card, maxWidth: 520, margin: '80px auto' }}>
+        <div style={styles.sectionTitle}>Nie masz jeszcze profilu budżetu</div>
+        <div style={{ ...styles.pageSubtitle, marginBottom: 16 }}>
+          Zalogowano jako {userEmail || 'użytkownik'}.
+        </div>
+
+        <div style={styles.actions}>
+          <button
+            type="button"
+            style={styles.primaryButton}
+            disabled={isAuthLoading}
+            onClick={() => void createFirstProfile()}
+          >
+            {isAuthLoading ? 'Tworzenie...' : 'Utwórz profil'}
+          </button>
+          <button
+            type="button"
+            style={styles.secondaryButton}
+            disabled={isAuthLoading}
+            onClick={() => void signOut()}
+          >
+            Wyloguj
+          </button>
+        </div>
+
+        {authErrorText && <div style={{ ...styles.infoBox, marginTop: 14 }}>{authErrorText}</div>}
+      </section>
+    </main>
+  )
+}
+
+function AuthLoadingScreen() {
+  const styles = budgetPageStyles
+
+  return (
+    <main style={styles.page}>
+      <section style={{ ...styles.card, maxWidth: 460, margin: '80px auto' }}>
+        <div style={styles.sectionTitle}>Ładowanie...</div>
+      </section>
+    </main>
+  )
+}
+
+type InvitationAcceptScreenProps = {
+  invitationErrorText: string
+  isInvitationWorking: boolean
+  acceptInvitation: () => Promise<void>
+  cancelInvitation: () => void
+}
+
+function InvitationAcceptScreen({
+  invitationErrorText,
+  isInvitationWorking,
+  acceptInvitation,
+  cancelInvitation,
+}: InvitationAcceptScreenProps) {
+  const styles = budgetPageStyles
+
+  return (
+    <main style={styles.page}>
+      <section style={{ ...styles.card, maxWidth: 520, margin: '80px auto' }}>
+        <div style={styles.sectionTitle}>Zostałeś zaproszony do wspólnego budżetu</div>
+        <div style={{ ...styles.pageSubtitle, marginBottom: 16 }}>
+          Możesz dołączyć do profilu i zobaczyć wspólne dane budżetu.
+        </div>
+
+        <div style={styles.actions}>
+          <button
+            type="button"
+            style={styles.primaryButton}
+            disabled={isInvitationWorking}
+            onClick={() => void acceptInvitation()}
+          >
+            {isInvitationWorking ? 'Dołączanie...' : 'Dołącz'}
+          </button>
+          <button
+            type="button"
+            style={styles.secondaryButton}
+            disabled={isInvitationWorking}
+            onClick={cancelInvitation}
+          >
+            Anuluj
+          </button>
+        </div>
+
+        {invitationErrorText && (
+          <div style={{ ...styles.infoBox, marginTop: 14 }}>{invitationErrorText}</div>
+        )}
+      </section>
+    </main>
+  )
+}
+
 export default function Home() {
+  const {
+    user,
+    profileId,
+    setActiveProfileId,
+    isAuthLoading,
+    authErrorText,
+    loginEmail,
+    setLoginEmail,
+    sendMagicLink,
+    signInWithGoogle,
+    signOut,
+    createFirstProfile,
+  } = useAuthProfile()
+  const {
+    pendingInvitationToken,
+    inviteEmail,
+    setInviteEmail,
+    inviteLink,
+    invitationStatusText,
+    invitationErrorText,
+    isInvitationWorking,
+    createInvitation,
+    copyInviteLink,
+    acceptInvitation,
+    cancelInvitation,
+  } = useInvitations({
+    profileId,
+    userId: user?.id || null,
+    setActiveProfileId,
+  })
+
+  if (isAuthLoading && (!user || !profileId)) {
+    return <AuthLoadingScreen />
+  }
+
+  if (!user) {
+    return (
+      <AuthScreen
+        authErrorText={authErrorText}
+        isAuthLoading={isAuthLoading}
+        loginEmail={loginEmail}
+        setLoginEmail={setLoginEmail}
+        sendMagicLink={sendMagicLink}
+        signInWithGoogle={signInWithGoogle}
+      />
+    )
+  }
+
+  if (pendingInvitationToken) {
+    return (
+      <InvitationAcceptScreen
+        invitationErrorText={invitationErrorText}
+        isInvitationWorking={isInvitationWorking}
+        acceptInvitation={acceptInvitation}
+        cancelInvitation={cancelInvitation}
+      />
+    )
+  }
+
+  if (!profileId) {
+    return (
+      <MissingProfileScreen
+        authErrorText={authErrorText}
+        isAuthLoading={isAuthLoading}
+        userEmail={user.email || ''}
+        createFirstProfile={createFirstProfile}
+        signOut={signOut}
+      />
+    )
+  }
+
+  return (
+    <BudgetApp
+      profileId={profileId}
+      userEmail={user.email || ''}
+      signOut={signOut}
+      inviteEmail={inviteEmail}
+      setInviteEmail={setInviteEmail}
+      inviteLink={inviteLink}
+      invitationStatusText={invitationStatusText}
+      invitationErrorText={invitationErrorText}
+      isInvitationWorking={isInvitationWorking}
+      createInvitation={createInvitation}
+      copyInviteLink={copyInviteLink}
+    />
+  )
+}
+
+type BudgetAppProps = {
+  profileId: string
+  userEmail: string
+  signOut: () => Promise<void>
+  inviteEmail: string
+  setInviteEmail: (value: string) => void
+  inviteLink: string
+  invitationStatusText: string
+  invitationErrorText: string
+  isInvitationWorking: boolean
+  createInvitation: () => Promise<void>
+  copyInviteLink: () => Promise<void>
+}
+
+function BudgetApp({
+  profileId,
+  userEmail,
+  signOut,
+  inviteEmail,
+  setInviteEmail,
+  inviteLink,
+  invitationStatusText,
+  invitationErrorText,
+  isInvitationWorking,
+  createInvitation,
+  copyInviteLink,
+}: BudgetAppProps) {
   const [categories, setCategories] = useState<Category[]>([])
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [trashedTransactions, setTrashedTransactions] = useState<Transaction[]>([])
@@ -86,6 +394,9 @@ export default function Home() {
   const [migrationPromptState, setMigrationPromptState] = useState<MigrationPromptState | null>(
     null
   )
+  const [budgetLimitEditorCategoryId, setBudgetLimitEditorCategoryId] = useState<
+    string | null | undefined
+  >(undefined)
 
   const [openAddSubcategoryFor, setOpenAddSubcategoryFor] = useState<string | null>(null)
   const [newSubcategoryName, setNewSubcategoryName] = useState('')
@@ -128,9 +439,10 @@ export default function Home() {
   const amountInputRef = useRef<HTMLInputElement | null>(null)
   const descriptionInputRef = useRef<HTMLInputElement | null>(null)
   const searchPanelRef = useRef<HTMLDivElement | null>(null)
-  const profileId = '4d206618-95ba-44e8-989b-90e139314ac9'
 
   const styles = budgetPageStyles
+  const [isSettingsPanelVisible, setIsSettingsPanelVisible] = useState(false)
+  const [isImportExportPanelVisible, setIsImportExportPanelVisible] = useState(false)
   const {
     visibleModules,
     draftVisibleModules,
@@ -178,6 +490,11 @@ export default function Home() {
     goToNextMonth,
   } = useBudgetMonthNavigation({ profileId })
 
+  const scopedTransactions = useMemo(
+    () => filterTransactionsByBudgetStartDate(transactions, budgetStartDate),
+    [budgetStartDate, transactions]
+  )
+
   const {
     selectedTransactionIds,
     setSelectedTransactionIds,
@@ -201,7 +518,7 @@ export default function Home() {
   })
 
   const selectedMonthTransactions = useSelectedMonthTransactions({
-    transactions,
+    transactions: scopedTransactions,
     selectedMonth,
   })
 
@@ -257,6 +574,24 @@ export default function Home() {
     expenseLevel1Id,
   })
 
+  const {
+    activeLimits: activeBudgetLimits,
+    activeLimitStates,
+    activeAlerts: activeBudgetLimitAlerts,
+    loadBudgetLimits,
+    addBudgetLimit,
+    updateBudgetLimit,
+    deleteBudgetLimit,
+  } = useBudgetLimits({
+    profileId,
+    selectedMonth,
+    categoriesById,
+    expenseLevel1Id,
+    transactions: scopedTransactions,
+    excludedMonthsSet,
+    getSignedAmountForTransaction,
+  })
+
   const canCreateTransactions = canCreateTransactionsInMonth(isSelectedMonthLocked)
 
   const {
@@ -272,7 +607,7 @@ export default function Home() {
     setIsPanelOpen: setIsBankSearchOpen,
   } = useBankSearch({
     profileId,
-    transactions,
+    transactions: scopedTransactions,
     categories,
     categoriesById,
     getSignedAmountForTransaction,
@@ -295,7 +630,7 @@ export default function Home() {
     getCountForLevel2ForSelectedMonth,
     getCategoryCountForSelectedMonth,
   } = useBudgetTreeMetrics({
-    transactions,
+    transactions: scopedTransactions,
     categories,
     selectedMonth,
     level3ByParentId,
@@ -310,7 +645,7 @@ export default function Home() {
   } = useTransactionShortcutData({
     visibleCategories,
     categoriesById,
-    transactions,
+    transactions: scopedTransactions,
   })
 
   const {
@@ -388,7 +723,7 @@ export default function Home() {
     copyPaymentSourcesBetweenKinds,
   } = usePaymentSources({
     profileId,
-    transactions,
+    transactions: scopedTransactions,
     transactionPaymentSplitsMap,
     categoriesById,
     incomeLevel1Id,
@@ -527,7 +862,7 @@ export default function Home() {
   } = useRecurringTransactionCreator({
     recurringTransactions,
     recurringExecutions,
-    transactions,
+    transactions: scopedTransactions,
     categoriesById,
     selectedMonth,
     selectedRecurringTransactionId,
@@ -657,7 +992,7 @@ export default function Home() {
     selectedMonth,
     guardMonthUnlocked,
     categories,
-    transactions,
+    transactions: scopedTransactions,
     newSubcategoryName,
     setOpenAddSubcategoryFor,
     setNewSubcategoryName,
@@ -689,7 +1024,7 @@ export default function Home() {
   }, [budgetStartDate, handleSaveMonthNavigationSettings, savedBudgetStartDate, transactions])
 
   const handleResetSelectedMonthData = useCallback(async () => {
-    const monthTransactions = transactions.filter(
+    const monthTransactions = scopedTransactions.filter(
       (transaction) => transaction.date.slice(0, 7) === selectedMonth
     )
 
@@ -721,7 +1056,12 @@ export default function Home() {
         deleted_at: new Date().toISOString(),
       })
       .eq('profile_id', profileId)
-      .gte('date', `${selectedMonth}-01`)
+      .gte(
+        'date',
+        budgetStartDate && budgetStartDate.slice(0, 7) === selectedMonth
+          ? budgetStartDate.slice(0, 10)
+          : `${selectedMonth}-01`
+      )
       .lt('date', `${getNextMonthText(selectedMonth)}-01`)
 
     if (error) {
@@ -740,8 +1080,9 @@ export default function Home() {
     loadData,
     profileId,
     resetTransactionCreator,
+    budgetStartDate,
     selectedMonth,
-    transactions,
+    scopedTransactions,
   ])
 
   const handleResetAllHistory = useCallback(async () => {
@@ -799,6 +1140,18 @@ export default function Home() {
   }, [loadData])
 
   useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      void loadBudgetLimits().catch((error) => {
+        setErrorText(error instanceof Error ? error.message : 'Nie udało się wczytać limitów.')
+      })
+    }, 0)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [loadBudgetLimits])
+
+  useEffect(() => {
     const refreshCurrentDay = () => {
       setCurrentDayOfMonth(new Date().getDate())
     }
@@ -836,7 +1189,7 @@ export default function Home() {
     activeTransactionsById,
     trashedTransactionsById,
   } = useBudgetMoveTargetsData({
-    transactions,
+    transactions: scopedTransactions,
     trashedTransactions,
     categories,
     categoriesById,
@@ -907,7 +1260,7 @@ export default function Home() {
   } = useCategoryVisibilityActions({
     supabase,
     categories,
-    transactions,
+    transactions: scopedTransactions,
     selectedMonth,
     activeTransactionsById,
     loadData,
@@ -923,9 +1276,9 @@ export default function Home() {
   })
 
   useEffect(() => {
-    const activeTransactionIds = new Set(transactions.map((transaction) => transaction.id))
+    const activeTransactionIds = new Set(scopedTransactions.map((transaction) => transaction.id))
     setSelectedTransactionIds((prev) => prev.filter((id) => activeTransactionIds.has(id)))
-  }, [transactions, setSelectedTransactionIds])
+  }, [scopedTransactions, setSelectedTransactionIds])
 
   useEffect(() => {
     if (!bulkMoveTargetCategoryId) {
@@ -1008,7 +1361,7 @@ export default function Home() {
       recurringTransactions,
       recurringExecutions,
       recurringReminderMonthStatuses,
-      transactions,
+      transactions: scopedTransactions,
       selectedMonth,
       selectedTransactionCategoryId,
       selectedLevel2Id,
@@ -1031,7 +1384,7 @@ export default function Home() {
             reminder.category_id === categoryId && isRecurringExpectedInMonth(reminder, selectedMonth)
         )
         .map((reminder) => {
-          const hasTransactionInMonth = transactions.some(
+          const hasTransactionInMonth = scopedTransactions.some(
             (transaction) =>
               transaction.recurring_transaction_id === reminder.id &&
               transaction.date.slice(0, 7) === selectedMonth
@@ -1054,7 +1407,7 @@ export default function Home() {
       categoriesById,
       recurringTransactions,
       selectedMonth,
-      transactions,
+      scopedTransactions,
       visibleModules.recurringTransactions,
     ]
   )
@@ -1115,8 +1468,92 @@ export default function Home() {
     return previousMonth
   }, [currentDayOfMonth, currentMonth, isPreviousMonthCloseReminderHidden, lockedMonthsSet])
 
+  const budgetLimitViewsByCategoryId = useMemo(() => {
+    return activeLimitStates.reduce<Record<string, BudgetLimitView>>((acc, state) => {
+      acc[getBudgetLimitKey(state.limit.category_id)] = state
+      return acc
+    }, {})
+  }, [activeLimitStates])
+
+  const getBudgetLimitView = useCallback(
+    (categoryId: string | null) => budgetLimitViewsByCategoryId[getBudgetLimitKey(categoryId)] || null,
+    [budgetLimitViewsByCategoryId]
+  )
+
+  const editedBudgetLimitView = useMemo(() => {
+    if (budgetLimitEditorCategoryId === undefined) {
+      return null
+    }
+
+    return getBudgetLimitView(budgetLimitEditorCategoryId)
+  }, [budgetLimitEditorCategoryId, getBudgetLimitView])
+
+  const editedBudgetLimitCategoryLabel = useMemo(() => {
+    if (budgetLimitEditorCategoryId === null) {
+      return 'Wydatki'
+    }
+
+    if (!budgetLimitEditorCategoryId) {
+      return ''
+    }
+
+    return getCategoryPathLabel(budgetLimitEditorCategoryId, categoriesById)
+  }, [budgetLimitEditorCategoryId, categoriesById])
+
+  const saveBudgetLimit = useCallback(
+    async (input: SaveBudgetLimitInput) => {
+      try {
+        if (editedBudgetLimitView) {
+          await updateBudgetLimit({
+            ...input,
+            id: editedBudgetLimitView.limit.id,
+          })
+        } else {
+          await addBudgetLimit(input)
+        }
+      } catch (error) {
+        setErrorText(error instanceof Error ? error.message : 'Nie udało się zapisać limitu.')
+        throw error
+      }
+    },
+    [addBudgetLimit, editedBudgetLimitView, updateBudgetLimit]
+  )
+
+  const removeBudgetLimit = useCallback(
+    async (limitId: string) => {
+      try {
+        await deleteBudgetLimit(limitId)
+      } catch (error) {
+        setErrorText(error instanceof Error ? error.message : 'Nie udało się usunąć limitu.')
+        throw error
+      }
+    },
+    [deleteBudgetLimit]
+  )
+
+  const disableEditedBudgetLimit = useCallback(
+    async (limitId: string) => {
+      try {
+        await deleteBudgetLimit(limitId, selectedMonth)
+      } catch (error) {
+        setErrorText(error instanceof Error ? error.message : 'Nie udało się wyłączyć limitu.')
+        throw error
+      }
+    },
+    [deleteBudgetLimit, selectedMonth]
+  )
+
+  const budgetLimitDataSnapshot = useMemo(
+    () => ({
+      activeLimitCount: activeBudgetLimits.length,
+      calculatedLimitCount: activeLimitStates.length,
+      activeAlertCount: activeBudgetLimitAlerts.length,
+    }),
+    [activeBudgetLimitAlerts.length, activeBudgetLimits.length, activeLimitStates.length]
+  )
+
   const budgetPageOverlayProps = useBudgetPageOverlayProps({
-    canCreateTransactions: canCreateTransactions && visibleModules.floatingActions,
+    canCreateTransactions,
     expenseLevel1Id,
     incomeLevel1Id,
     openFloatingTransactionCreator,
@@ -1175,9 +1612,64 @@ export default function Home() {
   })
 
   return (
-    <main style={styles.page}>
-      <div style={styles.pageTitle}>Budżet testowy</div>
-      <div style={styles.pageSubtitle}>Wersja robocza do wygodniejszego klikania i testowania</div>
+    <main
+      style={styles.page}
+      data-budget-limit-count={budgetLimitDataSnapshot.activeLimitCount}
+      data-budget-limit-calculated-count={budgetLimitDataSnapshot.calculatedLimitCount}
+      data-budget-limit-alert-count={budgetLimitDataSnapshot.activeAlertCount}
+    >
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'start' }}>
+        <div>
+          <div style={styles.pageTitle}>Budżet testowy</div>
+          <div style={styles.pageSubtitle}>Wersja robocza do wygodniejszego klikania i testowania</div>
+        </div>
+        <UserProfileMenu
+          userEmail={userEmail}
+          onToggleSettings={() => setIsSettingsPanelVisible((previousValue) => !previousValue)}
+          onToggleImportExport={() =>
+            setIsImportExportPanelVisible((previousValue) => !previousValue)
+          }
+          onSignOut={signOut}
+          styles={styles}
+        />
+      </div>
+
+      <section style={{ ...styles.topPanel, display: 'grid', gap: 10 }}>
+        <div style={styles.sectionTitle}>Zaproszenia</div>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'end' }}>
+          <label style={{ ...styles.sortLabel, minWidth: 260 }}>
+            Email osoby zapraszanej
+            <input
+              type="email"
+              style={{ ...styles.input, marginTop: 6 }}
+              value={inviteEmail}
+              onChange={(event) => setInviteEmail(event.target.value)}
+              placeholder="opcjonalnie"
+              disabled={isInvitationWorking}
+            />
+          </label>
+          <button
+            type="button"
+            style={styles.secondaryButton}
+            disabled={isInvitationWorking}
+            onClick={() => void createInvitation()}
+          >
+            {isInvitationWorking ? 'Tworzenie...' : 'Zaproś osobę'}
+          </button>
+        </div>
+
+        {inviteLink && (
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+            <input style={{ ...styles.input, flex: '1 1 320px' }} value={inviteLink} readOnly />
+            <button type="button" style={styles.secondaryButton} onClick={() => void copyInviteLink()}>
+              Kopiuj
+            </button>
+          </div>
+        )}
+
+        {invitationStatusText && <div style={styles.smallMutedText}>{invitationStatusText}</div>}
+        {invitationErrorText && <div style={styles.infoBox}>{invitationErrorText}</div>}
+      </section>
 
       <BudgetHeaderPanel
         selectedMonth={selectedMonth}
@@ -1185,7 +1677,7 @@ export default function Home() {
         status={status}
         categoriesCount={categories.length}
         visibleCategoriesCount={visibleCategories.length}
-        transactionsCount={transactions.length}
+        transactionsCount={scopedTransactions.length}
         hiddenCategoriesCount={hiddenCategoriesInSelectedMonth.length}
         showHiddenCategories={showHiddenCategories}
         errorText={errorText}
@@ -1262,49 +1754,64 @@ export default function Home() {
         </div>
       )}
 
-      {visibleModules.recurringTransactions && (
-        <div style={{ ...styles.topPanel, display: 'flex', justifyContent: 'flex-end' }}>
-          <ReminderBellPanel
-            selectedMonth={currentMonth}
-            recurringTransactions={recurringTransactions}
-            recurringReminderMonthStatuses={recurringReminderMonthStatuses}
-            transactions={transactions}
-            categoriesById={categoriesById}
-            styles={styles}
-            onAddFromReminder={openReminderTransactionCreator}
-            categoryOptions={finalCategoryOptions}
-            onSaveReminder={saveRecurringTransaction}
-            onDeleteReminder={deleteRecurringTransaction}
-            onMarkRead={(reminder) =>
-              saveRecurringReminderMonthStatus({
-                reminderId: reminder.id,
-                month: currentMonth,
-                status: 'read',
-              })
-            }
-          />
+      {(visibleModules.recurringTransactions ||
+        (visibleModules.budgetLimits && activeBudgetLimits.length > 0)) && (
+        <div style={{ ...styles.topPanel, display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
+          {visibleModules.budgetLimits && activeBudgetLimits.length > 0 && (
+            <BudgetLimitAlertsPanel
+              alerts={activeBudgetLimitAlerts}
+              categoriesById={categoriesById}
+              styles={styles}
+              onOpenLimit={setBudgetLimitEditorCategoryId}
+            />
+          )}
+
+          {visibleModules.recurringTransactions && (
+            <ReminderBellPanel
+              selectedMonth={currentMonth}
+              recurringTransactions={recurringTransactions}
+              recurringReminderMonthStatuses={recurringReminderMonthStatuses}
+              transactions={scopedTransactions}
+              categoriesById={categoriesById}
+              styles={styles}
+              onAddFromReminder={openReminderTransactionCreator}
+              categoryOptions={finalCategoryOptions}
+              onSaveReminder={saveRecurringTransaction}
+              onDeleteReminder={deleteRecurringTransaction}
+              onMarkRead={(reminder) =>
+                saveRecurringReminderMonthStatus({
+                  reminderId: reminder.id,
+                  month: currentMonth,
+                  status: 'read',
+                })
+              }
+            />
+          )}
         </div>
       )}
 
-      <AppSettingsPanel
-        visibleModules={visibleModules}
-        draftVisibleModules={draftVisibleModules}
-        saveStatusText={moduleVisibilitySaveStatusText}
-        onChangeModuleVisibility={setDraftModuleVisibility}
-        onSave={saveVisibleModules}
-        onResetDraft={resetDraftVisibleModules}
-        onLockAllPastMonths={handleLockAllPastMonths}
-        onUnlockAllPastMonths={handleUnlockAllPastMonths}
-        onResetSelectedMonthData={handleResetSelectedMonthData}
-        onResetAllHistory={handleResetAllHistory}
-        styles={styles}
-      />
+      {isSettingsPanelVisible && (
+        <AppSettingsPanel
+          visibleModules={visibleModules}
+          draftVisibleModules={draftVisibleModules}
+          saveStatusText={moduleVisibilitySaveStatusText}
+          onChangeModuleVisibility={setDraftModuleVisibility}
+          onSave={saveVisibleModules}
+          onResetDraft={resetDraftVisibleModules}
+          onLockAllPastMonths={handleLockAllPastMonths}
+          onUnlockAllPastMonths={handleUnlockAllPastMonths}
+          onResetSelectedMonthData={handleResetSelectedMonthData}
+          onResetAllHistory={handleResetAllHistory}
+          styles={styles}
+          defaultOpen
+        />
+      )}
 
       {visibleModules.dashboard && (
         <DashboardPanel
           profileId={profileId}
           styles={styles}
-          transactions={transactions}
+          transactions={scopedTransactions}
           transactionTagsMap={transactionTagsMap}
           categoriesById={categoriesById}
           selectedMonth={selectedMonth}
@@ -1365,7 +1872,7 @@ export default function Home() {
         />
       )}
 
-      {visibleModules.bulkActions && canCreateTransactions && (
+      {canCreateTransactions && (
         <BulkActionsBar
           selectedCount={selectedTransactionIds.length}
           targetCategoryId={bulkMoveTargetCategoryId}
@@ -1398,30 +1905,28 @@ export default function Home() {
         />
       )}
 
-      {visibleModules.drafts && (
-        <DraftsPanel
-          draftsStatusText={draftsStatusText}
-          isDraftsLoading={isDraftsLoading}
-          drafts={drafts}
-          isCleaningAllDrafts={isCleaningAllDrafts}
-          cleanupAllDrafts={() => {
-            void cleanupAllDrafts()
-          }}
-          getDraftLevel1Id={getDraftLevel1Id}
-          formatDraftUpdatedAt={formatDraftUpdatedAt}
-          getDraftLocationLabel={getDraftLocationLabel}
-          applyDraftToTransactionCreator={applyDraftToTransactionCreator}
-          deleteDraft={deleteDraft}
-          styles={styles}
-        />
-      )}
+      <DraftsPanel
+        draftsStatusText={draftsStatusText}
+        isDraftsLoading={isDraftsLoading}
+        drafts={drafts}
+        isCleaningAllDrafts={isCleaningAllDrafts}
+        cleanupAllDrafts={() => {
+          void cleanupAllDrafts()
+        }}
+        getDraftLevel1Id={getDraftLevel1Id}
+        formatDraftUpdatedAt={formatDraftUpdatedAt}
+        getDraftLocationLabel={getDraftLocationLabel}
+        applyDraftToTransactionCreator={applyDraftToTransactionCreator}
+        deleteDraft={deleteDraft}
+        styles={styles}
+      />
 
-      {visibleModules.importExport && (
+      {isImportExportPanelVisible && (
         <ImportExportPanel
           selectedMonth={selectedMonth}
           categories={categories}
           categoriesById={categoriesById}
-          transactions={transactions}
+          transactions={scopedTransactions}
           trashedTransactions={trashedTransactions}
           transactionPaymentSplitsMap={transactionPaymentSplitsMap}
           importableCategoryIds={addableTransactionCategoryIds}
@@ -1506,7 +2011,7 @@ export default function Home() {
           goals={financialGoals}
           goalPriorities={financialGoalPriorities}
           goalMonthConfigs={financialGoalMonthConfigs}
-          transactions={transactions}
+          transactions={scopedTransactions}
           lockedMonthsSet={lockedMonthsSet}
           getSignedAmountForTransaction={getSignedAmountForTransaction}
           onSaveGoal={saveFinancialGoal}
@@ -1518,27 +2023,25 @@ export default function Home() {
         />
       )}
 
-      {visibleModules.bankSearch && (
-        <SearchPanel
-          ref={searchPanelRef}
-          isOpen={isBankSearchOpen}
-          setIsOpen={setIsBankSearchOpen}
-          searchState={bankSearchState}
-          onFieldChange={handleBankSearchFieldChange}
-          onToggleTagId={handleBankSearchToggleTagId}
-          onReset={resetBankSearch}
-          results={bankSearchResults}
-          summary={bankSearchSummary}
-          categoryOptions={bankSearchCategoryOptions}
-          paymentSourceOptions={bankSearchPaymentSourceOptions}
-          tagOptions={bankSearchTagOptions}
-          transactionTagsMap={transactionTagsMap}
-          transactionPaymentSplitsMap={transactionPaymentSplitsMap}
-          categoriesById={categoriesById}
-          onOpenSearchForTag={handleOpenSearchForTag}
-          styles={styles}
-        />
-      )}
+      <SearchPanel
+        ref={searchPanelRef}
+        isOpen={isBankSearchOpen}
+        setIsOpen={setIsBankSearchOpen}
+        searchState={bankSearchState}
+        onFieldChange={handleBankSearchFieldChange}
+        onToggleTagId={handleBankSearchToggleTagId}
+        onReset={resetBankSearch}
+        results={bankSearchResults}
+        summary={bankSearchSummary}
+        categoryOptions={bankSearchCategoryOptions}
+        paymentSourceOptions={bankSearchPaymentSourceOptions}
+        tagOptions={bankSearchTagOptions}
+        transactionTagsMap={transactionTagsMap}
+        transactionPaymentSplitsMap={transactionPaymentSplitsMap}
+        categoriesById={categoriesById}
+        onOpenSearchForTag={handleOpenSearchForTag}
+        styles={styles}
+      />
 
       {visibleModules.monthCalendar && (
         <MonthCalendarPanel
@@ -1574,8 +2077,7 @@ export default function Home() {
         />
       )}
 
-      {visibleModules.budgetTree && (
-        <BudgetTreeSection
+      <BudgetTreeSection
         sortedLevel1={sortedLevel1}
         openLevel1Ids={openLevel1Ids}
         openLevel1CalendarIds={openLevel1CalendarIds}
@@ -1589,6 +2091,7 @@ export default function Home() {
         isReorderingLevel1={isReorderingLevel1}
         reorderingLevel1Id={reorderingLevel1Id}
         reorderingLevel2Id={reorderingLevel2Id}
+        expenseLevel1Id={expenseLevel1Id}
         styles={styles}
         level2SortMode={level2SortMode}
         setLevel2SortMode={setLevel2SortMode}
@@ -1647,33 +2150,42 @@ export default function Home() {
         transactionPaymentSplitsMap={transactionPaymentSplitsMap}
         onTagClick={handleOpenSearchForTag}
         onDeleteDescriptionSuggestion={handleDeleteDescriptionSuggestion}
+        getBudgetLimitView={visibleModules.budgetLimits ? getBudgetLimitView : undefined}
+        onEditBudgetLimit={visibleModules.budgetLimits ? setBudgetLimitEditorCategoryId : undefined}
         />
-      )}
 
-      {visibleModules.hiddenCategories && (
-        <HiddenCategoriesPanel
-          categories={hiddenCategoriesInSelectedMonth}
-          categoriesById={categoriesById}
-          showHiddenCategories={showHiddenCategories}
-          getHiddenCategoryLabel={getHiddenCategoryLabel}
-          handleRestoreCategory={handleRestoreCategory}
-          styles={styles}
-        />
-      )}
+      <HiddenCategoriesPanel
+        categories={hiddenCategoriesInSelectedMonth}
+        categoriesById={categoriesById}
+        showHiddenCategories={showHiddenCategories}
+        getHiddenCategoryLabel={getHiddenCategoryLabel}
+        handleRestoreCategory={handleRestoreCategory}
+        styles={styles}
+      />
 
-      {visibleModules.trash && (
-        <TrashPanel
-          transactions={trashedTransactions}
-          categoriesById={categoriesById}
-          getAmountNumber={getAmountNumber}
-          onRestoreTransaction={handleRestoreTransaction}
-          onPermanentDeleteTransaction={handlePermanentDeleteTransaction}
-          onEmptyTrash={handleEmptyTrash}
-          styles={styles}
-        />
-      )}
+      <TrashPanel
+        transactions={trashedTransactions}
+        categoriesById={categoriesById}
+        getAmountNumber={getAmountNumber}
+        onRestoreTransaction={handleRestoreTransaction}
+        onPermanentDeleteTransaction={handlePermanentDeleteTransaction}
+        onEmptyTrash={handleEmptyTrash}
+        styles={styles}
+      />
 
       <BudgetPageOverlays {...budgetPageOverlayProps} />
+
+      <BudgetLimitEditorModal
+        isOpen={visibleModules.budgetLimits && budgetLimitEditorCategoryId !== undefined}
+        categoryId={budgetLimitEditorCategoryId ?? null}
+        categoryLabel={editedBudgetLimitCategoryLabel}
+        selectedMonth={selectedMonth}
+        existingLimit={editedBudgetLimitView?.limit ?? null}
+        onClose={() => setBudgetLimitEditorCategoryId(undefined)}
+        onSave={saveBudgetLimit}
+        onDelete={removeBudgetLimit}
+        onDisable={disableEditedBudgetLimit}
+      />
     </main>
   )
 }

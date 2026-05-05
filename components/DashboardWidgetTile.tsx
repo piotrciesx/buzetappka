@@ -19,6 +19,7 @@ export default function DashboardWidgetTile({
   rect,
   transactions,
   selectedMonth,
+  budgetStartDate,
   excludedMonthsSet,
   transactionTagsMap,
   dashboardStats,
@@ -31,7 +32,6 @@ export default function DashboardWidgetTile({
   isDropBlocked,
   isInteractionLocked,
   isConfigOpen,
-  onToggleConfig,
   onToggleSize,
   onRemove,
 }: DashboardWidgetTileProps) {
@@ -85,12 +85,42 @@ export default function DashboardWidgetTile({
       wrapperStyle={wrapperStyle}
       isDragging={isDragging}
       isDropBlocked={isDropBlocked}
+      onResizePointerDown={(edge, event) => {
+        if (isInteractionLocked) return
+
+        event.preventDefault()
+        event.stopPropagation()
+
+        const startX = event.clientX
+        const direction =
+          widget.width >= 4 ? (edge === 'right' ? -1 : 1) : edge === 'right' ? 1 : -1
+        let didResize = false
+
+        const handlePointerMove = (moveEvent: PointerEvent) => {
+          const deltaX = moveEvent.clientX - startX
+
+          if (!didResize && deltaX * direction > 18) {
+            didResize = true
+            onToggleSize(widget.id)
+            cleanup()
+          }
+        }
+
+        const cleanup = () => {
+          window.removeEventListener('pointermove', handlePointerMove)
+          window.removeEventListener('pointerup', cleanup)
+          window.removeEventListener('pointercancel', cleanup)
+        }
+
+        window.addEventListener('pointermove', handlePointerMove)
+        window.addEventListener('pointerup', cleanup)
+        window.addEventListener('pointercancel', cleanup)
+      }}
     >
       <DashboardWidgetHeader
         widget={widget}
         safeDefinition={safeDefinition}
         dragHandleProps={dragHandleProps}
-        onConfigOpen={() => onToggleConfig(widget.id)}
         onToggleSize={() => onToggleSize(widget.id)}
         onRemove={() => onRemove(widget.id)}
       />
@@ -107,6 +137,7 @@ export default function DashboardWidgetTile({
         rect={rect}
         transactions={transactions}
         selectedMonth={selectedMonth}
+        budgetStartDate={budgetStartDate}
         excludedMonthsSet={excludedMonthsSet}
         transactionTagsMap={transactionTagsMap}
         dashboardStats={dashboardStats}

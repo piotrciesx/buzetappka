@@ -111,7 +111,7 @@ export default function DraftsPanel(props: Props) {
                     flexWrap: 'wrap',
                   }}
                 >
-                  <div style={{ fontSize: 16, fontWeight: 700 }}>
+                  <div style={{ fontSize: 16, fontWeight: 600 }}>
                     {draft.type === 'income' ? 'Przychód' : 'Wydatek'}
                   </div>
                   <div style={{ color: '#6b7280', fontSize: 13 }}>

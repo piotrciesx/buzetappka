@@ -35,7 +35,7 @@ type WeekMetric = {
 }
 
 const FONT_FAMILY =
-  'var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+  'var(--font-app-sans)'
 
 const rootStyle: CSSProperties = {
   width: '100%',
@@ -85,10 +85,10 @@ const summaryLabelStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
   fontSize: 10.5,
-  lineHeight: 1.15,
-  fontWeight: 650,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -96,10 +96,10 @@ const summaryValueStyle: CSSProperties = {
   minWidth: 0,
   color: '#111827',
   fontSize: 15,
-  lineHeight: 1.12,
-  fontWeight: 760,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -159,11 +159,11 @@ const weekLabelStyle: CSSProperties = {
   minWidth: 0,
   color: MUTED,
   fontSize: 10.5,
-  lineHeight: 1.12,
-  fontWeight: 700,
+  lineHeight: 1.2,
+  fontWeight: 600,
   textAlign: 'center',
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -175,8 +175,8 @@ const legendStyle: CSSProperties = {
   gap: 10,
   color: SOFT_TEXT,
   fontSize: 10.5,
-  lineHeight: 1.15,
-  fontWeight: 650,
+  lineHeight: 1.2,
+  fontWeight: 600,
   overflow: 'hidden',
 }
 
@@ -209,10 +209,10 @@ const weekMiniTitleStyle: CSSProperties = {
   minWidth: 0,
   color: MUTED,
   fontSize: 10,
-  lineHeight: 1.1,
-  fontWeight: 750,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -220,10 +220,10 @@ const weekMiniValueStyle: CSSProperties = {
   minWidth: 0,
   color: '#111827',
   fontSize: 11.5,
-  lineHeight: 1.12,
-  fontWeight: 760,
+  lineHeight: 1.2,
+  fontWeight: 600,
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
+  overflow: 'visible',
   textOverflow: 'ellipsis',
 }
 
@@ -450,7 +450,7 @@ export default function WeeklyTrendWidget({
               <div style={{ ...weekMiniValueStyle, color: week.balance >= 0 ? GREEN : RED }}>
                 {formatMoney(week.balance)}
               </div>
-              <div style={{ ...weekMiniTitleStyle, fontWeight: 650 }}>{week.count} wpisów</div>
+              <div style={{ ...weekMiniTitleStyle, fontWeight: 600 }}>{week.count} wpisów</div>
             </div>
           ))}
         </div>

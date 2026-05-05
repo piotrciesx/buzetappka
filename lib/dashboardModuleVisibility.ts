@@ -44,7 +44,6 @@ const LIST_MODULES = new Set<DashboardModuleId>([
   'top-incomes',
   'problem-categories',
   'money-leaks',
-  'fixed-vs-variable',
 ])
 
 const isGeneralTrendModule = (moduleId: DashboardModuleId) =>
@@ -165,13 +164,6 @@ const PRESET_CONFIG_BY_CONTAINER: Record<
     wide: { columns: 2, moduleLimit: 2, minModuleWidth: 220, minHeight: 3 },
     tall: { columns: 2, moduleLimit: 2, minModuleWidth: 210, minHeight: 3 },
     full: { columns: 2, moduleLimit: 2, minModuleWidth: 210, minHeight: 3 },
-  },
-  'expense-structure': {
-    compact: { columns: 1, moduleLimit: 1, minModuleWidth: 180, minHeight: 2 },
-    standard: { columns: 1, moduleLimit: 1, minModuleWidth: 180, minHeight: 3 },
-    wide: { columns: 1, moduleLimit: 1, minModuleWidth: 180, minHeight: 3 },
-    tall: { columns: 1, moduleLimit: 1, minModuleWidth: 180, minHeight: 3 },
-    full: { columns: 1, moduleLimit: 1, minModuleWidth: 180, minHeight: 3 },
   },
   'stability-leaks': {
     compact: { columns: 1, moduleLimit: 1, minModuleWidth: 180, minHeight: 2 },
