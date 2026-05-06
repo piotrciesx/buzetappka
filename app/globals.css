@@ -222,6 +222,17 @@ video {
     margin-left: auto;
   }
 
+  [data-category-drag-row="true"],
+  [data-category-drag-row="true"] * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  [data-category-drag-row="true"] {
+    touch-action: pan-y;
+  }
+
   [data-category-primary-label="desktop"] {
     display: none;
   }

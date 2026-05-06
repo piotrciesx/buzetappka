@@ -16,6 +16,7 @@ import { DescriptionSuggestion } from '../lib/suggestionUtils'
 import { Tag, TransactionPaymentSplit } from '../lib/budgetPageTypes'
 import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
 import { useIsMobileViewport } from '../lib/useIsMobileViewport'
+import { getNearestDndSwapTargetId } from '../lib/getNearestDndSwapTargetId'
 
 type Category = {
   id: string
@@ -312,7 +313,17 @@ export default function Level2Section(props: Props) {
       return
     }
 
-    await handleReorderLevel3(l2.id, String(active.id), String(over.id))
+    const level3Ids = sortedLevel3Children.map((category) => category.id)
+    await handleReorderLevel3(
+      l2.id,
+      String(active.id),
+      getNearestDndSwapTargetId(
+        level3Ids,
+        String(active.id),
+        String(over.id),
+        isMobileViewport
+      )
+    )
   }
 
   const level2Transactions = hasChildren
@@ -402,6 +413,7 @@ export default function Level2Section(props: Props) {
   return (
     <div ref={setNodeRef} style={wrapStyle}>
       <div
+        data-category-drag-row="true"
         style={{
           ...styles.l2Header,
           boxShadow: isDragging ? '0 12px 24px rgba(0, 0, 0, 0.12)' : styles.l2Header.boxShadow,

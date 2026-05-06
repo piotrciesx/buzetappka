@@ -58,6 +58,7 @@ export default function Level3SectionHeader({
 }: Level3SectionHeaderProps) {
   return (
     <div
+      data-category-drag-row="true"
       style={{
         ...styles.l3Header,
         boxShadow: isDragging ? '0 12px 24px rgba(0, 0, 0, 0.12)' : styles.l3Header.boxShadow,

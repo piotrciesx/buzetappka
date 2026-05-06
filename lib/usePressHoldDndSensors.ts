@@ -11,8 +11,8 @@ export const usePressHoldDndSensors = () => {
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 450,
-        tolerance: 12,
+        delay: 560,
+        tolerance: 18,
       },
     })
   )

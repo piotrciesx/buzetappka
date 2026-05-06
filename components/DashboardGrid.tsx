@@ -21,6 +21,7 @@ import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
 const DASHBOARD_GRID_GAP = 12
 const DASHBOARD_GRID_ROW_HEIGHT = 132
 const MOBILE_WIDGET_HEIGHT = 300
+const MOBILE_REORDER_THRESHOLD = MOBILE_WIDGET_HEIGHT * 0.58
 
 type WidgetPixelRect = {
   left: number
@@ -351,14 +352,25 @@ export default function DashboardGrid(props: Props) {
       if (!activeWidget) return currentSession
 
       if (isMobileDashboard) {
-        const activeRect = baseMobileWidgetRects[activeWidget.id]
-        if (!activeRect) return currentSession
+        const activeIndex = widgets.findIndex((widget) => widget.id === activeWidget.id)
+        if (activeIndex < 0) return currentSession
 
-        const top = activeRect.top + event.delta.y
-        const targetIndex = Math.max(
+        const currentIndex = Math.max(
           0,
-          Math.min(widgets.length - 1, Math.round(top / (MOBILE_WIDGET_HEIGHT + DASHBOARD_GRID_GAP)))
+          Math.min(
+            widgets.length - 1,
+            Math.round(currentSession.targetY / SMALL_WIDGET_SIZE.height)
+          )
         )
+        const slotHeight = MOBILE_WIDGET_HEIGHT + DASHBOARD_GRID_GAP
+        const dragDistanceFromCurrentSlot =
+          event.delta.y - (currentIndex - activeIndex) * slotHeight
+        const targetIndex =
+          dragDistanceFromCurrentSlot > MOBILE_REORDER_THRESHOLD
+            ? Math.min(widgets.length - 1, currentIndex + 1)
+            : dragDistanceFromCurrentSlot < -MOBILE_REORDER_THRESHOLD
+              ? Math.max(0, currentIndex - 1)
+              : currentIndex
         const nextTargetX = 0
         const nextTargetY = targetIndex * SMALL_WIDGET_SIZE.height
 

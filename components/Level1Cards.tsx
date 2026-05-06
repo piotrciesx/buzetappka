@@ -47,7 +47,12 @@ function Level1CardBase(props: BaseProps) {
 
   return (
     <>
-      <div style={styles.l1Header} onClick={onToggle} {...headerDragProps}>
+      <div
+        data-category-drag-row="true"
+        style={styles.l1Header}
+        onClick={onToggle}
+        {...headerDragProps}
+      >
         <div style={styles.l2Left}>
           {dragHandle}
           <div style={styles.arrow}>{isOpen ? '▼' : '▶'}</div>

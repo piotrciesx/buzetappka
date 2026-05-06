@@ -700,7 +700,7 @@ export default function TransactionCreatorModal(props: Props) {
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
                     event.preventDefault()
-                    tagInputRef.current?.focus()
+                    void handleSaveFromKeyboard()
                   }
                 }}
               />

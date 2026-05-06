@@ -24,6 +24,8 @@ import {
 } from '../lib/budgetPageTypes'
 import { DescriptionSuggestion } from '../lib/suggestionUtils'
 import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
+import { useIsMobileViewport } from '../lib/useIsMobileViewport'
+import { getNearestDndSwapTargetId } from '../lib/getNearestDndSwapTargetId'
 
 type Props = {
   sortedLevel1: Category[]
@@ -211,6 +213,7 @@ export default function BudgetCategoryTree(props: Props) {
   } = props
 
   const dndSensors = usePressHoldDndSensors()
+  const isMobileViewport = useIsMobileViewport()
   const [level1InlineAddTokens, setLevel1InlineAddTokens] = useState<Record<string, number>>({})
 
   const openLevel1InlineAdd = (level1Id: string) => {
@@ -407,7 +410,17 @@ export default function BudgetCategoryTree(props: Props) {
             return
           }
 
-          await handleReorderLevel2(level1Category.id, String(active.id), String(over.id))
+          const level2Ids = childrenLevel2.map((category) => category.id)
+          await handleReorderLevel2(
+            level1Category.id,
+            String(active.id),
+            getNearestDndSwapTargetId(
+              level2Ids,
+              String(active.id),
+              String(over.id),
+              isMobileViewport
+            )
+          )
         }}
       >
         <SortableContext
@@ -686,7 +699,16 @@ export default function BudgetCategoryTree(props: Props) {
           return
         }
 
-        await handleReorderLevel1(String(active.id), String(over.id))
+        const level1Ids = sortedLevel1.map((category) => category.id)
+        await handleReorderLevel1(
+          String(active.id),
+          getNearestDndSwapTargetId(
+            level1Ids,
+            String(active.id),
+            String(over.id),
+            isMobileViewport
+          )
+        )
       }}
     >
       <SortableContext
