@@ -67,6 +67,15 @@ import {
   wideInputStyle,
 } from './month-calendar/monthCalendarStyles'
 
+type MonthQuickFilter = 'all' | 'income' | 'expense' | 'no-day'
+
+const quickFilterBarStyle: CSSProperties = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: 8,
+  marginBottom: 12,
+}
+
 export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
   const {
     selectedMonth,
@@ -83,6 +92,7 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
     onUpdateTransaction,
     onDeleteTransaction,
     onMoveTransaction,
+    onDuplicateTransaction,
     onAddTransactionForDay,
     calendarTitle = 'Kalendarz miesiąca',
     calendarSubtitle = 'Kliknij dzień, aby zobaczyć wpisy z tego dnia.',
@@ -151,6 +161,7 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
   }
 
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
+  const [quickFilter, setQuickFilter] = useState<MonthQuickFilter>('all')
   const [editingTransactionId, setEditingTransactionId] = useState<string | null>(null)
   const [editDay, setEditDay] = useState('')
   const [editAmount, setEditAmount] = useState('')
@@ -172,9 +183,25 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
   const daysInMonth = getDaysInMonth(selectedMonth)
   const firstDayOffset = (new Date(year, month - 1, 1).getDay() + 6) % 7
 
+  const filteredTransactions = useMemo(() => {
+    if (quickFilter === 'income') {
+      return transactions.filter((transaction) => getSignedAmountForTransaction(transaction) > 0)
+    }
+
+    if (quickFilter === 'expense') {
+      return transactions.filter((transaction) => getSignedAmountForTransaction(transaction) < 0)
+    }
+
+    if (quickFilter === 'no-day') {
+      return transactions.filter((transaction) => transaction.day_is_null)
+    }
+
+    return transactions
+  }, [getSignedAmountForTransaction, quickFilter, transactions])
+
   const transactionsWithDay = useMemo(() => {
-    return transactions.filter((transaction) => !transaction.day_is_null)
-  }, [transactions])
+    return filteredTransactions.filter((transaction) => !transaction.day_is_null)
+  }, [filteredTransactions])
 
   const isSelectedMonthPartial = isMonthPartialByBudgetStart(selectedMonth, budgetStartDate)
 
@@ -187,8 +214,8 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
   }, [budgetStartDate, selectedDay, selectedMonth])
 
   const transactionsWithoutDay = useMemo(() => {
-    return transactions.filter((transaction) => transaction.day_is_null)
-  }, [transactions])
+    return filteredTransactions.filter((transaction) => transaction.day_is_null)
+  }, [filteredTransactions])
 
   const transactionsByDay = useMemo(() => {
     return transactionsWithDay.reduce<Record<string, Transaction[]>>((acc, transaction) => {
@@ -814,6 +841,16 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
                   przenieś
                 </button>
 
+                {onDuplicateTransaction && (
+                  <button
+                    type="button"
+                    style={secondaryButtonStyle}
+                    onClick={() => onDuplicateTransaction(transaction)}
+                  >
+                    powiel wpis
+                  </button>
+                )}
+
                 <button
                   type="button"
                   style={dangerButtonStyle}
@@ -979,6 +1016,23 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
       }
       notices={
         <>
+          <div style={quickFilterBarStyle}>
+            {[
+              ['all', 'wszystko'],
+              ['income', 'tylko przychody'],
+              ['expense', 'tylko wydatki'],
+              ['no-day', 'bez dnia'],
+            ].map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                style={quickFilter === value ? styles.primaryButton : styles.secondaryButton}
+                onClick={() => setQuickFilter(value as MonthQuickFilter)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
           {isSelectedMonthPartial && (
             <div style={{ ...styles.infoBox, marginBottom: 10 }}>
               Ten miesiąc jest niepełny — dane przed datą startową nie są liczone.

@@ -63,9 +63,12 @@ type Props = {
   suggestedCategoryId: string | null
   lockedLevel1Id: string | null
   topShortcutCategories: TransactionShortcut[]
+  pinnedShortcutCategories: TransactionShortcut[]
+  pinnedCategoryIds: string[]
   recentShortcutCategories: TransactionShortcut[]
   descriptionSuggestions: DescriptionSuggestionSet
   onSelectShortcutCategory: (categoryId: string) => void
+  onTogglePinnedCategory: (categoryId: string) => void
   selectedLevel1Id: string | null
   setSelectedLevel1Id: (value: string | null) => void
   selectedLevel2Id: string | null
@@ -74,6 +77,9 @@ type Props = {
   setSelectedCategoryId: (value: string | null) => void
   isSerialModeEnabled: boolean
   setIsSerialModeEnabled: (value: boolean) => void
+  isQuickDayModeEnabled: boolean
+  setIsQuickDayModeEnabled: (value: boolean) => void
+  setQuickDayDate: (value: string) => void
   amount: string
   setAmount: (value: string) => void
   description: string
@@ -148,9 +154,12 @@ export default function TransactionCreatorModal(props: Props) {
     suggestedCategoryId,
     lockedLevel1Id,
     topShortcutCategories,
+    pinnedShortcutCategories,
+    pinnedCategoryIds,
     recentShortcutCategories,
     descriptionSuggestions,
     onSelectShortcutCategory,
+    onTogglePinnedCategory,
     selectedLevel1Id,
     setSelectedLevel1Id,
     selectedLevel2Id,
@@ -159,6 +168,9 @@ export default function TransactionCreatorModal(props: Props) {
     setSelectedCategoryId,
     isSerialModeEnabled,
     setIsSerialModeEnabled,
+    isQuickDayModeEnabled,
+    setIsQuickDayModeEnabled,
+    setQuickDayDate,
     amount,
     setAmount,
     description,
@@ -384,6 +396,32 @@ export default function TransactionCreatorModal(props: Props) {
           </div>
         )}
 
+        {pinnedShortcutCategories.length > 0 && (
+          <div style={sectionStyle}>
+            <div style={styles.l2Name}>Przypięte kategorie</div>
+
+            <div style={shortcutListStyle}>
+              {pinnedShortcutCategories.map((shortcut) => {
+                const isSelected = effectiveCategoryId === shortcut.id
+
+                return (
+                  <button
+                    key={shortcut.id}
+                    style={{
+                      ...(isSelected ? styles.primaryButton : styles.secondaryButton),
+                      ...shortcutButtonStyle,
+                    }}
+                    onClick={() => handleShortcutClick(shortcut.id)}
+                  >
+                    <span>przypięte</span>
+                    <span>{shortcut.label}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
         {topShortcutCategories.length > 0 && (
           <div style={sectionStyle}>
             <div style={styles.l2Name}>Szybkie kategorie</div>
@@ -552,6 +590,15 @@ export default function TransactionCreatorModal(props: Props) {
             <div style={finalCategoryInfoStyle}>
               <div style={finalCategoryInfoTitleStyle}>Zapis trafi do</div>
               <div style={finalCategoryInfoValueStyle}>{effectiveCategoryLabel}</div>
+              <button
+                type="button"
+                style={{ ...styles.secondaryButton, marginTop: 8 }}
+                onClick={() => onTogglePinnedCategory(effectiveCategoryId)}
+              >
+                {pinnedCategoryIds.includes(effectiveCategoryId)
+                  ? 'odepnij kategorię'
+                  : 'przypnij kategorię'}
+              </button>
             </div>
           )}
         </div>
@@ -636,11 +683,19 @@ export default function TransactionCreatorModal(props: Props) {
                 inputMode="numeric"
                 onChange={(event) => {
                   const nextDay = normalizeDayInput(event.target.value, selectedMonth)
-                  setTransactionDate(nextDay ? `${selectedMonth}-${nextDay}` : '')
+                  const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : ''
+                  setTransactionDate(nextDate)
+                  if (isQuickDayModeEnabled) {
+                    setQuickDayDate(nextDate)
+                  }
                 }}
                 onBlur={(event) => {
                   const nextDay = normalizeDayInput(event.target.value, selectedMonth)
-                  setTransactionDate(nextDay ? `${selectedMonth}-${nextDay}` : '')
+                  const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : ''
+                  setTransactionDate(nextDate)
+                  if (isQuickDayModeEnabled) {
+                    setQuickDayDate(nextDate)
+                  }
                 }}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
@@ -795,6 +850,20 @@ export default function TransactionCreatorModal(props: Props) {
               onChange={(event) => setIsSerialModeEnabled(event.target.checked)}
             />
             dodawaj seryjnie
+          </label>
+
+          <label style={serialToggleStyle}>
+            <input
+              type="checkbox"
+              checked={isQuickDayModeEnabled}
+              onChange={(event) => {
+                setIsQuickDayModeEnabled(event.target.checked)
+                if (event.target.checked) {
+                  setQuickDayDate(transactionDate)
+                }
+              }}
+            />
+            tryb szybkiego dnia
           </label>
 
           {(!selectedLevel1Id || !effectiveCategoryId) && (

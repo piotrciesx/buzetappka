@@ -33,6 +33,7 @@ import {
 import { DescriptionSuggestion, DescriptionSuggestionSet } from '../lib/suggestionUtils'
 import { splitTagInput } from '../lib/tagUtils'
 import { useDescriptionSuggestions } from '../lib/useDescriptionSuggestions'
+import { useIsMobileViewport } from '../lib/useIsMobileViewport'
 
 const normalizeAmountInput = (value: string) => {
   return value.replace(',', '.')
@@ -56,6 +57,7 @@ type Transaction = {
   date: string
   day_is_null?: boolean
   payment_source_id?: string | null
+  recurring_transaction_id?: string | null
   created_at?: string
   is_deleted?: boolean
   deleted_at?: string | null
@@ -122,6 +124,7 @@ type Props = {
     paymentSplitItems?: PaymentSplitInput[]
   ) => Promise<void>
   handleMoveTransaction: (id: string, targetCategoryId: string) => Promise<void>
+  handleDuplicateTransaction?: (transaction: Transaction) => void
   handleOpenCalendarAddForDay: (categoryId: string, dayText: string) => void
   selectedTransactionIds: string[]
   onToggleTransactionSelection: (transactionId: string) => void
@@ -187,6 +190,7 @@ export default function Level3Section(props: Props) {
     handleDeleteTransaction,
     handleUpdateTransaction,
     handleMoveTransaction,
+    handleDuplicateTransaction,
     handleOpenCalendarAddForDay,
     selectedTransactionIds,
     onToggleTransactionSelection,
@@ -242,6 +246,7 @@ export default function Level3Section(props: Props) {
   const [inlinePaymentSplitItems, setInlinePaymentSplitItems] = useState<PaymentSplitInput[]>([])
   const [inlineRecurringTransactionId, setInlineRecurringTransactionId] = useState('')
   const [isInlineSaving, setIsInlineSaving] = useState(false)
+  const inlineSaveLockRef = useRef(false)
   const inlineAmountInputRef = useRef<HTMLInputElement | null>(null)
   const inlineDescriptionInputRef = useRef<HTMLInputElement | null>(null)
 
@@ -289,6 +294,7 @@ export default function Level3Section(props: Props) {
   })
 
   const isDragBlocked = isDragDisabled || isOpen
+  const isMobileViewport = useIsMobileViewport()
   const { attributes, listeners, setNodeRef, transform, isDragging } = useSortable({
     id: l3.id,
     disabled: !isSortable || isDragBlocked,
@@ -476,14 +482,16 @@ export default function Level3Section(props: Props) {
     setInlinePaymentSourceId('')
     setInlinePaymentSplitItems([])
     setInlineRecurringTransactionId('')
+    inlineSaveLockRef.current = false
     setIsInlineSaving(false)
   }
 
   const saveInlineAdd = async () => {
-    if (isInlineSaving) {
+    if (inlineSaveLockRef.current) {
       return
     }
 
+    inlineSaveLockRef.current = true
     setIsInlineSaving(true)
 
     try {
@@ -499,6 +507,7 @@ export default function Level3Section(props: Props) {
       )
       cancelInlineAdd()
     } catch {
+      inlineSaveLockRef.current = false
       setIsInlineSaving(false)
     }
   }
@@ -555,10 +564,19 @@ export default function Level3Section(props: Props) {
         budgetLimitView={budgetLimitView}
         canUseBudgetLimit={canUseBudgetLimit}
         onEditBudgetLimit={onEditBudgetLimit ? () => onEditBudgetLimit(l3.id) : undefined}
+        headerDragProps={
+          isSortable && !isDragBlocked && isMobileViewport
+            ? {
+                ...attributes,
+                ...listeners,
+              }
+            : undefined
+        }
         dragHandle={
-          isSortable ? (
+          isSortable && !isMobileViewport ? (
             <button
               type="button"
+              data-category-drag-handle="true"
               aria-label={`Przeciągnij podkategorię ${l3.name}`}
               title={dragHandleTitle}
               style={dragHandleStyle}
@@ -955,6 +973,17 @@ export default function Level3Section(props: Props) {
                       >
                         przenieś
                       </button>
+
+                      {handleDuplicateTransaction && (
+                        <button
+                          style={styles.secondaryButton}
+                          onClick={() => {
+                            handleDuplicateTransaction(transaction)
+                          }}
+                        >
+                          powiel wpis
+                        </button>
+                      )}
 
                       <button
                         style={styles.secondaryButton}

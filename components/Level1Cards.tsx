@@ -1,8 +1,9 @@
 'use client'
 
-import { CSSProperties, ReactNode } from 'react'
+import { CSSProperties, HTMLAttributes, ReactNode } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { useIsMobileViewport } from '../lib/useIsMobileViewport'
 
 type Category = {
   id: string
@@ -22,6 +23,7 @@ type BaseProps = {
   children?: ReactNode
   styles: Record<string, CSSProperties>
   dragHandle?: ReactNode
+  headerDragProps?: HTMLAttributes<HTMLDivElement>
   extraActions?: ReactNode
   limitIndicator?: ReactNode
 }
@@ -38,13 +40,14 @@ function Level1CardBase(props: BaseProps) {
     children,
     styles,
     dragHandle,
+    headerDragProps,
     extraActions,
     limitIndicator,
   } = props
 
   return (
     <>
-      <div style={styles.l1Header} onClick={onToggle}>
+      <div style={styles.l1Header} onClick={onToggle} {...headerDragProps}>
         <div style={styles.l2Left}>
           {dragHandle}
           <div style={styles.arrow}>{isOpen ? '▼' : '▶'}</div>
@@ -90,6 +93,7 @@ export function SortableLevel1Card(props: SortableProps) {
     id: level1Category.id,
     disabled: !isSortable,
   })
+  const isMobileViewport = useIsMobileViewport()
 
   const wrapStyle: CSSProperties = {
     ...styles.l1Card,
@@ -116,12 +120,21 @@ export function SortableLevel1Card(props: SortableProps) {
           }
         }}
         styles={styles}
+        headerDragProps={
+          isSortable && isMobileViewport
+            ? ({
+                ...attributes,
+                ...listeners,
+              } as HTMLAttributes<HTMLDivElement>)
+            : undefined
+        }
         extraActions={extraActions}
         limitIndicator={limitIndicator}
         dragHandle={
-          isSortable ? (
+          isSortable && !isMobileViewport ? (
             <button
               type="button"
+              data-category-drag-handle="true"
               aria-label={`Przeciągnij kategorię ${level1Category.name}`}
               style={dragHandleStyle}
               onMouseDown={(event) => event.stopPropagation()}

@@ -16,6 +16,9 @@ type UseBudgetPageOverlayPropsParams = {
   transactionCreatorLockedLevel1Id: string | null
   topTransactionShortcutCategoriesByType: Record<string, any[]>
   recentTransactionShortcutCategoriesByType: Record<string, any[]>
+  pinnedTransactionShortcutCategoriesByType: Record<string, any[]>
+  pinnedCategoryIds: string[]
+  togglePinnedCategory: (categoryId: string) => void
   descriptionSuggestions: any
   applyTransactionCategorySelection: (id: string) => void
   selectedTransactionTypeId: string | null
@@ -26,6 +29,9 @@ type UseBudgetPageOverlayPropsParams = {
   setSelectedTransactionCategoryId: (id: string | null) => void
   isSerialTransactionCreatorEnabled: boolean
   setIsSerialTransactionCreatorEnabled: (value: boolean) => void
+  isQuickDayModeEnabled: boolean
+  setIsQuickDayModeEnabled: (value: boolean) => void
+  setQuickDayDate: (value: string) => void
   newAmount: string
   setNewAmount: (value: string) => void
   newDescription: string
@@ -75,6 +81,9 @@ export function useBudgetPageOverlayProps({
   transactionCreatorLockedLevel1Id,
   topTransactionShortcutCategoriesByType,
   recentTransactionShortcutCategoriesByType,
+  pinnedTransactionShortcutCategoriesByType,
+  pinnedCategoryIds,
+  togglePinnedCategory,
   descriptionSuggestions,
   applyTransactionCategorySelection,
   selectedTransactionTypeId,
@@ -85,6 +94,9 @@ export function useBudgetPageOverlayProps({
   setSelectedTransactionCategoryId,
   isSerialTransactionCreatorEnabled,
   setIsSerialTransactionCreatorEnabled,
+  isQuickDayModeEnabled,
+  setIsQuickDayModeEnabled,
+  setQuickDayDate,
   newAmount,
   setNewAmount,
   newDescription,
@@ -136,6 +148,11 @@ export function useBudgetPageOverlayProps({
     topShortcutCategories: shortcutBaseLevel1Id
       ? topTransactionShortcutCategoriesByType[shortcutBaseLevel1Id] || []
       : [],
+    pinnedShortcutCategories: shortcutBaseLevel1Id
+      ? pinnedTransactionShortcutCategoriesByType[shortcutBaseLevel1Id] || []
+      : [],
+    pinnedCategoryIds,
+    togglePinnedCategory,
     recentShortcutCategories: shortcutBaseLevel1Id
       ? recentTransactionShortcutCategoriesByType[shortcutBaseLevel1Id] || []
       : [],
@@ -149,6 +166,9 @@ export function useBudgetPageOverlayProps({
     setSelectedTransactionCategoryId,
     isSerialTransactionCreatorEnabled,
     setIsSerialTransactionCreatorEnabled,
+    isQuickDayModeEnabled,
+    setIsQuickDayModeEnabled,
+    setQuickDayDate,
     newAmount,
     setNewAmount,
     newDescription,

@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react'
+import type { CSSProperties, HTMLAttributes, ReactNode } from 'react'
 import BudgetLimitIndicator, { BudgetLimitView } from '../BudgetLimitIndicator'
 
 type Level3SectionHeaderProps = {
@@ -14,6 +14,7 @@ type Level3SectionHeaderProps = {
   canAddHere: boolean
   isSelectedMonthLocked: boolean
   dragHandle: ReactNode
+  headerDragProps?: HTMLAttributes<HTMLDivElement>
   styles: Record<string, CSSProperties>
   onToggle: () => void
   onToggleCalendar: () => void
@@ -41,6 +42,7 @@ export default function Level3SectionHeader({
   canAddHere,
   isSelectedMonthLocked,
   dragHandle,
+  headerDragProps,
   styles,
   onToggle,
   onToggleCalendar,
@@ -65,6 +67,7 @@ export default function Level3SectionHeader({
           onToggle()
         }
       }}
+      {...headerDragProps}
     >
       <div style={styles.l2Left}>
         {dragHandle}

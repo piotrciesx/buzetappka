@@ -192,14 +192,13 @@ export function useDescriptionSuggestions({
       return true
     }
 
-    if (
-      event.key === 'Enter' &&
-      filteredSuggestions.length > 0 &&
-      boundedActiveSuggestionIndex >= 0 &&
-      boundedActiveSuggestionIndex < filteredSuggestions.length
-    ) {
+    if (event.key === 'Enter' && filteredSuggestions.length > 0) {
       event.preventDefault()
-      applySuggestion(filteredSuggestions[boundedActiveSuggestionIndex].text)
+      const suggestionIndex =
+        boundedActiveSuggestionIndex >= 0 && boundedActiveSuggestionIndex < filteredSuggestions.length
+          ? boundedActiveSuggestionIndex
+          : 0
+      applySuggestion(filteredSuggestions[suggestionIndex].text)
       return true
     }
 

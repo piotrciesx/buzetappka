@@ -69,7 +69,7 @@ export default function DashboardWidgetFrame({
               : tileStyle.boxShadow,
           transform: undefined,
           opacity: isDropBlocked ? 0.82 : 1,
-          touchAction: dragListeners ? 'none' : tileStyle.touchAction,
+          touchAction: dragListeners ? 'pan-y' : tileStyle.touchAction,
         }}
         onPointerEnter={() => setIsHovered(true)}
         onPointerLeave={() => setIsHovered(false)}

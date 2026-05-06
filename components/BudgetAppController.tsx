@@ -60,6 +60,7 @@ import { getNextMonthText, getPrevMonthText } from '../lib/dateUtils'
 import { filterTransactionsByBudgetStartDate } from '../lib/transactionScope'
 import { downloadProfileBackupCsv, downloadProfileBackupJson } from '../lib/exportBackup'
 import { useBudgetAppEffects } from './budget-app/useBudgetAppEffects'
+import { createPaymentSplitItemsFromStoredSplits } from '../lib/paymentSplitUtils'
 
 type MigrationPromptState = {
   categoryId: string
@@ -144,6 +145,25 @@ export default function BudgetAppController({
   >([])
   const [selectedRecurringTransactionId, setSelectedRecurringTransactionId] = useState('')
   const [isSerialTransactionCreatorEnabled, setIsSerialTransactionCreatorEnabled] = useState(false)
+  const [isQuickDayModeEnabled, setIsQuickDayModeEnabled] = useState(false)
+  const [quickDayDate, setQuickDayDate] = useState('')
+  const [pinnedCategoryIds, setPinnedCategoryIds] = useState<string[]>(() => {
+    if (!profileId || typeof window === 'undefined') {
+      return []
+    }
+
+    const storedValue = window.localStorage.getItem(`budget-app-pinned-categories-${profileId}`)
+    if (!storedValue) {
+      return []
+    }
+
+    try {
+      const parsedValue = JSON.parse(storedValue)
+      return Array.isArray(parsedValue) ? parsedValue.filter(Boolean) : []
+    } catch {
+      return []
+    }
+  })
   const [transactionCreatorInitialDate, setTransactionCreatorInitialDate] = useState<string | null>(
     null
   )
@@ -220,6 +240,32 @@ export default function BudgetAppController({
     goToPrevMonth,
     goToNextMonth,
   } = useBudgetMonthNavigation({ profileId })
+
+  const effectiveQuickDayDate = quickDayDate.startsWith(selectedMonth) ? quickDayDate : ''
+
+  useEffect(() => {
+    if (
+      !isTransactionCreatorOpen ||
+      !isQuickDayModeEnabled ||
+      !effectiveQuickDayDate ||
+      newTransactionDate
+    ) {
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setNewTransactionDate(effectiveQuickDayDate)
+    }, 0)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [
+    effectiveQuickDayDate,
+    isQuickDayModeEnabled,
+    isTransactionCreatorOpen,
+    newTransactionDate,
+  ])
 
   const effectiveVisibleModules = useMemo(
     () =>
@@ -524,6 +570,51 @@ export default function BudgetAppController({
     setSelectedTransactionTypeId,
   })
 
+  useEffect(() => {
+    if (!profileId || typeof window === 'undefined') {
+      return
+    }
+
+    window.localStorage.setItem(
+      `budget-app-pinned-categories-${profileId}`,
+      JSON.stringify(pinnedCategoryIds)
+    )
+  }, [pinnedCategoryIds, profileId])
+
+  const togglePinnedCategory = useCallback((categoryId: string) => {
+    setPinnedCategoryIds((prev) =>
+      prev.includes(categoryId)
+        ? prev.filter((item) => item !== categoryId)
+        : [categoryId, ...prev].slice(0, 12)
+    )
+  }, [])
+
+  const pinnedTransactionShortcutCategoriesByType = useMemo(() => {
+    return pinnedCategoryIds.reduce<Record<string, Array<{ id: string; label: string }>>>(
+      (acc, categoryId) => {
+        if (!addableTransactionCategoryIds.has(categoryId)) {
+          return acc
+        }
+
+        const rootId = getRootLevel1IdForCategory(categoryId)
+        const label = transactionCategoryPathLabels[categoryId]
+
+        if (!rootId || !label) {
+          return acc
+        }
+
+        acc[rootId] = [...(acc[rootId] || []), { id: categoryId, label }]
+        return acc
+      },
+      {}
+    )
+  }, [
+    addableTransactionCategoryIds,
+    getRootLevel1IdForCategory,
+    pinnedCategoryIds,
+    transactionCategoryPathLabels,
+  ])
+
   const getDefaultPaymentSourceIdForCategoryId = useCallback(
     (categoryId: string) => {
       if (!isPaymentSourcesModuleEnabled) {
@@ -687,6 +778,46 @@ export default function BudgetAppController({
     setIsTransactionCreatorOpen,
     restoreDescriptionSuggestion,
   })
+
+  const handleDuplicateTransaction = useCallback(
+    (transaction: Transaction) => {
+      if (!canCreateTransactionsInMonth(isSelectedMonthLocked)) {
+        return
+      }
+
+      applyTransactionCategorySelection(transaction.category_id)
+      setTransactionCreatorSuggestionId(transaction.category_id)
+      setTransactionCreatorLockedLevel1Id(null)
+      setNewAmount(String(getAmountNumber(transaction.amount)))
+      setNewDescription(transaction.description || '')
+      setSelectedTagNames((transactionTagsMap[transaction.id] || []).map((tag) => tag.name))
+      setSelectedPaymentSourceId(transaction.payment_source_id || '')
+      setSelectedPaymentSplitItems(
+        createPaymentSplitItemsFromStoredSplits(transactionPaymentSplitsMap[transaction.id] || [])
+      )
+      setSelectedRecurringTransactionId(transaction.recurring_transaction_id || '')
+      setNewTransactionDate(isQuickDayModeEnabled && effectiveQuickDayDate ? effectiveQuickDayDate : '')
+      setIsSerialTransactionCreatorEnabled(false)
+      setTransactionDraftId(null)
+      setTransactionDraftType(null)
+      setTransactionCreatorInitialDate(null)
+      setIsTransactionCreatorOpen(true)
+
+      window.setTimeout(() => {
+        amountInputRef.current?.focus()
+      }, 0)
+    },
+    [
+      applyTransactionCategorySelection,
+      isQuickDayModeEnabled,
+      isSelectedMonthLocked,
+      effectiveQuickDayDate,
+      setTransactionDraftId,
+      setTransactionDraftType,
+      transactionPaymentSplitsMap,
+      transactionTagsMap,
+    ]
+  )
 
   const handleTransactionSavedWithReminderStatus = useCallback(
     async (transaction: Transaction) => {
@@ -984,6 +1115,8 @@ export default function BudgetAppController({
     newTransactionDate,
     selectedRecurringTransactionId,
     isSerialTransactionCreatorEnabled,
+    isQuickDayModeEnabled,
+    quickDayDate: effectiveQuickDayDate,
     isPaymentSourcesEnabled: isPaymentSourcesModuleEnabled,
     isRecurringTransactionsEnabled: isRecurringTransactionsModuleEnabled,
     isAllowedMoveTarget,
@@ -1308,6 +1441,9 @@ export default function BudgetAppController({
     transactionCreatorLockedLevel1Id,
     topTransactionShortcutCategoriesByType,
     recentTransactionShortcutCategoriesByType,
+    pinnedTransactionShortcutCategoriesByType,
+    pinnedCategoryIds,
+    togglePinnedCategory,
     descriptionSuggestions,
     applyTransactionCategorySelection,
     selectedTransactionTypeId,
@@ -1318,6 +1454,9 @@ export default function BudgetAppController({
     setSelectedTransactionCategoryId,
     isSerialTransactionCreatorEnabled,
     setIsSerialTransactionCreatorEnabled,
+    isQuickDayModeEnabled,
+    setIsQuickDayModeEnabled,
+    setQuickDayDate,
     newAmount,
     setNewAmount,
     newDescription,
@@ -1735,6 +1874,7 @@ export default function BudgetAppController({
           onUpdateTransaction: handleUpdateTransaction,
           onDeleteTransaction: handleDeleteTransaction,
           onMoveTransaction: handleMoveTransaction,
+          onDuplicateTransaction: handleDuplicateTransaction,
           onAddTransactionForDay: handleOpenGlobalCalendarAddForDay,
           calendarTitle: 'Kalendarz miesiąca',
           calendarSubtitle: 'Kliknij dzień, aby zobaczyć wpisy z tego dnia lub dodać nowy wpis.',
@@ -1811,6 +1951,7 @@ export default function BudgetAppController({
           handleDeleteTransaction,
           handleUpdateTransaction,
           handleMoveTransaction,
+          handleDuplicateTransaction,
           handleOpenCategoryCalendarAddForDay,
           handleOpenLevel1CalendarAddForDay,
           toggleTransactionSelection,

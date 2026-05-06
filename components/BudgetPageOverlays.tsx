@@ -29,6 +29,9 @@ type Props = {
   transactionCreatorSuggestionId: string | null
   transactionCreatorLockedLevel1Id: string | null
   topShortcutCategories: any[]
+  pinnedShortcutCategories: any[]
+  pinnedCategoryIds: string[]
+  togglePinnedCategory: (categoryId: string) => void
   recentShortcutCategories: any[]
   descriptionSuggestions: any
   applyTransactionCategorySelection: (id: string) => void
@@ -40,6 +43,9 @@ type Props = {
   setSelectedTransactionCategoryId: (id: string | null) => void
   isSerialTransactionCreatorEnabled: boolean
   setIsSerialTransactionCreatorEnabled: (v: boolean) => void
+  isQuickDayModeEnabled: boolean
+  setIsQuickDayModeEnabled: (v: boolean) => void
+  setQuickDayDate: (v: string) => void
   newAmount: string
   setNewAmount: (v: string) => void
   newDescription: string
@@ -90,6 +96,9 @@ export default function BudgetPageOverlays(props: Props) {
     transactionCreatorSuggestionId,
     transactionCreatorLockedLevel1Id,
     topShortcutCategories,
+    pinnedShortcutCategories,
+    pinnedCategoryIds,
+    togglePinnedCategory,
     recentShortcutCategories,
     descriptionSuggestions,
     applyTransactionCategorySelection,
@@ -101,6 +110,9 @@ export default function BudgetPageOverlays(props: Props) {
     setSelectedTransactionCategoryId,
     isSerialTransactionCreatorEnabled,
     setIsSerialTransactionCreatorEnabled,
+    isQuickDayModeEnabled,
+    setIsQuickDayModeEnabled,
+    setQuickDayDate,
     newAmount,
     setNewAmount,
     newDescription,
@@ -156,6 +168,9 @@ export default function BudgetPageOverlays(props: Props) {
         suggestedCategoryId={transactionCreatorSuggestionId}
         lockedLevel1Id={transactionCreatorLockedLevel1Id}
         topShortcutCategories={topShortcutCategories}
+        pinnedShortcutCategories={pinnedShortcutCategories}
+        pinnedCategoryIds={pinnedCategoryIds}
+        onTogglePinnedCategory={togglePinnedCategory}
         recentShortcutCategories={recentShortcutCategories}
         descriptionSuggestions={descriptionSuggestions}
         onSelectShortcutCategory={applyTransactionCategorySelection}
@@ -167,6 +182,9 @@ export default function BudgetPageOverlays(props: Props) {
         setSelectedCategoryId={setSelectedTransactionCategoryId}
         isSerialModeEnabled={isSerialTransactionCreatorEnabled}
         setIsSerialModeEnabled={setIsSerialTransactionCreatorEnabled}
+        isQuickDayModeEnabled={isQuickDayModeEnabled}
+        setIsQuickDayModeEnabled={setIsQuickDayModeEnabled}
+        setQuickDayDate={setQuickDayDate}
         amount={newAmount}
         setAmount={setNewAmount}
         description={newDescription}

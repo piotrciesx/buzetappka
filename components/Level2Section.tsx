@@ -15,6 +15,7 @@ import type { HeatmapMode } from './month-calendar/monthCalendarTypes'
 import { DescriptionSuggestion } from '../lib/suggestionUtils'
 import { Tag, TransactionPaymentSplit } from '../lib/budgetPageTypes'
 import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
+import { useIsMobileViewport } from '../lib/useIsMobileViewport'
 
 type Category = {
   id: string
@@ -109,6 +110,7 @@ type Props = {
     paymentSplitItems?: Array<{ paymentSourceId: string; amount: string }>
   ) => Promise<void>
   handleMoveTransaction: (id: string, targetCategoryId: string) => Promise<void>
+  handleDuplicateTransaction?: (transaction: Transaction) => void
   handleOpenCalendarAddForDay: (categoryId: string, dayText: string) => void
   selectedTransactionIds: string[]
   onToggleTransactionSelection: (transactionId: string) => void
@@ -186,6 +188,7 @@ export default function Level2Section(props: Props) {
     handleDeleteTransaction,
     handleUpdateTransaction,
     handleMoveTransaction,
+    handleDuplicateTransaction,
     handleOpenCalendarAddForDay,
     selectedTransactionIds,
     onToggleTransactionSelection,
@@ -223,6 +226,7 @@ export default function Level2Section(props: Props) {
   const isLevel2DragBlocked = isDragDisabled || isOpen
 
   const sensors = usePressHoldDndSensors()
+  const isMobileViewport = useIsMobileViewport()
 
   const hasVisibleOpenLevel3 = sortedLevel3Children.some((category) =>
     openLevel3Ids.includes(category.id)
@@ -361,6 +365,7 @@ export default function Level2Section(props: Props) {
               handleDeleteTransaction={handleDeleteTransaction}
               handleUpdateTransaction={handleUpdateTransaction}
               handleMoveTransaction={handleMoveTransaction}
+              handleDuplicateTransaction={handleDuplicateTransaction}
               handleOpenCalendarAddForDay={handleOpenCalendarAddForDay}
               selectedTransactionIds={selectedTransactionIds}
               onToggleTransactionSelection={onToggleTransactionSelection}
@@ -406,11 +411,14 @@ export default function Level2Section(props: Props) {
             toggleLevel2(l2.id)
           }
         }}
+        {...(isSortable && !isLevel2DragBlocked && isMobileViewport ? attributes : {})}
+        {...(isSortable && !isLevel2DragBlocked && isMobileViewport ? listeners : {})}
       >
         <div style={styles.l2Left}>
-          {isSortable && (
+          {isSortable && !isMobileViewport && (
             <button
               type="button"
+              data-category-drag-handle="true"
               aria-label={`Przeciągnij kategorię ${l2.name}`}
               title={dragHandleTitle}
               style={dragHandleStyle}
@@ -610,6 +618,7 @@ export default function Level2Section(props: Props) {
           onUpdateTransaction={handleUpdateTransaction}
           onDeleteTransaction={handleDeleteTransaction}
           onMoveTransaction={handleMoveTransaction}
+          onDuplicateTransaction={handleDuplicateTransaction}
           heatmapVariant={calendarHeatmapVariant}
           heatmapMode={heatmapMode}
           heatmapInverted={heatmapInverted}
@@ -686,6 +695,7 @@ export default function Level2Section(props: Props) {
           handleDeleteTransaction={handleDeleteTransaction}
           handleUpdateTransaction={handleUpdateTransaction}
           handleMoveTransaction={handleMoveTransaction}
+          handleDuplicateTransaction={handleDuplicateTransaction}
           handleOpenCalendarAddForDay={handleOpenCalendarAddForDay}
           selectedTransactionIds={selectedTransactionIds}
           onToggleTransactionSelection={onToggleTransactionSelection}

@@ -11,6 +11,7 @@ export type Transaction = {
   date: string
   day_is_null?: boolean
   payment_source_id?: string | null
+  recurring_transaction_id?: string | null
   created_at?: string
   is_deleted?: boolean
   deleted_at?: string | null
@@ -56,6 +57,7 @@ export type MonthCalendarPanelProps = {
   ) => Promise<void>
   onDeleteTransaction: (transactionId: string) => Promise<void>
   onMoveTransaction: (transactionId: string, targetCategoryId: string) => Promise<void>
+  onDuplicateTransaction?: (transaction: Transaction) => void
   onAddTransactionForDay?: (dayText: string) => void
   calendarTitle?: string
   calendarSubtitle?: string

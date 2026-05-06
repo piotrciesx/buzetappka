@@ -100,6 +100,7 @@ type Props = {
     paymentSplitItems?: Array<{ paymentSourceId: string; amount: string }>
   ) => Promise<void>
   handleMoveTransaction: (id: string, targetCategoryId: string) => Promise<void>
+  handleDuplicateTransaction?: (transaction: Transaction) => void
   handleOpenCategoryCalendarAddForDay: (categoryId: string, dayText: string) => void
   handleOpenLevel1CalendarAddForDay: (level1Id: string, dayText: string) => void
   toggleTransactionSelection: (transactionId: string) => void
@@ -179,6 +180,7 @@ export default function BudgetTreeSection({
   handleDeleteTransaction,
   handleUpdateTransaction,
   handleMoveTransaction,
+  handleDuplicateTransaction,
   handleOpenCategoryCalendarAddForDay,
   handleOpenLevel1CalendarAddForDay,
   toggleTransactionSelection,
@@ -323,6 +325,7 @@ export default function BudgetTreeSection({
         handleDeleteTransaction={handleDeleteTransaction}
         handleUpdateTransaction={handleUpdateTransaction}
         handleMoveTransaction={handleMoveTransaction}
+        handleDuplicateTransaction={handleDuplicateTransaction}
         handleOpenCategoryCalendarAddForDay={handleOpenCategoryCalendarAddForDay}
         handleOpenLevel1CalendarAddForDay={handleOpenLevel1CalendarAddForDay}
         toggleTransactionSelection={toggleTransactionSelection}

@@ -96,6 +96,7 @@ type Props = {
     paymentSplitItems?: Array<{ paymentSourceId: string; amount: string }>
   ) => Promise<void>
   handleMoveTransaction: (id: string, targetCategoryId: string) => Promise<void>
+  handleDuplicateTransaction?: (transaction: Transaction) => void
   handleOpenCategoryCalendarAddForDay: (categoryId: string, dayText: string) => void
   handleOpenLevel1CalendarAddForDay: (level1Id: string, dayText: string) => void
   toggleTransactionSelection: (transactionId: string) => void
@@ -188,6 +189,7 @@ export default function BudgetCategoryTree(props: Props) {
     handleDeleteTransaction,
     handleUpdateTransaction,
     handleMoveTransaction,
+    handleDuplicateTransaction,
     handleOpenCategoryCalendarAddForDay,
     handleOpenLevel1CalendarAddForDay,
     toggleTransactionSelection,
@@ -273,6 +275,7 @@ export default function BudgetCategoryTree(props: Props) {
         handleDeleteTransaction={handleDeleteTransaction}
         handleUpdateTransaction={handleUpdateTransaction}
         handleMoveTransaction={handleMoveTransaction}
+        handleDuplicateTransaction={handleDuplicateTransaction}
         handleOpenCalendarAddForDay={handleOpenCategoryCalendarAddForDay}
         selectedTransactionIds={selectedTransactionIds}
         onToggleTransactionSelection={toggleTransactionSelection}
@@ -337,6 +340,7 @@ export default function BudgetCategoryTree(props: Props) {
         handleDeleteTransaction={handleDeleteTransaction}
         handleUpdateTransaction={handleUpdateTransaction}
         handleMoveTransaction={handleMoveTransaction}
+        handleDuplicateTransaction={handleDuplicateTransaction}
         handleOpenCalendarAddForDay={(_, dayText) =>
           handleOpenLevel1CalendarAddForDay(level1Category.id, dayText)
         }
@@ -433,6 +437,7 @@ export default function BudgetCategoryTree(props: Props) {
     return (
       <button
         type="button"
+        data-category-drag-handle="true"
         aria-label={`Przeciągnij kategorię ${level1Category.name}`}
         title="Aby przenosić, najpierw zwiń kategorię"
         style={{
@@ -610,6 +615,7 @@ export default function BudgetCategoryTree(props: Props) {
         onUpdateTransaction={handleUpdateTransaction}
         onDeleteTransaction={handleDeleteTransaction}
         onMoveTransaction={handleMoveTransaction}
+        onDuplicateTransaction={handleDuplicateTransaction}
         heatmapVariant={calendarHeatmapVariant}
         heatmapMode={heatmapMode}
         heatmapInverted={heatmapInverted}

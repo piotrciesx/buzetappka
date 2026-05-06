@@ -1,4 +1,4 @@
-import { RefObject, useCallback } from 'react'
+import { RefObject, useCallback, useRef } from 'react'
 import { SupabaseClient } from '@supabase/supabase-js'
 import { normalizeAmountInput } from './budgetPageHelpers'
 import { Category, Tag, Transaction, UndoAction } from './budgetPageTypes'
@@ -32,6 +32,8 @@ type UseTransactionEntryActionsParams = {
   newTransactionDate: string
   selectedRecurringTransactionId: string
   isSerialTransactionCreatorEnabled: boolean
+  isQuickDayModeEnabled?: boolean
+  quickDayDate?: string
   isPaymentSourcesEnabled: boolean
   isRecurringTransactionsEnabled: boolean
   isAllowedMoveTarget: (transaction: Transaction, targetCategoryId: string) => boolean
@@ -81,6 +83,8 @@ export function useTransactionEntryActions({
   newTransactionDate,
   selectedRecurringTransactionId,
   isSerialTransactionCreatorEnabled,
+  isQuickDayModeEnabled = false,
+  quickDayDate = '',
   isPaymentSourcesEnabled,
   isRecurringTransactionsEnabled,
   isAllowedMoveTarget,
@@ -109,6 +113,7 @@ export function useTransactionEntryActions({
   selectedPaymentSplitItems,
   transactionTagsMap,
 }: UseTransactionEntryActionsParams) {
+  const saveLockRef = useRef(false)
   const canAddTransactionToCategory = useCallback(
     (categoryId: string) => {
       const category = visibleCategories.find((item) => item.id === categoryId)
@@ -327,6 +332,10 @@ export function useTransactionEntryActions({
 
   const handleSaveTransaction = useCallback(
     async (shouldCloseAfterSave = false) => {
+      if (saveLockRef.current) {
+        return
+      }
+
       const effectiveCategoryId = getEffectiveTransactionCategoryId()
 
       if (!selectedTransactionTypeId) {
@@ -382,6 +391,7 @@ export function useTransactionEntryActions({
         buildDateFromDayInput(selectedMonth, normalizedDayInput) || `${selectedMonth}-01`
       const nextDayIsNull = !normalizedDayInput
 
+      saveLockRef.current = true
       setIsSaving(true)
 
       try {
@@ -399,9 +409,11 @@ export function useTransactionEntryActions({
           await deleteDraft(transactionDraftType)
         }
 
+        saveLockRef.current = false
         setIsSaving(false)
       } catch (error) {
         if (error instanceof Error && error.message === 'locked-month') {
+          saveLockRef.current = false
           setIsSaving(false)
           return
         } else if (error instanceof Error && error.message === 'invalid-amount') {
@@ -414,13 +426,14 @@ export function useTransactionEntryActions({
           alert(`Błąd zapisu: ${error.message}`)
         }
 
+        saveLockRef.current = false
         setIsSaving(false)
         return
       }
 
       if (isSerialTransactionCreatorEnabled && !shouldCloseAfterSave) {
         setTransactionCreatorSuggestionId(effectiveCategoryId)
-        setNewTransactionDate('')
+        setNewTransactionDate(isQuickDayModeEnabled && quickDayDate ? quickDayDate : '')
         setNewAmount('')
         setNewDescription('')
         setSelectedTagNames([])
@@ -431,10 +444,12 @@ export function useTransactionEntryActions({
           amountInputRef.current?.focus()
         }, 0)
 
+        saveLockRef.current = false
         return
       }
 
       resetTransactionCreator()
+      saveLockRef.current = false
     },
     [
       amountInputRef,
@@ -444,7 +459,9 @@ export function useTransactionEntryActions({
       getEffectiveTransactionCategoryId,
       getRootLevel1IdForCategory,
       isSerialTransactionCreatorEnabled,
+      isQuickDayModeEnabled,
       isRecurringTransactionsEnabled,
+      quickDayDate,
       newAmount,
       newDescription,
       newTransactionDate,
