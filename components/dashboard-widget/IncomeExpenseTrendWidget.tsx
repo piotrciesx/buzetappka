@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
@@ -234,7 +234,7 @@ function isMonthBeforeBudgetStart(month: string, budgetStartDate: string) {
 function formatMonthLabel(month: string) {
   const [year, monthNumber] = month.split('-')
 
-  return `${monthNumber}.${year}`
+  return `${monthNumber}.${year.slice(2)}`
 }
 
 function getDayFromDate(date: string) {
@@ -308,6 +308,23 @@ export default function IncomeExpenseTrendWidget({
   const [showIncome, setShowIncome] = useState(true)
   const [showExpense, setShowExpense] = useState(true)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (!isDropdownOpen) return
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null
+      if (!target || dropdownRef.current?.contains(target)) return
+      setIsDropdownOpen(false)
+    }
+
+    window.addEventListener('pointerdown', handlePointerDown)
+
+    return () => {
+      window.removeEventListener('pointerdown', handlePointerDown)
+    }
+  }, [isDropdownOpen])
 
   const months = useMemo(() => getMonthList(selectedMonth, monthsCount), [selectedMonth, monthsCount])
 
@@ -478,6 +495,10 @@ export default function IncomeExpenseTrendWidget({
           })}
 
           {data.map((point, index) => {
+            if (isCompact && index % 2 === 1 && index !== data.length - 1) {
+              return null
+            }
+
             const leftPercent = (getPointX(index) / viewBoxWidth) * 100
 
             return (
@@ -497,7 +518,7 @@ export default function IncomeExpenseTrendWidget({
       </div>
 
       <div style={footerStyle}>
-        <div style={dropdownWrapStyle}>
+        <div ref={dropdownRef} style={dropdownWrapStyle}>
           <button
             type="button"
             style={dropdownButtonStyle}

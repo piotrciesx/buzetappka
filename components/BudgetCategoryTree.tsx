@@ -462,6 +462,7 @@ export default function BudgetCategoryTree(props: Props) {
         {canUseMonthCalendar && (
           <button
             type="button"
+            data-category-secondary-action="true"
             style={styles.secondaryButton}
             onMouseDown={(event) => event.stopPropagation()}
             onPointerDown={(event) => event.stopPropagation()}
@@ -477,6 +478,7 @@ export default function BudgetCategoryTree(props: Props) {
         {canUseBudgetLimit && onEditBudgetLimit && (
           <button
             type="button"
+            data-category-secondary-action="true"
             style={styles.secondaryButton}
             onMouseDown={(event) => event.stopPropagation()}
             onPointerDown={(event) => event.stopPropagation()}
@@ -521,6 +523,39 @@ export default function BudgetCategoryTree(props: Props) {
         >
           Dodaj kategorię
         </button>
+
+        {(canUseMonthCalendar || (canUseBudgetLimit && onEditBudgetLimit)) && (
+          <details data-mobile-category-menu="true" onClick={(event) => event.stopPropagation()}>
+            <summary style={styles.secondaryButton}>więcej</summary>
+            <div data-mobile-category-menu-panel="true">
+              {canUseMonthCalendar && (
+                <button
+                  type="button"
+                  style={styles.secondaryButton}
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    toggleLevel1Calendar(level1Category.id)
+                  }}
+                >
+                  {isLevel1CalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
+                </button>
+              )}
+
+              {canUseBudgetLimit && onEditBudgetLimit && (
+                <button
+                  type="button"
+                  style={styles.secondaryButton}
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    onEditBudgetLimit(null)
+                  }}
+                >
+                  {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
+                </button>
+              )}
+            </div>
+          </details>
+        )}
       </>
     )
   }

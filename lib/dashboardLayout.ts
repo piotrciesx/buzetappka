@@ -112,7 +112,7 @@ const placeWidgetInNextFreeSpace = (
   let y = 0
 
   while (true) {
-    for (let x = 0; x < columns; x += 1) {
+    for (let x = 0; x < columns; x += size.width) {
       if (canPlaceWidget(occupiedCells, x, y, size, columns)) {
         occupyWidgetCells(occupiedCells, x, y, size)
 
@@ -125,7 +125,7 @@ const placeWidgetInNextFreeSpace = (
       }
     }
 
-    y += 1
+    y += size.height
   }
 }
 

@@ -443,10 +443,11 @@ export default function Level2Section(props: Props) {
           </div>
         </div>
 
-        <div style={styles.actions} onClick={(event) => event.stopPropagation()}>
+        <div data-category-actions="true" style={styles.actions} onClick={(event) => event.stopPropagation()}>
           {canUseMonthCalendar && (
             <button
               type="button"
+              data-category-secondary-action="true"
               style={styles.secondaryButton}
               onMouseDown={(event) => event.stopPropagation()}
               onPointerDown={(event) => event.stopPropagation()}
@@ -462,6 +463,7 @@ export default function Level2Section(props: Props) {
           {canUseBudgetLimit && onEditBudgetLimit && (
             <button
               type="button"
+              data-category-secondary-action="true"
               style={styles.secondaryButton}
               onMouseDown={(event) => event.stopPropagation()}
               onPointerDown={(event) => event.stopPropagation()}
@@ -490,6 +492,7 @@ export default function Level2Section(props: Props) {
           )}
 
           <button
+            data-category-secondary-action="true"
             style={styles.secondaryButton}
             onClick={async () => {
               await handleRenameCategory(l2.id)
@@ -499,6 +502,7 @@ export default function Level2Section(props: Props) {
           </button>
 
           <button
+            data-category-secondary-action="true"
             style={styles.dangerButton}
             onClick={async () => {
               await handleDeleteCategory(l2.id)
@@ -523,6 +527,7 @@ export default function Level2Section(props: Props) {
 
           {isClosingAfterSelectedMonth ? (
             <button
+              data-category-secondary-action="true"
               style={styles.secondaryButton}
               onClick={async () => {
                 await handleUndoScheduledHide(l2.id)
@@ -533,6 +538,7 @@ export default function Level2Section(props: Props) {
           ) : (
             <>
               <button
+                data-category-secondary-action="true"
                 style={styles.dangerButton}
                 onClick={async () => {
                   await handleHideLevel2Click('now')
@@ -542,6 +548,7 @@ export default function Level2Section(props: Props) {
               </button>
 
               <button
+                data-category-secondary-action="true"
                 style={styles.dangerButton}
                 onClick={async () => {
                   await handleHideLevel2Click('next')
@@ -551,6 +558,42 @@ export default function Level2Section(props: Props) {
               </button>
             </>
           )}
+
+          <details data-mobile-category-menu="true" onClick={(event) => event.stopPropagation()}>
+            <summary style={styles.secondaryButton}>więcej</summary>
+            <div data-mobile-category-menu-panel="true">
+              {canUseMonthCalendar && (
+                <button type="button" style={styles.secondaryButton} onClick={() => setIsCalendarOpen((prev) => !prev)}>
+                  {isCalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
+                </button>
+              )}
+              {canUseBudgetLimit && onEditBudgetLimit && (
+                <button type="button" style={styles.secondaryButton} onClick={() => onEditBudgetLimit(l2.id)}>
+                  {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
+                </button>
+              )}
+              <button style={styles.secondaryButton} onClick={async () => handleRenameCategory(l2.id)}>
+                zmień nazwę
+              </button>
+              {isClosingAfterSelectedMonth ? (
+                <button style={styles.secondaryButton} onClick={async () => handleUndoScheduledHide(l2.id)}>
+                  cofnij zamknięcie
+                </button>
+              ) : (
+                <>
+                  <button style={styles.dangerButton} onClick={async () => handleHideLevel2Click('now')}>
+                    ukryj teraz
+                  </button>
+                  <button style={styles.dangerButton} onClick={async () => handleHideLevel2Click('next')}>
+                    ukryj od następnego
+                  </button>
+                </>
+              )}
+              <button style={styles.dangerButton} onClick={async () => handleDeleteCategory(l2.id)}>
+                usuń
+              </button>
+            </div>
+          </details>
         </div>
       </div>
 

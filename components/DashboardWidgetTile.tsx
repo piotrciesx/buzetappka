@@ -1,6 +1,6 @@
 'use client'
 
-import { ButtonHTMLAttributes, CSSProperties, useMemo } from 'react'
+import { ButtonHTMLAttributes, CSSProperties, HTMLAttributes, useMemo } from 'react'
 import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
 import {
@@ -32,6 +32,7 @@ export default function DashboardWidgetTile({
   isDropBlocked,
   isInteractionLocked,
   isConfigOpen,
+  isMobileDashboard,
   onToggleSize,
   onRemove,
 }: DashboardWidgetTileProps) {
@@ -78,6 +79,12 @@ export default function DashboardWidgetTile({
     ...attributes,
     ...listeners,
   } as ButtonHTMLAttributes<HTMLButtonElement>
+  const mobileDragProps = isMobileDashboard
+    ? ({
+        ...attributes,
+        ...listeners,
+      } as HTMLAttributes<HTMLDivElement>)
+    : undefined
 
   return (
     <DashboardWidgetFrame
@@ -85,7 +92,9 @@ export default function DashboardWidgetTile({
       wrapperStyle={wrapperStyle}
       isDragging={isDragging}
       isDropBlocked={isDropBlocked}
-      onResizePointerDown={(edge, event) => {
+      dragAttributes={mobileDragProps}
+      dragListeners={mobileDragProps}
+      onResizePointerDown={isMobileDashboard ? undefined : (edge, event) => {
         if (isInteractionLocked) return
 
         event.preventDefault()
@@ -120,7 +129,8 @@ export default function DashboardWidgetTile({
       <DashboardWidgetHeader
         widget={widget}
         safeDefinition={safeDefinition}
-        dragHandleProps={dragHandleProps}
+        dragHandleProps={isMobileDashboard ? undefined : dragHandleProps}
+        isMobileDashboard={isMobileDashboard}
         onToggleSize={() => onToggleSize(widget.id)}
         onRemove={() => onRemove(widget.id)}
       />

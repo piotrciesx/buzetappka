@@ -25,7 +25,7 @@ export const tileStyle: CSSProperties = {
   borderWidth: 1,
   borderStyle: 'solid',
   borderColor: 'rgba(148, 163, 184, 0.36)',
-  borderRadius: 28,
+  borderRadius: 18,
   boxShadow:
     'inset 0 1px 0 rgba(255,255,255,0.92), 0 6px 18px rgba(0,0,0,0.06)',
   padding: 14,
@@ -37,8 +37,8 @@ export const tileHeaderStyle: CSSProperties = {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'flex-start',
-  gap: 10,
-  padding: '2px 2px 8px',
+  gap: 8,
+  padding: '0 0 8px',
   minWidth: 0,
   minHeight: 0,
   overflow: 'hidden',
@@ -64,9 +64,10 @@ export const tileTitleStyle: CSSProperties = {
   lineHeight: 1.2,
   letterSpacing: 0,
   display: '-webkit-box',
-  WebkitLineClamp: 1,
+  WebkitLineClamp: 2,
   WebkitBoxOrient: 'vertical',
-  overflow: 'visible',
+  overflow: 'hidden',
+  overflowWrap: 'anywhere',
 }
 
 export const metaStyle: CSSProperties = {
@@ -75,7 +76,7 @@ export const metaStyle: CSSProperties = {
   lineHeight: 1.25,
   color: '#64748b',
   whiteSpace: 'nowrap',
-  overflow: 'visible',
+  overflow: 'hidden',
   textOverflow: 'ellipsis',
 }
 

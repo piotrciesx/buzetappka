@@ -47,7 +47,7 @@ export default function DashboardWidgetContent(props: WidgetContentProps) {
   } = props
 
   if (widget.containerType === 'month-finance') {
-    return <MonthFinanceWidget widget={widget} dashboardStats={dashboardStats} />
+    return <MonthFinanceWidget widget={widget} rect={props.rect} dashboardStats={dashboardStats} />
   }
 
   if (widget.containerType === 'month-rhythm') {

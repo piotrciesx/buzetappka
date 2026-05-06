@@ -11,7 +11,8 @@ import {
 type DashboardWidgetHeaderProps = {
   widget: DashboardWidgetLayoutItem
   safeDefinition: DashboardWidgetDefinition
-  dragHandleProps: ButtonHTMLAttributes<HTMLButtonElement>
+  dragHandleProps?: ButtonHTMLAttributes<HTMLButtonElement>
+  isMobileDashboard: boolean
   onToggleSize: () => void
   onRemove: () => void
 }
@@ -20,6 +21,7 @@ export default function DashboardWidgetHeader({
   widget,
   safeDefinition,
   dragHandleProps,
+  isMobileDashboard,
   onToggleSize,
   onRemove,
 }: DashboardWidgetHeaderProps) {
@@ -38,36 +40,46 @@ export default function DashboardWidgetHeader({
         overflow: 'hidden',
       }}
     >
-      <div style={{ flex: 1, minWidth: 0 }}>
+      <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
         <div style={tileTitleStyle}>{safeDefinition.title}</div>
         {widget.width > 1 && <div style={metaStyle}>{safeDefinition.description}</div>}
       </div>
 
-      <div style={{ display: 'inline-flex', gap: 6, flexShrink: 0 }}>
-        <button
-          type="button"
-          data-dashboard-ignore-drag="true"
-          data-dashboard-config-control="true"
-          style={{
-            ...iconButtonStyle,
-            width: 'auto',
-            minWidth: 34,
-            padding: '0 8px',
-            fontSize: 14,
-            fontWeight: 600,
-          }}
-          aria-label={`Przełącz kafel ${safeDefinition.title} na tryb ${sizeButtonLabel}`}
-          onClick={onToggleSize}
-          title={`Przełącz na tryb ${sizeButtonLabel}`}
-        >
-          ↔
-        </button>
+      <div
+        style={{ display: 'inline-flex', gap: isMobileDashboard ? 4 : 6, flexShrink: 0 }}
+        onPointerDown={(event) => event.stopPropagation()}
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        {!isMobileDashboard && (
+          <button
+            type="button"
+            data-dashboard-ignore-drag="true"
+            data-dashboard-config-control="true"
+            style={{
+              ...iconButtonStyle,
+              width: 'auto',
+              minWidth: 34,
+              padding: '0 8px',
+              fontSize: 14,
+              fontWeight: 600,
+            }}
+            aria-label={`Przełącz kafel ${safeDefinition.title} na tryb ${sizeButtonLabel}`}
+            onClick={onToggleSize}
+            title={`Przełącz na tryb ${sizeButtonLabel}`}
+          >
+            ↔
+          </button>
+        )}
 
         <button
           type="button"
           data-dashboard-ignore-drag="true"
           style={{
             ...iconButtonStyle,
+            width: isMobileDashboard ? 28 : iconButtonStyle.width,
+            height: isMobileDashboard ? 28 : iconButtonStyle.height,
+            minWidth: isMobileDashboard ? 28 : iconButtonStyle.minWidth,
+            borderRadius: isMobileDashboard ? 10 : iconButtonStyle.borderRadius,
             color: isRemoveHovered ? '#dc2626' : '#64748b',
             borderColor: isRemoveHovered ? 'rgba(220,38,38,0.34)' : iconButtonStyle.borderColor,
             background: isRemoveHovered ? 'rgba(254,242,242,0.88)' : iconButtonStyle.background,
@@ -81,16 +93,18 @@ export default function DashboardWidgetHeader({
           ×
         </button>
 
-        <button
-          type="button"
-          data-dashboard-ignore-drag="true"
-          style={dragHandleStyle}
-          aria-label={`Przeciągnij kafel ${safeDefinition.title}`}
-          title="Przeciągnij"
-          {...dragHandleProps}
-        >
-          ⋮⋮
-        </button>
+        {!isMobileDashboard && dragHandleProps && (
+          <button
+            type="button"
+            data-dashboard-ignore-drag="true"
+            style={dragHandleStyle}
+            aria-label={`Przeciągnij kafel ${safeDefinition.title}`}
+            title="Przeciągnij"
+            {...dragHandleProps}
+          >
+            ⋮⋮
+          </button>
+        )}
       </div>
     </div>
   )

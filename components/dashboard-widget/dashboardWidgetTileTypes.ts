@@ -74,6 +74,7 @@ export type DashboardWidgetTileProps = {
   isDropBlocked: boolean
   isInteractionLocked: boolean
   isConfigOpen: boolean
+  isMobileDashboard: boolean
   onToggleConfig: (id: string) => void
   onToggleSize: (id: string) => void
   onRemove: (id: string) => void

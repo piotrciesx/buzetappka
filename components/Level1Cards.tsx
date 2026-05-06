@@ -55,7 +55,7 @@ function Level1CardBase(props: BaseProps) {
         </div>
 
         {extraActions && (
-          <div style={styles.actions} onClick={(event) => event.stopPropagation()}>
+          <div data-category-actions="true" style={styles.actions} onClick={(event) => event.stopPropagation()}>
             {extraActions}
           </div>
         )}

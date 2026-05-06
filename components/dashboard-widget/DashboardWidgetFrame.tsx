@@ -1,4 +1,4 @@
-import { useState, type CSSProperties, type PointerEvent, type ReactNode } from 'react'
+import { useState, type CSSProperties, type HTMLAttributes, type PointerEvent, type ReactNode } from 'react'
 import { BLUE, tileStyle } from './dashboardWidgetTileStyles'
 
 type ResizeEdge = 'left' | 'right'
@@ -8,6 +8,8 @@ type DashboardWidgetFrameProps = {
   wrapperStyle: CSSProperties
   isDragging: boolean
   isDropBlocked: boolean
+  dragAttributes?: HTMLAttributes<HTMLDivElement>
+  dragListeners?: HTMLAttributes<HTMLDivElement>
   onResizePointerDown?: (edge: ResizeEdge, event: PointerEvent<HTMLDivElement>) => void
   children: ReactNode
 }
@@ -29,6 +31,8 @@ export default function DashboardWidgetFrame({
   wrapperStyle,
   isDragging,
   isDropBlocked,
+  dragAttributes,
+  dragListeners,
   onResizePointerDown,
   children,
 }: DashboardWidgetFrameProps) {
@@ -65,9 +69,12 @@ export default function DashboardWidgetFrame({
               : tileStyle.boxShadow,
           transform: undefined,
           opacity: isDropBlocked ? 0.82 : 1,
+          touchAction: dragListeners ? 'none' : tileStyle.touchAction,
         }}
         onPointerEnter={() => setIsHovered(true)}
         onPointerLeave={() => setIsHovered(false)}
+        {...dragAttributes}
+        {...dragListeners}
       >
         {onResizePointerDown && (
           <>

@@ -4,6 +4,7 @@ import { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
 import { DashboardStats } from '../../lib/dashboardStats'
 import { BLUE, GREEN, RED, dashboardMetricCard } from './dashboardWidgetTileStyles'
 import { formatMoney, formatPercent, getColorForMoney } from './dashboardWidgetTileUtils'
+import type { DashboardWidgetPixelRect } from './dashboardWidgetTileTypes'
 
 function IncomeExpenseDonut({
   income,
@@ -213,12 +214,15 @@ function MetricCard({
 
 export default function MonthFinanceWidget({
   widget,
+  rect,
   dashboardStats,
 }: {
   widget: DashboardWidgetLayoutItem
+  rect: DashboardWidgetPixelRect
   dashboardStats: DashboardStats
 }) {
   const isSmall = widget.width === 2
+  const isMobile = rect.width < 420
   const expenseShare =
     dashboardStats.income > 0 ? formatPercent(dashboardStats.expenseShareOfIncome) : 'Brak'
 
@@ -229,6 +233,55 @@ export default function MonthFinanceWidget({
   ]
 
   if (isSmall) {
+    if (isMobile) {
+      return (
+        <div
+          style={{
+            height: '100%',
+            minWidth: 0,
+            minHeight: 0,
+            overflow: 'hidden',
+            display: 'grid',
+            gridTemplateRows: 'auto minmax(0, 1fr)',
+            alignItems: 'center',
+            gap: 8,
+            padding: '2px 4px 6px',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div
+            style={{
+              minWidth: 0,
+              display: 'grid',
+              justifyItems: 'center',
+              alignContent: 'center',
+              gap: 5,
+              overflow: 'hidden',
+            }}
+          >
+            <BalanceBlock balance={dashboardStats.balance} compact />
+            <IncomeExpenseDonut income={dashboardStats.income} expense={dashboardStats.expense} size={112} />
+          </div>
+
+          <div
+            style={{
+              minWidth: 0,
+              minHeight: 0,
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+              gap: 6,
+              alignContent: 'start',
+              overflow: 'hidden',
+            }}
+          >
+            {metrics.map((metric) => (
+              <MetricCard key={metric.label} {...metric} compact />
+            ))}
+          </div>
+        </div>
+      )
+    }
+
     return (
       <div
         style={{

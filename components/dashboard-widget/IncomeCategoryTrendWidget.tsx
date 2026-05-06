@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
@@ -275,7 +275,7 @@ function isMonthBeforeBudgetStart(month: string, budgetStartDate: string) {
 
 function formatMonthLabel(month: string) {
   const [year, monthNumber] = month.split('-')
-  return `${monthNumber}.${year}`
+  return `${monthNumber}.${year.slice(2)}`
 }
 
 function getCategoryName(category: Category) {
@@ -437,6 +437,23 @@ export default function IncomeCategoryTrendWidget({
   const monthsCount = isCompact ? 6 : 12
   const [selectedIds, setSelectedIds] = useState<string[] | null>(null)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (!isDropdownOpen) return
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null
+      if (!target || dropdownRef.current?.contains(target)) return
+      setIsDropdownOpen(false)
+    }
+
+    window.addEventListener('pointerdown', handlePointerDown)
+
+    return () => {
+      window.removeEventListener('pointerdown', handlePointerDown)
+    }
+  }, [isDropdownOpen])
 
   const months = useMemo(() => getMonthList(selectedMonth, monthsCount), [selectedMonth, monthsCount])
 
@@ -595,6 +612,10 @@ export default function IncomeCategoryTrendWidget({
           })}
 
           {data.map((point, index) => {
+            if (isCompact && index % 2 === 1 && index !== data.length - 1) {
+              return null
+            }
+
             const leftPercent = (getPointX(index) / viewBoxWidth) * 100
             return (
               <div key={point.key} style={{ ...monthLabelBaseStyle, left: `${leftPercent}%`, top: `${monthLabelTopPercent}%` }}>
@@ -606,7 +627,7 @@ export default function IncomeCategoryTrendWidget({
       </div>
 
       <div style={footerStyle}>
-        <div style={dropdownWrapStyle}>
+        <div ref={dropdownRef} style={dropdownWrapStyle}>
           <button type="button" style={dropdownButtonStyle} onClick={() => setIsDropdownOpen((previousValue) => !previousValue)}>
             <span>{getVisibleModeLabel(activeSelectedIds.length, selectedLevel)}</span>
             <span>{isDropdownOpen ? '▴' : '▾'}</span>

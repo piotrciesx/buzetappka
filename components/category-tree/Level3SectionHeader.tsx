@@ -82,10 +82,11 @@ export default function Level3SectionHeader({
         </div>
       </div>
 
-      <div style={styles.actions} onClick={(event) => event.stopPropagation()}>
+      <div data-category-actions="true" style={styles.actions} onClick={(event) => event.stopPropagation()}>
         {canUseMonthCalendar && (
           <button
             type="button"
+            data-category-secondary-action="true"
             style={styles.secondaryButton}
             onMouseDown={(event) => event.stopPropagation()}
             onPointerDown={(event) => event.stopPropagation()}
@@ -112,6 +113,7 @@ export default function Level3SectionHeader({
         {showCategoryActions && canUseBudgetLimit && onEditBudgetLimit && (
           <button
             type="button"
+            data-category-secondary-action="true"
             style={styles.secondaryButton}
             onMouseDown={(event) => event.stopPropagation()}
             onPointerDown={(event) => event.stopPropagation()}
@@ -126,6 +128,7 @@ export default function Level3SectionHeader({
 
         {showCategoryActions && isClosingAfterSelectedMonth ? (
           <button
+            data-category-secondary-action="true"
             style={styles.secondaryButton}
             onClick={async () => {
               await onUndoScheduledHide()
@@ -136,6 +139,7 @@ export default function Level3SectionHeader({
         ) : showCategoryActions ? (
           <>
             <button
+              data-category-secondary-action="true"
               style={styles.secondaryButton}
               onClick={async () => {
                 await onRenameCategory()
@@ -145,6 +149,7 @@ export default function Level3SectionHeader({
             </button>
 
             <button
+              data-category-secondary-action="true"
               style={styles.dangerButton}
               onClick={async () => {
                 await onDeleteCategory()
@@ -154,6 +159,7 @@ export default function Level3SectionHeader({
             </button>
 
             <button
+              data-category-secondary-action="true"
               style={styles.dangerButton}
               onClick={async () => {
                 await onHideNow()
@@ -163,6 +169,7 @@ export default function Level3SectionHeader({
             </button>
 
             <button
+              data-category-secondary-action="true"
               style={styles.dangerButton}
               onClick={async () => {
                 await onHideNext()
@@ -172,6 +179,44 @@ export default function Level3SectionHeader({
             </button>
           </>
         ) : null}
+
+        {showCategoryActions && (
+          <details data-mobile-category-menu="true" onClick={(event) => event.stopPropagation()}>
+            <summary style={styles.secondaryButton}>więcej</summary>
+            <div data-mobile-category-menu-panel="true">
+              {canUseMonthCalendar && (
+                <button type="button" style={styles.secondaryButton} onClick={onToggleCalendar}>
+                  {isCalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
+                </button>
+              )}
+              {canUseBudgetLimit && onEditBudgetLimit && (
+                <button type="button" style={styles.secondaryButton} onClick={onEditBudgetLimit}>
+                  {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
+                </button>
+              )}
+              {isClosingAfterSelectedMonth ? (
+                <button style={styles.secondaryButton} onClick={async () => onUndoScheduledHide()}>
+                  cofnij zamknięcie
+                </button>
+              ) : (
+                <>
+                  <button style={styles.secondaryButton} onClick={async () => onRenameCategory()}>
+                    zmień nazwę
+                  </button>
+                  <button style={styles.dangerButton} onClick={async () => onHideNow()}>
+                    ukryj teraz
+                  </button>
+                  <button style={styles.dangerButton} onClick={async () => onHideNext()}>
+                    ukryj od następnego
+                  </button>
+                  <button style={styles.dangerButton} onClick={async () => onDeleteCategory()}>
+                    usuń
+                  </button>
+                </>
+              )}
+            </div>
+          </details>
+        )}
       </div>
     </div>
   )

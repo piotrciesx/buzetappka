@@ -7,7 +7,7 @@ import {
   DragStartEvent,
 } from '@dnd-kit/core'
 import DashboardWidgetTile from './DashboardWidgetTile'
-import { DASHBOARD_GRID_COLUMNS } from '../lib/dashboardWidgetConfig'
+import { DASHBOARD_GRID_COLUMNS, SMALL_WIDGET_SIZE } from '../lib/dashboardWidgetConfig'
 import { getDashboardLayoutHeight, projectDashboardWidgets } from '../lib/dashboardLayout'
 import {
   DashboardModuleId,
@@ -20,6 +20,7 @@ import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
 
 const DASHBOARD_GRID_GAP = 12
 const DASHBOARD_GRID_ROW_HEIGHT = 132
+const MOBILE_WIDGET_HEIGHT = 300
 
 type WidgetPixelRect = {
   left: number
@@ -80,6 +81,20 @@ const getPixelsForRowSpan = (span: number) => {
 const getGridHeightInPixels = (rows: number) => {
   if (rows <= 0) return 0
   return DASHBOARD_GRID_ROW_HEIGHT * rows + DASHBOARD_GRID_GAP * (rows - 1)
+}
+
+const getSnappedWidgetX = (x: number, width: number) => {
+  if (width >= DASHBOARD_GRID_COLUMNS) return 0
+
+  const step = Math.max(1, width)
+  const snappedX = Math.round(x / step) * step
+
+  return Math.max(0, Math.min(DASHBOARD_GRID_COLUMNS - width, snappedX))
+}
+
+const getSnappedWidgetY = (y: number, height: number) => {
+  const step = Math.max(1, height)
+  return Math.max(0, Math.round(y / step) * step)
 }
 
 const getWidgetPixelRect = (
@@ -243,21 +258,23 @@ export default function DashboardGrid(props: Props) {
   }, [isMounted, widgets.length])
 
   const sensors = usePressHoldDndSensors()
+  const isMobileDashboard = measuredGridWidth > 0 && measuredGridWidth < 640
 
   const previewWidgets = useMemo(() => {
     if (!dragSession) return widgets
 
     const activeWidget = widgetsById.get(dragSession.id)
     if (!activeWidget) return widgets
+    const activeSize = isMobileDashboard ? SMALL_WIDGET_SIZE : activeWidget
 
     return projectDashboardWidgets(widgets, {
       id: activeWidget.id,
       x: dragSession.targetX,
       y: dragSession.targetY,
-      width: activeWidget.width,
-      height: activeWidget.height,
+      width: activeSize.width,
+      height: activeSize.height,
     })
-  }, [dragSession, widgets, widgetsById])
+  }, [dragSession, isMobileDashboard, widgets, widgetsById])
 
   const previewWidgetsById = useMemo(() => {
     return new Map(previewWidgets.map((widget) => [widget.id, widget]))
@@ -265,34 +282,47 @@ export default function DashboardGrid(props: Props) {
 
   const activeDragWidget = dragSession ? widgetsById.get(dragSession.id) ?? null : null
   const activePreviewWidget = dragSession ? previewWidgetsById.get(dragSession.id) ?? null : null
-  const activeDragGhostRect =
-    activePreviewWidget && columnWidth > 0
-      ? getWidgetPixelRect(activePreviewWidget, columnWidth)
-      : null
 
   const layoutHeightRows = getDashboardLayoutHeight(previewWidgets)
-  const isMobileDashboard = measuredGridWidth > 0 && measuredGridWidth < 640
-  const mobileWidgetRects = useMemo(() => {
+  const baseMobileWidgetRects = useMemo(() => {
     let nextTop = 0
 
     return widgets.reduce<Record<string, WidgetPixelRect>>((acc, widget) => {
-      const height = Math.max(220, getPixelsForRowSpan(widget.height))
-
       acc[widget.id] = {
         left: 0,
         top: nextTop,
         width: measuredGridWidth,
-        height,
+        height: MOBILE_WIDGET_HEIGHT,
       }
-      nextTop += height + DASHBOARD_GRID_GAP
+      nextTop += MOBILE_WIDGET_HEIGHT + DASHBOARD_GRID_GAP
 
       return acc
     }, {})
   }, [measuredGridWidth, widgets])
-  const mobileGridHeight = widgets.reduce((total, widget, index) => {
-    const height = Math.max(220, getPixelsForRowSpan(widget.height))
-    return total + height + (index === widgets.length - 1 ? 0 : DASHBOARD_GRID_GAP)
+  const previewMobileWidgetRects = useMemo(() => {
+    let nextTop = 0
+
+    return previewWidgets.reduce<Record<string, WidgetPixelRect>>((acc, widget) => {
+      acc[widget.id] = {
+        left: 0,
+        top: nextTop,
+        width: measuredGridWidth,
+        height: MOBILE_WIDGET_HEIGHT,
+      }
+      nextTop += MOBILE_WIDGET_HEIGHT + DASHBOARD_GRID_GAP
+
+      return acc
+    }, {})
+  }, [measuredGridWidth, previewWidgets])
+  const mobileGridHeight = widgets.reduce((total, _widget, index) => {
+    return total + MOBILE_WIDGET_HEIGHT + (index === widgets.length - 1 ? 0 : DASHBOARD_GRID_GAP)
   }, 0)
+  const activeDragGhostRect =
+    activePreviewWidget && columnWidth > 0
+      ? isMobileDashboard
+        ? previewMobileWidgetRects[activePreviewWidget.id]
+        : getWidgetPixelRect(activePreviewWidget, columnWidth)
+      : null
   const layoutHeightPixels = getGridHeightInPixels(layoutHeightRows)
   const gridHeight = isMobileDashboard
     ? Math.max(mobileGridHeight, DASHBOARD_GRID_ROW_HEIGHT)
@@ -306,8 +336,8 @@ export default function DashboardGrid(props: Props) {
 
     setDragSession({
       id: activeWidget.id,
-      targetX: activeWidget.x,
-      targetY: activeWidget.y,
+      targetX: isMobileDashboard ? 0 : getSnappedWidgetX(activeWidget.x, activeWidget.width),
+      targetY: getSnappedWidgetY(activeWidget.y, activeWidget.height),
     })
   }
 
@@ -320,20 +350,39 @@ export default function DashboardGrid(props: Props) {
       const activeWidget = widgetsById.get(currentSession.id)
       if (!activeWidget) return currentSession
 
+      if (isMobileDashboard) {
+        const activeRect = baseMobileWidgetRects[activeWidget.id]
+        if (!activeRect) return currentSession
+
+        const top = activeRect.top + event.delta.y
+        const targetIndex = Math.max(
+          0,
+          Math.min(widgets.length - 1, Math.round(top / (MOBILE_WIDGET_HEIGHT + DASHBOARD_GRID_GAP)))
+        )
+        const nextTargetX = 0
+        const nextTargetY = targetIndex * SMALL_WIDGET_SIZE.height
+
+        if (currentSession.targetX === nextTargetX && currentSession.targetY === nextTargetY) {
+          return currentSession
+        }
+
+        return {
+          ...currentSession,
+          targetX: nextTargetX,
+          targetY: nextTargetY,
+        }
+      }
+
       const rect = getWidgetPixelRect(activeWidget, columnWidth)
       const left = rect.left + event.delta.x
       const top = rect.top + event.delta.y
+      const rawTargetX = Math.round(left / (columnWidth + DASHBOARD_GRID_GAP))
+      const rawTargetY = Math.round(top / (DASHBOARD_GRID_ROW_HEIGHT + DASHBOARD_GRID_GAP))
       const nextTargetX = Math.max(
         0,
-        Math.min(
-          DASHBOARD_GRID_COLUMNS - activeWidget.width,
-          Math.round(left / (columnWidth + DASHBOARD_GRID_GAP))
-        )
+        Math.min(DASHBOARD_GRID_COLUMNS - activeWidget.width, getSnappedWidgetX(rawTargetX, activeWidget.width))
       )
-      const nextTargetY = Math.max(
-        0,
-        Math.round(top / (DASHBOARD_GRID_ROW_HEIGHT + DASHBOARD_GRID_GAP))
-      )
+      const nextTargetY = getSnappedWidgetY(rawTargetY, activeWidget.height)
 
       if (currentSession.targetX === nextTargetX && currentSession.targetY === nextTargetY) {
         return currentSession
@@ -405,14 +454,20 @@ export default function DashboardGrid(props: Props) {
           {widgets.map((widget) => {
             const previewWidget = previewWidgetsById.get(widget.id) ?? widget
             const isActiveDragWidget = dragSession?.id === widget.id
+            const displayWidget = isMobileDashboard
+              ? { ...previewWidget, ...SMALL_WIDGET_SIZE, x: 0 }
+              : previewWidget
             const rect = isMobileDashboard
-              ? mobileWidgetRects[widget.id]
+              ? isActiveDragWidget
+                ? baseMobileWidgetRects[widget.id] ?? previewMobileWidgetRects[widget.id]
+                : previewMobileWidgetRects[widget.id] ?? baseMobileWidgetRects[widget.id]
               : getWidgetPixelRect(isActiveDragWidget ? widget : previewWidget, columnWidth)
+            if (!rect) return null
 
             return (
               <DashboardWidgetTile
                 key={widget.id}
-                widget={previewWidget}
+                widget={displayWidget}
                 rect={rect}
                 transactions={transactions}
                 selectedMonth={selectedMonth}
@@ -428,6 +483,7 @@ export default function DashboardGrid(props: Props) {
                 isDropBlocked={false}
                 isInteractionLocked={false}
                 isConfigOpen={openConfigWidgetId === widget.id}
+                isMobileDashboard={isMobileDashboard}
                 onToggleConfig={toggleWidgetConfig}
                 onWidgetConfigChange={onWidgetConfigChange}
                 onToggleSize={onToggleWidgetSize}

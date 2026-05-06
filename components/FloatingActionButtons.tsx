@@ -26,7 +26,7 @@ export default function FloatingActionButtons(props: Props) {
         disabled={!incomeLevel1Id}
         onClick={onOpenIncome}
       >
-        + Przychód
+        +
       </button>
 
       <button
@@ -35,13 +35,14 @@ export default function FloatingActionButtons(props: Props) {
         title="Dodaj wydatek"
         style={{
           ...styles.floatingActionButton,
+          ...styles.floatingExpenseButton,
           opacity: expenseLevel1Id ? 1 : 0.6,
           cursor: expenseLevel1Id ? 'pointer' : 'not-allowed',
         }}
         disabled={!expenseLevel1Id}
         onClick={onOpenExpense}
       >
-        + Wydatek
+        −
       </button>
     </div>
   )

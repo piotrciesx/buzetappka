@@ -92,8 +92,9 @@ const cardStyle = {
 
 const compactCardStyle = {
   ...cardStyle,
-  minHeight: 82,
-  gridTemplateRows: '22px 1fr 15px',
+  minHeight: 72,
+  gridTemplateRows: '24px 1fr 14px',
+  padding: '7px 8px',
 }
 
 const labelStyle = {
@@ -127,7 +128,8 @@ const valueStyle = {
 
 const compactValueStyle = {
   ...valueStyle,
-  fontSize: 21,
+  fontSize: 18,
+  letterSpacing: 0,
 }
 
 const percentStyle = {
@@ -309,7 +311,7 @@ export default function DayActivityWidget({
     existingDaysInMonth > 0 ? (daysWithoutActivity / existingDaysInMonth) * 100 : 0
   const activePercent = existingDaysInMonth > 0 ? (activeDays / existingDaysInMonth) * 100 : 0
 
-  const isLarge = widget.width >= 4 || widget.height >= 3
+  const isLarge = widget.width >= 4
   const isNarrow = rect.width < 420
   const isCompact = !isLarge && isNarrow
   const showChart = isLarge || !isCompact
