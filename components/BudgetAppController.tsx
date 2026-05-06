@@ -1425,6 +1425,22 @@ export default function BudgetAppController({
     ]
   )
 
+  const recentTransactionPreviews = useMemo(() => {
+    return scopedTransactions
+      .filter((transaction) => !transaction.is_deleted)
+      .sort((left, right) => (right.created_at || '').localeCompare(left.created_at || ''))
+      .slice(0, 5)
+      .map((transaction) => ({
+        id: transaction.id,
+        amount: String(getAmountNumber(transaction.amount)),
+        date: transaction.day_is_null ? `${transaction.date.slice(0, 7)} · bez dnia` : transaction.date,
+        description: transaction.description || '',
+        categoryLabel: categoriesById[transaction.category_id]
+          ? getCategoryPathLabel(transaction.category_id, categoriesById)
+          : 'Kategoria niedostępna',
+      }))
+  }, [categoriesById, scopedTransactions])
+
   const budgetPageOverlayProps = useBudgetPageOverlayProps({
     canCreateTransactions,
     expenseLevel1Id,
@@ -1541,12 +1557,14 @@ export default function BudgetAppController({
           heatmapMode,
           calendarHeatmapVariant,
           heatmapInverted,
+          recentTransactions: recentTransactionPreviews,
           onHeatmapModeChange: setHeatmapMode,
           onCalendarHeatmapVariantChange: setCalendarHeatmapVariant,
           onHeatmapInvertedChange: setHeatmapInverted,
           onResetHeatmapSettings: handleResetHeatmapSettings,
           onPrevMonth: goToPrevMonth,
           onNextMonth: goToNextMonth,
+          onGoToCurrentMonth: () => setSelectedMonth(currentMonth),
           onLockSelectedMonth: handleLockSelectedMonth,
           onUnlockSelectedMonth: handleUnlockSelectedMonth,
           onToggleHidden: () => setShowHiddenCategories((prev) => !prev),

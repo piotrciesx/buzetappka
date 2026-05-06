@@ -66,6 +66,23 @@ type UseTransactionEntryActionsParams = {
   transactionTagsMap: Record<string, Tag[]>
 }
 
+const normalizeDuplicateDescription = (value: string | null | undefined) =>
+  (value || '')
+    .trim()
+    .toLocaleLowerCase('pl-PL')
+    .replace(/\s+/g, ' ')
+
+const getDayDistance = (leftDate: string, rightDate: string) => {
+  const leftTime = new Date(`${leftDate}T00:00:00`).getTime()
+  const rightTime = new Date(`${rightDate}T00:00:00`).getTime()
+
+  if (!Number.isFinite(leftTime) || !Number.isFinite(rightTime)) {
+    return Number.POSITIVE_INFINITY
+  }
+
+  return Math.abs(leftTime - rightTime) / 86_400_000
+}
+
 export function useTransactionEntryActions({
   supabase,
   profileId,
@@ -218,6 +235,75 @@ export function useTransactionEntryActions({
     [supabase]
   )
 
+  const confirmPotentialDuplicate = useCallback(
+    (
+      categoryId: string,
+      amountText: string,
+      descriptionText: string,
+      dateText: string,
+      dayIsNull = false
+    ) => {
+      const value = Number(normalizeAmountInput(amountText))
+
+      if (!value || value <= 0) {
+        return true
+      }
+
+      const normalizedDescription = normalizeDuplicateDescription(descriptionText)
+
+      if (normalizedDescription.length < 3) {
+        return true
+      }
+
+      const duplicateCandidate = Object.values(activeTransactionsById).find((transaction) => {
+        if (transaction.category_id !== categoryId || transaction.is_deleted) {
+          return false
+        }
+
+        const existingAmount = Number(transaction.amount)
+        if (!Number.isFinite(existingAmount) || Math.abs(existingAmount - value) > 0.01) {
+          return false
+        }
+
+        if (Boolean(transaction.day_is_null) !== dayIsNull) {
+          return false
+        }
+
+        if (!dayIsNull && getDayDistance(transaction.date, dateText) > 1) {
+          return false
+        }
+
+        const existingDescription = normalizeDuplicateDescription(transaction.description)
+        const hasSimilarDescription =
+          existingDescription === normalizedDescription ||
+          (existingDescription.length >= 6 &&
+            normalizedDescription.length >= 6 &&
+            (existingDescription.includes(normalizedDescription) ||
+              normalizedDescription.includes(existingDescription)))
+
+        if (!hasSimilarDescription) {
+          return false
+        }
+
+        if (!transaction.created_at) {
+          return transaction.date === dateText
+        }
+
+        const createdAtTime = new Date(transaction.created_at).getTime()
+        const minutesSinceCreated = (Date.now() - createdAtTime) / 60_000
+
+        return transaction.date === dateText || minutesSinceCreated <= 30
+      })
+
+      if (!duplicateCandidate) {
+        return true
+      }
+
+      return confirm('Podobny wpis istnieje już w tym dniu. Dodać mimo to?')
+    },
+    [activeTransactionsById]
+  )
+
   const saveTransactionToCategory = useCallback(
     async (
       categoryId: string,
@@ -249,6 +335,18 @@ export function useTransactionEntryActions({
       }
 
       const trimmedDescription = descriptionText.trim() || null
+
+      if (
+        !confirmPotentialDuplicate(
+          categoryId,
+          amountText,
+          descriptionText,
+          dateText,
+          dayIsNull
+        )
+      ) {
+        throw new Error('duplicate-cancelled')
+      }
 
       const normalizedPaymentSplit = isPaymentSourcesEnabled
         ? buildPaymentSplitPayload({
@@ -314,6 +412,7 @@ export function useTransactionEntryActions({
     [
       canAddTransactionToCategory,
       guardMonthUnlocked,
+      confirmPotentialDuplicate,
       isPaymentSourcesEnabled,
       isRecurringTransactionsEnabled,
       loadData,
@@ -416,6 +515,10 @@ export function useTransactionEntryActions({
           saveLockRef.current = false
           setIsSaving(false)
           return
+        } else if (error instanceof Error && error.message === 'duplicate-cancelled') {
+          saveLockRef.current = false
+          setIsSaving(false)
+          return
         } else if (error instanceof Error && error.message === 'invalid-amount') {
           alert('Podaj poprawną kwotę')
         } else if (error instanceof Error && error.message === 'missing-inserted-transaction') {
@@ -515,6 +618,10 @@ export function useTransactionEntryActions({
         )
       } catch (error) {
         if (error instanceof Error && error.message === 'locked-month') {
+          throw error
+        }
+
+        if (error instanceof Error && error.message === 'duplicate-cancelled') {
           throw error
         }
 

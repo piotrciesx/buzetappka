@@ -5,6 +5,14 @@ import { CSSProperties } from 'react'
 type HeatmapMode = 'normal' | 'balance'
 type CalendarHeatmapVariant = 'balance' | 'income' | 'expense'
 
+type RecentTransactionPreview = {
+  id: string
+  amount: string
+  date: string
+  description: string
+  categoryLabel: string
+}
+
 type Props = {
   selectedMonth: string
   currentMonth: string
@@ -30,12 +38,14 @@ type Props = {
   heatmapMode: HeatmapMode
   calendarHeatmapVariant: CalendarHeatmapVariant
   heatmapInverted: boolean
+  recentTransactions: RecentTransactionPreview[]
   onHeatmapModeChange: (value: HeatmapMode) => void
   onCalendarHeatmapVariantChange: (value: CalendarHeatmapVariant) => void
   onHeatmapInvertedChange: (value: boolean) => void
   onResetHeatmapSettings: () => void
   onPrevMonth: () => void
   onNextMonth: () => void
+  onGoToCurrentMonth: () => void
   onLockSelectedMonth: () => Promise<void>
   onUnlockSelectedMonth: () => Promise<void>
   onToggleHidden: () => void
@@ -99,6 +109,31 @@ const subtleCheckboxStyle: CSSProperties = {
   marginTop: 6,
 }
 
+const recentEntriesStyle: CSSProperties = {
+  marginTop: 10,
+  maxWidth: 520,
+}
+
+const recentEntriesSummaryStyle: CSSProperties = {
+  cursor: 'pointer',
+  fontSize: 13,
+  fontWeight: 600,
+  color: '#1d4ed8',
+}
+
+const recentEntriesListStyle: CSSProperties = {
+  display: 'grid',
+  gap: 8,
+  marginTop: 10,
+}
+
+const recentEntryStyle: CSSProperties = {
+  padding: 10,
+  border: '1px solid #e5e7eb',
+  borderRadius: 10,
+  background: '#ffffff',
+}
+
 const getLastDateOfMonth = (monthText: string) => {
   const [year, month] = monthText.split('-').map(Number)
 
@@ -136,12 +171,14 @@ export default function BudgetHeaderPanel(props: Props) {
     heatmapMode,
     calendarHeatmapVariant,
     heatmapInverted,
+    recentTransactions,
     onHeatmapModeChange,
     onCalendarHeatmapVariantChange,
     onHeatmapInvertedChange,
     onResetHeatmapSettings,
     onPrevMonth,
     onNextMonth,
+    onGoToCurrentMonth,
     onLockSelectedMonth,
     onUnlockSelectedMonth,
     onToggleHidden,
@@ -154,6 +191,7 @@ export default function BudgetHeaderPanel(props: Props) {
   const displayedSelectedMonth = selectedMonth || '---- --'
   const displayedCurrentMonth = currentMonth || '---- --'
   const budgetStartMaxDate = currentMonth ? getLastDateOfMonth(currentMonth) : undefined
+  const isCurrentMonthSelected = selectedMonth === currentMonth
 
   return (
     <div style={styles.topPanel}>
@@ -167,6 +205,12 @@ export default function BudgetHeaderPanel(props: Props) {
         </button>
 
         <div style={styles.monthLabel}>{displayedSelectedMonth}</div>
+
+        {!isCurrentMonthSelected && (
+          <button onClick={onGoToCurrentMonth} style={styles.primaryButton}>
+            Dziś
+          </button>
+        )}
 
         <button
           onClick={onNextMonth}
@@ -215,6 +259,25 @@ export default function BudgetHeaderPanel(props: Props) {
       <div style={styles.infoBox}>
         <b>Rozliczenie miesiąca:</b> {isSelectedMonthLocked ? 'zamknięty' : 'otwarty'}
       </div>
+
+      {recentTransactions.length > 0 && (
+        <details style={recentEntriesStyle}>
+          <summary style={recentEntriesSummaryStyle}>Ostatnio dodane wpisy</summary>
+          <div style={recentEntriesListStyle}>
+            {recentTransactions.map((transaction) => (
+              <div key={transaction.id} style={recentEntryStyle}>
+                <div style={{ fontWeight: 700 }}>{transaction.amount} zł</div>
+                <div style={{ fontSize: 13, color: '#374151' }}>
+                  {transaction.description || 'Bez opisu'}
+                </div>
+                <div style={{ fontSize: 12, color: '#6b7280' }}>
+                  {transaction.date} · {transaction.categoryLabel}
+                </div>
+              </div>
+            ))}
+          </div>
+        </details>
+      )}
 
       <div style={styles.monthNavigationSettingsCard}>
         <div style={styles.monthNavigationSettingsTitle}>Data startowa budżetu</div>
