@@ -44,7 +44,7 @@ export default function FinancialGoalEditModal({
       <div style={modalStyle} onClick={(event) => event.stopPropagation()}>
         <div style={styles.sectionTitle}>Edytuj cel</div>
         <div style={{ ...styles.pageSubtitle, marginBottom: 16 }}>
-          MoĹĽesz zmieniÄ‡ nazwÄ™, kwotÄ™ docelowÄ… i deadline bez rÄ™cznego przenoszenia celu miÄ™dzy
+          Możesz zmienić nazwę, kwotę docelową i deadline bez ręcznego przenoszenia celu między
           listami.
         </div>
 

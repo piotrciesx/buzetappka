@@ -5,9 +5,6 @@ import {
   DndContext,
   DragMoveEvent,
   DragStartEvent,
-  PointerSensor,
-  useSensor,
-  useSensors,
 } from '@dnd-kit/core'
 import DashboardWidgetTile from './DashboardWidgetTile'
 import { DASHBOARD_GRID_COLUMNS } from '../lib/dashboardWidgetConfig'
@@ -19,6 +16,7 @@ import {
 } from '../lib/dashboardTypes'
 import { DashboardStats, TopCategory } from '../lib/dashboardStats'
 import { Category, Tag, Transaction } from '../lib/budgetPageTypes'
+import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
 
 const DASHBOARD_GRID_GAP = 12
 const DASHBOARD_GRID_ROW_HEIGHT = 132
@@ -244,13 +242,7 @@ export default function DashboardGrid(props: Props) {
     }
   }, [isMounted, widgets.length])
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 6,
-      },
-    })
-  )
+  const sensors = usePressHoldDndSensors()
 
   const previewWidgets = useMemo(() => {
     if (!dragSession) return widgets
@@ -279,8 +271,32 @@ export default function DashboardGrid(props: Props) {
       : null
 
   const layoutHeightRows = getDashboardLayoutHeight(previewWidgets)
+  const isMobileDashboard = measuredGridWidth > 0 && measuredGridWidth < 640
+  const mobileWidgetRects = useMemo(() => {
+    let nextTop = 0
+
+    return widgets.reduce<Record<string, WidgetPixelRect>>((acc, widget) => {
+      const height = Math.max(220, getPixelsForRowSpan(widget.height))
+
+      acc[widget.id] = {
+        left: 0,
+        top: nextTop,
+        width: measuredGridWidth,
+        height,
+      }
+      nextTop += height + DASHBOARD_GRID_GAP
+
+      return acc
+    }, {})
+  }, [measuredGridWidth, widgets])
+  const mobileGridHeight = widgets.reduce((total, widget, index) => {
+    const height = Math.max(220, getPixelsForRowSpan(widget.height))
+    return total + height + (index === widgets.length - 1 ? 0 : DASHBOARD_GRID_GAP)
+  }, 0)
   const layoutHeightPixels = getGridHeightInPixels(layoutHeightRows)
-  const gridHeight = Math.max(layoutHeightPixels, DASHBOARD_GRID_ROW_HEIGHT)
+  const gridHeight = isMobileDashboard
+    ? Math.max(mobileGridHeight, DASHBOARD_GRID_ROW_HEIGHT)
+    : Math.max(layoutHeightPixels, DASHBOARD_GRID_ROW_HEIGHT)
 
   const handleDragStart = (event: DragStartEvent) => {
     if (columnWidth <= 0) return
@@ -389,7 +405,9 @@ export default function DashboardGrid(props: Props) {
           {widgets.map((widget) => {
             const previewWidget = previewWidgetsById.get(widget.id) ?? widget
             const isActiveDragWidget = dragSession?.id === widget.id
-            const rect = getWidgetPixelRect(isActiveDragWidget ? widget : previewWidget, columnWidth)
+            const rect = isMobileDashboard
+              ? mobileWidgetRects[widget.id]
+              : getWidgetPixelRect(isActiveDragWidget ? widget : previewWidget, columnWidth)
 
             return (
               <DashboardWidgetTile

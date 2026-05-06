@@ -12,6 +12,7 @@ import {
   BankSearchState,
   BankSearchSummary,
   BankSearchTagOption,
+  hasActiveSearchFilters,
 } from '../lib/useBankSearch'
 
 type Props = {
@@ -241,6 +242,7 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
     onOpenSearchForTag,
     styles,
   } = props
+  const hasActiveFilters = hasActiveSearchFilters(searchState)
 
   return (
     <div ref={ref} style={panelStyle}>
@@ -446,15 +448,17 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
             </div>
           </div>
 
-          <div style={historyWrapStyle}>
-            <div style={historyHeaderStyle}>
+          <div data-bank-search-history="true" style={historyWrapStyle}>
+            <div data-bank-search-history-header="true" style={historyHeaderStyle}>
               <div>Data</div>
               <div>Kwota</div>
               <div>Kategoria / opis</div>
               <div>Miesiąc</div>
             </div>
 
-            {results.length === 0 ? (
+            {!hasActiveFilters ? (
+              <div style={emptyStateStyle}>Wpisz opis albo ustaw filtr, aby zobaczyć wyniki.</div>
+            ) : results.length === 0 ? (
               <div style={emptyStateStyle}>Brak wyników dla obecnych filtrów.</div>
             ) : (
               results.map(({ transaction, effectiveSignedAmount, matchedPaymentSourceId }) => {
@@ -475,7 +479,7 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                 })
 
                 return (
-                  <div key={transaction.id} style={historyRowStyle}>
+                  <div key={transaction.id} data-bank-search-history-row="true" style={historyRowStyle}>
                     <div>{getTransactionDateLabel(transaction.day_is_null, transaction.date)}</div>
                     <div
                       style={{

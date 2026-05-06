@@ -137,7 +137,7 @@ export default function DashboardPanel({
   }, [isAddPanelOpen])
 
   return (
-    <section style={panelStyle}>
+    <section data-dashboard-panel="true" style={panelStyle}>
       <div style={headerStyle}>
         <div>
           <div style={styles.sectionTitle}>Dashboard</div>
@@ -161,6 +161,7 @@ export default function DashboardPanel({
 
           {isAddPanelOpen && (
             <div
+              data-dashboard-add-panel="true"
               style={{
                 position: 'absolute',
                 right: 0,

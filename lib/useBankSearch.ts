@@ -63,6 +63,19 @@ export const DEFAULT_BANK_SEARCH_STATE: BankSearchState = {
   sortMode: 'newest',
 }
 
+export const hasActiveSearchFilters = (state: BankSearchState) => {
+  return Boolean(
+    state.description.trim() ||
+      state.categoryId ||
+      state.paymentSourceId ||
+      state.tagIds.length > 0 ||
+      state.dateFrom ||
+      state.dateTo ||
+      state.amountMin.trim() ||
+      state.amountMax.trim()
+  )
+}
+
 type UseBankSearchParams = {
   profileId: string
   transactions: Transaction[]
@@ -252,6 +265,10 @@ export function useBankSearch(params: UseBankSearchParams) {
   )
 
   const results = useMemo<BankSearchResult[]>(() => {
+    if (!hasActiveSearchFilters(searchState)) {
+      return []
+    }
+
     const normalizedDescription = normalizeSearchText(searchState.description)
     const parsedMin = parseAmountFilter(searchState.amountMin)
     const parsedMax = parseAmountFilter(searchState.amountMax)

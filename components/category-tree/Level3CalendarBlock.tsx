@@ -26,6 +26,7 @@ type MoveTarget = {
 type Level3CalendarBlockProps = {
   isOpen: boolean
   selectedMonth: string
+  budgetStartDate: string
   transactions: Transaction[]
   styles: Record<string, CSSProperties>
   isSelectedMonthLocked: boolean
@@ -73,6 +74,7 @@ type Level3CalendarBlockProps = {
 export default function Level3CalendarBlock({
   isOpen,
   selectedMonth,
+  budgetStartDate,
   transactions,
   styles,
   isSelectedMonthLocked,
@@ -104,6 +106,7 @@ export default function Level3CalendarBlock({
   return (
     <MonthCalendarPanel
       selectedMonth={selectedMonth}
+      budgetStartDate={budgetStartDate}
       transactions={transactions}
       styles={styles}
       isSelectedMonthLocked={isSelectedMonthLocked}

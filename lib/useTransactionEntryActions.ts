@@ -32,6 +32,8 @@ type UseTransactionEntryActionsParams = {
   newTransactionDate: string
   selectedRecurringTransactionId: string
   isSerialTransactionCreatorEnabled: boolean
+  isPaymentSourcesEnabled: boolean
+  isRecurringTransactionsEnabled: boolean
   isAllowedMoveTarget: (transaction: Transaction, targetCategoryId: string) => boolean
   getRootLevel1IdForCategory: (categoryId: string) => string | null
   deleteDraft: (draftType: 'income' | 'expense') => Promise<void>
@@ -79,6 +81,8 @@ export function useTransactionEntryActions({
   newTransactionDate,
   selectedRecurringTransactionId,
   isSerialTransactionCreatorEnabled,
+  isPaymentSourcesEnabled,
+  isRecurringTransactionsEnabled,
   isAllowedMoveTarget,
   getRootLevel1IdForCategory,
   deleteDraft,
@@ -241,12 +245,14 @@ export function useTransactionEntryActions({
 
       const trimmedDescription = descriptionText.trim() || null
 
-      const normalizedPaymentSplit = buildPaymentSplitPayload({
-        totalAmountText: amountText,
-        selectedPaymentSourceId:
-          paymentSourceIdOverride === undefined ? selectedPaymentSourceId : paymentSourceIdOverride || '',
-        splitItems: paymentSplitItemsOverride ?? selectedPaymentSplitItems,
-      })
+      const normalizedPaymentSplit = isPaymentSourcesEnabled
+        ? buildPaymentSplitPayload({
+            totalAmountText: amountText,
+            selectedPaymentSourceId:
+              paymentSourceIdOverride === undefined ? selectedPaymentSourceId : paymentSourceIdOverride || '',
+            splitItems: paymentSplitItemsOverride ?? selectedPaymentSplitItems,
+          })
+        : { paymentSourceId: null, splitRows: [], errors: [] }
 
       if (normalizedPaymentSplit.errors.length > 0) {
         throw new Error('invalid-payment-split-total')
@@ -263,7 +269,7 @@ export function useTransactionEntryActions({
             date: dateText,
             day_is_null: dayIsNull,
             payment_source_id: normalizedPaymentSplit.paymentSourceId,
-            recurring_transaction_id: recurringTransactionId,
+            recurring_transaction_id: isRecurringTransactionsEnabled ? recurringTransactionId : null,
           },
         ])
         .select(
@@ -281,12 +287,14 @@ export function useTransactionEntryActions({
 
       try {
         await syncTransactionTags(insertedTransaction.id, tagNames)
-        await syncTransactionPaymentSplits(
-          insertedTransaction.id,
-          amountText,
-          normalizedPaymentSplit.paymentSourceId || '',
-          paymentSplitItemsOverride ?? selectedPaymentSplitItems
-        )
+        if (isPaymentSourcesEnabled) {
+          await syncTransactionPaymentSplits(
+            insertedTransaction.id,
+            amountText,
+            normalizedPaymentSplit.paymentSourceId || '',
+            paymentSplitItemsOverride ?? selectedPaymentSplitItems
+          )
+        }
       } catch (tagError) {
         await rollbackInsertedTransaction(insertedTransaction.id)
         throw tagError
@@ -301,6 +309,8 @@ export function useTransactionEntryActions({
     [
       canAddTransactionToCategory,
       guardMonthUnlocked,
+      isPaymentSourcesEnabled,
+      isRecurringTransactionsEnabled,
       loadData,
       onTransactionSaved,
       profileId,
@@ -382,7 +392,7 @@ export function useTransactionEntryActions({
           nextTransactionDate,
           nextDayIsNull,
           selectedTagNames,
-          selectedRecurringTransactionId || null
+          isRecurringTransactionsEnabled ? selectedRecurringTransactionId || null : null
         )
 
         if (transactionDraftType) {
@@ -434,6 +444,7 @@ export function useTransactionEntryActions({
       getEffectiveTransactionCategoryId,
       getRootLevel1IdForCategory,
       isSerialTransactionCreatorEnabled,
+      isRecurringTransactionsEnabled,
       newAmount,
       newDescription,
       newTransactionDate,
@@ -481,7 +492,7 @@ export function useTransactionEntryActions({
           nextTransactionDate,
           nextDayIsNull,
           tagNames,
-          recurringTransactionId || null,
+          isRecurringTransactionsEnabled ? recurringTransactionId || null : null,
           paymentSourceId,
           paymentSplitItems
         )
@@ -517,7 +528,7 @@ export function useTransactionEntryActions({
         throw error
       }
     },
-    [saveTransactionToCategory, selectedMonth]
+    [isRecurringTransactionsEnabled, saveTransactionToCategory, selectedMonth]
   )
 
   const handleUpdateTransaction = useCallback(
@@ -561,26 +572,38 @@ export function useTransactionEntryActions({
           ? dayIsNullOverride
           : Boolean(transaction.day_is_null) && trimmedDateText === transaction.date
 
-      const normalizedPaymentSplit = buildPaymentSplitPayload({
-        totalAmountText: amountText,
-        selectedPaymentSourceId: paymentSourceId === undefined ? transaction.payment_source_id || '' : paymentSourceId || '',
-        splitItems: paymentSplitItems ?? [],
-      })
+      const shouldUpdatePaymentSources = isPaymentSourcesEnabled && paymentSourceId !== undefined
+      const normalizedPaymentSplit = shouldUpdatePaymentSources
+        ? buildPaymentSplitPayload({
+            totalAmountText: amountText,
+            selectedPaymentSourceId: paymentSourceId || '',
+            splitItems: paymentSplitItems ?? [],
+          })
+        : { paymentSourceId: transaction.payment_source_id || null, splitRows: [], errors: [] }
 
       if (normalizedPaymentSplit.errors.length > 0) {
         alert(normalizedPaymentSplit.errors.join('\n'))
         throw new Error('invalid-payment-split-total')
       }
 
+      const transactionUpdates = shouldUpdatePaymentSources
+        ? {
+            amount: value,
+            description: descriptionText.trim() || null,
+            date: trimmedDateText,
+            day_is_null: nextDayIsNull,
+            payment_source_id: normalizedPaymentSplit.paymentSourceId,
+          }
+        : {
+            amount: value,
+            description: descriptionText.trim() || null,
+            date: trimmedDateText,
+            day_is_null: nextDayIsNull,
+          }
+
       const { error } = await supabase
         .from('transactions')
-        .update({
-          amount: value,
-          description: descriptionText.trim() || null,
-          date: trimmedDateText,
-          day_is_null: nextDayIsNull,
-          payment_source_id: normalizedPaymentSplit.paymentSourceId,
-        })
+        .update(transactionUpdates)
         .eq('id', transactionId)
 
       if (error) {
@@ -589,17 +612,20 @@ export function useTransactionEntryActions({
       }
 
       await syncTransactionTags(transactionId, tagNames)
-      await syncTransactionPaymentSplits(
-        transactionId,
-        amountText,
-        normalizedPaymentSplit.paymentSourceId || '',
-        paymentSplitItems ?? []
-      )
+      if (shouldUpdatePaymentSources) {
+        await syncTransactionPaymentSplits(
+          transactionId,
+          amountText,
+          normalizedPaymentSplit.paymentSourceId || '',
+          paymentSplitItems ?? []
+        )
+      }
       await loadData()
     },
     [
       activeTransactionsById,
       guardTransactionsUnlocked,
+      isPaymentSourcesEnabled,
       loadData,
       supabase,
       syncTransactionPaymentSplits,

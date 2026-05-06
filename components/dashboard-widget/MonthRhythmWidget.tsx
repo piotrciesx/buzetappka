@@ -2,7 +2,7 @@
 
 import type { Category, Transaction } from '../../lib/budgetPageTypes'
 import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
-import { getDaysInMonth, isFutureDate } from '../../lib/dateUtils'
+import { getDaysInMonth, isDateBeforeBudgetStart, isFutureDate } from '../../lib/dateUtils'
 import { BLUE, GREEN, MUTED, RED } from './dashboardWidgetTileStyles'
 import { formatMoney } from './dashboardWidgetTileUtils'
 
@@ -15,6 +15,7 @@ type DayPoint = {
   cumulative: number
   count: number
   isFuture: boolean
+  isBeforeBudgetStart: boolean
 }
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
@@ -163,11 +164,13 @@ const getColorForRhythm = (value: number) => {
 const buildMonthRhythmDays = ({
   transactions,
   selectedMonth,
+  budgetStartDate,
   categoriesById,
   getSignedAmountForTransaction,
 }: {
   transactions: Transaction[]
   selectedMonth: string
+  budgetStartDate: string
   categoriesById: Record<string, Category>
   getSignedAmountForTransaction: (transaction: Transaction) => number
 }) => {
@@ -184,11 +187,13 @@ const buildMonthRhythmDays = ({
       cumulative: 0,
       count: 0,
       isFuture: isFutureDate(date),
+      isBeforeBudgetStart: isDateBeforeBudgetStart(date, budgetStartDate),
     }
   })
 
   for (const transaction of transactions) {
     if (!isTransactionInMonth(transaction, selectedMonth)) continue
+    if (isDateBeforeBudgetStart(transaction.date, budgetStartDate)) continue
     if (isFutureDate(transaction.date)) continue
     if (!categoriesById[transaction.category_id]) continue
 
@@ -294,25 +299,34 @@ function MonthCalendarHeatmap({
             }
 
             const visual = getBalanceHeatmapVisual(day.net, negativeReference, positiveReference)
+            const isInactive = day.isFuture || day.isBeforeBudgetStart
 
             return (
               <div
                 key={day.date}
-                title={`${day.day}: ${formatMoney(day.net)}`}
+                title={
+                  day.isBeforeBudgetStart
+                    ? `${day.day}: poza zakresem budżetu`
+                    : `${day.day}: ${formatMoney(day.net)}`
+                }
                 style={{
                   width: cellSize,
                   height: cellSize,
                   borderRadius: compact ? 8 : 9,
-                  background: day.isFuture ? '#f1f5f9' : visual.background,
-                  border: day.isFuture ? '1px solid #e2e8f0' : `1px solid ${visual.borderColor}`,
+                  background: isInactive ? '#f1f5f9' : visual.background,
+                  border: day.isBeforeBudgetStart
+                    ? '1px dashed #d1d5db'
+                    : day.isFuture
+                      ? '1px solid #e2e8f0'
+                      : `1px solid ${visual.borderColor}`,
                   display: 'grid',
                   placeItems: 'center',
-                  color: day.isFuture ? MUTED : visual.textColor,
+                  color: isInactive ? MUTED : visual.textColor,
                   fontSize: compact ? 10 : 10.5,
                   fontWeight: 600,
                   boxSizing: 'border-box',
                   overflow: 'hidden',
-                  opacity: day.isFuture ? 0.62 : 1,
+                  opacity: isInactive ? 0.62 : 1,
                 }}
               >
                 {day.day}
@@ -499,12 +513,14 @@ export default function MonthRhythmWidget({
   widget,
   transactions,
   selectedMonth,
+  budgetStartDate,
   categoriesById,
   getSignedAmountForTransaction,
 }: {
   widget: DashboardWidgetLayoutItem
   transactions: Transaction[]
   selectedMonth: string
+  budgetStartDate: string
   categoriesById: Record<string, Category>
   getSignedAmountForTransaction: (transaction: Transaction) => number
 }) {
@@ -512,10 +528,11 @@ export default function MonthRhythmWidget({
   const days = buildMonthRhythmDays({
     transactions,
     selectedMonth,
+    budgetStartDate,
     categoriesById,
     getSignedAmountForTransaction,
   })
-  const existingDays = days.filter((day) => !day.isFuture)
+  const existingDays = days.filter((day) => !day.isFuture && !day.isBeforeBudgetStart)
 
   if (isSmall) {
     return (

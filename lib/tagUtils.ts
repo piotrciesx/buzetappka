@@ -235,6 +235,7 @@ export const fetchTransactionTagLinks = async (
 
 export const fetchTagsByIds = async (
   supabase: SupabaseClient,
+  profileId: string,
   tagIds: string[]
 ): Promise<Tag[]> => {
   if (tagIds.length === 0) {
@@ -244,6 +245,7 @@ export const fetchTagsByIds = async (
   const { data, error } = await supabase
     .from('tags')
     .select('id, profile_id, name, normalized_name, created_at')
+    .eq('profile_id', profileId)
     .in('id', tagIds)
 
   if (error) {
@@ -255,6 +257,7 @@ export const fetchTagsByIds = async (
 
 export const fetchTransactionTagsMap = async (
   supabase: SupabaseClient,
+  profileId: string,
   transactionIds: string[]
 ): Promise<Record<string, Tag[]>> => {
   if (transactionIds.length === 0) {
@@ -268,7 +271,7 @@ export const fetchTransactionTagsMap = async (
   }
 
   const uniqueTagIds = Array.from(new Set(transactionTagLinks.map((link) => link.tag_id)))
-  const tags = await fetchTagsByIds(supabase, uniqueTagIds)
+  const tags = await fetchTagsByIds(supabase, profileId, uniqueTagIds)
   const tagsById = Object.fromEntries(tags.map((tag) => [tag.id, tag]))
 
   const result: Record<string, Tag[]> = {}

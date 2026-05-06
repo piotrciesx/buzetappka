@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { supabase } from './supabaseClient'
 
 export type AppModuleKey =
   | 'dashboard'
@@ -21,7 +22,14 @@ export const DEFAULT_APP_MODULE_VISIBILITY: AppModuleVisibility = {
   monthCalendar: true,
 }
 
-const APP_MODULE_VISIBILITY_STORAGE_KEY = 'budget-app-visible-modules-v1'
+type UseAppModuleVisibilityInput = {
+  profileId: string
+  userId: string
+}
+
+type UserProfileSettingsRow = {
+  visible_modules: unknown
+}
 
 const moduleKeys = Object.keys(DEFAULT_APP_MODULE_VISIBILITY) as AppModuleKey[]
 
@@ -44,7 +52,7 @@ const normalizeModuleVisibility = (value: unknown): AppModuleVisibility => {
   )
 }
 
-export function useAppModuleVisibility() {
+export function useAppModuleVisibility({ profileId, userId }: UseAppModuleVisibilityInput) {
   const [visibleModules, setVisibleModules] = useState<AppModuleVisibility>(
     DEFAULT_APP_MODULE_VISIBILITY
   )
@@ -53,32 +61,93 @@ export function useAppModuleVisibility() {
   )
   const [saveStatusText, setSaveStatusText] = useState('')
 
-  useEffect(() => {
-    if (typeof window === 'undefined') {
+  const applyVisibility = useCallback((nextVisibility: AppModuleVisibility) => {
+    setVisibleModules(nextVisibility)
+    setDraftVisibleModules(nextVisibility)
+  }, [])
+
+  const loadVisibleModules = useCallback(async () => {
+    if (!profileId || !userId) {
+      const defaultVisibility = { ...DEFAULT_APP_MODULE_VISIBILITY }
+
+      applyVisibility(defaultVisibility)
       return
     }
 
-    const timeoutId = window.setTimeout(() => {
-      try {
-        const storedValue = window.localStorage.getItem(APP_MODULE_VISIBILITY_STORAGE_KEY)
-        const nextVisibility = storedValue
-          ? normalizeModuleVisibility(JSON.parse(storedValue))
-          : { ...DEFAULT_APP_MODULE_VISIBILITY }
+    setSaveStatusText('')
 
-        setVisibleModules(nextVisibility)
-        setDraftVisibleModules(nextVisibility)
-      } catch {
-        const defaultVisibility = { ...DEFAULT_APP_MODULE_VISIBILITY }
+    const { data, error } = await supabase
+      .from('user_profile_settings')
+      .select('visible_modules')
+      .eq('profile_id', profileId)
+      .eq('user_id', userId)
+      .maybeSingle()
 
-        setVisibleModules(defaultVisibility)
-        setDraftVisibleModules(defaultVisibility)
+    if (error) {
+      const fallbackVisibility = { ...DEFAULT_APP_MODULE_VISIBILITY }
+
+      applyVisibility(fallbackVisibility)
+      setSaveStatusText(
+        `Nie udało się wczytać ustawień z Supabase. Użyto ustawień domyślnych. ${error.message}`
+      )
+      return
+    }
+
+    if (data) {
+      const nextVisibility = normalizeModuleVisibility(
+        (data as UserProfileSettingsRow).visible_modules
+      )
+
+      applyVisibility(nextVisibility)
+      return
+    }
+
+    const defaultVisibility = { ...DEFAULT_APP_MODULE_VISIBILITY }
+    const { error: insertError } = await supabase.from('user_profile_settings').insert({
+      profile_id: profileId,
+      user_id: userId,
+      visible_modules: defaultVisibility,
+    })
+
+    if (insertError) {
+      const fallbackVisibility = { ...DEFAULT_APP_MODULE_VISIBILITY }
+
+      applyVisibility(fallbackVisibility)
+      setSaveStatusText(
+        `Nie udało się utworzyć ustawień w Supabase. Użyto ustawień domyślnych. ${insertError.message}`
+      )
+      return
+    }
+
+    applyVisibility(defaultVisibility)
+  }, [applyVisibility, profileId, userId])
+
+  useEffect(() => {
+    let isActive = true
+
+    const load = async () => {
+      await loadVisibleModules()
+    }
+
+    void load().catch((error) => {
+      if (!isActive) {
+        return
       }
-    }, 0)
+
+      const fallbackVisibility = { ...DEFAULT_APP_MODULE_VISIBILITY }
+
+      applyVisibility(fallbackVisibility)
+      setSaveStatusText(
+        error instanceof Error
+          ? `Nie udało się wczytać ustawień modułów. Użyto ustawień domyślnych. ${error.message}`
+          : 'Nie udało się wczytać ustawień modułów. Użyto ustawień domyślnych.'
+      )
+    })
 
     return () => {
-      window.clearTimeout(timeoutId)
+      isActive = false
     }
-  }, [])
+  }, [applyVisibility, loadVisibleModules])
 
   const setDraftModuleVisibility = (moduleKey: AppModuleKey, isVisible: boolean) => {
     setDraftVisibleModules((previousVisibility) => ({
@@ -88,26 +157,41 @@ export function useAppModuleVisibility() {
     setSaveStatusText('')
   }
 
-  const saveVisibleModules = () => {
-    setVisibleModules(draftVisibleModules)
+  const saveVisibleModules = async () => {
+    const nextVisibility = normalizeModuleVisibility(draftVisibleModules)
 
-    try {
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem(
-          APP_MODULE_VISIBILITY_STORAGE_KEY,
-          JSON.stringify(draftVisibleModules)
-        )
-      }
-
-      setSaveStatusText('Zapisano ustawienia.')
-    } catch {
-      setSaveStatusText('Nie udało się zapisać ustawień lokalnie.')
+    if (!profileId || !userId) {
+      setSaveStatusText('Nie udało się zapisać ustawień: brak profilu lub użytkownika.')
+      return
     }
+
+    const { error } = await supabase.from('user_profile_settings').upsert(
+      {
+        profile_id: profileId,
+        user_id: userId,
+        visible_modules: nextVisibility,
+        updated_at: new Date().toISOString(),
+      },
+      {
+        onConflict: 'profile_id,user_id',
+      }
+    )
+
+    if (error) {
+      setSaveStatusText(
+        `Nie udało się zapisać ustawień w Supabase. ${error.message}`
+      )
+      return
+    }
+
+    setVisibleModules(nextVisibility)
+    setDraftVisibleModules(nextVisibility)
+    setSaveStatusText('Zapisano ustawienia.')
   }
 
   const resetDraftVisibleModules = () => {
-    setDraftVisibleModules(visibleModules)
-    setSaveStatusText('Cofnięto niezapisane zmiany.')
+    setDraftVisibleModules({ ...DEFAULT_APP_MODULE_VISIBILITY })
+    setSaveStatusText('Przywrócono domyślne ustawienia w wersji roboczej.')
   }
 
   return {

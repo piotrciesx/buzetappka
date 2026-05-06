@@ -1,6 +1,6 @@
 'use client'
 
-import { CSSProperties, KeyboardEvent, useMemo, useRef, useState } from 'react'
+import { CSSProperties, KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import DescriptionSuggestionDeleteMenu from './DescriptionSuggestionDeleteMenu'
@@ -9,6 +9,19 @@ import type { BudgetLimitView } from './BudgetLimitIndicator'
 import Level3CalendarBlock from './category-tree/Level3CalendarBlock'
 import Level3InlineAddForm from './category-tree/Level3InlineAddForm'
 import Level3SectionHeader from './category-tree/Level3SectionHeader'
+import {
+  activeSuggestionButtonStyle,
+  clickableTagBadgeStyle,
+  compactPrimaryButtonStyle,
+  compactSecondaryButtonStyle,
+  inlineDescriptionFieldWrapStyle,
+  suggestionButtonStyle,
+  suggestionsDropdownStyle,
+  tagBadgeStyle,
+  tagBadgesWrapStyle,
+  tagFieldWrapStyle,
+  tagRemoveButtonStyle,
+} from './category-tree/level3SectionStyles'
 import type { HeatmapMode } from './month-calendar/monthCalendarTypes'
 import { buildDateFromDayInput, getDayInputFromDate, normalizeDayInput } from '../lib/dateUtils'
 import { Tag, TransactionPaymentSplit } from '../lib/budgetPageTypes'
@@ -67,13 +80,17 @@ type HideMode = 'now' | 'next'
 type Props = {
   l3: Category
   headerName?: string
+  hideHeader?: boolean
+  startInlineAddToken?: number
   showHeaderSum?: boolean
   showCategoryActions?: boolean
   selectedMonth: string
+  budgetStartDate: string
   isClosingAfterSelectedMonth: boolean
   categorySum: number
   transactions: Transaction[]
   canAddHere: boolean
+  canUseMonthCalendar?: boolean
   isSelectedMonthLocked: boolean
   isOpen: boolean
   toggleLevel3: (id: string) => void
@@ -126,6 +143,7 @@ type Props = {
     optionLabel?: string
   }>
   getRecurringOptionsForCategoryId?: (categoryId: string) => RecurringLinkOption[]
+  getDefaultPaymentSourceIdForCategoryId?: (categoryId: string) => string
   transactionTagsMap: Record<string, Tag[]>
   transactionPaymentSplitsMap?: Record<string, TransactionPaymentSplit[]>
   onTagClick?: (tagId: string) => void
@@ -142,106 +160,21 @@ type Props = {
   styles: Record<string, CSSProperties>
 }
 
-const inlineDescriptionFieldWrapStyle = {
-  flex: 1,
-  minWidth: 220,
-  position: 'relative' as const,
-} as const
-
-const suggestionsDropdownStyle = {
-  position: 'absolute' as const,
-  top: 'calc(100% + 6px)',
-  left: 0,
-  right: 0,
-  zIndex: 30,
-  background: '#ffffff',
-  border: '1px solid #d1d5db',
-  borderRadius: 12,
-  boxShadow: '0 12px 24px rgba(15, 23, 42, 0.12)',
-  overflow: 'hidden',
-} as const
-
-const suggestionButtonStyle = {
-  width: '100%',
-  textAlign: 'left' as const,
-  background: '#ffffff',
-  border: 'none',
-  borderBottom: '1px solid #f1f5f9',
-  padding: '10px 12px',
-  cursor: 'pointer',
-  fontSize: 14,
-  color: '#111827',
-} as const
-
-const activeSuggestionButtonStyle = {
-  ...suggestionButtonStyle,
-  background: '#eff6ff',
-} as const
-
-const tagFieldWrapStyle = {
-  marginTop: 8,
-  display: 'flex',
-  flexDirection: 'column' as const,
-  gap: 8,
-} as const
-
-const tagBadgesWrapStyle = {
-  display: 'flex',
-  gap: 6,
-  flexWrap: 'wrap' as const,
-} as const
-
-const tagBadgeStyle = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 6,
-  padding: '4px 8px',
-  borderRadius: 999,
-  background: '#eff6ff',
-  border: '1px solid #bfdbfe',
-  color: '#1d4ed8',
-  fontSize: 12,
-  fontWeight: 600,
-} as const
-
-const clickableTagBadgeStyle = {
-  ...tagBadgeStyle,
-  cursor: 'pointer',
-} as const
-
-const tagRemoveButtonStyle = {
-  border: 'none',
-  background: 'transparent',
-  color: '#1d4ed8',
-  cursor: 'pointer',
-  fontSize: 14,
-  lineHeight: 1.2,
-  padding: 0,
-} as const
-
-const compactPrimaryButtonStyle = {
-  padding: '6px 10px',
-  fontSize: 13,
-  minHeight: 32,
-} as const
-
-const compactSecondaryButtonStyle = {
-  padding: '6px 10px',
-  fontSize: 13,
-  minHeight: 32,
-} as const
-
 export default function Level3Section(props: Props) {
   const {
     l3,
     headerName,
+    hideHeader = false,
+    startInlineAddToken = 0,
     showHeaderSum = true,
     showCategoryActions = true,
     selectedMonth,
+    budgetStartDate,
     isClosingAfterSelectedMonth,
     categorySum,
     transactions,
     canAddHere,
+    canUseMonthCalendar = true,
     isSelectedMonthLocked,
     isOpen,
     toggleLevel3,
@@ -268,6 +201,7 @@ export default function Level3Section(props: Props) {
     descriptionSuggestions,
     getPaymentSourceOptionsForCategoryId,
     getRecurringOptionsForCategoryId,
+    getDefaultPaymentSourceIdForCategoryId,
     transactionTagsMap,
     transactionPaymentSplitsMap = {},
     onTagClick,
@@ -382,6 +316,10 @@ export default function Level3Section(props: Props) {
     return (transactionTagsMap[transactionId] || []).map((tag) => tag.name)
   }
 
+  const getPaymentSourceOptions = (categoryId: string) =>
+    getPaymentSourceOptionsForCategoryId?.(categoryId) || []
+  const canUsePaymentSources = Boolean(getPaymentSourceOptionsForCategoryId)
+
   const startEditingTransaction = (transaction: Transaction) => {
     const nextTagNames = getTransactionTagNames(transaction.id)
 
@@ -427,8 +365,8 @@ export default function Level3Section(props: Props) {
         nextTransactionDate,
         editTagNames,
         undefined,
-        editPaymentSourceId || null,
-        editPaymentSplitItems
+        canUsePaymentSources ? editPaymentSourceId || null : undefined,
+        canUsePaymentSources ? editPaymentSplitItems : undefined
       )
       cancelEditingTransaction()
     } catch {
@@ -505,7 +443,9 @@ export default function Level3Section(props: Props) {
     setInlineDescription('')
     setInlineTagNames([])
     setInlineTagInput('')
-    setInlinePaymentSourceId('')
+    setInlinePaymentSourceId(
+      canUsePaymentSources ? getDefaultPaymentSourceIdForCategoryId?.(l3.id) || '' : ''
+    )
     setInlinePaymentSplitItems([])
     setInlineRecurringTransactionId('')
 
@@ -517,6 +457,14 @@ export default function Level3Section(props: Props) {
       inlineAmountInputRef.current?.focus()
     }, 0)
   }
+
+  useEffect(() => {
+    if (startInlineAddToken <= 0 || isSelectedMonthLocked) {
+      return
+    }
+
+    openInlineAdd()
+  }, [startInlineAddToken])
 
   const cancelInlineAdd = () => {
     setIsInlineAdding(false)
@@ -545,8 +493,8 @@ export default function Level3Section(props: Props) {
         inlineDescription,
         inlineDay,
         inlineTagNames,
-        inlinePaymentSourceId || null,
-        inlinePaymentSplitItems,
+        canUsePaymentSources ? inlinePaymentSourceId || null : undefined,
+        canUsePaymentSources ? inlinePaymentSplitItems : undefined,
         inlineRecurringTransactionId || null
       )
       cancelInlineAdd()
@@ -576,12 +524,13 @@ export default function Level3Section(props: Props) {
     return getTransactionPaymentSourceDisplayLines({
       transaction,
       splitItems: transactionPaymentSplitsMap[transaction.id] || [],
-      paymentSourceOptions: getPaymentSourceOptionsForCategoryId?.(transaction.category_id) || [],
+      paymentSourceOptions: getPaymentSourceOptions(transaction.category_id),
     })
   }
 
   return (
     <div ref={setNodeRef} style={wrapStyle}>
+      {!hideHeader && (
       <Level3SectionHeader
         name={headerName || l3.name}
         categorySum={categorySum}
@@ -591,6 +540,7 @@ export default function Level3Section(props: Props) {
         isDragging={isDragging}
         isClosingAfterSelectedMonth={isClosingAfterSelectedMonth}
         isCalendarOpen={isCalendarOpen}
+        canUseMonthCalendar={canUseMonthCalendar}
         canAddHere={canAddHere}
         isSelectedMonthLocked={isSelectedMonthLocked}
         styles={styles}
@@ -604,7 +554,7 @@ export default function Level3Section(props: Props) {
         onUndoScheduledHide={() => handleUndoScheduledHide(l3.id)}
         budgetLimitView={budgetLimitView}
         canUseBudgetLimit={canUseBudgetLimit}
-        onEditBudgetLimit={() => onEditBudgetLimit?.(l3.id)}
+        onEditBudgetLimit={onEditBudgetLimit ? () => onEditBudgetLimit(l3.id) : undefined}
         dragHandle={
           isSortable ? (
             <button
@@ -627,10 +577,12 @@ export default function Level3Section(props: Props) {
           ) : null
         }
       />
+      )}
 
       <Level3CalendarBlock
-        isOpen={isCalendarOpen}
+        isOpen={canUseMonthCalendar && isCalendarOpen}
         selectedMonth={selectedMonth}
+        budgetStartDate={budgetStartDate}
         transactions={transactions}
         styles={styles}
         isSelectedMonthLocked={isSelectedMonthLocked}
@@ -696,6 +648,7 @@ export default function Level3Section(props: Props) {
               handleInlineSuggestionPointerUp={handleInlineSuggestionPointerUp}
               handleInlineSuggestionPointerLeave={handleInlineSuggestionPointerLeave}
               getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
+              getDefaultPaymentSourceIdForCategoryId={getDefaultPaymentSourceIdForCategoryId}
               recurringOptions={getRecurringOptionsForCategoryId?.(l3.id) || []}
               selectedRecurringTransactionId={inlineRecurringTransactionId}
               setSelectedRecurringTransactionId={setInlineRecurringTransactionId}
@@ -862,12 +815,10 @@ export default function Level3Section(props: Props) {
 
                         <PaymentSplitEditor
                           amount={editAmount}
-                          isVisible
                           selectedPaymentSourceId={editPaymentSourceId}
                           setSelectedPaymentSourceId={setEditPaymentSourceId}
-                          paymentSourceOptions={
-                            getPaymentSourceOptionsForCategoryId?.(transaction.category_id) || []
-                          }
+                          isVisible={canUsePaymentSources}
+                          paymentSourceOptions={getPaymentSourceOptions(transaction.category_id)}
                           paymentSplitItems={editPaymentSplitItems}
                           setPaymentSplitItems={setEditPaymentSplitItems}
                           styles={styles}

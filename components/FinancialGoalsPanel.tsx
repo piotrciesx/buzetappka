@@ -5,9 +5,6 @@ import {
   closestCenter,
   DndContext,
   DragEndEvent,
-  PointerSensor,
-  useSensor,
-  useSensors,
 } from '@dnd-kit/core'
 import {
   arrayMove,
@@ -32,6 +29,7 @@ import FinancialGoalsHeader from './financial-goals/FinancialGoalsHeader'
 import FinancialGoalsModeControls from './financial-goals/FinancialGoalsModeControls'
 import { SortableGoalCard, StaticGoalCard } from './financial-goals/FinancialGoalCard'
 import type { FinancialGoalsPanelProps, FormState } from './financial-goals/financialGoalsPanelTypes'
+import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
 
 const panelStyle = {
   marginBottom: 20,
@@ -289,7 +287,7 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
   const [isAllocationSliderActive, setIsAllocationSliderActive] = useState(false)
   const [isLocalAllocationActive, setIsLocalAllocationActive] = useState(false)
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }))
+  const sensors = usePressHoldDndSensors()
 
   const storedMode = useMemo(
     () => getFinancialGoalModeForMonth(selectedMonth, goalMonthConfigs),

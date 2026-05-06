@@ -10,6 +10,7 @@ type Level3SectionHeaderProps = {
   isDragging: boolean
   isClosingAfterSelectedMonth: boolean
   isCalendarOpen: boolean
+  canUseMonthCalendar?: boolean
   canAddHere: boolean
   isSelectedMonthLocked: boolean
   dragHandle: ReactNode
@@ -36,6 +37,7 @@ export default function Level3SectionHeader({
   isDragging,
   isClosingAfterSelectedMonth,
   isCalendarOpen,
+  canUseMonthCalendar = true,
   canAddHere,
   isSelectedMonthLocked,
   dragHandle,
@@ -81,18 +83,20 @@ export default function Level3SectionHeader({
       </div>
 
       <div style={styles.actions} onClick={(event) => event.stopPropagation()}>
-        <button
-          type="button"
-          style={styles.secondaryButton}
-          onMouseDown={(event) => event.stopPropagation()}
-          onPointerDown={(event) => event.stopPropagation()}
-          onClick={(event) => {
-            event.stopPropagation()
-            onToggleCalendar()
-          }}
-        >
-          {isCalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
-        </button>
+        {canUseMonthCalendar && (
+          <button
+            type="button"
+            style={styles.secondaryButton}
+            onMouseDown={(event) => event.stopPropagation()}
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={(event) => {
+              event.stopPropagation()
+              onToggleCalendar()
+            }}
+          >
+            {isCalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
+          </button>
+        )}
 
         {canAddHere && !isSelectedMonthLocked && (
           <button

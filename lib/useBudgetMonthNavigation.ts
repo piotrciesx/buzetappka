@@ -19,6 +19,11 @@ type MonthNavigationSettingsRow = {
   min_history_month: string | null
   budget_start_date: string | null
   lock_future_months: boolean
+  simple_mode: boolean | null
+  heatmap_variant: string | null
+  heatmap_display_mode: string | null
+  heatmap_inverted: boolean | null
+  auto_exclude_partial_months: boolean | null
 }
 
 const DEFAULT_MONTH_NAVIGATION_START_MONTH = ''
@@ -64,6 +69,13 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
   const [budgetStartDate, setBudgetStartDate] = useState('')
   const [savedBudgetStartDate, setSavedBudgetStartDate] = useState('')
   const [isFutureMonthNavigationLocked, setIsFutureMonthNavigationLocked] = useState(true)
+  const [simpleMode, setSimpleMode] = useState(false)
+  const [calendarHeatmapVariant, setCalendarHeatmapVariant] = useState<
+    'balance' | 'income' | 'expense'
+  >('balance')
+  const [heatmapMode, setHeatmapMode] = useState<'normal' | 'balance'>('balance')
+  const [heatmapInverted, setHeatmapInverted] = useState(false)
+  const [autoExcludePartialMonths, setAutoExcludePartialMonths] = useState(false)
   const [isSavingMonthNavigationSettings, setIsSavingMonthNavigationSettings] = useState(false)
   const [monthNavigationErrorText, setMonthNavigationErrorText] = useState('')
   const [lockedMonths, setLockedMonths] = useState<string[]>([])
@@ -163,7 +175,9 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
 
     const { data, error } = await supabase
       .from('profile_month_navigation_settings')
-      .select('profile_id, min_history_month, budget_start_date, lock_future_months')
+      .select(
+        'profile_id, min_history_month, budget_start_date, lock_future_months, simple_mode, heatmap_variant, heatmap_display_mode, heatmap_inverted, auto_exclude_partial_months'
+      )
       .eq('profile_id', profileId)
       .maybeSingle()
 
@@ -179,6 +193,11 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
       setBudgetStartDate('')
       setSavedBudgetStartDate('')
       setIsFutureMonthNavigationLocked(true)
+      setSimpleMode(false)
+      setCalendarHeatmapVariant('balance')
+      setHeatmapMode('balance')
+      setHeatmapInverted(false)
+      setAutoExcludePartialMonths(false)
       setSelectedMonth((prev) =>
         clampMonthToNavigationRange(
           prev || effectiveCurrentMonth,
@@ -194,11 +213,21 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
     const nextMinAllowedMonth = getMonthKeyFromDate(nextBudgetStartDate) || DEFAULT_MONTH_NAVIGATION_START_MONTH
     const nextFutureLocked = settings?.lock_future_months ?? true
     const nextMaxAllowedMonth = nextFutureLocked ? effectiveCurrentMonth : null
+    const nextHeatmapVariant =
+      settings?.heatmap_variant === 'income' || settings?.heatmap_variant === 'expense'
+        ? settings.heatmap_variant
+        : 'balance'
+    const nextHeatmapMode = settings?.heatmap_display_mode === 'normal' ? 'normal' : 'balance'
 
     setMonthNavigationStartMonth(nextMinAllowedMonth)
     setBudgetStartDate(nextBudgetStartDate)
     setSavedBudgetStartDate(nextBudgetStartDate)
     setIsFutureMonthNavigationLocked(nextFutureLocked)
+    setSimpleMode(Boolean(settings?.simple_mode))
+    setCalendarHeatmapVariant(nextHeatmapVariant)
+    setHeatmapMode(nextHeatmapMode)
+    setHeatmapInverted(Boolean(settings?.heatmap_inverted))
+    setAutoExcludePartialMonths(Boolean(settings?.auto_exclude_partial_months))
     setSelectedMonth((prev) =>
       clampMonthToNavigationRange(prev || effectiveCurrentMonth, nextMinAllowedMonth, nextMaxAllowedMonth)
     )
@@ -261,6 +290,11 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
   }, [clampMonthToNavigationRange, maxAllowedMonth, minAllowedMonth, selectedMonth])
 
   const handleSaveMonthNavigationSettings = useCallback(async () => {
+    if (!profileId) {
+      setMonthNavigationErrorText('Nie udało się zapisać ustawień: brak aktywnego profilu.')
+      return
+    }
+
     const validationError = validateMonthNavigationStartMonth(monthNavigationStartMonth)
     const startDateValidationError = validateBudgetStartDate(budgetStartDate)
 
@@ -272,39 +306,73 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
     setIsSavingMonthNavigationSettings(true)
     setMonthNavigationErrorText('')
 
+    const effectiveBudgetStartMonth = getMonthKeyFromDate(budgetStartDate)
+
     const payload = {
-      min_history_month: budgetStartDate ? `${getMonthKeyFromDate(budgetStartDate)}-01` : null,
+      profile_id: profileId,
+      min_history_month: effectiveBudgetStartMonth ? `${effectiveBudgetStartMonth}-01` : null,
       budget_start_date: budgetStartDate || null,
       lock_future_months: isFutureMonthNavigationLocked,
+      simple_mode: simpleMode,
+      heatmap_variant: calendarHeatmapVariant,
+      heatmap_display_mode: heatmapMode,
+      heatmap_inverted: heatmapInverted,
+      auto_exclude_partial_months: autoExcludePartialMonths,
       updated_at: new Date().toISOString(),
     }
 
-    const { data: updatedSettings, error: updateError } = await supabase
+    const { error: saveError } = await supabase
       .from('profile_month_navigation_settings')
-      .update(payload)
-      .eq('profile_id', profileId)
-      .select('profile_id')
-      .maybeSingle()
+      .upsert(payload, { onConflict: 'profile_id' })
 
-    if (updateError) {
+    if (saveError) {
       setMonthNavigationErrorText(
-        getErrorMessage(updateError, 'Nie udało się zapisać ustawień nawigacji miesięcy.')
+        getErrorMessage(saveError, 'Nie udało się zapisać ustawień nawigacji miesięcy.')
       )
       setIsSavingMonthNavigationSettings(false)
       return
     }
 
-    if (!updatedSettings) {
-      const { error: insertError } = await supabase.from('profile_month_navigation_settings').insert(
-        {
-          profile_id: profileId,
-          ...payload,
-        }
-      )
+    if (autoExcludePartialMonths) {
+      const budgetStartDay = budgetStartDate.slice(8, 10)
+      const budgetStartMonth = getMonthKeyFromDate(budgetStartDate)
 
-      if (insertError) {
+      if (budgetStartMonth && budgetStartDay && budgetStartDay !== '01') {
+        const { error: autoExcludeError } = await supabase.from('profile_excluded_months').upsert(
+          {
+            profile_id: profileId,
+            month: `${budgetStartMonth}-01`,
+            reason: 'auto_partial',
+          },
+          {
+            onConflict: 'profile_id,month',
+          }
+        )
+
+        if (autoExcludeError) {
+          setMonthNavigationErrorText(
+            getErrorMessage(
+              autoExcludeError,
+              'Nie udało się automatycznie wyłączyć niepełnego miesiąca.'
+            )
+          )
+          setIsSavingMonthNavigationSettings(false)
+          return
+        }
+      }
+    } else {
+      const { error: clearAutoExcludeError } = await supabase
+        .from('profile_excluded_months')
+        .delete()
+        .eq('profile_id', profileId)
+        .eq('reason', 'auto_partial')
+
+      if (clearAutoExcludeError && !isMissingBackendObjectError(clearAutoExcludeError)) {
         setMonthNavigationErrorText(
-          getErrorMessage(insertError, 'Nie udało się zapisać ustawień nawigacji miesięcy.')
+          getErrorMessage(
+            clearAutoExcludeError,
+            'Nie udało się wyczyścić automatycznych wyłączeń miesięcy.'
+          )
         )
         setIsSavingMonthNavigationSettings(false)
         return
@@ -317,19 +385,26 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
     setSelectedMonth((prev) =>
       clampMonthToNavigationRange(
         prev || effectiveCurrentMonth,
-        getMonthKeyFromDate(budgetStartDate),
+        effectiveBudgetStartMonth,
         nextMaxAllowedMonth
       )
     )
     setSavedBudgetStartDate(budgetStartDate)
+    await loadExcludedMonths()
     setIsSavingMonthNavigationSettings(false)
   }, [
     clampMonthToNavigationRange,
     currentMonth,
     budgetStartDate,
+    calendarHeatmapVariant,
+    autoExcludePartialMonths,
+    heatmapInverted,
+    heatmapMode,
     isFutureMonthNavigationLocked,
     monthNavigationStartMonth,
     profileId,
+    loadExcludedMonths,
+    simpleMode,
     validateBudgetStartDate,
     validateMonthNavigationStartMonth,
   ])
@@ -527,6 +602,16 @@ export function useBudgetMonthNavigation({ profileId }: UseBudgetMonthNavigation
     setBudgetStartDate,
     isFutureMonthNavigationLocked,
     setIsFutureMonthNavigationLocked,
+    simpleMode,
+    setSimpleMode,
+    calendarHeatmapVariant,
+    setCalendarHeatmapVariant,
+    heatmapMode,
+    setHeatmapMode,
+    heatmapInverted,
+    setHeatmapInverted,
+    autoExcludePartialMonths,
+    setAutoExcludePartialMonths,
     isSavingMonthNavigationSettings,
     monthNavigationErrorText,
     setMonthNavigationErrorText,

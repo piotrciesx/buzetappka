@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { supabase } from './supabaseClient'
 import {
   Category,
@@ -78,6 +78,11 @@ export function usePaymentSources({
   const [paymentSourceSettings, setPaymentSourceSettings] =
     useState<PaymentSourceSettings>(DEFAULT_SETTINGS)
 
+  useEffect(() => {
+    setPaymentSources([])
+    setPaymentSourceSettings(DEFAULT_SETTINGS)
+  }, [profileId])
+
   const loadPaymentSources = useCallback(async () => {
     const { data: sourcesData, error: sourcesError } = await supabase
       .from('payment_sources')
@@ -154,7 +159,7 @@ export function usePaymentSources({
       }
 
       const query = input.id
-        ? supabase.from('payment_sources').update(payload).eq('id', input.id)
+        ? supabase.from('payment_sources').update(payload).eq('id', input.id).eq('profile_id', profileId)
         : supabase.from('payment_sources').insert(payload)
 
       const { error } = await query
@@ -170,7 +175,11 @@ export function usePaymentSources({
 
   const deletePaymentSource = useCallback(
     async (paymentSourceId: string) => {
-      const { error } = await supabase.from('payment_sources').delete().eq('id', paymentSourceId)
+      const { error } = await supabase
+        .from('payment_sources')
+        .delete()
+        .eq('id', paymentSourceId)
+        .eq('profile_id', profileId)
 
       if (error) {
         throw new Error(error.message)
@@ -262,6 +271,7 @@ export function usePaymentSources({
             [targetKey]: Boolean(source[sourceKey]),
           })
           .eq('id', source.id)
+          .eq('profile_id', profileId)
       )
 
       const results = await Promise.all(updates)
@@ -273,7 +283,7 @@ export function usePaymentSources({
 
       await loadPaymentSources()
     },
-    [loadPaymentSources, paymentSources]
+    [loadPaymentSources, paymentSources, profileId]
   )
 
   const buildOptionsForKind = useCallback(

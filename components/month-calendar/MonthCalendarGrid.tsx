@@ -15,7 +15,7 @@ type MonthCalendarGridProps = {
 export default function MonthCalendarGrid({ firstDayOffset, children }: MonthCalendarGridProps) {
   return (
     <>
-      <div style={calendarWeekdaysStyle}>
+      <div data-month-calendar-weekdays="true" style={calendarWeekdaysStyle}>
         {weekdayLabels.map((label) => (
           <div key={label} style={calendarWeekdayStyle}>
             {label}
@@ -23,7 +23,7 @@ export default function MonthCalendarGrid({ firstDayOffset, children }: MonthCal
         ))}
       </div>
 
-      <div style={calendarGridStyle}>
+      <div data-month-calendar-grid="true" style={calendarGridStyle}>
         {Array.from({ length: firstDayOffset }, (_, index) => (
           <div key={`empty-${index}`} style={calendarEmptyCellStyle} />
         ))}

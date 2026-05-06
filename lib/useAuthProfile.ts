@@ -6,14 +6,47 @@ import { supabase } from './supabaseClient'
 
 type ProfileUserRow = {
   profile_id: string
+  role: string
+  created_at: string | null
 }
+
+const ACTIVE_PROFILE_STORAGE_PREFIX = 'budget-active-profile-id'
 
 const getAuthRedirectUrl = () => {
   if (typeof window === 'undefined') {
     return undefined
   }
 
-  return window.location.origin
+  const url = new URL(window.location.href)
+  url.hash = ''
+  url.searchParams.delete('code')
+
+  return `${url.origin}${url.pathname}${url.search}`
+}
+
+const getActiveProfileStorageKey = (userId: string) => `${ACTIVE_PROFILE_STORAGE_PREFIX}:${userId}`
+
+const getStoredActiveProfileId = (userId: string) => {
+  if (typeof window === 'undefined') {
+    return null
+  }
+
+  return window.localStorage.getItem(getActiveProfileStorageKey(userId))
+}
+
+const storeActiveProfileId = (userId: string, nextProfileId: string | null) => {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  const storageKey = getActiveProfileStorageKey(userId)
+
+  if (nextProfileId) {
+    window.localStorage.setItem(storageKey, nextProfileId)
+    return
+  }
+
+  window.localStorage.removeItem(storageKey)
 }
 
 const clearAuthRedirectParams = () => {
@@ -27,7 +60,10 @@ const clearAuthRedirectParams = () => {
     return
   }
 
-  window.history.replaceState({}, document.title, url.origin + url.pathname)
+  url.searchParams.delete('code')
+  url.hash = ''
+
+  window.history.replaceState({}, document.title, `${url.origin}${url.pathname}${url.search}`)
 }
 
 const exchangeCodeFromUrl = async () => {
@@ -50,6 +86,37 @@ const exchangeCodeFromUrl = async () => {
   clearAuthRedirectParams()
 }
 
+const getMembershipDateValue = (membership: ProfileUserRow) => {
+  const timestamp = membership.created_at ? Date.parse(membership.created_at) : 0
+  return Number.isFinite(timestamp) ? timestamp : 0
+}
+
+const pickProfileId = (memberships: ProfileUserRow[], userId: string) => {
+  if (memberships.length === 0) {
+    return null
+  }
+
+  const storedProfileId = getStoredActiveProfileId(userId)
+
+  if (storedProfileId && memberships.some((membership) => membership.profile_id === storedProfileId)) {
+    return storedProfileId
+  }
+
+  const ownerMemberships = memberships
+    .filter((membership) => membership.role === 'owner')
+    .sort((left, right) => getMembershipDateValue(right) - getMembershipDateValue(left))
+
+  if (ownerMemberships[0]) {
+    return ownerMemberships[0].profile_id
+  }
+
+  const latestMembership = [...memberships].sort(
+    (left, right) => getMembershipDateValue(right) - getMembershipDateValue(left)
+  )[0]
+
+  return latestMembership?.profile_id || null
+}
+
 export function useAuthProfile() {
   const [user, setUser] = useState<AuthUser | null>(null)
   const [profileId, setProfileId] = useState<string | null>(null)
@@ -60,17 +127,20 @@ export function useAuthProfile() {
   const loadProfileIdForUser = useCallback(async (userId: string) => {
     const { data, error } = await supabase
       .from('profile_users')
-      .select('profile_id')
+      .select('profile_id, role, created_at')
       .eq('user_id', userId)
-      .order('created_at', { ascending: true })
-      .limit(1)
-      .maybeSingle()
+      .order('created_at', { ascending: false })
 
     if (error) {
       throw new Error(error.message)
     }
 
-    return (data as ProfileUserRow | null)?.profile_id || null
+    const memberships = (data || []) as ProfileUserRow[]
+    const nextProfileId = pickProfileId(memberships, userId)
+
+    storeActiveProfileId(userId, nextProfileId)
+
+    return nextProfileId
   }, [])
 
   const refreshAuthState = useCallback(async () => {
@@ -149,9 +219,7 @@ export function useAuthProfile() {
         void refreshAuthState()
           .catch((error) => {
             setAuthErrorText(
-              error instanceof Error
-                ? error.message
-                : 'Nie udało się wczytać profilu budżetu.'
+              error instanceof Error ? error.message : 'Nie udało się wczytać profilu budżetu.'
             )
             setUser(session.user)
             setProfileId(null)
@@ -165,6 +233,17 @@ export function useAuthProfile() {
       subscription.unsubscribe()
     }
   }, [refreshAuthState])
+
+  const setActiveProfileId = useCallback(
+    (nextProfileId: string | null) => {
+      if (user) {
+        storeActiveProfileId(user.id, nextProfileId)
+      }
+
+      setProfileId(nextProfileId)
+    },
+    [user]
+  )
 
   const sendMagicLink = useCallback(async () => {
     const email = loginEmail.trim()
@@ -227,10 +306,15 @@ export function useAuthProfile() {
     setAuthErrorText('')
 
     try {
+      const currentUserId = user?.id
       const { error } = await supabase.auth.signOut()
 
       if (error) {
         throw new Error(error.message)
+      }
+
+      if (currentUserId) {
+        storeActiveProfileId(currentUserId, null)
       }
 
       setUser(null)
@@ -240,7 +324,7 @@ export function useAuthProfile() {
     } finally {
       setIsAuthLoading(false)
     }
-  }, [])
+  }, [user])
 
   const createFirstProfile = useCallback(async () => {
     if (!user) {
@@ -252,6 +336,13 @@ export function useAuthProfile() {
     setAuthErrorText('')
 
     try {
+      const existingProfileId = await loadProfileIdForUser(user.id)
+
+      if (existingProfileId) {
+        setProfileId(existingProfileId)
+        return
+      }
+
       const { data, error } = await supabase.rpc('create_first_profile')
 
       if (error) {
@@ -264,9 +355,9 @@ export function useAuthProfile() {
         throw new Error('Nie udało się utworzyć profilu budżetu.')
       }
 
+      storeActiveProfileId(user.id, nextProfileId)
       setProfileId(nextProfileId)
       await refreshAuthState()
-      setProfileId(nextProfileId)
     } catch (error) {
       setAuthErrorText(
         error instanceof Error ? error.message : 'Nie udało się utworzyć profilu budżetu.'
@@ -274,12 +365,12 @@ export function useAuthProfile() {
     } finally {
       setIsAuthLoading(false)
     }
-  }, [refreshAuthState, user])
+  }, [loadProfileIdForUser, refreshAuthState, user])
 
   return {
     user,
     profileId,
-    setActiveProfileId: setProfileId,
+    setActiveProfileId,
     isAuthLoading,
     authErrorText,
     loginEmail,
@@ -288,5 +379,6 @@ export function useAuthProfile() {
     signInWithGoogle,
     signOut,
     createFirstProfile,
+    refreshAuthState,
   }
 }

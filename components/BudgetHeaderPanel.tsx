@@ -3,6 +3,7 @@
 import { CSSProperties } from 'react'
 
 type HeatmapMode = 'normal' | 'balance'
+type CalendarHeatmapVariant = 'balance' | 'income' | 'expense'
 
 type Props = {
   selectedMonth: string
@@ -16,7 +17,6 @@ type Props = {
   errorText: string
   minAllowedMonth: string | null
   maxAllowedMonth: string | null
-  monthNavigationStartMonth: string
   budgetStartDate: string
   monthNavigationFutureLocked: boolean
   isSavingMonthNavigationSettings: boolean
@@ -28,8 +28,10 @@ type Props = {
   isSelectedMonthExcluded: boolean
   isUpdatingSelectedMonthExclusion: boolean
   heatmapMode: HeatmapMode
+  calendarHeatmapVariant: CalendarHeatmapVariant
   heatmapInverted: boolean
   onHeatmapModeChange: (value: HeatmapMode) => void
+  onCalendarHeatmapVariantChange: (value: CalendarHeatmapVariant) => void
   onHeatmapInvertedChange: (value: boolean) => void
   onResetHeatmapSettings: () => void
   onPrevMonth: () => void
@@ -37,7 +39,6 @@ type Props = {
   onLockSelectedMonth: () => Promise<void>
   onUnlockSelectedMonth: () => Promise<void>
   onToggleHidden: () => void
-  onMonthNavigationStartMonthChange: (value: string) => void
   onBudgetStartDateChange: (value: string) => void
   onMonthNavigationFutureLockedChange: (value: boolean) => void
   onSaveMonthNavigationSettings: () => void
@@ -98,6 +99,17 @@ const subtleCheckboxStyle: CSSProperties = {
   marginTop: 6,
 }
 
+const getLastDateOfMonth = (monthText: string) => {
+  const [year, month] = monthText.split('-').map(Number)
+
+  if (!year || !month) {
+    return undefined
+  }
+
+  const lastDay = new Date(year, month, 0).getDate()
+  return `${monthText}-${String(lastDay).padStart(2, '0')}`
+}
+
 export default function BudgetHeaderPanel(props: Props) {
   const {
     selectedMonth,
@@ -122,8 +134,10 @@ export default function BudgetHeaderPanel(props: Props) {
     isSelectedMonthExcluded,
     isUpdatingSelectedMonthExclusion,
     heatmapMode,
+    calendarHeatmapVariant,
     heatmapInverted,
     onHeatmapModeChange,
+    onCalendarHeatmapVariantChange,
     onHeatmapInvertedChange,
     onResetHeatmapSettings,
     onPrevMonth,
@@ -139,7 +153,7 @@ export default function BudgetHeaderPanel(props: Props) {
   } = props
   const displayedSelectedMonth = selectedMonth || '---- --'
   const displayedCurrentMonth = currentMonth || '---- --'
-  const budgetStartMaxDate = currentMonth ? `${currentMonth}-31` : undefined
+  const budgetStartMaxDate = currentMonth ? getLastDateOfMonth(currentMonth) : undefined
 
   return (
     <div style={styles.topPanel}>
@@ -203,7 +217,7 @@ export default function BudgetHeaderPanel(props: Props) {
       </div>
 
       <div style={styles.monthNavigationSettingsCard}>
-        <div style={styles.monthNavigationSettingsTitle}>Blokady nawigacji miesięcy</div>
+        <div style={styles.monthNavigationSettingsTitle}>Data startowa budżetu</div>
 
         <div style={styles.monthNavigationSettingsRow}>
           <label style={styles.monthNavigationField}>
@@ -231,13 +245,14 @@ export default function BudgetHeaderPanel(props: Props) {
             style={styles.secondaryButton}
             disabled={isSavingMonthNavigationSettings}
           >
-            {isSavingMonthNavigationSettings ? 'Zapisywanie...' : 'Zapisz blokady miesięcy'}
+            {isSavingMonthNavigationSettings ? 'Zapisywanie...' : 'Zapisz datę startową'}
           </button>
         </div>
 
         <div style={styles.monthNavigationHint}>
-          Po wejściu aplikacja otwiera bieżący miesiąc: <b>{displayedCurrentMonth}</b>. Dozwolony zakres
-          nawigacji: <b>{minAllowedMonth || 'bez dolnego limitu'}</b>
+          Po wejściu aplikacja otwiera bieżący miesiąc: <b>{displayedCurrentMonth}</b>. Dane
+          sprzed daty startowej budżetu są ignorowane w aktywnych widokach. Dozwolony zakres
+          historii: <b>{minAllowedMonth || 'bez dolnego limitu'}</b>
           {maxAllowedMonth ? (
             <>
               {' '}
@@ -260,9 +275,7 @@ export default function BudgetHeaderPanel(props: Props) {
         <div style={heatmapSettingsTitleStyle}>Ustawienia heatmapy</div>
 
         <div style={heatmapSettingsHintStyle}>
-          Na kalendarzu ogólnym zarówno widok zwykły, jak i heatmapa pokazują <b>bilans dnia</b>,
-          czyli przychody minus wydatki. Ustawienia tutaj dotyczą tylko głównego kalendarza
-          miesiąca i zapisują się lokalnie w tej przeglądarce.
+          Ustawienia tutaj dotyczą głównego kalendarza miesiąca i zapisują się w profilu.
         </div>
 
         <div style={heatmapRowStyle}>
@@ -275,6 +288,21 @@ export default function BudgetHeaderPanel(props: Props) {
             >
               <option value="normal">zwykły</option>
               <option value="balance">heatmapa</option>
+            </select>
+          </label>
+
+          <label style={heatmapFieldStyle}>
+            <span style={heatmapLabelStyle}>Tryb heatmapy</span>
+            <select
+              value={calendarHeatmapVariant}
+              onChange={(event) =>
+                onCalendarHeatmapVariantChange(event.target.value as CalendarHeatmapVariant)
+              }
+              style={styles.input}
+            >
+              <option value="balance">bilans</option>
+              <option value="income">przychody</option>
+              <option value="expense">wydatki</option>
             </select>
           </label>
         </div>

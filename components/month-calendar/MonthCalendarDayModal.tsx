@@ -46,8 +46,8 @@ export default function MonthCalendarDayModal({
   onClose,
 }: MonthCalendarDayModalProps) {
   return (
-    <div style={overlayStyle} onClick={onClose}>
-      <div style={modalStyle} onClick={(event) => event.stopPropagation()}>
+    <div data-calendar-modal-overlay="true" style={overlayStyle} onClick={onClose}>
+      <div data-calendar-modal="true" style={modalStyle} onClick={(event) => event.stopPropagation()}>
         <div style={modalHeaderStyle}>
           <div>
             <div style={modalTitleStyle}>

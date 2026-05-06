@@ -1,74 +1,35 @@
-import { useCallback, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback } from 'react'
 import { Category, Transaction } from './budgetPageTypes'
 import { getAmountNumber } from './transactionUtils'
 
 export type HeatmapMode = 'normal' | 'balance'
 export type CalendarHeatmapVariant = 'balance' | 'income' | 'expense'
 
-const HEATMAP_STORAGE_KEY = 'budget-app-heatmap-settings-v2'
 const DEFAULT_HEATMAP_MODE: HeatmapMode = 'balance'
 
 type UseHeatmapParams = {
   categoriesById: Record<string, Category>
   incomeLevel1Id: string | null
   expenseLevel1Id: string | null
+  heatmapMode: HeatmapMode
+  setHeatmapMode: Dispatch<SetStateAction<HeatmapMode>>
+  heatmapInverted: boolean
+  setHeatmapInverted: Dispatch<SetStateAction<boolean>>
 }
 
 export function useHeatmap({
   categoriesById,
   incomeLevel1Id,
   expenseLevel1Id,
+  heatmapMode,
+  setHeatmapMode,
+  heatmapInverted,
+  setHeatmapInverted,
 }: UseHeatmapParams) {
-  const [heatmapMode, setHeatmapMode] = useState<HeatmapMode>(DEFAULT_HEATMAP_MODE)
-  const [heatmapInverted, setHeatmapInverted] = useState(false)
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return
-    }
-
-    try {
-      const raw = window.localStorage.getItem(HEATMAP_STORAGE_KEY)
-
-      if (!raw) {
-        return
-      }
-
-      const parsed = JSON.parse(raw) as {
-        mode?: HeatmapMode
-        inverted?: boolean
-      }
-
-      if (parsed.mode === 'normal' || parsed.mode === 'balance') {
-        setHeatmapMode(parsed.mode)
-      }
-
-      if (typeof parsed.inverted === 'boolean') {
-        setHeatmapInverted(parsed.inverted)
-      }
-    } catch {
-      // nic
-    }
-  }, [])
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return
-    }
-
-    window.localStorage.setItem(
-      HEATMAP_STORAGE_KEY,
-      JSON.stringify({
-        mode: heatmapMode,
-        inverted: heatmapInverted,
-      })
-    )
-  }, [heatmapInverted, heatmapMode])
-
   const handleResetHeatmapSettings = useCallback(() => {
     setHeatmapMode(DEFAULT_HEATMAP_MODE)
     setHeatmapInverted(false)
-  }, [])
+  }, [setHeatmapInverted, setHeatmapMode])
 
   const getRootLevel1IdForCategory = useCallback(
     (categoryId: string) => {

@@ -5,9 +5,6 @@ import {
   closestCenter,
   DndContext,
   DragEndEvent,
-  PointerSensor,
-  useSensor,
-  useSensors,
 } from '@dnd-kit/core'
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
@@ -17,6 +14,7 @@ import BudgetLimitIndicator, { BudgetLimitView } from './BudgetLimitIndicator'
 import type { HeatmapMode } from './month-calendar/monthCalendarTypes'
 import { DescriptionSuggestion } from '../lib/suggestionUtils'
 import { Tag, TransactionPaymentSplit } from '../lib/budgetPageTypes'
+import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
 
 type Category = {
   id: string
@@ -66,7 +64,9 @@ type Props = {
   onEditBudgetLimit?: (categoryId: string | null) => void
   getBudgetLimitView?: (categoryId: string | null) => BudgetLimitView | null
   selectedMonth: string
+  budgetStartDate: string
   isSelectedMonthLocked: boolean
+  canUseMonthCalendar?: boolean
   isClosingAfterSelectedMonth: boolean
   openLevel2Ids: string[]
   toggleLevel2: (id: string) => void
@@ -133,6 +133,7 @@ type Props = {
     optionLabel?: string
   }>
   getRecurringOptionsForCategoryId?: (categoryId: string) => RecurringLinkOption[]
+  getDefaultPaymentSourceIdForCategoryId?: (categoryId: string) => string
   transactionTagsMap: Record<string, Tag[]>
   transactionPaymentSplitsMap?: Record<string, TransactionPaymentSplit[]>
   onTagClick?: (tagId: string) => void
@@ -159,7 +160,9 @@ export default function Level2Section(props: Props) {
     onEditBudgetLimit,
     getBudgetLimitView,
     selectedMonth,
+    budgetStartDate,
     isSelectedMonthLocked,
+    canUseMonthCalendar = true,
     isClosingAfterSelectedMonth,
     openLevel2Ids,
     toggleLevel2,
@@ -197,6 +200,7 @@ export default function Level2Section(props: Props) {
     descriptionSuggestions,
     getPaymentSourceOptionsForCategoryId,
     getRecurringOptionsForCategoryId,
+    getDefaultPaymentSourceIdForCategoryId,
     transactionTagsMap,
     transactionPaymentSplitsMap = {},
     onTagClick,
@@ -212,18 +216,13 @@ export default function Level2Section(props: Props) {
   } = props
 
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+  const [inlineAddToken, setInlineAddToken] = useState(0)
 
   const isOpen = openLevel2Ids.includes(l2.id)
   const hasChildren = sortedLevel3Children.length > 0
   const isLevel2DragBlocked = isDragDisabled || isOpen
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 6,
-      },
-    })
-  )
+  const sensors = usePressHoldDndSensors()
 
   const hasVisibleOpenLevel3 = sortedLevel3Children.some((category) =>
     openLevel3Ids.includes(category.id)
@@ -316,6 +315,14 @@ export default function Level2Section(props: Props) {
     ? sortedLevel3Children.flatMap((child) => getTransactionsForCategoryAndMonth(child.id))
     : getTransactionsForCategoryAndMonth(l2.id)
 
+  const openLevel2InlineAdd = () => {
+    if (!isOpen) {
+      toggleLevel2(l2.id)
+    }
+
+    setInlineAddToken((previousToken) => previousToken + 1)
+  }
+
   const renderLevel3List = () => {
     return (
       <DndContext
@@ -335,11 +342,13 @@ export default function Level2Section(props: Props) {
               key={l3.id}
               l3={l3}
               selectedMonth={selectedMonth}
+              budgetStartDate={budgetStartDate}
               isClosingAfterSelectedMonth={isChildClosingAfterSelectedMonth(l3)}
               categorySum={getSumForCategory(l3.id)}
               transactions={getTransactionsForCategoryAndMonth(l3.id)}
               canAddHere={true}
               isSelectedMonthLocked={isSelectedMonthLocked}
+              canUseMonthCalendar={canUseMonthCalendar}
               isOpen={openLevel3Ids.includes(l3.id)}
               toggleLevel3={toggleLevel3}
               handleLevel3DragStart={handleLevel3DragStart}
@@ -366,6 +375,7 @@ export default function Level2Section(props: Props) {
               descriptionSuggestions={descriptionSuggestions}
               getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
               getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}
+              getDefaultPaymentSourceIdForCategoryId={getDefaultPaymentSourceIdForCategoryId}
               transactionTagsMap={transactionTagsMap}
               transactionPaymentSplitsMap={transactionPaymentSplitsMap}
               onTagClick={onTagClick}
@@ -434,18 +444,20 @@ export default function Level2Section(props: Props) {
         </div>
 
         <div style={styles.actions} onClick={(event) => event.stopPropagation()}>
-          <button
-            type="button"
-            style={styles.secondaryButton}
-            onMouseDown={(event) => event.stopPropagation()}
-            onPointerDown={(event) => event.stopPropagation()}
-            onClick={(event) => {
-              event.stopPropagation()
-              setIsCalendarOpen((prev) => !prev)
-            }}
-          >
-            {isCalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
-          </button>
+          {canUseMonthCalendar && (
+            <button
+              type="button"
+              style={styles.secondaryButton}
+              onMouseDown={(event) => event.stopPropagation()}
+              onPointerDown={(event) => event.stopPropagation()}
+              onClick={(event) => {
+                event.stopPropagation()
+                setIsCalendarOpen((prev) => !prev)
+              }}
+            >
+              {isCalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
+            </button>
+          )}
 
           {canUseBudgetLimit && onEditBudgetLimit && (
             <button
@@ -459,6 +471,21 @@ export default function Level2Section(props: Props) {
               }}
             >
               {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
+            </button>
+          )}
+
+          {!hasChildren && !isSelectedMonthLocked && (
+            <button
+              type="button"
+              style={styles.primaryButton}
+              onMouseDown={(event) => event.stopPropagation()}
+              onPointerDown={(event) => event.stopPropagation()}
+              onClick={(event) => {
+                event.stopPropagation()
+                openLevel2InlineAdd()
+              }}
+            >
+              + wpis
             </button>
           )}
 
@@ -527,9 +554,10 @@ export default function Level2Section(props: Props) {
         </div>
       </div>
 
-      {isCalendarOpen && (
+      {canUseMonthCalendar && isCalendarOpen && (
         <MonthCalendarPanel
           selectedMonth={selectedMonth}
+          budgetStartDate={budgetStartDate}
           transactions={level2Transactions}
           styles={styles}
           isSelectedMonthLocked={isSelectedMonthLocked}
@@ -590,16 +618,20 @@ export default function Level2Section(props: Props) {
       {isOpen && !hasChildren && (
         <Level3Section
           l3={l2}
+          hideHeader
+          startInlineAddToken={inlineAddToken}
           headerName="Wpisy w kategorii"
           showHeaderSum={false}
           showCategoryActions={false}
           selectedMonth={selectedMonth}
+          budgetStartDate={budgetStartDate}
           isClosingAfterSelectedMonth={isClosingAfterSelectedMonth}
           categorySum={getSumForCategory(l2.id)}
           transactions={getTransactionsForCategoryAndMonth(l2.id)}
           canAddHere={true}
           isSelectedMonthLocked={isSelectedMonthLocked}
-          isOpen={openLevel3Ids.includes(l2.id)}
+          canUseMonthCalendar={canUseMonthCalendar}
+          isOpen={true}
           toggleLevel3={toggleLevel3}
           handleLevel3DragStart={handleLevel3DragStart}
           openTransactionCreator={openTransactionCreator}
@@ -625,6 +657,7 @@ export default function Level2Section(props: Props) {
           descriptionSuggestions={descriptionSuggestions}
           getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
           getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}
+          getDefaultPaymentSourceIdForCategoryId={getDefaultPaymentSourceIdForCategoryId}
           transactionTagsMap={transactionTagsMap}
           transactionPaymentSplitsMap={transactionPaymentSplitsMap}
           onTagClick={onTagClick}

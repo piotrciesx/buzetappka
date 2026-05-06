@@ -25,7 +25,9 @@ type Props = {
   openLevel2Ids: string[]
   openLevel3Ids: string[]
   selectedMonth: string
+  budgetStartDate: string
   isSelectedMonthLocked: boolean
+  canUseMonthCalendar?: boolean
   openAddSubcategoryFor: string | null
   newSubcategoryName: string
   selectedTransactionIds: string[]
@@ -110,6 +112,7 @@ type Props = {
   descriptionSuggestions: BudgetCategoryTreeProps['descriptionSuggestions']
   getPaymentSourceOptionsForCategoryId: BudgetCategoryTreeProps['getPaymentSourceOptionsForCategoryId']
   getRecurringOptionsForCategoryId: BudgetCategoryTreeProps['getRecurringOptionsForCategoryId']
+  getDefaultPaymentSourceIdForCategoryId: BudgetCategoryTreeProps['getDefaultPaymentSourceIdForCategoryId']
   transactionTagsMap: Record<string, Tag[]>
   transactionPaymentSplitsMap: Record<string, TransactionPaymentSplit[]>
   onTagClick: BudgetCategoryTreeProps['onTagClick']
@@ -125,7 +128,9 @@ export default function BudgetTreeSection({
   openLevel2Ids,
   openLevel3Ids,
   selectedMonth,
+  budgetStartDate,
   isSelectedMonthLocked,
+  canUseMonthCalendar = true,
   openAddSubcategoryFor,
   newSubcategoryName,
   selectedTransactionIds,
@@ -185,6 +190,7 @@ export default function BudgetTreeSection({
   descriptionSuggestions,
   getPaymentSourceOptionsForCategoryId,
   getRecurringOptionsForCategoryId,
+  getDefaultPaymentSourceIdForCategoryId,
   transactionTagsMap,
   transactionPaymentSplitsMap,
   onTagClick,
@@ -271,7 +277,9 @@ export default function BudgetTreeSection({
         openLevel2Ids={openLevel2Ids}
         openLevel3Ids={openLevel3Ids}
         selectedMonth={selectedMonth}
+        budgetStartDate={budgetStartDate}
         isSelectedMonthLocked={isSelectedMonthLocked}
+        canUseMonthCalendar={canUseMonthCalendar}
         openAddSubcategoryFor={openAddSubcategoryFor}
         newSubcategoryName={newSubcategoryName}
         selectedTransactionIds={selectedTransactionIds}
@@ -326,6 +334,7 @@ export default function BudgetTreeSection({
         descriptionSuggestions={descriptionSuggestions}
         getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
         getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}
+        getDefaultPaymentSourceIdForCategoryId={getDefaultPaymentSourceIdForCategoryId}
         transactionTagsMap={transactionTagsMap}
         transactionPaymentSplitsMap={transactionPaymentSplitsMap}
         onTagClick={onTagClick}

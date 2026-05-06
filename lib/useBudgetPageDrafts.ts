@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Dispatch, RefObject, SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
 import { getCategoryPathLabel } from './budgetPageHelpers'
@@ -119,6 +119,15 @@ export const useBudgetPageDrafts = ({
   const [isCleaningAllDrafts, setIsCleaningAllDrafts] = useState(false)
   const [draftPromptState, setDraftPromptState] = useState<DraftPromptState | null>(null)
   const hasMigratedLegacyDraftsRef = useRef(false)
+
+  useEffect(() => {
+    setTransactionDraftId(null)
+    setTransactionDraftType(null)
+    setDrafts([])
+    setDraftsStatusText('')
+    setDraftPromptState(null)
+    hasMigratedLegacyDraftsRef.current = false
+  }, [profileId])
 
   const loadDrafts = useCallback(async () => {
     setIsDraftsLoading(true)

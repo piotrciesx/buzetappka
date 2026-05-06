@@ -6,6 +6,8 @@ type UserProfileMenuProps = {
   userEmail: string
   onToggleSettings: () => void
   onToggleImportExport: () => void
+  onExportBackupJson: () => Promise<void>
+  onExportBackupCsv: () => Promise<void>
   onSignOut: () => Promise<void>
   styles: Record<string, CSSProperties>
 }
@@ -51,10 +53,14 @@ export default function UserProfileMenu({
   userEmail,
   onToggleSettings,
   onToggleImportExport,
+  onExportBackupJson,
+  onExportBackupCsv,
   onSignOut,
   styles,
 }: UserProfileMenuProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [isBackupMenuOpen, setIsBackupMenuOpen] = useState(false)
+  const [isExportingBackup, setIsExportingBackup] = useState(false)
   const [statusText, setStatusText] = useState('')
   const rootRef = useRef<HTMLDivElement | null>(null)
 
@@ -86,8 +92,23 @@ export default function UserProfileMenu({
     setStatusText('Funkcja w budowie.')
   }
 
+  const runBackupExport = async (exportAction: () => Promise<void>) => {
+    setIsExportingBackup(true)
+    setStatusText('')
+
+    try {
+      await exportAction()
+      setStatusText('Pobrano backup danych.')
+      setIsBackupMenuOpen(false)
+    } catch (error) {
+      setStatusText(error instanceof Error ? error.message : 'Nie udało się pobrać backupu.')
+    } finally {
+      setIsExportingBackup(false)
+    }
+  }
+
   return (
-    <div ref={rootRef} style={{ position: 'relative' }}>
+    <div ref={rootRef} data-budget-profile-menu="true" style={{ position: 'relative' }}>
       <button
         type="button"
         style={avatarButtonStyle}
@@ -101,7 +122,7 @@ export default function UserProfileMenu({
       </button>
 
       {isOpen && (
-        <div style={dropdownStyle}>
+        <div data-profile-menu-dropdown="true" style={dropdownStyle}>
           {userEmail && (
             <div style={{ ...styles.smallMutedText, padding: '6px 10px 9px' }}>{userEmail}</div>
           )}
@@ -132,6 +153,36 @@ export default function UserProfileMenu({
           >
             Import / eksport
           </button>
+          <button
+            type="button"
+            style={menuButtonStyle}
+            onClick={() => {
+              setStatusText('')
+              setIsBackupMenuOpen((previousValue) => !previousValue)
+            }}
+          >
+            Backup danych
+          </button>
+          {isBackupMenuOpen && (
+            <div style={{ padding: '0 0 6px 12px' }}>
+              <button
+                type="button"
+                style={menuButtonStyle}
+                disabled={isExportingBackup}
+                onClick={() => void runBackupExport(onExportBackupJson)}
+              >
+                Eksport JSON (pełny backup)
+              </button>
+              <button
+                type="button"
+                style={menuButtonStyle}
+                disabled={isExportingBackup}
+                onClick={() => void runBackupExport(onExportBackupCsv)}
+              >
+                Eksport CSV (uproszczony)
+              </button>
+            </div>
+          )}
           <button type="button" style={menuButtonStyle} onClick={() => void onSignOut()}>
             Wyloguj
           </button>

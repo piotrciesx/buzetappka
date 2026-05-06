@@ -1,10 +1,14 @@
-import { Dispatch, SetStateAction, useCallback } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef } from 'react'
 import { sortCategoriesForDisplay } from './budgetPageHelpers'
 import { Category, Tag, Transaction, TransactionPaymentSplit } from './budgetPageTypes'
+import { getNextMonthText } from './dateUtils'
 import { supabase } from './supabaseClient'
 import { fetchTransactionTagsMap } from './tagUtils'
 
 type UseBudgetPageDataParams = {
+  profileId: string
+  selectedMonth: string
+  budgetStartDate: string
   setStatus: Dispatch<SetStateAction<string>>
   setErrorText: Dispatch<SetStateAction<string>>
   setCategories: Dispatch<SetStateAction<Category[]>>
@@ -24,6 +28,9 @@ type UseBudgetPageDataParams = {
 }
 
 export function useBudgetPageData({
+  profileId,
+  selectedMonth,
+  budgetStartDate,
   setStatus,
   setErrorText,
   setCategories,
@@ -41,17 +48,62 @@ export function useBudgetPageData({
   loadFinancialGoals,
   loadDrafts,
 }: UseBudgetPageDataParams) {
+  const activeProfileIdRef = useRef(profileId)
+
+  useEffect(() => {
+    activeProfileIdRef.current = profileId
+    setCategories([])
+    setTransactions([])
+    setTrashedTransactions([])
+    setTransactionPaymentSplitsMap({})
+    setTransactionTagsMap({})
+    setTags([])
+    resetTreeOpenState(null)
+    setErrorText('')
+    setStatus(profileId ? 'Ładowanie...' : 'Brak profilu')
+  }, [
+    profileId,
+    resetTreeOpenState,
+    setCategories,
+    setErrorText,
+    setStatus,
+    setTags,
+    setTransactionPaymentSplitsMap,
+    setTransactionTagsMap,
+    setTransactions,
+    setTrashedTransactions,
+  ])
+
   const loadData = useCallback(async () => {
+    if (!profileId || !selectedMonth) {
+      return
+    }
+
+    const loadProfileId = profileId
+    const isStaleLoad = () => activeProfileIdRef.current !== loadProfileId
+
     setStatus('Ładowanie...')
     setErrorText('')
 
     await loadMonthNavigationSettings()
+    if (isStaleLoad()) {
+      return
+    }
+
     await loadLockedMonths()
+    if (isStaleLoad()) {
+      return
+    }
+
     await loadExcludedMonths()
+    if (isStaleLoad()) {
+      return
+    }
 
     const { data: categoriesData, error: categoriesError } = await supabase
       .from('categories')
       .select('id, name, parent_id, level, default_order, sort_order, active_to, reactivate_from')
+      .eq('profile_id', profileId)
       .order('level', { ascending: true })
       .order('sort_order', { ascending: true })
       .order('name', { ascending: true })
@@ -59,6 +111,10 @@ export function useBudgetPageData({
     if (categoriesError) {
       setErrorText(categoriesError.message)
       setStatus('Błąd przy pobieraniu kategorii')
+      return
+    }
+
+    if (isStaleLoad()) {
       return
     }
 
@@ -72,6 +128,7 @@ export function useBudgetPageData({
     const { error: trashCleanupError } = await supabase
       .from('transactions')
       .delete()
+      .eq('profile_id', profileId)
       .eq('is_deleted', true)
       .lt('deleted_at', trashAutoDeleteCutoff)
 
@@ -81,12 +138,25 @@ export function useBudgetPageData({
       return
     }
 
+    if (isStaleLoad()) {
+      return
+    }
+
+    const monthStartDate =
+      budgetStartDate && budgetStartDate.slice(0, 7) === selectedMonth
+        ? budgetStartDate.slice(0, 10)
+        : `${selectedMonth}-01`
+    const nextMonthStartDate = `${getNextMonthText(selectedMonth)}-01`
+
     const { data: transactionsData, error: transactionsError } = await supabase
       .from('transactions')
       .select(
         'id, category_id, amount, description, date, day_is_null, payment_source_id, recurring_transaction_id, created_at, is_deleted, deleted_at'
       )
+      .eq('profile_id', profileId)
       .eq('is_deleted', false)
+      .gte('date', monthStartDate)
+      .lt('date', nextMonthStartDate)
       .order('date', { ascending: false })
 
     if (transactionsError) {
@@ -95,22 +165,29 @@ export function useBudgetPageData({
       return
     }
 
+    if (isStaleLoad()) {
+      return
+    }
+
     const nextTransactions = (transactionsData || []) as Transaction[]
+    const transactionIds = nextTransactions.map((transaction) => transaction.id)
     setTransactions(nextTransactions)
 
-    const { data: splitRows, error: splitRowsError } = await supabase
-      .from('transaction_payment_splits')
-      .select('id, transaction_id, payment_source_id, amount, created_at')
-      .in(
-        'transaction_id',
-        nextTransactions.length > 0
-          ? nextTransactions.map((transaction) => transaction.id)
-          : ['00000000-0000-0000-0000-000000000000']
-      )
+    const { data: splitRows, error: splitRowsError } =
+      transactionIds.length > 0
+        ? await supabase
+            .from('transaction_payment_splits')
+            .select('id, transaction_id, payment_source_id, amount, created_at')
+            .in('transaction_id', transactionIds)
+        : { data: [], error: null }
 
     if (splitRowsError) {
       setErrorText(splitRowsError.message)
       setStatus('Błąd przy pobieraniu splitów płatności')
+      return
+    }
+
+    if (isStaleLoad()) {
       return
     }
 
@@ -136,7 +213,10 @@ export function useBudgetPageData({
       .select(
         'id, category_id, amount, description, date, day_is_null, payment_source_id, recurring_transaction_id, created_at, is_deleted, deleted_at'
       )
+      .eq('profile_id', profileId)
       .eq('is_deleted', true)
+      .gte('date', monthStartDate)
+      .lt('date', nextMonthStartDate)
       .order('deleted_at', { ascending: false })
 
     if (trashedTransactionsError) {
@@ -149,13 +229,29 @@ export function useBudgetPageData({
 
     try {
       await loadPaymentSources()
+      if (isStaleLoad()) {
+        return
+      }
+
       await loadRecurringTransactions()
+      if (isStaleLoad()) {
+        return
+      }
+
       await loadFinancialGoals()
+      if (isStaleLoad()) {
+        return
+      }
 
       const nextTransactionTagsMap = await fetchTransactionTagsMap(
         supabase,
-        nextTransactions.map((transaction) => transaction.id)
+        profileId,
+        transactionIds
       )
+
+      if (isStaleLoad()) {
+        return
+      }
 
       setTransactionTagsMap(nextTransactionTagsMap)
       setTags(
@@ -176,6 +272,9 @@ export function useBudgetPageData({
     }
 
     await loadDrafts()
+    if (isStaleLoad()) {
+      return
+    }
 
     if (!categoriesData || categoriesData.length === 0) {
       setStatus('Brak kategorii z bazy')
@@ -184,6 +283,7 @@ export function useBudgetPageData({
 
     setStatus('OK')
   }, [
+    budgetStartDate,
     loadDrafts,
     loadFinancialGoals,
     loadLockedMonths,
@@ -191,7 +291,9 @@ export function useBudgetPageData({
     loadMonthNavigationSettings,
     loadPaymentSources,
     loadRecurringTransactions,
+    profileId,
     resetTreeOpenState,
+    selectedMonth,
     setCategories,
     setErrorText,
     setStatus,

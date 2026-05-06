@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { supabase } from './supabaseClient'
 import {
   RecurringReminderMonthStatus,
@@ -12,6 +12,7 @@ import {
   mapRecurringReminderMonthStatusRow,
   mapRecurringTransactionRow,
 } from './recurringTransactions'
+import { getNextMonthText } from './dateUtils'
 
 type SaveRecurringInput = Omit<RecurringTransaction, 'id' | 'profile_id' | 'created_at'> & {
   id?: string
@@ -19,20 +20,40 @@ type SaveRecurringInput = Omit<RecurringTransaction, 'id' | 'profile_id' | 'crea
 
 type UseRecurringTransactionsParams = {
   profileId: string
+  selectedMonth: string
 }
 
-export function useRecurringTransactions({ profileId }: UseRecurringTransactionsParams) {
+export function useRecurringTransactions({ profileId, selectedMonth }: UseRecurringTransactionsParams) {
   const [recurringTransactions, setRecurringTransactions] = useState<RecurringTransaction[]>([])
   const [recurringExecutions, setRecurringExecutions] = useState<RecurringTransactionExecution[]>([])
   const [recurringReminderMonthStatuses, setRecurringReminderMonthStatuses] = useState<
     RecurringReminderMonthStatus[]
   >([])
 
+  useEffect(() => {
+    setRecurringTransactions([])
+    setRecurringExecutions([])
+    setRecurringReminderMonthStatuses([])
+  }, [profileId])
+
   const loadRecurringTransactions = useCallback(async () => {
+    if (!profileId || !selectedMonth) {
+      setRecurringTransactions([])
+      setRecurringExecutions([])
+      setRecurringReminderMonthStatuses([])
+      return
+    }
+
+    const monthStartDate = `${selectedMonth}-01`
+    const nextMonthStartDate = `${getNextMonthText(selectedMonth)}-01`
+
     const { data: recurringData, error: recurringError } = await supabase
       .from('recurring_transactions')
       .select('*')
       .eq('profile_id', profileId)
+      .eq('status', 'active')
+      .or(`start_date.is.null,start_date.lt.${nextMonthStartDate}`)
+      .or(`end_date.is.null,end_date.gte.${monthStartDate}`)
       .order('created_at', { ascending: false })
 
     if (recurringError) {
@@ -56,6 +77,8 @@ export function useRecurringTransactions({ profileId }: UseRecurringTransactions
       .from('recurring_transaction_executions')
       .select('*')
       .in('recurring_transaction_id', recurringIds)
+      .gte('generated_for_date', monthStartDate)
+      .lt('generated_for_date', nextMonthStartDate)
       .order('generated_for_date', { ascending: false })
 
     if (executionsError) {
@@ -70,6 +93,7 @@ export function useRecurringTransactions({ profileId }: UseRecurringTransactions
       .from('recurring_reminder_month_statuses')
       .select('*')
       .eq('profile_id', profileId)
+      .eq('month', monthStartDate)
       .in('reminder_id', recurringIds)
       .order('month', { ascending: false })
 
@@ -87,7 +111,7 @@ export function useRecurringTransactions({ profileId }: UseRecurringTransactions
     setRecurringTransactions(mappedRecurring)
     setRecurringExecutions(mappedExecutions)
     setRecurringReminderMonthStatuses(mappedStatuses)
-  }, [profileId])
+  }, [profileId, selectedMonth])
 
   const saveRecurringTransaction = useCallback(
     async (input: SaveRecurringInput) => {
@@ -116,7 +140,13 @@ export function useRecurringTransactions({ profileId }: UseRecurringTransactions
       }
 
       const query = input.id
-        ? supabase.from('recurring_transactions').update(payload).eq('id', input.id).select('*').single()
+        ? supabase
+            .from('recurring_transactions')
+            .update(payload)
+            .eq('id', input.id)
+            .eq('profile_id', profileId)
+            .select('*')
+            .single()
         : supabase.from('recurring_transactions').insert(payload).select('*').single()
 
       const { error } = await query
@@ -132,7 +162,11 @@ export function useRecurringTransactions({ profileId }: UseRecurringTransactions
 
   const deleteRecurringTransaction = useCallback(
     async (recurringId: string) => {
-      const { error } = await supabase.from('recurring_transactions').delete().eq('id', recurringId)
+      const { error } = await supabase
+        .from('recurring_transactions')
+        .delete()
+        .eq('id', recurringId)
+        .eq('profile_id', profileId)
 
       if (error) {
         throw new Error(error.message)
@@ -140,7 +174,7 @@ export function useRecurringTransactions({ profileId }: UseRecurringTransactions
 
       await loadRecurringTransactions()
     },
-    [loadRecurringTransactions]
+    [loadRecurringTransactions, profileId]
   )
 
   const saveRecurringReminderMonthStatus = useCallback(

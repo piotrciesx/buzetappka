@@ -32,7 +32,7 @@ export default function MonthCalendarContainer({
 }: MonthCalendarContainerProps) {
   return (
     <>
-      <section style={calendarPanelStyle}>
+      <section data-month-calendar-panel="true" style={calendarPanelStyle}>
         {toolbar}
         {notices}
         <MonthCalendarLegend heatmapMode={heatmapMode} legendLabels={legendLabels} />

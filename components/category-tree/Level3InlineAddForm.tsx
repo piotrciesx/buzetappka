@@ -143,6 +143,7 @@ type Level3InlineAddFormProps = {
   handleInlineSuggestionPointerUp: () => void
   handleInlineSuggestionPointerLeave: () => void
   getPaymentSourceOptionsForCategoryId?: (categoryId: string) => PaymentSourceOption[]
+  getDefaultPaymentSourceIdForCategoryId?: (categoryId: string) => string
   normalizeAmountInput: (value: string) => string
   saveInlineAdd: () => Promise<void>
   cancelInlineAdd: () => void
@@ -181,6 +182,7 @@ export default function Level3InlineAddForm({
   handleInlineSuggestionPointerUp,
   handleInlineSuggestionPointerLeave,
   getPaymentSourceOptionsForCategoryId,
+  getDefaultPaymentSourceIdForCategoryId: _getDefaultPaymentSourceIdForCategoryId,
   normalizeAmountInput,
   saveInlineAdd,
   cancelInlineAdd,
@@ -352,7 +354,7 @@ export default function Level3InlineAddForm({
         )}
       </div>
 
-      {paymentSourceOptions.length > 0 && (
+      {getPaymentSourceOptionsForCategoryId && (
         <div style={{ minWidth: 280, flex: 1 }}>
           <PaymentSplitEditor
             amount={inlineAmount}
@@ -364,6 +366,11 @@ export default function Level3InlineAddForm({
             setPaymentSplitItems={setInlinePaymentSplitItems}
             styles={styles}
           />
+          {paymentSourceOptions.length === 0 && (
+            <div style={helperTextStyle}>
+              Źródła płatności są włączone, ale nie masz jeszcze żadnego źródła do wyboru.
+            </div>
+          )}
         </div>
       )}
 

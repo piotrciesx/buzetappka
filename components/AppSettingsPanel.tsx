@@ -1,14 +1,21 @@
 'use client'
 
-import { CSSProperties, useState } from 'react'
-import { AppModuleKey, AppModuleVisibility } from '../lib/useAppModuleVisibility'
+import { CSSProperties, ReactNode, useState } from 'react'
+import {
+  AppModuleKey,
+  AppModuleVisibility,
+  DEFAULT_APP_MODULE_VISIBILITY,
+} from '../lib/useAppModuleVisibility'
 
 type AppSettingsPanelProps = {
-  visibleModules: AppModuleVisibility
+  simpleMode: boolean
+  onSimpleModeChange: (value: boolean) => void
+  autoExcludePartialMonths: boolean
+  onAutoExcludePartialMonthsChange: (value: boolean) => void
   draftVisibleModules: AppModuleVisibility
   saveStatusText: string
   onChangeModuleVisibility: (moduleKey: AppModuleKey, isVisible: boolean) => void
-  onSave: () => void
+  onSave: () => void | Promise<void>
   onResetDraft: () => void
   onLockAllPastMonths: () => Promise<void>
   onUnlockAllPastMonths: () => Promise<void>
@@ -16,6 +23,7 @@ type AppSettingsPanelProps = {
   onResetAllHistory: () => Promise<void>
   styles: Record<string, CSSProperties>
   defaultOpen?: boolean
+  profileMembersPanel?: ReactNode
 }
 
 const moduleItems: Array<{ key: AppModuleKey; label: string }> = [
@@ -28,7 +36,10 @@ const moduleItems: Array<{ key: AppModuleKey; label: string }> = [
 ]
 
 export default function AppSettingsPanel({
-  visibleModules,
+  simpleMode,
+  onSimpleModeChange,
+  autoExcludePartialMonths,
+  onAutoExcludePartialMonthsChange,
   draftVisibleModules,
   saveStatusText,
   onChangeModuleVisibility,
@@ -40,10 +51,11 @@ export default function AppSettingsPanel({
   onResetAllHistory,
   styles,
   defaultOpen = false,
+  profileMembersPanel,
 }: AppSettingsPanelProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen)
-  const hasUnsavedChanges = moduleItems.some(
-    (item) => visibleModules[item.key] !== draftVisibleModules[item.key]
+  const isDraftDefault = moduleItems.every(
+    (item) => draftVisibleModules[item.key] === DEFAULT_APP_MODULE_VISIBILITY[item.key]
   )
 
   return (
@@ -55,9 +67,29 @@ export default function AppSettingsPanel({
       {isOpen && (
         <div style={{ marginTop: 12 }}>
           <p style={{ marginTop: 0, marginBottom: 12, color: '#4b5563', fontSize: 13 }}>
-            Te ustawienia na razie zapisują się lokalnie w tej przeglądarce. Służą do testów i
-            porządkowania widoku.
+            Ustawienia trybu działania zapisują się dla profilu, a widoczność modułów osobno dla
+            użytkownika.
           </p>
+
+          <div style={{ display: 'grid', gap: 6, marginBottom: 12 }}>
+            <label style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <input
+                type="checkbox"
+                checked={simpleMode}
+                onChange={(event) => onSimpleModeChange(event.target.checked)}
+              />
+              <span>Tryb prosty</span>
+            </label>
+
+            <label style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <input
+                type="checkbox"
+                checked={autoExcludePartialMonths}
+                onChange={(event) => onAutoExcludePartialMonthsChange(event.target.checked)}
+              />
+              <span>Automatycznie wyłączaj niepełne miesiące ze statystyk</span>
+            </label>
+          </div>
 
           <div style={{ display: 'grid', gap: 6, marginBottom: 12 }}>
             {moduleItems.map((item) => (
@@ -76,12 +108,14 @@ export default function AppSettingsPanel({
             <button type="button" onClick={onSave}>
               Zapisz ustawienia
             </button>
-            <button type="button" onClick={onResetDraft} disabled={!hasUnsavedChanges}>
-              Cofnij niezapisane zmiany
+            <button type="button" onClick={onResetDraft} disabled={isDraftDefault}>
+              Przywróć domyślne
             </button>
           </div>
 
           {saveStatusText && <div style={{ marginTop: 8, fontSize: 13 }}>{saveStatusText}</div>}
+
+          {profileMembersPanel}
 
           <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid #e5e7eb' }}>
             <div style={styles.l2Name}>Narzędzia administracyjne</div>
@@ -100,7 +134,7 @@ export default function AppSettingsPanel({
               </button>
             </div>
             <p style={{ marginBottom: 0, color: '#6b7280', fontSize: 13 }}>
-              TODO: widoczność modułów nadal zapisuje się lokalnie w przeglądarce.
+              Widoczność modułów jest zapisywana po kliknięciu przycisku zapisu.
             </p>
           </div>
         </div>

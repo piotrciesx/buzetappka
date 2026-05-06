@@ -40,6 +40,7 @@ export default function DashboardWidgetContent(props: WidgetContentProps) {
     widget,
     transactions,
     selectedMonth,
+    budgetStartDate,
     dashboardStats,
     categoriesById,
     getSignedAmountForTransaction,
@@ -55,6 +56,7 @@ export default function DashboardWidgetContent(props: WidgetContentProps) {
         widget={widget}
         transactions={transactions}
         selectedMonth={selectedMonth}
+        budgetStartDate={budgetStartDate}
         categoriesById={categoriesById}
         getSignedAmountForTransaction={getSignedAmountForTransaction}
       />

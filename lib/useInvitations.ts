@@ -3,17 +3,21 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from './supabaseClient'
 
-type ProfileInvitationRow = {
-  token: string
-}
-
 type UseInvitationsParams = {
   profileId: string | null
   userId: string | null
   setActiveProfileId: (profileId: string | null) => void
 }
 
+type InvitationStatusRow = {
+  profile_id: string | null
+  is_current_member: boolean | null
+}
+
 const PENDING_INVITATION_STORAGE_KEY = 'budget-pending-invitation-token'
+const ALREADY_MEMBER_INVITATION_MESSAGE = 'To konto już należy do tego profilu.'
+const EXISTING_BUDGET_INVITATION_WARNING =
+  'To konto ma już własny budżet. Po dołączeniu do wspólnego profilu będziesz pracować na budżecie osoby zapraszającej. Twój dotychczasowy budżet nie zostanie usunięty, ale będzie ukryty, dopóki nie opuścisz wspólnego profilu albo nie przełączysz aktywnego profilu. Przed dołączeniem zalecamy wykonanie backupu.'
 
 const getInviteTokenFromUrl = () => {
   if (typeof window === 'undefined') {
@@ -43,6 +47,14 @@ const clearInviteFromUrl = () => {
   window.history.replaceState({}, document.title, nextUrl)
 }
 
+const getInvitationStatusRow = (data: unknown): InvitationStatusRow | null => {
+  if (Array.isArray(data)) {
+    return (data[0] as InvitationStatusRow | undefined) || null
+  }
+
+  return (data as InvitationStatusRow | null) || null
+}
+
 export function useInvitations({
   profileId,
   userId,
@@ -52,7 +64,9 @@ export function useInvitations({
   const [inviteEmail, setInviteEmail] = useState('')
   const [inviteLink, setInviteLink] = useState('')
   const [invitationStatusText, setInvitationStatusText] = useState('')
+  const [invitationInfoText, setInvitationInfoText] = useState('')
   const [invitationErrorText, setInvitationErrorText] = useState('')
+  const [invitationWarningText, setInvitationWarningText] = useState('')
   const [isInvitationWorking, setIsInvitationWorking] = useState(false)
 
   useEffect(() => {
@@ -71,6 +85,70 @@ export function useInvitations({
     }
   }, [])
 
+  useEffect(() => {
+    let isActive = true
+
+    const loadInvitationContext = async () => {
+      if (!pendingInvitationToken || !userId) {
+        setInvitationInfoText('')
+        setInvitationWarningText('')
+        return
+      }
+
+      const { data: invitationStatus, error: invitationStatusError } = await supabase.rpc(
+        'get_profile_invitation_status',
+        {
+          invitation_token: pendingInvitationToken,
+        }
+      )
+
+      if (!isActive) {
+        return
+      }
+
+      if (invitationStatusError) {
+        setInvitationInfoText('')
+        setInvitationWarningText('')
+        return
+      }
+
+      const statusRow = getInvitationStatusRow(invitationStatus)
+
+      if (statusRow?.is_current_member && statusRow.profile_id) {
+        setActiveProfileId(statusRow.profile_id)
+        setInvitationInfoText(ALREADY_MEMBER_INVITATION_MESSAGE)
+        setInvitationWarningText('')
+        return
+      }
+
+      setInvitationInfoText('')
+
+      const { data: memberships, error: membershipsError } = await supabase
+        .from('profile_users')
+        .select('profile_id')
+        .eq('user_id', userId)
+
+      if (!isActive) {
+        return
+      }
+
+      if (membershipsError) {
+        setInvitationWarningText('')
+        return
+      }
+
+      setInvitationWarningText(
+        (memberships || []).length > 0 ? EXISTING_BUDGET_INVITATION_WARNING : ''
+      )
+    }
+
+    void loadInvitationContext()
+
+    return () => {
+      isActive = false
+    }
+  }, [pendingInvitationToken, setActiveProfileId, userId])
+
   const createInvitation = useCallback(async () => {
     if (!profileId || !userId) {
       setInvitationErrorText('Nie udało się utworzyć zaproszenia: brak aktywnego profilu.')
@@ -83,22 +161,16 @@ export function useInvitations({
 
     try {
       const trimmedEmail = inviteEmail.trim()
-      const { data, error } = await supabase
-        .from('profile_invitations')
-        .insert({
-          profile_id: profileId,
-          invited_email: trimmedEmail || null,
-          created_by: userId,
-          role: 'member',
-        })
-        .select('token')
-        .single()
+      const { data, error } = await supabase.rpc('create_profile_invitation', {
+        target_profile_id: profileId,
+        target_invited_email: trimmedEmail || null,
+      })
 
       if (error) {
         throw new Error(error.message)
       }
 
-      const token = (data as ProfileInvitationRow | null)?.token
+      const token = data ? String(data) : ''
 
       if (!token) {
         throw new Error('Nie udało się pobrać tokenu zaproszenia.')
@@ -155,6 +227,8 @@ export function useInvitations({
 
       setActiveProfileId(nextProfileId)
       setPendingInvitationToken(null)
+      setInvitationInfoText('')
+      setInvitationWarningText('')
       window.sessionStorage.removeItem(PENDING_INVITATION_STORAGE_KEY)
       clearInviteFromUrl()
       setInvitationStatusText('Dołączono do wspólnego budżetu.')
@@ -171,6 +245,8 @@ export function useInvitations({
     setPendingInvitationToken(null)
     setInvitationErrorText('')
     setInvitationStatusText('')
+    setInvitationInfoText('')
+    setInvitationWarningText('')
     window.sessionStorage.removeItem(PENDING_INVITATION_STORAGE_KEY)
     clearInviteFromUrl()
   }, [])
@@ -181,7 +257,9 @@ export function useInvitations({
     setInviteEmail,
     inviteLink,
     invitationStatusText,
+    invitationInfoText,
     invitationErrorText,
+    invitationWarningText,
     isInvitationWorking,
     createInvitation,
     copyInviteLink,

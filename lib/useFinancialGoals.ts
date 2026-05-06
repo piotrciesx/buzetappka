@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   FinancialGoal,
   FinancialGoalAllocationMode,
@@ -24,6 +24,12 @@ export function useFinancialGoals({ profileId }: UseFinancialGoalsParams) {
   const [financialGoals, setFinancialGoals] = useState<FinancialGoal[]>([])
   const [financialGoalPriorities, setFinancialGoalPriorities] = useState<FinancialGoalMonthPriority[]>([])
   const [financialGoalMonthConfigs, setFinancialGoalMonthConfigs] = useState<FinancialGoalMonthConfig[]>([])
+
+  useEffect(() => {
+    setFinancialGoals([])
+    setFinancialGoalPriorities([])
+    setFinancialGoalMonthConfigs([])
+  }, [profileId])
 
   const loadFinancialGoals = useCallback(async () => {
     const { data, error } = await supabase
@@ -87,7 +93,7 @@ export function useFinancialGoals({ profileId }: UseFinancialGoalsParams) {
       }
 
       const query = input.id
-        ? supabase.from('financial_goals').update(payload).eq('id', input.id)
+        ? supabase.from('financial_goals').update(payload).eq('id', input.id).eq('profile_id', profileId)
         : supabase.from('financial_goals').insert(payload)
 
       const { error } = await query
@@ -260,7 +266,11 @@ export function useFinancialGoals({ profileId }: UseFinancialGoalsParams) {
 
   const deleteFinancialGoal = useCallback(
     async (goalId: string) => {
-      const { error } = await supabase.from('financial_goals').delete().eq('id', goalId)
+      const { error } = await supabase
+        .from('financial_goals')
+        .delete()
+        .eq('id', goalId)
+        .eq('profile_id', profileId)
 
       if (error) {
         throw new Error(error.message)
@@ -268,7 +278,7 @@ export function useFinancialGoals({ profileId }: UseFinancialGoalsParams) {
 
       await loadFinancialGoals()
     },
-    [loadFinancialGoals]
+    [loadFinancialGoals, profileId]
   )
 
   return {

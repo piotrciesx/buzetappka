@@ -9,9 +9,9 @@ export default function FinancialGoalsHeader({ styles }: FinancialGoalsHeaderPro
     <>
       <div style={styles.sectionTitle}>Cele finansowe</div>
       <div style={styles.pageSubtitle}>
-        Start celu ustawiamy na miesiÄ…c utworzenia. NadwyĹĽka dodatnia jest rozdzielana wedĹ‚ug
-        aktywnego trybu z konfiguracjÄ… dziedziczonÄ… od wybranego miesiÄ…ca do przodu, bez zmiany
-        historii wczeĹ›niejszych miesiÄ™cy.
+        Start celu ustawiamy na miesiąc utworzenia. Nadwyżka dodatnia jest rozdzielana według
+        aktywnego trybu z konfiguracją dziedziczoną od wybranego miesiąca do przodu, bez zmiany
+        historii wcześniejszych miesięcy.
       </div>
     </>
   )

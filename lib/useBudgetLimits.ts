@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type {
   BudgetLimit,
   BudgetLimitAlertState,
@@ -230,6 +230,11 @@ export function useBudgetLimits({
 }: UseBudgetLimitsParams) {
   const [limits, setLimits] = useState<BudgetLimit[]>([])
   const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    setLimits([])
+    setIsLoading(false)
+  }, [profileId])
 
   const loadBudgetLimits = useCallback(async () => {
     setIsLoading(true)

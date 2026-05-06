@@ -2,13 +2,16 @@ import { CSSProperties } from 'react'
 
 export const budgetPageStyles: Record<string, CSSProperties> = {
   page: {
-    padding: 20,
+    width: '100%',
     maxWidth: 1100,
+    boxSizing: 'border-box',
+    padding: 20,
     margin: '0 auto',
     fontFamily: 'Arial, sans-serif',
     background: '#f8fafc',
     minHeight: '100vh',
     color: '#111827',
+    overflowX: 'hidden',
   } as const,
 
   pageTitle: {
@@ -30,6 +33,19 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     padding: 16,
     marginBottom: 20,
     boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+    maxWidth: '100%',
+    boxSizing: 'border-box',
+  } as const,
+
+  card: {
+    background: '#ffffff',
+    border: '1px solid #e5e7eb',
+    borderRadius: 14,
+    padding: 16,
+    marginBottom: 20,
+    boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+    maxWidth: '100%',
+    boxSizing: 'border-box',
   } as const,
 
   monthBar: {
@@ -49,6 +65,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     background: '#eff6ff',
     border: '1px solid #bfdbfe',
     borderRadius: 10,
+    boxSizing: 'border-box',
   } as const,
 
   monthNavigationSettingsCard: {
@@ -111,6 +128,16 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     borderRadius: 10,
     padding: '10px 12px',
     fontSize: 14,
+    maxWidth: '100%',
+    boxSizing: 'border-box',
+    overflowWrap: 'anywhere' as const,
+  } as const,
+
+  smallMutedText: {
+    fontSize: 13,
+    color: '#6b7280',
+    lineHeight: 1.45,
+    overflowWrap: 'anywhere' as const,
   } as const,
 
   sectionTitle: {
@@ -135,6 +162,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     borderRadius: 16,
     padding: 14,
     boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+    maxWidth: '100%',
+    boxSizing: 'border-box',
   } as const,
 
   l1Header: {
@@ -153,7 +182,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
 
   l2Wrap: {
     marginTop: 12,
-    marginLeft: 14,
+    marginLeft: 'clamp(6px, 2vw, 14px)',
+    minWidth: 0,
   } as const,
 
   l2Header: {
@@ -174,6 +204,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     alignItems: 'center',
     gap: 10,
     flexWrap: 'wrap' as const,
+    minWidth: 0,
   } as const,
 
   arrow: {
@@ -185,11 +216,13 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   l2Name: {
     fontWeight: 600,
     fontSize: 16,
+    overflowWrap: 'anywhere' as const,
   } as const,
 
   l2Meta: {
     fontSize: 13,
     color: '#6b7280',
+    overflowWrap: 'anywhere' as const,
   } as const,
 
   closingBadge: {
@@ -206,7 +239,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
 
   l3Wrap: {
     marginTop: 10,
-    marginLeft: 14,
+    marginLeft: 'clamp(6px, 2vw, 14px)',
+    minWidth: 0,
   } as const,
 
   l3Header: {
@@ -225,6 +259,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   l3Name: {
     fontWeight: 600,
     fontSize: 15,
+    overflowWrap: 'anywhere' as const,
   } as const,
 
   dragHandle: {
@@ -254,6 +289,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     display: 'flex',
     gap: 8,
     flexWrap: 'wrap' as const,
+    minWidth: 0,
   } as const,
 
   primaryButton: {
@@ -264,6 +300,9 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     color: '#ffffff',
     fontWeight: 600,
     cursor: 'pointer',
+    maxWidth: '100%',
+    whiteSpace: 'normal' as const,
+    overflowWrap: 'anywhere' as const,
   } as const,
 
   secondaryButton: {
@@ -274,6 +313,9 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     color: '#111827',
     fontWeight: 600,
     cursor: 'pointer',
+    maxWidth: '100%',
+    whiteSpace: 'normal' as const,
+    overflowWrap: 'anywhere' as const,
   } as const,
 
   dangerButton: {
@@ -284,6 +326,9 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     color: '#991b1b',
     fontWeight: 600,
     cursor: 'pointer',
+    maxWidth: '100%',
+    whiteSpace: 'normal' as const,
+    overflowWrap: 'anywhere' as const,
   } as const,
 
   formRow: {
@@ -295,6 +340,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     background: '#f9fafb',
     border: '1px solid #e5e7eb',
     borderRadius: 12,
+    maxWidth: '100%',
+    boxSizing: 'border-box',
   } as const,
 
   input: {
@@ -305,6 +352,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     background: '#ffffff',
     fontSize: 14,
     minWidth: 180,
+    maxWidth: '100%',
+    boxSizing: 'border-box',
     outline: 'none',
   } as const,
 
@@ -316,6 +365,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     background: '#ffffff',
     fontSize: 14,
     width: 120,
+    maxWidth: '100%',
+    boxSizing: 'border-box',
     outline: 'none',
   } as const,
 
@@ -336,12 +387,17 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     border: '1px solid #e5e7eb',
     borderRadius: 10,
     fontSize: 14,
+    maxWidth: '100%',
+    boxSizing: 'border-box',
+    minWidth: 0,
   } as const,
 
   transactionLeft: {
     display: 'flex',
     flexDirection: 'column' as const,
     gap: 4,
+    minWidth: 0,
+    overflowWrap: 'anywhere' as const,
   } as const,
 
   amountText: {
@@ -383,6 +439,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     alignItems: 'center',
     gap: 8,
     flexWrap: 'wrap' as const,
+    minWidth: 0,
   } as const,
 
   sortLabel: {
@@ -399,6 +456,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     flexDirection: 'column' as const,
     gap: 10,
     zIndex: 950,
+    maxWidth: 'calc(100vw - 32px)',
   } as const,
 
   floatingActionButton: {
@@ -415,6 +473,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     boxShadow: '0 16px 32px rgba(37, 99, 235, 0.28)',
     padding: '0 18px',
     textAlign: 'left' as const,
+    maxWidth: '100%',
+    whiteSpace: 'normal' as const,
   } as const,
 
   floatingIncomeButton: {

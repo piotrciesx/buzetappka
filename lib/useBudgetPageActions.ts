@@ -10,6 +10,7 @@ type UseBudgetPageActionsParams = {
   guardMonthUnlocked: (monthText: string, actionLabel: string) => boolean
   categories: Category[]
   transactions: Transaction[]
+  isPaymentSourcesEnabled: boolean
   newSubcategoryName: string
   setOpenAddSubcategoryFor: (value: string | null) => void
   setNewSubcategoryName: (value: string) => void
@@ -26,6 +27,7 @@ export function useBudgetPageActions({
   guardMonthUnlocked,
   categories,
   transactions,
+  isPaymentSourcesEnabled,
   newSubcategoryName,
   setOpenAddSubcategoryFor,
   setNewSubcategoryName,
@@ -49,7 +51,7 @@ export function useBudgetPageActions({
         description: row.description || null,
         date: row.date,
         day_is_null: row.day_is_null,
-        payment_source_id: row.payment_source_id || null,
+        payment_source_id: isPaymentSourcesEnabled ? row.payment_source_id || null : null,
         is_deleted: false,
       }))
 
@@ -70,7 +72,7 @@ export function useBudgetPageActions({
           await setTransactionTags(supabase, profileId, insertedRow.id, importRow.tag_names)
         }
 
-        if (insertedRow?.id && importRow?.payment_splits?.length) {
+        if (isPaymentSourcesEnabled && insertedRow?.id && importRow?.payment_splits?.length) {
           const { error: splitInsertError } = await supabase.from('transaction_payment_splits').insert(
             importRow.payment_splits.map((split) => ({
               transaction_id: insertedRow.id,
@@ -87,7 +89,7 @@ export function useBudgetPageActions({
 
       await loadData()
     },
-    [guardMonthUnlocked, loadData, profileId, selectedMonth]
+    [guardMonthUnlocked, isPaymentSourcesEnabled, loadData, profileId, selectedMonth]
   )
 
   const handleAddSubcategory = useCallback(
@@ -206,7 +208,11 @@ export function useBudgetPageActions({
         }
       }
 
-      const { error } = await supabase.from('categories').update({ name: nextName }).eq('id', category.id)
+      const { error } = await supabase
+        .from('categories')
+        .update({ name: nextName })
+        .eq('id', category.id)
+        .eq('profile_id', profileId)
 
       if (error) {
         alert(`Błąd zmiany nazwy: ${error.message}`)
@@ -215,7 +221,7 @@ export function useBudgetPageActions({
 
       await loadData()
     },
-    [categories, loadData, transactions]
+    [categories, loadData, profileId, transactions]
   )
 
   const handleDeleteCategory = useCallback(
@@ -250,7 +256,11 @@ export function useBudgetPageActions({
         return
       }
 
-      const { error } = await supabase.from('categories').delete().eq('id', category.id)
+      const { error } = await supabase
+        .from('categories')
+        .delete()
+        .eq('id', category.id)
+        .eq('profile_id', profileId)
 
       if (error) {
         alert(`Błąd usuwania kategorii: ${error.message}`)
@@ -259,7 +269,7 @@ export function useBudgetPageActions({
 
       await loadData()
     },
-    [categories, loadData, transactions]
+    [categories, loadData, profileId, transactions]
   )
 
   return {
