@@ -1,6 +1,6 @@
 'use client'
 
-import type { ComponentProps, CSSProperties } from 'react'
+import type { ComponentProps, CSSProperties, ReactNode } from 'react'
 import BudgetCategoryTree from './BudgetCategoryTree'
 import type { BudgetLimitView } from './BudgetLimitIndicator'
 import {
@@ -124,6 +124,8 @@ type Props = {
   onAddExpense?: () => void
   onOpenSearch?: () => void
   onOpenCalendar?: () => void
+  workspaceTopContent?: ReactNode
+  workspaceBottomContent?: ReactNode
 }
 
 export default function BudgetTreeSection({
@@ -207,6 +209,8 @@ export default function BudgetTreeSection({
   onAddExpense,
   onOpenSearch,
   onOpenCalendar,
+  workspaceTopContent,
+  workspaceBottomContent,
 }: Props) {
   const visibleTopLevelCount = sortedLevel1.length
   const visibleTransactionCount = sortedLevel1.reduce(
@@ -220,7 +224,7 @@ export default function BudgetTreeSection({
         <div>
           <div data-tree-workspace-label="true">Kategorie</div>
           <p>
-            {selectedMonth} · {visibleTopLevelCount} sekcje · {visibleTransactionCount} wpisy
+            {selectedMonth} / {visibleTopLevelCount} sekcje / {visibleTransactionCount} wpisy
           </p>
         </div>
 
@@ -329,83 +333,95 @@ export default function BudgetTreeSection({
         </div>
       </div>
 
+      {workspaceTopContent && (
+        <div data-budget-tree-control-deck="true">{workspaceTopContent}</div>
+      )}
+
       {sortedLevel1.length === 0 && (
         <div style={styles.emptyStateCard}>Brak widocznych kategorii w wybranym miesiącu</div>
       )}
 
-      <BudgetCategoryTree
-        sortedLevel1={sortedLevel1}
-        openLevel1Ids={openLevel1Ids}
-        openLevel1CalendarIds={openLevel1CalendarIds}
-        openLevel2Ids={openLevel2Ids}
-        openLevel3Ids={openLevel3Ids}
-        selectedMonth={selectedMonth}
-        budgetStartDate={budgetStartDate}
-        isSelectedMonthLocked={isSelectedMonthLocked}
-        canUseMonthCalendar={canUseMonthCalendar}
-        openAddSubcategoryFor={openAddSubcategoryFor}
-        newSubcategoryName={newSubcategoryName}
-        selectedTransactionIds={selectedTransactionIds}
-        isReorderingLevel1={isReorderingLevel1}
-        reorderingLevel1Id={reorderingLevel1Id}
-        reorderingLevel2Id={reorderingLevel2Id}
-        expenseLevel1Id={expenseLevel1Id}
-        styles={styles}
-        toggleLevel1={toggleLevel1}
-        toggleLevel1Calendar={toggleLevel1Calendar}
-        toggleLevel2={toggleLevel2}
-        toggleLevel3={toggleLevel3}
-        setOpenAddSubcategoryFor={setOpenAddSubcategoryFor}
-        setNewSubcategoryName={setNewSubcategoryName}
-        getSortedLevel2Children={getSortedLevel2Children}
-        getSortedLevel3Children={getSortedLevel3Children}
-        getTransactionsForLevel1AndMonth={getTransactionsForLevel1AndMonth}
-        getTransactionsForCategoryAndMonthForSelectedMonth={
-          getTransactionsForCategoryAndMonthForSelectedMonth
-        }
-        getSumForCategoryForSelectedMonth={getSumForCategoryForSelectedMonth}
-        getSumForLevel2ForSelectedMonth={getSumForLevel2ForSelectedMonth}
-        getCountForLevel2ForSelectedMonth={getCountForLevel2ForSelectedMonth}
-        getAmountNumber={getAmountNumber}
-        getMoveTargetsForTransaction={getMoveTargetsForTransaction}
-        getSignedAmountForTransaction={getSignedAmountForTransaction}
-        getCalendarHeatmapVariantForLevel1Id={getCalendarHeatmapVariantForLevel1Id}
-        heatmapMode={heatmapMode}
-        heatmapInverted={heatmapInverted}
-        onHeatmapModeChange={onHeatmapModeChange}
-        onHeatmapInvertedChange={onHeatmapInvertedChange}
-        isCategoryClosingAfterSelectedMonth={isCategoryClosingAfterSelectedMonth}
-        handleAddSubcategory={handleAddSubcategory}
-        handleRenameCategory={handleRenameCategory}
-        handleDeleteCategory={handleDeleteCategory}
-        openTransactionCreator={openTransactionCreator}
-        handleInlineSaveTransaction={handleInlineSaveTransaction}
-        handleHideCategory={handleHideCategory}
-        handleRestoreCategory={handleRestoreCategory}
-        handleUndoScheduledHide={handleUndoScheduledHide}
-        handleDeleteTransaction={handleDeleteTransaction}
-        handleUpdateTransaction={handleUpdateTransaction}
-        handleMoveTransaction={handleMoveTransaction}
-        handleDuplicateTransaction={handleDuplicateTransaction}
-        handleOpenCategoryCalendarAddForDay={handleOpenCategoryCalendarAddForDay}
-        handleOpenLevel1CalendarAddForDay={handleOpenLevel1CalendarAddForDay}
-        toggleTransactionSelection={toggleTransactionSelection}
-        handleLevel3DragStart={handleLevel3DragStart}
-        handleReorderLevel3={handleReorderLevel3}
-        handleLevel1DragStart={handleLevel1DragStart}
-        handleReorderLevel1={handleReorderLevel1}
-        handleReorderLevel2={handleReorderLevel2}
-        descriptionSuggestions={descriptionSuggestions}
-        getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
-        getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}
-        getDefaultPaymentSourceIdForCategoryId={getDefaultPaymentSourceIdForCategoryId}
-        transactionTagsMap={transactionTagsMap}
-        transactionPaymentSplitsMap={transactionPaymentSplitsMap}
-        onTagClick={onTagClick}
-        onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
-        getBudgetLimitView={getBudgetLimitView}
-        onEditBudgetLimit={onEditBudgetLimit}
-      />
+      <div data-tree-category-grid="true">
+        <div data-tree-category-list="true">
+        <BudgetCategoryTree
+          sortedLevel1={sortedLevel1}
+          openLevel1Ids={openLevel1Ids}
+          openLevel1CalendarIds={openLevel1CalendarIds}
+          openLevel2Ids={openLevel2Ids}
+          openLevel3Ids={openLevel3Ids}
+          selectedMonth={selectedMonth}
+          budgetStartDate={budgetStartDate}
+          isSelectedMonthLocked={isSelectedMonthLocked}
+          canUseMonthCalendar={canUseMonthCalendar}
+          openAddSubcategoryFor={openAddSubcategoryFor}
+          newSubcategoryName={newSubcategoryName}
+          selectedTransactionIds={selectedTransactionIds}
+          isReorderingLevel1={isReorderingLevel1}
+          reorderingLevel1Id={reorderingLevel1Id}
+          reorderingLevel2Id={reorderingLevel2Id}
+          expenseLevel1Id={expenseLevel1Id}
+          styles={styles}
+          toggleLevel1={toggleLevel1}
+          toggleLevel1Calendar={toggleLevel1Calendar}
+          toggleLevel2={toggleLevel2}
+          toggleLevel3={toggleLevel3}
+          setOpenAddSubcategoryFor={setOpenAddSubcategoryFor}
+          setNewSubcategoryName={setNewSubcategoryName}
+          getSortedLevel2Children={getSortedLevel2Children}
+          getSortedLevel3Children={getSortedLevel3Children}
+          getTransactionsForLevel1AndMonth={getTransactionsForLevel1AndMonth}
+          getTransactionsForCategoryAndMonthForSelectedMonth={
+            getTransactionsForCategoryAndMonthForSelectedMonth
+          }
+          getSumForCategoryForSelectedMonth={getSumForCategoryForSelectedMonth}
+          getSumForLevel2ForSelectedMonth={getSumForLevel2ForSelectedMonth}
+          getCountForLevel2ForSelectedMonth={getCountForLevel2ForSelectedMonth}
+          getAmountNumber={getAmountNumber}
+          getMoveTargetsForTransaction={getMoveTargetsForTransaction}
+          getSignedAmountForTransaction={getSignedAmountForTransaction}
+          getCalendarHeatmapVariantForLevel1Id={getCalendarHeatmapVariantForLevel1Id}
+          heatmapMode={heatmapMode}
+          heatmapInverted={heatmapInverted}
+          onHeatmapModeChange={onHeatmapModeChange}
+          onHeatmapInvertedChange={onHeatmapInvertedChange}
+          isCategoryClosingAfterSelectedMonth={isCategoryClosingAfterSelectedMonth}
+          handleAddSubcategory={handleAddSubcategory}
+          handleRenameCategory={handleRenameCategory}
+          handleDeleteCategory={handleDeleteCategory}
+          openTransactionCreator={openTransactionCreator}
+          handleInlineSaveTransaction={handleInlineSaveTransaction}
+          handleHideCategory={handleHideCategory}
+          handleRestoreCategory={handleRestoreCategory}
+          handleUndoScheduledHide={handleUndoScheduledHide}
+          handleDeleteTransaction={handleDeleteTransaction}
+          handleUpdateTransaction={handleUpdateTransaction}
+          handleMoveTransaction={handleMoveTransaction}
+          handleDuplicateTransaction={handleDuplicateTransaction}
+          handleOpenCategoryCalendarAddForDay={handleOpenCategoryCalendarAddForDay}
+          handleOpenLevel1CalendarAddForDay={handleOpenLevel1CalendarAddForDay}
+          toggleTransactionSelection={toggleTransactionSelection}
+          handleLevel3DragStart={handleLevel3DragStart}
+          handleReorderLevel3={handleReorderLevel3}
+          handleLevel1DragStart={handleLevel1DragStart}
+          handleReorderLevel1={handleReorderLevel1}
+          handleReorderLevel2={handleReorderLevel2}
+          descriptionSuggestions={descriptionSuggestions}
+          getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
+          getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}
+          getDefaultPaymentSourceIdForCategoryId={getDefaultPaymentSourceIdForCategoryId}
+          transactionTagsMap={transactionTagsMap}
+          transactionPaymentSplitsMap={transactionPaymentSplitsMap}
+          onTagClick={onTagClick}
+          onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
+          getBudgetLimitView={getBudgetLimitView}
+          onEditBudgetLimit={onEditBudgetLimit}
+        />
+        </div>
+      </div>
+
+      {workspaceBottomContent && (
+        <div data-budget-tree-bottom-deck="true">{workspaceBottomContent}</div>
+      )}
     </div>
   )
 }

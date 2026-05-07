@@ -2099,6 +2099,117 @@ export default function BudgetAppController({
             : undefined,
           onOpenSearch: () => setActiveUtilityPanel('search'),
           onOpenCalendar: () => setActiveUtilityPanel('monthCalendar'),
+          workspaceTopContent: (
+            <div data-budget-status-grid="true">
+              {previousMonthCloseReminder && (
+                <details data-budget-compact-notice="alert">
+                  <summary>Alert miesiaca</summary>
+                  <div>
+                    Poprzedni miesiac {previousMonthCloseReminder} nie jest jeszcze zamkniety.
+                  </div>
+                  <div data-budget-actions-row="true" style={{ ...styles.actions, marginTop: 8 }}>
+                    <button
+                      type="button"
+                      style={styles.primaryButton}
+                      onClick={async () => {
+                        const confirmed = confirm(
+                          `Czy na pewno zamknac poprzedni miesiac ${previousMonthCloseReminder}?`
+                        )
+
+                        if (!confirmed) {
+                          return
+                        }
+
+                        await handleLockMonth(previousMonthCloseReminder)
+                      }}
+                    >
+                      Zamknij
+                    </button>
+                    <button
+                      type="button"
+                      style={styles.secondaryButton}
+                      onClick={() => setIsPreviousMonthCloseReminderHidden(true)}
+                    >
+                      Pozniej
+                    </button>
+                  </div>
+                </details>
+              )}
+
+              <details data-budget-compact-notice="note">
+                <summary>Notatka miesiaca</summary>
+                <ProfileMonthNotePanel
+                  profileId={profileId}
+                  userId={userId}
+                  selectedMonth={selectedMonth}
+                  styles={styles}
+                />
+              </details>
+
+              {effectiveVisibleModules.budgetLimits && activeBudgetLimits.length > 0 && (
+                <section data-budget-compact-notice="limits">
+                  <div data-workspace-card-title="true">Limity</div>
+                  <BudgetLimitAlertsPanel
+                    alerts={activeBudgetLimitAlerts}
+                    categoriesById={categoriesById}
+                    styles={styles}
+                    onOpenLimit={setBudgetLimitEditorCategoryId}
+                  />
+                </section>
+              )}
+            </div>
+          ),
+          workspaceBottomContent: (
+            <section data-core-workspace-footer="true" aria-label="Dolny kontekst workspace">
+              <div data-workspace-month-switch="true">
+                <button
+                  type="button"
+                  onClick={goToPrevMonth}
+                  disabled={isPrevMonthNavigationBlocked}
+                  aria-label="Poprzedni miesiac"
+                >
+                  ‹
+                </button>
+                <span>{selectedMonth}</span>
+                <button
+                  type="button"
+                  onClick={goToNextMonth}
+                  disabled={isNextMonthNavigationBlocked}
+                  aria-label="Nastepny miesiac"
+                >
+                  ›
+                </button>
+              </div>
+
+              <div data-workspace-bottom-feed="true">
+                <span>Ostatnie</span>
+                {recentTransactionPreviews.slice(0, 3).map((transaction) => (
+                  <button
+                    key={transaction.id}
+                    type="button"
+                    data-transaction-kind={transaction.kind}
+                    onClick={() => {
+                      setActiveUtilityPanel('search')
+                      handleBankSearchFieldChange('description', transaction.description)
+                    }}
+                  >
+                    <b>{transaction.amount} zl</b>
+                    <small>{transaction.description || 'Bez opisu'}</small>
+                  </button>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                data-workspace-trash-chip="true"
+                onClick={() => setActiveUtilityPanel('trash')}
+              >
+                <span>Trash</span>
+                <b>{trashedTransactions.length}</b>
+                <small>Kosz</small>
+              </button>
+            </section>
+          ),
         }}
         hiddenCategoriesPanelProps={{
           categories: hiddenCategoriesInSelectedMonth,

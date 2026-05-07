@@ -699,6 +699,12 @@ export default function BudgetCategoryTree(props: Props) {
     )
   }
 
+  const getLevel1Summary = (level1Category: Category) => ({
+    amount: getSumForCategoryForSelectedMonth(level1Category.id),
+    transactionCount: getTransactionsForLevel1AndMonth(level1Category.id).length,
+    childCount: getSortedLevel2Children(level1Category.id).length,
+  })
+
   const isLevel1DndBlocked =
     isReorderingLevel1 || sortedLevel1.some((category) => openLevel1Ids.includes(category.id))
   const isLevel1Sortable = sortedLevel1.length > 1
@@ -717,6 +723,7 @@ export default function BudgetCategoryTree(props: Props) {
               isOpen={isLevel1Open}
               onToggle={() => toggleLevel1(level1Category.id)}
               styles={styles}
+              summary={getLevel1Summary(level1Category)}
               dragHandle={renderBlockedLevel1DragHandle(level1Category, isLevel1Sortable)}
               extraActions={renderLevel1Actions(level1Category, isLevel1CalendarOpen)}
               limitIndicator={
@@ -777,6 +784,7 @@ export default function BudgetCategoryTree(props: Props) {
               onToggle={() => toggleLevel1(level1Category.id)}
               isSortable={isLevel1Sortable}
               styles={styles}
+              summary={getLevel1Summary(level1Category)}
               extraActions={renderLevel1Actions(level1Category, isLevel1CalendarOpen)}
               limitIndicator={
                 level1Category.id === expenseLevel1Id && getBudgetLimitView ? (

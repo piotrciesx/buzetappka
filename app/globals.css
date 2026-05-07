@@ -944,6 +944,187 @@ video {
   }
 }
 
+/* Core tree workspace rebuild: central panel owns controls, category sections and footer. */
+[data-budget-workspace-main="true"] > [data-budget-status-grid="true"],
+[data-budget-workspace-main="true"] > [data-core-workspace-footer="true"] {
+  display: none !important;
+}
+
+[data-budget-tree-workspace="true"],
+[data-budget-workspace-main="true"] > [data-budget-tree-workspace="true"] {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 14px;
+  min-height: calc(100dvh - 132px) !important;
+  padding: 18px !important;
+}
+
+[data-budget-tree-toolbar="true"] {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+  border-bottom: 0 !important;
+}
+
+[data-budget-tree-control-deck="true"] {
+  min-width: 0;
+}
+
+[data-budget-tree-control-deck="true"] [data-budget-status-grid="true"] {
+  margin: 0 !important;
+  padding: 8px !important;
+  border-radius: 14px !important;
+  box-shadow: none !important;
+}
+
+[data-budget-tree-control-deck="true"] [data-budget-compact-notice] {
+  min-height: 32px !important;
+  border-radius: 10px !important;
+}
+
+[data-tree-category-grid="true"] {
+  min-width: 0;
+  align-self: stretch;
+}
+
+[data-tree-category-grid="true"] > div,
+[data-tree-category-grid="true"] > [role="application"] {
+  min-width: 0;
+}
+
+[data-tree-category-list="true"] {
+  gap: 14px;
+}
+
+[data-tree-category-list="true"] {
+  display: grid;
+}
+
+[data-tree-category-grid="true"] > div:not([data-category-drag-row]) {
+  min-width: 0;
+}
+
+[data-tree-category-grid="true"] > div > div,
+[data-tree-category-grid="true"] > div[data-rfd-droppable-id],
+[data-tree-category-grid="true"] > div {
+  min-width: 0;
+}
+
+[data-tree-category-grid="true"] > div > div[style*="margin-bottom"],
+[data-tree-category-grid="true"] > div[style*="margin-bottom"] {
+  margin-bottom: 0 !important;
+}
+
+[data-budget-tree-workspace="true"] [data-category-drag-row="true"] {
+  min-height: 96px !important;
+  padding: 14px !important;
+  border-radius: 16px !important;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(244, 248, 252, 0.94)) !important;
+  box-shadow:
+    0 14px 34px rgba(15, 23, 42, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.84) !important;
+}
+
+[data-budget-tree-workspace="true"] [data-category-drag-row="true"] > :first-child {
+  gap: 12px !important;
+}
+
+[data-level1-title-block="true"] {
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+}
+
+[data-level1-title-block="true"] > div:first-child {
+  color: #0f172a;
+  font-size: 18px !important;
+  font-weight: 780 !important;
+  letter-spacing: 0;
+}
+
+[data-level1-summary="true"] {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+[data-level1-summary="true"] strong,
+[data-level1-summary="true"] span {
+  min-height: 24px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  padding: 0 8px;
+  font-size: 11px;
+  line-height: 1;
+}
+
+[data-level1-summary="true"] strong {
+  background: #eef6ff;
+  color: #1d4ed8;
+  font-weight: 820;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-level1-summary="true"] span {
+  background: rgba(241, 245, 249, 0.92);
+  color: #475569;
+  font-weight: 680;
+}
+
+[data-budget-tree-bottom-deck="true"] {
+  min-width: 0;
+}
+
+[data-budget-tree-bottom-deck="true"] [data-core-workspace-footer="true"] {
+  margin-top: 0 !important;
+}
+
+@media (min-width: 1100px) {
+  [data-tree-category-grid="true"] > div:first-child {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  [data-tree-category-list="true"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  [data-tree-category-grid="true"] > div:first-child > div {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 1099px) {
+  [data-tree-category-grid="true"] > div:first-child {
+    grid-template-columns: 1fr;
+  }
+
+  [data-tree-category-list="true"] {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 820px) {
+  [data-budget-tree-workspace="true"],
+  [data-budget-workspace-main="true"] > [data-budget-tree-workspace="true"] {
+    display: block;
+    min-height: auto !important;
+  }
+
+  [data-budget-tree-control-deck="true"],
+  [data-tree-category-grid="true"],
+  [data-budget-tree-bottom-deck="true"] {
+    margin-top: 12px;
+  }
+
+  [data-budget-tree-workspace="true"] [data-category-drag-row="true"] {
+    min-height: 84px !important;
+  }
+}
+
 /* Main site core workspace pass: final geometry and production-stable overrides. */
 [data-budget-app="true"] {
   --shell-left: 172px;
