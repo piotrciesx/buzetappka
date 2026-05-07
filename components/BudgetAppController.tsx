@@ -2562,7 +2562,10 @@ export default function BudgetAppController({
               <span>Kategorie</span>
               <strong>{visibleCategories.length}</strong>
             </div>
-            <div data-context-metric="true">
+            <div
+              data-context-metric="true"
+              data-balance-state={totalBudgetBalance > 0 ? 'positive' : totalBudgetBalance < 0 ? 'negative' : 'neutral'}
+            >
               <span>Bilans</span>
               <strong>{totalBudgetBalance.toLocaleString('pl-PL')}</strong>
             </div>
