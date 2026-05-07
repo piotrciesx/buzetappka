@@ -1,6 +1,6 @@
 'use client'
 
-import { CSSProperties, ReactNode, useState } from 'react'
+import { CSSProperties, ReactNode, useEffect, useState } from 'react'
 import {
   closestCenter,
   DndContext,
@@ -215,6 +215,34 @@ export default function BudgetCategoryTree(props: Props) {
   const dndSensors = usePressHoldDndSensors()
   const isMobileViewport = useIsMobileViewport()
   const [level1InlineAddTokens, setLevel1InlineAddTokens] = useState<Record<string, number>>({})
+
+  useEffect(() => {
+    const closeOpenMenu = (event: PointerEvent) => {
+      if (event.target instanceof Element && event.target.closest('[data-mobile-category-menu="true"]')) {
+        const currentMenu = event.target.closest('details[data-mobile-category-menu="true"]')
+        document
+          .querySelectorAll<HTMLDetailsElement>('details[data-mobile-category-menu="true"][open]')
+          .forEach((menu) => {
+            if (menu !== currentMenu) {
+              menu.open = false
+            }
+          })
+        return
+      }
+
+      document
+        .querySelectorAll<HTMLDetailsElement>('details[data-mobile-category-menu="true"][open]')
+        .forEach((menu) => {
+          menu.open = false
+        })
+    }
+
+    document.addEventListener('pointerdown', closeOpenMenu)
+
+    return () => {
+      document.removeEventListener('pointerdown', closeOpenMenu)
+    }
+  }, [])
 
   const openLevel1InlineAdd = (level1Id: string) => {
     if (!openLevel1Ids.includes(level1Id)) {
@@ -521,7 +549,7 @@ export default function BudgetCategoryTree(props: Props) {
               openLevel1InlineAdd(level1Category.id)
             }}
           >
-            + wpis
+            edit
           </button>
         )}
 

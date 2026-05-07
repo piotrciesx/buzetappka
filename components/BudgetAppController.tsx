@@ -2091,6 +2091,14 @@ export default function BudgetAppController({
           onDeleteDescriptionSuggestion: handleDeleteDescriptionSuggestion,
           getBudgetLimitView: isBudgetLimitsModuleEnabled ? getBudgetLimitView : undefined,
           onEditBudgetLimit: isBudgetLimitsModuleEnabled ? setBudgetLimitEditorCategoryId : undefined,
+          onAddIncome: incomeLevel1Id
+            ? () => openBlankFloatingTransactionCreator(incomeLevel1Id)
+            : undefined,
+          onAddExpense: expenseLevel1Id
+            ? () => openBlankFloatingTransactionCreator(expenseLevel1Id)
+            : undefined,
+          onOpenSearch: () => setActiveUtilityPanel('search'),
+          onOpenCalendar: () => setActiveUtilityPanel('monthCalendar'),
         }}
         hiddenCategoriesPanelProps={{
           categories: hiddenCategoriesInSelectedMonth,

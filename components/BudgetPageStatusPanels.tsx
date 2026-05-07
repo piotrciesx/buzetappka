@@ -32,6 +32,7 @@ type IconName =
   | 'calendar'
   | 'search'
   | 'plus'
+  | 'more'
 
 const Icon = ({ name }: { name: IconName }) => {
   const common = {
@@ -117,6 +118,13 @@ const Icon = ({ name }: { name: IconName }) => {
         </>
       )}
       {name === 'plus' && <path d="M12 5v14M5 12h14" {...common} />}
+      {name === 'more' && (
+        <>
+          <circle cx="5" cy="12" r="1.2" {...common} />
+          <circle cx="12" cy="12" r="1.2" {...common} />
+          <circle cx="19" cy="12" r="1.2" {...common} />
+        </>
+      )}
     </svg>
   )
 }
@@ -134,6 +142,7 @@ export default function BudgetPageStatusPanels({
   onQuickAdd,
 }: Props) {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
+  const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false)
   const openPanel = (panel: BudgetUtilityPanel) => {
     onOpenUtilityPanel(activeUtilityPanel === panel ? null : panel)
   }
@@ -217,7 +226,7 @@ export default function BudgetPageStatusPanels({
     <>
       <aside data-budget-sidebar="true" aria-label="Moduły aplikacji">
         <div data-budget-sidebar-avatar="true">B</div>
-        <nav data-budget-sidebar-nav="true">
+        <nav data-budget-sidebar-nav="true" data-sidebar-desktop-nav="true">
           {sidebarItems.map((item) => (
             <button
               key={item.id}
@@ -233,6 +242,64 @@ export default function BudgetPageStatusPanels({
             </button>
           ))}
         </nav>
+
+        <nav data-budget-mobile-nav="true" aria-label="Główna nawigacja mobilna">
+          <button type="button" aria-label="Dodaj" title="Dodaj" onClick={onQuickAdd}>
+            <Icon name="plus" />
+            <span>Dodaj</span>
+          </button>
+          <button
+            type="button"
+            aria-label="Szukaj"
+            title="Szukaj"
+            data-active={activeUtilityPanel === 'search' ? 'true' : 'false'}
+            onClick={() => openPanel('search')}
+          >
+            <Icon name="search" />
+            <span>Szukaj</span>
+          </button>
+          <button
+            type="button"
+            aria-label="Kalendarz"
+            title="Kalendarz"
+            data-active={activeUtilityPanel === 'monthCalendar' ? 'true' : 'false'}
+            onClick={() => openPanel('monthCalendar')}
+          >
+            <Icon name="calendar" />
+            <span>Kalendarz</span>
+          </button>
+          <button
+            type="button"
+            aria-label="Więcej"
+            title="Więcej"
+            aria-expanded={isMobileMoreOpen}
+            onClick={() => setIsMobileMoreOpen((value) => !value)}
+          >
+            <Icon name="more" />
+            <span>Więcej</span>
+          </button>
+        </nav>
+
+        {isMobileMoreOpen && (
+          <div data-budget-mobile-more-menu="true">
+            {sidebarItems
+              .filter((item) => !['calendar', 'search'].includes(item.id))
+              .map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  data-active={item.active ? 'true' : 'false'}
+                  onClick={() => {
+                    setIsMobileMoreOpen(false)
+                    item.onClick()
+                  }}
+                >
+                  <Icon name={item.icon} />
+                  <span>{item.label}</span>
+                </button>
+              ))}
+          </div>
+        )}
       </aside>
 
       <div data-budget-shell-content="true">

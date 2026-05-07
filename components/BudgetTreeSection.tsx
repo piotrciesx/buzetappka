@@ -120,6 +120,10 @@ type Props = {
   onDeleteDescriptionSuggestion: BudgetCategoryTreeProps['onDeleteDescriptionSuggestion']
   getBudgetLimitView?: (categoryId: string | null) => BudgetLimitView | null
   onEditBudgetLimit?: (categoryId: string | null) => void
+  onAddIncome?: () => void
+  onAddExpense?: () => void
+  onOpenSearch?: () => void
+  onOpenCalendar?: () => void
 }
 
 export default function BudgetTreeSection({
@@ -199,10 +203,48 @@ export default function BudgetTreeSection({
   onDeleteDescriptionSuggestion,
   getBudgetLimitView,
   onEditBudgetLimit,
+  onAddIncome,
+  onAddExpense,
+  onOpenSearch,
+  onOpenCalendar,
 }: Props) {
+  const visibleTopLevelCount = sortedLevel1.length
+  const visibleTransactionCount = sortedLevel1.reduce(
+    (sum, category) => sum + getTransactionsForLevel1AndMonth(category.id).length,
+    0
+  )
+
   return (
-    <div>
-      <div style={styles.sectionTitle}>Drzewo kategorii</div>
+    <div data-budget-tree-workspace="true">
+      <div data-budget-tree-toolbar="true">
+        <div>
+          <div data-tree-workspace-label="true">Kategorie</div>
+          <p>
+            {selectedMonth} · {visibleTopLevelCount} sekcje · {visibleTransactionCount} wpisy
+          </p>
+        </div>
+
+        <div data-tree-toolbar-actions="true">
+          {onAddIncome && (
+            <button type="button" data-workspace-action="income" onClick={onAddIncome}>
+              Dodaj przychod
+            </button>
+          )}
+          {onAddExpense && (
+            <button type="button" data-workspace-action="expense" onClick={onAddExpense}>
+              Dodaj wydatek
+            </button>
+          )}
+          {onOpenSearch && (
+            <button type="button" data-workspace-action="neutral" onClick={onOpenSearch}>
+              Szukaj
+            </button>
+          )}
+          {onOpenCalendar && (
+            <button type="button" data-workspace-action="neutral" onClick={onOpenCalendar}>
+              Kalendarz
+            </button>
+          )}
 
       <details data-tree-view-menu="true" data-floating-dropdown="true">
         <summary aria-label="Ustawienia widoku drzewa">⋯</summary>
@@ -269,6 +311,9 @@ export default function BudgetTreeSection({
             <option value="asc">rosnąco</option>
             <option value="desc">malejąco</option>
           </select>
+        </div>
+      </div>
+
         </div>
       </div>
 
