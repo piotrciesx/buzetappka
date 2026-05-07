@@ -1541,6 +1541,82 @@ export default function BudgetAppController({
       }))
   }, [categoriesById, getSignedAmountForTransaction, scopedTransactions])
 
+  const totalBudgetBalance = useMemo(() => {
+    return scopedTransactions
+      .filter((transaction) => !transaction.is_deleted)
+      .reduce((sum, transaction) => sum + getSignedAmountForTransaction(transaction), 0)
+  }, [getSignedAmountForTransaction, scopedTransactions])
+
+  const liveRailItems = useMemo(() => {
+    const items = [
+      previousMonthCloseReminder
+        ? {
+            title: 'Alert miesiąca',
+            text: `Poprzedni miesiąc ${previousMonthCloseReminder} czeka na zamknięcie.`,
+            meta: ['Miesiąc', 'Kontrola'],
+          }
+        : null,
+      recentTransactionPreviews.length > 0
+        ? {
+            title: 'Najnowsza aktywność',
+            text: `${recentTransactionPreviews[0].description || 'Bez opisu'} / ${recentTransactionPreviews[0].amount} zł`,
+            meta: ['Wpisy', selectedMonth],
+          }
+        : null,
+      {
+        title: 'Mini kalendarz',
+        text: `${selectedMonthTransactions.length} wpisy w miesiącu ${selectedMonth}.`,
+        meta: ['Kalendarz', isSelectedMonthLocked ? 'Zamknięty' : 'Otwarty'],
+      },
+      effectiveVisibleModules.recurringTransactions
+        ? {
+            title: 'Przypomnienia / raty',
+            text:
+              recurringTransactions.length > 0
+                ? `${recurringTransactions.length} aktywne pozycje w module.`
+                : 'Brak aktywnych przypomnień w podglądzie.',
+            meta: ['Moduł aktywny', 'Live'],
+          }
+        : null,
+      effectiveVisibleModules.financialGoals
+        ? {
+            title: 'Cele finansowe',
+            text:
+              financialGoals.length > 0
+                ? `${financialGoals.length} cele w aktualnym profilu.`
+                : 'Cele są aktywne, ale lista jest pusta.',
+            meta: ['Moduł aktywny', 'Cele'],
+          }
+        : null,
+    ].filter(Boolean) as Array<{ title: string; text: string; meta: string[] }>
+
+    return items.length > 0
+      ? items
+      : [{ title: 'Status workspace', text: 'Brak nowych zdarzeń w podglądzie.', meta: ['Live'] }]
+  }, [
+    effectiveVisibleModules.financialGoals,
+    effectiveVisibleModules.recurringTransactions,
+    financialGoals.length,
+    isSelectedMonthLocked,
+    previousMonthCloseReminder,
+    recentTransactionPreviews,
+    recurringTransactions.length,
+    selectedMonth,
+    selectedMonthTransactions.length,
+  ])
+  const [liveRailIndex, setLiveRailIndex] = useState(0)
+  const activeLiveRailItem = liveRailItems[liveRailIndex % liveRailItems.length]
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setLiveRailIndex((previousIndex) => (previousIndex + 1) % liveRailItems.length)
+    }, 60000)
+
+    return () => {
+      window.clearInterval(intervalId)
+    }
+  }, [liveRailItems.length])
+
   const budgetPageOverlayProps = useBudgetPageOverlayProps({
     canCreateTransactions,
     expenseLevel1Id,
@@ -2315,21 +2391,16 @@ export default function BudgetAppController({
                     <small>Brak wpisów w tym zakresie.</small>
                   ) : (
                     recentTransactionPreviews.slice(0, 6).map((transaction) => (
-                      <button
+                      <div
                         key={transaction.id}
-                        type="button"
                         data-workspace-recent-row="true"
                         data-transaction-kind={transaction.kind}
-                        onClick={() => {
-                          setActiveUtilityPanel('search')
-                          handleBankSearchFieldChange('description', transaction.description)
-                        }}
                       >
                         <b>{transaction.amount} zł</b>
                         <span>{transaction.description || 'Bez opisu'}</span>
                         <small>{transaction.categoryLabel}</small>
                         <time>{transaction.date}</time>
-                      </button>
+                      </div>
                     ))
                   )}
                 </div>
@@ -2444,6 +2515,36 @@ export default function BudgetAppController({
         </div>
 
         <aside data-budget-context-rail="true" aria-label="Kontekst workspace">
+          <section data-context-card="rail-actions" aria-label="Szybkie akcje">
+            <button type="button" aria-label="Szukaj" title="Szukaj" onClick={() => setActiveUtilityPanel('search')}>
+              ⌕
+            </button>
+            <button
+              type="button"
+              aria-label="Powiadomienia"
+              title="Powiadomienia"
+              disabled={!effectiveVisibleModules.recurringTransactions}
+              onClick={() => setActiveUtilityPanel('recurringTransactions')}
+            >
+              ♫
+            </button>
+            <button
+              type="button"
+              aria-label="Dodaj wpis"
+              title="Dodaj wpis"
+              onClick={() => openBlankFloatingTransactionCreator(null)}
+            >
+              +
+            </button>
+            <button
+              type="button"
+              aria-label="Profil"
+              title="Profil"
+              onClick={() => setIsSettingsPanelVisible((previousValue) => !previousValue)}
+            >
+              P
+            </button>
+          </section>
           <section data-context-card="summary">
             <div>
               <span>Miesiąc</span>
@@ -2460,6 +2561,14 @@ export default function BudgetAppController({
             <div data-context-metric="true">
               <span>Kategorie</span>
               <strong>{visibleCategories.length}</strong>
+            </div>
+            <div data-context-metric="true">
+              <span>Bilans</span>
+              <strong>{totalBudgetBalance.toLocaleString('pl-PL')}</strong>
+            </div>
+            <div data-context-metric="true">
+              <span>Szkice</span>
+              <strong>{drafts.length}</strong>
             </div>
           </section>
 
@@ -2496,6 +2605,15 @@ export default function BudgetAppController({
               <small>Podgląd</small>
             </div>
             <div data-live-widget-card="true">
+              <div data-live-widget-rotating="true">
+                <strong>{activeLiveRailItem.title}</strong>
+                <p>{activeLiveRailItem.text}</p>
+                <div data-live-widget-meta="true">
+                  {activeLiveRailItem.meta.map((item) => (
+                    <span key={item}>{item}</span>
+                  ))}
+                </div>
+              </div>
               <strong>
                 {previousMonthCloseReminder
                   ? 'Alert miesiąca'

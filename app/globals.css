@@ -1019,6 +1019,249 @@ video {
   }
 }
 
+/* Main layout repair: no horizontal header, rebuilt right rail, stable bottom utility. */
+[data-budget-brand="true"],
+[data-budget-topbar-actions="true"] {
+  display: none !important;
+}
+
+[data-budget-header-row="true"] {
+  pointer-events: none;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+[data-budget-topbar-month="true"] {
+  pointer-events: auto;
+  justify-self: center !important;
+  margin-inline: auto !important;
+  padding: 5px !important;
+  border: 1px solid rgba(203, 213, 225, 0.56) !important;
+  border-radius: 14px !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(238, 244, 250, 0.68)) !important;
+  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.065), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-budget-topbar-month="true"] > button {
+  min-height: 36px !important;
+  border-radius: 10px !important;
+}
+
+[data-budget-topbar-month="true"] > button:nth-child(2) {
+  min-width: 150px !important;
+  font-size: 16px !important;
+  font-weight: 760 !important;
+}
+
+[data-context-card="rail-actions"] {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px !important;
+  padding: 2px 2px 10px !important;
+}
+
+[data-context-card="rail-actions"] button {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 10px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.86), rgba(238,244,250,0.68));
+  color: #334155;
+  font-size: 15px;
+  font-weight: 760;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.88);
+  cursor: pointer;
+}
+
+[data-context-card="rail-actions"] button:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+
+[data-context-card="summary"] {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 4px !important;
+}
+
+[data-context-card="summary"] span {
+  display: block;
+  margin-bottom: 3px;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+[data-context-card="summary"] strong {
+  color: #172033;
+  font-size: 21px !important;
+  font-weight: 780;
+}
+
+[data-context-card="metrics"] {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px !important;
+}
+
+[data-context-metric="true"] {
+  min-height: 66px;
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid rgba(213, 222, 232, 0.78);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.56);
+}
+
+[data-context-metric="true"] span {
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 720;
+  text-transform: uppercase;
+}
+
+[data-context-metric="true"] strong {
+  min-width: 0;
+  overflow: hidden;
+  color: #172033;
+  font-size: 18px;
+  font-weight: 780;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-context-card="calendar"],
+[data-context-card="activity"] {
+  display: none !important;
+}
+
+[data-live-widget-card="true"] > strong,
+[data-live-widget-card="true"] > p,
+[data-live-widget-card="true"] > [data-live-widget-meta="true"] {
+  display: none !important;
+}
+
+[data-live-widget-rotating="true"] {
+  display: grid;
+  gap: 8px;
+}
+
+[data-live-widget-rotating="true"] p {
+  margin: 0;
+  color: #475569;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+[data-workspace-calendar-nav="true"] {
+  grid-template-columns: 34px 34px !important;
+  justify-content: start;
+}
+
+[data-workspace-calendar-nav="true"] button:nth-child(2) {
+  display: none !important;
+}
+
+[data-workspace-recent-row="true"] {
+  cursor: default !important;
+  pointer-events: none !important;
+}
+
+[data-workspace-recent-row="true"]:hover {
+  transform: none !important;
+  background: transparent !important;
+}
+
+[data-budget-tree-bottom-deck="true"] [data-core-workspace-footer="true"] {
+  grid-template-columns: minmax(260px, 1fr) minmax(0, 1fr) !important;
+  grid-template-areas:
+    "calendar recent"
+    "month trash" !important;
+  align-items: stretch !important;
+}
+
+[data-workspace-mini-calendar-card="true"] {
+  grid-area: calendar;
+}
+
+[data-workspace-recent-table="true"] {
+  grid-area: recent;
+}
+
+[data-budget-tree-bottom-deck="true"] [data-workspace-month-switch="true"] {
+  grid-area: month;
+  display: inline-flex !important;
+  width: fit-content;
+  align-self: end;
+  margin-top: 4px;
+}
+
+[data-workspace-trash-chip="true"] {
+  grid-area: trash;
+  justify-self: end;
+  align-self: end;
+  min-width: 68px !important;
+  min-height: 38px !important;
+}
+
+@media (min-width: 821px) {
+  [data-budget-app="true"] {
+    padding: 64px 14px 16px 166px !important;
+  }
+
+  [data-budget-header-row="true"] {
+    inset: 0 348px auto 166px !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  [data-budget-workspace="true"] {
+    grid-template-columns: minmax(0, 1fr) 332px !important;
+    gap: 14px !important;
+  }
+
+  [data-budget-context-rail="true"] {
+    position: sticky !important;
+    top: 14px !important;
+    max-width: 332px !important;
+    min-height: calc(100dvh - 30px) !important;
+    padding: 12px !important;
+    border-width: 0 0 0 1px !important;
+    border-color: rgba(203, 213, 225, 0.74) !important;
+    border-radius: 0 !important;
+    background: linear-gradient(180deg, rgba(251, 253, 255, 0.92), rgba(239, 245, 250, 0.84)) !important;
+    box-shadow: inset 1px 0 0 rgba(255,255,255,0.82) !important;
+  }
+}
+
+@media (max-width: 820px) {
+  [data-budget-header-row="true"] {
+    pointer-events: auto;
+    inset: 0 0 auto 0 !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  [data-budget-topbar-month="true"] {
+    justify-self: stretch !important;
+  }
+
+  [data-budget-tree-bottom-deck="true"] [data-core-workspace-footer="true"] {
+    grid-template-columns: 1fr !important;
+    grid-template-areas:
+      "calendar"
+      "recent"
+      "month"
+      "trash" !important;
+  }
+}
+
 /* Etap 25 IA overrides: sidebar sections, live rail, and central recent feed. */
 [data-sidebar-section] {
   display: grid;
