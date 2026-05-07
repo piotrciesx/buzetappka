@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
-Liczba plików: 187
-Data: 2026-05-07T20:34:33.399Z
+Liczba plików: 189
+Data: 2026-05-07T22:54:44.249Z
 
 
 ==================================================
@@ -830,6 +830,1609 @@ video {
   }
 }
 
+/* Final premium correction: keep after legacy visual passes. */
+@media (min-width: 821px) {
+  [data-budget-app="true"] {
+    padding: 0 332px 0 166px !important;
+    background: linear-gradient(135deg, #f7f9fc 0%, #edf2f7 46%, #f8fafc 100%) !important;
+  }
+
+  [data-budget-header-row="true"] {
+    inset: 0 332px auto 166px !important;
+    grid-template-columns: minmax(160px, 260px) minmax(260px, 1fr) minmax(160px, 260px) !important;
+    min-height: 72px !important;
+    padding: 10px 22px !important;
+    border-color: rgba(196, 207, 219, 0.72) !important;
+    background: rgba(248, 251, 253, 0.88) !important;
+    backdrop-filter: blur(18px);
+  }
+
+  [data-budget-workspace="true"] {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0 !important;
+    padding: 92px 24px 24px !important;
+    max-width: none !important;
+  }
+
+  [data-budget-context-rail="true"] {
+    position: fixed !important;
+    inset: 0 0 0 auto !important;
+    width: 332px !important;
+    max-width: 332px !important;
+  }
+}
+
+[data-budget-topbar-month="true"] {
+  justify-self: center !important;
+  display: grid !important;
+  grid-template-columns: 38px auto 38px !important;
+  align-items: center !important;
+  gap: 14px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-budget-topbar-month="true"] > button {
+  width: 38px !important;
+  min-width: 38px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(196, 207, 219, 0.82) !important;
+  border-radius: 999px !important;
+  padding: 0 !important;
+  background: rgba(255, 255, 255, 0.78) !important;
+  color: #334155 !important;
+  font-size: 22px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 8px 18px rgba(15, 23, 42, 0.045) !important;
+}
+
+[data-budget-topbar-month="true"] > button:nth-child(2) {
+  width: auto !important;
+  min-width: 116px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #111827 !important;
+  font-size: 24px !important;
+  font-weight: 790 !important;
+  box-shadow: none !important;
+}
+
+[data-budget-topbar-month="true"] > button:nth-child(n + 4),
+[data-budget-topbar-month="true"] [data-month-state="true"],
+[data-tree-month-switch="true"] {
+  display: none !important;
+}
+
+[data-budget-tree-workspace="true"] {
+  display: grid !important;
+  gap: 16px !important;
+  min-height: auto !important;
+  padding: clamp(18px, 2vw, 26px) !important;
+  border: 1px solid rgba(203, 213, 225, 0.74) !important;
+  border-radius: 22px !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(244, 248, 251, 0.78)) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 24px 70px rgba(15, 23, 42, 0.09) !important;
+}
+
+[data-budget-tree-toolbar="true"] {
+  display: flex !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 0 0 2px !important;
+  border: 0 !important;
+}
+
+[data-tree-toolbar-actions="true"] {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+[data-workspace-action],
+[data-tree-sort-menu="true"] summary,
+[data-tree-view-menu="true"] summary {
+  min-width: 38px !important;
+  width: 38px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(198, 209, 221, 0.82) !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(235, 242, 248, 0.78)) !important;
+  color: #334155 !important;
+  font-size: 18px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 8px 18px rgba(15, 23, 42, 0.045) !important;
+}
+
+[data-workspace-action="income"] {
+  color: #15803d !important;
+}
+
+[data-workspace-action="expense"] {
+  color: #be123c !important;
+}
+
+[data-tree-sort-menu="true"] summary {
+  width: auto !important;
+  padding: 0 14px !important;
+  font-size: 12px !important;
+  font-weight: 740 !important;
+  list-style: none;
+}
+
+[data-tree-sort-menu="true"] summary::-webkit-details-marker,
+[data-tree-view-menu="true"] summary::-webkit-details-marker {
+  display: none;
+}
+
+[data-tree-sort-inline="true"] {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+  z-index: 60 !important;
+  width: min(620px, calc(100vw - 560px)) !important;
+  min-width: 420px !important;
+  padding: 12px !important;
+  border: 1px solid rgba(198, 209, 221, 0.82) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.97) !important;
+  box-shadow: 0 22px 46px rgba(15, 23, 42, 0.14) !important;
+}
+
+[data-level1-tree-shell="true"],
+[data-level1-header-grid="true"] {
+  width: 100% !important;
+}
+
+[data-level1-tree-shell="true"] {
+  display: grid !important;
+  gap: 14px !important;
+}
+
+[data-level1-header-grid="true"] {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  gap: 16px !important;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"] {
+  position: relative !important;
+  min-height: 138px !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  padding: 20px !important;
+  border: 1px solid rgba(198, 209, 221, 0.72) !important;
+  border-radius: 18px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 16px 34px rgba(15, 23, 42, 0.075) !important;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"]::after {
+  display: none !important;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"][data-level1-kind="income"] {
+  background: linear-gradient(145deg, rgba(249, 255, 251, 0.95), rgba(232, 246, 239, 0.82)) !important;
+  color: #166534 !important;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"][data-level1-kind="expense"] {
+  background: linear-gradient(145deg, rgba(255, 249, 249, 0.95), rgba(249, 235, 237, 0.82)) !important;
+  color: #9f1239 !important;
+}
+
+[data-level1-title-block="true"] {
+  min-width: 0 !important;
+  min-height: 92px !important;
+  display: grid !important;
+  align-content: space-between !important;
+  gap: 12px !important;
+}
+
+[data-level1-title-block="true"]::before {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 10px !important;
+  background: rgba(255, 255, 255, 0.52) !important;
+  font-size: 17px !important;
+}
+
+[data-level1-title-block="true"] > div:first-child {
+  color: #172033 !important;
+  font-size: 20px !important;
+  font-weight: 780 !important;
+  line-height: 1.1 !important;
+  white-space: nowrap !important;
+}
+
+[data-level1-summary="true"] strong {
+  display: block !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  color: #0f172a !important;
+  font-size: clamp(24px, 2.1vw, 34px) !important;
+  font-weight: 820 !important;
+  line-height: 1.05 !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-calendar-recent-panel="true"] {
+  display: grid !important;
+  grid-template-columns: minmax(280px, 0.92fr) minmax(0, 1.08fr) !important;
+  height: 286px !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(203, 213, 225, 0.78) !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+}
+
+[data-workspace-calendar-pane="true"],
+[data-workspace-recent-pane="true"] {
+  min-width: 0 !important;
+  padding: 14px !important;
+  overflow: hidden !important;
+}
+
+[data-workspace-calendar-pane="true"] {
+  border-right: 1px solid rgba(226, 232, 240, 0.9) !important;
+}
+
+[data-workspace-panel-header="true"] {
+  margin-bottom: 10px !important;
+}
+
+[data-mini-calendar="main"] {
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 4px !important;
+}
+
+[data-mini-calendar="main"] small,
+[data-mini-calendar="main"] button,
+[data-mini-calendar="main"] i {
+  height: 25px !important;
+  min-height: 25px !important;
+  border-radius: 8px !important;
+  font-size: 11px !important;
+}
+
+[data-mini-calendar="main"] small {
+  height: 18px !important;
+}
+
+[data-workspace-recent-rows="true"] {
+  display: grid !important;
+  gap: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+[data-workspace-recent-row="true"] {
+  min-width: 0 !important;
+  min-height: 29px !important;
+  display: grid !important;
+  grid-template-columns: 76px minmax(0, 1.25fr) minmax(72px, 0.8fr) 68px !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 5px 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.88) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-workspace-recent-row="true"] b,
+[data-workspace-recent-row="true"] span,
+[data-workspace-recent-row="true"] small,
+[data-workspace-recent-row="true"] time {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: 11px !important;
+}
+
+[data-workspace-recent-row="true"] small {
+  width: auto !important;
+  padding: 3px 7px !important;
+  border-radius: 999px !important;
+}
+
+[data-pinned-category-panel="true"] {
+  padding: 16px !important;
+  border: 1px solid rgba(203, 213, 225, 0.78) !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+}
+
+[data-pinned-categories-grid="true"] {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 210px)) !important;
+  justify-content: start !important;
+  gap: 10px !important;
+}
+
+[data-pinned-category-main="true"] {
+  min-height: 92px !important;
+  padding: 12px !important;
+}
+
+[data-pinned-category-main="true"] b {
+  font-size: 16px !important;
+  white-space: nowrap !important;
+}
+
+[data-workspace-bottom-bar="true"] {
+  min-height: 28px !important;
+  padding: 0 2px !important;
+}
+
+[data-workspace-trash-chip="true"] {
+  min-width: 54px !important;
+  min-height: 30px !important;
+  display: inline-flex !important;
+  grid-template-columns: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  border-radius: 999px !important;
+  padding: 0 10px !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="live"] {
+  flex: 0 0 auto !important;
+  min-height: 238px !important;
+}
+
+[data-budget-context-rail="true"] [data-live-widget-card="true"] {
+  min-height: 174px !important;
+  align-content: stretch !important;
+  gap: 12px !important;
+  padding: 14px !important;
+}
+
+[data-live-widget-totals="true"] {
+  display: grid;
+  gap: 8px;
+}
+
+[data-live-widget-totals="true"] div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+[data-live-widget-totals="true"] span {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 720;
+}
+
+[data-live-widget-totals="true"] strong {
+  color: #172033;
+  font-size: 14px;
+  font-weight: 790;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-live-widget-totals="true"] div:first-child strong {
+  color: #16744b;
+}
+
+[data-live-widget-totals="true"] div:nth-child(2) strong,
+[data-live-widget-totals="true"] [data-balance-state="negative"] strong {
+  color: #b33a3a;
+}
+
+[data-live-widget-flow="true"] {
+  display: flex;
+  width: 100%;
+  height: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(226, 232, 240, 0.9);
+}
+
+[data-live-widget-flow="true"] i {
+  min-width: 0;
+  height: 100%;
+}
+
+[data-live-widget-flow="true"] [data-flow-kind="income"] {
+  background: #86efac;
+}
+
+[data-live-widget-flow="true"] [data-flow-kind="expense"] {
+  background: #fecdd3;
+}
+
+[data-live-widget-empty="true"] {
+  min-height: 138px;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+}
+
+[data-live-widget-empty="true"] p {
+  margin: 0;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+@media (max-width: 820px) {
+  [data-calendar-recent-panel="true"],
+  [data-level1-header-grid="true"] {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+  }
+
+  [data-workspace-calendar-pane="true"] {
+    border-right: 0 !important;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.9) !important;
+  }
+
+  [data-pinned-categories-grid="true"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Premium layout correction: fixes the accepted mockup mismatches after older overrides. */
+@media (min-width: 821px) {
+  [data-budget-app="true"] {
+    padding: 0 332px 0 166px !important;
+    background: linear-gradient(135deg, #f7f9fc 0%, #edf2f7 46%, #f8fafc 100%) !important;
+  }
+
+  [data-budget-header-row="true"] {
+    inset: 0 332px auto 166px !important;
+    grid-template-columns: minmax(160px, 260px) minmax(260px, 1fr) minmax(160px, 260px) !important;
+    min-height: 72px !important;
+    padding: 10px 22px !important;
+    border-color: rgba(196, 207, 219, 0.72) !important;
+    background: rgba(248, 251, 253, 0.88) !important;
+    backdrop-filter: blur(18px);
+  }
+
+  [data-budget-workspace="true"] {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0 !important;
+    padding: 92px 24px 24px !important;
+    max-width: none !important;
+  }
+
+  [data-budget-context-rail="true"] {
+    position: fixed !important;
+    inset: 0 0 0 auto !important;
+    width: 332px !important;
+    max-width: 332px !important;
+  }
+}
+
+[data-budget-topbar-month="true"] {
+  justify-self: center !important;
+  display: grid !important;
+  grid-template-columns: 38px auto 38px !important;
+  align-items: center !important;
+  gap: 14px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-budget-topbar-month="true"] > button {
+  width: 38px !important;
+  min-width: 38px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(196, 207, 219, 0.82) !important;
+  border-radius: 999px !important;
+  padding: 0 !important;
+  background: rgba(255, 255, 255, 0.78) !important;
+  color: #334155 !important;
+  font-size: 22px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 8px 18px rgba(15, 23, 42, 0.045) !important;
+}
+
+[data-budget-topbar-month="true"] > button:nth-child(2) {
+  width: auto !important;
+  min-width: 116px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #111827 !important;
+  font-size: 24px !important;
+  font-weight: 790 !important;
+  box-shadow: none !important;
+}
+
+[data-budget-topbar-month="true"] > button:nth-child(n + 4),
+[data-budget-topbar-month="true"] [data-month-state="true"],
+[data-tree-month-switch="true"] {
+  display: none !important;
+}
+
+[data-budget-tree-workspace="true"] {
+  display: grid !important;
+  gap: 16px !important;
+  min-height: auto !important;
+  padding: clamp(18px, 2vw, 26px) !important;
+  border: 1px solid rgba(203, 213, 225, 0.74) !important;
+  border-radius: 22px !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(244, 248, 251, 0.78)) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 24px 70px rgba(15, 23, 42, 0.09) !important;
+}
+
+[data-budget-tree-toolbar="true"] {
+  display: flex !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 0 0 2px !important;
+  border: 0 !important;
+}
+
+[data-tree-toolbar-actions="true"] {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+[data-workspace-action],
+[data-tree-sort-menu="true"] summary,
+[data-tree-view-menu="true"] summary {
+  min-width: 38px !important;
+  width: 38px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(198, 209, 221, 0.82) !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(235, 242, 248, 0.78)) !important;
+  color: #334155 !important;
+  font-size: 18px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 8px 18px rgba(15, 23, 42, 0.045) !important;
+}
+
+[data-workspace-action="income"] {
+  color: #15803d !important;
+}
+
+[data-workspace-action="expense"] {
+  color: #be123c !important;
+}
+
+[data-tree-sort-menu="true"] summary {
+  width: auto !important;
+  padding: 0 14px !important;
+  color: #334155 !important;
+  font-size: 12px !important;
+  font-weight: 740 !important;
+  list-style: none;
+}
+
+[data-tree-sort-menu="true"] summary::-webkit-details-marker,
+[data-tree-view-menu="true"] summary::-webkit-details-marker {
+  display: none;
+}
+
+[data-tree-sort-inline="true"] {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+  z-index: 60 !important;
+  width: min(620px, calc(100vw - 560px)) !important;
+  min-width: 420px !important;
+  padding: 12px !important;
+  border: 1px solid rgba(198, 209, 221, 0.82) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.97) !important;
+  box-shadow: 0 22px 46px rgba(15, 23, 42, 0.14) !important;
+}
+
+[data-level1-tree-shell="true"] {
+  display: grid !important;
+  gap: 14px !important;
+  width: 100% !important;
+}
+
+[data-level1-header-grid="true"] {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  gap: 16px !important;
+  width: 100% !important;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"] {
+  position: relative !important;
+  min-height: 138px !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  padding: 20px !important;
+  border: 1px solid rgba(198, 209, 221, 0.72) !important;
+  border-radius: 18px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 16px 34px rgba(15, 23, 42, 0.075) !important;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"]::after {
+  display: none !important;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"][data-level1-kind="income"] {
+  background: linear-gradient(145deg, rgba(249, 255, 251, 0.95), rgba(232, 246, 239, 0.82)) !important;
+  color: #166534 !important;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"][data-level1-kind="expense"] {
+  background: linear-gradient(145deg, rgba(255, 249, 249, 0.95), rgba(249, 235, 237, 0.82)) !important;
+  color: #9f1239 !important;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"] > :first-child {
+  display: grid !important;
+  grid-template-columns: auto auto minmax(0, 1fr) !important;
+  align-items: start !important;
+  gap: 10px !important;
+}
+
+[data-level1-title-block="true"] {
+  min-width: 0 !important;
+  min-height: 92px !important;
+  display: grid !important;
+  align-content: space-between !important;
+  gap: 12px !important;
+}
+
+[data-level1-title-block="true"]::before {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 10px !important;
+  background: rgba(255, 255, 255, 0.52) !important;
+  color: currentColor !important;
+  font-size: 17px !important;
+}
+
+[data-level1-title-block="true"] > div:first-child {
+  color: #172033 !important;
+  font-size: 20px !important;
+  font-weight: 780 !important;
+  line-height: 1.1 !important;
+  white-space: nowrap !important;
+}
+
+[data-level1-summary="true"] {
+  min-width: 0 !important;
+}
+
+[data-level1-summary="true"] strong {
+  display: block !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  color: #0f172a !important;
+  font-size: clamp(24px, 2.1vw, 34px) !important;
+  font-weight: 820 !important;
+  line-height: 1.05 !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-category-actions="true"] {
+  align-self: start !important;
+}
+
+[data-level1-content-stack="true"] {
+  display: grid !important;
+  gap: 12px !important;
+}
+
+[data-level1-expanded-content="true"] {
+  padding: 12px !important;
+  border: 1px solid rgba(211, 220, 230, 0.82) !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.58) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88) !important;
+}
+
+[data-calendar-recent-panel="true"] {
+  display: grid !important;
+  grid-template-columns: minmax(280px, 0.92fr) minmax(0, 1.08fr) !important;
+  min-height: 0 !important;
+  height: 286px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(203, 213, 225, 0.78) !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 18px 42px rgba(15, 23, 42, 0.06) !important;
+}
+
+[data-workspace-calendar-pane="true"],
+[data-workspace-recent-pane="true"] {
+  min-width: 0 !important;
+  padding: 14px !important;
+  overflow: hidden !important;
+}
+
+[data-workspace-calendar-pane="true"] {
+  border-right: 1px solid rgba(226, 232, 240, 0.9) !important;
+}
+
+[data-workspace-panel-header="true"] {
+  margin-bottom: 10px !important;
+}
+
+[data-mini-calendar="main"] {
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 4px !important;
+}
+
+[data-mini-calendar="main"] small,
+[data-mini-calendar="main"] button,
+[data-mini-calendar="main"] i {
+  height: 25px !important;
+  min-height: 25px !important;
+  border-radius: 8px !important;
+  font-size: 11px !important;
+}
+
+[data-mini-calendar="main"] small {
+  height: 18px !important;
+}
+
+[data-workspace-recent-rows="true"] {
+  display: grid !important;
+  gap: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+[data-workspace-recent-row="true"] {
+  min-width: 0 !important;
+  min-height: 29px !important;
+  display: grid !important;
+  grid-template-columns: 76px minmax(0, 1.25fr) minmax(72px, 0.8fr) 68px !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 5px 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.88) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-workspace-recent-row="true"] b,
+[data-workspace-recent-row="true"] span,
+[data-workspace-recent-row="true"] small,
+[data-workspace-recent-row="true"] time {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: 11px !important;
+}
+
+[data-workspace-recent-row="true"] small {
+  width: auto !important;
+  padding: 3px 7px !important;
+  border-radius: 999px !important;
+  background: rgba(241, 245, 249, 0.92) !important;
+  color: #475569 !important;
+}
+
+[data-pinned-category-panel="true"] {
+  padding: 16px !important;
+  border: 1px solid rgba(203, 213, 225, 0.78) !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 16px 36px rgba(15, 23, 42, 0.055) !important;
+}
+
+[data-pinned-categories-grid="true"] {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 210px)) !important;
+  justify-content: start !important;
+  gap: 10px !important;
+}
+
+[data-pinned-category-main="true"] {
+  min-height: 92px !important;
+  padding: 12px !important;
+}
+
+[data-pinned-category-main="true"] b {
+  font-size: 16px !important;
+  white-space: nowrap !important;
+}
+
+[data-workspace-bottom-bar="true"] {
+  min-height: 28px !important;
+  padding: 0 2px !important;
+}
+
+[data-workspace-trash-chip="true"] {
+  min-width: 54px !important;
+  min-height: 30px !important;
+  display: inline-flex !important;
+  grid-template-columns: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  border-radius: 999px !important;
+  padding: 0 10px !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="live"] {
+  flex: 0 0 auto !important;
+  min-height: 238px !important;
+}
+
+[data-budget-context-rail="true"] [data-live-widget-card="true"] {
+  min-height: 174px !important;
+  align-content: stretch !important;
+  gap: 12px !important;
+  padding: 14px !important;
+}
+
+[data-live-widget-totals="true"] {
+  display: grid;
+  gap: 8px;
+}
+
+[data-live-widget-totals="true"] div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+[data-live-widget-totals="true"] span {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 720;
+}
+
+[data-live-widget-totals="true"] strong {
+  color: #172033;
+  font-size: 14px;
+  font-weight: 790;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-live-widget-totals="true"] div:first-child strong {
+  color: #16744b;
+}
+
+[data-live-widget-totals="true"] div:nth-child(2) strong {
+  color: #b33a3a;
+}
+
+[data-live-widget-totals="true"] [data-balance-state="positive"] strong {
+  color: #16744b;
+}
+
+[data-live-widget-totals="true"] [data-balance-state="negative"] strong {
+  color: #b33a3a;
+}
+
+[data-live-widget-flow="true"] {
+  display: flex;
+  width: 100%;
+  height: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(226, 232, 240, 0.9);
+}
+
+[data-live-widget-flow="true"] i {
+  min-width: 0;
+  height: 100%;
+}
+
+[data-live-widget-flow="true"] [data-flow-kind="income"] {
+  background: #86efac;
+}
+
+[data-live-widget-flow="true"] [data-flow-kind="expense"] {
+  background: #fecdd3;
+}
+
+[data-live-widget-empty="true"] {
+  min-height: 138px;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  text-align: left;
+}
+
+[data-live-widget-empty="true"] strong {
+  color: #172033;
+  font-size: 15px;
+}
+
+[data-live-widget-empty="true"] p {
+  margin: 0;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+@media (max-width: 820px) {
+  [data-calendar-recent-panel="true"],
+  [data-level1-header-grid="true"] {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+  }
+
+  [data-workspace-calendar-pane="true"] {
+    border-right: 0 !important;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.9) !important;
+  }
+
+  [data-pinned-categories-grid="true"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Premium main layout pass: scoped to the current dashboard shell. */
+@media (min-width: 821px) {
+  [data-budget-app="true"] {
+    padding: 0 332px 0 166px !important;
+    background:
+      linear-gradient(135deg, #f7f9fc 0%, #edf2f7 44%, #f8fafc 100%) !important;
+  }
+
+  [data-budget-header-row="true"] {
+    inset: 0 332px auto 166px !important;
+    min-height: 56px !important;
+    border-color: rgba(196, 207, 219, 0.72) !important;
+    background: rgba(248, 251, 253, 0.84) !important;
+    backdrop-filter: blur(18px);
+  }
+
+  [data-budget-workspace="true"] {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0 !important;
+    padding: 72px 22px 24px !important;
+  }
+}
+
+[data-budget-tree-workspace="true"] {
+  display: grid !important;
+  gap: 18px !important;
+  min-height: auto !important;
+  padding: clamp(18px, 2vw, 28px) !important;
+  border: 1px solid rgba(203, 213, 225, 0.74) !important;
+  border-radius: 22px !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(244, 248, 251, 0.78)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 24px 70px rgba(15, 23, 42, 0.09) !important;
+}
+
+[data-budget-tree-toolbar="true"] {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 12px !important;
+  margin: 0 !important;
+  padding: 0 0 4px !important;
+  border: 0 !important;
+}
+
+[data-tree-month-switch="true"] {
+  justify-self: center;
+  display: inline-grid;
+  grid-template-columns: 38px minmax(132px, auto) 38px;
+  align-items: center;
+  gap: 8px;
+  padding: 5px;
+  border: 1px solid rgba(197, 208, 220, 0.82);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(237, 243, 248, 0.74));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.94), 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+[data-tree-month-switch="true"] button,
+[data-workspace-calendar-nav="true"] button,
+[data-workspace-trash-chip="true"],
+[data-pinned-category-menu="true"] summary {
+  border: 1px solid rgba(198, 209, 221, 0.82);
+  background: rgba(255, 255, 255, 0.74);
+  color: #334155;
+  cursor: pointer;
+}
+
+[data-tree-month-switch="true"] button {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  font-size: 20px;
+  line-height: 1;
+}
+
+[data-tree-month-switch="true"] strong {
+  color: #111827;
+  font-size: 20px;
+  font-weight: 780;
+  text-align: center;
+}
+
+[data-tree-toolbar-actions="true"] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+[data-workspace-action],
+[data-tree-sort-menu="true"] summary,
+[data-tree-view-menu="true"] summary {
+  min-width: 38px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(198, 209, 221, 0.82) !important;
+  border-radius: 12px !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(235, 242, 248, 0.76)) !important;
+  color: #334155 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 8px 18px rgba(15, 23, 42, 0.045) !important;
+}
+
+[data-tree-sort-menu="true"],
+[data-tree-view-menu="true"] {
+  position: relative;
+}
+
+[data-tree-sort-menu="true"] summary {
+  width: auto !important;
+  padding: 0 14px !important;
+  color: #334155 !important;
+  font-size: 12px !important;
+  font-weight: 720 !important;
+  list-style: none;
+}
+
+[data-tree-sort-menu="true"] summary::-webkit-details-marker,
+[data-tree-view-menu="true"] summary::-webkit-details-marker,
+[data-pinned-category-menu="true"] summary::-webkit-details-marker {
+  display: none;
+}
+
+[data-tree-sort-inline="true"] {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+  z-index: 40 !important;
+  width: min(620px, calc(100vw - 560px)) !important;
+  min-width: 420px !important;
+  padding: 12px !important;
+  border: 1px solid rgba(198, 209, 221, 0.82) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 22px 46px rgba(15, 23, 42, 0.14) !important;
+}
+
+[data-level1-tree-shell="true"] {
+  display: grid !important;
+  gap: 14px !important;
+}
+
+[data-level1-header-grid="true"] {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  gap: 16px !important;
+}
+
+[data-level1-header-grid="true"] > div,
+[data-level1-header-grid="true"] [style] {
+  min-width: 0;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"] {
+  position: relative;
+  min-height: 164px !important;
+  height: 100% !important;
+  overflow: hidden;
+  align-items: stretch !important;
+  padding: 22px !important;
+  border-radius: 20px !important;
+  border-color: rgba(198, 209, 221, 0.78) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 18px 40px rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"]::after {
+  content: "";
+  position: absolute;
+  right: -28px;
+  bottom: -42px;
+  width: 210px;
+  height: 110px;
+  border-radius: 50%;
+  opacity: 0.26;
+  border: 1px solid currentColor;
+  transform: rotate(-10deg);
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"][data-level1-kind="income"] {
+  background:
+    radial-gradient(circle at 88% 18%, rgba(34, 197, 94, 0.18), transparent 34%),
+    linear-gradient(145deg, rgba(248, 255, 251, 0.96), rgba(232, 246, 239, 0.84)) !important;
+  color: #166534;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"][data-level1-kind="expense"] {
+  background:
+    radial-gradient(circle at 88% 18%, rgba(244, 63, 94, 0.16), transparent 34%),
+    linear-gradient(145deg, rgba(255, 249, 249, 0.96), rgba(249, 235, 237, 0.84)) !important;
+  color: #9f1239;
+}
+
+[data-level1-title-block="true"] {
+  display: grid !important;
+  align-content: end !important;
+  gap: 12px !important;
+  min-height: 116px;
+}
+
+[data-level1-title-block="true"] > div:first-child {
+  color: #172033 !important;
+  font-size: clamp(21px, 2vw, 30px) !important;
+  font-weight: 780 !important;
+  line-height: 1.05 !important;
+}
+
+[data-level1-title-block="true"]::before {
+  content: "↗";
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.64);
+  color: currentColor;
+  font-size: 20px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+[data-category-drag-row="true"][data-level1-kind="expense"] [data-level1-title-block="true"]::before {
+  content: "↘";
+}
+
+[data-level1-summary="true"] strong {
+  color: #0f172a !important;
+  font-size: clamp(28px, 3vw, 42px) !important;
+  font-weight: 820 !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-level1-content-stack="true"] {
+  display: grid !important;
+  gap: 12px !important;
+}
+
+[data-level1-expanded-content="true"] {
+  padding: 12px !important;
+  border: 1px solid rgba(211, 220, 230, 0.82) !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.58) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88) !important;
+}
+
+[data-level1-expanded-content="true"] [data-category-drag-row="true"] {
+  min-height: 46px !important;
+  border-width: 0 0 1px 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-main-workspace-deck="true"] {
+  display: grid;
+  gap: 16px;
+}
+
+[data-calendar-recent-panel="true"] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: 326px;
+  overflow: hidden;
+  border: 1px solid rgba(203, 213, 225, 0.78);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 18px 42px rgba(15, 23, 42, 0.06);
+}
+
+[data-workspace-calendar-pane="true"],
+[data-workspace-recent-pane="true"],
+[data-pinned-category-panel="true"] {
+  min-width: 0;
+  padding: 18px;
+}
+
+[data-workspace-calendar-pane="true"] {
+  border-right: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+[data-workspace-panel-header="true"] {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+[data-workspace-panel-header="true"] div {
+  display: grid;
+  gap: 3px;
+}
+
+[data-workspace-panel-header="true"] span {
+  color: #172033;
+  font-size: 15px;
+  font-weight: 780;
+}
+
+[data-workspace-panel-header="true"] strong {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 560;
+}
+
+[data-workspace-calendar-nav="true"] {
+  display: flex;
+  gap: 6px;
+}
+
+[data-workspace-calendar-nav="true"] button {
+  min-height: 30px;
+  border-radius: 10px;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 680;
+}
+
+[data-mini-calendar="main"] {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 7px;
+}
+
+[data-mini-calendar="main"] small,
+[data-mini-calendar="main"] button,
+[data-mini-calendar="main"] i {
+  min-width: 0;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+}
+
+[data-mini-calendar="main"] small {
+  height: 22px;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 760;
+}
+
+[data-mini-calendar="main"] button {
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  background: rgba(248, 250, 252, 0.82);
+  color: #334155;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+[data-mini-calendar="main"] button[data-current-day="true"] {
+  border-color: rgba(37, 99, 235, 0.38);
+  background: rgba(219, 234, 254, 0.84);
+  color: #1d4ed8;
+  font-weight: 760;
+}
+
+[data-workspace-recent-rows="true"] {
+  display: grid !important;
+  gap: 0 !important;
+  min-height: 236px;
+}
+
+[data-workspace-recent-row="true"] {
+  min-height: 40px !important;
+  display: grid !important;
+  grid-template-columns: 92px minmax(0, 1.15fr) minmax(96px, 0.85fr) 84px !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 9px 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.88) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-workspace-recent-row="true"] b {
+  font-size: 12px !important;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-workspace-recent-row="true"][data-transaction-kind="income"] b {
+  color: #15803d !important;
+}
+
+[data-workspace-recent-row="true"][data-transaction-kind="expense"] b {
+  color: #be123c !important;
+}
+
+[data-workspace-recent-row="true"] span,
+[data-workspace-recent-row="true"] small,
+[data-workspace-recent-row="true"] time {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+[data-workspace-recent-row="true"] small {
+  width: fit-content;
+  max-width: 100%;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(241, 245, 249, 0.92);
+  color: #475569;
+}
+
+[data-workspace-empty-placeholder="true"] {
+  min-height: 160px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgba(203, 213, 225, 0.88);
+  border-radius: 14px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+[data-pinned-category-panel="true"] {
+  border: 1px solid rgba(203, 213, 225, 0.78);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 16px 36px rgba(15, 23, 42, 0.055);
+}
+
+[data-pinned-categories-grid="true"] {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+[data-pinned-category-card="true"] {
+  position: relative;
+  min-width: 0;
+  border: 1px solid rgba(203, 213, 225, 0.8);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.86), rgba(241, 245, 249, 0.74));
+}
+
+[data-pinned-category-card="true"][data-pinned-category-kind="income"] {
+  background: linear-gradient(145deg, rgba(249, 255, 251, 0.9), rgba(232, 246, 239, 0.7));
+}
+
+[data-pinned-category-card="true"][data-pinned-category-kind="expense"] {
+  background: linear-gradient(145deg, rgba(255, 249, 249, 0.9), rgba(249, 235, 237, 0.7));
+}
+
+[data-pinned-category-main="true"] {
+  width: 100%;
+  min-height: 112px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: space-between;
+  gap: 8px;
+  border: 0;
+  border-radius: 16px;
+  padding: 14px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+[data-pinned-category-main="true"] > span {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.68);
+}
+
+[data-pinned-category-main="true"] div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+[data-pinned-category-main="true"] strong,
+[data-pinned-category-main="true"] small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-pinned-category-main="true"] strong {
+  color: #172033;
+  font-size: 13px;
+  font-weight: 760;
+}
+
+[data-pinned-category-main="true"] small {
+  color: #64748b;
+  font-size: 11px;
+}
+
+[data-pinned-category-main="true"] b {
+  grid-column: 1 / -1;
+  color: #0f172a;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-pinned-category-menu="true"] {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+[data-pinned-category-menu="true"] summary {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  list-style: none;
+}
+
+[data-pinned-category-menu="true"] div {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 20;
+  width: 120px;
+  padding: 6px;
+  border: 1px solid rgba(203, 213, 225, 0.86);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.14);
+}
+
+[data-pinned-category-menu="true"] button {
+  width: 100%;
+  min-height: 30px;
+  border: 0;
+  border-radius: 8px;
+  background: rgba(241, 245, 249, 0.8);
+  color: #334155;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+[data-workspace-bottom-bar="true"] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 680;
+}
+
+[data-workspace-trash-chip="true"] {
+  min-width: 58px !important;
+  min-height: 34px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  border-radius: 999px !important;
+  padding: 0 12px !important;
+}
+
+[data-context-card="upcoming"] {
+  flex: 0 0 auto !important;
+  display: grid !important;
+  gap: 8px !important;
+  padding: 12px !important;
+  border: 1px solid rgba(207, 217, 228, 0.78) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.58) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88) !important;
+}
+
+[data-context-card="upcoming"] p {
+  margin: 0;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+@media (max-width: 1100px) {
+  [data-pinned-categories-grid="true"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  [data-calendar-recent-panel="true"],
+  [data-level1-header-grid="true"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  [data-workspace-calendar-pane="true"] {
+    border-right: 0;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+  }
+
+  [data-pinned-categories-grid="true"] {
+    grid-template-columns: 1fr;
+  }
+
+  [data-tree-sort-inline="true"] {
+    right: auto !important;
+    left: 0 !important;
+    width: min(92vw, 520px) !important;
+    min-width: 0 !important;
+  }
+}
+
+@media (min-width: 821px) {
+  [data-budget-workspace="true"] {
+    grid-template-columns: minmax(0, 1fr) 332px !important;
+  }
+
+  [data-budget-context-rail="true"] {
+    position: fixed !important;
+    inset: 0 0 0 auto !important;
+    width: 332px !important;
+    max-width: 332px !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    border-radius: 0 !important;
+  }
+}
+
 /* Etap 25 final IA wins over older visual passes. */
 [data-sidebar-section] {
   display: grid !important;
@@ -1006,6 +2609,483 @@ video {
   [data-workspace-recent-row="true"] {
     grid-template-columns: 86px minmax(0, 1fr) !important;
     grid-template-rows: auto auto !important;
+  }
+}
+
+/* Main workspace stabilization: single tree rhythm, full-width expansion, calm bottom deck. */
+[data-budget-header-row="true"] {
+  min-height: 50px !important;
+  padding-block: 6px !important;
+}
+
+[data-budget-topbar-month="true"] {
+  justify-self: center !important;
+  width: auto !important;
+  padding: 2px !important;
+}
+
+[data-budget-topbar-actions="true"] > button,
+[data-workspace-action],
+[data-tree-view-menu="true"] summary {
+  border: 1px solid rgba(203, 213, 225, 0.72) !important;
+  background: rgba(255, 255, 255, 0.68) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  color: #334155 !important;
+}
+
+[data-tree-view-menu="true"] summary {
+  color: transparent !important;
+  position: relative;
+}
+
+[data-tree-view-menu="true"] summary::before {
+  content: "☰";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #475569;
+  font-size: 14px;
+}
+
+[data-level1-tree-shell="true"] {
+  display: grid !important;
+  gap: 14px !important;
+}
+
+[data-level1-header-grid="true"] {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+  align-items: stretch !important;
+}
+
+[data-level1-header-grid="true"] > div {
+  margin: 0 !important;
+  min-width: 0 !important;
+}
+
+[data-level1-content-stack="true"] {
+  display: grid !important;
+  gap: 12px !important;
+}
+
+[data-level1-expanded-content="true"] {
+  min-width: 0 !important;
+  padding: 12px !important;
+  border: 1px solid rgba(213, 222, 232, 0.82) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.58) !important;
+}
+
+[data-level1-expanded-content="true"][data-level1-kind="income"] {
+  background: linear-gradient(180deg, rgba(240, 253, 244, 0.48), rgba(255, 255, 255, 0.62)) !important;
+}
+
+[data-level1-expanded-content="true"][data-level1-kind="expense"] {
+  background: linear-gradient(180deg, rgba(255, 241, 242, 0.48), rgba(255, 255, 255, 0.62)) !important;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"] {
+  min-height: 132px !important;
+  border-radius: 16px !important;
+  padding: 18px !important;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.055) !important;
+}
+
+[data-level1-header-grid="true"] [data-level1-kind="income"] {
+  border-color: rgba(134, 239, 172, 0.48) !important;
+  background: linear-gradient(145deg, rgba(240, 253, 244, 0.96), rgba(255, 255, 255, 0.82)) !important;
+}
+
+[data-level1-header-grid="true"] [data-level1-kind="expense"] {
+  border-color: rgba(254, 205, 211, 0.58) !important;
+  background: linear-gradient(145deg, rgba(255, 241, 242, 0.96), rgba(255, 255, 255, 0.82)) !important;
+}
+
+[data-level1-summary="true"] span {
+  display: inline-grid !important;
+}
+
+[data-budget-tree-workspace="true"] [data-category-drag-row="true"] + [data-category-drag-row="true"],
+[data-budget-tree-workspace="true"] [data-category-drag-row="true"] + div {
+  margin-top: 6px !important;
+}
+
+[data-budget-tree-workspace="true"] [data-category-drag-row="true"]:not([data-level1-kind]) {
+  min-height: 48px !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+
+[data-inline-entry-form="true"] {
+  display: grid !important;
+  grid-template-columns: 76px minmax(180px, 1fr) 116px auto auto !important;
+  align-items: start !important;
+  gap: 8px !important;
+  padding: 10px !important;
+  border-radius: 12px !important;
+  background: rgba(248, 250, 252, 0.72) !important;
+}
+
+[data-inline-entry-form="true"] > div:nth-of-type(n + 2) {
+  grid-column: 1 / -1;
+}
+
+[data-budget-tree-workspace="true"] [style*="transactionRow"] {
+  border: 0 !important;
+}
+
+[data-budget-tree-bottom-deck="true"] [data-core-workspace-footer="true"] {
+  grid-template-columns: minmax(250px, 0.9fr) minmax(0, 1.5fr) auto !important;
+  min-height: 292px !important;
+}
+
+[data-budget-tree-bottom-deck="true"] [data-workspace-month-switch="true"] {
+  display: none !important;
+}
+
+[data-workspace-mini-calendar-card="true"],
+[data-workspace-recent-table="true"] {
+  min-height: 268px !important;
+  max-height: 268px !important;
+  overflow: hidden !important;
+}
+
+[data-workspace-mini-calendar-card="true"] {
+  display: grid !important;
+  grid-template-rows: auto auto 1fr !important;
+  gap: 8px !important;
+}
+
+[data-workspace-calendar-nav="true"] {
+  display: grid !important;
+  grid-template-columns: 34px 1fr 34px !important;
+  gap: 6px !important;
+}
+
+[data-workspace-calendar-nav="true"] button {
+  min-height: 30px !important;
+  border: 1px solid rgba(203, 213, 225, 0.72) !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+  color: #334155 !important;
+  font-size: 12px !important;
+}
+
+[data-workspace-mini-calendar-card="true"] [data-mini-calendar="true"] {
+  max-width: none !important;
+  align-content: start !important;
+}
+
+[data-workspace-mini-calendar-card="true"] [data-mini-calendar="true"] button,
+[data-workspace-mini-calendar-card="true"] [data-mini-calendar="true"] i {
+  height: 24px !important;
+  min-height: 24px !important;
+}
+
+[data-workspace-recent-rows="true"] {
+  max-height: 190px !important;
+  overflow: auto !important;
+  gap: 0 !important;
+}
+
+[data-workspace-recent-row="true"] {
+  min-height: 30px !important;
+  border-width: 0 0 1px 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+[data-pinned-categories="true"] {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  min-height: 30px !important;
+}
+
+[data-pinned-categories="true"] button {
+  min-height: 26px !important;
+  border-radius: 999px !important;
+  padding: 0 10px !important;
+  border: 1px solid rgba(203, 213, 225, 0.72) !important;
+  background: rgba(255, 255, 255, 0.62) !important;
+  color: #475569 !important;
+  font-size: 11px !important;
+  font-weight: 680 !important;
+}
+
+[data-pinned-category-kind="income"] {
+  border-color: rgba(134, 239, 172, 0.58) !important;
+  background: rgba(240, 253, 244, 0.82) !important;
+  color: #166534 !important;
+}
+
+[data-pinned-category-kind="expense"] {
+  border-color: rgba(254, 205, 211, 0.7) !important;
+  background: rgba(255, 241, 242, 0.82) !important;
+  color: #9f1239 !important;
+}
+
+@media (max-width: 820px) {
+  [data-level1-header-grid="true"],
+  [data-budget-tree-bottom-deck="true"] [data-core-workspace-footer="true"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  [data-inline-entry-form="true"] {
+    grid-template-columns: 72px minmax(0, 1fr) 104px !important;
+  }
+
+  [data-inline-entry-form="true"] > button {
+    grid-column: span 1;
+  }
+
+  [data-budget-app="true"] [style*="position: fixed"][style*="bottom"] {
+    display: none !important;
+  }
+}
+
+/* Main layout repair: no horizontal header, rebuilt right rail, stable bottom utility. */
+[data-budget-brand="true"],
+[data-budget-topbar-actions="true"] {
+  display: none !important;
+}
+
+[data-budget-header-row="true"] {
+  pointer-events: none;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+[data-budget-topbar-month="true"] {
+  pointer-events: auto;
+  justify-self: center !important;
+  margin-inline: auto !important;
+  padding: 5px !important;
+  border: 1px solid rgba(203, 213, 225, 0.56) !important;
+  border-radius: 14px !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(238, 244, 250, 0.68)) !important;
+  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.065), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-budget-topbar-month="true"] > button {
+  min-height: 36px !important;
+  border-radius: 10px !important;
+}
+
+[data-budget-topbar-month="true"] > button:nth-child(2) {
+  min-width: 150px !important;
+  font-size: 16px !important;
+  font-weight: 760 !important;
+}
+
+[data-context-card="rail-actions"] {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px !important;
+  padding: 2px 2px 10px !important;
+}
+
+[data-context-card="rail-actions"] button {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 10px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.86), rgba(238,244,250,0.68));
+  color: #334155;
+  font-size: 15px;
+  font-weight: 760;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.88);
+  cursor: pointer;
+}
+
+[data-context-card="rail-actions"] button:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+
+[data-context-card="summary"] {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 4px !important;
+}
+
+[data-context-card="summary"] span {
+  display: block;
+  margin-bottom: 3px;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+[data-context-card="summary"] strong {
+  color: #172033;
+  font-size: 21px !important;
+  font-weight: 780;
+}
+
+[data-context-card="metrics"] {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px !important;
+}
+
+[data-context-metric="true"] {
+  min-height: 66px;
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid rgba(213, 222, 232, 0.78);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.56);
+}
+
+[data-context-metric="true"] span {
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 720;
+  text-transform: uppercase;
+}
+
+[data-context-metric="true"] strong {
+  min-width: 0;
+  overflow: hidden;
+  color: #172033;
+  font-size: 18px;
+  font-weight: 780;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-context-card="calendar"],
+[data-context-card="activity"] {
+  display: none !important;
+}
+
+[data-live-widget-card="true"] > strong,
+[data-live-widget-card="true"] > p,
+[data-live-widget-card="true"] > [data-live-widget-meta="true"] {
+  display: none !important;
+}
+
+[data-live-widget-rotating="true"] {
+  display: grid;
+  gap: 8px;
+}
+
+[data-live-widget-rotating="true"] p {
+  margin: 0;
+  color: #475569;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+[data-workspace-calendar-nav="true"] {
+  grid-template-columns: 34px 34px !important;
+  justify-content: start;
+}
+
+[data-workspace-calendar-nav="true"] button:nth-child(2) {
+  display: none !important;
+}
+
+[data-workspace-recent-row="true"] {
+  cursor: default !important;
+  pointer-events: none !important;
+}
+
+[data-workspace-recent-row="true"]:hover {
+  transform: none !important;
+  background: transparent !important;
+}
+
+[data-budget-tree-bottom-deck="true"] [data-core-workspace-footer="true"] {
+  grid-template-columns: minmax(260px, 1fr) minmax(0, 1fr) !important;
+  grid-template-areas:
+    "calendar recent"
+    "month trash" !important;
+  align-items: stretch !important;
+}
+
+[data-workspace-mini-calendar-card="true"] {
+  grid-area: calendar;
+}
+
+[data-workspace-recent-table="true"] {
+  grid-area: recent;
+}
+
+[data-budget-tree-bottom-deck="true"] [data-workspace-month-switch="true"] {
+  grid-area: month;
+  display: inline-flex !important;
+  width: fit-content;
+  align-self: end;
+  margin-top: 4px;
+}
+
+[data-workspace-trash-chip="true"] {
+  grid-area: trash;
+  justify-self: end;
+  align-self: end;
+  min-width: 68px !important;
+  min-height: 38px !important;
+}
+
+@media (min-width: 821px) {
+  [data-budget-app="true"] {
+    padding: 64px 14px 16px 166px !important;
+  }
+
+  [data-budget-header-row="true"] {
+    inset: 0 348px auto 166px !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  [data-budget-workspace="true"] {
+    grid-template-columns: minmax(0, 1fr) 332px !important;
+    gap: 14px !important;
+  }
+
+  [data-budget-context-rail="true"] {
+    position: sticky !important;
+    top: 14px !important;
+    max-width: 332px !important;
+    min-height: calc(100dvh - 30px) !important;
+    padding: 12px !important;
+    border-width: 0 0 0 1px !important;
+    border-color: rgba(203, 213, 225, 0.74) !important;
+    border-radius: 0 !important;
+    background: linear-gradient(180deg, rgba(251, 253, 255, 0.92), rgba(239, 245, 250, 0.84)) !important;
+    box-shadow: inset 1px 0 0 rgba(255,255,255,0.82) !important;
+  }
+}
+
+@media (max-width: 820px) {
+  [data-budget-header-row="true"] {
+    pointer-events: auto;
+    inset: 0 0 auto 0 !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  [data-budget-topbar-month="true"] {
+    justify-self: stretch !important;
+  }
+
+  [data-budget-tree-bottom-deck="true"] [data-core-workspace-footer="true"] {
+    grid-template-columns: 1fr !important;
+    grid-template-areas:
+      "calendar"
+      "recent"
+      "month"
+      "trash" !important;
   }
 }
 
@@ -3984,12 +6064,14 @@ body {
 
 [data-budget-tree-workspace="true"] {
   min-width: 0;
-  min-height: clamp(420px, calc(100dvh - 108px), 900px);
-  padding: 12px !important;
-  border: 1px solid rgba(213, 222, 232, 0.9) !important;
-  border-radius: 10px !important;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(248, 250, 252, 0.72)) !important;
-  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.055) !important;
+  display: grid !important;
+  gap: 16px !important;
+  min-height: auto !important;
+  padding: clamp(18px, 2vw, 26px) !important;
+  border: 1px solid rgba(203, 213, 225, 0.74) !important;
+  border-radius: 22px !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(244, 248, 251, 0.78)) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 24px 70px rgba(15, 23, 42, 0.09) !important;
 }
 
 [data-budget-workspace-main="true"] > [data-budget-tree-workspace="true"],
@@ -3998,11 +6080,11 @@ body {
 }
 
 [data-budget-workspace-main="true"] > [data-budget-tree-workspace="true"] {
-  padding: 12px !important;
-  border: 1px solid rgba(213, 222, 232, 0.9) !important;
-  border-radius: 10px !important;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(248, 250, 252, 0.72)) !important;
-  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.055) !important;
+  padding: clamp(18px, 2vw, 26px) !important;
+  border: 1px solid rgba(203, 213, 225, 0.74) !important;
+  border-radius: 22px !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(244, 248, 251, 0.78)) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 24px 70px rgba(15, 23, 42, 0.09) !important;
 }
 
 [data-budget-header-row="true"] {
@@ -4035,13 +6117,13 @@ body {
 }
 
 [data-budget-tree-toolbar="true"] {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
-  gap: 12px;
-  margin-bottom: 12px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.82);
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 0 0 2px !important;
+  border: 0 !important;
 }
 
 [data-budget-tree-toolbar="true"] p {
@@ -4052,6 +6134,10 @@ body {
 
 [data-tree-toolbar-actions="true"] {
   position: relative;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
 }
 
 [data-tree-view-menu="true"] summary {
@@ -4098,6 +6184,649 @@ body {
   background: rgba(255, 255, 255, 0.64) !important;
 }
 
+[data-budget-topbar-month="true"] {
+  justify-self: center !important;
+  display: grid !important;
+  grid-template-columns: 38px auto 38px !important;
+  align-items: center !important;
+  gap: 14px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-budget-topbar-month="true"] > button {
+  width: 38px !important;
+  min-width: 38px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(196, 207, 219, 0.82) !important;
+  border-radius: 999px !important;
+  padding: 0 !important;
+  background: rgba(255, 255, 255, 0.78) !important;
+  color: #334155 !important;
+  font-size: 22px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 8px 18px rgba(15, 23, 42, 0.045) !important;
+}
+
+[data-budget-topbar-month="true"] > button:nth-child(2) {
+  width: auto !important;
+  min-width: 116px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #111827 !important;
+  font-size: 24px !important;
+  font-weight: 790 !important;
+  box-shadow: none !important;
+}
+
+[data-budget-topbar-month="true"] > button:nth-child(n + 4),
+[data-budget-topbar-month="true"] [data-month-state="true"],
+[data-tree-month-switch="true"] {
+  display: none !important;
+}
+
+[data-workspace-action],
+[data-tree-sort-menu="true"] summary,
+[data-tree-view-menu="true"] summary {
+  min-width: 38px !important;
+  width: 38px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(198, 209, 221, 0.82) !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(235, 242, 248, 0.78)) !important;
+  color: #334155 !important;
+  font-size: 18px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 8px 18px rgba(15, 23, 42, 0.045) !important;
+}
+
+[data-tree-sort-menu="true"] summary {
+  width: auto !important;
+  padding: 0 14px !important;
+  font-size: 12px !important;
+  font-weight: 740 !important;
+  list-style: none;
+}
+
+[data-tree-sort-inline="true"] {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+  z-index: 60 !important;
+  width: min(620px, calc(100vw - 560px)) !important;
+  min-width: 420px !important;
+  padding: 12px !important;
+  border: 1px solid rgba(198, 209, 221, 0.82) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.97) !important;
+  box-shadow: 0 22px 46px rgba(15, 23, 42, 0.14) !important;
+}
+
+[data-level1-tree-shell="true"],
+[data-level1-header-grid="true"] {
+  width: 100% !important;
+}
+
+[data-level1-tree-shell="true"] {
+  display: grid !important;
+  gap: 14px !important;
+}
+
+[data-level1-header-grid="true"] {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  gap: 16px !important;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"] {
+  position: relative !important;
+  min-height: 138px !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  padding: 20px !important;
+  border: 1px solid rgba(198, 209, 221, 0.72) !important;
+  border-radius: 18px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 16px 34px rgba(15, 23, 42, 0.075) !important;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"]::after {
+  display: none !important;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"][data-level1-kind="income"] {
+  background: linear-gradient(145deg, rgba(249, 255, 251, 0.95), rgba(232, 246, 239, 0.82)) !important;
+  color: #166534 !important;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"][data-level1-kind="expense"] {
+  background: linear-gradient(145deg, rgba(255, 249, 249, 0.95), rgba(249, 235, 237, 0.82)) !important;
+  color: #9f1239 !important;
+}
+
+[data-level1-title-block="true"] {
+  min-width: 0 !important;
+  min-height: 92px !important;
+  display: grid !important;
+  align-content: space-between !important;
+  gap: 12px !important;
+}
+
+[data-level1-title-block="true"]::before {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 10px !important;
+  background: rgba(255, 255, 255, 0.52) !important;
+  font-size: 17px !important;
+}
+
+[data-level1-title-block="true"] > div:first-child {
+  color: #172033 !important;
+  font-size: 20px !important;
+  font-weight: 780 !important;
+  line-height: 1.1 !important;
+  white-space: nowrap !important;
+}
+
+[data-level1-summary="true"] strong {
+  display: block !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  color: #0f172a !important;
+  font-size: clamp(24px, 2.1vw, 34px) !important;
+  font-weight: 820 !important;
+  line-height: 1.05 !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-calendar-recent-panel="true"] {
+  display: grid !important;
+  grid-template-columns: minmax(280px, 0.92fr) minmax(0, 1.08fr) !important;
+  height: 286px !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(203, 213, 225, 0.78) !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+}
+
+[data-workspace-calendar-pane="true"],
+[data-workspace-recent-pane="true"] {
+  min-width: 0 !important;
+  padding: 14px !important;
+  overflow: hidden !important;
+}
+
+[data-workspace-calendar-pane="true"] {
+  border-right: 1px solid rgba(226, 232, 240, 0.9) !important;
+}
+
+[data-mini-calendar="main"] {
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 4px !important;
+}
+
+[data-mini-calendar="main"] small,
+[data-mini-calendar="main"] button,
+[data-mini-calendar="main"] i {
+  height: 25px !important;
+  min-height: 25px !important;
+  border-radius: 8px !important;
+  font-size: 11px !important;
+}
+
+[data-workspace-recent-rows="true"] {
+  display: grid !important;
+  gap: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+[data-workspace-recent-row="true"] {
+  min-width: 0 !important;
+  min-height: 29px !important;
+  display: grid !important;
+  grid-template-columns: 76px minmax(0, 1.25fr) minmax(72px, 0.8fr) 68px !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 5px 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.88) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-workspace-recent-row="true"] b,
+[data-workspace-recent-row="true"] span,
+[data-workspace-recent-row="true"] small,
+[data-workspace-recent-row="true"] time {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: 11px !important;
+}
+
+[data-pinned-categories-grid="true"] {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 210px)) !important;
+  justify-content: start !important;
+  gap: 10px !important;
+}
+
+[data-pinned-category-main="true"] {
+  min-height: 92px !important;
+  padding: 12px !important;
+}
+
+[data-pinned-category-main="true"] b {
+  font-size: 16px !important;
+  white-space: nowrap !important;
+}
+
+[data-workspace-trash-chip="true"] {
+  min-width: 54px !important;
+  min-height: 30px !important;
+  display: inline-flex !important;
+  grid-template-columns: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  border-radius: 999px !important;
+  padding: 0 10px !important;
+}
+
+/* Right sidebar repair: keep this block scoped to the right rail only. */
+@media (min-width: 821px) {
+  [data-budget-app="true"] {
+    padding: 0 332px 0 166px !important;
+    background: linear-gradient(135deg, #f7f9fc 0%, #edf2f7 46%, #f8fafc 100%) !important;
+  }
+
+  [data-budget-header-row="true"] {
+    inset: 0 332px auto 166px !important;
+    grid-template-columns: minmax(160px, 260px) minmax(260px, 1fr) minmax(160px, 260px) !important;
+    min-height: 72px !important;
+    padding: 10px 22px !important;
+    border-color: rgba(196, 207, 219, 0.72) !important;
+    background: rgba(248, 251, 253, 0.88) !important;
+    backdrop-filter: blur(18px);
+  }
+
+  [data-budget-workspace="true"] {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0 !important;
+    padding: 92px 24px 24px !important;
+    max-width: none !important;
+  }
+
+  [data-budget-context-rail="true"] {
+    position: fixed !important;
+    inset: 0 0 0 auto !important;
+    z-index: 42 !important;
+    width: 332px !important;
+    max-width: 332px !important;
+    min-height: 100dvh !important;
+    height: 100dvh !important;
+    overflow-y: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding: 14px !important;
+    border-width: 0 0 0 1px !important;
+    border-color: rgba(196, 207, 219, 0.82) !important;
+    border-radius: 0 !important;
+    background:
+      linear-gradient(180deg, rgba(253, 255, 255, 0.96), rgba(238, 244, 249, 0.91)),
+      radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.95), transparent 34%) !important;
+    box-shadow:
+      inset 1px 0 0 rgba(255, 255, 255, 0.88),
+      -18px 0 42px rgba(15, 23, 42, 0.055) !important;
+  }
+}
+
+[data-budget-context-rail="true"] [data-context-card] {
+  width: 100% !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="rail-actions"] {
+  flex: 0 0 auto !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  padding: 0 0 2px !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="rail-actions"] button {
+  position: relative;
+  display: grid !important;
+  place-items: center !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 40px !important;
+  padding: 0 !important;
+  border: 1px solid rgba(198, 209, 221, 0.82) !important;
+  border-radius: 11px !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(235, 242, 248, 0.76)) !important;
+  color: #334155 !important;
+  font-size: 0 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 8px 18px rgba(15, 23, 42, 0.045) !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="rail-actions"] button::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: currentColor;
+  mask: var(--rail-action-icon) center / contain no-repeat;
+  -webkit-mask: var(--rail-action-icon) center / contain no-repeat;
+}
+
+[data-budget-context-rail="true"] [data-context-card="rail-actions"] button:nth-child(1) {
+  --rail-action-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='6'/%3E%3Cpath d='m16 16 4 4'/%3E%3C/svg%3E");
+}
+
+[data-budget-context-rail="true"] [data-context-card="rail-actions"] button:nth-child(2) {
+  --rail-action-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6.5 10a5.5 5.5 0 0 1 11 0c0 5 1.7 5.8 2.2 7H4.3c.5-1.2 2.2-2 2.2-7Z'/%3E%3Cpath d='M10 20h4'/%3E%3C/svg%3E");
+}
+
+[data-budget-context-rail="true"] [data-context-card="rail-actions"] button:nth-child(3) {
+  --rail-action-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'%3E%3Cpath d='M12 5v14'/%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");
+}
+
+[data-budget-context-rail="true"] [data-context-card="rail-actions"] button:nth-child(4) {
+  font-size: 15px !important;
+  font-weight: 780 !important;
+  letter-spacing: 0 !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="rail-actions"] button:nth-child(4)::before {
+  content: "P";
+  width: auto;
+  height: auto;
+  background: transparent;
+  mask: none;
+  -webkit-mask: none;
+}
+
+[data-budget-context-rail="true"] [data-context-card="summary"] {
+  flex: 0 0 auto !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: end !important;
+  gap: 10px !important;
+  padding: 12px !important;
+  border: 1px solid rgba(207, 217, 228, 0.78) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.62) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="summary"] span {
+  margin: 0 0 4px !important;
+  color: #64748b !important;
+  font-size: 10px !important;
+  font-weight: 760 !important;
+  letter-spacing: 0 !important;
+  text-transform: uppercase !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="summary"] strong {
+  color: #172033 !important;
+  font-size: 22px !important;
+  font-weight: 780 !important;
+  line-height: 1 !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="summary"] em {
+  align-self: center !important;
+  padding: 5px 9px !important;
+  border: 1px solid rgba(148, 163, 184, 0.28) !important;
+  border-radius: 999px !important;
+  background: rgba(241, 245, 249, 0.86) !important;
+  color: #475569 !important;
+  font-size: 11px !important;
+  font-style: normal !important;
+  font-weight: 760 !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="metrics"] {
+  flex: 0 0 auto !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-budget-context-rail="true"] [data-context-metric="true"] {
+  min-height: 64px !important;
+  padding: 10px !important;
+  border: 1px solid rgba(207, 217, 228, 0.78) !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.6) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88) !important;
+}
+
+[data-budget-context-rail="true"] [data-context-metric="true"] span {
+  color: #64748b !important;
+  font-size: 10px !important;
+  font-weight: 740 !important;
+  letter-spacing: 0 !important;
+  text-transform: uppercase !important;
+}
+
+[data-budget-context-rail="true"] [data-context-metric="true"] strong {
+  color: #172033 !important;
+  font-size: 17px !important;
+  line-height: 1.1 !important;
+}
+
+[data-budget-context-rail="true"] [data-context-metric="true"][data-balance-state="positive"] strong {
+  color: #16744b !important;
+}
+
+[data-budget-context-rail="true"] [data-context-metric="true"][data-balance-state="negative"] strong {
+  color: #b33a3a !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="calendar"],
+[data-budget-context-rail="true"] [data-context-card="activity"] {
+  display: none !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="live"] {
+  flex: 1 1 auto !important;
+  min-height: 270px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  padding: 12px !important;
+  border: 1px solid rgba(196, 207, 219, 0.82) !important;
+  border-radius: 16px !important;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.78), rgba(236, 243, 249, 0.68)),
+    radial-gradient(circle at 14% 0%, rgba(214, 224, 236, 0.38), transparent 42%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 14px 34px rgba(15, 23, 42, 0.065) !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="live"] [data-context-card-header="true"] {
+  flex: 0 0 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="live"] [data-context-card-header="true"] span {
+  color: #172033 !important;
+  font-size: 12px !important;
+  font-weight: 780 !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="live"] [data-context-card-header="true"] small {
+  padding: 4px 8px !important;
+  border-radius: 999px !important;
+  background: rgba(226, 232, 240, 0.82) !important;
+  color: #64748b !important;
+  font-size: 10px !important;
+  font-weight: 760 !important;
+}
+
+[data-budget-context-rail="true"] [data-live-widget-card="true"] {
+  flex: 1 1 auto !important;
+  min-height: 210px !important;
+  display: grid !important;
+  align-content: center !important;
+  gap: 14px !important;
+  padding: 18px !important;
+  border: 1px solid rgba(203, 213, 225, 0.72) !important;
+  border-radius: 15px !important;
+  background: rgba(255, 255, 255, 0.62) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-budget-context-rail="true"] [data-live-widget-rotating="true"] {
+  display: grid !important;
+  gap: 11px !important;
+}
+
+[data-budget-context-rail="true"] [data-live-widget-rotating="true"] strong {
+  color: #101827 !important;
+  font-size: 18px !important;
+  font-weight: 790 !important;
+  line-height: 1.15 !important;
+}
+
+[data-budget-context-rail="true"] [data-live-widget-rotating="true"] p {
+  margin: 0 !important;
+  color: #475569 !important;
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+}
+
+[data-budget-context-rail="true"] [data-live-widget-meta="true"] {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+}
+
+[data-budget-context-rail="true"] [data-live-widget-meta="true"] span {
+  padding: 5px 8px !important;
+  border: 1px solid rgba(203, 213, 225, 0.72) !important;
+  border-radius: 999px !important;
+  background: rgba(248, 250, 252, 0.78) !important;
+  color: #475569 !important;
+  font-size: 10px !important;
+  font-weight: 740 !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="live"] {
+  flex: 0 0 auto !important;
+  min-height: 238px !important;
+}
+
+[data-budget-context-rail="true"] [data-live-widget-card="true"] {
+  min-height: 174px !important;
+  align-content: stretch !important;
+  gap: 12px !important;
+  padding: 14px !important;
+}
+
+[data-live-widget-totals="true"] {
+  display: grid;
+  gap: 8px;
+}
+
+[data-live-widget-totals="true"] div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+[data-live-widget-totals="true"] span {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 720;
+}
+
+[data-live-widget-totals="true"] strong {
+  color: #172033;
+  font-size: 14px;
+  font-weight: 790;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-live-widget-totals="true"] div:first-child strong {
+  color: #16744b;
+}
+
+[data-live-widget-totals="true"] div:nth-child(2) strong,
+[data-live-widget-totals="true"] [data-balance-state="negative"] strong {
+  color: #b33a3a;
+}
+
+[data-live-widget-flow="true"] {
+  display: flex;
+  width: 100%;
+  height: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(226, 232, 240, 0.9);
+}
+
+[data-live-widget-flow="true"] i {
+  min-width: 0;
+  height: 100%;
+}
+
+[data-live-widget-flow="true"] [data-flow-kind="income"] {
+  background: #86efac;
+}
+
+[data-live-widget-flow="true"] [data-flow-kind="expense"] {
+  background: #fecdd3;
+}
+
+[data-live-widget-empty="true"] {
+  min-height: 138px;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+}
+
+[data-live-widget-empty="true"] p {
+  margin: 0;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
 [data-context-card] {
   border: 0 !important;
   border-radius: 0 !important;
@@ -4107,7 +6836,8 @@ body {
 
 @media (min-width: 821px) {
   [data-budget-app="true"] {
-    padding: 58px 14px 16px 166px !important;
+    padding: 0 332px 0 166px !important;
+    background: linear-gradient(135deg, #f7f9fc 0%, #edf2f7 46%, #f8fafc 100%) !important;
   }
 
   [data-budget-sidebar="true"] {
@@ -4118,20 +6848,202 @@ body {
 
   [data-budget-header-row="true"] {
     position: fixed !important;
-    inset: 0 0 auto 166px !important;
-    min-height: 58px !important;
-    grid-template-columns: minmax(220px, 340px) minmax(300px, 1fr) auto !important;
-    padding: 8px 14px !important;
+    inset: 0 332px auto 166px !important;
+    min-height: 72px !important;
+    grid-template-columns: minmax(160px, 260px) minmax(260px, 1fr) minmax(160px, 260px) !important;
+    padding: 10px 22px !important;
     border-width: 0 0 1px 0 !important;
     border-radius: 0 !important;
+    border-color: rgba(196, 207, 219, 0.72) !important;
+    background: rgba(248, 251, 253, 0.88) !important;
     box-shadow: none !important;
+    backdrop-filter: blur(18px);
   }
 
   [data-budget-workspace="true"] {
-    grid-template-columns: minmax(0, 1fr) 292px !important;
-    gap: 12px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0 !important;
+    padding: 92px 24px 24px !important;
     max-width: none !important;
   }
+}
+
+/* Small scoped fix: right rail icons and Level 1 category cards only. */
+[data-budget-context-rail="true"] [data-context-card="rail-actions"] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  padding: 0 0 4px !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="rail-actions"] button {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 0 !important;
+  border: 1px solid rgba(198, 209, 221, 0.82) !important;
+  border-radius: 10px !important;
+  background: rgba(255, 255, 255, 0.78) !important;
+  color: #334155 !important;
+  font-size: 0 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 6px 14px rgba(15, 23, 42, 0.045) !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="rail-actions"] button::before {
+  display: none !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="rail-actions"] svg {
+  width: 17px !important;
+  height: 17px !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  stroke-width: 2 !important;
+}
+
+[data-budget-context-rail="true"] [data-context-card="rail-actions"] [data-rail-profile-action="true"] {
+  border-color: #111827 !important;
+  border-radius: 999px !important;
+  background: #111827 !important;
+  color: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 780 !important;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12) !important;
+}
+
+[data-tree-category-grid="true"],
+[data-tree-category-list="true"],
+[data-level1-tree-shell="true"],
+[data-level1-header-grid="true"] {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+[data-level1-header-grid="true"] {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+}
+
+[data-level1-header-grid="true"] > div {
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"] {
+  min-height: 136px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: start !important;
+  padding: 18px !important;
+  overflow: hidden !important;
+  border-radius: 18px !important;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"]::after {
+  opacity: 0.08 !important;
+  transform: scale(0.78) rotate(-10deg) !important;
+}
+
+[data-level1-header-grid="true"] [data-category-drag-row="true"] > :first-child {
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: auto auto minmax(0, 1fr) !important;
+  align-items: start !important;
+  gap: 10px !important;
+}
+
+[data-level1-title-block="true"] {
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 12px !important;
+}
+
+[data-level1-title-block="true"] > div:first-child {
+  overflow: visible !important;
+  color: #172033 !important;
+  font-size: 20px !important;
+  font-weight: 780 !important;
+  line-height: 1.1 !important;
+  white-space: nowrap !important;
+  text-overflow: clip !important;
+}
+
+[data-level1-summary="true"] strong {
+  display: block !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: clamp(23px, 2vw, 32px) !important;
+  line-height: 1.05 !important;
+}
+
+[data-level1-toggle-icon="true"],
+[data-category-toggle-icon="true"] {
+  width: 24px !important;
+  height: 24px !important;
+  display: grid !important;
+  place-items: center !important;
+  color: #64748b !important;
+}
+
+[data-category-quick-add="true"],
+[data-level1-action-menu-trigger="true"],
+[data-mobile-category-menu="true"] > summary {
+  width: 30px !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 0 !important;
+  border-radius: 9px !important;
+  font-size: 0 !important;
+}
+
+[data-category-quick-add="true"] svg,
+[data-category-drag-handle="true"] svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+[data-level1-content-stack="true"] {
+  width: 100% !important;
+  display: grid !important;
+  gap: 12px !important;
+}
+
+[data-level1-expanded-content="true"] {
+  width: 100% !important;
+}
+
+[data-level1-expanded-content="true"][data-level1-kind="income"] {
+  border-left: 3px solid rgba(34, 197, 94, 0.38) !important;
+}
+
+[data-level1-expanded-content="true"][data-level1-kind="expense"] {
+  border-left: 3px solid rgba(244, 63, 94, 0.34) !important;
+}
+
+[data-transaction-day-entry="true"] {
+  display: grid;
+}
+
+[data-transaction-day-header="true"] {
+  padding: 9px 4px 5px;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 760;
+  text-transform: uppercase;
+  letter-spacing: 0;
 }
 
 
@@ -4602,7 +7514,9 @@ PLIK: components\BudgetAppController.tsx
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import BudgetPageMainPanels, { type BudgetUtilityPanel } from './BudgetPageMainPanels'
+import BudgetRightRail from './BudgetRightRail'
 import DashboardPanel from './DashboardPanel'
+import MainWorkspaceBottomDeck from './MainWorkspaceBottomDeck'
 import BudgetPageOverlays from './BudgetPageOverlays'
 import BudgetPageStatusPanels from './BudgetPageStatusPanels'
 import BudgetLimitEditorModal from './BudgetLimitEditorModal'
@@ -5276,6 +8190,43 @@ export default function BudgetAppController({
   }, [
     addableTransactionCategoryIds,
     getRootLevel1IdForCategory,
+    pinnedCategoryIds,
+    transactionCategoryPathLabels,
+  ])
+
+  const pinnedWorkspaceCategories = useMemo(() => {
+    const categoryNameCounts = categories.reduce<Record<string, number>>((acc, category) => {
+      acc[category.name] = (acc[category.name] || 0) + 1
+      return acc
+    }, {})
+
+    return pinnedCategoryIds
+      .filter((categoryId) => addableTransactionCategoryIds.has(categoryId) && categoriesById[categoryId])
+      .slice(0, 5)
+      .map((categoryId) => {
+        const category = categoriesById[categoryId]
+        const rootId = getRootLevel1IdForCategory(categoryId)
+        const isDuplicateName = categoryNameCounts[category.name] > 1
+        const label = isDuplicateName
+          ? transactionCategoryPathLabels[categoryId] || getCategoryPathLabel(categoryId, categoriesById)
+          : category.name
+
+        return {
+          id: categoryId,
+          label,
+          kind: rootId === expenseLevel1Id ? ('expense' as const) : ('income' as const),
+          amount: getSumForCategoryForSelectedMonth(categoryId),
+          transactionCount: getCategoryCountForSelectedMonth(categoryId),
+        }
+      })
+  }, [
+    addableTransactionCategoryIds,
+    categories,
+    categoriesById,
+    expenseLevel1Id,
+    getCategoryCountForSelectedMonth,
+    getRootLevel1IdForCategory,
+    getSumForCategoryForSelectedMonth,
     pinnedCategoryIds,
     transactionCategoryPathLabels,
   ])
@@ -6099,7 +9050,7 @@ export default function BudgetAppController({
       .map((transaction) => ({
         id: transaction.id,
         amount: String(getAmountNumber(transaction.amount)),
-        kind: getSignedAmountForTransaction(transaction) >= 0 ? 'income' : 'expense',
+        kind: getSignedAmountForTransaction(transaction) >= 0 ? ('income' as const) : ('expense' as const),
         date: transaction.day_is_null ? `${transaction.date.slice(0, 7)} · bez dnia` : transaction.date,
         description: transaction.description || '',
         categoryLabel: categoriesById[transaction.category_id]
@@ -6107,6 +9058,26 @@ export default function BudgetAppController({
           : 'Kategoria niedostępna',
       }))
   }, [categoriesById, getSignedAmountForTransaction, scopedTransactions])
+
+  const totalBudgetBalance = useMemo(() => {
+    return scopedTransactions
+      .filter((transaction) => !transaction.is_deleted)
+      .reduce((sum, transaction) => sum + getSignedAmountForTransaction(transaction), 0)
+  }, [getSignedAmountForTransaction, scopedTransactions])
+
+  const selectedMonthIncomeTotal = useMemo(() => {
+    return selectedMonthTransactions.reduce((sum, transaction) => {
+      const signedAmount = getSignedAmountForTransaction(transaction)
+      return signedAmount > 0 ? sum + signedAmount : sum
+    }, 0)
+  }, [getSignedAmountForTransaction, selectedMonthTransactions])
+
+  const selectedMonthExpenseTotal = useMemo(() => {
+    return selectedMonthTransactions.reduce((sum, transaction) => {
+      const signedAmount = getSignedAmountForTransaction(transaction)
+      return signedAmount < 0 ? sum + Math.abs(signedAmount) : sum
+    }, 0)
+  }, [getSignedAmountForTransaction, selectedMonthTransactions])
 
   const budgetPageOverlayProps = useBudgetPageOverlayProps({
     canCreateTransactions,
@@ -6792,68 +9763,17 @@ export default function BudgetAppController({
             </div>
           ),
           workspaceBottomContent: (
-            <section data-core-workspace-footer="true" aria-label="Ostatnie wpisy i narzędzia">
-              <div data-workspace-month-switch="true">
-                <button
-                  type="button"
-                  onClick={goToPrevMonth}
-                  disabled={isPrevMonthNavigationBlocked}
-                  aria-label="Poprzedni miesiac"
-                >
-                  ‹
-                </button>
-                <span>{selectedMonth}</span>
-                <button
-                  type="button"
-                  onClick={goToNextMonth}
-                  disabled={isNextMonthNavigationBlocked}
-                  aria-label="Nastepny miesiac"
-                >
-                  ›
-                </button>
-              </div>
-
-              <div data-workspace-recent-table="true">
-                <div data-workspace-recent-header="true">
-                  <span>Ostatnie wpisy</span>
-                  <small>{recentTransactionPreviews.length} w podglądzie</small>
-                </div>
-                <div data-workspace-recent-rows="true">
-                  {recentTransactionPreviews.length === 0 ? (
-                    <small>Brak wpisów w tym zakresie.</small>
-                  ) : (
-                    recentTransactionPreviews.slice(0, 6).map((transaction) => (
-                      <button
-                        key={transaction.id}
-                        type="button"
-                        data-workspace-recent-row="true"
-                        data-transaction-kind={transaction.kind}
-                        onClick={() => {
-                          setActiveUtilityPanel('search')
-                          handleBankSearchFieldChange('description', transaction.description)
-                        }}
-                      >
-                        <b>{transaction.amount} zł</b>
-                        <span>{transaction.description || 'Bez opisu'}</span>
-                        <small>{transaction.categoryLabel}</small>
-                        <time>{transaction.date}</time>
-                      </button>
-                    ))
-                  )}
-                </div>
-              </div>
-
-              <button
-                type="button"
-                data-workspace-trash-chip="true"
-                onClick={() => setActiveUtilityPanel('trash')}
-                aria-label={`Kosz, liczba elementów: ${trashedTransactions.length}`}
-              >
-                <span aria-hidden="true">⌫</span>
-                <b>{trashedTransactions.length}</b>
-                <small>Kosz</small>
-              </button>
-            </section>
+            <MainWorkspaceBottomDeck
+              selectedMonth={selectedMonth}
+              calendarDays={contextCalendarDays}
+              recentTransactions={recentTransactionPreviews}
+              pinnedCategories={pinnedWorkspaceCategories}
+              trashedCount={trashedTransactions.length}
+              onOpenMonthCalendar={() => setActiveUtilityPanel('monthCalendar')}
+              onOpenDay={(dayText) => handleOpenGlobalCalendarAddForDay(dayText)}
+              onOpenPinnedCategory={openTransactionCreator}
+              onOpenTrash={() => setActiveUtilityPanel('trash')}
+            />
           ),
         }}
         hiddenCategoriesPanelProps={{
@@ -6874,200 +9794,24 @@ export default function BudgetAppController({
           styles,
         }}
       />
-          <section data-core-workspace-footer="true" aria-label="Dolny kontekst workspace">
-            <div data-workspace-month-switch="true">
-              <button
-                type="button"
-                onClick={goToPrevMonth}
-                disabled={isPrevMonthNavigationBlocked}
-                aria-label="Poprzedni miesiac"
-              >
-                ‹
-              </button>
-              <span>{selectedMonth}</span>
-              <button
-                type="button"
-                onClick={goToNextMonth}
-                disabled={isNextMonthNavigationBlocked}
-                aria-label="Nastepny miesiac"
-              >
-                ›
-              </button>
-            </div>
-
-            <div data-workspace-bottom-feed="true">
-              <span>Ostatnie</span>
-              {recentTransactionPreviews.slice(0, 3).map((transaction) => (
-                <button
-                  key={transaction.id}
-                  type="button"
-                  data-transaction-kind={transaction.kind}
-                  onClick={() => {
-                    setActiveUtilityPanel('search')
-                    handleBankSearchFieldChange('description', transaction.description)
-                  }}
-                >
-                  <b>{transaction.amount} zl</b>
-                  <small>{transaction.description || 'Bez opisu'}</small>
-                </button>
-              ))}
-            </div>
-
-            <button
-              type="button"
-              data-workspace-trash-chip="true"
-              onClick={() => setActiveUtilityPanel('trash')}
-            >
-              <span>Trash</span>
-              <b>{trashedTransactions.length}</b>
-              <small>Kosz</small>
-            </button>
-          </section>
-          <section data-lower-workspace="true" aria-label="Dolny kontekst workspace">
-            <div data-workspace-insight-card="true">
-              <span>Ostatnie wpisy</span>
-              <strong>{recentTransactionPreviews.length}</strong>
-              <small>najnowsze operacje w budżecie</small>
-            </div>
-            <div data-workspace-insight-card="true">
-              <span>Aktywne kategorie</span>
-              <strong>{visibleCategories.length}</strong>
-              <small>widoczne w tym miesiącu</small>
-            </div>
-            <div data-workspace-insight-card="true">
-              <span>Szybkie akcje</span>
-              <div data-workspace-quick-actions="true">
-                <button type="button" onClick={() => openBlankFloatingTransactionCreator(null)}>
-                  Dodaj wpis
-                </button>
-                <button type="button" onClick={() => setActiveUtilityPanel('search')}>
-                  Szukaj
-                </button>
-                <button type="button" onClick={() => setActiveUtilityPanel('monthCalendar')}>
-                  Kalendarz
-                </button>
-              </div>
-            </div>
-          </section>
         </div>
 
-        <aside data-budget-context-rail="true" aria-label="Kontekst workspace">
-          <section data-context-card="summary">
-            <div>
-              <span>Miesiąc</span>
-              <strong>{selectedMonth}</strong>
-            </div>
-            <em>{isSelectedMonthLocked ? 'zamknięty' : 'otwarty'}</em>
-          </section>
-
-          <section data-context-card="metrics">
-            <div data-context-metric="true">
-              <span>Wpisy</span>
-              <strong>{selectedMonthTransactions.length}</strong>
-            </div>
-            <div data-context-metric="true">
-              <span>Kategorie</span>
-              <strong>{visibleCategories.length}</strong>
-            </div>
-          </section>
-
-          <section data-context-card="calendar">
-            <div data-context-card-header="true">
-              <span>Mini kalendarz</span>
-              <button type="button" onClick={() => setActiveUtilityPanel('monthCalendar')}>
-                Otwórz
-              </button>
-            </div>
-            <div data-mini-calendar="true">
-              {['P', 'W', 'Ś', 'C', 'P', 'S', 'N'].map((dayLabel) => (
-                <small key={dayLabel}>{dayLabel}</small>
-              ))}
-              {contextCalendarDays.map((dayNumber, index) =>
-                dayNumber ? (
-                  <button
-                    key={`${selectedMonth}-${dayNumber}`}
-                    type="button"
-                    onClick={() => handleOpenGlobalCalendarAddForDay(String(dayNumber))}
-                  >
-                    {dayNumber}
-                  </button>
-                ) : (
-                  <i key={`empty-${index}`} />
-                )
-              )}
-            </div>
-          </section>
-
-          <section data-context-card="live">
-            <div data-context-card-header="true">
-              <span>Dzisiaj / Teraz / Podgląd</span>
-              <small>Podgląd</small>
-            </div>
-            <div data-live-widget-card="true">
-              <strong>
-                {previousMonthCloseReminder
-                  ? 'Alert miesiąca'
-                  : recentTransactionPreviews.length > 0
-                    ? 'Najnowsza aktywność'
-                    : 'Status workspace'}
-              </strong>
-              <p>
-                {previousMonthCloseReminder
-                  ? `Poprzedni miesiąc ${previousMonthCloseReminder} czeka na zamknięcie.`
-                  : recentTransactionPreviews.length > 0
-                    ? `${recentTransactionPreviews[0].description || 'Bez opisu'} / ${recentTransactionPreviews[0].amount} zł`
-                    : 'Brak nowych wpisów w podglądzie.'}
-              </p>
-              <div data-live-widget-meta="true">
-                <span>{drafts.length} szkice</span>
-                <span>{selectedMonthTransactions.length} wpisy</span>
-                <span>{isSelectedMonthLocked ? 'zamknięty' : 'otwarty'}</span>
-              </div>
-              <div data-live-widget-dots="true" aria-label="Rotacja podglądu">
-                <i data-active="true" />
-                <i />
-                <i />
-              </div>
-            </div>
-          </section>
-
-          <section data-context-card="activity">
-            <span>Ostatnio dodane</span>
-            {recentTransactionPreviews.length === 0 ? (
-              <small>Brak wpisów</small>
-            ) : (
-              recentTransactionPreviews.slice(0, 5).map((transaction) => (
-                <div
-                  key={transaction.id}
-                  data-context-activity-row="true"
-                  data-transaction-kind={transaction.kind}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => {
-                    setActiveUtilityPanel('search')
-                    handleBankSearchFieldChange('description', transaction.description)
-                  }}
-                  onKeyDown={(event) => {
-                    if (event.key !== 'Enter' && event.key !== ' ') {
-                      return
-                    }
-
-                    event.preventDefault()
-                    setActiveUtilityPanel('search')
-                    handleBankSearchFieldChange('description', transaction.description)
-                  }}
-                >
-                  <b>{transaction.amount} zł</b>
-                  <div data-context-activity-copy="true">
-                    <strong>{transaction.description || 'Bez opisu'}</strong>
-                    <small>{transaction.categoryLabel}</small>
-                  </div>
-                  <time>{transaction.date}</time>
-                </div>
-              ))
-            )}
-          </section>
-        </aside>
+        <BudgetRightRail
+          selectedMonth={selectedMonth}
+          isSelectedMonthLocked={isSelectedMonthLocked}
+          transactionCount={selectedMonthTransactions.length}
+          categoryCount={visibleCategories.length}
+          balance={totalBudgetBalance}
+          incomeTotal={selectedMonthIncomeTotal}
+          expenseTotal={selectedMonthExpenseTotal}
+          draftCount={drafts.length}
+          recurringCount={recurringTransactions.length}
+          showRecurring={effectiveVisibleModules.recurringTransactions}
+          onOpenSearch={() => setActiveUtilityPanel('search')}
+          onOpenNotifications={() => setActiveUtilityPanel('recurringTransactions')}
+          onQuickAdd={() => openBlankFloatingTransactionCreator(null)}
+          onToggleProfile={() => setIsSettingsPanelVisible((previousValue) => !previousValue)}
+        />
       </section>
 
       {isDashboardPanelOpen && (
@@ -7879,7 +10623,16 @@ export default function BudgetCategoryTree(props: Props) {
         onPointerDown={(event) => event.stopPropagation()}
         onClick={(event) => event.stopPropagation()}
       >
-        ::
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <path
+            d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="3"
+          />
+        </svg>
       </button>
     )
   }
@@ -7888,129 +10641,96 @@ export default function BudgetCategoryTree(props: Props) {
     const canUseBudgetLimit =
       level1Category.id === expenseLevel1Id && Boolean(getBudgetLimitView && onEditBudgetLimit)
     const budgetLimitView = canUseBudgetLimit ? getBudgetLimitView?.(null) ?? null : null
-    const hasLevel2Children = getSortedLevel2Children(level1Category.id).length > 0
 
     return (
       <>
-        {canUseMonthCalendar && (
-          <button
-            type="button"
-            data-category-secondary-action="true"
-            style={styles.secondaryButton}
-            onMouseDown={(event) => event.stopPropagation()}
-            onPointerDown={(event) => event.stopPropagation()}
-            onClick={(event) => {
-              event.stopPropagation()
-              toggleLevel1Calendar(level1Category.id)
-            }}
-          >
-            {isLevel1CalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
-          </button>
-        )}
-
-        {canUseBudgetLimit && onEditBudgetLimit && (
-          <button
-            type="button"
-            data-category-secondary-action="true"
-            style={styles.secondaryButton}
-            onMouseDown={(event) => event.stopPropagation()}
-            onPointerDown={(event) => event.stopPropagation()}
-            onClick={(event) => {
-              event.stopPropagation()
-              onEditBudgetLimit(null)
-            }}
-          >
-            {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
-          </button>
-        )}
-
-        {!hasLevel2Children && !isSelectedMonthLocked && (
+        {!isSelectedMonthLocked && (
           <button
             type="button"
             data-category-quick-add="true"
-            style={styles.primaryButton}
+            style={styles.secondaryButton}
+            aria-label={`Dodaj wpis: ${level1Category.name}`}
+            title="Dodaj wpis"
             onMouseDown={(event) => event.stopPropagation()}
             onPointerDown={(event) => event.stopPropagation()}
             onClick={(event) => {
               event.stopPropagation()
-              openLevel1InlineAdd(level1Category.id)
+              openTransactionCreator(level1Category.id)
             }}
           >
-            ✎
+            <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true">
+              <path
+                d="M12 20h9"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.9"
+              />
+              <path
+                d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.9"
+              />
+            </svg>
           </button>
         )}
 
-        <button
-          type="button"
-          data-category-secondary-action="true"
-          style={styles.primaryButton}
-          onMouseDown={(event) => event.stopPropagation()}
-          onPointerDown={(event) => event.stopPropagation()}
-          onClick={(event) => {
-            event.stopPropagation()
-            setOpenAddSubcategoryFor(level1Category.id)
-            setNewSubcategoryName('')
-
-            if (!openLevel1Ids.includes(level1Category.id)) {
-              toggleLevel1(level1Category.id)
-            }
-          }}
+        <details
+          data-mobile-category-menu="true"
+          data-floating-dropdown="true"
+          onClick={(event) => event.stopPropagation()}
         >
-          Dodaj kategorię
-        </button>
+          <summary style={styles.secondaryButton} aria-label={`Menu kategorii ${level1Category.name}`}>
+            ⋯
+          </summary>
+          <div data-mobile-category-menu-panel="true">
+            <button
+              type="button"
+              style={styles.secondaryButton}
+              onClick={(event) => {
+                event.stopPropagation()
+                setOpenAddSubcategoryFor(level1Category.id)
+                setNewSubcategoryName('')
 
-        {(canUseMonthCalendar || (canUseBudgetLimit && onEditBudgetLimit)) && (
-          <details
-            data-mobile-category-menu="true"
-            data-floating-dropdown="true"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <summary style={styles.secondaryButton}>⋯</summary>
-            <div data-mobile-category-menu-panel="true">
+                if (!openLevel1Ids.includes(level1Category.id)) {
+                  toggleLevel1(level1Category.id)
+                }
+              }}
+            >
+              Dodaj kategorię
+            </button>
+
+            {canUseMonthCalendar && (
               <button
                 type="button"
                 style={styles.secondaryButton}
                 onClick={(event) => {
                   event.stopPropagation()
-                  setOpenAddSubcategoryFor(level1Category.id)
-                  setNewSubcategoryName('')
-
-                  if (!openLevel1Ids.includes(level1Category.id)) {
-                    toggleLevel1(level1Category.id)
-                  }
+                  toggleLevel1Calendar(level1Category.id)
                 }}
               >
-                Dodaj kategorię
+                {isLevel1CalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
               </button>
+            )}
 
-              {canUseMonthCalendar && (
-                <button
-                  type="button"
-                  style={styles.secondaryButton}
-                  onClick={(event) => {
-                    event.stopPropagation()
-                    toggleLevel1Calendar(level1Category.id)
-                  }}
-                >
-                  {isLevel1CalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
-                </button>
-              )}
-
-              {canUseBudgetLimit && onEditBudgetLimit && (
-                <button
-                  type="button"
-                  style={styles.secondaryButton}
-                  onClick={(event) => {
-                    event.stopPropagation()
-                    onEditBudgetLimit(null)
-                  }}
-                >
-                  {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
-                </button>
-              )}
-            </div>
-          </details>
-        )}
+            {canUseBudgetLimit && onEditBudgetLimit && (
+              <button
+                type="button"
+                style={styles.secondaryButton}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  onEditBudgetLimit(null)
+                }}
+              >
+                {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
+              </button>
+            )}
+          </div>
+        </details>
       </>
     )
   }
@@ -8091,6 +10811,29 @@ export default function BudgetCategoryTree(props: Props) {
     transactionCount: getTransactionsForLevel1AndMonth(level1Category.id).length,
     childCount: getSortedLevel2Children(level1Category.id).length,
   })
+  const getLevel1Kind = (level1Category: Category) =>
+    level1Category.id === expenseLevel1Id ? 'expense' : 'income'
+
+  const renderLevel1Content = (level1Category: Category) => {
+    const isLevel1Open = openLevel1Ids.includes(level1Category.id)
+    const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
+
+    if (!isLevel1Open && !(canUseMonthCalendar && isLevel1CalendarOpen)) {
+      return null
+    }
+
+    return (
+      <section
+        key={`content-${level1Category.id}`}
+        data-level1-expanded-content="true"
+        data-level1-kind={getLevel1Kind(level1Category)}
+      >
+        {canUseMonthCalendar && isLevel1CalendarOpen && renderLevel1CalendarPanel(level1Category)}
+        {renderAddSubcategoryForm(level1Category.id, 'Nazwa kategorii')}
+        {isLevel1Open ? renderLevel2List(level1Category) : null}
+      </section>
+    )
+  }
 
   const isLevel1DndBlocked =
     isReorderingLevel1 || sortedLevel1.some((category) => openLevel1Ids.includes(category.id))
@@ -8098,9 +10841,10 @@ export default function BudgetCategoryTree(props: Props) {
 
   if (isLevel1DndBlocked) {
     return (
-      <div>
-        {sortedLevel1.map((level1Category) => {
-          const isLevel1Open = openLevel1Ids.includes(level1Category.id)
+      <div data-level1-tree-shell="true">
+        <div data-level1-header-grid="true">
+          {sortedLevel1.map((level1Category) => {
+            const isLevel1Open = openLevel1Ids.includes(level1Category.id)
           const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
 
           return (
@@ -8110,6 +10854,7 @@ export default function BudgetCategoryTree(props: Props) {
               isOpen={isLevel1Open}
               onToggle={() => toggleLevel1(level1Category.id)}
               styles={styles}
+              kind={getLevel1Kind(level1Category)}
               summary={getLevel1Summary(level1Category)}
               dragHandle={renderBlockedLevel1DragHandle(level1Category, isLevel1Sortable)}
               extraActions={renderLevel1Actions(level1Category, isLevel1CalendarOpen)}
@@ -8118,50 +10863,50 @@ export default function BudgetCategoryTree(props: Props) {
                   <BudgetLimitIndicator view={getBudgetLimitView?.(null) ?? null} />
                 ) : null
               }
-            >
-              {canUseMonthCalendar && isLevel1CalendarOpen && renderLevel1CalendarPanel(level1Category)}
-              {renderAddSubcategoryForm(level1Category.id, 'Nazwa kategorii')}
-              {isLevel1Open ? renderLevel2List(level1Category) : null}
-            </StaticLevel1Card>
+            />
           )
         })}
+        </div>
+        <div data-level1-content-stack="true">{sortedLevel1.map(renderLevel1Content)}</div>
       </div>
     )
   }
 
   return (
-    <DndContext
-      sensors={dndSensors}
-      collisionDetection={closestCenter}
-      onDragStart={() => {
-        handleLevel1DragStart()
-      }}
-      onDragEnd={async (event: DragEndEvent) => {
-        const { active, over } = event
+    <div data-level1-tree-shell="true">
+      <DndContext
+        sensors={dndSensors}
+        collisionDetection={closestCenter}
+        onDragStart={() => {
+          handleLevel1DragStart()
+        }}
+        onDragEnd={async (event: DragEndEvent) => {
+          const { active, over } = event
 
-        if (!over || active.id === over.id) {
-          return
-        }
+          if (!over || active.id === over.id) {
+            return
+          }
 
-        const level1Ids = sortedLevel1.map((category) => category.id)
-        await handleReorderLevel1(
-          String(active.id),
-          getNearestDndSwapTargetId(
-            level1Ids,
+          const level1Ids = sortedLevel1.map((category) => category.id)
+          await handleReorderLevel1(
             String(active.id),
-            String(over.id),
-            isMobileViewport
+            getNearestDndSwapTargetId(
+              level1Ids,
+              String(active.id),
+              String(over.id),
+              isMobileViewport
+            )
           )
-        )
-      }}
-    >
-      <SortableContext
-        items={sortedLevel1.map((category) => category.id)}
-        strategy={verticalListSortingStrategy}
+        }}
       >
-        {sortedLevel1.map((level1Category) => {
-          const isLevel1Open = openLevel1Ids.includes(level1Category.id)
-          const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
+        <SortableContext
+          items={sortedLevel1.map((category) => category.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div data-level1-header-grid="true">
+            {sortedLevel1.map((level1Category) => {
+              const isLevel1Open = openLevel1Ids.includes(level1Category.id)
+              const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
 
           return (
             <SortableLevel1Card
@@ -8171,6 +10916,7 @@ export default function BudgetCategoryTree(props: Props) {
               onToggle={() => toggleLevel1(level1Category.id)}
               isSortable={isLevel1Sortable}
               styles={styles}
+              kind={getLevel1Kind(level1Category)}
               summary={getLevel1Summary(level1Category)}
               extraActions={renderLevel1Actions(level1Category, isLevel1CalendarOpen)}
               limitIndicator={
@@ -8178,15 +10924,14 @@ export default function BudgetCategoryTree(props: Props) {
                   <BudgetLimitIndicator view={getBudgetLimitView?.(null) ?? null} />
                 ) : null
               }
-            >
-              {canUseMonthCalendar && isLevel1CalendarOpen && renderLevel1CalendarPanel(level1Category)}
-              {renderAddSubcategoryForm(level1Category.id, 'Nazwa kategorii')}
-              {isLevel1Open ? renderLevel2List(level1Category) : null}
-            </SortableLevel1Card>
+            />
           )
         })}
-      </SortableContext>
-    </DndContext>
+          </div>
+        </SortableContext>
+      </DndContext>
+      <div data-level1-content-stack="true">{sortedLevel1.map(renderLevel1Content)}</div>
+    </div>
   )
 }
 
@@ -9956,6 +12701,172 @@ export default function BudgetPageStatusPanels({
 
 
 ==================================================
+PLIK: components\BudgetRightRail.tsx
+==================================================
+
+'use client'
+
+type Props = {
+  selectedMonth: string
+  isSelectedMonthLocked: boolean
+  transactionCount: number
+  categoryCount: number
+  balance: number
+  incomeTotal: number
+  expenseTotal: number
+  draftCount: number
+  recurringCount: number
+  showRecurring: boolean
+  onOpenSearch: () => void
+  onOpenNotifications: () => void
+  onQuickAdd: () => void
+  onToggleProfile: () => void
+}
+
+export default function BudgetRightRail({
+  selectedMonth,
+  isSelectedMonthLocked,
+  transactionCount,
+  categoryCount,
+  balance,
+  incomeTotal,
+  expenseTotal,
+  draftCount,
+  recurringCount,
+  showRecurring,
+  onOpenSearch,
+  onOpenNotifications,
+  onQuickAdd,
+  onToggleProfile,
+}: Props) {
+  const balanceState = balance > 0 ? 'positive' : balance < 0 ? 'negative' : 'neutral'
+  const hasOverviewData = incomeTotal > 0 || expenseTotal > 0
+  const totalFlow = incomeTotal + expenseTotal
+  const incomeShare = totalFlow > 0 ? Math.round((incomeTotal / totalFlow) * 100) : 0
+  const expenseShare = totalFlow > 0 ? 100 - incomeShare : 0
+
+  return (
+    <aside data-budget-context-rail="true" aria-label="Kontekst workspace">
+      <section data-context-card="rail-actions" aria-label="Akcje">
+        <button type="button" aria-label="Szukaj" title="Szukaj" onClick={onOpenSearch}>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="6" />
+            <path d="m16 16 4 4" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          aria-label="Powiadomienia"
+          title="Powiadomienia"
+          disabled={!showRecurring}
+          onClick={onOpenNotifications}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6.5 10a5.5 5.5 0 0 1 11 0c0 5 1.7 5.8 2.2 7H4.3c.5-1.2 2.2-2 2.2-7Z" />
+            <path d="M10 20h4" />
+          </svg>
+        </button>
+        <button type="button" aria-label="Dodaj wpis" title="Dodaj wpis" onClick={onQuickAdd}>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          aria-label="Profil"
+          title="Profil"
+          data-rail-profile-action="true"
+          onClick={onToggleProfile}
+        >
+          P
+        </button>
+      </section>
+
+      <section data-context-card="summary">
+        <div>
+          <span>Miesiąc</span>
+          <strong>{selectedMonth}</strong>
+        </div>
+        <em>{isSelectedMonthLocked ? 'zamknięty' : 'otwarty'}</em>
+      </section>
+
+      <section data-context-card="metrics">
+        <div data-context-metric="true">
+          <span>Wpisy</span>
+          <strong>{transactionCount}</strong>
+        </div>
+        <div data-context-metric="true">
+          <span>Kategorie</span>
+          <strong>{categoryCount}</strong>
+        </div>
+        <div data-context-metric="true" data-balance-state={balanceState}>
+          <span>Bilans</span>
+          <strong>{balance.toLocaleString('pl-PL')}</strong>
+        </div>
+        <div data-context-metric="true">
+          <span>Szkice</span>
+          <strong>{draftCount}</strong>
+        </div>
+      </section>
+
+      <section data-context-card="live">
+        <div data-context-card-header="true">
+          <span>Przegląd miesiąca</span>
+          <small>{selectedMonth}</small>
+        </div>
+        <div data-live-widget-card="true">
+          {hasOverviewData ? (
+            <>
+              <div data-live-widget-totals="true">
+                <div>
+                  <span>Wpływy</span>
+                  <strong>{incomeTotal.toLocaleString('pl-PL')} zł</strong>
+                </div>
+                <div>
+                  <span>Wydatki</span>
+                  <strong>{expenseTotal.toLocaleString('pl-PL')} zł</strong>
+                </div>
+                <div data-balance-state={balanceState}>
+                  <span>Bilans</span>
+                  <strong>{balance.toLocaleString('pl-PL')} zł</strong>
+                </div>
+              </div>
+              <div data-live-widget-flow="true" aria-label="Wpływy kontra wydatki">
+                <i style={{ width: `${incomeShare}%` }} data-flow-kind="income" />
+                <i style={{ width: `${expenseShare}%` }} data-flow-kind="expense" />
+              </div>
+              <div data-live-widget-meta="true">
+                <span>{transactionCount} wpisy</span>
+                <span>{isSelectedMonthLocked ? 'zamknięty' : 'otwarty'}</span>
+              </div>
+            </>
+          ) : (
+            <div data-live-widget-empty="true">
+              <strong>Brak danych do podglądu</strong>
+              <p>Dodaj wpisy, aby zobaczyć przegląd miesiąca.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section data-context-card="upcoming">
+        <div data-context-card-header="true">
+          <span>Nadchodzące płatności</span>
+          <small>{showRecurring ? `${recurringCount}` : '0'}</small>
+        </div>
+        <p>
+          {showRecurring && recurringCount > 0
+            ? 'Moduł przypomnień ma aktywne pozycje do sprawdzenia.'
+            : 'Brak aktywnych płatności w podglądzie.'}
+        </p>
+      </section>
+    </aside>
+  )
+}
+
+
+
+==================================================
 PLIK: components\BudgetTreeSection.tsx
 ==================================================
 
@@ -10173,22 +13084,9 @@ export default function BudgetTreeSection({
   workspaceTopContent,
   workspaceBottomContent,
 }: Props) {
-  const visibleTopLevelCount = sortedLevel1.length
-  const visibleTransactionCount = sortedLevel1.reduce(
-    (sum, category) => sum + getTransactionsForLevel1AndMonth(category.id).length,
-    0
-  )
-
   return (
     <div data-budget-tree-workspace="true">
       <div data-budget-tree-toolbar="true">
-        <div>
-          <div data-tree-workspace-label="true">Kategorie</div>
-          <p>
-            {selectedMonth} / {visibleTopLevelCount} sekcje / {visibleTransactionCount} wpisy
-          </p>
-        </div>
-
         <div data-tree-toolbar-actions="true">
           {onAddIncome && (
             <button
@@ -10231,77 +13129,99 @@ export default function BudgetTreeSection({
               aria-label="Kalendarz"
               title="Kalendarz"
             >
-              ◷
+              <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
+                <rect
+                  x="4"
+                  y="5"
+                  width="16"
+                  height="15"
+                  rx="2"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                />
+                <path
+                  d="M8 3v4M16 3v4M4 10h16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.8"
+                />
+              </svg>
             </button>
           )}
 
-      <details data-tree-view-menu="true" data-floating-dropdown="true">
-        <summary aria-label="Ustawienia widoku drzewa">⋯</summary>
-      </details>
+          <details data-tree-sort-menu="true" data-floating-dropdown="true">
+            <summary>Sortuj</summary>
+            <div data-tree-sort-inline="true" style={styles.sortBar}>
+              <div style={styles.sortGroup}>
+                <label htmlFor="level2-sort-mode" style={styles.sortLabel}>
+                  Sortowanie L2
+                </label>
+                <select
+                  id="level2-sort-mode"
+                  value={level2SortMode}
+                  onChange={(event) => setLevel2SortMode(event.target.value as SortMode)}
+                  style={styles.input}
+                >
+                  <option value="default">domyślne</option>
+                  <option value="manual">ręczne</option>
+                  <option value="sum">według sumy</option>
+                  <option value="frequency">według częstotliwości</option>
+                </select>
 
-      <div data-tree-sort-inline="true" style={styles.sortBar}>
-        <div style={styles.sortGroup}>
-          <label htmlFor="level2-sort-mode" style={styles.sortLabel}>
-            Sortowanie L2
-          </label>
-          <select
-            id="level2-sort-mode"
-            value={level2SortMode}
-            onChange={(event) => setLevel2SortMode(event.target.value as SortMode)}
-            style={styles.input}
-          >
-            <option value="default">domyślne</option>
-            <option value="manual">ręczne</option>
-            <option value="sum">według sumy</option>
-            <option value="frequency">według częstotliwości</option>
-          </select>
+                <label htmlFor="level2-sort-direction" style={styles.sortLabel}>
+                  Kierunek L2
+                </label>
+                <select
+                  id="level2-sort-direction"
+                  value={level2SortDirection}
+                  onChange={(event) => setLevel2SortDirection(event.target.value as SortDirection)}
+                  style={styles.input}
+                  disabled={level2SortMode !== 'sum' && level2SortMode !== 'frequency'}
+                >
+                  <option value="asc">rosnąco</option>
+                  <option value="desc">malejąco</option>
+                </select>
+              </div>
 
-          <label htmlFor="level2-sort-direction" style={styles.sortLabel}>
-            Kierunek L2
-          </label>
-          <select
-            id="level2-sort-direction"
-            value={level2SortDirection}
-            onChange={(event) => setLevel2SortDirection(event.target.value as SortDirection)}
-            style={styles.input}
-            disabled={level2SortMode !== 'sum' && level2SortMode !== 'frequency'}
-          >
-            <option value="asc">rosnąco</option>
-            <option value="desc">malejąco</option>
-          </select>
-        </div>
+              <div style={styles.sortGroup}>
+                <label htmlFor="level3-sort-mode" style={styles.sortLabel}>
+                  Sortowanie L3
+                </label>
+                <select
+                  id="level3-sort-mode"
+                  value={level3SortMode}
+                  onChange={(event) => setLevel3SortMode(event.target.value as SortMode)}
+                  style={styles.input}
+                >
+                  <option value="default">domyślne</option>
+                  <option value="manual">ręczne</option>
+                  <option value="sum">według sumy</option>
+                  <option value="frequency">według częstotliwości</option>
+                </select>
 
-        <div style={styles.sortGroup}>
-          <label htmlFor="level3-sort-mode" style={styles.sortLabel}>
-            Sortowanie L3
-          </label>
-          <select
-            id="level3-sort-mode"
-            value={level3SortMode}
-            onChange={(event) => setLevel3SortMode(event.target.value as SortMode)}
-            style={styles.input}
-          >
-            <option value="default">domyślne</option>
-            <option value="manual">ręczne</option>
-            <option value="sum">według sumy</option>
-            <option value="frequency">według częstotliwości</option>
-          </select>
+                <label htmlFor="level3-sort-direction" style={styles.sortLabel}>
+                  Kierunek L3
+                </label>
+                <select
+                  id="level3-sort-direction"
+                  value={level3SortDirection}
+                  onChange={(event) => setLevel3SortDirection(event.target.value as SortDirection)}
+                  style={styles.input}
+                  disabled={level3SortMode !== 'sum' && level3SortMode !== 'frequency'}
+                >
+                  <option value="asc">rosnąco</option>
+                  <option value="desc">malejąco</option>
+                </select>
+              </div>
+            </div>
+          </details>
 
-          <label htmlFor="level3-sort-direction" style={styles.sortLabel}>
-            Kierunek L3
-          </label>
-          <select
-            id="level3-sort-direction"
-            value={level3SortDirection}
-            onChange={(event) => setLevel3SortDirection(event.target.value as SortDirection)}
-            style={styles.input}
-            disabled={level3SortMode !== 'sum' && level3SortMode !== 'frequency'}
-          >
-            <option value="asc">rosnąco</option>
-            <option value="desc">malejąco</option>
-          </select>
-        </div>
-      </div>
+          <details data-tree-view-menu="true" data-floating-dropdown="true">
+            <summary aria-label="Ustawienia widoku drzewa">⋯</summary>
+          </details>
 
         </div>
       </div>
@@ -10777,6 +13697,7 @@ type Level3InlineAddFormProps = {
   selectedRecurringTransactionId: string
   setSelectedRecurringTransactionId: Dispatch<SetStateAction<string>>
   isInlineSaving: boolean
+  inlineDayInputRef: RefObject<HTMLInputElement | null>
   inlineAmountInputRef: RefObject<HTMLInputElement | null>
   inlineDescriptionInputRef: RefObject<HTMLInputElement | null>
   filteredInlineSuggestions: DescriptionSuggestion[]
@@ -10822,6 +13743,7 @@ export default function Level3InlineAddForm({
   selectedRecurringTransactionId,
   setSelectedRecurringTransactionId,
   isInlineSaving,
+  inlineDayInputRef,
   inlineAmountInputRef,
   inlineDescriptionInputRef,
   filteredInlineSuggestions,
@@ -10833,7 +13755,6 @@ export default function Level3InlineAddForm({
   handleInlineSuggestionPointerUp,
   handleInlineSuggestionPointerLeave,
   getPaymentSourceOptionsForCategoryId,
-  getDefaultPaymentSourceIdForCategoryId: _getDefaultPaymentSourceIdForCategoryId,
   normalizeAmountInput,
   saveInlineAdd,
   cancelInlineAdd,
@@ -10867,8 +13788,9 @@ export default function Level3InlineAddForm({
   }
 
   return (
-    <div style={styles.formRow}>
+    <div style={styles.formRow} data-inline-entry-form="true">
       <input
+        ref={inlineDayInputRef}
         style={styles.smallInput}
         value={inlineDay}
         onChange={(event) => setInlineDay(normalizeDayInput(event.target.value, selectedMonth))}
@@ -10877,20 +13799,6 @@ export default function Level3InlineAddForm({
         onBlur={() => {
           setInlineDay((prev) => normalizeDayInput(prev, selectedMonth))
         }}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            event.preventDefault()
-            inlineAmountInputRef.current?.focus()
-          }
-        }}
-      />
-
-      <input
-        ref={inlineAmountInputRef}
-        style={styles.smallInput}
-        value={inlineAmount}
-        onChange={(event) => setInlineAmount(normalizeAmountInput(event.target.value))}
-        placeholder="kwota"
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
             event.preventDefault()
@@ -10916,7 +13824,7 @@ export default function Level3InlineAddForm({
 
             if (event.key === 'Enter') {
               event.preventDefault()
-              await saveInlineAdd()
+              inlineAmountInputRef.current?.focus()
             }
           }}
         />
@@ -10961,6 +13869,20 @@ export default function Level3InlineAddForm({
           strzałkami i Enterem, a ukryć prawym przyciskiem albo długim przytrzymaniem.
         </div>
       </div>
+
+      <input
+        ref={inlineAmountInputRef}
+        style={styles.smallInput}
+        value={inlineAmount}
+        onChange={(event) => setInlineAmount(normalizeAmountInput(event.target.value))}
+        placeholder="kwota"
+        onKeyDown={async (event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault()
+            await saveInlineAdd()
+          }
+        }}
+      />
 
       <div style={{ ...inlineDescriptionFieldWrapStyle, minWidth: 180 }}>
         <input
@@ -11153,7 +14075,18 @@ export default function Level3SectionHeader({
       <div style={styles.l2Left}>
         {dragHandle}
 
-        <div style={styles.arrow}>{isOpen ? '▾' : '▸'}</div>
+        <div style={styles.arrow} data-category-toggle-icon="true" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="17" height="17">
+            <path
+              d={isOpen ? 'm7 10 5 5 5-5' : 'm10 7 5 5-5 5'}
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+            />
+          </svg>
+        </div>
 
         <div>
           <div style={styles.l3Name}>{showCategorySum ? `${name} • ${categorySum}` : name}</div>
@@ -11187,11 +14120,29 @@ export default function Level3SectionHeader({
           <button
             data-category-quick-add="true"
             style={styles.primaryButton}
+            aria-label={`Dodaj wpis: ${name}`}
             onClick={() => {
               onInlineAdd()
             }}
           >
-            + wpis
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <path
+                d="M12 20h9"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.9"
+              />
+              <path
+                d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.9"
+              />
+            </svg>
           </button>
         )}
 
@@ -25286,6 +28237,7 @@ type BaseProps = {
   headerDragProps?: HTMLAttributes<HTMLDivElement>
   extraActions?: ReactNode
   limitIndicator?: ReactNode
+  kind?: 'income' | 'expense' | 'neutral'
   summary?: {
     amount: number
     transactionCount: number
@@ -25308,6 +28260,7 @@ function Level1CardBase(props: BaseProps) {
     headerDragProps,
     extraActions,
     limitIndicator,
+    kind = 'neutral',
     summary,
   } = props
 
@@ -25315,20 +28268,30 @@ function Level1CardBase(props: BaseProps) {
     <>
       <div
         data-category-drag-row="true"
+        data-level1-kind={kind}
         style={styles.l1Header}
         onClick={onToggle}
         {...headerDragProps}
       >
         <div style={styles.l2Left}>
           {dragHandle}
-          <div style={styles.arrow}>{isOpen ? '▼' : '▶'}</div>
+          <div style={styles.arrow} data-level1-toggle-icon="true" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18">
+              <path
+                d={isOpen ? 'm7 10 5 5 5-5' : 'm10 7 5 5-5 5'}
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+              />
+            </svg>
+          </div>
           <div data-level1-title-block="true">
             <div>{level1Category.name}</div>
             {summary && (
               <div data-level1-summary="true">
-                <strong>{summary.amount.toLocaleString('pl-PL')} zl</strong>
-                <span>{summary.transactionCount} wpisy</span>
-                <span>{summary.childCount} podkategorie</span>
+                <strong>{summary.amount.toLocaleString('pl-PL')} zł</strong>
               </div>
             )}
             {limitIndicator}
@@ -25365,6 +28328,7 @@ export function SortableLevel1Card(props: SortableProps) {
     styles,
     extraActions,
     limitIndicator,
+    kind,
     summary,
   } = props
 
@@ -25409,6 +28373,7 @@ export function SortableLevel1Card(props: SortableProps) {
         }
         extraActions={extraActions}
         limitIndicator={limitIndicator}
+        kind={kind}
         summary={summary}
         dragHandle={
           isSortable && !isMobileViewport ? (
@@ -25423,7 +28388,16 @@ export function SortableLevel1Card(props: SortableProps) {
               {...attributes}
               {...listeners}
             >
-              ::
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                <path
+                  d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="3"
+                />
+              </svg>
             </button>
           ) : undefined
         }
@@ -25883,11 +28857,31 @@ export default function Level2Section(props: Props) {
               {...attributes}
               {...listeners}
             >
-              ::
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                <path
+                  d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="3"
+                />
+              </svg>
             </button>
           )}
 
-          <div style={styles.arrow}>{isOpen ? '▾' : '▸'}</div>
+          <div style={styles.arrow} data-category-toggle-icon="true" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="17" height="17">
+              <path
+                d={isOpen ? 'm7 10 5 5 5-5' : 'm10 7 5 5-5 5'}
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+              />
+            </svg>
+          </div>
 
           <div>
             <div style={styles.l2Name}>{l2.name}</div>
@@ -25950,7 +28944,24 @@ export default function Level2Section(props: Props) {
                 openLevel2InlineAdd()
               }}
             >
-              + wpis
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                <path
+                  d="M12 20h9"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.9"
+                />
+                <path
+                  d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.9"
+                />
+              </svg>
             </button>
           )}
 
@@ -26211,7 +29222,7 @@ PLIK: components\Level3Section.tsx
 
 'use client'
 
-import { CSSProperties, KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { CSSProperties, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import DescriptionSuggestionDeleteMenu from './DescriptionSuggestionDeleteMenu'
@@ -26458,8 +29469,10 @@ export default function Level3Section(props: Props) {
   const [inlineRecurringTransactionId, setInlineRecurringTransactionId] = useState('')
   const [isInlineSaving, setIsInlineSaving] = useState(false)
   const inlineSaveLockRef = useRef(false)
+  const inlineDayInputRef = useRef<HTMLInputElement | null>(null)
   const inlineAmountInputRef = useRef<HTMLInputElement | null>(null)
   const inlineDescriptionInputRef = useRef<HTMLInputElement | null>(null)
+  const editDayInputRef = useRef<HTMLInputElement | null>(null)
 
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
 
@@ -26653,13 +29666,25 @@ export default function Level3Section(props: Props) {
     }
   }
 
-  const openInlineAdd = () => {
+  const openInlineAdd = useCallback(() => {
     setIsInlineAdding(true)
-    setInlineDay('')
-    setInlineAmount('')
-    setInlineDescription('')
-    setInlineTagNames([])
-    setInlineTagInput('')
+    const storageKey = `budget-inline-draft-${l3.id}-${selectedMonth}`
+    const storedDraft = typeof window === 'undefined' ? null : window.localStorage.getItem(storageKey)
+    let parsedDraft: Partial<{ day: string; amount: string; description: string; tags: string }> = {}
+
+    if (storedDraft) {
+      try {
+        parsedDraft = JSON.parse(storedDraft)
+      } catch {
+        parsedDraft = {}
+      }
+    }
+
+    setInlineDay(parsedDraft.day || '')
+    setInlineAmount(parsedDraft.amount || '')
+    setInlineDescription(parsedDraft.description || '')
+    setInlineTagNames(splitTagInput(parsedDraft.tags || ''))
+    setInlineTagInput(parsedDraft.tags || '')
     setInlinePaymentSourceId(
       canUsePaymentSources ? getDefaultPaymentSourceIdForCategoryId?.(l3.id) || '' : ''
     )
@@ -26671,19 +29696,36 @@ export default function Level3Section(props: Props) {
     }
 
     window.setTimeout(() => {
-      inlineAmountInputRef.current?.focus()
+      inlineDayInputRef.current?.focus()
     }, 0)
-  }
+  }, [
+    canUsePaymentSources,
+    getDefaultPaymentSourceIdForCategoryId,
+    isOpen,
+    l3.id,
+    selectedMonth,
+    toggleLevel3,
+  ])
 
   useEffect(() => {
     if (startInlineAddToken <= 0 || isSelectedMonthLocked) {
       return
     }
 
-    openInlineAdd()
-  }, [startInlineAddToken])
+    const timeoutId = window.setTimeout(() => {
+      openInlineAdd()
+    }, 0)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [isSelectedMonthLocked, openInlineAdd, startInlineAddToken])
 
   const cancelInlineAdd = () => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem(`budget-inline-draft-${l3.id}-${selectedMonth}`)
+    }
+
     setIsInlineAdding(false)
     setInlineDay('')
     setInlineAmount('')
@@ -26716,12 +29758,45 @@ export default function Level3Section(props: Props) {
         canUsePaymentSources ? inlinePaymentSplitItems : undefined,
         inlineRecurringTransactionId || null
       )
+      if (typeof window !== 'undefined') {
+        window.localStorage.removeItem(`budget-inline-draft-${l3.id}-${selectedMonth}`)
+      }
       cancelInlineAdd()
     } catch {
       inlineSaveLockRef.current = false
       setIsInlineSaving(false)
     }
   }
+
+  useEffect(() => {
+    if (!isInlineAdding || typeof window === 'undefined') {
+      return
+    }
+
+    const hasDraft =
+      inlineDay.trim() || inlineAmount.trim() || inlineDescription.trim() || inlineTagInput.trim()
+    const storageKey = `budget-inline-draft-${l3.id}-${selectedMonth}`
+    const timeoutId = window.setTimeout(() => {
+      if (!hasDraft) {
+        window.localStorage.removeItem(storageKey)
+        return
+      }
+
+      window.localStorage.setItem(
+        storageKey,
+        JSON.stringify({
+          day: inlineDay,
+          amount: inlineAmount,
+          description: inlineDescription,
+          tags: inlineTagInput,
+        })
+      )
+    }, 450)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [inlineAmount, inlineDay, inlineDescription, inlineTagInput, isInlineAdding, l3.id, selectedMonth])
 
   const orderedTransactions = useMemo(() => {
     return [...transactions].sort((left, right) => {
@@ -26738,6 +29813,15 @@ export default function Level3Section(props: Props) {
 
   const getTransactionDateLabel = (transaction: Transaction) => {
     return transaction.day_is_null ? 'brak dnia' : transaction.date
+  }
+
+  const getTransactionDayGroupLabel = (transaction: Transaction) => {
+    if (transaction.day_is_null) {
+      return 'bez dnia'
+    }
+
+    const dayText = transaction.date.slice(8, 10).replace(/^0/, '')
+    return dayText ? `dzień ${dayText}` : 'bez dnia'
   }
 
   const getTransactionPaymentSourceLabels = (transaction: Transaction) => {
@@ -26801,7 +29885,16 @@ export default function Level3Section(props: Props) {
               {...attributes}
               {...listeners}
             >
-              ::
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                <path
+                  d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="3"
+                />
+              </svg>
             </button>
           ) : null
         }
@@ -26884,22 +29977,32 @@ export default function Level3Section(props: Props) {
               normalizeAmountInput={normalizeAmountInput}
               saveInlineAdd={saveInlineAdd}
               cancelInlineAdd={cancelInlineAdd}
+              inlineDayInputRef={inlineDayInputRef}
               styles={styles}
             />
           )}
 
           {orderedTransactions.length === 0 && <div style={styles.emptyText}>Brak wpisów w tym miesiącu</div>}
 
-          {orderedTransactions.map((transaction) => {
+          {orderedTransactions.map((transaction, index) => {
             const isEditing = editingTransactionId === transaction.id
             const isMovingCurrent = movingTransactionId === transaction.id
             const moveTargets = getMoveTargetsForTransaction(transaction)
             const isSelected = selectedTransactionIds.includes(transaction.id)
             const transactionTags = transactionTagsMap[transaction.id] || []
+            const dayGroupLabel = getTransactionDayGroupLabel(transaction)
+            const previousTransaction = orderedTransactions[index - 1]
+            const shouldShowDayGroup =
+              !previousTransaction ||
+              getTransactionDayGroupLabel(previousTransaction) !== dayGroupLabel
 
             return (
-              <div key={transaction.id} style={styles.transactionRow}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+              <div key={transaction.id} data-transaction-day-entry="true">
+                {shouldShowDayGroup && (
+                  <div data-transaction-day-header="true">{dayGroupLabel}</div>
+                )}
+                <div style={styles.transactionRow}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
                   <input
                     type="checkbox"
                     checked={isSelected}
@@ -26914,6 +30017,7 @@ export default function Level3Section(props: Props) {
                     {isEditing && !isSelectedMonthLocked ? (
                       <>
                         <input
+                          ref={editDayInputRef}
                           style={styles.smallInput}
                           value={editDay}
                           onChange={(event) =>
@@ -26927,19 +30031,8 @@ export default function Level3Section(props: Props) {
                           onKeyDown={(event) => {
                             if (event.key === 'Enter') {
                               event.preventDefault()
-                              editAmountInputRef.current?.focus()
+                              editDescriptionInputRef.current?.focus()
                             }
-                          }}
-                        />
-
-                        <input
-                          ref={editAmountInputRef}
-                          style={styles.smallInput}
-                          value={editAmount}
-                          onChange={(event) => setEditAmount(normalizeAmountInput(event.target.value))}
-                          placeholder="kwota"
-                          onKeyDown={async (event) => {
-                            await handleEditFieldKeyDown(event, transaction.id, 'amount')
                           }}
                         />
 
@@ -26956,7 +30049,20 @@ export default function Level3Section(props: Props) {
                             onFocus={() => setIsEditDescriptionFocused(true)}
                             onBlur={() => setIsEditDescriptionFocused(false)}
                             onKeyDown={async (event) => {
-                              await handleEditFieldKeyDown(event, transaction.id, 'description')
+                              if (handleEditSuggestionKeyDown(event)) {
+                                return
+                              }
+
+                              if (event.key === 'Escape') {
+                                event.preventDefault()
+                                cancelEditingTransaction()
+                                return
+                              }
+
+                              if (event.key === 'Enter' && !event.shiftKey) {
+                                event.preventDefault()
+                                editAmountInputRef.current?.focus()
+                              }
                             }}
                           />
 
@@ -26999,6 +30105,17 @@ export default function Level3Section(props: Props) {
                             </div>
                           )}
                         </div>
+
+                        <input
+                          ref={editAmountInputRef}
+                          style={styles.smallInput}
+                          value={editAmount}
+                          onChange={(event) => setEditAmount(normalizeAmountInput(event.target.value))}
+                          placeholder="kwota"
+                          onKeyDown={async (event) => {
+                            await handleEditFieldKeyDown(event, transaction.id, 'description')
+                          }}
+                        />
 
                         <div style={tagFieldWrapStyle}>
                           <input
@@ -27120,7 +30237,7 @@ export default function Level3Section(props: Props) {
                   </div>
                 </div>
 
-                <div style={styles.actions}>
+                  <div style={styles.actions}>
                   <div style={styles.dateText}>miesiąc: {selectedMonth}</div>
 
                   {isEditing && !isSelectedMonthLocked ? (
@@ -27206,6 +30323,7 @@ export default function Level3Section(props: Props) {
                       </button>
                     </>
                   ) : null}
+                  </div>
                 </div>
               </div>
             )
@@ -27213,6 +30331,189 @@ export default function Level3Section(props: Props) {
         </div>
       )}
     </div>
+  )
+}
+
+
+
+==================================================
+PLIK: components\MainWorkspaceBottomDeck.tsx
+==================================================
+
+'use client'
+
+type CalendarDay = number | null
+
+type RecentTransactionPreview = {
+  id: string
+  amount: string
+  kind: 'income' | 'expense'
+  date: string
+  description: string
+  categoryLabel: string
+}
+
+type PinnedWorkspaceCategory = {
+  id: string
+  label: string
+  kind: 'income' | 'expense'
+  amount: number
+  transactionCount: number
+}
+
+type Props = {
+  selectedMonth: string
+  calendarDays: CalendarDay[]
+  recentTransactions: RecentTransactionPreview[]
+  pinnedCategories: PinnedWorkspaceCategory[]
+  trashedCount: number
+  onOpenMonthCalendar: () => void
+  onOpenDay: (dayText: string) => void
+  onOpenPinnedCategory: (categoryId: string) => void
+  onOpenTrash: () => void
+}
+
+export default function MainWorkspaceBottomDeck({
+  selectedMonth,
+  calendarDays,
+  recentTransactions,
+  pinnedCategories,
+  trashedCount,
+  onOpenMonthCalendar,
+  onOpenDay,
+  onOpenPinnedCategory,
+  onOpenTrash,
+}: Props) {
+  const today = new Date()
+  const currentMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`
+  const currentDay = today.getDate()
+
+  return (
+    <section data-main-workspace-deck="true" aria-label="Kalendarz, wpisy i przypięte kategorie">
+      <div data-calendar-recent-panel="true">
+        <section data-workspace-calendar-pane="true" aria-label="Kalendarz miesiąca">
+          <div data-workspace-panel-header="true">
+            <div>
+              <span>Kalendarz</span>
+              <strong>{selectedMonth}</strong>
+            </div>
+            <div data-workspace-calendar-nav="true">
+              <button type="button" onClick={onOpenMonthCalendar}>
+                Otwórz
+              </button>
+            </div>
+          </div>
+
+          <div data-mini-calendar="main">
+            {['P', 'W', 'Ś', 'C', 'P', 'S', 'N'].map((dayLabel, index) => (
+              <small key={`${dayLabel}-${index}`}>{dayLabel}</small>
+            ))}
+            {calendarDays.map((dayNumber, index) =>
+              dayNumber ? (
+                <button
+                  key={`${selectedMonth}-${dayNumber}`}
+                  type="button"
+                  data-current-day={selectedMonth === currentMonth && dayNumber === currentDay}
+                  onClick={() => onOpenDay(String(dayNumber))}
+                >
+                  {dayNumber}
+                </button>
+              ) : (
+                <i key={`empty-${index}`} />
+              )
+            )}
+          </div>
+        </section>
+
+        <section data-workspace-recent-pane="true" aria-label="Ostatnie wpisy">
+          <div data-workspace-panel-header="true">
+            <div>
+              <span>Ostatnie wpisy</span>
+              <strong>{recentTransactions.length} w podglądzie</strong>
+            </div>
+          </div>
+          <div data-workspace-recent-rows="true">
+            {recentTransactions.length === 0 ? (
+              <small data-workspace-empty-placeholder="true">Brak wpisów w tym zakresie.</small>
+            ) : (
+              recentTransactions.slice(0, 7).map((transaction) => (
+                <div
+                  key={transaction.id}
+                  data-workspace-recent-row="true"
+                  data-transaction-kind={transaction.kind}
+                >
+                  <b>{transaction.amount} zł</b>
+                  <span>{transaction.description || 'Bez opisu'}</span>
+                  <small>{transaction.categoryLabel}</small>
+                  <time>{transaction.date}</time>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
+      </div>
+
+      <section data-pinned-category-panel="true" aria-label="Przypięte kategorie">
+        <div data-workspace-panel-header="true">
+          <div>
+            <span>Przypięte kategorie</span>
+            <strong>Szybki dostęp do najważniejszych kategorii</strong>
+          </div>
+        </div>
+
+        <div data-pinned-categories-grid="true">
+          {pinnedCategories.length === 0 ? (
+            <small data-workspace-empty-placeholder="true">Brak przypiętych kategorii.</small>
+          ) : (
+            pinnedCategories.map((category) => (
+              <article
+                key={category.id}
+                data-pinned-category-card="true"
+                data-pinned-category-kind={category.kind}
+              >
+                <button
+                  type="button"
+                  data-pinned-category-main="true"
+                  onClick={() => onOpenPinnedCategory(category.id)}
+                >
+                  <span aria-hidden="true">{category.kind === 'income' ? '↗' : '↘'}</span>
+                  <div>
+                    <strong>{category.label}</strong>
+                    <small>
+                      {category.transactionCount > 0
+                        ? `${category.transactionCount} wpisy`
+                        : 'Gotowe do szybkiego wpisu'}
+                    </small>
+                  </div>
+                  <b>{category.amount.toLocaleString('pl-PL')} zł</b>
+                </button>
+                <details data-pinned-category-menu="true" data-floating-dropdown="true">
+                  <summary aria-label={`Menu kategorii ${category.label}`}>⋯</summary>
+                  <div>
+                    <button type="button" onClick={() => onOpenPinnedCategory(category.id)}>
+                      Dodaj wpis
+                    </button>
+                  </div>
+                </details>
+              </article>
+            ))
+          )}
+        </div>
+      </section>
+
+      <footer data-workspace-bottom-bar="true">
+        <span>{selectedMonth}</span>
+        <button
+          type="button"
+          data-workspace-trash-chip="true"
+          onClick={onOpenTrash}
+          aria-label={`Kosz, liczba elementów: ${trashedCount}`}
+        >
+          <span aria-hidden="true">⌫</span>
+          <b>{trashedCount}</b>
+        </button>
+      </footer>
+    </section>
   )
 }
 

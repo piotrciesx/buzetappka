@@ -73,7 +73,18 @@ export default function Level3SectionHeader({
       <div style={styles.l2Left}>
         {dragHandle}
 
-        <div style={styles.arrow}>{isOpen ? '▾' : '▸'}</div>
+        <div style={styles.arrow} data-category-toggle-icon="true" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="17" height="17">
+            <path
+              d={isOpen ? 'm7 10 5 5 5-5' : 'm10 7 5 5-5 5'}
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+            />
+          </svg>
+        </div>
 
         <div>
           <div style={styles.l3Name}>{showCategorySum ? `${name} • ${categorySum}` : name}</div>
@@ -107,11 +118,29 @@ export default function Level3SectionHeader({
           <button
             data-category-quick-add="true"
             style={styles.primaryButton}
+            aria-label={`Dodaj wpis: ${name}`}
             onClick={() => {
               onInlineAdd()
             }}
           >
-            + wpis
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <path
+                d="M12 20h9"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.9"
+              />
+              <path
+                d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.9"
+              />
+            </svg>
           </button>
         )}
 

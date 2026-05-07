@@ -64,7 +64,18 @@ function Level1CardBase(props: BaseProps) {
       >
         <div style={styles.l2Left}>
           {dragHandle}
-          <div style={styles.arrow}>{isOpen ? '▼' : '▶'}</div>
+          <div style={styles.arrow} data-level1-toggle-icon="true" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18">
+              <path
+                d={isOpen ? 'm7 10 5 5 5-5' : 'm10 7 5 5-5 5'}
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+              />
+            </svg>
+          </div>
           <div data-level1-title-block="true">
             <div>{level1Category.name}</div>
             {summary && (
@@ -166,7 +177,16 @@ export function SortableLevel1Card(props: SortableProps) {
               {...attributes}
               {...listeners}
             >
-              ::
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                <path
+                  d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="3"
+                />
+              </svg>
             </button>
           ) : undefined
         }

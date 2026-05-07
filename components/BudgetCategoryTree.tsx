@@ -492,7 +492,16 @@ export default function BudgetCategoryTree(props: Props) {
         onPointerDown={(event) => event.stopPropagation()}
         onClick={(event) => event.stopPropagation()}
       >
-        ::
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <path
+            d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="3"
+          />
+        </svg>
       </button>
     )
   }
@@ -501,129 +510,96 @@ export default function BudgetCategoryTree(props: Props) {
     const canUseBudgetLimit =
       level1Category.id === expenseLevel1Id && Boolean(getBudgetLimitView && onEditBudgetLimit)
     const budgetLimitView = canUseBudgetLimit ? getBudgetLimitView?.(null) ?? null : null
-    const hasLevel2Children = getSortedLevel2Children(level1Category.id).length > 0
 
     return (
       <>
-        {canUseMonthCalendar && (
-          <button
-            type="button"
-            data-category-secondary-action="true"
-            style={styles.secondaryButton}
-            onMouseDown={(event) => event.stopPropagation()}
-            onPointerDown={(event) => event.stopPropagation()}
-            onClick={(event) => {
-              event.stopPropagation()
-              toggleLevel1Calendar(level1Category.id)
-            }}
-          >
-            {isLevel1CalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
-          </button>
-        )}
-
-        {canUseBudgetLimit && onEditBudgetLimit && (
-          <button
-            type="button"
-            data-category-secondary-action="true"
-            style={styles.secondaryButton}
-            onMouseDown={(event) => event.stopPropagation()}
-            onPointerDown={(event) => event.stopPropagation()}
-            onClick={(event) => {
-              event.stopPropagation()
-              onEditBudgetLimit(null)
-            }}
-          >
-            {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
-          </button>
-        )}
-
-        {!hasLevel2Children && !isSelectedMonthLocked && (
+        {!isSelectedMonthLocked && (
           <button
             type="button"
             data-category-quick-add="true"
-            style={styles.primaryButton}
+            style={styles.secondaryButton}
+            aria-label={`Dodaj wpis: ${level1Category.name}`}
+            title="Dodaj wpis"
             onMouseDown={(event) => event.stopPropagation()}
             onPointerDown={(event) => event.stopPropagation()}
             onClick={(event) => {
               event.stopPropagation()
-              openLevel1InlineAdd(level1Category.id)
+              openTransactionCreator(level1Category.id)
             }}
           >
-            ✎
+            <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true">
+              <path
+                d="M12 20h9"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.9"
+              />
+              <path
+                d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.9"
+              />
+            </svg>
           </button>
         )}
 
-        <button
-          type="button"
-          data-category-secondary-action="true"
-          style={styles.primaryButton}
-          onMouseDown={(event) => event.stopPropagation()}
-          onPointerDown={(event) => event.stopPropagation()}
-          onClick={(event) => {
-            event.stopPropagation()
-            setOpenAddSubcategoryFor(level1Category.id)
-            setNewSubcategoryName('')
-
-            if (!openLevel1Ids.includes(level1Category.id)) {
-              toggleLevel1(level1Category.id)
-            }
-          }}
+        <details
+          data-mobile-category-menu="true"
+          data-floating-dropdown="true"
+          onClick={(event) => event.stopPropagation()}
         >
-          Dodaj kategorię
-        </button>
+          <summary style={styles.secondaryButton} aria-label={`Menu kategorii ${level1Category.name}`}>
+            ⋯
+          </summary>
+          <div data-mobile-category-menu-panel="true">
+            <button
+              type="button"
+              style={styles.secondaryButton}
+              onClick={(event) => {
+                event.stopPropagation()
+                setOpenAddSubcategoryFor(level1Category.id)
+                setNewSubcategoryName('')
 
-        {(canUseMonthCalendar || (canUseBudgetLimit && onEditBudgetLimit)) && (
-          <details
-            data-mobile-category-menu="true"
-            data-floating-dropdown="true"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <summary style={styles.secondaryButton}>⋯</summary>
-            <div data-mobile-category-menu-panel="true">
+                if (!openLevel1Ids.includes(level1Category.id)) {
+                  toggleLevel1(level1Category.id)
+                }
+              }}
+            >
+              Dodaj kategorię
+            </button>
+
+            {canUseMonthCalendar && (
               <button
                 type="button"
                 style={styles.secondaryButton}
                 onClick={(event) => {
                   event.stopPropagation()
-                  setOpenAddSubcategoryFor(level1Category.id)
-                  setNewSubcategoryName('')
-
-                  if (!openLevel1Ids.includes(level1Category.id)) {
-                    toggleLevel1(level1Category.id)
-                  }
+                  toggleLevel1Calendar(level1Category.id)
                 }}
               >
-                Dodaj kategorię
+                {isLevel1CalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
               </button>
+            )}
 
-              {canUseMonthCalendar && (
-                <button
-                  type="button"
-                  style={styles.secondaryButton}
-                  onClick={(event) => {
-                    event.stopPropagation()
-                    toggleLevel1Calendar(level1Category.id)
-                  }}
-                >
-                  {isLevel1CalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
-                </button>
-              )}
-
-              {canUseBudgetLimit && onEditBudgetLimit && (
-                <button
-                  type="button"
-                  style={styles.secondaryButton}
-                  onClick={(event) => {
-                    event.stopPropagation()
-                    onEditBudgetLimit(null)
-                  }}
-                >
-                  {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
-                </button>
-              )}
-            </div>
-          </details>
-        )}
+            {canUseBudgetLimit && onEditBudgetLimit && (
+              <button
+                type="button"
+                style={styles.secondaryButton}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  onEditBudgetLimit(null)
+                }}
+              >
+                {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
+              </button>
+            )}
+          </div>
+        </details>
       </>
     )
   }

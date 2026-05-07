@@ -43,7 +43,10 @@ export default function BudgetRightRail({
     <aside data-budget-context-rail="true" aria-label="Kontekst workspace">
       <section data-context-card="rail-actions" aria-label="Akcje">
         <button type="button" aria-label="Szukaj" title="Szukaj" onClick={onOpenSearch}>
-          Szukaj
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="6" />
+            <path d="m16 16 4 4" />
+          </svg>
         </button>
         <button
           type="button"
@@ -52,12 +55,23 @@ export default function BudgetRightRail({
           disabled={!showRecurring}
           onClick={onOpenNotifications}
         >
-          Powiadomienia
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6.5 10a5.5 5.5 0 0 1 11 0c0 5 1.7 5.8 2.2 7H4.3c.5-1.2 2.2-2 2.2-7Z" />
+            <path d="M10 20h4" />
+          </svg>
         </button>
         <button type="button" aria-label="Dodaj wpis" title="Dodaj wpis" onClick={onQuickAdd}>
-          Dodaj
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
         </button>
-        <button type="button" aria-label="Profil" title="Profil" onClick={onToggleProfile}>
+        <button
+          type="button"
+          aria-label="Profil"
+          title="Profil"
+          data-rail-profile-action="true"
+          onClick={onToggleProfile}
+        >
           P
         </button>
       </section>

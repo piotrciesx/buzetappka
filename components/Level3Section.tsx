@@ -593,6 +593,15 @@ export default function Level3Section(props: Props) {
     return transaction.day_is_null ? 'brak dnia' : transaction.date
   }
 
+  const getTransactionDayGroupLabel = (transaction: Transaction) => {
+    if (transaction.day_is_null) {
+      return 'bez dnia'
+    }
+
+    const dayText = transaction.date.slice(8, 10).replace(/^0/, '')
+    return dayText ? `dzień ${dayText}` : 'bez dnia'
+  }
+
   const getTransactionPaymentSourceLabels = (transaction: Transaction) => {
     return getTransactionPaymentSourceDisplayLines({
       transaction,
@@ -654,7 +663,16 @@ export default function Level3Section(props: Props) {
               {...attributes}
               {...listeners}
             >
-              ::
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                <path
+                  d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="3"
+                />
+              </svg>
             </button>
           ) : null
         }
@@ -744,16 +762,25 @@ export default function Level3Section(props: Props) {
 
           {orderedTransactions.length === 0 && <div style={styles.emptyText}>Brak wpisów w tym miesiącu</div>}
 
-          {orderedTransactions.map((transaction) => {
+          {orderedTransactions.map((transaction, index) => {
             const isEditing = editingTransactionId === transaction.id
             const isMovingCurrent = movingTransactionId === transaction.id
             const moveTargets = getMoveTargetsForTransaction(transaction)
             const isSelected = selectedTransactionIds.includes(transaction.id)
             const transactionTags = transactionTagsMap[transaction.id] || []
+            const dayGroupLabel = getTransactionDayGroupLabel(transaction)
+            const previousTransaction = orderedTransactions[index - 1]
+            const shouldShowDayGroup =
+              !previousTransaction ||
+              getTransactionDayGroupLabel(previousTransaction) !== dayGroupLabel
 
             return (
-              <div key={transaction.id} style={styles.transactionRow}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+              <div key={transaction.id} data-transaction-day-entry="true">
+                {shouldShowDayGroup && (
+                  <div data-transaction-day-header="true">{dayGroupLabel}</div>
+                )}
+                <div style={styles.transactionRow}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
                   <input
                     type="checkbox"
                     checked={isSelected}
@@ -988,7 +1015,7 @@ export default function Level3Section(props: Props) {
                   </div>
                 </div>
 
-                <div style={styles.actions}>
+                  <div style={styles.actions}>
                   <div style={styles.dateText}>miesiąc: {selectedMonth}</div>
 
                   {isEditing && !isSelectedMonthLocked ? (
@@ -1074,6 +1101,7 @@ export default function Level3Section(props: Props) {
                       </button>
                     </>
                   ) : null}
+                  </div>
                 </div>
               </div>
             )
