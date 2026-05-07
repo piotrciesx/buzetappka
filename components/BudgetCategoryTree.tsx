@@ -549,7 +549,7 @@ export default function BudgetCategoryTree(props: Props) {
               openLevel1InlineAdd(level1Category.id)
             }}
           >
-            edit
+            ✎
           </button>
         )}
 

@@ -2118,7 +2118,56 @@ export default function BudgetAppController({
           styles,
         }}
       />
-          <section data-lower-workspace="true" aria-label="Szybki kontekst workspace">
+          <section data-core-workspace-footer="true" aria-label="Dolny kontekst workspace">
+            <div data-workspace-month-switch="true">
+              <button
+                type="button"
+                onClick={goToPrevMonth}
+                disabled={isPrevMonthNavigationBlocked}
+                aria-label="Poprzedni miesiac"
+              >
+                ‹
+              </button>
+              <span>{selectedMonth}</span>
+              <button
+                type="button"
+                onClick={goToNextMonth}
+                disabled={isNextMonthNavigationBlocked}
+                aria-label="Nastepny miesiac"
+              >
+                ›
+              </button>
+            </div>
+
+            <div data-workspace-bottom-feed="true">
+              <span>Ostatnie</span>
+              {recentTransactionPreviews.slice(0, 3).map((transaction) => (
+                <button
+                  key={transaction.id}
+                  type="button"
+                  data-transaction-kind={transaction.kind}
+                  onClick={() => {
+                    setActiveUtilityPanel('search')
+                    handleBankSearchFieldChange('description', transaction.description)
+                  }}
+                >
+                  <b>{transaction.amount} zl</b>
+                  <small>{transaction.description || 'Bez opisu'}</small>
+                </button>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              data-workspace-trash-chip="true"
+              onClick={() => setActiveUtilityPanel('trash')}
+            >
+              <span>Trash</span>
+              <b>{trashedTransactions.length}</b>
+              <small>Kosz</small>
+            </button>
+          </section>
+          <section data-lower-workspace="true" aria-label="Dolny kontekst workspace">
             <div data-workspace-insight-card="true">
               <span>Ostatnie wpisy</span>
               <strong>{recentTransactionPreviews.length}</strong>

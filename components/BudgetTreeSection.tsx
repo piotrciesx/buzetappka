@@ -226,13 +226,25 @@ export default function BudgetTreeSection({
 
         <div data-tree-toolbar-actions="true">
           {onAddIncome && (
-            <button type="button" data-workspace-action="income" onClick={onAddIncome}>
-              Dodaj przychod
+            <button
+              type="button"
+              data-workspace-action="income"
+              onClick={onAddIncome}
+              aria-label="Dodaj przychod"
+              title="Dodaj przychod"
+            >
+              +
             </button>
           )}
           {onAddExpense && (
-            <button type="button" data-workspace-action="expense" onClick={onAddExpense}>
-              Dodaj wydatek
+            <button
+              type="button"
+              data-workspace-action="expense"
+              onClick={onAddExpense}
+              aria-label="Dodaj wydatek"
+              title="Dodaj wydatek"
+            >
+              -
             </button>
           )}
           {onOpenSearch && (
