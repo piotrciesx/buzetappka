@@ -124,10 +124,6 @@ type Props = {
   onAddExpense?: () => void
   onOpenSearch?: () => void
   onOpenCalendar?: () => void
-  onPrevMonth?: () => void
-  onNextMonth?: () => void
-  isPrevMonthNavigationBlocked?: boolean
-  isNextMonthNavigationBlocked?: boolean
   workspaceTopContent?: ReactNode
   workspaceBottomContent?: ReactNode
 }
@@ -213,36 +209,12 @@ export default function BudgetTreeSection({
   onAddExpense,
   onOpenSearch,
   onOpenCalendar,
-  onPrevMonth,
-  onNextMonth,
-  isPrevMonthNavigationBlocked = false,
-  isNextMonthNavigationBlocked = false,
   workspaceTopContent,
   workspaceBottomContent,
 }: Props) {
   return (
     <div data-budget-tree-workspace="true">
       <div data-budget-tree-toolbar="true">
-        <div data-tree-month-switch="true">
-          <button
-            type="button"
-            onClick={onPrevMonth}
-            disabled={!onPrevMonth || isPrevMonthNavigationBlocked}
-            aria-label="Poprzedni miesiąc"
-          >
-            ‹
-          </button>
-          <strong>{selectedMonth}</strong>
-          <button
-            type="button"
-            onClick={onNextMonth}
-            disabled={!onNextMonth || isNextMonthNavigationBlocked}
-            aria-label="Następny miesiąc"
-          >
-            ›
-          </button>
-        </div>
-
         <div data-tree-toolbar-actions="true">
           {onAddIncome && (
             <button
@@ -285,7 +257,26 @@ export default function BudgetTreeSection({
               aria-label="Kalendarz"
               title="Kalendarz"
             >
-              ▦
+              <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
+                <rect
+                  x="4"
+                  y="5"
+                  width="16"
+                  height="15"
+                  rx="2"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                />
+                <path
+                  d="M8 3v4M16 3v4M4 10h16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.8"
+                />
+              </svg>
             </button>
           )}
 

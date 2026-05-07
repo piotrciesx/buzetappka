@@ -25,10 +25,6 @@ type Props = {
   recentTransactions: RecentTransactionPreview[]
   pinnedCategories: PinnedWorkspaceCategory[]
   trashedCount: number
-  isPrevMonthNavigationBlocked: boolean
-  isNextMonthNavigationBlocked: boolean
-  onPrevMonth: () => void
-  onNextMonth: () => void
   onOpenMonthCalendar: () => void
   onOpenDay: (dayText: string) => void
   onOpenPinnedCategory: (categoryId: string) => void
@@ -41,10 +37,6 @@ export default function MainWorkspaceBottomDeck({
   recentTransactions,
   pinnedCategories,
   trashedCount,
-  isPrevMonthNavigationBlocked,
-  isNextMonthNavigationBlocked,
-  onPrevMonth,
-  onNextMonth,
   onOpenMonthCalendar,
   onOpenDay,
   onOpenPinnedCategory,
@@ -64,24 +56,8 @@ export default function MainWorkspaceBottomDeck({
               <strong>{selectedMonth}</strong>
             </div>
             <div data-workspace-calendar-nav="true">
-              <button
-                type="button"
-                onClick={onPrevMonth}
-                disabled={isPrevMonthNavigationBlocked}
-                aria-label="Poprzedni miesiąc"
-              >
-                ‹
-              </button>
               <button type="button" onClick={onOpenMonthCalendar}>
-                Dzisiaj
-              </button>
-              <button
-                type="button"
-                onClick={onNextMonth}
-                disabled={isNextMonthNavigationBlocked}
-                aria-label="Następny miesiąc"
-              >
-                ›
+                Otwórz
               </button>
             </div>
           </div>
@@ -118,7 +94,7 @@ export default function MainWorkspaceBottomDeck({
             {recentTransactions.length === 0 ? (
               <small data-workspace-empty-placeholder="true">Brak wpisów w tym zakresie.</small>
             ) : (
-              recentTransactions.slice(0, 6).map((transaction) => (
+              recentTransactions.slice(0, 7).map((transaction) => (
                 <div
                   key={transaction.id}
                   data-workspace-recent-row="true"

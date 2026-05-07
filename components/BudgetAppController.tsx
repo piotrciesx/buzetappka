@@ -1553,75 +1553,19 @@ export default function BudgetAppController({
       .reduce((sum, transaction) => sum + getSignedAmountForTransaction(transaction), 0)
   }, [getSignedAmountForTransaction, scopedTransactions])
 
-  const liveRailItems = useMemo(() => {
-    const items = [
-      previousMonthCloseReminder
-        ? {
-            title: 'Alert miesiąca',
-            text: `Poprzedni miesiąc ${previousMonthCloseReminder} czeka na zamknięcie.`,
-            meta: ['Miesiąc', 'Kontrola'],
-          }
-        : null,
-      recentTransactionPreviews.length > 0
-        ? {
-            title: 'Najnowsza aktywność',
-            text: `${recentTransactionPreviews[0].description || 'Bez opisu'} / ${recentTransactionPreviews[0].amount} zł`,
-            meta: ['Wpisy', selectedMonth],
-          }
-        : null,
-      {
-        title: 'Mini kalendarz',
-        text: `${selectedMonthTransactions.length} wpisy w miesiącu ${selectedMonth}.`,
-        meta: ['Kalendarz', isSelectedMonthLocked ? 'Zamknięty' : 'Otwarty'],
-      },
-      effectiveVisibleModules.recurringTransactions
-        ? {
-            title: 'Przypomnienia / raty',
-            text:
-              recurringTransactions.length > 0
-                ? `${recurringTransactions.length} aktywne pozycje w module.`
-                : 'Brak aktywnych przypomnień w podglądzie.',
-            meta: ['Moduł aktywny', 'Live'],
-          }
-        : null,
-      effectiveVisibleModules.financialGoals
-        ? {
-            title: 'Cele finansowe',
-            text:
-              financialGoals.length > 0
-                ? `${financialGoals.length} cele w aktualnym profilu.`
-                : 'Cele są aktywne, ale lista jest pusta.',
-            meta: ['Moduł aktywny', 'Cele'],
-          }
-        : null,
-    ].filter(Boolean) as Array<{ title: string; text: string; meta: string[] }>
+  const selectedMonthIncomeTotal = useMemo(() => {
+    return selectedMonthTransactions.reduce((sum, transaction) => {
+      const signedAmount = getSignedAmountForTransaction(transaction)
+      return signedAmount > 0 ? sum + signedAmount : sum
+    }, 0)
+  }, [getSignedAmountForTransaction, selectedMonthTransactions])
 
-    return items.length > 0
-      ? items
-      : [{ title: 'Status workspace', text: 'Brak nowych zdarzeń w podglądzie.', meta: ['Live'] }]
-  }, [
-    effectiveVisibleModules.financialGoals,
-    effectiveVisibleModules.recurringTransactions,
-    financialGoals.length,
-    isSelectedMonthLocked,
-    previousMonthCloseReminder,
-    recentTransactionPreviews,
-    recurringTransactions.length,
-    selectedMonth,
-    selectedMonthTransactions.length,
-  ])
-  const [liveRailIndex, setLiveRailIndex] = useState(0)
-  const activeLiveRailItem = liveRailItems[liveRailIndex % liveRailItems.length]
-
-  useEffect(() => {
-    const intervalId = window.setInterval(() => {
-      setLiveRailIndex((previousIndex) => (previousIndex + 1) % liveRailItems.length)
-    }, 60000)
-
-    return () => {
-      window.clearInterval(intervalId)
-    }
-  }, [liveRailItems.length])
+  const selectedMonthExpenseTotal = useMemo(() => {
+    return selectedMonthTransactions.reduce((sum, transaction) => {
+      const signedAmount = getSignedAmountForTransaction(transaction)
+      return signedAmount < 0 ? sum + Math.abs(signedAmount) : sum
+    }, 0)
+  }, [getSignedAmountForTransaction, selectedMonthTransactions])
 
   const budgetPageOverlayProps = useBudgetPageOverlayProps({
     canCreateTransactions,
@@ -2246,10 +2190,6 @@ export default function BudgetAppController({
             : undefined,
           onOpenSearch: () => setActiveUtilityPanel('search'),
           onOpenCalendar: () => setActiveUtilityPanel('monthCalendar'),
-          onPrevMonth: goToPrevMonth,
-          onNextMonth: goToNextMonth,
-          isPrevMonthNavigationBlocked,
-          isNextMonthNavigationBlocked,
           workspaceTopContent: (
             <div data-budget-status-grid="true">
               {previousMonthCloseReminder && (
@@ -2317,10 +2257,6 @@ export default function BudgetAppController({
               recentTransactions={recentTransactionPreviews}
               pinnedCategories={pinnedWorkspaceCategories}
               trashedCount={trashedTransactions.length}
-              isPrevMonthNavigationBlocked={isPrevMonthNavigationBlocked}
-              isNextMonthNavigationBlocked={isNextMonthNavigationBlocked}
-              onPrevMonth={goToPrevMonth}
-              onNextMonth={goToNextMonth}
               onOpenMonthCalendar={() => setActiveUtilityPanel('monthCalendar')}
               onOpenDay={(dayText) => handleOpenGlobalCalendarAddForDay(dayText)}
               onOpenPinnedCategory={openTransactionCreator}
@@ -2354,12 +2290,11 @@ export default function BudgetAppController({
           transactionCount={selectedMonthTransactions.length}
           categoryCount={visibleCategories.length}
           balance={totalBudgetBalance}
+          incomeTotal={selectedMonthIncomeTotal}
+          expenseTotal={selectedMonthExpenseTotal}
           draftCount={drafts.length}
-          activeLiveRailItem={activeLiveRailItem}
           recurringCount={recurringTransactions.length}
-          goalsCount={financialGoals.length}
           showRecurring={effectiveVisibleModules.recurringTransactions}
-          showGoals={effectiveVisibleModules.financialGoals}
           onOpenSearch={() => setActiveUtilityPanel('search')}
           onOpenNotifications={() => setActiveUtilityPanel('recurringTransactions')}
           onQuickAdd={() => openBlankFloatingTransactionCreator(null)}

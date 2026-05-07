@@ -1,23 +1,16 @@
 'use client'
 
-type LiveRailItem = {
-  title: string
-  text: string
-  meta: string[]
-}
-
 type Props = {
   selectedMonth: string
   isSelectedMonthLocked: boolean
   transactionCount: number
   categoryCount: number
   balance: number
+  incomeTotal: number
+  expenseTotal: number
   draftCount: number
-  activeLiveRailItem: LiveRailItem
   recurringCount: number
-  goalsCount: number
   showRecurring: boolean
-  showGoals: boolean
   onOpenSearch: () => void
   onOpenNotifications: () => void
   onQuickAdd: () => void
@@ -30,18 +23,21 @@ export default function BudgetRightRail({
   transactionCount,
   categoryCount,
   balance,
+  incomeTotal,
+  expenseTotal,
   draftCount,
-  activeLiveRailItem,
   recurringCount,
-  goalsCount,
   showRecurring,
-  showGoals,
   onOpenSearch,
   onOpenNotifications,
   onQuickAdd,
   onToggleProfile,
 }: Props) {
   const balanceState = balance > 0 ? 'positive' : balance < 0 ? 'negative' : 'neutral'
+  const hasOverviewData = incomeTotal > 0 || expenseTotal > 0
+  const totalFlow = incomeTotal + expenseTotal
+  const incomeShare = totalFlow > 0 ? Math.round((incomeTotal / totalFlow) * 100) : 0
+  const expenseShare = totalFlow > 0 ? 100 - incomeShare : 0
 
   return (
     <aside data-budget-context-rail="true" aria-label="Kontekst workspace">
@@ -96,30 +92,40 @@ export default function BudgetRightRail({
       <section data-context-card="live">
         <div data-context-card-header="true">
           <span>Przegląd miesiąca</span>
-          <small>Live</small>
+          <small>{selectedMonth}</small>
         </div>
         <div data-live-widget-card="true">
-          <div data-live-widget-rotating="true">
-            <strong>{activeLiveRailItem.title}</strong>
-            <p>{activeLiveRailItem.text}</p>
-            <div data-live-widget-meta="true">
-              {activeLiveRailItem.meta.map((item) => (
-                <span key={item}>{item}</span>
-              ))}
+          {hasOverviewData ? (
+            <>
+              <div data-live-widget-totals="true">
+                <div>
+                  <span>Wpływy</span>
+                  <strong>{incomeTotal.toLocaleString('pl-PL')} zł</strong>
+                </div>
+                <div>
+                  <span>Wydatki</span>
+                  <strong>{expenseTotal.toLocaleString('pl-PL')} zł</strong>
+                </div>
+                <div data-balance-state={balanceState}>
+                  <span>Bilans</span>
+                  <strong>{balance.toLocaleString('pl-PL')} zł</strong>
+                </div>
+              </div>
+              <div data-live-widget-flow="true" aria-label="Wpływy kontra wydatki">
+                <i style={{ width: `${incomeShare}%` }} data-flow-kind="income" />
+                <i style={{ width: `${expenseShare}%` }} data-flow-kind="expense" />
+              </div>
+              <div data-live-widget-meta="true">
+                <span>{transactionCount} wpisy</span>
+                <span>{isSelectedMonthLocked ? 'zamknięty' : 'otwarty'}</span>
+              </div>
+            </>
+          ) : (
+            <div data-live-widget-empty="true">
+              <strong>Brak danych do podglądu</strong>
+              <p>Dodaj wpisy, aby zobaczyć przegląd miesiąca.</p>
             </div>
-          </div>
-          <div data-live-widget-meta="true">
-            <span>{draftCount} szkice</span>
-            <span>{transactionCount} wpisy</span>
-            {showRecurring && <span>{recurringCount} przypomnienia</span>}
-            {showGoals && <span>{goalsCount} cele</span>}
-            <span>{isSelectedMonthLocked ? 'zamknięty' : 'otwarty'}</span>
-          </div>
-          <div data-live-widget-dots="true" aria-label="Rotacja podglądu">
-            <i data-active="true" />
-            <i />
-            <i />
-          </div>
+          )}
         </div>
       </section>
 
