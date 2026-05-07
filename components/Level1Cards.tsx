@@ -70,7 +70,6 @@ function Level1CardBase(props: BaseProps) {
             {summary && (
               <div data-level1-summary="true">
                 <strong>{summary.amount.toLocaleString('pl-PL')} zł</strong>
-                <span>{summary.childCount} podkategorie</span>
               </div>
             )}
             {limitIndicator}

@@ -2,7 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import BudgetPageMainPanels, { type BudgetUtilityPanel } from './BudgetPageMainPanels'
+import BudgetRightRail from './BudgetRightRail'
 import DashboardPanel from './DashboardPanel'
+import MainWorkspaceBottomDeck from './MainWorkspaceBottomDeck'
 import BudgetPageOverlays from './BudgetPageOverlays'
 import BudgetPageStatusPanels from './BudgetPageStatusPanels'
 import BudgetLimitEditorModal from './BudgetLimitEditorModal'
@@ -700,7 +702,9 @@ export default function BudgetAppController({
         return {
           id: categoryId,
           label,
-          kind: rootId === expenseLevel1Id ? 'expense' : 'income',
+          kind: rootId === expenseLevel1Id ? ('expense' as const) : ('income' as const),
+          amount: getSumForCategoryForSelectedMonth(categoryId),
+          transactionCount: getCategoryCountForSelectedMonth(categoryId),
         }
       })
   }, [
@@ -708,7 +712,9 @@ export default function BudgetAppController({
     categories,
     categoriesById,
     expenseLevel1Id,
+    getCategoryCountForSelectedMonth,
     getRootLevel1IdForCategory,
+    getSumForCategoryForSelectedMonth,
     pinnedCategoryIds,
     transactionCategoryPathLabels,
   ])
@@ -1532,7 +1538,7 @@ export default function BudgetAppController({
       .map((transaction) => ({
         id: transaction.id,
         amount: String(getAmountNumber(transaction.amount)),
-        kind: getSignedAmountForTransaction(transaction) >= 0 ? 'income' : 'expense',
+        kind: getSignedAmountForTransaction(transaction) >= 0 ? ('income' as const) : ('expense' as const),
         date: transaction.day_is_null ? `${transaction.date.slice(0, 7)} · bez dnia` : transaction.date,
         description: transaction.description || '',
         categoryLabel: categoriesById[transaction.category_id]
@@ -2240,6 +2246,10 @@ export default function BudgetAppController({
             : undefined,
           onOpenSearch: () => setActiveUtilityPanel('search'),
           onOpenCalendar: () => setActiveUtilityPanel('monthCalendar'),
+          onPrevMonth: goToPrevMonth,
+          onNextMonth: goToNextMonth,
+          isPrevMonthNavigationBlocked,
+          isNextMonthNavigationBlocked,
           workspaceTopContent: (
             <div data-budget-status-grid="true">
               {previousMonthCloseReminder && (
@@ -2301,122 +2311,21 @@ export default function BudgetAppController({
             </div>
           ),
           workspaceBottomContent: (
-            <section data-core-workspace-footer="true" aria-label="Ostatnie wpisy i narzędzia">
-              <div data-workspace-mini-calendar-card="true">
-                <div data-workspace-recent-header="true">
-                  <span>Kalendarz</span>
-                  <small>{selectedMonth}</small>
-                </div>
-                <div data-workspace-calendar-nav="true">
-                  <button
-                    type="button"
-                    onClick={goToPrevMonth}
-                    disabled={isPrevMonthNavigationBlocked}
-                    aria-label="Poprzedni miesiąc"
-                  >
-                    ‹
-                  </button>
-                  <button type="button" onClick={() => setActiveUtilityPanel('monthCalendar')}>
-                    Otwórz
-                  </button>
-                  <button
-                    type="button"
-                    onClick={goToNextMonth}
-                    disabled={isNextMonthNavigationBlocked}
-                    aria-label="Następny miesiąc"
-                  >
-                    ›
-                  </button>
-                </div>
-                <div data-mini-calendar="true">
-                  {['P', 'W', 'Ś', 'C', 'P', 'S', 'N'].map((dayLabel) => (
-                    <small key={`workspace-${dayLabel}`}>{dayLabel}</small>
-                  ))}
-                  {contextCalendarDays.map((dayNumber, index) =>
-                    dayNumber ? (
-                      <button
-                        key={`workspace-${selectedMonth}-${dayNumber}`}
-                        type="button"
-                        onClick={() => handleOpenGlobalCalendarAddForDay(String(dayNumber))}
-                      >
-                        {dayNumber}
-                      </button>
-                    ) : (
-                      <i key={`workspace-empty-${index}`} />
-                    )
-                  )}
-                </div>
-              </div>
-              <div data-workspace-month-switch="true">
-                <button
-                  type="button"
-                  onClick={goToPrevMonth}
-                  disabled={isPrevMonthNavigationBlocked}
-                  aria-label="Poprzedni miesiac"
-                >
-                  ‹
-                </button>
-                <span>{selectedMonth}</span>
-                <button
-                  type="button"
-                  onClick={goToNextMonth}
-                  disabled={isNextMonthNavigationBlocked}
-                  aria-label="Nastepny miesiac"
-                >
-                  ›
-                </button>
-              </div>
-
-              <div data-workspace-recent-table="true">
-                <div data-workspace-recent-header="true">
-                  <span>Ostatnie wpisy</span>
-                  <small>{recentTransactionPreviews.length} w podglądzie</small>
-                </div>
-                {pinnedWorkspaceCategories.length > 0 && (
-                  <div data-pinned-categories="true" aria-label="Przypięte kategorie">
-                    {pinnedWorkspaceCategories.map((category) => (
-                      <button
-                        key={category.id}
-                        type="button"
-                        data-pinned-category-kind={category.kind}
-                        onClick={() => openTransactionCreator(category.id)}
-                      >
-                        {category.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-                <div data-workspace-recent-rows="true">
-                  {recentTransactionPreviews.length === 0 ? (
-                    <small>Brak wpisów w tym zakresie.</small>
-                  ) : (
-                    recentTransactionPreviews.slice(0, 6).map((transaction) => (
-                      <div
-                        key={transaction.id}
-                        data-workspace-recent-row="true"
-                        data-transaction-kind={transaction.kind}
-                      >
-                        <b>{transaction.amount} zł</b>
-                        <span>{transaction.description || 'Bez opisu'}</span>
-                        <small>{transaction.categoryLabel}</small>
-                        <time>{transaction.date}</time>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-
-              <button
-                type="button"
-                data-workspace-trash-chip="true"
-                onClick={() => setActiveUtilityPanel('trash')}
-                aria-label={`Kosz, liczba elementów: ${trashedTransactions.length}`}
-              >
-                <span aria-hidden="true">⌫</span>
-                <b>{trashedTransactions.length}</b>
-                <small>Kosz</small>
-              </button>
-            </section>
+            <MainWorkspaceBottomDeck
+              selectedMonth={selectedMonth}
+              calendarDays={contextCalendarDays}
+              recentTransactions={recentTransactionPreviews}
+              pinnedCategories={pinnedWorkspaceCategories}
+              trashedCount={trashedTransactions.length}
+              isPrevMonthNavigationBlocked={isPrevMonthNavigationBlocked}
+              isNextMonthNavigationBlocked={isNextMonthNavigationBlocked}
+              onPrevMonth={goToPrevMonth}
+              onNextMonth={goToNextMonth}
+              onOpenMonthCalendar={() => setActiveUtilityPanel('monthCalendar')}
+              onOpenDay={(dayText) => handleOpenGlobalCalendarAddForDay(dayText)}
+              onOpenPinnedCategory={openTransactionCreator}
+              onOpenTrash={() => setActiveUtilityPanel('trash')}
+            />
           ),
         }}
         hiddenCategoriesPanelProps={{
@@ -2437,254 +2346,25 @@ export default function BudgetAppController({
           styles,
         }}
       />
-          <section data-core-workspace-footer="true" aria-label="Dolny kontekst workspace">
-            <div data-workspace-month-switch="true">
-              <button
-                type="button"
-                onClick={goToPrevMonth}
-                disabled={isPrevMonthNavigationBlocked}
-                aria-label="Poprzedni miesiac"
-              >
-                ‹
-              </button>
-              <span>{selectedMonth}</span>
-              <button
-                type="button"
-                onClick={goToNextMonth}
-                disabled={isNextMonthNavigationBlocked}
-                aria-label="Nastepny miesiac"
-              >
-                ›
-              </button>
-            </div>
-
-            <div data-workspace-bottom-feed="true">
-              <span>Ostatnie</span>
-              {recentTransactionPreviews.slice(0, 3).map((transaction) => (
-                <button
-                  key={transaction.id}
-                  type="button"
-                  data-transaction-kind={transaction.kind}
-                  onClick={() => {
-                    setActiveUtilityPanel('search')
-                    handleBankSearchFieldChange('description', transaction.description)
-                  }}
-                >
-                  <b>{transaction.amount} zl</b>
-                  <small>{transaction.description || 'Bez opisu'}</small>
-                </button>
-              ))}
-            </div>
-
-            <button
-              type="button"
-              data-workspace-trash-chip="true"
-              onClick={() => setActiveUtilityPanel('trash')}
-            >
-              <span>Trash</span>
-              <b>{trashedTransactions.length}</b>
-              <small>Kosz</small>
-            </button>
-          </section>
-          <section data-lower-workspace="true" aria-label="Dolny kontekst workspace">
-            <div data-workspace-insight-card="true">
-              <span>Ostatnie wpisy</span>
-              <strong>{recentTransactionPreviews.length}</strong>
-              <small>najnowsze operacje w budżecie</small>
-            </div>
-            <div data-workspace-insight-card="true">
-              <span>Aktywne kategorie</span>
-              <strong>{visibleCategories.length}</strong>
-              <small>widoczne w tym miesiącu</small>
-            </div>
-            <div data-workspace-insight-card="true">
-              <span>Szybkie akcje</span>
-              <div data-workspace-quick-actions="true">
-                <button type="button" onClick={() => openBlankFloatingTransactionCreator(null)}>
-                  Dodaj wpis
-                </button>
-                <button type="button" onClick={() => setActiveUtilityPanel('search')}>
-                  Szukaj
-                </button>
-                <button type="button" onClick={() => setActiveUtilityPanel('monthCalendar')}>
-                  Kalendarz
-                </button>
-              </div>
-            </div>
-          </section>
         </div>
 
-        <aside data-budget-context-rail="true" aria-label="Kontekst workspace">
-          <section data-context-card="rail-actions" aria-label="Szybkie akcje">
-            <button type="button" aria-label="Szukaj" title="Szukaj" onClick={() => setActiveUtilityPanel('search')}>
-              ⌕
-            </button>
-            <button
-              type="button"
-              aria-label="Powiadomienia"
-              title="Powiadomienia"
-              disabled={!effectiveVisibleModules.recurringTransactions}
-              onClick={() => setActiveUtilityPanel('recurringTransactions')}
-            >
-              ♫
-            </button>
-            <button
-              type="button"
-              aria-label="Dodaj wpis"
-              title="Dodaj wpis"
-              onClick={() => openBlankFloatingTransactionCreator(null)}
-            >
-              +
-            </button>
-            <button
-              type="button"
-              aria-label="Profil"
-              title="Profil"
-              onClick={() => setIsSettingsPanelVisible((previousValue) => !previousValue)}
-            >
-              P
-            </button>
-          </section>
-          <section data-context-card="summary">
-            <div>
-              <span>Miesiąc</span>
-              <strong>{selectedMonth}</strong>
-            </div>
-            <em>{isSelectedMonthLocked ? 'zamknięty' : 'otwarty'}</em>
-          </section>
-
-          <section data-context-card="metrics">
-            <div data-context-metric="true">
-              <span>Wpisy</span>
-              <strong>{selectedMonthTransactions.length}</strong>
-            </div>
-            <div data-context-metric="true">
-              <span>Kategorie</span>
-              <strong>{visibleCategories.length}</strong>
-            </div>
-            <div
-              data-context-metric="true"
-              data-balance-state={totalBudgetBalance > 0 ? 'positive' : totalBudgetBalance < 0 ? 'negative' : 'neutral'}
-            >
-              <span>Bilans</span>
-              <strong>{totalBudgetBalance.toLocaleString('pl-PL')}</strong>
-            </div>
-            <div data-context-metric="true">
-              <span>Szkice</span>
-              <strong>{drafts.length}</strong>
-            </div>
-          </section>
-
-          <section data-context-card="calendar">
-            <div data-context-card-header="true">
-              <span>Mini kalendarz</span>
-              <button type="button" onClick={() => setActiveUtilityPanel('monthCalendar')}>
-                Otwórz
-              </button>
-            </div>
-            <div data-mini-calendar="true">
-              {['P', 'W', 'Ś', 'C', 'P', 'S', 'N'].map((dayLabel) => (
-                <small key={dayLabel}>{dayLabel}</small>
-              ))}
-              {contextCalendarDays.map((dayNumber, index) =>
-                dayNumber ? (
-                  <button
-                    key={`${selectedMonth}-${dayNumber}`}
-                    type="button"
-                    onClick={() => handleOpenGlobalCalendarAddForDay(String(dayNumber))}
-                  >
-                    {dayNumber}
-                  </button>
-                ) : (
-                  <i key={`empty-${index}`} />
-                )
-              )}
-            </div>
-          </section>
-
-          <section data-context-card="live">
-            <div data-context-card-header="true">
-              <span>Dzisiaj / Teraz / Podgląd</span>
-              <small>Podgląd</small>
-            </div>
-            <div data-live-widget-card="true">
-              <div data-live-widget-rotating="true">
-                <strong>{activeLiveRailItem.title}</strong>
-                <p>{activeLiveRailItem.text}</p>
-                <div data-live-widget-meta="true">
-                  {activeLiveRailItem.meta.map((item) => (
-                    <span key={item}>{item}</span>
-                  ))}
-                </div>
-              </div>
-              <strong>
-                {previousMonthCloseReminder
-                  ? 'Alert miesiąca'
-                  : recentTransactionPreviews.length > 0
-                    ? 'Najnowsza aktywność'
-                    : 'Status workspace'}
-              </strong>
-              <p>
-                {previousMonthCloseReminder
-                  ? `Poprzedni miesiąc ${previousMonthCloseReminder} czeka na zamknięcie.`
-                  : recentTransactionPreviews.length > 0
-                    ? `${recentTransactionPreviews[0].description || 'Bez opisu'} / ${recentTransactionPreviews[0].amount} zł`
-                    : 'Brak nowych wpisów w podglądzie.'}
-              </p>
-              <div data-live-widget-meta="true">
-                <span>{drafts.length} szkice</span>
-                <span>{selectedMonthTransactions.length} wpisy</span>
-                {effectiveVisibleModules.recurringTransactions && (
-                  <span>{recurringTransactions.length} przypomnienia</span>
-                )}
-                {effectiveVisibleModules.financialGoals && <span>{financialGoals.length} cele</span>}
-                <span>{isSelectedMonthLocked ? 'zamknięty' : 'otwarty'}</span>
-              </div>
-              <div data-live-widget-dots="true" aria-label="Rotacja podglądu">
-                <i data-active="true" />
-                <i />
-                <i />
-              </div>
-            </div>
-          </section>
-
-          <section data-context-card="activity">
-            <span>Ostatnio dodane</span>
-            {recentTransactionPreviews.length === 0 ? (
-              <small>Brak wpisów</small>
-            ) : (
-              recentTransactionPreviews.slice(0, 5).map((transaction) => (
-                <div
-                  key={transaction.id}
-                  data-context-activity-row="true"
-                  data-transaction-kind={transaction.kind}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => {
-                    setActiveUtilityPanel('search')
-                    handleBankSearchFieldChange('description', transaction.description)
-                  }}
-                  onKeyDown={(event) => {
-                    if (event.key !== 'Enter' && event.key !== ' ') {
-                      return
-                    }
-
-                    event.preventDefault()
-                    setActiveUtilityPanel('search')
-                    handleBankSearchFieldChange('description', transaction.description)
-                  }}
-                >
-                  <b>{transaction.amount} zł</b>
-                  <div data-context-activity-copy="true">
-                    <strong>{transaction.description || 'Bez opisu'}</strong>
-                    <small>{transaction.categoryLabel}</small>
-                  </div>
-                  <time>{transaction.date}</time>
-                </div>
-              ))
-            )}
-          </section>
-        </aside>
+        <BudgetRightRail
+          selectedMonth={selectedMonth}
+          isSelectedMonthLocked={isSelectedMonthLocked}
+          transactionCount={selectedMonthTransactions.length}
+          categoryCount={visibleCategories.length}
+          balance={totalBudgetBalance}
+          draftCount={drafts.length}
+          activeLiveRailItem={activeLiveRailItem}
+          recurringCount={recurringTransactions.length}
+          goalsCount={financialGoals.length}
+          showRecurring={effectiveVisibleModules.recurringTransactions}
+          showGoals={effectiveVisibleModules.financialGoals}
+          onOpenSearch={() => setActiveUtilityPanel('search')}
+          onOpenNotifications={() => setActiveUtilityPanel('recurringTransactions')}
+          onQuickAdd={() => openBlankFloatingTransactionCreator(null)}
+          onToggleProfile={() => setIsSettingsPanelVisible((previousValue) => !previousValue)}
+        />
       </section>
 
       {isDashboardPanelOpen && (
