@@ -130,7 +130,7 @@ export default function Level3CalendarBlock({
       onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
       onAddTransactionForDay={onAddTransactionForDay}
       calendarTitle={`Kalendarz • ${categoryName}`}
-      calendarSubtitle="Kliknij dzień, aby zobaczyć wpisy z tej podkategorii lub dodać nowy wpis."
+      calendarSubtitle=""
     />
   )
 }

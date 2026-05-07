@@ -14,23 +14,23 @@ import { DASHBOARD_WIDGET_DEFINITIONS } from '../lib/dashboardWidgetConfig'
 import type { DashboardContainerType } from '../lib/dashboardTypes'
 
 const panelStyle: CSSProperties = {
-  marginBottom: 20,
+  marginBottom: 14,
   background:
-    'linear-gradient(135deg, rgba(255,255,255,0.88), rgba(246,249,252,0.74)), radial-gradient(circle at 8% 0%, rgba(56,189,248,0.18), transparent 30%), radial-gradient(circle at 92% 10%, rgba(34,197,94,0.12), transparent 28%)',
-  border: '1px solid rgba(255, 255, 255, 0.72)',
-  borderRadius: 24,
-  padding: 18,
-  boxShadow: '0 18px 54px rgba(15, 23, 42, 0.10)',
-  backdropFilter: 'blur(18px)',
+    'linear-gradient(145deg, rgba(255,255,255,0.78), rgba(241,245,249,0.66)), radial-gradient(circle at 12% 0%, rgba(59,130,246,0.13), transparent 32%), radial-gradient(circle at 92% 8%, rgba(20,184,166,0.10), transparent 28%)',
+  border: '1px solid rgba(226, 232, 240, 0.72)',
+  borderRadius: 18,
+  padding: 14,
+  boxShadow: '0 22px 64px rgba(15, 23, 42, 0.11), inset 0 1px 0 rgba(255,255,255,0.72)',
+  backdropFilter: 'blur(24px) saturate(1.18)',
 }
 
 const headerStyle: CSSProperties = {
   display: 'flex',
   justifyContent: 'space-between',
-  gap: 12,
+  gap: 10,
   flexWrap: 'wrap',
   alignItems: 'flex-start',
-  marginBottom: 14,
+  marginBottom: 10,
 }
 
 type Props = {

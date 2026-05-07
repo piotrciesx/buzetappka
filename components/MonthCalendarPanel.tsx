@@ -95,7 +95,7 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
     onDuplicateTransaction,
     onAddTransactionForDay,
     calendarTitle = 'Kalendarz miesiąca',
-    calendarSubtitle = 'Kliknij dzień, aby zobaczyć wpisy z tego dnia.',
+    calendarSubtitle = '',
     heatmapVariant = 'balance',
     heatmapMode: controlledHeatmapMode,
     onHeatmapModeChange,

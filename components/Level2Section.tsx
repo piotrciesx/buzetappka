@@ -499,6 +499,7 @@ export default function Level2Section(props: Props) {
           {!hasChildren && !isSelectedMonthLocked && (
             <button
               type="button"
+              data-category-quick-add="true"
               style={styles.primaryButton}
               onMouseDown={(event) => event.stopPropagation()}
               onPointerDown={(event) => event.stopPropagation()}
@@ -532,6 +533,7 @@ export default function Level2Section(props: Props) {
           </button>
 
           <button
+            data-category-secondary-action="true"
             style={styles.primaryButton}
             onClick={() => {
               setOpenAddSubcategoryFor(l2.id)
@@ -579,9 +581,28 @@ export default function Level2Section(props: Props) {
             </>
           )}
 
-          <details data-mobile-category-menu="true" onClick={(event) => event.stopPropagation()}>
-            <summary style={styles.secondaryButton}>więcej</summary>
+          <details
+            data-mobile-category-menu="true"
+            data-floating-dropdown="true"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <summary style={styles.secondaryButton}>⋯</summary>
             <div data-mobile-category-menu-panel="true">
+              <button
+                type="button"
+                style={styles.secondaryButton}
+                onClick={() => {
+                  setOpenAddSubcategoryFor(l2.id)
+                  setNewSubcategoryName('')
+
+                  if (!isOpen) {
+                    toggleLevel2(l2.id)
+                  }
+                }}
+              >
+                Dodaj podkategorię
+              </button>
+
               {canUseMonthCalendar && (
                 <button type="button" style={styles.secondaryButton} onClick={() => setIsCalendarOpen((prev) => !prev)}>
                   {isCalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
@@ -645,7 +666,7 @@ export default function Level2Section(props: Props) {
           onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
           onAddTransactionForDay={(dayText) => handleOpenCalendarAddForDay(l2.id, dayText)}
           calendarTitle={`Kalendarz • ${l2.name}`}
-          calendarSubtitle="Kliknij dzień, aby zobaczyć wpisy z tej kategorii lub dodać nowy wpis."
+          calendarSubtitle=""
         />
       )}
 

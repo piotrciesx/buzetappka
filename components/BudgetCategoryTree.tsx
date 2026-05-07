@@ -512,6 +512,7 @@ export default function BudgetCategoryTree(props: Props) {
         {!hasLevel2Children && !isSelectedMonthLocked && (
           <button
             type="button"
+            data-category-quick-add="true"
             style={styles.primaryButton}
             onMouseDown={(event) => event.stopPropagation()}
             onPointerDown={(event) => event.stopPropagation()}
@@ -526,6 +527,7 @@ export default function BudgetCategoryTree(props: Props) {
 
         <button
           type="button"
+          data-category-secondary-action="true"
           style={styles.primaryButton}
           onMouseDown={(event) => event.stopPropagation()}
           onPointerDown={(event) => event.stopPropagation()}
@@ -543,9 +545,29 @@ export default function BudgetCategoryTree(props: Props) {
         </button>
 
         {(canUseMonthCalendar || (canUseBudgetLimit && onEditBudgetLimit)) && (
-          <details data-mobile-category-menu="true" onClick={(event) => event.stopPropagation()}>
-            <summary style={styles.secondaryButton}>więcej</summary>
+          <details
+            data-mobile-category-menu="true"
+            data-floating-dropdown="true"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <summary style={styles.secondaryButton}>⋯</summary>
             <div data-mobile-category-menu-panel="true">
+              <button
+                type="button"
+                style={styles.secondaryButton}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  setOpenAddSubcategoryFor(level1Category.id)
+                  setNewSubcategoryName('')
+
+                  if (!openLevel1Ids.includes(level1Category.id)) {
+                    toggleLevel1(level1Category.id)
+                  }
+                }}
+              >
+                Dodaj kategorię
+              </button>
+
               {canUseMonthCalendar && (
                 <button
                   type="button"
@@ -644,7 +666,7 @@ export default function BudgetCategoryTree(props: Props) {
           handleOpenLevel1CalendarAddForDay(level1Category.id, dayText)
         }
         calendarTitle={`Kalendarz • ${level1Category.name}`}
-        calendarSubtitle="Kliknij dzień, aby zobaczyć wpisy z tej kategorii głównej lub dodać nowy wpis."
+        calendarSubtitle=""
       />
     )
   }

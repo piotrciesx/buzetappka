@@ -1,10 +1,12 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import BudgetPageMainPanels from './BudgetPageMainPanels'
+import BudgetPageMainPanels, { type BudgetUtilityPanel } from './BudgetPageMainPanels'
+import DashboardPanel from './DashboardPanel'
 import BudgetPageOverlays from './BudgetPageOverlays'
 import BudgetPageStatusPanels from './BudgetPageStatusPanels'
 import BudgetLimitEditorModal from './BudgetLimitEditorModal'
+import BudgetLimitAlertsPanel from './BudgetLimitAlertsPanel'
 import ProfileMembersPanel from './ProfileMembersPanel'
 import ProfileMonthNotePanel from './ProfileMonthNotePanel'
 import type { BudgetLimitView } from './BudgetLimitIndicator'
@@ -183,7 +185,8 @@ export default function BudgetAppController({
 
   const styles = budgetPageStyles
   const [isSettingsPanelVisible, setIsSettingsPanelVisible] = useState(false)
-  const [isImportExportPanelVisible, setIsImportExportPanelVisible] = useState(false)
+  const [activeUtilityPanel, setActiveUtilityPanel] = useState<BudgetUtilityPanel>(null)
+  const [isDashboardPanelOpen, setIsDashboardPanelOpen] = useState(false)
   const {
     visibleModules,
     draftVisibleModules,
@@ -266,6 +269,62 @@ export default function BudgetAppController({
     isTransactionCreatorOpen,
     newTransactionDate,
   ])
+
+  useEffect(() => {
+    const selector = 'details[data-floating-dropdown="true"]'
+
+    const closeOtherDropdowns = (currentDropdown: HTMLDetailsElement) => {
+      document.querySelectorAll<HTMLDetailsElement>(selector).forEach((dropdown) => {
+        if (dropdown !== currentDropdown) {
+          dropdown.open = false
+        }
+      })
+    }
+
+    const handleToggle = (event: Event) => {
+      const dropdown = event.target instanceof HTMLDetailsElement ? event.target : null
+
+      if (!dropdown?.matches(selector) || !dropdown.open) {
+        return
+      }
+
+      closeOtherDropdowns(dropdown)
+    }
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target instanceof Node ? event.target : null
+
+      if (!target) {
+        return
+      }
+
+      document.querySelectorAll<HTMLDetailsElement>(selector).forEach((dropdown) => {
+        if (!dropdown.contains(target)) {
+          dropdown.open = false
+        }
+      })
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') {
+        return
+      }
+
+      document.querySelectorAll<HTMLDetailsElement>(selector).forEach((dropdown) => {
+        dropdown.open = false
+      })
+    }
+
+    document.addEventListener('toggle', handleToggle, true)
+    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('toggle', handleToggle, true)
+      document.removeEventListener('pointerdown', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
 
   const effectiveVisibleModules = useMemo(
     () =>
@@ -1429,17 +1488,18 @@ export default function BudgetAppController({
     return scopedTransactions
       .filter((transaction) => !transaction.is_deleted)
       .sort((left, right) => (right.created_at || '').localeCompare(left.created_at || ''))
-      .slice(0, 5)
+      .slice(0, 8)
       .map((transaction) => ({
         id: transaction.id,
         amount: String(getAmountNumber(transaction.amount)),
+        kind: getSignedAmountForTransaction(transaction) >= 0 ? 'income' : 'expense',
         date: transaction.day_is_null ? `${transaction.date.slice(0, 7)} · bez dnia` : transaction.date,
         description: transaction.description || '',
         categoryLabel: categoriesById[transaction.category_id]
           ? getCategoryPathLabel(transaction.category_id, categoriesById)
           : 'Kategoria niedostępna',
       }))
-  }, [categoriesById, scopedTransactions])
+  }, [categoriesById, getSignedAmountForTransaction, scopedTransactions])
 
   const budgetPageOverlayProps = useBudgetPageOverlayProps({
     canCreateTransactions,
@@ -1511,6 +1571,23 @@ export default function BudgetAppController({
     openBlankFloatingTransactionCreator,
   })
 
+  const contextCalendarDays = useMemo(() => {
+    const [year, month] = selectedMonth.split('-').map(Number)
+
+    if (!year || !month) {
+      return []
+    }
+
+    const firstDay = new Date(year, month - 1, 1)
+    const daysInMonth = new Date(year, month, 0).getDate()
+    const leadingEmptyDays = (firstDay.getDay() + 6) % 7
+
+    return [
+      ...Array.from({ length: leadingEmptyDays }, () => null),
+      ...Array.from({ length: daysInMonth }, (_, index) => index + 1),
+    ]
+  }, [selectedMonth])
+
   return (
     <main
       style={styles.page}
@@ -1521,12 +1598,13 @@ export default function BudgetAppController({
     >
       <BudgetPageStatusPanels
         styles={styles}
-        visibleModules={effectiveVisibleModules}
         userProfileMenuProps={{
           userEmail,
           onToggleSettings: () => setIsSettingsPanelVisible((previousValue) => !previousValue),
           onToggleImportExport: () =>
-            setIsImportExportPanelVisible((previousValue) => !previousValue),
+            setActiveUtilityPanel((previousValue) =>
+              previousValue === 'importExport' ? null : 'importExport'
+            ),
           onExportBackupJson: () => downloadProfileBackupJson(supabase, profileId),
           onExportBackupCsv: () => downloadProfileBackupCsv(supabase, profileId, budgetStartDate),
           onSignOut: signOut,
@@ -1581,33 +1659,6 @@ export default function BudgetAppController({
           onToggleSelectedMonthExcluded: handleToggleSelectedMonthExcludedWithConfirm,
           styles,
         }}
-        previousMonthCloseReminder={previousMonthCloseReminder}
-        onLockPreviousMonth={handleLockMonth}
-        onHidePreviousMonthReminder={() => setIsPreviousMonthCloseReminderHidden(true)}
-        budgetLimitAlertsPanelProps={{
-          alerts: activeBudgetLimitAlerts,
-          categoriesById,
-          styles,
-          onOpenLimit: setBudgetLimitEditorCategoryId,
-        }}
-        reminderBellPanelProps={{
-          selectedMonth: currentMonth,
-          recurringTransactions,
-          recurringReminderMonthStatuses,
-          transactions: scopedTransactions,
-          categoriesById,
-          styles,
-          onAddFromReminder: openReminderTransactionCreator,
-          categoryOptions: finalCategoryOptions,
-          onSaveReminder: saveRecurringTransaction,
-          onDeleteReminder: deleteRecurringTransaction,
-          onMarkRead: (reminder) =>
-            saveRecurringReminderMonthStatus({
-              reminderId: reminder.id,
-              month: currentMonth,
-              status: 'read',
-            }),
-        }}
         appSettingsPanelProps={{
           simpleMode,
           onSimpleModeChange: setSimpleMode,
@@ -1646,31 +1697,79 @@ export default function BudgetAppController({
           ),
         }}
         isSettingsPanelVisible={isSettingsPanelVisible}
-        hasActiveBudgetLimits={activeBudgetLimits.length > 0}
+        isDashboardOpen={isDashboardPanelOpen}
+        onToggleDashboard={() => setIsDashboardPanelOpen((previousValue) => !previousValue)}
+        activeUtilityPanel={activeUtilityPanel}
+        onOpenUtilityPanel={setActiveUtilityPanel}
+        onQuickAdd={() => openBlankFloatingTransactionCreator(null)}
       />
 
-      <ProfileMonthNotePanel
-        profileId={profileId}
-        userId={userId}
-        selectedMonth={selectedMonth}
-        styles={styles}
-      />
+      <section data-budget-workspace="true">
+        <div data-budget-workspace-main="true">
+          <div data-budget-status-grid="true">
+            {previousMonthCloseReminder && (
+              <details data-budget-compact-notice="alert">
+                <summary>Alert miesiąca</summary>
+                <div>
+                  Poprzedni miesiąc {previousMonthCloseReminder} nie jest jeszcze zamknięty.
+                </div>
+                <div data-budget-actions-row="true" style={{ ...styles.actions, marginTop: 8 }}>
+                  <button
+                    type="button"
+                    style={styles.primaryButton}
+                    onClick={async () => {
+                      const confirmed = confirm(
+                        `Czy na pewno zamknąć poprzedni miesiąc ${previousMonthCloseReminder}?`
+                      )
+
+                      if (!confirmed) {
+                        return
+                      }
+
+                      await handleLockMonth(previousMonthCloseReminder)
+                    }}
+                  >
+                    Zamknij
+                  </button>
+                  <button
+                    type="button"
+                    style={styles.secondaryButton}
+                    onClick={() => setIsPreviousMonthCloseReminderHidden(true)}
+                  >
+                    Później
+                  </button>
+                </div>
+              </details>
+            )}
+
+            <details data-budget-compact-notice="note">
+              <summary>Notatka miesiąca</summary>
+              <ProfileMonthNotePanel
+                profileId={profileId}
+                userId={userId}
+                selectedMonth={selectedMonth}
+                styles={styles}
+              />
+            </details>
+
+            {effectiveVisibleModules.budgetLimits && activeBudgetLimits.length > 0 && (
+              <section data-budget-compact-notice="limits">
+                <div data-workspace-card-title="true">Limity</div>
+                <BudgetLimitAlertsPanel
+                  alerts={activeBudgetLimitAlerts}
+                  categoriesById={categoriesById}
+                  styles={styles}
+                  onOpenLimit={setBudgetLimitEditorCategoryId}
+                />
+              </section>
+            )}
+          </div>
 
       <BudgetPageMainPanels
         visibleModules={effectiveVisibleModules}
         canCreateTransactions={canCreateTransactions}
-        isImportExportPanelVisible={isImportExportPanelVisible}
-        dashboardPanelProps={{
-          profileId,
-          styles,
-          transactions: scopedTransactions,
-          transactionTagsMap,
-          categoriesById,
-          selectedMonth,
-          budgetStartDate,
-          excludedMonthsSet,
-          getSignedAmountForTransaction,
-        }}
+        activeUtilityPanel={activeUtilityPanel}
+        onCloseUtilityPanel={() => setActiveUtilityPanel(null)}
         undoBannerProps={
           lastUndoAction && selectedTransactionIds.length === 0 && !migrationPromptState
             ? {
@@ -1895,7 +1994,7 @@ export default function BudgetAppController({
           onDuplicateTransaction: handleDuplicateTransaction,
           onAddTransactionForDay: handleOpenGlobalCalendarAddForDay,
           calendarTitle: 'Kalendarz miesiąca',
-          calendarSubtitle: 'Kliknij dzień, aby zobaczyć wpisy z tego dnia lub dodać nowy wpis.',
+          calendarSubtitle: '',
           heatmapMode,
           onHeatmapModeChange: setHeatmapMode,
           heatmapInverted,
@@ -2011,6 +2110,161 @@ export default function BudgetAppController({
           styles,
         }}
       />
+          <section data-lower-workspace="true" aria-label="Szybki kontekst workspace">
+            <div data-workspace-insight-card="true">
+              <span>Ostatnie wpisy</span>
+              <strong>{recentTransactionPreviews.length}</strong>
+              <small>najnowsze operacje w budżecie</small>
+            </div>
+            <div data-workspace-insight-card="true">
+              <span>Aktywne kategorie</span>
+              <strong>{visibleCategories.length}</strong>
+              <small>widoczne w tym miesiącu</small>
+            </div>
+            <div data-workspace-insight-card="true">
+              <span>Szybkie akcje</span>
+              <div data-workspace-quick-actions="true">
+                <button type="button" onClick={() => openBlankFloatingTransactionCreator(null)}>
+                  Dodaj wpis
+                </button>
+                <button type="button" onClick={() => setActiveUtilityPanel('search')}>
+                  Szukaj
+                </button>
+                <button type="button" onClick={() => setActiveUtilityPanel('monthCalendar')}>
+                  Kalendarz
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <aside data-budget-context-rail="true" aria-label="Kontekst workspace">
+          <section data-context-card="summary">
+            <div>
+              <span>Miesiąc</span>
+              <strong>{selectedMonth}</strong>
+            </div>
+            <em>{isSelectedMonthLocked ? 'zamknięty' : 'otwarty'}</em>
+          </section>
+
+          <section data-context-card="metrics">
+            <div data-context-metric="true">
+              <span>Wpisy</span>
+              <strong>{selectedMonthTransactions.length}</strong>
+            </div>
+            <div data-context-metric="true">
+              <span>Kategorie</span>
+              <strong>{visibleCategories.length}</strong>
+            </div>
+          </section>
+
+          <section data-context-card="calendar">
+            <div data-context-card-header="true">
+              <span>Mini kalendarz</span>
+              <button type="button" onClick={() => setActiveUtilityPanel('monthCalendar')}>
+                Otwórz
+              </button>
+            </div>
+            <div data-mini-calendar="true">
+              {['P', 'W', 'Ś', 'C', 'P', 'S', 'N'].map((dayLabel) => (
+                <small key={dayLabel}>{dayLabel}</small>
+              ))}
+              {contextCalendarDays.map((dayNumber, index) =>
+                dayNumber ? (
+                  <button
+                    key={`${selectedMonth}-${dayNumber}`}
+                    type="button"
+                    onClick={() => handleOpenGlobalCalendarAddForDay(String(dayNumber))}
+                  >
+                    {dayNumber}
+                  </button>
+                ) : (
+                  <i key={`empty-${index}`} />
+                )
+              )}
+            </div>
+          </section>
+
+          <section data-context-card="activity">
+            <span>Ostatnio dodane</span>
+            {recentTransactionPreviews.length === 0 ? (
+              <small>Brak wpisów</small>
+            ) : (
+              recentTransactionPreviews.slice(0, 5).map((transaction) => (
+                <div
+                  key={transaction.id}
+                  data-context-activity-row="true"
+                  data-transaction-kind={transaction.kind}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => {
+                    setActiveUtilityPanel('search')
+                    handleBankSearchFieldChange('description', transaction.description)
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key !== 'Enter' && event.key !== ' ') {
+                      return
+                    }
+
+                    event.preventDefault()
+                    setActiveUtilityPanel('search')
+                    handleBankSearchFieldChange('description', transaction.description)
+                  }}
+                >
+                  <b>{transaction.amount} zł</b>
+                  <div data-context-activity-copy="true">
+                    <strong>{transaction.description || 'Bez opisu'}</strong>
+                    <small>{transaction.categoryLabel}</small>
+                  </div>
+                  <time>{transaction.date}</time>
+                </div>
+              ))
+            )}
+          </section>
+        </aside>
+      </section>
+
+      {effectiveVisibleModules.dashboard && isDashboardPanelOpen && (
+        <div data-dashboard-overlay="true">
+          <button
+            type="button"
+            data-dashboard-backdrop="true"
+            aria-label="Zamknij dashboard"
+            onClick={() => setIsDashboardPanelOpen(false)}
+          />
+          <aside data-dashboard-drawer="true" aria-label="Dashboard analityczny">
+            <div data-dashboard-drawer-header="true">
+              <div>
+                <strong>Dashboard</strong>
+                <span>compact analytics</span>
+              </div>
+              <div data-dashboard-mode-tabs="true" aria-label="Tryb dashboardu">
+                <button type="button">compact</button>
+                <button type="button">standard</button>
+                <button type="button">full</button>
+              </div>
+              <button
+                type="button"
+                aria-label="Zamknij dashboard"
+                onClick={() => setIsDashboardPanelOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+            <DashboardPanel
+              profileId={profileId}
+              styles={styles}
+              transactions={scopedTransactions}
+              transactionTagsMap={transactionTagsMap}
+              categoriesById={categoriesById}
+              selectedMonth={selectedMonth}
+              budgetStartDate={budgetStartDate}
+              excludedMonthsSet={excludedMonthsSet}
+              getSignedAmountForTransaction={getSignedAmountForTransaction}
+            />
+          </aside>
+        </div>
+      )}
       <BudgetPageOverlays {...budgetPageOverlayProps} />
 
       <BudgetLimitEditorModal

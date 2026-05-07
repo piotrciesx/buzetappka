@@ -4,7 +4,6 @@ import { ComponentPropsWithRef } from 'react'
 import BudgetTreeSection from './BudgetTreeSection'
 import BulkActionsBar from './BulkActionsBar'
 import CategoryMigrationPrompt from './CategoryMigrationPrompt'
-import DashboardPanel from './DashboardPanel'
 import DraftsPanel from './DraftsPanel'
 import FinancialGoalsContainer from './FinancialGoalsContainer'
 import HiddenCategoriesPanel from './HiddenCategoriesPanel'
@@ -16,11 +15,22 @@ import TrashPanel from './TrashPanel'
 import UndoBanner from './UndoBanner'
 import type { AppModuleVisibility } from '../lib/useAppModuleVisibility'
 
+export type BudgetUtilityPanel =
+  | 'drafts'
+  | 'importExport'
+  | 'paymentSources'
+  | 'financialGoals'
+  | 'search'
+  | 'monthCalendar'
+  | 'hiddenCategories'
+  | 'trash'
+  | null
+
 type Props = {
   visibleModules: AppModuleVisibility
   canCreateTransactions: boolean
-  isImportExportPanelVisible: boolean
-  dashboardPanelProps: ComponentPropsWithRef<typeof DashboardPanel>
+  activeUtilityPanel: BudgetUtilityPanel
+  onCloseUtilityPanel: () => void
   undoBannerProps: ComponentPropsWithRef<typeof UndoBanner> | null
   categoryMigrationPromptProps: ComponentPropsWithRef<typeof CategoryMigrationPrompt> | null
   bulkActionsBarProps: ComponentPropsWithRef<typeof BulkActionsBar> | null
@@ -38,8 +48,8 @@ type Props = {
 export default function BudgetPageMainPanels({
   visibleModules,
   canCreateTransactions,
-  isImportExportPanelVisible,
-  dashboardPanelProps,
+  activeUtilityPanel,
+  onCloseUtilityPanel,
   undoBannerProps,
   categoryMigrationPromptProps,
   bulkActionsBarProps,
@@ -53,33 +63,78 @@ export default function BudgetPageMainPanels({
   hiddenCategoriesPanelProps,
   trashPanelProps,
 }: Props) {
+  const utilityPanelTitle =
+    activeUtilityPanel === 'drafts'
+      ? 'Szkice'
+      : activeUtilityPanel === 'importExport'
+        ? 'Dane / backup'
+        : activeUtilityPanel === 'paymentSources'
+          ? 'Płatności'
+          : activeUtilityPanel === 'financialGoals'
+            ? 'Cele finansowe'
+            : activeUtilityPanel === 'search'
+              ? 'Wyszukiwarka'
+              : activeUtilityPanel === 'monthCalendar'
+                ? 'Kalendarz'
+                : activeUtilityPanel === 'hiddenCategories'
+                  ? 'Ukryte kategorie'
+                  : activeUtilityPanel === 'trash'
+                    ? 'Kosz'
+                    : ''
+
   return (
     <>
-      {visibleModules.dashboard && <DashboardPanel {...dashboardPanelProps} />}
-
       {undoBannerProps && <UndoBanner {...undoBannerProps} />}
 
       {categoryMigrationPromptProps && <CategoryMigrationPrompt {...categoryMigrationPromptProps} />}
 
       {canCreateTransactions && bulkActionsBarProps && <BulkActionsBar {...bulkActionsBarProps} />}
 
-      <DraftsPanel {...draftsPanelProps} />
+      {activeUtilityPanel && (
+        <div data-budget-utility-overlay="true">
+          <button
+            type="button"
+            aria-label="Zamknij panel"
+            data-budget-utility-backdrop="true"
+            onClick={onCloseUtilityPanel}
+          />
+          <aside
+            data-budget-utility-panel="true"
+            data-utility-panel-kind={activeUtilityPanel}
+            aria-label={utilityPanelTitle}
+          >
+            <div data-budget-utility-header="true">
+              <div>{utilityPanelTitle}</div>
+              <button type="button" onClick={onCloseUtilityPanel} aria-label="Zamknij panel">
+                ×
+              </button>
+            </div>
 
-      {isImportExportPanelVisible && <ImportExportPanel {...importExportPanelProps} />}
-
-      {visibleModules.paymentSources && <PaymentSourcesPanel {...paymentSourcesPanelProps} />}
-
-      {visibleModules.financialGoals && <FinancialGoalsContainer {...financialGoalsContainerProps} />}
-
-      <SearchPanel {...searchPanelProps} />
-
-      {visibleModules.monthCalendar && <MonthCalendarPanel {...monthCalendarPanelProps} />}
+            <div data-budget-utility-body="true">
+              {activeUtilityPanel === 'drafts' && <DraftsPanel {...draftsPanelProps} />}
+              {activeUtilityPanel === 'importExport' && (
+                <ImportExportPanel {...importExportPanelProps} />
+              )}
+              {activeUtilityPanel === 'paymentSources' && visibleModules.paymentSources && (
+                <PaymentSourcesPanel {...paymentSourcesPanelProps} />
+              )}
+              {activeUtilityPanel === 'financialGoals' && visibleModules.financialGoals && (
+                <FinancialGoalsContainer {...financialGoalsContainerProps} />
+              )}
+              {activeUtilityPanel === 'search' && <SearchPanel {...searchPanelProps} />}
+              {activeUtilityPanel === 'monthCalendar' && visibleModules.monthCalendar && (
+                <MonthCalendarPanel {...monthCalendarPanelProps} />
+              )}
+              {activeUtilityPanel === 'hiddenCategories' && (
+                <HiddenCategoriesPanel {...hiddenCategoriesPanelProps} />
+              )}
+              {activeUtilityPanel === 'trash' && <TrashPanel {...trashPanelProps} />}
+            </div>
+          </aside>
+        </div>
+      )}
 
       <BudgetTreeSection {...budgetTreeSectionProps} />
-
-      <HiddenCategoriesPanel {...hiddenCategoriesPanelProps} />
-
-      <TrashPanel {...trashPanelProps} />
     </>
   )
 }

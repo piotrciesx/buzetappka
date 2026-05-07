@@ -38,11 +38,11 @@ type Props = {
 }
 
 const panelStyle = {
-  border: '1px solid #d0d7de',
-  borderRadius: 12,
-  padding: 16,
-  marginBottom: 20,
-  background: '#ffffff',
+  border: 0,
+  borderRadius: 0,
+  padding: 0,
+  marginBottom: 0,
+  background: 'transparent',
 } as const
 
 const panelHeaderStyle = {
@@ -248,10 +248,7 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
     <div ref={ref} style={panelStyle}>
       <div style={panelHeaderStyle}>
         <div>
-          <div style={styles.sectionTitle}>Wyszukiwarka / tryb bankowy</div>
-          <div style={subtitleStyle}>
-            Szuka po całej historii wpisów, a nie tylko po aktualnym miesiącu.
-          </div>
+          <div style={styles.sectionTitle}>Wyszukiwarka</div>
         </div>
 
         <button type="button" onClick={() => setIsOpen((prev) => !prev)} style={toggleButtonStyle}>

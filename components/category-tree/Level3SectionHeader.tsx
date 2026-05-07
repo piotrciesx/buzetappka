@@ -105,6 +105,7 @@ export default function Level3SectionHeader({
 
         {canAddHere && !isSelectedMonthLocked && (
           <button
+            data-category-quick-add="true"
             style={styles.primaryButton}
             onClick={() => {
               onInlineAdd()
@@ -185,8 +186,12 @@ export default function Level3SectionHeader({
         ) : null}
 
         {showCategoryActions && (
-          <details data-mobile-category-menu="true" onClick={(event) => event.stopPropagation()}>
-            <summary style={styles.secondaryButton}>więcej</summary>
+          <details
+            data-mobile-category-menu="true"
+            data-floating-dropdown="true"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <summary style={styles.secondaryButton}>⋯</summary>
             <div data-mobile-category-menu-panel="true">
               {canUseMonthCalendar && (
                 <button type="button" style={styles.secondaryButton} onClick={onToggleCalendar}>

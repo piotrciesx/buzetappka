@@ -204,7 +204,11 @@ export default function BudgetTreeSection({
     <div>
       <div style={styles.sectionTitle}>Drzewo kategorii</div>
 
-      <div style={styles.sortBar}>
+      <details data-tree-view-menu="true" data-floating-dropdown="true">
+        <summary aria-label="Ustawienia widoku drzewa">⋯</summary>
+      </details>
+
+      <div data-tree-sort-inline="true" style={styles.sortBar}>
         <div style={styles.sortGroup}>
           <label htmlFor="level2-sort-mode" style={styles.sortLabel}>
             Sortowanie L2
