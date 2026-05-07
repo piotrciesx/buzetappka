@@ -270,7 +270,7 @@ export default function BudgetTreeSection({
               aria-label="Kalendarz"
               title="Kalendarz"
             >
-              ◷
+              ▦
             </button>
           )}
 

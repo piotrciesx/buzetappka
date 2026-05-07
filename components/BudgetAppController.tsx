@@ -680,6 +680,39 @@ export default function BudgetAppController({
     transactionCategoryPathLabels,
   ])
 
+  const pinnedWorkspaceCategories = useMemo(() => {
+    const categoryNameCounts = categories.reduce<Record<string, number>>((acc, category) => {
+      acc[category.name] = (acc[category.name] || 0) + 1
+      return acc
+    }, {})
+
+    return pinnedCategoryIds
+      .filter((categoryId) => addableTransactionCategoryIds.has(categoryId) && categoriesById[categoryId])
+      .slice(0, 5)
+      .map((categoryId) => {
+        const category = categoriesById[categoryId]
+        const rootId = getRootLevel1IdForCategory(categoryId)
+        const isDuplicateName = categoryNameCounts[category.name] > 1
+        const label = isDuplicateName
+          ? transactionCategoryPathLabels[categoryId] || getCategoryPathLabel(categoryId, categoriesById)
+          : category.name
+
+        return {
+          id: categoryId,
+          label,
+          kind: rootId === expenseLevel1Id ? 'expense' : 'income',
+        }
+      })
+  }, [
+    addableTransactionCategoryIds,
+    categories,
+    categoriesById,
+    expenseLevel1Id,
+    getRootLevel1IdForCategory,
+    pinnedCategoryIds,
+    transactionCategoryPathLabels,
+  ])
+
   const getDefaultPaymentSourceIdForCategoryId = useCallback(
     (categoryId: string) => {
       if (!isPaymentSourcesModuleEnabled) {
@@ -2193,6 +2226,51 @@ export default function BudgetAppController({
           ),
           workspaceBottomContent: (
             <section data-core-workspace-footer="true" aria-label="Ostatnie wpisy i narzędzia">
+              <div data-workspace-mini-calendar-card="true">
+                <div data-workspace-recent-header="true">
+                  <span>Kalendarz</span>
+                  <small>{selectedMonth}</small>
+                </div>
+                <div data-workspace-calendar-nav="true">
+                  <button
+                    type="button"
+                    onClick={goToPrevMonth}
+                    disabled={isPrevMonthNavigationBlocked}
+                    aria-label="Poprzedni miesiąc"
+                  >
+                    ‹
+                  </button>
+                  <button type="button" onClick={() => setActiveUtilityPanel('monthCalendar')}>
+                    Otwórz
+                  </button>
+                  <button
+                    type="button"
+                    onClick={goToNextMonth}
+                    disabled={isNextMonthNavigationBlocked}
+                    aria-label="Następny miesiąc"
+                  >
+                    ›
+                  </button>
+                </div>
+                <div data-mini-calendar="true">
+                  {['P', 'W', 'Ś', 'C', 'P', 'S', 'N'].map((dayLabel) => (
+                    <small key={`workspace-${dayLabel}`}>{dayLabel}</small>
+                  ))}
+                  {contextCalendarDays.map((dayNumber, index) =>
+                    dayNumber ? (
+                      <button
+                        key={`workspace-${selectedMonth}-${dayNumber}`}
+                        type="button"
+                        onClick={() => handleOpenGlobalCalendarAddForDay(String(dayNumber))}
+                      >
+                        {dayNumber}
+                      </button>
+                    ) : (
+                      <i key={`workspace-empty-${index}`} />
+                    )
+                  )}
+                </div>
+              </div>
               <div data-workspace-month-switch="true">
                 <button
                   type="button"
@@ -2218,6 +2296,20 @@ export default function BudgetAppController({
                   <span>Ostatnie wpisy</span>
                   <small>{recentTransactionPreviews.length} w podglądzie</small>
                 </div>
+                {pinnedWorkspaceCategories.length > 0 && (
+                  <div data-pinned-categories="true" aria-label="Przypięte kategorie">
+                    {pinnedWorkspaceCategories.map((category) => (
+                      <button
+                        key={category.id}
+                        type="button"
+                        data-pinned-category-kind={category.kind}
+                        onClick={() => openTransactionCreator(category.id)}
+                      >
+                        {category.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
                 <div data-workspace-recent-rows="true">
                   {recentTransactionPreviews.length === 0 ? (
                     <small>Brak wpisów w tym zakresie.</small>
@@ -2421,6 +2513,10 @@ export default function BudgetAppController({
               <div data-live-widget-meta="true">
                 <span>{drafts.length} szkice</span>
                 <span>{selectedMonthTransactions.length} wpisy</span>
+                {effectiveVisibleModules.recurringTransactions && (
+                  <span>{recurringTransactions.length} przypomnienia</span>
+                )}
+                {effectiveVisibleModules.financialGoals && <span>{financialGoals.length} cele</span>}
                 <span>{isSelectedMonthLocked ? 'zamknięty' : 'otwarty'}</span>
               </div>
               <div data-live-widget-dots="true" aria-label="Rotacja podglądu">

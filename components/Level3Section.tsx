@@ -1,6 +1,6 @@
 'use client'
 
-import { CSSProperties, KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { CSSProperties, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import DescriptionSuggestionDeleteMenu from './DescriptionSuggestionDeleteMenu'
@@ -247,8 +247,10 @@ export default function Level3Section(props: Props) {
   const [inlineRecurringTransactionId, setInlineRecurringTransactionId] = useState('')
   const [isInlineSaving, setIsInlineSaving] = useState(false)
   const inlineSaveLockRef = useRef(false)
+  const inlineDayInputRef = useRef<HTMLInputElement | null>(null)
   const inlineAmountInputRef = useRef<HTMLInputElement | null>(null)
   const inlineDescriptionInputRef = useRef<HTMLInputElement | null>(null)
+  const editDayInputRef = useRef<HTMLInputElement | null>(null)
 
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
 
@@ -442,13 +444,25 @@ export default function Level3Section(props: Props) {
     }
   }
 
-  const openInlineAdd = () => {
+  const openInlineAdd = useCallback(() => {
     setIsInlineAdding(true)
-    setInlineDay('')
-    setInlineAmount('')
-    setInlineDescription('')
-    setInlineTagNames([])
-    setInlineTagInput('')
+    const storageKey = `budget-inline-draft-${l3.id}-${selectedMonth}`
+    const storedDraft = typeof window === 'undefined' ? null : window.localStorage.getItem(storageKey)
+    let parsedDraft: Partial<{ day: string; amount: string; description: string; tags: string }> = {}
+
+    if (storedDraft) {
+      try {
+        parsedDraft = JSON.parse(storedDraft)
+      } catch {
+        parsedDraft = {}
+      }
+    }
+
+    setInlineDay(parsedDraft.day || '')
+    setInlineAmount(parsedDraft.amount || '')
+    setInlineDescription(parsedDraft.description || '')
+    setInlineTagNames(splitTagInput(parsedDraft.tags || ''))
+    setInlineTagInput(parsedDraft.tags || '')
     setInlinePaymentSourceId(
       canUsePaymentSources ? getDefaultPaymentSourceIdForCategoryId?.(l3.id) || '' : ''
     )
@@ -460,19 +474,36 @@ export default function Level3Section(props: Props) {
     }
 
     window.setTimeout(() => {
-      inlineAmountInputRef.current?.focus()
+      inlineDayInputRef.current?.focus()
     }, 0)
-  }
+  }, [
+    canUsePaymentSources,
+    getDefaultPaymentSourceIdForCategoryId,
+    isOpen,
+    l3.id,
+    selectedMonth,
+    toggleLevel3,
+  ])
 
   useEffect(() => {
     if (startInlineAddToken <= 0 || isSelectedMonthLocked) {
       return
     }
 
-    openInlineAdd()
-  }, [startInlineAddToken])
+    const timeoutId = window.setTimeout(() => {
+      openInlineAdd()
+    }, 0)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [isSelectedMonthLocked, openInlineAdd, startInlineAddToken])
 
   const cancelInlineAdd = () => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem(`budget-inline-draft-${l3.id}-${selectedMonth}`)
+    }
+
     setIsInlineAdding(false)
     setInlineDay('')
     setInlineAmount('')
@@ -505,12 +536,45 @@ export default function Level3Section(props: Props) {
         canUsePaymentSources ? inlinePaymentSplitItems : undefined,
         inlineRecurringTransactionId || null
       )
+      if (typeof window !== 'undefined') {
+        window.localStorage.removeItem(`budget-inline-draft-${l3.id}-${selectedMonth}`)
+      }
       cancelInlineAdd()
     } catch {
       inlineSaveLockRef.current = false
       setIsInlineSaving(false)
     }
   }
+
+  useEffect(() => {
+    if (!isInlineAdding || typeof window === 'undefined') {
+      return
+    }
+
+    const hasDraft =
+      inlineDay.trim() || inlineAmount.trim() || inlineDescription.trim() || inlineTagInput.trim()
+    const storageKey = `budget-inline-draft-${l3.id}-${selectedMonth}`
+    const timeoutId = window.setTimeout(() => {
+      if (!hasDraft) {
+        window.localStorage.removeItem(storageKey)
+        return
+      }
+
+      window.localStorage.setItem(
+        storageKey,
+        JSON.stringify({
+          day: inlineDay,
+          amount: inlineAmount,
+          description: inlineDescription,
+          tags: inlineTagInput,
+        })
+      )
+    }, 450)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [inlineAmount, inlineDay, inlineDescription, inlineTagInput, isInlineAdding, l3.id, selectedMonth])
 
   const orderedTransactions = useMemo(() => {
     return [...transactions].sort((left, right) => {
@@ -673,6 +737,7 @@ export default function Level3Section(props: Props) {
               normalizeAmountInput={normalizeAmountInput}
               saveInlineAdd={saveInlineAdd}
               cancelInlineAdd={cancelInlineAdd}
+              inlineDayInputRef={inlineDayInputRef}
               styles={styles}
             />
           )}
@@ -703,6 +768,7 @@ export default function Level3Section(props: Props) {
                     {isEditing && !isSelectedMonthLocked ? (
                       <>
                         <input
+                          ref={editDayInputRef}
                           style={styles.smallInput}
                           value={editDay}
                           onChange={(event) =>
@@ -716,19 +782,8 @@ export default function Level3Section(props: Props) {
                           onKeyDown={(event) => {
                             if (event.key === 'Enter') {
                               event.preventDefault()
-                              editAmountInputRef.current?.focus()
+                              editDescriptionInputRef.current?.focus()
                             }
-                          }}
-                        />
-
-                        <input
-                          ref={editAmountInputRef}
-                          style={styles.smallInput}
-                          value={editAmount}
-                          onChange={(event) => setEditAmount(normalizeAmountInput(event.target.value))}
-                          placeholder="kwota"
-                          onKeyDown={async (event) => {
-                            await handleEditFieldKeyDown(event, transaction.id, 'amount')
                           }}
                         />
 
@@ -745,7 +800,20 @@ export default function Level3Section(props: Props) {
                             onFocus={() => setIsEditDescriptionFocused(true)}
                             onBlur={() => setIsEditDescriptionFocused(false)}
                             onKeyDown={async (event) => {
-                              await handleEditFieldKeyDown(event, transaction.id, 'description')
+                              if (handleEditSuggestionKeyDown(event)) {
+                                return
+                              }
+
+                              if (event.key === 'Escape') {
+                                event.preventDefault()
+                                cancelEditingTransaction()
+                                return
+                              }
+
+                              if (event.key === 'Enter' && !event.shiftKey) {
+                                event.preventDefault()
+                                editAmountInputRef.current?.focus()
+                              }
                             }}
                           />
 
@@ -788,6 +856,17 @@ export default function Level3Section(props: Props) {
                             </div>
                           )}
                         </div>
+
+                        <input
+                          ref={editAmountInputRef}
+                          style={styles.smallInput}
+                          value={editAmount}
+                          onChange={(event) => setEditAmount(normalizeAmountInput(event.target.value))}
+                          placeholder="kwota"
+                          onKeyDown={async (event) => {
+                            await handleEditFieldKeyDown(event, transaction.id, 'description')
+                          }}
+                        />
 
                         <div style={tagFieldWrapStyle}>
                           <input

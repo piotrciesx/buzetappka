@@ -26,6 +26,7 @@ type BaseProps = {
   headerDragProps?: HTMLAttributes<HTMLDivElement>
   extraActions?: ReactNode
   limitIndicator?: ReactNode
+  kind?: 'income' | 'expense' | 'neutral'
   summary?: {
     amount: number
     transactionCount: number
@@ -48,6 +49,7 @@ function Level1CardBase(props: BaseProps) {
     headerDragProps,
     extraActions,
     limitIndicator,
+    kind = 'neutral',
     summary,
   } = props
 
@@ -55,6 +57,7 @@ function Level1CardBase(props: BaseProps) {
     <>
       <div
         data-category-drag-row="true"
+        data-level1-kind={kind}
         style={styles.l1Header}
         onClick={onToggle}
         {...headerDragProps}
@@ -66,8 +69,7 @@ function Level1CardBase(props: BaseProps) {
             <div>{level1Category.name}</div>
             {summary && (
               <div data-level1-summary="true">
-                <strong>{summary.amount.toLocaleString('pl-PL')} zl</strong>
-                <span>{summary.transactionCount} wpisy</span>
+                <strong>{summary.amount.toLocaleString('pl-PL')} zł</strong>
                 <span>{summary.childCount} podkategorie</span>
               </div>
             )}
@@ -105,6 +107,7 @@ export function SortableLevel1Card(props: SortableProps) {
     styles,
     extraActions,
     limitIndicator,
+    kind,
     summary,
   } = props
 
@@ -149,6 +152,7 @@ export function SortableLevel1Card(props: SortableProps) {
         }
         extraActions={extraActions}
         limitIndicator={limitIndicator}
+        kind={kind}
         summary={summary}
         dragHandle={
           isSortable && !isMobileViewport ? (

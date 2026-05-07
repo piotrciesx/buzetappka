@@ -704,6 +704,29 @@ export default function BudgetCategoryTree(props: Props) {
     transactionCount: getTransactionsForLevel1AndMonth(level1Category.id).length,
     childCount: getSortedLevel2Children(level1Category.id).length,
   })
+  const getLevel1Kind = (level1Category: Category) =>
+    level1Category.id === expenseLevel1Id ? 'expense' : 'income'
+
+  const renderLevel1Content = (level1Category: Category) => {
+    const isLevel1Open = openLevel1Ids.includes(level1Category.id)
+    const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
+
+    if (!isLevel1Open && !(canUseMonthCalendar && isLevel1CalendarOpen)) {
+      return null
+    }
+
+    return (
+      <section
+        key={`content-${level1Category.id}`}
+        data-level1-expanded-content="true"
+        data-level1-kind={getLevel1Kind(level1Category)}
+      >
+        {canUseMonthCalendar && isLevel1CalendarOpen && renderLevel1CalendarPanel(level1Category)}
+        {renderAddSubcategoryForm(level1Category.id, 'Nazwa kategorii')}
+        {isLevel1Open ? renderLevel2List(level1Category) : null}
+      </section>
+    )
+  }
 
   const isLevel1DndBlocked =
     isReorderingLevel1 || sortedLevel1.some((category) => openLevel1Ids.includes(category.id))
@@ -711,9 +734,10 @@ export default function BudgetCategoryTree(props: Props) {
 
   if (isLevel1DndBlocked) {
     return (
-      <div>
-        {sortedLevel1.map((level1Category) => {
-          const isLevel1Open = openLevel1Ids.includes(level1Category.id)
+      <div data-level1-tree-shell="true">
+        <div data-level1-header-grid="true">
+          {sortedLevel1.map((level1Category) => {
+            const isLevel1Open = openLevel1Ids.includes(level1Category.id)
           const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
 
           return (
@@ -723,6 +747,7 @@ export default function BudgetCategoryTree(props: Props) {
               isOpen={isLevel1Open}
               onToggle={() => toggleLevel1(level1Category.id)}
               styles={styles}
+              kind={getLevel1Kind(level1Category)}
               summary={getLevel1Summary(level1Category)}
               dragHandle={renderBlockedLevel1DragHandle(level1Category, isLevel1Sortable)}
               extraActions={renderLevel1Actions(level1Category, isLevel1CalendarOpen)}
@@ -731,50 +756,50 @@ export default function BudgetCategoryTree(props: Props) {
                   <BudgetLimitIndicator view={getBudgetLimitView?.(null) ?? null} />
                 ) : null
               }
-            >
-              {canUseMonthCalendar && isLevel1CalendarOpen && renderLevel1CalendarPanel(level1Category)}
-              {renderAddSubcategoryForm(level1Category.id, 'Nazwa kategorii')}
-              {isLevel1Open ? renderLevel2List(level1Category) : null}
-            </StaticLevel1Card>
+            />
           )
         })}
+        </div>
+        <div data-level1-content-stack="true">{sortedLevel1.map(renderLevel1Content)}</div>
       </div>
     )
   }
 
   return (
-    <DndContext
-      sensors={dndSensors}
-      collisionDetection={closestCenter}
-      onDragStart={() => {
-        handleLevel1DragStart()
-      }}
-      onDragEnd={async (event: DragEndEvent) => {
-        const { active, over } = event
+    <div data-level1-tree-shell="true">
+      <DndContext
+        sensors={dndSensors}
+        collisionDetection={closestCenter}
+        onDragStart={() => {
+          handleLevel1DragStart()
+        }}
+        onDragEnd={async (event: DragEndEvent) => {
+          const { active, over } = event
 
-        if (!over || active.id === over.id) {
-          return
-        }
+          if (!over || active.id === over.id) {
+            return
+          }
 
-        const level1Ids = sortedLevel1.map((category) => category.id)
-        await handleReorderLevel1(
-          String(active.id),
-          getNearestDndSwapTargetId(
-            level1Ids,
+          const level1Ids = sortedLevel1.map((category) => category.id)
+          await handleReorderLevel1(
             String(active.id),
-            String(over.id),
-            isMobileViewport
+            getNearestDndSwapTargetId(
+              level1Ids,
+              String(active.id),
+              String(over.id),
+              isMobileViewport
+            )
           )
-        )
-      }}
-    >
-      <SortableContext
-        items={sortedLevel1.map((category) => category.id)}
-        strategy={verticalListSortingStrategy}
+        }}
       >
-        {sortedLevel1.map((level1Category) => {
-          const isLevel1Open = openLevel1Ids.includes(level1Category.id)
-          const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
+        <SortableContext
+          items={sortedLevel1.map((category) => category.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div data-level1-header-grid="true">
+            {sortedLevel1.map((level1Category) => {
+              const isLevel1Open = openLevel1Ids.includes(level1Category.id)
+              const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
 
           return (
             <SortableLevel1Card
@@ -784,6 +809,7 @@ export default function BudgetCategoryTree(props: Props) {
               onToggle={() => toggleLevel1(level1Category.id)}
               isSortable={isLevel1Sortable}
               styles={styles}
+              kind={getLevel1Kind(level1Category)}
               summary={getLevel1Summary(level1Category)}
               extraActions={renderLevel1Actions(level1Category, isLevel1CalendarOpen)}
               limitIndicator={
@@ -791,14 +817,13 @@ export default function BudgetCategoryTree(props: Props) {
                   <BudgetLimitIndicator view={getBudgetLimitView?.(null) ?? null} />
                 ) : null
               }
-            >
-              {canUseMonthCalendar && isLevel1CalendarOpen && renderLevel1CalendarPanel(level1Category)}
-              {renderAddSubcategoryForm(level1Category.id, 'Nazwa kategorii')}
-              {isLevel1Open ? renderLevel2List(level1Category) : null}
-            </SortableLevel1Card>
+            />
           )
         })}
-      </SortableContext>
-    </DndContext>
+          </div>
+        </SortableContext>
+      </DndContext>
+      <div data-level1-content-stack="true">{sortedLevel1.map(renderLevel1Content)}</div>
+    </div>
   )
 }

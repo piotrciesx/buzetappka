@@ -126,6 +126,7 @@ type Level3InlineAddFormProps = {
   selectedRecurringTransactionId: string
   setSelectedRecurringTransactionId: Dispatch<SetStateAction<string>>
   isInlineSaving: boolean
+  inlineDayInputRef: RefObject<HTMLInputElement | null>
   inlineAmountInputRef: RefObject<HTMLInputElement | null>
   inlineDescriptionInputRef: RefObject<HTMLInputElement | null>
   filteredInlineSuggestions: DescriptionSuggestion[]
@@ -171,6 +172,7 @@ export default function Level3InlineAddForm({
   selectedRecurringTransactionId,
   setSelectedRecurringTransactionId,
   isInlineSaving,
+  inlineDayInputRef,
   inlineAmountInputRef,
   inlineDescriptionInputRef,
   filteredInlineSuggestions,
@@ -182,7 +184,6 @@ export default function Level3InlineAddForm({
   handleInlineSuggestionPointerUp,
   handleInlineSuggestionPointerLeave,
   getPaymentSourceOptionsForCategoryId,
-  getDefaultPaymentSourceIdForCategoryId: _getDefaultPaymentSourceIdForCategoryId,
   normalizeAmountInput,
   saveInlineAdd,
   cancelInlineAdd,
@@ -216,8 +217,9 @@ export default function Level3InlineAddForm({
   }
 
   return (
-    <div style={styles.formRow}>
+    <div style={styles.formRow} data-inline-entry-form="true">
       <input
+        ref={inlineDayInputRef}
         style={styles.smallInput}
         value={inlineDay}
         onChange={(event) => setInlineDay(normalizeDayInput(event.target.value, selectedMonth))}
@@ -226,20 +228,6 @@ export default function Level3InlineAddForm({
         onBlur={() => {
           setInlineDay((prev) => normalizeDayInput(prev, selectedMonth))
         }}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            event.preventDefault()
-            inlineAmountInputRef.current?.focus()
-          }
-        }}
-      />
-
-      <input
-        ref={inlineAmountInputRef}
-        style={styles.smallInput}
-        value={inlineAmount}
-        onChange={(event) => setInlineAmount(normalizeAmountInput(event.target.value))}
-        placeholder="kwota"
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
             event.preventDefault()
@@ -265,7 +253,7 @@ export default function Level3InlineAddForm({
 
             if (event.key === 'Enter') {
               event.preventDefault()
-              await saveInlineAdd()
+              inlineAmountInputRef.current?.focus()
             }
           }}
         />
@@ -310,6 +298,20 @@ export default function Level3InlineAddForm({
           strzałkami i Enterem, a ukryć prawym przyciskiem albo długim przytrzymaniem.
         </div>
       </div>
+
+      <input
+        ref={inlineAmountInputRef}
+        style={styles.smallInput}
+        value={inlineAmount}
+        onChange={(event) => setInlineAmount(normalizeAmountInput(event.target.value))}
+        placeholder="kwota"
+        onKeyDown={async (event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault()
+            await saveInlineAdd()
+          }
+        }}
+      />
 
       <div style={{ ...inlineDescriptionFieldWrapStyle, minWidth: 180 }}>
         <input
