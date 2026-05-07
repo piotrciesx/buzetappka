@@ -5,12 +5,14 @@ import AppSettingsPanel from './AppSettingsPanel'
 import BudgetHeaderPanel from './BudgetHeaderPanel'
 import UserProfileMenu from './UserProfileMenu'
 import type { BudgetUtilityPanel } from './BudgetPageMainPanels'
+import type { AppModuleVisibility } from '../lib/useAppModuleVisibility'
 
 type Props = {
   styles: Record<string, CSSProperties>
   userProfileMenuProps: ComponentProps<typeof UserProfileMenu>
   budgetHeaderPanelProps: ComponentProps<typeof BudgetHeaderPanel>
   appSettingsPanelProps: ComponentProps<typeof AppSettingsPanel>
+  visibleModules: AppModuleVisibility
   isSettingsPanelVisible: boolean
   isDashboardOpen: boolean
   onToggleDashboard: () => void
@@ -27,12 +29,22 @@ type IconName =
   | 'drafts'
   | 'payments'
   | 'goals'
+  | 'backup'
   | 'import'
   | 'trash'
   | 'calendar'
   | 'search'
   | 'plus'
   | 'more'
+
+type SidebarItem = {
+  id: string
+  label: string
+  icon: IconName
+  badge?: number
+  active?: boolean
+  onClick: () => void
+}
 
 const Icon = ({ name }: { name: IconName }) => {
   const common = {
@@ -99,6 +111,12 @@ const Icon = ({ name }: { name: IconName }) => {
           <path d="M5 19h14" {...common} />
         </>
       )}
+      {name === 'backup' && (
+        <>
+          <path d="M5 7h14v12H5z" {...common} />
+          <path d="M8 7V5h8v2M9 12h6M9 16h4" {...common} />
+        </>
+      )}
       {name === 'trash' && (
         <>
           <path d="M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14" {...common} />
@@ -134,6 +152,7 @@ export default function BudgetPageStatusPanels({
   userProfileMenuProps,
   budgetHeaderPanelProps,
   appSettingsPanelProps,
+  visibleModules,
   isSettingsPanelVisible,
   isDashboardOpen,
   onToggleDashboard,
@@ -147,14 +166,7 @@ export default function BudgetPageStatusPanels({
     onOpenUtilityPanel(activeUtilityPanel === panel ? null : panel)
   }
 
-  const sidebarItems: Array<{
-    id: string
-    label: string
-    icon: IconName
-    badge?: number
-    active?: boolean
-    onClick: () => void
-  }> = [
+  const basicSidebarItems: SidebarItem[] = [
     { id: 'profile', label: 'Profil', icon: 'user', onClick: userProfileMenuProps.onToggleSettings },
     {
       id: 'settings',
@@ -174,28 +186,13 @@ export default function BudgetPageStatusPanels({
       id: 'drafts',
       label: 'Szkice',
       icon: 'drafts',
-      badge: 3,
       active: activeUtilityPanel === 'drafts',
       onClick: () => openPanel('drafts'),
     },
     {
-      id: 'payments',
-      label: 'Płatności',
-      icon: 'payments',
-      active: activeUtilityPanel === 'paymentSources',
-      onClick: () => openPanel('paymentSources'),
-    },
-    {
-      id: 'goals',
-      label: 'Cele finansowe',
-      icon: 'goals',
-      active: activeUtilityPanel === 'financialGoals',
-      onClick: () => openPanel('financialGoals'),
-    },
-    {
       id: 'import',
       label: 'Dane / backup',
-      icon: 'import',
+      icon: 'backup',
       active: activeUtilityPanel === 'importExport',
       onClick: () => openPanel('importExport'),
     },
@@ -222,25 +219,79 @@ export default function BudgetPageStatusPanels({
     },
   ]
 
+  const optionalSidebarItems: SidebarItem[] = ([
+    {
+      id: 'payments',
+      label: 'Źródła płatności',
+      icon: 'payments',
+      active: activeUtilityPanel === 'paymentSources',
+      onClick: () => openPanel('paymentSources'),
+    },
+    {
+      id: 'goals',
+      label: 'Cele finansowe',
+      icon: 'goals',
+      active: activeUtilityPanel === 'financialGoals',
+      onClick: () => openPanel('financialGoals'),
+    },
+    {
+      id: 'recurring',
+      label: 'Przypomnienia / raty',
+      icon: 'bell',
+      active: activeUtilityPanel === 'recurringTransactions',
+      onClick: () => openPanel('recurringTransactions'),
+    },
+  ] satisfies SidebarItem[]).filter((item) => {
+    if (item.id === 'payments') return visibleModules.paymentSources
+    if (item.id === 'goals') return visibleModules.financialGoals
+    if (item.id === 'recurring') return visibleModules.recurringTransactions
+    return true
+  })
+
+  const sidebarItems = [...basicSidebarItems, ...optionalSidebarItems]
+
   return (
     <>
       <aside data-budget-sidebar="true" aria-label="Moduły aplikacji">
         <div data-budget-sidebar-avatar="true">B</div>
         <nav data-budget-sidebar-nav="true" data-sidebar-desktop-nav="true">
-          {sidebarItems.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              title={item.label}
-              aria-label={item.label}
-              data-active={item.active ? 'true' : 'false'}
-              onClick={item.onClick}
-            >
-              <Icon name={item.icon} />
-              <span data-sidebar-label="true">{item.label}</span>
-              {item.badge ? <span data-sidebar-badge="true">{item.badge}</span> : null}
-            </button>
-          ))}
+          <div data-sidebar-section="primary">
+            <span data-sidebar-section-label="true">Podstawowe</span>
+            {basicSidebarItems.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                title={item.label}
+                aria-label={item.label}
+                data-active={item.active ? 'true' : 'false'}
+                onClick={item.onClick}
+              >
+                <Icon name={item.icon} />
+                <span data-sidebar-label="true">{item.label}</span>
+                {item.badge ? <span data-sidebar-badge="true">{item.badge}</span> : null}
+              </button>
+            ))}
+          </div>
+
+          {optionalSidebarItems.length > 0 && (
+            <div data-sidebar-section="optional">
+              <span data-sidebar-section-label="true">Dodatkowe</span>
+              {optionalSidebarItems.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  title={item.label}
+                  aria-label={item.label}
+                  data-active={item.active ? 'true' : 'false'}
+                  onClick={item.onClick}
+                >
+                  <Icon name={item.icon} />
+                  <span data-sidebar-label="true">{item.label}</span>
+                  {item.badge ? <span data-sidebar-badge="true">{item.badge}</span> : null}
+                </button>
+              ))}
+            </div>
+          )}
         </nav>
 
         <nav data-budget-mobile-nav="true" aria-label="Główna nawigacja mobilna">
@@ -315,15 +366,16 @@ export default function BudgetPageStatusPanels({
             <button type="button" title="Szukaj" aria-label="Szukaj" onClick={() => openPanel('search')}>
               <Icon name="search" />
             </button>
-            <button
-              type="button"
-              title="Przypomnienia"
-              aria-label="Przypomnienia"
-              onClick={() => setIsNotificationsOpen((value) => !value)}
-            >
-              <Icon name="bell" />
-              <span data-sidebar-badge="true">2</span>
-            </button>
+            {visibleModules.recurringTransactions && (
+              <button
+                type="button"
+                title="Przypomnienia"
+                aria-label="Przypomnienia"
+                onClick={() => setIsNotificationsOpen((value) => !value)}
+              >
+                <Icon name="bell" />
+              </button>
+            )}
             {isNotificationsOpen && (
               <div data-notifications-dropdown="true">
                 <div data-notifications-title="true">Powiadomienia</div>

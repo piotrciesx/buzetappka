@@ -331,12 +331,18 @@ export default function BudgetAppController({
       simpleMode
         ? {
             ...visibleModules,
+            dashboard: true,
+            monthCalendar: true,
             paymentSources: false,
             recurringTransactions: false,
             financialGoals: false,
             budgetLimits: false,
           }
-        : visibleModules,
+        : {
+            ...visibleModules,
+            dashboard: true,
+            monthCalendar: true,
+          },
     [simpleMode, visibleModules]
   )
   const isPaymentSourcesModuleEnabled = effectiveVisibleModules.paymentSources
@@ -712,6 +718,7 @@ export default function BudgetAppController({
     loadRecurringTransactions,
     saveRecurringTransaction,
     deleteRecurringTransaction,
+    saveRecurringExecution,
     saveRecurringReminderMonthStatus,
   } = useRecurringTransactions({
     profileId,
@@ -1696,6 +1703,7 @@ export default function BudgetAppController({
             />
           ),
         }}
+        visibleModules={effectiveVisibleModules}
         isSettingsPanelVisible={isSettingsPanelVisible}
         isDashboardOpen={isDashboardPanelOpen}
         onToggleDashboard={() => setIsDashboardPanelOpen((previousValue) => !previousValue)}
@@ -1957,6 +1965,30 @@ export default function BudgetAppController({
           onReorderGoalsForMonth: saveGoalPrioritiesForMonth,
           styles,
         }}
+        recurringTransactionsPanelProps={{
+          selectedMonth,
+          isSelectedMonthLocked,
+          recurringTransactions: isRecurringTransactionsModuleEnabled ? recurringTransactions : [],
+          recurringExecutions: isRecurringTransactionsModuleEnabled ? recurringExecutions : [],
+          categoriesById,
+          paymentSources: isPaymentSourcesModuleEnabled ? paymentSources : [],
+          transactionsById: activeTransactionsById,
+          categoryOptions: finalCategoryOptions,
+          onSaveRecurringTransaction: saveRecurringTransaction,
+          onSkipRecurringInMonth: async (recurring, generatedForDate) => {
+            await saveRecurringExecution({
+              recurringTransactionId: recurring.id,
+              generatedForDate,
+              status: 'skipped',
+            })
+          },
+          onOpenCreateFromRecurring: openReminderTransactionCreator,
+          onOpenCreateFromExecution: (recurring, execution) => {
+            openReminderTransactionCreator(recurring)
+            setNewTransactionDate(execution.generated_for_date)
+          },
+          styles,
+        }}
         searchPanelProps={{
           ref: searchPanelRef,
           isOpen: isBankSearchOpen,
@@ -2160,7 +2192,7 @@ export default function BudgetAppController({
             </div>
           ),
           workspaceBottomContent: (
-            <section data-core-workspace-footer="true" aria-label="Dolny kontekst workspace">
+            <section data-core-workspace-footer="true" aria-label="Ostatnie wpisy i narzędzia">
               <div data-workspace-month-switch="true">
                 <button
                   type="button"
@@ -2181,30 +2213,43 @@ export default function BudgetAppController({
                 </button>
               </div>
 
-              <div data-workspace-bottom-feed="true">
-                <span>Ostatnie</span>
-                {recentTransactionPreviews.slice(0, 3).map((transaction) => (
-                  <button
-                    key={transaction.id}
-                    type="button"
-                    data-transaction-kind={transaction.kind}
-                    onClick={() => {
-                      setActiveUtilityPanel('search')
-                      handleBankSearchFieldChange('description', transaction.description)
-                    }}
-                  >
-                    <b>{transaction.amount} zl</b>
-                    <small>{transaction.description || 'Bez opisu'}</small>
-                  </button>
-                ))}
+              <div data-workspace-recent-table="true">
+                <div data-workspace-recent-header="true">
+                  <span>Ostatnie wpisy</span>
+                  <small>{recentTransactionPreviews.length} w podglądzie</small>
+                </div>
+                <div data-workspace-recent-rows="true">
+                  {recentTransactionPreviews.length === 0 ? (
+                    <small>Brak wpisów w tym zakresie.</small>
+                  ) : (
+                    recentTransactionPreviews.slice(0, 6).map((transaction) => (
+                      <button
+                        key={transaction.id}
+                        type="button"
+                        data-workspace-recent-row="true"
+                        data-transaction-kind={transaction.kind}
+                        onClick={() => {
+                          setActiveUtilityPanel('search')
+                          handleBankSearchFieldChange('description', transaction.description)
+                        }}
+                      >
+                        <b>{transaction.amount} zł</b>
+                        <span>{transaction.description || 'Bez opisu'}</span>
+                        <small>{transaction.categoryLabel}</small>
+                        <time>{transaction.date}</time>
+                      </button>
+                    ))
+                  )}
+                </div>
               </div>
 
               <button
                 type="button"
                 data-workspace-trash-chip="true"
                 onClick={() => setActiveUtilityPanel('trash')}
+                aria-label={`Kosz, liczba elementów: ${trashedTransactions.length}`}
               >
-                <span>Trash</span>
+                <span aria-hidden="true">⌫</span>
                 <b>{trashedTransactions.length}</b>
                 <small>Kosz</small>
               </button>
@@ -2353,6 +2398,39 @@ export default function BudgetAppController({
             </div>
           </section>
 
+          <section data-context-card="live">
+            <div data-context-card-header="true">
+              <span>Dzisiaj / Teraz / Podgląd</span>
+              <small>Podgląd</small>
+            </div>
+            <div data-live-widget-card="true">
+              <strong>
+                {previousMonthCloseReminder
+                  ? 'Alert miesiąca'
+                  : recentTransactionPreviews.length > 0
+                    ? 'Najnowsza aktywność'
+                    : 'Status workspace'}
+              </strong>
+              <p>
+                {previousMonthCloseReminder
+                  ? `Poprzedni miesiąc ${previousMonthCloseReminder} czeka na zamknięcie.`
+                  : recentTransactionPreviews.length > 0
+                    ? `${recentTransactionPreviews[0].description || 'Bez opisu'} / ${recentTransactionPreviews[0].amount} zł`
+                    : 'Brak nowych wpisów w podglądzie.'}
+              </p>
+              <div data-live-widget-meta="true">
+                <span>{drafts.length} szkice</span>
+                <span>{selectedMonthTransactions.length} wpisy</span>
+                <span>{isSelectedMonthLocked ? 'zamknięty' : 'otwarty'}</span>
+              </div>
+              <div data-live-widget-dots="true" aria-label="Rotacja podglądu">
+                <i data-active="true" />
+                <i />
+                <i />
+              </div>
+            </div>
+          </section>
+
           <section data-context-card="activity">
             <span>Ostatnio dodane</span>
             {recentTransactionPreviews.length === 0 ? (
@@ -2392,7 +2470,7 @@ export default function BudgetAppController({
         </aside>
       </section>
 
-      {effectiveVisibleModules.dashboard && isDashboardPanelOpen && (
+      {isDashboardPanelOpen && (
         <div data-dashboard-overlay="true">
           <button
             type="button"

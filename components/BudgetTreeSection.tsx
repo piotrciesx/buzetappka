@@ -252,13 +252,25 @@ export default function BudgetTreeSection({
             </button>
           )}
           {onOpenSearch && (
-            <button type="button" data-workspace-action="neutral" onClick={onOpenSearch}>
-              Szukaj
+            <button
+              type="button"
+              data-workspace-action="neutral"
+              onClick={onOpenSearch}
+              aria-label="Szukaj"
+              title="Szukaj"
+            >
+              ⌕
             </button>
           )}
           {onOpenCalendar && (
-            <button type="button" data-workspace-action="neutral" onClick={onOpenCalendar}>
-              Kalendarz
+            <button
+              type="button"
+              data-workspace-action="neutral"
+              onClick={onOpenCalendar}
+              aria-label="Kalendarz"
+              title="Kalendarz"
+            >
+              ◷
             </button>
           )}
 

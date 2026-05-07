@@ -10,6 +10,7 @@ import HiddenCategoriesPanel from './HiddenCategoriesPanel'
 import ImportExportPanel from './ImportExportPanel'
 import MonthCalendarPanel from './MonthCalendarPanel'
 import PaymentSourcesPanel from './PaymentSourcesPanel'
+import RecurringTransactionsPanel from './RecurringTransactionsPanel'
 import SearchPanel from './SearchPanel'
 import TrashPanel from './TrashPanel'
 import UndoBanner from './UndoBanner'
@@ -20,6 +21,7 @@ export type BudgetUtilityPanel =
   | 'importExport'
   | 'paymentSources'
   | 'financialGoals'
+  | 'recurringTransactions'
   | 'search'
   | 'monthCalendar'
   | 'hiddenCategories'
@@ -38,6 +40,7 @@ type Props = {
   importExportPanelProps: ComponentPropsWithRef<typeof ImportExportPanel>
   paymentSourcesPanelProps: ComponentPropsWithRef<typeof PaymentSourcesPanel>
   financialGoalsContainerProps: ComponentPropsWithRef<typeof FinancialGoalsContainer>
+  recurringTransactionsPanelProps: ComponentPropsWithRef<typeof RecurringTransactionsPanel>
   searchPanelProps: ComponentPropsWithRef<typeof SearchPanel>
   monthCalendarPanelProps: ComponentPropsWithRef<typeof MonthCalendarPanel>
   budgetTreeSectionProps: ComponentPropsWithRef<typeof BudgetTreeSection>
@@ -57,6 +60,7 @@ export default function BudgetPageMainPanels({
   importExportPanelProps,
   paymentSourcesPanelProps,
   financialGoalsContainerProps,
+  recurringTransactionsPanelProps,
   searchPanelProps,
   monthCalendarPanelProps,
   budgetTreeSectionProps,
@@ -72,15 +76,17 @@ export default function BudgetPageMainPanels({
           ? 'Płatności'
           : activeUtilityPanel === 'financialGoals'
             ? 'Cele finansowe'
-            : activeUtilityPanel === 'search'
-              ? 'Wyszukiwarka'
-              : activeUtilityPanel === 'monthCalendar'
-                ? 'Kalendarz'
-                : activeUtilityPanel === 'hiddenCategories'
-                  ? 'Ukryte kategorie'
-                  : activeUtilityPanel === 'trash'
-                    ? 'Kosz'
-                    : ''
+            : activeUtilityPanel === 'recurringTransactions'
+              ? 'Przypomnienia / raty'
+              : activeUtilityPanel === 'search'
+                ? 'Wyszukiwarka'
+                : activeUtilityPanel === 'monthCalendar'
+                  ? 'Kalendarz'
+                  : activeUtilityPanel === 'hiddenCategories'
+                    ? 'Ukryte kategorie'
+                    : activeUtilityPanel === 'trash'
+                      ? 'Kosz'
+                      : ''
 
   return (
     <>
@@ -121,8 +127,12 @@ export default function BudgetPageMainPanels({
               {activeUtilityPanel === 'financialGoals' && visibleModules.financialGoals && (
                 <FinancialGoalsContainer {...financialGoalsContainerProps} />
               )}
+              {activeUtilityPanel === 'recurringTransactions' &&
+                visibleModules.recurringTransactions && (
+                  <RecurringTransactionsPanel {...recurringTransactionsPanelProps} />
+                )}
               {activeUtilityPanel === 'search' && <SearchPanel {...searchPanelProps} />}
-              {activeUtilityPanel === 'monthCalendar' && visibleModules.monthCalendar && (
+              {activeUtilityPanel === 'monthCalendar' && (
                 <MonthCalendarPanel {...monthCalendarPanelProps} />
               )}
               {activeUtilityPanel === 'hiddenCategories' && (

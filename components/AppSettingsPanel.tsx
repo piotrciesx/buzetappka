@@ -27,11 +27,9 @@ type AppSettingsPanelProps = {
 }
 
 const moduleItems: Array<{ key: AppModuleKey; label: string }> = [
-  { key: 'dashboard', label: 'Dashboard' },
   { key: 'paymentSources', label: 'Źródła płatności' },
   { key: 'recurringTransactions', label: 'Przypomnienia / raty' },
   { key: 'financialGoals', label: 'Cele finansowe' },
-  { key: 'monthCalendar', label: 'Kalendarz miesiąca' },
   { key: 'budgetLimits', label: 'Limity i alerty budżetowe' },
 ]
 
