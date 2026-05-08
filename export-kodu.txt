@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 458
-Data: 2026-05-08T21:18:21.018Z
+Data: 2026-05-08T22:38:43.978Z
 
 
 ==================================================
@@ -76140,7 +76140,7 @@ PLIK: app\styles\side-panels.css
 [data-dashboard-overlay="true"] {
   position: fixed !important;
   inset: 0 !important;
-  z-index: 2400 !important;
+  z-index: 2300 !important;
   visibility: hidden !important;
   opacity: 0 !important;
   pointer-events: none !important;
@@ -76234,6 +76234,462 @@ PLIK: app\styles\side-panels.css
   max-width: 100%;
 }
 
+[data-sidebar-primary-backdrop="true"],
+[data-budget-utility-backdrop="true"] {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2600 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+  background: rgba(15, 23, 42, 0.06) !important;
+  pointer-events: auto !important;
+}
+
+[data-budget-utility-overlay="true"] {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2600 !important;
+  pointer-events: none !important;
+  isolation: isolate !important;
+}
+
+[data-app-view="settings"],
+[data-app-view="profile"],
+[data-budget-utility-panel="true"] {
+  --side-panel-left: 166px;
+  --side-panel-top: 58px;
+  --side-panel-bottom-gap: 18px;
+  --side-panel-width: min(660px, calc(100vw - var(--side-panel-left) - 24px));
+  position: fixed !important;
+  left: var(--side-panel-left) !important;
+  right: auto !important;
+  top: var(--side-panel-top) !important;
+  bottom: auto !important;
+  z-index: 2610 !important;
+  box-sizing: border-box !important;
+  width: var(--side-panel-width) !important;
+  min-width: var(--side-panel-width) !important;
+  max-width: var(--side-panel-width) !important;
+  height: calc(100dvh - var(--side-panel-top) - var(--side-panel-bottom-gap)) !important;
+  max-height: calc(100dvh - var(--side-panel-top) - var(--side-panel-bottom-gap)) !important;
+  overflow: auto !important;
+  padding: 12px !important;
+  border: 1px solid rgba(31, 41, 55, 0.18) !important;
+  border-left-color: rgba(31, 41, 55, 0.26) !important;
+  border-radius: 0 18px 18px 0 !important;
+  background:
+    linear-gradient(145deg, rgba(248, 250, 252, 0.94), rgba(241, 245, 249, 0.86)),
+    radial-gradient(circle at 15% 0%, rgba(59, 130, 246, 0.08), transparent 32%) !important;
+  box-shadow:
+    inset 1px 0 0 rgba(255, 255, 255, 0.78),
+    inset 0 1px 0 rgba(255, 255, 255, 0.78),
+    18px 0 48px rgba(15, 23, 42, 0.13) !important;
+  backdrop-filter: blur(22px) saturate(1.08);
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+  pointer-events: auto !important;
+}
+
+[data-app-view="profile"] {
+  --side-panel-width: min(420px, calc(100vw - var(--side-panel-left) - 24px));
+}
+
+[data-app-view="settings"] {
+  --side-panel-width: min(780px, calc(100vw - var(--side-panel-left) - 24px));
+}
+
+[data-budget-utility-panel="true"][data-utility-panel-kind="monthCalendar"],
+[data-budget-utility-panel="true"][data-utility-panel-kind="search"],
+[data-budget-utility-panel="true"][data-utility-panel-kind="financialGoals"] {
+  --side-panel-width: min(820px, calc(100vw - var(--side-panel-left) - 24px));
+}
+
+[data-budget-utility-panel="true"][data-utility-panel-kind="importExport"] {
+  --side-panel-width: min(720px, calc(100vw - var(--side-panel-left) - 24px));
+}
+
+[data-budget-utility-header="true"],
+[data-app-view-header="true"] {
+  position: sticky !important;
+  top: -12px !important;
+  z-index: 2 !important;
+  background: rgba(248, 250, 252, 0.92) !important;
+  backdrop-filter: blur(14px);
+}
+
+[data-app-view="settings"] [data-floating-dropdown],
+[data-app-view="profile"] [data-floating-dropdown],
+[data-budget-utility-panel="true"] [data-floating-dropdown],
+[data-app-view="settings"] [data-mobile-category-menu-panel],
+[data-app-view="profile"] [data-mobile-category-menu-panel],
+[data-budget-utility-panel="true"] [data-mobile-category-menu-panel] {
+  z-index: 2700 !important;
+}
+
+[data-profile-panel-body="true"] {
+  display: grid;
+  gap: 14px;
+  padding: 4px 2px 18px;
+  color: #334155;
+  font-size: 13px;
+}
+
+[data-profile-panel-body="true"] p {
+  margin: 0;
+}
+
+[data-profile-panel-placeholder="true"] {
+  min-height: 64px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgba(148, 163, 184, 0.48);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.58);
+  color: #64748b;
+  font-size: 12px;
+}
+
+[data-profile-summary-card="true"],
+[data-profile-stat-card="true"],
+[data-profile-top-categories="true"],
+[data-settings-section] {
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(248, 250, 252, 0.64));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 10px 24px rgba(15, 23, 42, 0.045);
+}
+
+[data-profile-summary-card="true"] {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+}
+
+[data-profile-summary-card="true"] span,
+[data-profile-stat-card="true"] span,
+[data-profile-category-row="true"] span {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+[data-profile-summary-card="true"] strong {
+  display: block;
+  margin-top: 3px;
+  color: #0f172a;
+  font-size: 13px;
+  font-weight: 720;
+  overflow-wrap: anywhere;
+}
+
+[data-profile-stat-grid="true"] {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+[data-profile-stat-card="true"] {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 12px;
+}
+
+[data-profile-stat-card="true"] strong {
+  color: #172033;
+  font-size: 16px;
+  font-weight: 760;
+  overflow-wrap: anywhere;
+}
+
+[data-profile-top-categories="true"] {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+}
+
+[data-profile-panel-section-title="true"] {
+  color: #172033;
+  font-size: 12px;
+  font-weight: 760;
+}
+
+[data-profile-category-row="true"] {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 2px;
+  border-top: 1px solid rgba(226, 232, 240, 0.78);
+}
+
+[data-profile-category-row="true"] strong {
+  min-width: 28px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.1);
+  color: #15803d;
+  font-size: 12px;
+}
+
+[data-settings-panel-content="true"] {
+  display: grid;
+  gap: 14px;
+  padding-bottom: 18px;
+  color: #334155;
+  font-family: inherit;
+}
+
+[data-settings-section] {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+[data-settings-section-heading="true"] {
+  display: grid;
+  gap: 3px;
+}
+
+[data-settings-section-heading="true"] span {
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+[data-settings-section-heading="true"] h3 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 15px;
+  font-weight: 760;
+}
+
+[data-settings-section-heading="true"] p,
+[data-settings-row="true"] p,
+[data-settings-feature-card="true"] p {
+  margin: 0;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+[data-settings-profile-card="true"],
+[data-settings-row="true"],
+[data-settings-feature-card="true"] {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid rgba(226, 232, 240, 0.86);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.68);
+}
+
+[data-settings-profile-card="true"] {
+  display: grid;
+  justify-content: stretch;
+  gap: 3px;
+}
+
+[data-settings-profile-card="true"] span {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+[data-settings-profile-card="true"] strong,
+[data-settings-row="true"] strong,
+[data-settings-feature-card="true"] strong {
+  color: #172033;
+  font-size: 13px;
+  font-weight: 740;
+}
+
+[data-settings-feature-grid="true"] {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+[data-settings-section="features"][data-simple-mode="true"] [data-settings-feature-card="true"] {
+  opacity: 0.72;
+}
+
+[data-settings-simple-note="true"],
+[data-settings-status="true"] {
+  padding: 9px 11px;
+  border: 1px solid rgba(59, 130, 246, 0.18);
+  border-radius: 12px;
+  background: rgba(239, 246, 255, 0.72);
+  color: #1d4ed8;
+  font-size: 12px;
+}
+
+[data-settings-switch="true"] {
+  position: relative;
+  flex: 0 0 auto;
+  width: 74px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(148, 163, 184, 0.42);
+  border-radius: 999px;
+  padding: 0 9px;
+  background: #e5e7eb;
+  color: #475569;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+[data-settings-switch="true"][data-state="on"] {
+  justify-content: flex-start;
+  border-color: rgba(22, 163, 74, 0.36);
+  background: #16a34a;
+  color: #ffffff;
+}
+
+[data-settings-switch="true"][data-state="off"] {
+  justify-content: flex-end;
+}
+
+[data-settings-switch="true"]:disabled {
+  cursor: default;
+  opacity: 0.72;
+}
+
+[data-settings-switch-label="true"] {
+  position: relative;
+  z-index: 1;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+[data-settings-switch-knob="true"] {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2);
+  transition: transform 160ms ease;
+}
+
+[data-settings-switch="true"][data-state="on"] [data-settings-switch-knob="true"] {
+  transform: translateX(40px);
+}
+
+[data-settings-actions="true"],
+[data-settings-admin-grid="true"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+[data-settings-actions="true"] button,
+[data-settings-admin-grid="true"] button,
+[data-settings-section="profile"] button {
+  min-height: 34px;
+  border: 1px solid rgba(203, 213, 225, 0.86);
+  border-radius: 999px;
+  padding: 0 12px;
+  background: rgba(255, 255, 255, 0.78);
+  color: #334155;
+  font-size: 12px;
+  font-weight: 680;
+}
+
+[data-settings-primary-action="true"],
+[data-settings-section="profile"] button:not(:disabled):first-of-type {
+  border-color: rgba(37, 99, 235, 0.28) !important;
+  background: rgba(239, 246, 255, 0.9) !important;
+  color: #1d4ed8 !important;
+}
+
+[data-settings-section="profile"] > section {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  border-top: 0 !important;
+}
+
+[data-settings-section="profile"] input {
+  border-radius: 12px !important;
+}
+
+[data-settings-section="profile"] section:last-child {
+  margin-top: 16px !important;
+  padding: 12px !important;
+  border: 1px solid rgba(248, 113, 113, 0.28) !important;
+  border-radius: 14px !important;
+  background: rgba(254, 242, 242, 0.62) !important;
+}
+
+[data-settings-section="profile"] section:last-child button {
+  border-color: rgba(248, 113, 113, 0.42) !important;
+  color: #b91c1c !important;
+}
+
+[data-settings-advanced-profile="true"] {
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(248, 250, 252, 0.58));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 10px 24px rgba(15, 23, 42, 0.04);
+  overflow: hidden;
+}
+
+[data-settings-advanced-profile="true"] summary {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  color: #172033;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 760;
+  list-style: none;
+}
+
+[data-settings-advanced-profile="true"] summary::-webkit-details-marker {
+  display: none;
+}
+
+[data-settings-advanced-profile="true"] summary::after {
+  content: "+";
+  margin-left: auto;
+  color: #64748b;
+  font-size: 18px;
+  font-weight: 520;
+}
+
+[data-settings-advanced-profile="true"][open] summary::after {
+  content: "−";
+}
+
+[data-settings-advanced-profile-body="true"] {
+  padding: 0 14px 14px;
+}
+
+[data-settings-advanced-profile-body="true"] > section {
+  margin-top: 0 !important;
+  padding-top: 12px !important;
+}
+
 @media (max-width: 820px) {
   [data-dashboard-drawer="true"] {
     --dashboard-drawer-left: 10px;
@@ -76250,6 +76706,31 @@ PLIK: app\styles\side-panels.css
     max-width: var(--dashboard-drawer-width) !important;
     height: min(82dvh, 780px) !important;
     max-height: min(82dvh, 780px) !important;
+  }
+
+  [data-app-view="profile"] {
+    left: 10px !important;
+    right: 10px !important;
+    top: 72px !important;
+    bottom: 74px !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: none !important;
+    border-radius: 16px 16px 0 0 !important;
+  }
+
+  [data-app-view="settings"],
+  [data-budget-utility-panel="true"] {
+    --side-panel-left: 10px;
+    --side-panel-top: 72px;
+    --side-panel-bottom-gap: calc(74px + env(safe-area-inset-bottom));
+    --side-panel-width: calc(100vw - 20px);
+    left: var(--side-panel-left) !important;
+    right: auto !important;
+    bottom: auto !important;
+    border-radius: 16px 16px 0 0 !important;
   }
 }
 
@@ -77592,7 +78073,7 @@ PLIK: components\AppSettingsPanel.tsx
 
 'use client'
 
-import { CSSProperties, ReactNode, useState } from 'react'
+import { CSSProperties, ReactNode } from 'react'
 import {
   AppModuleKey,
   AppModuleVisibility,
@@ -77615,15 +78096,55 @@ type AppSettingsPanelProps = {
   onResetAllHistory: () => Promise<void>
   styles: Record<string, CSSProperties>
   defaultOpen?: boolean
+  userEmail?: string
+  onExportBackupJson?: () => void | Promise<void>
+  onExportBackupCsv?: () => void | Promise<void>
   profileMembersPanel?: ReactNode
 }
 
-const moduleItems: Array<{ key: AppModuleKey; label: string }> = [
-  { key: 'paymentSources', label: 'Źródła płatności' },
-  { key: 'recurringTransactions', label: 'Przypomnienia / raty' },
-  { key: 'financialGoals', label: 'Cele finansowe' },
-  { key: 'budgetLimits', label: 'Limity i alerty budżetowe' },
+const moduleItems: Array<{ key: AppModuleKey; label: string; description: string }> = [
+  {
+    key: 'paymentSources',
+    label: 'Źródła płatności',
+    description: 'Karty, konta, gotówka i domyślne źródła.',
+  },
+  {
+    key: 'recurringTransactions',
+    label: 'Przypomnienia / raty',
+    description: 'Cykliczne wpisy, raty i przypomnienia.',
+  },
+  {
+    key: 'financialGoals',
+    label: 'Cele finansowe',
+    description: 'Cele, priorytety i miesięczne alokacje.',
+  },
+  {
+    key: 'budgetLimits',
+    label: 'Limity / alerty',
+    description: 'Alerty i kontrola wydatków w kategoriach.',
+  },
 ]
+
+type SwitchProps = {
+  checked: boolean
+  disabled?: boolean
+  onChange?: (value: boolean) => void
+}
+
+const SettingsSwitch = ({ checked, disabled = false, onChange }: SwitchProps) => (
+  <button
+    type="button"
+    role="switch"
+    aria-checked={checked}
+    disabled={disabled}
+    data-settings-switch="true"
+    data-state={checked ? 'on' : 'off'}
+    onClick={() => onChange?.(!checked)}
+  >
+    <span data-settings-switch-label="true">{checked ? 'Wł.' : 'Wył.'}</span>
+    <span data-settings-switch-knob="true" />
+  </button>
+)
 
 export default function AppSettingsPanel({
   simpleMode,
@@ -77639,95 +78160,124 @@ export default function AppSettingsPanel({
   onUnlockAllPastMonths,
   onResetSelectedMonthData,
   onResetAllHistory,
-  styles,
-  defaultOpen = false,
+  defaultOpen: ignoredDefaultOpen = false,
+  userEmail,
   profileMembersPanel,
 }: AppSettingsPanelProps) {
-  const [isOpen, setIsOpen] = useState(defaultOpen)
+  void ignoredDefaultOpen
+
+  const effectiveAutoExcludePartialMonths = autoExcludePartialMonths !== false
   const isDraftDefault = moduleItems.every(
     (item) => draftVisibleModules[item.key] === DEFAULT_APP_MODULE_VISIBILITY[item.key]
   )
 
+  const handleSimpleModeChange = (value: boolean) => {
+    onSimpleModeChange(value)
+
+    if (value) {
+      moduleItems.forEach((item) => onChangeModuleVisibility(item.key, false))
+    }
+  }
+
   return (
-    <section style={styles.card}>
-      <button type="button" onClick={() => setIsOpen((previousValue) => !previousValue)}>
-        Ustawienia aplikacji
-      </button>
-
-      {isOpen && (
-        <div style={{ marginTop: 12 }}>
-          <p style={{ marginTop: 0, marginBottom: 12, color: '#4b5563', fontSize: 13 }}>
-            Ustawienia trybu działania zapisują się dla profilu, a widoczność modułów osobno dla
-            użytkownika.
-          </p>
-
-          <div style={{ display: 'grid', gap: 6, marginBottom: 12 }}>
-            <label style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-              <input
-                type="checkbox"
-                checked={simpleMode}
-                onChange={(event) => onSimpleModeChange(event.target.checked)}
-              />
-              <span>Tryb prosty</span>
-            </label>
-
-            <label style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-              <input
-                type="checkbox"
-                checked={autoExcludePartialMonths}
-                onChange={(event) => onAutoExcludePartialMonthsChange(event.target.checked)}
-              />
-              <span>Automatycznie wyłączaj niepełne miesiące ze statystyk</span>
-            </label>
-          </div>
-
-          <div style={{ display: 'grid', gap: 6, marginBottom: 12 }}>
-            {moduleItems.map((item) => (
-              <label key={item.key} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                <input
-                  type="checkbox"
-                  checked={draftVisibleModules[item.key]}
-                  onChange={(event) => onChangeModuleVisibility(item.key, event.target.checked)}
-                />
-                <span>{item.label}</span>
-              </label>
-            ))}
-          </div>
-
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
-            <button type="button" onClick={onSave}>
-              Zapisz ustawienia
-            </button>
-            <button type="button" onClick={onResetDraft} disabled={isDraftDefault}>
-              Przywróć domyślne
-            </button>
-          </div>
-
-          {saveStatusText && <div style={{ marginTop: 8, fontSize: 13 }}>{saveStatusText}</div>}
-
-          {profileMembersPanel}
-
-          <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid #e5e7eb' }}>
-            <div style={styles.l2Name}>Narzędzia administracyjne</div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
-              <button type="button" onClick={() => void onLockAllPastMonths()}>
-                Zablokuj wszystkie minione miesiące
-              </button>
-              <button type="button" onClick={() => void onUnlockAllPastMonths()}>
-                Odblokuj wszystkie minione miesiące
-              </button>
-              <button type="button" onClick={() => void onResetSelectedMonthData()}>
-                Reset danych wybranego miesiąca
-              </button>
-              <button type="button" onClick={() => void onResetAllHistory()}>
-                Reset całej historii wpisów
-              </button>
-            </div>
-            <p style={{ marginBottom: 0, color: '#6b7280', fontSize: 13 }}>
-              Widoczność modułów jest zapisywana po kliknięciu przycisku zapisu.
-            </p>
-          </div>
+    <section data-settings-panel-content="true">
+      <section data-settings-section="profile-summary">
+        <div data-settings-section-heading="true">
+          <h3>Profil</h3>
+          <p>Podstawowe informacje o aktywnym użytkowniku.</p>
         </div>
+        <div data-settings-profile-card="true">
+          <span>Aktualny użytkownik</span>
+          <strong>{userEmail || 'brak danych'}</strong>
+        </div>
+      </section>
+
+      <section data-settings-section="basic">
+        <div data-settings-section-heading="true">
+          <h3>Ustawienia podstawowe</h3>
+          <p>Krótka konfiguracja zachowania budżetu.</p>
+        </div>
+        <div data-settings-row="true">
+          <div>
+            <strong>Auto wyłączanie niepełnych miesięcy</strong>
+            <p>Niepełne miesiące nie zaburzają statystyk i trendów.</p>
+          </div>
+          <SettingsSwitch
+            checked={effectiveAutoExcludePartialMonths}
+            onChange={onAutoExcludePartialMonthsChange}
+          />
+        </div>
+        <div data-settings-row="true">
+          <div>
+            <strong>Tryb prosty</strong>
+            <p>Po włączeniu wyłącza funkcje dodatkowe i blokuje ich przełączniki.</p>
+          </div>
+          <SettingsSwitch checked={simpleMode} onChange={handleSimpleModeChange} />
+        </div>
+      </section>
+
+      <section data-settings-section="features" data-simple-mode={simpleMode ? 'true' : 'false'}>
+        <div data-settings-section-heading="true">
+          <h3>Funkcje dodatkowe</h3>
+          <p>Moduły, które można ukryć w spokojniejszym trybie pracy.</p>
+        </div>
+        {simpleMode && (
+          <div data-settings-simple-note="true">
+            Tryb prosty jest włączony. Funkcje dodatkowe są wyłączone do czasu wyłączenia trybu prostego.
+          </div>
+        )}
+        <div data-settings-feature-grid="true">
+          {moduleItems.map((item) => (
+            <article key={item.key} data-settings-feature-card="true">
+              <div>
+                <strong>{item.label}</strong>
+                <p>{item.description}</p>
+              </div>
+              <SettingsSwitch
+                checked={!simpleMode && draftVisibleModules[item.key]}
+                disabled={simpleMode}
+                onChange={(value) => onChangeModuleVisibility(item.key, value)}
+              />
+            </article>
+          ))}
+        </div>
+        <div data-settings-actions="true">
+          <button type="button" data-settings-primary-action="true" onClick={onSave}>
+            Zapisz ustawienia
+          </button>
+          <button type="button" onClick={onResetDraft} disabled={isDraftDefault}>
+            Przywróć domyślne
+          </button>
+        </div>
+        {saveStatusText && <div data-settings-status="true">{saveStatusText}</div>}
+      </section>
+
+      <section data-settings-section="admin">
+        <div data-settings-section-heading="true">
+          <h3>Narzędzia administracyjne</h3>
+          <p>Operacje techniczne dla profilu i miesięcy.</p>
+        </div>
+        <div data-settings-admin-grid="true">
+          <button type="button" onClick={() => void onLockAllPastMonths()}>
+            Zamknij wszystkie poprzednie miesiące
+          </button>
+          <button type="button" onClick={() => void onUnlockAllPastMonths()}>
+            Odblokuj wszystkie miesiące
+          </button>
+          <button type="button" onClick={() => void onResetSelectedMonthData()}>
+            Resetuj bieżący miesiąc
+          </button>
+          <button type="button" onClick={() => void onResetAllHistory()}>
+            Resetuj całą historię
+          </button>
+        </div>
+      </section>
+
+      {profileMembersPanel && (
+        <details data-settings-advanced-profile="true">
+          <summary>Zaawansowane ustawienia profilu</summary>
+          <div data-settings-advanced-profile-body="true">{profileMembersPanel}</div>
+        </details>
       )}
     </section>
   )
@@ -77898,6 +78448,7 @@ export default function BudgetPageStatusPanelsContainer({
 }: BudgetPageStatusPanelsContainerProps) {
   const {
     activeUtilityPanel,
+    activeSidebarPrimaryPanel,
     autoExcludePartialMonths,
     budgetStartDate,
     calendarHeatmapVariant,
@@ -77950,6 +78501,7 @@ export default function BudgetPageStatusPanelsContainer({
     scopedTransactions,
     selectedMonth,
     setActiveUtilityPanel,
+    setActiveSidebarPrimaryPanel,
     setAutoExcludePartialMonths,
     setBudgetStartDate,
     setCalendarHeatmapVariant,
@@ -77971,21 +78523,71 @@ export default function BudgetPageStatusPanelsContainer({
     status,
     styles,
     supabase,
+    transactions,
     userEmail,
     userId,
     visibleCategories,
     visibleModules,
   } = ctx
 
-  const handleToggleSettings = () => {
+  const profileTransactions = (
+    Array.isArray(transactions) ? transactions : scopedTransactions
+  ) as Array<{ amount?: number | string; category_id?: string }>
+  const categoryNamesById = new Map<string, string>(
+    categories.map((category: { id: string; name: string }) => [category.id, category.name])
+  )
+  const signedAmountGetter =
+    typeof ctx.getSignedAmountForTransaction === 'function'
+      ? ctx.getSignedAmountForTransaction
+      : (transaction: { amount?: number | string }) => Number(transaction.amount || 0)
+  const profileTotalBalance = profileTransactions.reduce(
+    (total: number, transaction) => total + signedAmountGetter(transaction),
+    0
+  )
+  const profileCategoryCounts = new Map<string, number>()
+
+  profileTransactions.forEach((transaction) => {
+    const categoryId = transaction.category_id || ''
+
+    if (!categoryId) {
+      return
+    }
+
+    profileCategoryCounts.set(categoryId, (profileCategoryCounts.get(categoryId) || 0) + 1)
+  })
+
+  const topProfileCategories = Array.from(profileCategoryCounts)
+    .sort(([, firstCount], [, secondCount]) => secondCount - firstCount)
+    .slice(0, 5)
+    .map(([categoryId, count]) => ({
+      id: categoryId,
+      name: categoryNamesById.get(categoryId) || 'Kategoria',
+      count,
+    }))
+
+  const handleOpenProfilePanel = () => {
     setIsDashboardPanelOpen(false)
     setActiveUtilityPanel(null)
-    setIsSettingsPanelVisible((previousValue: boolean) => !previousValue)
+    setActiveSidebarPrimaryPanel((previousValue: string | null) =>
+      previousValue === 'profile' ? null : 'profile'
+    )
+  }
+
+  const handleOpenSettingsPanel = () => {
+    setIsDashboardPanelOpen(false)
+    setActiveUtilityPanel(null)
+    setActiveSidebarPrimaryPanel((previousValue: string | null) =>
+      previousValue === 'settings' ? null : 'settings'
+    )
+  }
+
+  const handleClosePrimaryPanel = () => {
+    setActiveSidebarPrimaryPanel(null)
   }
 
   const handleToggleImportExport = () => {
     setIsDashboardPanelOpen(false)
-    setIsSettingsPanelVisible(false)
+    setActiveSidebarPrimaryPanel(null)
     setActiveUtilityPanel((previousValue: string | null) =>
       previousValue === 'importExport' ? null : 'importExport'
     )
@@ -77993,13 +78595,13 @@ export default function BudgetPageStatusPanelsContainer({
 
   const handleToggleDashboard = () => {
     setActiveUtilityPanel(null)
-    setIsSettingsPanelVisible(false)
+    setActiveSidebarPrimaryPanel(null)
     setIsDashboardPanelOpen((previousValue: boolean) => !previousValue)
   }
 
   const handleOpenUtilityPanel = (panel: string | null) => {
     setIsDashboardPanelOpen(false)
-    setIsSettingsPanelVisible(false)
+    setActiveSidebarPrimaryPanel(null)
     setActiveUtilityPanel(panel)
   }
 
@@ -78008,7 +78610,7 @@ export default function BudgetPageStatusPanelsContainer({
         styles={styles}
         userProfileMenuProps={{
           userEmail,
-          onToggleSettings: handleToggleSettings,
+          onToggleSettings: handleOpenSettingsPanel,
           onToggleImportExport: handleToggleImportExport,
           onExportBackupJson: () => downloadProfileBackupJson(supabase, profileId),
           onExportBackupCsv: () => downloadProfileBackupCsv(supabase, profileId, budgetStartDate),
@@ -78071,6 +78673,7 @@ export default function BudgetPageStatusPanelsContainer({
           onAutoExcludePartialMonthsChange: setAutoExcludePartialMonths,
           draftVisibleModules,
           saveStatusText: moduleVisibilitySaveStatusText,
+          userEmail,
           onChangeModuleVisibility: setDraftModuleVisibility,
           onSave: async () => {
             await handleSaveMonthNavigationSettingsWithStartDateWarning()
@@ -78081,6 +78684,8 @@ export default function BudgetPageStatusPanelsContainer({
           onUnlockAllPastMonths: handleUnlockAllPastMonths,
           onResetSelectedMonthData: handleResetSelectedMonthData,
           onResetAllHistory: handleResetAllHistory,
+          onExportBackupJson: () => downloadProfileBackupJson(supabase, profileId),
+          onExportBackupCsv: () => downloadProfileBackupCsv(supabase, profileId, budgetStartDate),
           styles,
           defaultOpen: true,
           profileMembersPanel: (
@@ -78102,8 +78707,20 @@ export default function BudgetPageStatusPanelsContainer({
           ),
         }}
         visibleModules={effectiveVisibleModules}
+        activeSidebarPrimaryPanel={activeSidebarPrimaryPanel}
         isSettingsPanelVisible={isSettingsPanelVisible}
         isDashboardOpen={isDashboardPanelOpen}
+        onOpenProfilePanel={handleOpenProfilePanel}
+        onOpenSettingsPanel={handleOpenSettingsPanel}
+        onClosePrimaryPanel={handleClosePrimaryPanel}
+        profilePanelProps={{
+          userEmail,
+          accountCreatedAt: null,
+          transactionsCount: profileTransactions.length,
+          categoriesCount: categories.length,
+          totalBalance: profileTotalBalance,
+          topCategories: topProfileCategories,
+        }}
         onToggleDashboard={handleToggleDashboard}
         activeUtilityPanel={activeUtilityPanel}
         onOpenUtilityPanel={handleOpenUtilityPanel}
@@ -78628,6 +79245,7 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
   const mainPanelsProps = useBudgetPageMainPanelsProps(viewCtx)
 
   const statusPanelsCtx = {
+    activeSidebarPrimaryPanel: ctx.activeSidebarPrimaryPanel,
     activeUtilityPanel: ctx.activeUtilityPanel,
     autoExcludePartialMonths: ctx.autoExcludePartialMonths,
     budgetStartDate: ctx.budgetStartDate,
@@ -78681,6 +79299,7 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     saveVisibleModules: ctx.saveVisibleModules,
     scopedTransactions: ctx.scopedTransactions,
     selectedMonth,
+    setActiveSidebarPrimaryPanel: ctx.setActiveSidebarPrimaryPanel,
     setActiveUtilityPanel: ctx.setActiveUtilityPanel,
     setAutoExcludePartialMonths: ctx.setAutoExcludePartialMonths,
     setBudgetStartDate: ctx.setBudgetStartDate,
@@ -78722,11 +79341,13 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     showRecurring: effectiveVisibleModules.recurringTransactions,
     onOpenSearch: () => {
       ctx.setIsDashboardPanelOpen(false)
+      ctx.setActiveSidebarPrimaryPanel?.(null)
       ctx.setIsSettingsPanelVisible(false)
       ctx.setActiveUtilityPanel('search')
     },
     onOpenNotifications: () => {
       ctx.setIsDashboardPanelOpen(false)
+      ctx.setActiveSidebarPrimaryPanel?.(null)
       ctx.setIsSettingsPanelVisible(false)
       ctx.setActiveUtilityPanel('recurringTransactions')
     },
@@ -78734,7 +79355,9 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     onToggleProfile: () => {
       ctx.setIsDashboardPanelOpen(false)
       ctx.setActiveUtilityPanel(null)
-      ctx.setIsSettingsPanelVisible((previousValue: boolean) => !previousValue)
+      ctx.setActiveSidebarPrimaryPanel?.((previousValue: string | null) =>
+        previousValue === 'profile' ? null : 'profile'
+      )
     },
   }
 
@@ -79139,6 +79762,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     selectedTransactionIds,
     selectedTransactions,
     setActiveUtilityPanel,
+    setActiveSidebarPrimaryPanel,
     setBudgetLimitEditorCategoryId,
     setBulkActionErrorText,
     setBulkMoveTargetCategoryId,
@@ -79186,6 +79810,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
 
   const openUtilityPanel = (panel: string | null) => {
     setIsDashboardPanelOpen?.(false)
+    setActiveSidebarPrimaryPanel?.(null)
     setIsSettingsPanelVisible?.(false)
     setActiveUtilityPanel(panel)
   }
@@ -80228,6 +80853,8 @@ type MigrationPromptState = {
   errorText: string
 }
 
+type SidebarPrimaryPanel = 'profile' | 'settings' | null
+
 export type BudgetAppProps = {
   profileId: string
   userId: string
@@ -80314,7 +80941,24 @@ export default function BudgetAppController({
   const searchPanelRef = useRef<HTMLDivElement | null>(null)
 
   const styles = budgetPageStyles
-  const [isSettingsPanelVisible, setIsSettingsPanelVisible] = useState(false)
+  const [activeSidebarPrimaryPanel, setActiveSidebarPrimaryPanel] =
+    useState<SidebarPrimaryPanel>(null)
+  const isSettingsPanelVisible = activeSidebarPrimaryPanel === 'settings'
+  const setIsSettingsPanelVisible = useCallback(
+    (value: boolean | ((previousValue: boolean) => boolean)) => {
+      setActiveSidebarPrimaryPanel((previousPanel) => {
+        const previousValue = previousPanel === 'settings'
+        const nextValue = typeof value === 'function' ? value(previousValue) : value
+
+        if (nextValue) {
+          return 'settings'
+        }
+
+        return previousPanel === 'settings' ? null : previousPanel
+      })
+    },
+    []
+  )
   const [activeUtilityPanel, setActiveUtilityPanel] = useState<BudgetUtilityPanel>(null)
   const [isDashboardPanelOpen, setIsDashboardPanelOpen] = useState(false)
   const {
@@ -81405,8 +82049,8 @@ export default function BudgetAppController({
     toggleTransactionSelection, transactionCategoryPathLabels, transactionPaymentSplitsMap, transactionTagsMap, transactions, trashedTransactions, trashedTransactionsById, userId, visibleModules, autoExcludePartialMonths,
     copyInviteLink, createInvitation, currentMonth, draftVisibleModules, goToNextMonth, goToPrevMonth, handleLockAllPastMonths, handleLockSelectedMonth, handleResetAllHistory, handleResetHeatmapSettings,
     handleResetSelectedMonthData, handleSaveMonthNavigationSettingsWithStartDateWarning, handleUnlockAllPastMonths, handleUnlockSelectedMonth, invitationErrorText, invitationStatusText, inviteEmail, inviteLink, isDashboardPanelOpen, isFutureMonthNavigationLocked,
-    isInvitationWorking, isNextMonthNavigationBlocked, isPrevMonthNavigationBlocked, isSavingMonthNavigationSettings, isSettingsPanelVisible, isUpdatingSelectedMonthLock, maxAllowedMonth, minAllowedMonth, moduleVisibilitySaveStatusText, monthNavigationErrorText,
-    onCurrentUserLeftProfile, resetDraftVisibleModules, saveVisibleModules, setAutoExcludePartialMonths, setBudgetStartDate, setCalendarHeatmapVariant, setDraftModuleVisibility, setInviteEmail, setIsDashboardPanelOpen, setIsFutureMonthNavigationLocked,
+    isInvitationWorking, isNextMonthNavigationBlocked, isPrevMonthNavigationBlocked, isSavingMonthNavigationSettings, activeSidebarPrimaryPanel, isSettingsPanelVisible, isUpdatingSelectedMonthLock, maxAllowedMonth, minAllowedMonth, moduleVisibilitySaveStatusText, monthNavigationErrorText,
+    onCurrentUserLeftProfile, resetDraftVisibleModules, saveVisibleModules, setActiveSidebarPrimaryPanel, setAutoExcludePartialMonths, setBudgetStartDate, setCalendarHeatmapVariant, setDraftModuleVisibility, setInviteEmail, setIsDashboardPanelOpen, setIsFutureMonthNavigationLocked,
     setIsSettingsPanelVisible, setMonthNavigationErrorText, setMonthNavigationStartMonth, setSelectedMonth, setShowHiddenCategories, setSimpleMode, signOut, simpleMode, userEmail, visibleCategories,
     addBudgetLimit, amountInputRef, applyTransactionCategorySelection, budgetLimitEditorCategoryId, currentTransactionCreatorPaymentSourceOptions, deleteBudgetLimit, descriptionInputRef, draftPromptState, excludedMonthsSet, handleSaveTransaction,
     incomePaymentSourceOptions, isQuickDayModeEnabled, isSaving, isSerialTransactionCreatorEnabled, isTransactionCreatorOpen, level1, newAmount, newDescription, newTransactionDate, openFloatingTransactionCreator,
@@ -83843,14 +84487,30 @@ import UserProfileMenu from './UserProfileMenu'
 import type { BudgetUtilityPanel } from './BudgetPageMainPanels'
 import type { AppModuleVisibility } from '../lib/useAppModuleVisibility'
 
+type SidebarPrimaryPanel = 'profile' | 'settings' | null
+
+type ProfilePanelProps = {
+  userEmail: string
+  accountCreatedAt: string | null
+  transactionsCount: number
+  categoriesCount: number
+  totalBalance: number
+  topCategories: Array<{ id: string; name: string; count: number }>
+}
+
 type Props = {
   styles: Record<string, CSSProperties>
   userProfileMenuProps: ComponentProps<typeof UserProfileMenu>
   budgetHeaderPanelProps: ComponentProps<typeof BudgetHeaderPanel>
   appSettingsPanelProps: ComponentProps<typeof AppSettingsPanel>
   visibleModules: AppModuleVisibility
+  activeSidebarPrimaryPanel: SidebarPrimaryPanel
   isSettingsPanelVisible: boolean
   isDashboardOpen: boolean
+  onOpenProfilePanel: () => void
+  onOpenSettingsPanel: () => void
+  onClosePrimaryPanel: () => void
+  profilePanelProps: ProfilePanelProps
   onToggleDashboard: () => void
   activeUtilityPanel: BudgetUtilityPanel
   onOpenUtilityPanel: (panel: BudgetUtilityPanel) => void
@@ -83989,8 +84649,13 @@ export default function BudgetPageStatusPanels({
   budgetHeaderPanelProps,
   appSettingsPanelProps,
   visibleModules,
+  activeSidebarPrimaryPanel,
   isSettingsPanelVisible,
   isDashboardOpen,
+  onOpenProfilePanel,
+  onOpenSettingsPanel,
+  onClosePrimaryPanel,
+  profilePanelProps,
   onToggleDashboard,
   activeUtilityPanel,
   onOpenUtilityPanel,
@@ -84002,14 +84667,27 @@ export default function BudgetPageStatusPanels({
     onOpenUtilityPanel(activeUtilityPanel === panel ? null : panel)
   }
 
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat('pl-PL', {
+      style: 'currency',
+      currency: 'PLN',
+      maximumFractionDigits: 2,
+    }).format(value)
+
   const basicSidebarItems: SidebarItem[] = [
-    { id: 'profile', label: 'Profil', icon: 'user', onClick: userProfileMenuProps.onToggleSettings },
+    {
+      id: 'profile',
+      label: 'Profil',
+      icon: 'user',
+      active: activeSidebarPrimaryPanel === 'profile',
+      onClick: onOpenProfilePanel,
+    },
     {
       id: 'settings',
       label: 'Ustawienia',
       icon: 'settings',
       active: isSettingsPanelVisible,
-      onClick: userProfileMenuProps.onToggleSettings,
+      onClick: onOpenSettingsPanel,
     },
     {
       id: 'dashboard',
@@ -84199,6 +84877,15 @@ export default function BudgetPageStatusPanels({
           <BudgetHeaderPanel {...budgetHeaderPanelProps} />
         </div>
 
+        {activeSidebarPrimaryPanel && (
+          <button
+            type="button"
+            data-sidebar-primary-backdrop="true"
+            aria-label="Zamknij panel"
+            onClick={onClosePrimaryPanel}
+          />
+        )}
+
         {isSettingsPanelVisible && (
           <section data-app-view="settings">
             <div data-app-view-header="true">
@@ -84206,17 +84893,73 @@ export default function BudgetPageStatusPanels({
                 <strong>Ustawienia</strong>
                 <span>Profil, moduły i zachowanie aplikacji</span>
               </div>
-              <button type="button" onClick={userProfileMenuProps.onToggleSettings}>
+              <button type="button" onClick={onClosePrimaryPanel}>
                 Zamknij
               </button>
             </div>
             <AppSettingsPanel {...appSettingsPanelProps} />
           </section>
         )}
+
+        {activeSidebarPrimaryPanel === 'profile' && (
+          <section data-app-view="profile">
+            <div data-app-view-header="true">
+              <div>
+                <strong>Profil</strong>
+                <span>Podsumowanie profilu</span>
+              </div>
+              <button type="button" onClick={onClosePrimaryPanel}>
+                Zamknij
+              </button>
+            </div>
+            <div data-profile-panel-body="true">
+              <section data-profile-summary-card="true">
+                <div>
+                  <span>E-mail użytkownika</span>
+                  <strong>{profilePanelProps.userEmail || 'brak danych'}</strong>
+                </div>
+                <div>
+                  <span>Konto od</span>
+                  <strong>{profilePanelProps.accountCreatedAt || 'brak danych'}</strong>
+                </div>
+              </section>
+
+              <section data-profile-stat-grid="true">
+                <div data-profile-stat-card="true">
+                  <span>Liczba wpisów</span>
+                  <strong>{profilePanelProps.transactionsCount}</strong>
+                </div>
+                <div data-profile-stat-card="true">
+                  <span>Liczba kategorii</span>
+                  <strong>{profilePanelProps.categoriesCount}</strong>
+                </div>
+                <div data-profile-stat-card="true">
+                  <span>Bilans całkowity</span>
+                  <strong>{formatCurrency(profilePanelProps.totalBalance)}</strong>
+                </div>
+              </section>
+
+              <section data-profile-top-categories="true">
+                <div data-profile-panel-section-title="true">Najczęstsze kategorie</div>
+                {profilePanelProps.topCategories.length > 0 ? (
+                  profilePanelProps.topCategories.map((category) => (
+                    <div key={category.id} data-profile-category-row="true">
+                      <span>{category.name}</span>
+                      <strong>{category.count}</strong>
+                    </div>
+                  ))
+                ) : (
+                  <div data-profile-panel-placeholder="true">Brak danych o kategoriach.</div>
+                )}
+              </section>
+            </div>
+          </section>
+        )}
       </div>
     </>
   )
 }
+
 
 
 ==================================================

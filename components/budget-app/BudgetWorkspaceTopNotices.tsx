@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import BudgetLimitAlertsPanel from '../BudgetLimitAlertsPanel'
 import ProfileMonthNotePanel from '../ProfileMonthNotePanel'
+import type { PinnedWorkspaceCategory } from '../../lib/budgetAppSummary'
 import type { Category } from '../../lib/budgetPageTypes'
 import type { BudgetLimitUsageState } from '../../lib/useBudgetLimits'
 
@@ -17,10 +18,12 @@ type BudgetWorkspaceTopNoticesProps = {
   activeBudgetLimitsCount: number
   activeBudgetLimitAlerts: BudgetLimitUsageState[]
   categoriesById: Record<string, Category>
+  pinnedWorkspaceCategories: PinnedWorkspaceCategory[]
   styles: Record<string, CSSProperties>
   onLockMonth: (month: string) => Promise<void>
   onHidePreviousMonthCloseReminder: () => void
   onOpenBudgetLimit: (categoryId: string | null) => void
+  onOpenPinnedCategory: (categoryId: string) => void
   sortContent?: ReactNode
 }
 
@@ -94,14 +97,17 @@ export default function BudgetWorkspaceTopNotices({
   activeBudgetLimitsCount,
   activeBudgetLimitAlerts,
   categoriesById,
+  pinnedWorkspaceCategories,
   styles,
   onLockMonth,
   onHidePreviousMonthCloseReminder,
   onOpenBudgetLimit,
+  onOpenPinnedCategory,
   sortContent,
 }: BudgetWorkspaceTopNoticesProps) {
   const [openedNotice, setOpenedNotice] = useState<OpenedNotice>(null)
   const noticeRef = useRef<HTMLDivElement | null>(null)
+  const visiblePinnedCategories = pinnedWorkspaceCategories.slice(0, 5)
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
@@ -211,6 +217,28 @@ export default function BudgetWorkspaceTopNotices({
           )}
         </div>
       </div>
+
+      {visiblePinnedCategories.length > 0 && (
+        <>
+          <i data-budget-status-separator="true" aria-hidden="true" />
+          <div data-budget-pinned-categories="true" aria-label="Przypięte kategorie">
+            {visiblePinnedCategories.map((category) => (
+              <button
+                key={category.id}
+                type="button"
+                data-budget-pinned-category="true"
+                data-pinned-category-kind={category.kind}
+                onClick={() => onOpenPinnedCategory(category.id)}
+                title={category.label}
+              >
+                <span>{category.label}</span>
+                <b>{category.amount.toLocaleString('pl-PL')} zł</b>
+              </button>
+            ))}
+          </div>
+          {sortContent && <i data-budget-status-separator="true" aria-hidden="true" />}
+        </>
+      )}
 
       {sortContent && (
         <div data-budget-status-right="true" data-budget-compact-notice="sort">

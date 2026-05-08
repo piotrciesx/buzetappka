@@ -594,10 +594,12 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
               activeBudgetLimitsCount={activeBudgetLimits.length}
               activeBudgetLimitAlerts={activeBudgetLimitAlerts}
               categoriesById={categoriesById}
+              pinnedWorkspaceCategories={pinnedWorkspaceCategories}
               styles={styles}
               onLockMonth={handleLockMonth}
               onHidePreviousMonthCloseReminder={() => setIsPreviousMonthCloseReminderHidden(true)}
               onOpenBudgetLimit={setBudgetLimitEditorCategoryId}
+              onOpenPinnedCategory={openTransactionCreator}
             />
           ),
           workspaceBottomContent: (
@@ -605,11 +607,9 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
               selectedMonth={selectedMonth}
               calendarDays={contextCalendarDays}
               recentTransactions={recentTransactionPreviews}
-              pinnedCategories={pinnedWorkspaceCategories}
               trashedCount={trashedTransactions.length}
               onOpenMonthCalendar={() => openUtilityPanel('monthCalendar')}
               onOpenDay={(dayText: string) => handleOpenGlobalCalendarAddForDay(dayText)}
-              onOpenPinnedCategory={openTransactionCreator}
               onOpenTrash={() => openUtilityPanel('trash')}
             />
           ),
