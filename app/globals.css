@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 @import "./styles/base.css";
 @import "./styles/auth.css";
@@ -11,4 +11,3 @@
 @import "./styles/dashboard.css";
 @import "./styles/modals.css";
 @import "./styles/mobile.css";
-@import "./styles/side-panels.css";
