@@ -378,6 +378,10 @@
   backdrop-filter: none !important;
 }
 
+[data-budget-status-right="true"] > [data-tree-sort-inline="true"] {
+  display: flex !important;
+}
+
 
 
 /* Right sidebar repair: keep this block scoped to the right rail only. */

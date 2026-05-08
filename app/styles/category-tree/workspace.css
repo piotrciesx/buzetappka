@@ -69,6 +69,171 @@
   align-self: center !important;
 }
 
+[data-budget-tree-control-deck="true"] {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+[data-budget-tree-control-deck="true"] [data-budget-status-grid="true"] {
+  position: relative !important;
+  z-index: 120 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 10px !important;
+  overflow: visible !important;
+}
+
+[data-budget-status-left="true"] {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+}
+
+[data-budget-status-right="true"] {
+  position: relative !important;
+  justify-self: end !important;
+}
+
+[data-budget-compact-notice="alert"],
+[data-budget-compact-notice="note"],
+[data-budget-compact-notice="sort"] {
+  position: relative !important;
+  min-height: 38px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+[data-budget-notice-trigger="true"],
+[data-budget-sort-trigger="true"] {
+  position: relative !important;
+  min-width: 38px !important;
+  height: 38px !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(198, 209, 221, 0.82) !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(238, 244, 250, 0.78)) !important;
+  color: #334155 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 8px 18px rgba(15, 23, 42, 0.045) !important;
+  cursor: pointer !important;
+}
+
+[data-budget-notice-trigger="true"]:disabled {
+  opacity: 0.48 !important;
+  cursor: default !important;
+}
+
+[data-budget-sort-trigger="true"] {
+  width: auto !important;
+  padding: 0 14px !important;
+  font-size: 12px !important;
+  font-weight: 720 !important;
+}
+
+[data-budget-notice-badge="true"] {
+  position: absolute !important;
+  top: -5px !important;
+  right: -5px !important;
+  width: 18px !important;
+  height: 18px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 2px solid #ffffff !important;
+  border-radius: 999px !important;
+  background: #dc2626 !important;
+  color: #ffffff !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+}
+
+[data-budget-notice-panel],
+[data-budget-status-right="true"] > [data-tree-sort-inline="true"] {
+  position: absolute !important;
+  display: flex !important;
+  top: calc(100% + 8px) !important;
+  left: 0 !important;
+  z-index: 5000 !important;
+  width: min(430px, calc(100vw - 260px)) !important;
+  min-width: 300px !important;
+  padding: 12px !important;
+  border: 1px solid rgba(148, 163, 184, 0.38) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 22px 54px rgba(15, 23, 42, 0.16) !important;
+  color: #172033 !important;
+}
+
+[data-budget-status-right="true"] > [data-tree-sort-inline="true"] {
+  left: auto !important;
+  right: 0 !important;
+  width: min(620px, calc(100vw - 240px)) !important;
+  min-width: 420px !important;
+}
+
+[data-tree-sort-panel="true"] {
+  position: static !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+[data-month-note-panel="true"] {
+  box-shadow: none !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+[data-month-note-list="true"] {
+  display: grid !important;
+  gap: 8px !important;
+}
+
+[data-month-note-item="true"] {
+  display: grid !important;
+  gap: 7px !important;
+  padding: 9px !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  border-radius: 10px !important;
+  background: rgba(248, 250, 252, 0.9) !important;
+}
+
+[data-month-note-item="true"] p {
+  margin: 0 !important;
+  color: #334155 !important;
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+  white-space: pre-wrap !important;
+}
+
+[data-month-note-actions="true"] {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+}
+
+[data-month-note-actions="true"] button {
+  min-height: 26px !important;
+  border: 1px solid rgba(203, 213, 225, 0.86) !important;
+  border-radius: 999px !important;
+  padding: 0 9px !important;
+  background: #ffffff !important;
+  color: #475569 !important;
+  font-size: 11px !important;
+  font-weight: 650 !important;
+}
+
 /*
   Najważniejsza poprawka:
   wcześniej data-tree-category-grid / data-tree-category-list potrafiły zachowywać się

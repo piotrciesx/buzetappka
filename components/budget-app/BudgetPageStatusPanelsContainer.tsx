@@ -13,6 +13,7 @@ export default function BudgetPageStatusPanelsContainer({
 }: BudgetPageStatusPanelsContainerProps) {
   const {
     activeUtilityPanel,
+    activeSidebarPrimaryPanel,
     autoExcludePartialMonths,
     budgetStartDate,
     calendarHeatmapVariant,
@@ -65,6 +66,7 @@ export default function BudgetPageStatusPanelsContainer({
     scopedTransactions,
     selectedMonth,
     setActiveUtilityPanel,
+    setActiveSidebarPrimaryPanel,
     setAutoExcludePartialMonths,
     setBudgetStartDate,
     setCalendarHeatmapVariant,
@@ -86,22 +88,95 @@ export default function BudgetPageStatusPanelsContainer({
     status,
     styles,
     supabase,
+    transactions,
     userEmail,
     userId,
     visibleCategories,
     visibleModules,
   } = ctx
 
+  const profileTransactions = (
+    Array.isArray(transactions) ? transactions : scopedTransactions
+  ) as Array<{ amount?: number | string; category_id?: string }>
+  const categoryNamesById = new Map<string, string>(
+    categories.map((category: { id: string; name: string }) => [category.id, category.name])
+  )
+  const signedAmountGetter =
+    typeof ctx.getSignedAmountForTransaction === 'function'
+      ? ctx.getSignedAmountForTransaction
+      : (transaction: { amount?: number | string }) => Number(transaction.amount || 0)
+  const profileTotalBalance = profileTransactions.reduce(
+    (total: number, transaction) => total + signedAmountGetter(transaction),
+    0
+  )
+  const profileCategoryCounts = new Map<string, number>()
+
+  profileTransactions.forEach((transaction) => {
+    const categoryId = transaction.category_id || ''
+
+    if (!categoryId) {
+      return
+    }
+
+    profileCategoryCounts.set(categoryId, (profileCategoryCounts.get(categoryId) || 0) + 1)
+  })
+
+  const topProfileCategories = Array.from(profileCategoryCounts)
+    .sort(([, firstCount], [, secondCount]) => secondCount - firstCount)
+    .slice(0, 5)
+    .map(([categoryId, count]) => ({
+      id: categoryId,
+      name: categoryNamesById.get(categoryId) || 'Kategoria',
+      count,
+    }))
+
+  const handleOpenProfilePanel = () => {
+    setIsDashboardPanelOpen(false)
+    setActiveUtilityPanel(null)
+    setActiveSidebarPrimaryPanel((previousValue: string | null) =>
+      previousValue === 'profile' ? null : 'profile'
+    )
+  }
+
+  const handleOpenSettingsPanel = () => {
+    setIsDashboardPanelOpen(false)
+    setActiveUtilityPanel(null)
+    setActiveSidebarPrimaryPanel((previousValue: string | null) =>
+      previousValue === 'settings' ? null : 'settings'
+    )
+  }
+
+  const handleClosePrimaryPanel = () => {
+    setActiveSidebarPrimaryPanel(null)
+  }
+
+  const handleToggleImportExport = () => {
+    setIsDashboardPanelOpen(false)
+    setActiveSidebarPrimaryPanel(null)
+    setActiveUtilityPanel((previousValue: string | null) =>
+      previousValue === 'importExport' ? null : 'importExport'
+    )
+  }
+
+  const handleToggleDashboard = () => {
+    setActiveUtilityPanel(null)
+    setActiveSidebarPrimaryPanel(null)
+    setIsDashboardPanelOpen((previousValue: boolean) => !previousValue)
+  }
+
+  const handleOpenUtilityPanel = (panel: string | null) => {
+    setIsDashboardPanelOpen(false)
+    setActiveSidebarPrimaryPanel(null)
+    setActiveUtilityPanel(panel)
+  }
+
   return (
 <BudgetPageStatusPanels
         styles={styles}
         userProfileMenuProps={{
           userEmail,
-          onToggleSettings: () => setIsSettingsPanelVisible((previousValue: boolean) => !previousValue),
-          onToggleImportExport: () =>
-            setActiveUtilityPanel((previousValue: string | null) =>
-              previousValue === 'importExport' ? null : 'importExport'
-            ),
+          onToggleSettings: handleOpenSettingsPanel,
+          onToggleImportExport: handleToggleImportExport,
           onExportBackupJson: () => downloadProfileBackupJson(supabase, profileId),
           onExportBackupCsv: () => downloadProfileBackupCsv(supabase, profileId, budgetStartDate),
           onSignOut: signOut,
@@ -163,6 +238,7 @@ export default function BudgetPageStatusPanelsContainer({
           onAutoExcludePartialMonthsChange: setAutoExcludePartialMonths,
           draftVisibleModules,
           saveStatusText: moduleVisibilitySaveStatusText,
+          userEmail,
           onChangeModuleVisibility: setDraftModuleVisibility,
           onSave: async () => {
             await handleSaveMonthNavigationSettingsWithStartDateWarning()
@@ -173,6 +249,8 @@ export default function BudgetPageStatusPanelsContainer({
           onUnlockAllPastMonths: handleUnlockAllPastMonths,
           onResetSelectedMonthData: handleResetSelectedMonthData,
           onResetAllHistory: handleResetAllHistory,
+          onExportBackupJson: () => downloadProfileBackupJson(supabase, profileId),
+          onExportBackupCsv: () => downloadProfileBackupCsv(supabase, profileId, budgetStartDate),
           styles,
           defaultOpen: true,
           profileMembersPanel: (
@@ -194,11 +272,23 @@ export default function BudgetPageStatusPanelsContainer({
           ),
         }}
         visibleModules={effectiveVisibleModules}
+        activeSidebarPrimaryPanel={activeSidebarPrimaryPanel}
         isSettingsPanelVisible={isSettingsPanelVisible}
         isDashboardOpen={isDashboardPanelOpen}
-        onToggleDashboard={() => setIsDashboardPanelOpen((previousValue: boolean) => !previousValue)}
+        onOpenProfilePanel={handleOpenProfilePanel}
+        onOpenSettingsPanel={handleOpenSettingsPanel}
+        onClosePrimaryPanel={handleClosePrimaryPanel}
+        profilePanelProps={{
+          userEmail,
+          accountCreatedAt: null,
+          transactionsCount: profileTransactions.length,
+          categoriesCount: categories.length,
+          totalBalance: profileTotalBalance,
+          topCategories: topProfileCategories,
+        }}
+        onToggleDashboard={handleToggleDashboard}
         activeUtilityPanel={activeUtilityPanel}
-        onOpenUtilityPanel={setActiveUtilityPanel}
+        onOpenUtilityPanel={handleOpenUtilityPanel}
         onQuickAdd={() => openBlankFloatingTransactionCreator(null)}
       />
   )

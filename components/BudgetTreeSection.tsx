@@ -1,6 +1,13 @@
 'use client'
 
-import type { ComponentProps, CSSProperties, ReactNode } from 'react'
+import {
+  cloneElement,
+  isValidElement,
+  type ComponentProps,
+  type CSSProperties,
+  type ReactElement,
+  type ReactNode,
+} from 'react'
 import BudgetCategoryTree from './BudgetCategoryTree'
 import type { BudgetLimitView } from './BudgetLimitIndicator'
 import {
@@ -213,9 +220,7 @@ export default function BudgetTreeSection({
   workspaceBottomContent,
 }: Props) {
   const sortMenu = (
-    <details data-tree-sort-menu="true" data-floating-dropdown="true">
-      <summary>Sortuj</summary>
-      <div data-tree-sort-inline="true" style={styles.sortBar}>
+      <div data-tree-sort-panel="true" style={styles.sortBar}>
         <div style={styles.sortGroup}>
           <label htmlFor="level2-sort-mode" style={styles.sortLabel}>
             Sortowanie L2
@@ -278,8 +283,13 @@ export default function BudgetTreeSection({
           </select>
         </div>
       </div>
-    </details>
   )
+
+  const workspaceTopNode = isValidElement(workspaceTopContent)
+    ? cloneElement(workspaceTopContent as ReactElement<{ sortContent?: ReactNode }>, {
+        sortContent: sortMenu,
+      })
+    : workspaceTopContent
 
   return (
     <div data-budget-tree-workspace="true">
@@ -369,8 +379,7 @@ export default function BudgetTreeSection({
       </div>
 
       <div data-budget-tree-control-deck="true">
-        {workspaceTopContent}
-        <div data-tree-sort-control="true">{sortMenu}</div>
+        {workspaceTopNode}
       </div>
 
       {sortedLevel1.length === 0 && (

@@ -1,10 +1,12 @@
 'use client'
 
-import type { CSSProperties } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import BudgetLimitAlertsPanel from '../BudgetLimitAlertsPanel'
 import ProfileMonthNotePanel from '../ProfileMonthNotePanel'
 import type { Category } from '../../lib/budgetPageTypes'
 import type { BudgetLimitUsageState } from '../../lib/useBudgetLimits'
+
+type OpenedNotice = 'alert' | 'note' | 'sort' | null
 
 type BudgetWorkspaceTopNoticesProps = {
   previousMonthCloseReminder: string | null
@@ -19,6 +21,7 @@ type BudgetWorkspaceTopNoticesProps = {
   onLockMonth: (month: string) => Promise<void>
   onHidePreviousMonthCloseReminder: () => void
   onOpenBudgetLimit: (categoryId: string | null) => void
+  sortContent?: ReactNode
 }
 
 const hiddenLabelStyle: CSSProperties = {
@@ -95,53 +98,135 @@ export default function BudgetWorkspaceTopNotices({
   onLockMonth,
   onHidePreviousMonthCloseReminder,
   onOpenBudgetLimit,
+  sortContent,
 }: BudgetWorkspaceTopNoticesProps) {
+  const [openedNotice, setOpenedNotice] = useState<OpenedNotice>(null)
+  const noticeRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null
+
+      if (target && noticeRef.current?.contains(target)) {
+        return
+      }
+
+      setOpenedNotice(null)
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpenedNotice(null)
+      }
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
+
+  const toggleNotice = (notice: Exclude<OpenedNotice, null>) => {
+    setOpenedNotice((previousValue) => (previousValue === notice ? null : notice))
+  }
+
   return (
-    <div data-budget-status-grid="true">
-      {previousMonthCloseReminder && (
-        <details data-budget-compact-notice="alert">
-          <summary aria-label="Alert miesiąca" title="Alert miesiąca">
+    <div ref={noticeRef} data-budget-status-grid="true" data-opened-notice={openedNotice || ''}>
+      <div data-budget-status-left="true">
+        <div data-budget-compact-notice="alert">
+          <button
+            type="button"
+            data-budget-notice-trigger="true"
+            aria-label="Alert miesiąca"
+            title="Alert miesiąca"
+            aria-expanded={openedNotice === 'alert'}
+            disabled={!previousMonthCloseReminder}
+            onClick={() => toggleNotice('alert')}
+          >
             <NoticeIcon type="alert" />
             <span style={hiddenLabelStyle}>Alert miesiąca</span>
-          </summary>
-          <div>Poprzedni miesiąc {previousMonthCloseReminder} nie jest jeszcze zamknięty.</div>
-          <div data-budget-actions-row="true" style={{ ...styles.actions, marginTop: 8 }}>
-            <button
-              type="button"
-              style={styles.primaryButton}
-              onClick={async () => {
-                const confirmed = confirm(
-                  `Czy na pewno zamknąć poprzedni miesiąc ${previousMonthCloseReminder}?`
-                )
+            {previousMonthCloseReminder && <span data-budget-notice-badge="true">1</span>}
+          </button>
+          {openedNotice === 'alert' && previousMonthCloseReminder && (
+            <div data-budget-notice-panel="alert">
+              <div>Poprzedni miesiąc {previousMonthCloseReminder} nie jest jeszcze zamknięty.</div>
+              <div data-budget-actions-row="true" style={{ ...styles.actions, marginTop: 8 }}>
+                <button
+                  type="button"
+                  style={styles.primaryButton}
+                  onClick={async () => {
+                    const confirmed = confirm(
+                      `Czy na pewno zamknąć poprzedni miesiąc ${previousMonthCloseReminder}?`
+                    )
 
-                if (!confirmed) {
-                  return
-                }
+                    if (!confirmed) {
+                      return
+                    }
 
-                await onLockMonth(previousMonthCloseReminder)
-              }}
-            >
-              Zamknij
-            </button>
-            <button type="button" style={styles.secondaryButton} onClick={onHidePreviousMonthCloseReminder}>
-              Później
-            </button>
-          </div>
-        </details>
+                    await onLockMonth(previousMonthCloseReminder)
+                    setOpenedNotice(null)
+                  }}
+                >
+                  Zamknij
+                </button>
+                <button
+                  type="button"
+                  style={styles.secondaryButton}
+                  onClick={() => {
+                    onHidePreviousMonthCloseReminder()
+                    setOpenedNotice(null)
+                  }}
+                >
+                  Później
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div data-budget-compact-notice="note">
+          <button
+            type="button"
+            data-budget-notice-trigger="true"
+            aria-label="Notatka miesiąca"
+            title="Notatka miesiąca"
+            aria-expanded={openedNotice === 'note'}
+            onClick={() => toggleNotice('note')}
+          >
+            <NoticeIcon type="note" />
+            <span style={hiddenLabelStyle}>Notatka miesiąca</span>
+          </button>
+          {openedNotice === 'note' && (
+            <div data-budget-notice-panel="note">
+              <ProfileMonthNotePanel
+                profileId={profileId}
+                userId={userId}
+                selectedMonth={selectedMonth}
+                styles={styles}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
+      {sortContent && (
+        <div data-budget-status-right="true" data-budget-compact-notice="sort">
+          <button
+            type="button"
+            data-budget-sort-trigger="true"
+            aria-label="Sortuj kategorie"
+            title="Sortuj kategorie"
+            aria-expanded={openedNotice === 'sort'}
+            onClick={() => toggleNotice('sort')}
+          >
+            Sortuj
+          </button>
+          {openedNotice === 'sort' && <div data-tree-sort-inline="true">{sortContent}</div>}
+        </div>
       )}
-
-      <details data-budget-compact-notice="note">
-        <summary aria-label="Notatka miesiąca" title="Notatka miesiąca">
-          <NoticeIcon type="note" />
-          <span style={hiddenLabelStyle}>Notatka miesiąca</span>
-        </summary>
-        <ProfileMonthNotePanel
-          profileId={profileId}
-          userId={userId}
-          selectedMonth={selectedMonth}
-          styles={styles}
-        />
-      </details>
 
       {isBudgetLimitsVisible && activeBudgetLimitsCount > 0 && (
         <section data-budget-compact-notice="limits">

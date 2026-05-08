@@ -177,6 +177,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     selectedTransactionIds,
     selectedTransactions,
     setActiveUtilityPanel,
+    setActiveSidebarPrimaryPanel,
     setBudgetLimitEditorCategoryId,
     setBulkActionErrorText,
     setBulkMoveTargetCategoryId,
@@ -185,6 +186,8 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     setHeatmapInverted,
     setHeatmapMode,
     setIsBankSearchOpen,
+    setIsDashboardPanelOpen,
+    setIsSettingsPanelVisible,
     setIsPreviousMonthCloseReminderHidden,
     setLevel2SortDirection,
     setLevel2SortMode,
@@ -220,6 +223,12 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     visibleModules,
   } = ctx
 
+  const openUtilityPanel = (panel: string | null) => {
+    setIsDashboardPanelOpen?.(false)
+    setActiveSidebarPrimaryPanel?.(null)
+    setIsSettingsPanelVisible?.(false)
+    setActiveUtilityPanel(panel)
+  }
 
   return {
     visibleModules: effectiveVisibleModules,
@@ -573,8 +582,8 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
           onAddExpense: expenseLevel1Id
             ? () => openBlankFloatingTransactionCreator(expenseLevel1Id)
             : undefined,
-          onOpenSearch: () => setActiveUtilityPanel('search'),
-          onOpenCalendar: () => setActiveUtilityPanel('monthCalendar'),
+          onOpenSearch: () => openUtilityPanel('search'),
+          onOpenCalendar: () => openUtilityPanel('monthCalendar'),
           workspaceTopContent: (
             <BudgetWorkspaceTopNotices
               previousMonthCloseReminder={previousMonthCloseReminder}
@@ -598,10 +607,10 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
               recentTransactions={recentTransactionPreviews}
               pinnedCategories={pinnedWorkspaceCategories}
               trashedCount={trashedTransactions.length}
-              onOpenMonthCalendar={() => setActiveUtilityPanel('monthCalendar')}
+              onOpenMonthCalendar={() => openUtilityPanel('monthCalendar')}
               onOpenDay={(dayText: string) => handleOpenGlobalCalendarAddForDay(dayText)}
               onOpenPinnedCategory={openTransactionCreator}
-              onOpenTrash={() => setActiveUtilityPanel('trash')}
+              onOpenTrash={() => openUtilityPanel('trash')}
             />
           ),
         },

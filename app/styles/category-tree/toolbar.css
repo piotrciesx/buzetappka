@@ -28,6 +28,10 @@
   display: flex !important;
 }
 
+[data-tree-sort-menu="true"][open] > [data-tree-sort-inline="true"] {
+  display: flex !important;
+}
+
 
 
 [data-workspace-action],
@@ -217,6 +221,10 @@
 [data-tree-sort-menu="true"],
 [data-tree-view-menu="true"] {
   position: relative;
+}
+
+[data-tree-sort-menu="true"][open] > [data-tree-sort-inline="true"] {
+  display: flex !important;
 }
 
 

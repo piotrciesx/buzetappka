@@ -69,6 +69,8 @@ type MigrationPromptState = {
   errorText: string
 }
 
+type SidebarPrimaryPanel = 'profile' | 'settings' | null
+
 export type BudgetAppProps = {
   profileId: string
   userId: string
@@ -155,7 +157,24 @@ export default function BudgetAppController({
   const searchPanelRef = useRef<HTMLDivElement | null>(null)
 
   const styles = budgetPageStyles
-  const [isSettingsPanelVisible, setIsSettingsPanelVisible] = useState(false)
+  const [activeSidebarPrimaryPanel, setActiveSidebarPrimaryPanel] =
+    useState<SidebarPrimaryPanel>(null)
+  const isSettingsPanelVisible = activeSidebarPrimaryPanel === 'settings'
+  const setIsSettingsPanelVisible = useCallback(
+    (value: boolean | ((previousValue: boolean) => boolean)) => {
+      setActiveSidebarPrimaryPanel((previousPanel) => {
+        const previousValue = previousPanel === 'settings'
+        const nextValue = typeof value === 'function' ? value(previousValue) : value
+
+        if (nextValue) {
+          return 'settings'
+        }
+
+        return previousPanel === 'settings' ? null : previousPanel
+      })
+    },
+    []
+  )
   const [activeUtilityPanel, setActiveUtilityPanel] = useState<BudgetUtilityPanel>(null)
   const [isDashboardPanelOpen, setIsDashboardPanelOpen] = useState(false)
   const {
@@ -1246,8 +1265,8 @@ export default function BudgetAppController({
     toggleTransactionSelection, transactionCategoryPathLabels, transactionPaymentSplitsMap, transactionTagsMap, transactions, trashedTransactions, trashedTransactionsById, userId, visibleModules, autoExcludePartialMonths,
     copyInviteLink, createInvitation, currentMonth, draftVisibleModules, goToNextMonth, goToPrevMonth, handleLockAllPastMonths, handleLockSelectedMonth, handleResetAllHistory, handleResetHeatmapSettings,
     handleResetSelectedMonthData, handleSaveMonthNavigationSettingsWithStartDateWarning, handleUnlockAllPastMonths, handleUnlockSelectedMonth, invitationErrorText, invitationStatusText, inviteEmail, inviteLink, isDashboardPanelOpen, isFutureMonthNavigationLocked,
-    isInvitationWorking, isNextMonthNavigationBlocked, isPrevMonthNavigationBlocked, isSavingMonthNavigationSettings, isSettingsPanelVisible, isUpdatingSelectedMonthLock, maxAllowedMonth, minAllowedMonth, moduleVisibilitySaveStatusText, monthNavigationErrorText,
-    onCurrentUserLeftProfile, resetDraftVisibleModules, saveVisibleModules, setAutoExcludePartialMonths, setBudgetStartDate, setCalendarHeatmapVariant, setDraftModuleVisibility, setInviteEmail, setIsDashboardPanelOpen, setIsFutureMonthNavigationLocked,
+    isInvitationWorking, isNextMonthNavigationBlocked, isPrevMonthNavigationBlocked, isSavingMonthNavigationSettings, activeSidebarPrimaryPanel, isSettingsPanelVisible, isUpdatingSelectedMonthLock, maxAllowedMonth, minAllowedMonth, moduleVisibilitySaveStatusText, monthNavigationErrorText,
+    onCurrentUserLeftProfile, resetDraftVisibleModules, saveVisibleModules, setActiveSidebarPrimaryPanel, setAutoExcludePartialMonths, setBudgetStartDate, setCalendarHeatmapVariant, setDraftModuleVisibility, setInviteEmail, setIsDashboardPanelOpen, setIsFutureMonthNavigationLocked,
     setIsSettingsPanelVisible, setMonthNavigationErrorText, setMonthNavigationStartMonth, setSelectedMonth, setShowHiddenCategories, setSimpleMode, signOut, simpleMode, userEmail, visibleCategories,
     addBudgetLimit, amountInputRef, applyTransactionCategorySelection, budgetLimitEditorCategoryId, currentTransactionCreatorPaymentSourceOptions, deleteBudgetLimit, descriptionInputRef, draftPromptState, excludedMonthsSet, handleSaveTransaction,
     incomePaymentSourceOptions, isQuickDayModeEnabled, isSaving, isSerialTransactionCreatorEnabled, isTransactionCreatorOpen, level1, newAmount, newDescription, newTransactionDate, openFloatingTransactionCreator,

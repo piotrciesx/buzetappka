@@ -14,19 +14,21 @@ export default function BudgetDashboardDrawer({
   dashboardPanelProps,
   onClose,
 }: BudgetDashboardDrawerProps) {
-  if (!isOpen) {
-    return null
-  }
-
   return (
-    <div data-dashboard-overlay="true">
+    <div data-dashboard-overlay="true" data-dashboard-open={isOpen ? 'true' : 'false'}>
       <button
         type="button"
         data-dashboard-backdrop="true"
         aria-label="Zamknij dashboard"
+        tabIndex={isOpen ? 0 : -1}
         onClick={onClose}
       />
-      <aside data-dashboard-drawer="true" aria-label="Dashboard analityczny">
+      <aside
+        data-dashboard-drawer="true"
+        data-dashboard-open={isOpen ? 'true' : 'false'}
+        aria-label="Dashboard analityczny"
+        aria-hidden={!isOpen}
+      >
         <div data-dashboard-drawer-header="true">
           <div>
             <strong>Dashboard</strong>

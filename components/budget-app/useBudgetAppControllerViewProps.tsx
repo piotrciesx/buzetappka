@@ -228,6 +228,7 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
   const mainPanelsProps = useBudgetPageMainPanelsProps(viewCtx)
 
   const statusPanelsCtx = {
+    activeSidebarPrimaryPanel: ctx.activeSidebarPrimaryPanel,
     activeUtilityPanel: ctx.activeUtilityPanel,
     autoExcludePartialMonths: ctx.autoExcludePartialMonths,
     budgetStartDate: ctx.budgetStartDate,
@@ -281,6 +282,7 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     saveVisibleModules: ctx.saveVisibleModules,
     scopedTransactions: ctx.scopedTransactions,
     selectedMonth,
+    setActiveSidebarPrimaryPanel: ctx.setActiveSidebarPrimaryPanel,
     setActiveUtilityPanel: ctx.setActiveUtilityPanel,
     setAutoExcludePartialMonths: ctx.setAutoExcludePartialMonths,
     setBudgetStartDate: ctx.setBudgetStartDate,
@@ -320,10 +322,26 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     draftCount: ctx.drafts.length,
     recurringCount: ctx.recurringTransactions.length,
     showRecurring: effectiveVisibleModules.recurringTransactions,
-    onOpenSearch: () => ctx.setActiveUtilityPanel('search'),
-    onOpenNotifications: () => ctx.setActiveUtilityPanel('recurringTransactions'),
+    onOpenSearch: () => {
+      ctx.setIsDashboardPanelOpen(false)
+      ctx.setActiveSidebarPrimaryPanel?.(null)
+      ctx.setIsSettingsPanelVisible(false)
+      ctx.setActiveUtilityPanel('search')
+    },
+    onOpenNotifications: () => {
+      ctx.setIsDashboardPanelOpen(false)
+      ctx.setActiveSidebarPrimaryPanel?.(null)
+      ctx.setIsSettingsPanelVisible(false)
+      ctx.setActiveUtilityPanel('recurringTransactions')
+    },
     onQuickAdd: () => ctx.openBlankFloatingTransactionCreator(null),
-    onToggleProfile: () => ctx.setIsSettingsPanelVisible((previousValue: boolean) => !previousValue),
+    onToggleProfile: () => {
+      ctx.setIsDashboardPanelOpen(false)
+      ctx.setActiveUtilityPanel(null)
+      ctx.setActiveSidebarPrimaryPanel?.((previousValue: string | null) =>
+        previousValue === 'profile' ? null : 'profile'
+      )
+    },
   }
 
   const dashboardDrawerProps = {

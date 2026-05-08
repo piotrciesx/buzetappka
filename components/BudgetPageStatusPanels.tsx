@@ -7,14 +7,30 @@ import UserProfileMenu from './UserProfileMenu'
 import type { BudgetUtilityPanel } from './BudgetPageMainPanels'
 import type { AppModuleVisibility } from '../lib/useAppModuleVisibility'
 
+type SidebarPrimaryPanel = 'profile' | 'settings' | null
+
+type ProfilePanelProps = {
+  userEmail: string
+  accountCreatedAt: string | null
+  transactionsCount: number
+  categoriesCount: number
+  totalBalance: number
+  topCategories: Array<{ id: string; name: string; count: number }>
+}
+
 type Props = {
   styles: Record<string, CSSProperties>
   userProfileMenuProps: ComponentProps<typeof UserProfileMenu>
   budgetHeaderPanelProps: ComponentProps<typeof BudgetHeaderPanel>
   appSettingsPanelProps: ComponentProps<typeof AppSettingsPanel>
   visibleModules: AppModuleVisibility
+  activeSidebarPrimaryPanel: SidebarPrimaryPanel
   isSettingsPanelVisible: boolean
   isDashboardOpen: boolean
+  onOpenProfilePanel: () => void
+  onOpenSettingsPanel: () => void
+  onClosePrimaryPanel: () => void
+  profilePanelProps: ProfilePanelProps
   onToggleDashboard: () => void
   activeUtilityPanel: BudgetUtilityPanel
   onOpenUtilityPanel: (panel: BudgetUtilityPanel) => void
@@ -153,8 +169,13 @@ export default function BudgetPageStatusPanels({
   budgetHeaderPanelProps,
   appSettingsPanelProps,
   visibleModules,
+  activeSidebarPrimaryPanel,
   isSettingsPanelVisible,
   isDashboardOpen,
+  onOpenProfilePanel,
+  onOpenSettingsPanel,
+  onClosePrimaryPanel,
+  profilePanelProps,
   onToggleDashboard,
   activeUtilityPanel,
   onOpenUtilityPanel,
@@ -166,14 +187,27 @@ export default function BudgetPageStatusPanels({
     onOpenUtilityPanel(activeUtilityPanel === panel ? null : panel)
   }
 
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat('pl-PL', {
+      style: 'currency',
+      currency: 'PLN',
+      maximumFractionDigits: 2,
+    }).format(value)
+
   const basicSidebarItems: SidebarItem[] = [
-    { id: 'profile', label: 'Profil', icon: 'user', onClick: userProfileMenuProps.onToggleSettings },
+    {
+      id: 'profile',
+      label: 'Profil',
+      icon: 'user',
+      active: activeSidebarPrimaryPanel === 'profile',
+      onClick: onOpenProfilePanel,
+    },
     {
       id: 'settings',
       label: 'Ustawienia',
       icon: 'settings',
       active: isSettingsPanelVisible,
-      onClick: userProfileMenuProps.onToggleSettings,
+      onClick: onOpenSettingsPanel,
     },
     {
       id: 'dashboard',
@@ -363,6 +397,15 @@ export default function BudgetPageStatusPanels({
           <BudgetHeaderPanel {...budgetHeaderPanelProps} />
         </div>
 
+        {activeSidebarPrimaryPanel && (
+          <button
+            type="button"
+            data-sidebar-primary-backdrop="true"
+            aria-label="Zamknij panel"
+            onClick={onClosePrimaryPanel}
+          />
+        )}
+
         {isSettingsPanelVisible && (
           <section data-app-view="settings">
             <div data-app-view-header="true">
@@ -370,11 +413,66 @@ export default function BudgetPageStatusPanels({
                 <strong>Ustawienia</strong>
                 <span>Profil, moduły i zachowanie aplikacji</span>
               </div>
-              <button type="button" onClick={userProfileMenuProps.onToggleSettings}>
+              <button type="button" onClick={onClosePrimaryPanel}>
                 Zamknij
               </button>
             </div>
             <AppSettingsPanel {...appSettingsPanelProps} />
+          </section>
+        )}
+
+        {activeSidebarPrimaryPanel === 'profile' && (
+          <section data-app-view="profile">
+            <div data-app-view-header="true">
+              <div>
+                <strong>Profil</strong>
+                <span>Podsumowanie profilu</span>
+              </div>
+              <button type="button" onClick={onClosePrimaryPanel}>
+                Zamknij
+              </button>
+            </div>
+            <div data-profile-panel-body="true">
+              <section data-profile-summary-card="true">
+                <div>
+                  <span>E-mail użytkownika</span>
+                  <strong>{profilePanelProps.userEmail || 'brak danych'}</strong>
+                </div>
+                <div>
+                  <span>Konto od</span>
+                  <strong>{profilePanelProps.accountCreatedAt || 'brak danych'}</strong>
+                </div>
+              </section>
+
+              <section data-profile-stat-grid="true">
+                <div data-profile-stat-card="true">
+                  <span>Liczba wpisów</span>
+                  <strong>{profilePanelProps.transactionsCount}</strong>
+                </div>
+                <div data-profile-stat-card="true">
+                  <span>Liczba kategorii</span>
+                  <strong>{profilePanelProps.categoriesCount}</strong>
+                </div>
+                <div data-profile-stat-card="true">
+                  <span>Bilans całkowity</span>
+                  <strong>{formatCurrency(profilePanelProps.totalBalance)}</strong>
+                </div>
+              </section>
+
+              <section data-profile-top-categories="true">
+                <div data-profile-panel-section-title="true">Najczęstsze kategorie</div>
+                {profilePanelProps.topCategories.length > 0 ? (
+                  profilePanelProps.topCategories.map((category) => (
+                    <div key={category.id} data-profile-category-row="true">
+                      <span>{category.name}</span>
+                      <strong>{category.count}</strong>
+                    </div>
+                  ))
+                ) : (
+                  <div data-profile-panel-placeholder="true">Brak danych o kategoriach.</div>
+                )}
+              </section>
+            </div>
           </section>
         )}
       </div>
