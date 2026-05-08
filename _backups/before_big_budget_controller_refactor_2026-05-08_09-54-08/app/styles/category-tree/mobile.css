@@ -1,0 +1,9 @@
+@media (max-width: 1099px) {
+  [data-tree-category-grid="true"] > div:first-child {
+    grid-template-columns: 1fr;
+  }
+
+  [data-tree-category-list="true"] {
+    grid-template-columns: 1fr;
+  }
+}

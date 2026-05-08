@@ -1,17 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import BudgetPageMainPanels, { type BudgetUtilityPanel } from './BudgetPageMainPanels'
-import BudgetRightRail from './BudgetRightRail'
-import DashboardPanel from './DashboardPanel'
-import MainWorkspaceBottomDeck from './MainWorkspaceBottomDeck'
-import BudgetPageOverlays from './BudgetPageOverlays'
-import BudgetPageStatusPanels from './BudgetPageStatusPanels'
-import BudgetLimitEditorModal from './BudgetLimitEditorModal'
-import BudgetLimitAlertsPanel from './BudgetLimitAlertsPanel'
-import ProfileMembersPanel from './ProfileMembersPanel'
-import ProfileMonthNotePanel from './ProfileMonthNotePanel'
-import type { BudgetLimitView } from './BudgetLimitIndicator'
+import { type BudgetUtilityPanel } from './BudgetPageMainPanels'
 import { useTransactionOperations } from '../lib/useTransactionOperations'
 import { useTransactionCreatorOpeners } from '../lib/useTransactionCreatorOpeners'
 import { useCategoryVisibilityActions } from '../lib/useCategoryVisibilityActions'
@@ -28,7 +18,6 @@ import {
 } from '../lib/budgetPageTypes'
 import { useSelectedMonthTransactions } from '../lib/useSelectedMonthTransactions'
 import { useBudgetPageDrafts } from '../lib/useBudgetPageDrafts'
-import { getHiddenCategoryLabel } from '../lib/categoryUtils'
 import { supabase } from '../lib/supabaseClient'
 import { getAmountNumber } from '../lib/transactionUtils'
 import { useBudgetMonthNavigation } from '../lib/useBudgetMonthNavigation'
@@ -53,18 +42,23 @@ import {
 } from '../lib/recurringTransactions'
 import { useFinancialGoals } from '../lib/useFinancialGoals'
 import { useBudgetLimits } from '../lib/useBudgetLimits'
-import type { SaveBudgetLimitInput } from '../lib/useBudgetLimits'
 import { isAllowedMoveTarget as checkIsAllowedMoveTarget } from '../lib/isAllowedMoveTarget'
 import { useBudgetPageData } from '../lib/useBudgetPageData'
 import { useRecurringOptions } from '../lib/useRecurringOptions'
 import { useOpenSearchForTag } from '../lib/useOpenSearchForTag'
-import { useBudgetPageOverlayProps } from '../lib/useBudgetPageOverlayProps'
 import { useAppModuleVisibility } from '../lib/useAppModuleVisibility'
-import { getNextMonthText, getPrevMonthText } from '../lib/dateUtils'
+import { getNextMonthText } from '../lib/dateUtils'
 import { filterTransactionsByBudgetStartDate } from '../lib/transactionScope'
 import { downloadProfileBackupCsv, downloadProfileBackupJson } from '../lib/exportBackup'
 import { useBudgetAppEffects } from './budget-app/useBudgetAppEffects'
-import { createPaymentSplitItemsFromStoredSplits } from '../lib/paymentSplitUtils'
+import BudgetAppControllerView from './budget-app/BudgetAppControllerView'
+import { useBudgetAppControllerViewProps } from './budget-app/useBudgetAppControllerViewProps'
+import { useDuplicateTransaction } from './budget-app/useDuplicateTransaction'
+import { useBudgetLimitViews } from './budget-app/useBudgetLimitViews'
+import { useFloatingDropdownDismissal } from './budget-app/useFloatingDropdownDismissal'
+import { usePinnedCategories } from './budget-app/usePinnedCategories'
+import { usePreviousMonthReminder } from './budget-app/usePreviousMonthReminder'
+import { useTransactionCategorySelection } from './budget-app/useTransactionCategorySelection'
 
 type MigrationPromptState = {
   categoryId: string
@@ -74,10 +68,6 @@ type MigrationPromptState = {
   targetCategoryId: string
   errorText: string
 }
-
-const GLOBAL_BUDGET_LIMIT_KEY = '__global__'
-
-const getBudgetLimitKey = (categoryId: string | null) => categoryId || GLOBAL_BUDGET_LIMIT_KEY
 
 export type BudgetAppProps = {
   profileId: string
@@ -151,23 +141,6 @@ export default function BudgetAppController({
   const [isSerialTransactionCreatorEnabled, setIsSerialTransactionCreatorEnabled] = useState(false)
   const [isQuickDayModeEnabled, setIsQuickDayModeEnabled] = useState(false)
   const [quickDayDate, setQuickDayDate] = useState('')
-  const [pinnedCategoryIds, setPinnedCategoryIds] = useState<string[]>(() => {
-    if (!profileId || typeof window === 'undefined') {
-      return []
-    }
-
-    const storedValue = window.localStorage.getItem(`budget-app-pinned-categories-${profileId}`)
-    if (!storedValue) {
-      return []
-    }
-
-    try {
-      const parsedValue = JSON.parse(storedValue)
-      return Array.isArray(parsedValue) ? parsedValue.filter(Boolean) : []
-    } catch {
-      return []
-    }
-  })
   const [transactionCreatorInitialDate, setTransactionCreatorInitialDate] = useState<string | null>(
     null
   )
@@ -177,10 +150,6 @@ export default function BudgetAppController({
   const [transactionPaymentSplitsMap, setTransactionPaymentSplitsMap] = useState<
     Record<string, TransactionPaymentSplit[]>
   >({})
-  const [isPreviousMonthCloseReminderHidden, setIsPreviousMonthCloseReminderHidden] =
-    useState(false)
-  const [currentDayOfMonth, setCurrentDayOfMonth] = useState<number | null>(null)
-
   const amountInputRef = useRef<HTMLInputElement | null>(null)
   const descriptionInputRef = useRef<HTMLInputElement | null>(null)
   const searchPanelRef = useRef<HTMLDivElement | null>(null)
@@ -272,61 +241,7 @@ export default function BudgetAppController({
     newTransactionDate,
   ])
 
-  useEffect(() => {
-    const selector = 'details[data-floating-dropdown="true"]'
-
-    const closeOtherDropdowns = (currentDropdown: HTMLDetailsElement) => {
-      document.querySelectorAll<HTMLDetailsElement>(selector).forEach((dropdown) => {
-        if (dropdown !== currentDropdown) {
-          dropdown.open = false
-        }
-      })
-    }
-
-    const handleToggle = (event: Event) => {
-      const dropdown = event.target instanceof HTMLDetailsElement ? event.target : null
-
-      if (!dropdown?.matches(selector) || !dropdown.open) {
-        return
-      }
-
-      closeOtherDropdowns(dropdown)
-    }
-
-    const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target instanceof Node ? event.target : null
-
-      if (!target) {
-        return
-      }
-
-      document.querySelectorAll<HTMLDetailsElement>(selector).forEach((dropdown) => {
-        if (!dropdown.contains(target)) {
-          dropdown.open = false
-        }
-      })
-    }
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') {
-        return
-      }
-
-      document.querySelectorAll<HTMLDetailsElement>(selector).forEach((dropdown) => {
-        dropdown.open = false
-      })
-    }
-
-    document.addEventListener('toggle', handleToggle, true)
-    document.addEventListener('pointerdown', handlePointerDown)
-    document.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      document.removeEventListener('toggle', handleToggle, true)
-      document.removeEventListener('pointerdown', handlePointerDown)
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [])
+  useFloatingDropdownDismissal()
 
   const effectiveVisibleModules = useMemo(
     () =>
@@ -525,56 +440,12 @@ export default function BudgetAppController({
     baseDescriptionSuggestions,
   })
 
-  const applyTransactionCategorySelection = useCallback(
-    (categoryId: string) => {
-      const selectedCategory = categoriesById[categoryId]
-
-      if (!selectedCategory) {
-        return
-      }
-
-      if (selectedCategory.level === 1) {
-        setSelectedTransactionTypeId(selectedCategory.id)
-        setSelectedLevel2Id(null)
-        setSelectedTransactionCategoryId(selectedCategory.id)
-        return
-      }
-
-      if (selectedCategory.level === 2 && selectedCategory.parent_id) {
-        const selectedLevel1 = categoriesById[selectedCategory.parent_id]
-
-        if (!selectedLevel1 || selectedLevel1.level !== 1) {
-          return
-        }
-
-        setSelectedTransactionTypeId(selectedLevel1.id)
-        setSelectedLevel2Id(selectedCategory.id)
-        setSelectedTransactionCategoryId(selectedCategory.id)
-        return
-      }
-
-      if (selectedCategory.level !== 3 || !selectedCategory.parent_id) {
-        return
-      }
-
-      const selectedLevel2 = categoriesById[selectedCategory.parent_id]
-
-      if (!selectedLevel2 || selectedLevel2.level !== 2 || !selectedLevel2.parent_id) {
-        return
-      }
-
-      const selectedLevel1 = categoriesById[selectedLevel2.parent_id]
-
-      if (!selectedLevel1 || selectedLevel1.level !== 1) {
-        return
-      }
-
-      setSelectedTransactionTypeId(selectedLevel1.id)
-      setSelectedLevel2Id(selectedLevel2.id)
-      setSelectedTransactionCategoryId(selectedCategory.id)
-    },
-    [categoriesById]
-  )
+  const applyTransactionCategorySelection = useTransactionCategorySelection({
+    categoriesById,
+    setSelectedTransactionTypeId,
+    setSelectedLevel2Id,
+    setSelectedTransactionCategoryId,
+  })
 
   const {
     paymentSources,
@@ -637,87 +508,16 @@ export default function BudgetAppController({
     setSelectedTransactionTypeId,
   })
 
-  useEffect(() => {
-    if (!profileId || typeof window === 'undefined') {
-      return
-    }
-
-    window.localStorage.setItem(
-      `budget-app-pinned-categories-${profileId}`,
-      JSON.stringify(pinnedCategoryIds)
-    )
-  }, [pinnedCategoryIds, profileId])
-
-  const togglePinnedCategory = useCallback((categoryId: string) => {
-    setPinnedCategoryIds((prev) =>
-      prev.includes(categoryId)
-        ? prev.filter((item) => item !== categoryId)
-        : [categoryId, ...prev].slice(0, 12)
-    )
-  }, [])
-
-  const pinnedTransactionShortcutCategoriesByType = useMemo(() => {
-    return pinnedCategoryIds.reduce<Record<string, Array<{ id: string; label: string }>>>(
-      (acc, categoryId) => {
-        if (!addableTransactionCategoryIds.has(categoryId)) {
-          return acc
-        }
-
-        const rootId = getRootLevel1IdForCategory(categoryId)
-        const label = transactionCategoryPathLabels[categoryId]
-
-        if (!rootId || !label) {
-          return acc
-        }
-
-        acc[rootId] = [...(acc[rootId] || []), { id: categoryId, label }]
-        return acc
-      },
-      {}
-    )
-  }, [
-    addableTransactionCategoryIds,
-    getRootLevel1IdForCategory,
+  const {
     pinnedCategoryIds,
-    transactionCategoryPathLabels,
-  ])
-
-  const pinnedWorkspaceCategories = useMemo(() => {
-    const categoryNameCounts = categories.reduce<Record<string, number>>((acc, category) => {
-      acc[category.name] = (acc[category.name] || 0) + 1
-      return acc
-    }, {})
-
-    return pinnedCategoryIds
-      .filter((categoryId) => addableTransactionCategoryIds.has(categoryId) && categoriesById[categoryId])
-      .slice(0, 5)
-      .map((categoryId) => {
-        const category = categoriesById[categoryId]
-        const rootId = getRootLevel1IdForCategory(categoryId)
-        const isDuplicateName = categoryNameCounts[category.name] > 1
-        const label = isDuplicateName
-          ? transactionCategoryPathLabels[categoryId] || getCategoryPathLabel(categoryId, categoriesById)
-          : category.name
-
-        return {
-          id: categoryId,
-          label,
-          kind: rootId === expenseLevel1Id ? ('expense' as const) : ('income' as const),
-          amount: getSumForCategoryForSelectedMonth(categoryId),
-          transactionCount: getCategoryCountForSelectedMonth(categoryId),
-        }
-      })
-  }, [
+    pinnedTransactionShortcutCategoriesByType,
+    togglePinnedCategory,
+  } = usePinnedCategories({
+    profileId,
     addableTransactionCategoryIds,
-    categories,
-    categoriesById,
-    expenseLevel1Id,
-    getCategoryCountForSelectedMonth,
-    getRootLevel1IdForCategory,
-    getSumForCategoryForSelectedMonth,
-    pinnedCategoryIds,
     transactionCategoryPathLabels,
-  ])
+    getRootLevel1IdForCategory,
+  })
 
   const getDefaultPaymentSourceIdForCategoryId = useCallback(
     (categoryId: string) => {
@@ -884,45 +684,29 @@ export default function BudgetAppController({
     restoreDescriptionSuggestion,
   })
 
-  const handleDuplicateTransaction = useCallback(
-    (transaction: Transaction) => {
-      if (!canCreateTransactionsInMonth(isSelectedMonthLocked)) {
-        return
-      }
-
-      applyTransactionCategorySelection(transaction.category_id)
-      setTransactionCreatorSuggestionId(transaction.category_id)
-      setTransactionCreatorLockedLevel1Id(null)
-      setNewAmount(String(getAmountNumber(transaction.amount)))
-      setNewDescription(transaction.description || '')
-      setSelectedTagNames((transactionTagsMap[transaction.id] || []).map((tag) => tag.name))
-      setSelectedPaymentSourceId(transaction.payment_source_id || '')
-      setSelectedPaymentSplitItems(
-        createPaymentSplitItemsFromStoredSplits(transactionPaymentSplitsMap[transaction.id] || [])
-      )
-      setSelectedRecurringTransactionId(transaction.recurring_transaction_id || '')
-      setNewTransactionDate(isQuickDayModeEnabled && effectiveQuickDayDate ? effectiveQuickDayDate : '')
-      setIsSerialTransactionCreatorEnabled(false)
-      setTransactionDraftId(null)
-      setTransactionDraftType(null)
-      setTransactionCreatorInitialDate(null)
-      setIsTransactionCreatorOpen(true)
-
-      window.setTimeout(() => {
-        amountInputRef.current?.focus()
-      }, 0)
-    },
-    [
-      applyTransactionCategorySelection,
-      isQuickDayModeEnabled,
-      isSelectedMonthLocked,
-      effectiveQuickDayDate,
-      setTransactionDraftId,
-      setTransactionDraftType,
-      transactionPaymentSplitsMap,
-      transactionTagsMap,
-    ]
-  )
+  const handleDuplicateTransaction = useDuplicateTransaction({
+    isSelectedMonthLocked,
+    isQuickDayModeEnabled,
+    effectiveQuickDayDate,
+    transactionTagsMap,
+    transactionPaymentSplitsMap,
+    amountInputRef,
+    applyTransactionCategorySelection,
+    setTransactionCreatorSuggestionId,
+    setTransactionCreatorLockedLevel1Id,
+    setNewAmount,
+    setNewDescription,
+    setSelectedTagNames,
+    setSelectedPaymentSourceId,
+    setSelectedPaymentSplitItems,
+    setSelectedRecurringTransactionId,
+    setNewTransactionDate,
+    setIsSerialTransactionCreatorEnabled,
+    setTransactionDraftId,
+    setTransactionDraftType,
+    setTransactionCreatorInitialDate,
+    setIsTransactionCreatorOpen,
+  })
 
   const handleTransactionSavedWithReminderStatus = useCallback(
     async (transaction: Transaction) => {
@@ -1274,6 +1058,15 @@ export default function BudgetAppController({
     setNewSubcategoryName,
   })
 
+  const {
+    previousMonthCloseReminder,
+    setCurrentDayOfMonth,
+    setIsPreviousMonthCloseReminderHidden,
+  } = usePreviousMonthReminder({
+    currentMonth,
+    lockedMonthsSet,
+  })
+
   useBudgetAppEffects({
     loadData,
     loadBudgetLimits,
@@ -1422,940 +1215,56 @@ export default function BudgetAppController({
     selectedMonthTransactions.length,
   ])
 
-  const previousMonthCloseReminder = useMemo(() => {
-    if (
-      currentDayOfMonth === null ||
-      currentDayOfMonth < 5 ||
-      !currentMonth ||
-      isPreviousMonthCloseReminderHidden
-    ) {
-      return null
-    }
+  const getBudgetLimitView = useBudgetLimitViews(activeLimitStates)
 
-    const previousMonth = getPrevMonthText(currentMonth)
-
-    if (lockedMonthsSet.has(previousMonth)) {
-      return null
-    }
-
-    return previousMonth
-  }, [currentDayOfMonth, currentMonth, isPreviousMonthCloseReminderHidden, lockedMonthsSet])
-
-  const budgetLimitViewsByCategoryId = useMemo(() => {
-    return activeLimitStates.reduce<Record<string, BudgetLimitView>>((acc, state) => {
-      acc[getBudgetLimitKey(state.limit.category_id)] = state
-      return acc
-    }, {})
-  }, [activeLimitStates])
-
-  const getBudgetLimitView = useCallback(
-    (categoryId: string | null) => budgetLimitViewsByCategoryId[getBudgetLimitKey(categoryId)] || null,
-    [budgetLimitViewsByCategoryId]
-  )
-
-  const editedBudgetLimitView = useMemo(() => {
-    if (budgetLimitEditorCategoryId === undefined) {
-      return null
-    }
-
-    return getBudgetLimitView(budgetLimitEditorCategoryId)
-  }, [budgetLimitEditorCategoryId, getBudgetLimitView])
-
-  const editedBudgetLimitCategoryLabel = useMemo(() => {
-    if (budgetLimitEditorCategoryId === null) {
-      return 'Wydatki'
-    }
-
-    if (!budgetLimitEditorCategoryId) {
-      return ''
-    }
-
-    return getCategoryPathLabel(budgetLimitEditorCategoryId, categoriesById)
-  }, [budgetLimitEditorCategoryId, categoriesById])
-
-  const saveBudgetLimit = useCallback(
-    async (input: SaveBudgetLimitInput) => {
-      try {
-        if (editedBudgetLimitView) {
-          await updateBudgetLimit({
-            ...input,
-            id: editedBudgetLimitView.limit.id,
-          })
-        } else {
-          await addBudgetLimit(input)
-        }
-      } catch (error) {
-        setErrorText(error instanceof Error ? error.message : 'Nie udało się zapisać limitu.')
-        throw error
-      }
-    },
-    [addBudgetLimit, editedBudgetLimitView, updateBudgetLimit]
-  )
-
-  const removeBudgetLimit = useCallback(
-    async (limitId: string) => {
-      try {
-        await deleteBudgetLimit(limitId)
-      } catch (error) {
-        setErrorText(error instanceof Error ? error.message : 'Nie udało się usunąć limitu.')
-        throw error
-      }
-    },
-    [deleteBudgetLimit]
-  )
-
-  const disableEditedBudgetLimit = useCallback(
-    async (limitId: string) => {
-      try {
-        await deleteBudgetLimit(limitId, selectedMonth)
-      } catch (error) {
-        setErrorText(error instanceof Error ? error.message : 'Nie udało się wyłączyć limitu.')
-        throw error
-      }
-    },
-    [deleteBudgetLimit, selectedMonth]
-  )
-
-  const budgetLimitDataSnapshot = useMemo(
-    () => ({
-      activeLimitCount: isBudgetLimitsModuleEnabled ? activeBudgetLimits.length : 0,
-      calculatedLimitCount: isBudgetLimitsModuleEnabled ? activeLimitStates.length : 0,
-      activeAlertCount: isBudgetLimitsModuleEnabled ? activeBudgetLimitAlerts.length : 0,
-    }),
-    [
-      activeBudgetLimitAlerts.length,
-      activeBudgetLimits.length,
-      activeLimitStates.length,
-      isBudgetLimitsModuleEnabled,
-    ]
-  )
-
-  const recentTransactionPreviews = useMemo(() => {
-    return scopedTransactions
-      .filter((transaction) => !transaction.is_deleted)
-      .sort((left, right) => (right.created_at || '').localeCompare(left.created_at || ''))
-      .slice(0, 8)
-      .map((transaction) => ({
-        id: transaction.id,
-        amount: String(getAmountNumber(transaction.amount)),
-        kind: getSignedAmountForTransaction(transaction) >= 0 ? ('income' as const) : ('expense' as const),
-        date: transaction.day_is_null ? `${transaction.date.slice(0, 7)} · bez dnia` : transaction.date,
-        description: transaction.description || '',
-        categoryLabel: categoriesById[transaction.category_id]
-          ? getCategoryPathLabel(transaction.category_id, categoriesById)
-          : 'Kategoria niedostępna',
-      }))
-  }, [categoriesById, getSignedAmountForTransaction, scopedTransactions])
-
-  const totalBudgetBalance = useMemo(() => {
-    return scopedTransactions
-      .filter((transaction) => !transaction.is_deleted)
-      .reduce((sum, transaction) => sum + getSignedAmountForTransaction(transaction), 0)
-  }, [getSignedAmountForTransaction, scopedTransactions])
-
-  const selectedMonthIncomeTotal = useMemo(() => {
-    return selectedMonthTransactions.reduce((sum, transaction) => {
-      const signedAmount = getSignedAmountForTransaction(transaction)
-      return signedAmount > 0 ? sum + signedAmount : sum
-    }, 0)
-  }, [getSignedAmountForTransaction, selectedMonthTransactions])
-
-  const selectedMonthExpenseTotal = useMemo(() => {
-    return selectedMonthTransactions.reduce((sum, transaction) => {
-      const signedAmount = getSignedAmountForTransaction(transaction)
-      return signedAmount < 0 ? sum + Math.abs(signedAmount) : sum
-    }, 0)
-  }, [getSignedAmountForTransaction, selectedMonthTransactions])
-
-  const budgetPageOverlayProps = useBudgetPageOverlayProps({
-    canCreateTransactions,
-    expenseLevel1Id,
-    incomeLevel1Id,
-    openFloatingTransactionCreator,
-
-    isTransactionCreatorOpen,
-    selectedMonth,
-    level1,
-    sortedLevel2ByParentIdForModal,
-    sortedLevel3ByParentIdForModal,
-    categoriesById,
-    transactionCreatorSuggestionId,
-    transactionCreatorLockedLevel1Id,
-    topTransactionShortcutCategoriesByType,
-    recentTransactionShortcutCategoriesByType,
-    pinnedTransactionShortcutCategoriesByType,
-    pinnedCategoryIds,
-    togglePinnedCategory,
-    descriptionSuggestions,
-    applyTransactionCategorySelection,
-    selectedTransactionTypeId,
-    setSelectedTransactionTypeIdWithPaymentSource,
-    selectedLevel2Id,
-    setSelectedLevel2Id,
-    selectedTransactionCategoryId,
-    setSelectedTransactionCategoryId,
-    isSerialTransactionCreatorEnabled,
-    setIsSerialTransactionCreatorEnabled,
-    isQuickDayModeEnabled,
-    setIsQuickDayModeEnabled,
-    setQuickDayDate,
-    newAmount,
-    setNewAmount,
-    newDescription,
-    setNewDescription,
-    newTransactionDate,
-    setNewTransactionDate,
-    selectedTagNames,
-    setSelectedTagNames,
-    selectedPaymentSourceId,
-    setSelectedPaymentSourceId,
-    currentTransactionCreatorPaymentSourceOptions: isPaymentSourcesModuleEnabled
-      ? currentTransactionCreatorPaymentSourceOptions
-      : [],
-    isTransactionCreatorPaymentSourceVisible:
-      isPaymentSourcesModuleEnabled && isTransactionCreatorPaymentSourceVisible,
-    selectedPaymentSplitItems: isPaymentSourcesModuleEnabled ? selectedPaymentSplitItems : [],
-    setSelectedPaymentSplitItems,
-    selectedRecurringTransactionId: isRecurringTransactionsModuleEnabled
-      ? selectedRecurringTransactionId
-      : '',
-    setSelectedRecurringTransactionId,
-    recurringOptionItems: isRecurringTransactionsModuleEnabled ? recurringOptionItems : [],
-    recurringSuggestionItems: isRecurringTransactionsModuleEnabled ? recurringSuggestionItems : [],
-    isSaving,
-    resetTransactionCreator,
-    handleSaveTransaction,
-    amountInputRef,
-    descriptionInputRef,
-    styles,
-    handleDeleteDescriptionSuggestion,
-
-    draftPromptState,
-    setDraftPromptState,
-    applyDraftToTransactionCreator,
-    deleteDraft,
-    openBlankFloatingTransactionCreator,
+  const {
+    budgetLimitDataSnapshot,
+    statusPanelsCtx,
+    rightRailProps,
+    mainPanelsProps,
+    dashboardDrawerProps,
+    overlaySectionProps,
+  } = useBudgetAppControllerViewProps({
+    activeBudgetLimitAlerts, activeBudgetLimits, activeTransactionsById, activeUtilityPanel, addableTransactionCategoryIds, applyDraftToTransactionCreator, bankSearchCategoryOptions, bankSearchPaymentSourceOptions, bankSearchResults, bankSearchState,
+    bankSearchSummary, bankSearchTagOptions, budgetStartDate, bulkActionErrorText, bulkMoveTargetCategoryId, calendarHeatmapVariant, canCreateTransactions, categories, categoriesById, cleanupAllDrafts,
+    clearTransactionOperationUi, clearTransactionSelection, commonBulkMoveTargets, copyPaymentSourcesBetweenKinds, currentTransactionCreatorKind, deleteDraft, deleteFinancialGoal, deletePaymentSource, descriptionSuggestions, drafts,
+    draftsStatusText, effectiveVisibleModules, errorText, expenseLevel1Id, finalCategoryOptions, financialGoalMonthConfigs, financialGoalPriorities, financialGoals, formatDraftUpdatedAt, getAmountNumber,
+    getBudgetLimitView, getCalendarHeatmapVariantForLevel1Id, getCategoryPathLabel, getCountForLevel2ForSelectedMonth, getDefaultPaymentSourceIdForCategoryId, getDraftLevel1Id, getDraftLocationLabel, getMoveTargetsForTransaction, getPaymentSourceOptionsForCategoryId, getRecurringOptionsForCategoryId,
+    getSignedAmountForTransaction, getRootLevel1IdForCategory, getSortedLevel2Children, getSortedLevel3Children, getSumForCategoryForSelectedMonth, getSumForLevel2ForSelectedMonth, getTransactionsForCategoryAndMonthForSelectedMonth, getTransactionsForLevel1AndMonth, handleAddSubcategory, handleBankSearchFieldChange,
+    handleBulkDeleteSelected, handleBulkMoveSelected, handleConfirmCategoryMigration, handleDeleteCategory, handleDeleteDescriptionSuggestion, handleDeleteTransaction, handleDuplicateTransaction, handleEmptyTrash, handleHideCategory, handleImportTransactions,
+    handleInlineSaveTransaction, handleLevel1DragStart, handleLevel3DragStart, handleLockMonth, handleMoveTransaction, handleOpenCategoryCalendarAddForDay, handleOpenGlobalCalendarAddForDay, handleOpenLevel1CalendarAddForDay, handleOpenSearchForTag, handlePermanentDeleteTransaction,
+    handleRenameCategory, handleReorderLevel1, handleReorderLevel2, handleReorderLevel3, handleRestoreCategory, handleRestoreTransaction, handleToggleSelectedMonthExcludedWithConfirm, handleUndoLastAction, handleUndoScheduledHide, handleUpdateTransaction,
+    heatmapInverted, heatmapMode, hiddenCategoriesInSelectedMonth, incomeLevel1Id, isAllowedMoveTarget, isBankSearchOpen, isBudgetLimitsModuleEnabled, isCleaningAllDrafts, isDraftsLoading, isMonthCalendarModuleEnabled,
+    isPaymentSourcesModuleEnabled, isRecurringTransactionsModuleEnabled, isReorderingLevel1, isSelectedMonthExcluded, isSelectedMonthLocked, isTransactionCreatorPaymentSourceVisible, isUpdatingSelectedMonthExclusion, lastUndoAction, level2SortDirection, level2SortMode,
+    level3SortDirection, level3SortMode, loadData, lockedMonthsSet, migrationPromptMoveTargets, migrationPromptState, migrationPromptTransactions, newSubcategoryName, openAddSubcategoryFor, openBlankFloatingTransactionCreator,
+    openLevel1CalendarIds, openLevel1Ids, openLevel2Ids, openLevel3Ids, openReminderTransactionCreator, openTransactionCreator, paymentSourceOptions, paymentSourceSettings, paymentSourceStats, paymentSources,
+    previousMonthCloseReminder, profileId, recurringExecutions, recurringTransactions, reorderingLevel1Id, reorderingLevel2Id, resetBankSearch, saveFinancialGoal, saveGoalAllocationsForMonth, saveGoalPrioritiesForMonth,
+    savePaymentSource, saveRecurringExecution, saveRecurringTransaction, scopedTransactions, searchPanelRef, selectedMonth, selectedMonthTransactions, selectedPaymentSourceId, selectedTransactionCategoryId, selectedTransactionIds,
+    selectedTransactions, setActiveUtilityPanel, setBudgetLimitEditorCategoryId, setBulkActionErrorText, setBulkMoveTargetCategoryId, setDefaultPaymentSource, setGoalModeForMonth, setHeatmapInverted, setHeatmapMode, setIsBankSearchOpen,
+    setIsPreviousMonthCloseReminderHidden, setLevel2SortDirection, setLevel2SortMode, setLevel3SortDirection, setLevel3SortMode, setMigrationPromptState, setNewSubcategoryName, setNewTransactionDate, setOpenAddSubcategoryFor, setPaymentSourceFieldVisibility,
+    setSelectedPaymentSourceId, showHiddenCategories, sortedLevel1, status, styles, supabase, toggleLevel1, toggleLevel1Calendar, toggleLevel2, toggleLevel3,
+    toggleTransactionSelection, transactionCategoryPathLabels, transactionPaymentSplitsMap, transactionTagsMap, transactions, trashedTransactions, trashedTransactionsById, userId, visibleModules, autoExcludePartialMonths,
+    copyInviteLink, createInvitation, currentMonth, draftVisibleModules, goToNextMonth, goToPrevMonth, handleLockAllPastMonths, handleLockSelectedMonth, handleResetAllHistory, handleResetHeatmapSettings,
+    handleResetSelectedMonthData, handleSaveMonthNavigationSettingsWithStartDateWarning, handleUnlockAllPastMonths, handleUnlockSelectedMonth, invitationErrorText, invitationStatusText, inviteEmail, inviteLink, isDashboardPanelOpen, isFutureMonthNavigationLocked,
+    isInvitationWorking, isNextMonthNavigationBlocked, isPrevMonthNavigationBlocked, isSavingMonthNavigationSettings, isSettingsPanelVisible, isUpdatingSelectedMonthLock, maxAllowedMonth, minAllowedMonth, moduleVisibilitySaveStatusText, monthNavigationErrorText,
+    onCurrentUserLeftProfile, resetDraftVisibleModules, saveVisibleModules, setAutoExcludePartialMonths, setBudgetStartDate, setCalendarHeatmapVariant, setDraftModuleVisibility, setInviteEmail, setIsDashboardPanelOpen, setIsFutureMonthNavigationLocked,
+    setIsSettingsPanelVisible, setMonthNavigationErrorText, setMonthNavigationStartMonth, setSelectedMonth, setShowHiddenCategories, setSimpleMode, signOut, simpleMode, userEmail, visibleCategories,
+    addBudgetLimit, amountInputRef, applyTransactionCategorySelection, budgetLimitEditorCategoryId, currentTransactionCreatorPaymentSourceOptions, deleteBudgetLimit, descriptionInputRef, draftPromptState, excludedMonthsSet, handleSaveTransaction,
+    incomePaymentSourceOptions, isQuickDayModeEnabled, isSaving, isSerialTransactionCreatorEnabled, isTransactionCreatorOpen, level1, newAmount, newDescription, newTransactionDate, openFloatingTransactionCreator,
+    pinnedCategoryIds, pinnedTransactionShortcutCategoriesByType, recentTransactionShortcutCategoriesByType, recurringOptionItems, recurringSuggestionItems, resetTransactionCreator, selectedLevel2Id, selectedPaymentSplitItems, selectedRecurringTransactionId, selectedTagNames,
+    selectedTransactionTypeId, setDraftPromptState, setErrorText, setIsQuickDayModeEnabled, setIsSerialTransactionCreatorEnabled, setNewAmount, setNewDescription, setQuickDayDate, setSelectedLevel2Id, setSelectedPaymentSplitItems,
+    setSelectedRecurringTransactionId, setSelectedTagNames, setSelectedTransactionCategoryId, setSelectedTransactionTypeIdWithPaymentSource, sortedLevel2ByParentIdForModal, sortedLevel3ByParentIdForModal, topTransactionShortcutCategoriesByType, togglePinnedCategory, updateBudgetLimit, activeLimitStates,
+    transactionCreatorLockedLevel1Id, transactionCreatorSuggestionId,
   })
-
-  const contextCalendarDays = useMemo(() => {
-    const [year, month] = selectedMonth.split('-').map(Number)
-
-    if (!year || !month) {
-      return []
-    }
-
-    const firstDay = new Date(year, month - 1, 1)
-    const daysInMonth = new Date(year, month, 0).getDate()
-    const leadingEmptyDays = (firstDay.getDay() + 6) % 7
-
-    return [
-      ...Array.from({ length: leadingEmptyDays }, () => null),
-      ...Array.from({ length: daysInMonth }, (_, index) => index + 1),
-    ]
-  }, [selectedMonth])
-
   return (
-    <main
-      style={styles.page}
-      data-budget-app="true"
-      data-budget-limit-count={budgetLimitDataSnapshot.activeLimitCount}
-      data-budget-limit-calculated-count={budgetLimitDataSnapshot.calculatedLimitCount}
-      data-budget-limit-alert-count={budgetLimitDataSnapshot.activeAlertCount}
-    >
-      <BudgetPageStatusPanels
-        styles={styles}
-        userProfileMenuProps={{
-          userEmail,
-          onToggleSettings: () => setIsSettingsPanelVisible((previousValue) => !previousValue),
-          onToggleImportExport: () =>
-            setActiveUtilityPanel((previousValue) =>
-              previousValue === 'importExport' ? null : 'importExport'
-            ),
-          onExportBackupJson: () => downloadProfileBackupJson(supabase, profileId),
-          onExportBackupCsv: () => downloadProfileBackupCsv(supabase, profileId, budgetStartDate),
-          onSignOut: signOut,
-          styles,
-        }}
-        budgetHeaderPanelProps={{
-          selectedMonth,
-          currentMonth,
-          status,
-          categoriesCount: categories.length,
-          visibleCategoriesCount: visibleCategories.length,
-          transactionsCount: scopedTransactions.length,
-          hiddenCategoriesCount: hiddenCategoriesInSelectedMonth.length,
-          showHiddenCategories,
-          errorText,
-          minAllowedMonth,
-          maxAllowedMonth,
-          budgetStartDate,
-          monthNavigationFutureLocked: isFutureMonthNavigationLocked,
-          isSavingMonthNavigationSettings,
-          monthNavigationErrorText,
-          isPrevMonthNavigationBlocked,
-          isNextMonthNavigationBlocked,
-          isSelectedMonthLocked,
-          isUpdatingSelectedMonthLock,
-          isSelectedMonthExcluded,
-          isUpdatingSelectedMonthExclusion,
-          heatmapMode,
-          calendarHeatmapVariant,
-          heatmapInverted,
-          recentTransactions: recentTransactionPreviews,
-          onHeatmapModeChange: setHeatmapMode,
-          onCalendarHeatmapVariantChange: setCalendarHeatmapVariant,
-          onHeatmapInvertedChange: setHeatmapInverted,
-          onResetHeatmapSettings: handleResetHeatmapSettings,
-          onPrevMonth: goToPrevMonth,
-          onNextMonth: goToNextMonth,
-          onGoToCurrentMonth: () => setSelectedMonth(currentMonth),
-          onLockSelectedMonth: handleLockSelectedMonth,
-          onUnlockSelectedMonth: handleUnlockSelectedMonth,
-          onToggleHidden: () => setShowHiddenCategories((prev) => !prev),
-          onBudgetStartDateChange: (value) => {
-            setBudgetStartDate(value)
-            setMonthNavigationStartMonth(value ? value.slice(0, 7) : '')
-            setMonthNavigationErrorText('')
-          },
-          onMonthNavigationFutureLockedChange: (value) => {
-            setIsFutureMonthNavigationLocked(value)
-            setMonthNavigationErrorText('')
-          },
-          onSaveMonthNavigationSettings: handleSaveMonthNavigationSettingsWithStartDateWarning,
-          onToggleSelectedMonthExcluded: handleToggleSelectedMonthExcludedWithConfirm,
-          styles,
-        }}
-        appSettingsPanelProps={{
-          simpleMode,
-          onSimpleModeChange: setSimpleMode,
-          autoExcludePartialMonths,
-          onAutoExcludePartialMonthsChange: setAutoExcludePartialMonths,
-          draftVisibleModules,
-          saveStatusText: moduleVisibilitySaveStatusText,
-          onChangeModuleVisibility: setDraftModuleVisibility,
-          onSave: async () => {
-            await handleSaveMonthNavigationSettingsWithStartDateWarning()
-            await saveVisibleModules()
-          },
-          onResetDraft: resetDraftVisibleModules,
-          onLockAllPastMonths: handleLockAllPastMonths,
-          onUnlockAllPastMonths: handleUnlockAllPastMonths,
-          onResetSelectedMonthData: handleResetSelectedMonthData,
-          onResetAllHistory: handleResetAllHistory,
-          styles,
-          defaultOpen: true,
-          profileMembersPanel: (
-            <ProfileMembersPanel
-              profileId={profileId}
-              userId={userId}
-              userEmail={userEmail}
-              inviteEmail={inviteEmail}
-              setInviteEmail={setInviteEmail}
-              inviteLink={inviteLink}
-              invitationStatusText={invitationStatusText}
-              invitationErrorText={invitationErrorText}
-              isInvitationWorking={isInvitationWorking}
-              createInvitation={createInvitation}
-              copyInviteLink={copyInviteLink}
-              onCurrentUserLeftProfile={onCurrentUserLeftProfile}
-              styles={styles}
-            />
-          ),
-        }}
-        visibleModules={effectiveVisibleModules}
-        isSettingsPanelVisible={isSettingsPanelVisible}
-        isDashboardOpen={isDashboardPanelOpen}
-        onToggleDashboard={() => setIsDashboardPanelOpen((previousValue) => !previousValue)}
-        activeUtilityPanel={activeUtilityPanel}
-        onOpenUtilityPanel={setActiveUtilityPanel}
-        onQuickAdd={() => openBlankFloatingTransactionCreator(null)}
-      />
-
-      <section data-budget-workspace="true">
-        <div data-budget-workspace-main="true">
-          <div data-budget-status-grid="true">
-            {previousMonthCloseReminder && (
-              <details data-budget-compact-notice="alert">
-                <summary>Alert miesiąca</summary>
-                <div>
-                  Poprzedni miesiąc {previousMonthCloseReminder} nie jest jeszcze zamknięty.
-                </div>
-                <div data-budget-actions-row="true" style={{ ...styles.actions, marginTop: 8 }}>
-                  <button
-                    type="button"
-                    style={styles.primaryButton}
-                    onClick={async () => {
-                      const confirmed = confirm(
-                        `Czy na pewno zamknąć poprzedni miesiąc ${previousMonthCloseReminder}?`
-                      )
-
-                      if (!confirmed) {
-                        return
-                      }
-
-                      await handleLockMonth(previousMonthCloseReminder)
-                    }}
-                  >
-                    Zamknij
-                  </button>
-                  <button
-                    type="button"
-                    style={styles.secondaryButton}
-                    onClick={() => setIsPreviousMonthCloseReminderHidden(true)}
-                  >
-                    Później
-                  </button>
-                </div>
-              </details>
-            )}
-
-            <details data-budget-compact-notice="note">
-              <summary>Notatka miesiąca</summary>
-              <ProfileMonthNotePanel
-                profileId={profileId}
-                userId={userId}
-                selectedMonth={selectedMonth}
-                styles={styles}
-              />
-            </details>
-
-            {effectiveVisibleModules.budgetLimits && activeBudgetLimits.length > 0 && (
-              <section data-budget-compact-notice="limits">
-                <div data-workspace-card-title="true">Limity</div>
-                <BudgetLimitAlertsPanel
-                  alerts={activeBudgetLimitAlerts}
-                  categoriesById={categoriesById}
-                  styles={styles}
-                  onOpenLimit={setBudgetLimitEditorCategoryId}
-                />
-              </section>
-            )}
-          </div>
-
-      <BudgetPageMainPanels
-        visibleModules={effectiveVisibleModules}
-        canCreateTransactions={canCreateTransactions}
-        activeUtilityPanel={activeUtilityPanel}
-        onCloseUtilityPanel={() => setActiveUtilityPanel(null)}
-        undoBannerProps={
-          lastUndoAction && selectedTransactionIds.length === 0 && !migrationPromptState
-            ? {
-                label: lastUndoAction.label,
-                onUndo: () =>
-                  handleUndoLastAction({
-                    activeTransactionsById,
-                    trashedTransactionsById,
-                    supabase,
-                    clearTransactionOperationUi,
-                    loadData,
-                  }),
-                styles,
-              }
-            : null
-        }
-        categoryMigrationPromptProps={
-          migrationPromptState
-            ? {
-                categoryLabel: migrationPromptState.categoryId
-                  ? getCategoryPathLabel(migrationPromptState.categoryId, categoriesById)
-                  : 'Wybrana kategoria',
-                modeLabel: migrationPromptState.mode === 'now' ? 'ukryj teraz' : 'ukryj od następnego',
-                transactions: migrationPromptTransactions,
-                moveTargets: migrationPromptMoveTargets,
-                targetCategoryId: migrationPromptState.targetCategoryId,
-                errorText: migrationPromptState.errorText,
-                getAmountNumber,
-                getTransactionCategoryLabel: (categoryId) =>
-                  categoriesById[categoryId]
-                    ? getCategoryPathLabel(categoryId, categoriesById)
-                    : 'Kategoria niedostępna',
-                onTargetCategoryChange: (value) => {
-                  setMigrationPromptState((prev) =>
-                    prev
-                      ? {
-                          ...prev,
-                          targetCategoryId: value,
-                          errorText: '',
-                        }
-                      : null
-                  )
-                },
-                onConfirm: () => handleConfirmCategoryMigration(migrationPromptState),
-                onCancel: () => clearTransactionOperationUi(),
-                styles,
-              }
-            : null
-        }
-        bulkActionsBarProps={{
-          selectedCount: selectedTransactionIds.length,
-          targetCategoryId: bulkMoveTargetCategoryId,
-          moveTargets: commonBulkMoveTargets,
-          errorText: bulkActionErrorText,
-          onTargetCategoryChange: (value) => {
-            setBulkMoveTargetCategoryId(value)
-            setBulkActionErrorText('')
-          },
-          onDeleteSelected: () =>
-            handleBulkDeleteSelected({
-              selectedTransactions,
-              supabase,
-              clearTransactionOperationUi,
-              loadData,
-            }),
-          onMoveSelected: () =>
-            handleBulkMoveSelected({
-              selectedTransactions,
-              bulkMoveTargetCategoryId,
-              isAllowedMoveTarget,
-              supabase,
-              clearTransactionOperationUi,
-              loadData,
-            }),
-          onClearSelection: clearTransactionSelection,
-          styles,
-        }}
-        draftsPanelProps={{
-          draftsStatusText,
-          isDraftsLoading,
-          drafts,
-          isCleaningAllDrafts,
-          cleanupAllDrafts: () => {
-            void cleanupAllDrafts()
-          },
-          getDraftLevel1Id,
-          formatDraftUpdatedAt,
-          getDraftLocationLabel,
-          applyDraftToTransactionCreator,
-          deleteDraft,
-          styles,
-        }}
-        importExportPanelProps={{
-          selectedMonth,
-          categories,
-          categoriesById,
-          transactions: scopedTransactions,
-          trashedTransactions,
-          transactionPaymentSplitsMap: isPaymentSourcesModuleEnabled ? transactionPaymentSplitsMap : {},
-          importableCategoryIds: addableTransactionCategoryIds,
-          categoryPathLabels: transactionCategoryPathLabels,
-          defaultCategoryId: selectedTransactionCategoryId,
-          isSelectedMonthLocked,
-          canCreateTransactions,
-          getPaymentSourceOptionsForCategoryId: isPaymentSourcesModuleEnabled
-            ? getPaymentSourceOptionsForCategoryId
-            : undefined,
-          onImportRows: handleImportTransactions,
-          styles,
-        }}
-        paymentSourcesPanelProps={{
-          paymentSources,
-          paymentSourceStats,
-          paymentSourceSettings,
-          onSave: async (input) => {
-            try {
-              await savePaymentSource(input)
-            } catch (error) {
-              if (error instanceof Error) {
-                alert(`Błąd zapisu źródła płatności: ${error.message}`)
-              }
-            }
-          },
-          onDelete: async (paymentSourceId) => {
-            try {
-              await deletePaymentSource(paymentSourceId)
-            } catch (error) {
-              if (error instanceof Error) {
-                alert(`Błąd usuwania źródła płatności: ${error.message}`)
-              }
-            }
-          },
-          onSetDefault: async (kind, paymentSourceId) => {
-            try {
-              await setDefaultPaymentSource(kind, paymentSourceId)
-              if (
-                !selectedPaymentSourceId &&
-                currentTransactionCreatorKind === kind &&
-                isTransactionCreatorPaymentSourceVisible
-              ) {
-                setSelectedPaymentSourceId(paymentSourceId || '')
-              }
-            } catch (error) {
-              if (error instanceof Error) {
-                alert(`Błąd ustawiania domyślnego źródła: ${error.message}`)
-              }
-            }
-          },
-          onSetFieldVisibility: async (kind, isVisible) => {
-            try {
-              await setPaymentSourceFieldVisibility(kind, isVisible)
-
-              if (!isVisible && currentTransactionCreatorKind === kind) {
-                setSelectedPaymentSourceId('')
-              }
-            } catch (error) {
-              if (error instanceof Error) {
-                alert(`Błąd zapisu ustawień pola źródła: ${error.message}`)
-              }
-            }
-          },
-          onCopyList: async (sourceKind, targetKind) => {
-            try {
-              await copyPaymentSourcesBetweenKinds(sourceKind, targetKind)
-            } catch (error) {
-              if (error instanceof Error) {
-                alert(`Błąd kopiowania list źródeł: ${error.message}`)
-              }
-            }
-          },
-          styles,
-        }}
-        financialGoalsContainerProps={{
-          selectedMonth,
-          goals: financialGoals,
-          goalPriorities: financialGoalPriorities,
-          goalMonthConfigs: financialGoalMonthConfigs,
-          transactions: scopedTransactions,
-          lockedMonthsSet,
-          getSignedAmountForTransaction,
-          onSaveGoal: saveFinancialGoal,
-          onDeleteGoal: deleteFinancialGoal,
-          onSetGoalModeForMonth: setGoalModeForMonth,
-          onSaveGoalAllocationsForMonth: saveGoalAllocationsForMonth,
-          onReorderGoalsForMonth: saveGoalPrioritiesForMonth,
-          styles,
-        }}
-        recurringTransactionsPanelProps={{
-          selectedMonth,
-          isSelectedMonthLocked,
-          recurringTransactions: isRecurringTransactionsModuleEnabled ? recurringTransactions : [],
-          recurringExecutions: isRecurringTransactionsModuleEnabled ? recurringExecutions : [],
-          categoriesById,
-          paymentSources: isPaymentSourcesModuleEnabled ? paymentSources : [],
-          transactionsById: activeTransactionsById,
-          categoryOptions: finalCategoryOptions,
-          onSaveRecurringTransaction: saveRecurringTransaction,
-          onSkipRecurringInMonth: async (recurring, generatedForDate) => {
-            await saveRecurringExecution({
-              recurringTransactionId: recurring.id,
-              generatedForDate,
-              status: 'skipped',
-            })
-          },
-          onOpenCreateFromRecurring: openReminderTransactionCreator,
-          onOpenCreateFromExecution: (recurring, execution) => {
-            openReminderTransactionCreator(recurring)
-            setNewTransactionDate(execution.generated_for_date)
-          },
-          styles,
-        }}
-        searchPanelProps={{
-          ref: searchPanelRef,
-          isOpen: isBankSearchOpen,
-          setIsOpen: setIsBankSearchOpen,
-          searchState: bankSearchState,
-          onFieldChange: handleBankSearchFieldChange,
-          onToggleTagId: handleBankSearchToggleTagId,
-          onReset: resetBankSearch,
-          results: bankSearchResults,
-          summary: bankSearchSummary,
-          categoryOptions: bankSearchCategoryOptions,
-          paymentSourceOptions: isPaymentSourcesModuleEnabled ? bankSearchPaymentSourceOptions : [],
-          tagOptions: bankSearchTagOptions,
-          transactionTagsMap,
-          transactionPaymentSplitsMap: isPaymentSourcesModuleEnabled ? transactionPaymentSplitsMap : {},
-          categoriesById,
-          onOpenSearchForTag: handleOpenSearchForTag,
-          styles,
-        }}
-        monthCalendarPanelProps={{
-          selectedMonth,
-          transactions: selectedMonthTransactions,
-          budgetStartDate,
-          isSelectedMonthExcluded,
-          onToggleSelectedMonthExcluded: handleToggleSelectedMonthExcludedWithConfirm,
-          isUpdatingSelectedMonthExclusion,
-          styles,
-          isSelectedMonthLocked,
-          getAmountNumber,
-          getMoveTargetsForTransaction,
-          getSignedAmountForTransaction,
-          onUpdateTransaction: handleUpdateTransaction,
-          onDeleteTransaction: handleDeleteTransaction,
-          onMoveTransaction: handleMoveTransaction,
-          onDuplicateTransaction: handleDuplicateTransaction,
-          onAddTransactionForDay: handleOpenGlobalCalendarAddForDay,
-          calendarTitle: 'Kalendarz miesiąca',
-          calendarSubtitle: '',
-          heatmapMode,
-          onHeatmapModeChange: setHeatmapMode,
-          heatmapInverted,
-          onHeatmapInvertedChange: setHeatmapInverted,
-          heatmapVariant: calendarHeatmapVariant,
-          showHeatmapControls: false,
-          descriptionSuggestions,
-          getPaymentSourceOptionsForCategoryId: isPaymentSourcesModuleEnabled
-            ? getPaymentSourceOptionsForCategoryId
-            : undefined,
-          transactionTagsMap,
-          transactionPaymentSplitsMap: isPaymentSourcesModuleEnabled ? transactionPaymentSplitsMap : {},
-          onTagClick: handleOpenSearchForTag,
-          onDeleteDescriptionSuggestion: handleDeleteDescriptionSuggestion,
-        }}
-        budgetTreeSectionProps={{
-          sortedLevel1,
-          openLevel1Ids,
-          openLevel1CalendarIds,
-          openLevel2Ids,
-          openLevel3Ids,
-          selectedMonth,
-          budgetStartDate,
-          isSelectedMonthLocked,
-          canUseMonthCalendar: isMonthCalendarModuleEnabled,
-          openAddSubcategoryFor,
-          newSubcategoryName,
-          selectedTransactionIds,
-          isReorderingLevel1,
-          reorderingLevel1Id,
-          reorderingLevel2Id,
-          expenseLevel1Id,
-          styles,
-          level2SortMode,
-          setLevel2SortMode,
-          level2SortDirection,
-          setLevel2SortDirection,
-          level3SortMode,
-          setLevel3SortMode,
-          level3SortDirection,
-          setLevel3SortDirection,
-          toggleLevel1,
-          toggleLevel1Calendar,
-          toggleLevel2,
-          toggleLevel3,
-          setOpenAddSubcategoryFor,
-          setNewSubcategoryName,
-          getSortedLevel2Children,
-          getSortedLevel3Children,
-          getTransactionsForLevel1AndMonth,
-          getTransactionsForCategoryAndMonthForSelectedMonth,
-          getSumForCategoryForSelectedMonth,
-          getSumForLevel2ForSelectedMonth,
-          getCountForLevel2ForSelectedMonth,
-          getAmountNumber,
-          getMoveTargetsForTransaction,
-          getSignedAmountForTransaction,
-          getCalendarHeatmapVariantForLevel1Id,
-          heatmapMode,
-          heatmapInverted,
-          onHeatmapModeChange: setHeatmapMode,
-          onHeatmapInvertedChange: setHeatmapInverted,
-          handleAddSubcategory,
-          handleRenameCategory,
-          handleDeleteCategory,
-          openTransactionCreator,
-          handleInlineSaveTransaction,
-          handleHideCategory,
-          handleRestoreCategory,
-          handleUndoScheduledHide,
-          handleDeleteTransaction,
-          handleUpdateTransaction,
-          handleMoveTransaction,
-          handleDuplicateTransaction,
-          handleOpenCategoryCalendarAddForDay,
-          handleOpenLevel1CalendarAddForDay,
-          toggleTransactionSelection,
-          handleLevel3DragStart,
-          handleReorderLevel3,
-          handleLevel1DragStart,
-          handleReorderLevel1,
-          handleReorderLevel2,
-          descriptionSuggestions,
-          getPaymentSourceOptionsForCategoryId: isPaymentSourcesModuleEnabled
-            ? getPaymentSourceOptionsForCategoryId
-            : undefined,
-          getRecurringOptionsForCategoryId: isRecurringTransactionsModuleEnabled
-            ? getRecurringOptionsForCategoryId
-            : undefined,
-          getDefaultPaymentSourceIdForCategoryId,
-          transactionTagsMap,
-          transactionPaymentSplitsMap: isPaymentSourcesModuleEnabled ? transactionPaymentSplitsMap : {},
-          onTagClick: handleOpenSearchForTag,
-          onDeleteDescriptionSuggestion: handleDeleteDescriptionSuggestion,
-          getBudgetLimitView: isBudgetLimitsModuleEnabled ? getBudgetLimitView : undefined,
-          onEditBudgetLimit: isBudgetLimitsModuleEnabled ? setBudgetLimitEditorCategoryId : undefined,
-          onAddIncome: incomeLevel1Id
-            ? () => openBlankFloatingTransactionCreator(incomeLevel1Id)
-            : undefined,
-          onAddExpense: expenseLevel1Id
-            ? () => openBlankFloatingTransactionCreator(expenseLevel1Id)
-            : undefined,
-          onOpenSearch: () => setActiveUtilityPanel('search'),
-          onOpenCalendar: () => setActiveUtilityPanel('monthCalendar'),
-          workspaceTopContent: (
-            <div data-budget-status-grid="true">
-              {previousMonthCloseReminder && (
-                <details data-budget-compact-notice="alert">
-                  <summary>Alert miesiaca</summary>
-                  <div>
-                    Poprzedni miesiac {previousMonthCloseReminder} nie jest jeszcze zamkniety.
-                  </div>
-                  <div data-budget-actions-row="true" style={{ ...styles.actions, marginTop: 8 }}>
-                    <button
-                      type="button"
-                      style={styles.primaryButton}
-                      onClick={async () => {
-                        const confirmed = confirm(
-                          `Czy na pewno zamknac poprzedni miesiac ${previousMonthCloseReminder}?`
-                        )
-
-                        if (!confirmed) {
-                          return
-                        }
-
-                        await handleLockMonth(previousMonthCloseReminder)
-                      }}
-                    >
-                      Zamknij
-                    </button>
-                    <button
-                      type="button"
-                      style={styles.secondaryButton}
-                      onClick={() => setIsPreviousMonthCloseReminderHidden(true)}
-                    >
-                      Pozniej
-                    </button>
-                  </div>
-                </details>
-              )}
-
-              <details data-budget-compact-notice="note">
-                <summary>Notatka miesiaca</summary>
-                <ProfileMonthNotePanel
-                  profileId={profileId}
-                  userId={userId}
-                  selectedMonth={selectedMonth}
-                  styles={styles}
-                />
-              </details>
-
-              {effectiveVisibleModules.budgetLimits && activeBudgetLimits.length > 0 && (
-                <section data-budget-compact-notice="limits">
-                  <div data-workspace-card-title="true">Limity</div>
-                  <BudgetLimitAlertsPanel
-                    alerts={activeBudgetLimitAlerts}
-                    categoriesById={categoriesById}
-                    styles={styles}
-                    onOpenLimit={setBudgetLimitEditorCategoryId}
-                  />
-                </section>
-              )}
-            </div>
-          ),
-          workspaceBottomContent: (
-            <MainWorkspaceBottomDeck
-              selectedMonth={selectedMonth}
-              calendarDays={contextCalendarDays}
-              recentTransactions={recentTransactionPreviews}
-              pinnedCategories={pinnedWorkspaceCategories}
-              trashedCount={trashedTransactions.length}
-              onOpenMonthCalendar={() => setActiveUtilityPanel('monthCalendar')}
-              onOpenDay={(dayText) => handleOpenGlobalCalendarAddForDay(dayText)}
-              onOpenPinnedCategory={openTransactionCreator}
-              onOpenTrash={() => setActiveUtilityPanel('trash')}
-            />
-          ),
-        }}
-        hiddenCategoriesPanelProps={{
-          categories: hiddenCategoriesInSelectedMonth,
-          categoriesById,
-          showHiddenCategories,
-          getHiddenCategoryLabel,
-          handleRestoreCategory,
-          styles,
-        }}
-        trashPanelProps={{
-          transactions: trashedTransactions,
-          categoriesById,
-          getAmountNumber,
-          onRestoreTransaction: handleRestoreTransaction,
-          onPermanentDeleteTransaction: handlePermanentDeleteTransaction,
-          onEmptyTrash: handleEmptyTrash,
-          styles,
-        }}
-      />
-        </div>
-
-        <BudgetRightRail
-          selectedMonth={selectedMonth}
-          isSelectedMonthLocked={isSelectedMonthLocked}
-          transactionCount={selectedMonthTransactions.length}
-          categoryCount={visibleCategories.length}
-          balance={totalBudgetBalance}
-          incomeTotal={selectedMonthIncomeTotal}
-          expenseTotal={selectedMonthExpenseTotal}
-          draftCount={drafts.length}
-          recurringCount={recurringTransactions.length}
-          showRecurring={effectiveVisibleModules.recurringTransactions}
-          onOpenSearch={() => setActiveUtilityPanel('search')}
-          onOpenNotifications={() => setActiveUtilityPanel('recurringTransactions')}
-          onQuickAdd={() => openBlankFloatingTransactionCreator(null)}
-          onToggleProfile={() => setIsSettingsPanelVisible((previousValue) => !previousValue)}
-        />
-      </section>
-
-      {isDashboardPanelOpen && (
-        <div data-dashboard-overlay="true">
-          <button
-            type="button"
-            data-dashboard-backdrop="true"
-            aria-label="Zamknij dashboard"
-            onClick={() => setIsDashboardPanelOpen(false)}
-          />
-          <aside data-dashboard-drawer="true" aria-label="Dashboard analityczny">
-            <div data-dashboard-drawer-header="true">
-              <div>
-                <strong>Dashboard</strong>
-                <span>compact analytics</span>
-              </div>
-              <div data-dashboard-mode-tabs="true" aria-label="Tryb dashboardu">
-                <button type="button">compact</button>
-                <button type="button">standard</button>
-                <button type="button">full</button>
-              </div>
-              <button
-                type="button"
-                aria-label="Zamknij dashboard"
-                onClick={() => setIsDashboardPanelOpen(false)}
-              >
-                ×
-              </button>
-            </div>
-            <DashboardPanel
-              profileId={profileId}
-              styles={styles}
-              transactions={scopedTransactions}
-              transactionTagsMap={transactionTagsMap}
-              categoriesById={categoriesById}
-              selectedMonth={selectedMonth}
-              budgetStartDate={budgetStartDate}
-              excludedMonthsSet={excludedMonthsSet}
-              getSignedAmountForTransaction={getSignedAmountForTransaction}
-            />
-          </aside>
-        </div>
-      )}
-      <BudgetPageOverlays {...budgetPageOverlayProps} />
-
-      <BudgetLimitEditorModal
-        isOpen={effectiveVisibleModules.budgetLimits && budgetLimitEditorCategoryId !== undefined}
-        categoryId={budgetLimitEditorCategoryId ?? null}
-        categoryLabel={editedBudgetLimitCategoryLabel}
-        selectedMonth={selectedMonth}
-        existingLimit={editedBudgetLimitView?.limit ?? null}
-        onClose={() => setBudgetLimitEditorCategoryId(undefined)}
-        onSave={saveBudgetLimit}
-        onDelete={removeBudgetLimit}
-        onDisable={disableEditedBudgetLimit}
-      />
-    </main>
+    <BudgetAppControllerView
+      styles={styles}
+      budgetLimitDataSnapshot={budgetLimitDataSnapshot}
+      statusPanelsCtx={statusPanelsCtx}
+      rightRailProps={rightRailProps}
+      mainPanelsProps={mainPanelsProps}
+      dashboardDrawerProps={dashboardDrawerProps}
+      overlaySectionProps={overlaySectionProps}
+    />
   )
 }

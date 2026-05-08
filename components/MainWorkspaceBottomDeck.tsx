@@ -56,8 +56,30 @@ export default function MainWorkspaceBottomDeck({
               <strong>{selectedMonth}</strong>
             </div>
             <div data-workspace-calendar-nav="true">
-              <button type="button" onClick={onOpenMonthCalendar}>
-                Otwórz
+              <button
+                type="button"
+                onClick={onOpenMonthCalendar}
+                aria-label="Otwórz pełny kalendarz miesiąca"
+                title="Otwórz kalendarz"
+              >
+                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                  <path
+                    d="M8 5h11v11"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                  />
+                  <path
+                    d="M19 5 5 19"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                  />
+                </svg>
               </button>
             </div>
           </div>
@@ -146,7 +168,13 @@ export default function MainWorkspaceBottomDeck({
                   <b>{category.amount.toLocaleString('pl-PL')} zł</b>
                 </button>
                 <details data-pinned-category-menu="true" data-floating-dropdown="true">
-                  <summary aria-label={`Menu kategorii ${category.label}`}>⋯</summary>
+                  <summary aria-label={`Menu kategorii ${category.label}`}>
+                    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                      <circle cx="5" cy="12" r="1.8" fill="currentColor" />
+                      <circle cx="12" cy="12" r="1.8" fill="currentColor" />
+                      <circle cx="19" cy="12" r="1.8" fill="currentColor" />
+                    </svg>
+                  </summary>
                   <div>
                     <button type="button" onClick={() => onOpenPinnedCategory(category.id)}>
                       Dodaj wpis

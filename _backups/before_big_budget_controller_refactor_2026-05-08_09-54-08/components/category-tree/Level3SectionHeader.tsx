@@ -1,0 +1,261 @@
+import type { CSSProperties, HTMLAttributes, ReactNode } from 'react'
+import BudgetLimitIndicator, { BudgetLimitView } from '../BudgetLimitIndicator'
+
+type Level3SectionHeaderProps = {
+  name: string
+  categorySum: number
+  showCategorySum?: boolean
+  showCategoryActions?: boolean
+  isOpen: boolean
+  isDragging: boolean
+  isClosingAfterSelectedMonth: boolean
+  isCalendarOpen: boolean
+  canUseMonthCalendar?: boolean
+  canAddHere: boolean
+  isSelectedMonthLocked: boolean
+  dragHandle: ReactNode
+  headerDragProps?: HTMLAttributes<HTMLDivElement>
+  styles: Record<string, CSSProperties>
+  onToggle: () => void
+  onToggleCalendar: () => void
+  onInlineAdd: () => void
+  onHideNow: () => Promise<void>
+  onHideNext: () => Promise<void>
+  onRenameCategory: () => Promise<void>
+  onDeleteCategory: () => Promise<void>
+  onUndoScheduledHide: () => Promise<void>
+  budgetLimitView?: BudgetLimitView | null
+  canUseBudgetLimit?: boolean
+  onEditBudgetLimit?: () => void
+}
+
+export default function Level3SectionHeader({
+  name,
+  categorySum,
+  showCategorySum = true,
+  showCategoryActions = true,
+  isOpen,
+  isDragging,
+  isClosingAfterSelectedMonth,
+  isCalendarOpen,
+  canUseMonthCalendar = true,
+  canAddHere,
+  isSelectedMonthLocked,
+  dragHandle,
+  headerDragProps,
+  styles,
+  onToggle,
+  onToggleCalendar,
+  onInlineAdd,
+  onHideNow,
+  onHideNext,
+  onRenameCategory,
+  onDeleteCategory,
+  onUndoScheduledHide,
+  budgetLimitView = null,
+  canUseBudgetLimit = false,
+  onEditBudgetLimit,
+}: Level3SectionHeaderProps) {
+  return (
+    <div
+      data-category-drag-row="true"
+      style={{
+        ...styles.l3Header,
+        boxShadow: isDragging ? '0 12px 24px rgba(0, 0, 0, 0.12)' : styles.l3Header.boxShadow,
+      }}
+      onClick={() => {
+        if (!isDragging) {
+          onToggle()
+        }
+      }}
+      {...headerDragProps}
+    >
+      <div style={styles.l2Left}>
+        {dragHandle}
+
+        <div style={styles.arrow} data-category-toggle-icon="true" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="17" height="17">
+            <path
+              d={isOpen ? 'm7 10 5 5 5-5' : 'm10 7 5 5-5 5'}
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+            />
+          </svg>
+        </div>
+
+        <div>
+          <div style={styles.l3Name}>{showCategorySum ? `${name} • ${categorySum}` : name}</div>
+
+          {isClosingAfterSelectedMonth && (
+            <div style={styles.closingBadge}>zamknie się z końcem tego miesiąca</div>
+          )}
+
+          <BudgetLimitIndicator view={budgetLimitView} />
+        </div>
+      </div>
+
+      <div data-category-actions="true" style={styles.actions} onClick={(event) => event.stopPropagation()}>
+        {canUseMonthCalendar && (
+          <button
+            type="button"
+            data-category-secondary-action="true"
+            style={styles.secondaryButton}
+            onMouseDown={(event) => event.stopPropagation()}
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={(event) => {
+              event.stopPropagation()
+              onToggleCalendar()
+            }}
+          >
+            {isCalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
+          </button>
+        )}
+
+        {canAddHere && !isSelectedMonthLocked && (
+          <button
+            data-category-quick-add="true"
+            style={styles.primaryButton}
+            aria-label={`Dodaj wpis: ${name}`}
+            onClick={() => {
+              onInlineAdd()
+            }}
+          >
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <path
+                d="M12 20h9"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.9"
+              />
+              <path
+                d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.9"
+              />
+            </svg>
+          </button>
+        )}
+
+        {showCategoryActions && canUseBudgetLimit && onEditBudgetLimit && (
+          <button
+            type="button"
+            data-category-secondary-action="true"
+            style={styles.secondaryButton}
+            onMouseDown={(event) => event.stopPropagation()}
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={(event) => {
+              event.stopPropagation()
+              onEditBudgetLimit()
+            }}
+          >
+            {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
+          </button>
+        )}
+
+        {showCategoryActions && isClosingAfterSelectedMonth ? (
+          <button
+            data-category-secondary-action="true"
+            style={styles.secondaryButton}
+            onClick={async () => {
+              await onUndoScheduledHide()
+            }}
+          >
+            cofnij zamknięcie
+          </button>
+        ) : showCategoryActions ? (
+          <>
+            <button
+              data-category-secondary-action="true"
+              style={styles.secondaryButton}
+              onClick={async () => {
+                await onRenameCategory()
+              }}
+            >
+              zmień nazwę
+            </button>
+
+            <button
+              data-category-secondary-action="true"
+              style={styles.dangerButton}
+              onClick={async () => {
+                await onDeleteCategory()
+              }}
+            >
+              usuń podkategorię
+            </button>
+
+            <button
+              data-category-secondary-action="true"
+              style={styles.dangerButton}
+              onClick={async () => {
+                await onHideNow()
+              }}
+            >
+              ukryj teraz
+            </button>
+
+            <button
+              data-category-secondary-action="true"
+              style={styles.dangerButton}
+              onClick={async () => {
+                await onHideNext()
+              }}
+            >
+              ukryj od następnego
+            </button>
+          </>
+        ) : null}
+
+        {showCategoryActions && (
+          <details
+            data-mobile-category-menu="true"
+            data-floating-dropdown="true"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <summary style={styles.secondaryButton}>⋯</summary>
+            <div data-mobile-category-menu-panel="true">
+              {canUseMonthCalendar && (
+                <button type="button" style={styles.secondaryButton} onClick={onToggleCalendar}>
+                  {isCalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
+                </button>
+              )}
+              {canUseBudgetLimit && onEditBudgetLimit && (
+                <button type="button" style={styles.secondaryButton} onClick={onEditBudgetLimit}>
+                  {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
+                </button>
+              )}
+              {isClosingAfterSelectedMonth ? (
+                <button style={styles.secondaryButton} onClick={async () => onUndoScheduledHide()}>
+                  cofnij zamknięcie
+                </button>
+              ) : (
+                <>
+                  <button style={styles.secondaryButton} onClick={async () => onRenameCategory()}>
+                    zmień nazwę
+                  </button>
+                  <button style={styles.dangerButton} onClick={async () => onHideNow()}>
+                    ukryj teraz
+                  </button>
+                  <button style={styles.dangerButton} onClick={async () => onHideNext()}>
+                    ukryj od następnego
+                  </button>
+                  <button style={styles.dangerButton} onClick={async () => onDeleteCategory()}>
+                    usuń
+                  </button>
+                </>
+              )}
+            </div>
+          </details>
+        )}
+      </div>
+    </div>
+  )
+}

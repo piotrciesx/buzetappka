@@ -160,8 +160,8 @@ export default function BudgetPageStatusPanels({
   onOpenUtilityPanel,
   onQuickAdd,
 }: Props) {
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false)
+
   const openPanel = (panel: BudgetUtilityPanel) => {
     onOpenUtilityPanel(activeUtilityPanel === panel ? null : panel)
   }
@@ -361,37 +361,6 @@ export default function BudgetPageStatusPanels({
           </div>
 
           <BudgetHeaderPanel {...budgetHeaderPanelProps} />
-
-          <div data-budget-topbar-actions="true">
-            <button type="button" title="Szukaj" aria-label="Szukaj" onClick={() => openPanel('search')}>
-              <Icon name="search" />
-            </button>
-            {visibleModules.recurringTransactions && (
-              <button
-                type="button"
-                title="Przypomnienia"
-                aria-label="Przypomnienia"
-                onClick={() => setIsNotificationsOpen((value) => !value)}
-              >
-                <Icon name="bell" />
-              </button>
-            )}
-            {isNotificationsOpen && (
-              <div data-notifications-dropdown="true">
-                <div data-notifications-title="true">Powiadomienia</div>
-                <button type="button" onClick={() => openPanel('monthCalendar')}>
-                  Kalendarz i przypomnienia
-                </button>
-                <button type="button" onClick={() => openPanel('drafts')}>
-                  Szkice do sprawdzenia
-                </button>
-              </div>
-            )}
-            <button type="button" title="Szybkie dodawanie" aria-label="Szybkie dodawanie" onClick={onQuickAdd}>
-              <Icon name="plus" />
-            </button>
-            <UserProfileMenu {...userProfileMenuProps} />
-          </div>
         </div>
 
         {isSettingsPanelVisible && (

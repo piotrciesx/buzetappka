@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { Dispatch, RefObject, SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
 import { getCategoryPathLabel } from './budgetPageHelpers'
@@ -119,6 +119,7 @@ export const useBudgetPageDrafts = ({
   const [isCleaningAllDrafts, setIsCleaningAllDrafts] = useState(false)
   const [draftPromptState, setDraftPromptState] = useState<DraftPromptState | null>(null)
   const hasMigratedLegacyDraftsRef = useRef(false)
+  const wasTransactionCreatorOpenRef = useRef(false)
 
   useEffect(() => {
     setTransactionDraftId(null)
@@ -127,6 +128,7 @@ export const useBudgetPageDrafts = ({
     setDraftsStatusText('')
     setDraftPromptState(null)
     hasMigratedLegacyDraftsRef.current = false
+    wasTransactionCreatorOpenRef.current = false
   }, [profileId])
 
   const loadDrafts = useCallback(async () => {
@@ -266,6 +268,45 @@ export const useBudgetPageDrafts = ({
       setIsCleaningAllDrafts(false)
     }
   }, [isCleaningAllDrafts, loadDrafts, profileId])
+
+  const buildCurrentTransactionDraft = useCallback(
+    (draftType: TransactionDraftType) => {
+      const currentDraftDate = newTransactionDate
+      const hasStartedDraft =
+        newAmount.trim() !== '' ||
+        newDescription.trim() !== '' ||
+        (transactionCreatorInitialDate !== null && transactionCreatorInitialDate !== currentDraftDate)
+
+      if (!hasStartedDraft) {
+        return null
+      }
+
+      const nextDraftId = transactionDraftId || getDraftForType(draftType)?.id || createDraftId()
+
+      return {
+        id: nextDraftId,
+        type: draftType,
+        level1_id: selectedTransactionTypeId,
+        level2_id: selectedLevel2Id,
+        category_id: selectedTransactionCategoryId,
+        amount: newAmount,
+        description: newDescription,
+        date: currentDraftDate,
+        updated_at: null,
+      } satisfies TransactionDraft
+    },
+    [
+      getDraftForType,
+      newAmount,
+      newDescription,
+      newTransactionDate,
+      selectedLevel2Id,
+      selectedTransactionCategoryId,
+      selectedTransactionTypeId,
+      transactionCreatorInitialDate,
+      transactionDraftId,
+    ]
+  )
 
   const getDraftLevel1Id = useCallback(
     (draft: TransactionDraft) => {
@@ -437,41 +478,61 @@ export const useBudgetPageDrafts = ({
   }, [drafts, draftsStatusText, isDraftsLoading, saveDraft])
 
   useEffect(() => {
+    const wasOpen = wasTransactionCreatorOpenRef.current
+    wasTransactionCreatorOpenRef.current = isTransactionCreatorOpen
+
+    if (!wasOpen || isTransactionCreatorOpen) {
+      return
+    }
+
+    const draftType = getDraftTypeForLevel1Id(selectedTransactionTypeId)
+
+    if (!draftType) {
+      return
+    }
+
+    const nextDraft = buildCurrentTransactionDraft(draftType)
+
+    if (!nextDraft) {
+      if (transactionDraftId || getDraftForType(draftType)) {
+        void deleteDraft(draftType).catch(() => {})
+      }
+
+      return
+    }
+
+    void saveDraft(nextDraft).catch(() => {})
+  }, [
+    buildCurrentTransactionDraft,
+    deleteDraft,
+    getDraftForType,
+    getDraftTypeForLevel1Id,
+    isTransactionCreatorOpen,
+    saveDraft,
+    selectedTransactionTypeId,
+    transactionDraftId,
+  ])
+
+  useEffect(() => {
     if (!isTransactionCreatorOpen) {
       return
     }
 
     const draftType = getDraftTypeForLevel1Id(selectedTransactionTypeId)
-    const currentDraftDate = newTransactionDate
-    const hasStartedDraft =
-      newAmount.trim() !== '' ||
-      newDescription.trim() !== '' ||
-      (transactionCreatorInitialDate !== null && transactionCreatorInitialDate !== currentDraftDate)
 
     if (!draftType) {
       return
     }
 
     const timeoutId = window.setTimeout(() => {
-      if (!hasStartedDraft) {
+      const nextDraft = buildCurrentTransactionDraft(draftType)
+
+      if (!nextDraft) {
         if (transactionDraftId || getDraftForType(draftType)) {
           void deleteDraft(draftType).catch(() => {})
         }
 
         return
-      }
-
-      const nextDraftId = transactionDraftId || getDraftForType(draftType)?.id || createDraftId()
-      const nextDraft: TransactionDraft = {
-        id: nextDraftId,
-        type: draftType,
-        level1_id: selectedTransactionTypeId,
-        level2_id: selectedLevel2Id,
-        category_id: selectedTransactionCategoryId,
-        amount: newAmount,
-        description: newDescription,
-        date: currentDraftDate,
-        updated_at: null,
       }
 
       void saveDraft(nextDraft).catch(() => {})
@@ -481,19 +542,13 @@ export const useBudgetPageDrafts = ({
       window.clearTimeout(timeoutId)
     }
   }, [
+    buildCurrentTransactionDraft,
     deleteDraft,
     getDraftForType,
     getDraftTypeForLevel1Id,
     isTransactionCreatorOpen,
-    newAmount,
-    newDescription,
-    newTransactionDate,
     saveDraft,
-    selectedLevel2Id,
-    selectedMonth,
-    selectedTransactionCategoryId,
     selectedTransactionTypeId,
-    transactionCreatorInitialDate,
     transactionDraftId,
   ])
 
@@ -519,4 +574,3 @@ export const useBudgetPageDrafts = ({
     applyDraftToTransactionCreator,
   }
 }
-

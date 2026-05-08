@@ -529,20 +529,11 @@ export default function BudgetCategoryTree(props: Props) {
           >
             <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true">
               <path
-                d="M12 20h9"
+                d="M12 5v14M5 12h14"
                 fill="none"
                 stroke="currentColor"
                 strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="1.9"
-              />
-              <path
-                d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="1.9"
+                strokeWidth="2"
               />
             </svg>
           </button>
@@ -554,7 +545,11 @@ export default function BudgetCategoryTree(props: Props) {
           onClick={(event) => event.stopPropagation()}
         >
           <summary style={styles.secondaryButton} aria-label={`Menu kategorii ${level1Category.name}`}>
-            ⋯
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <circle cx="5" cy="12" r="1.8" fill="currentColor" />
+              <circle cx="12" cy="12" r="1.8" fill="currentColor" />
+              <circle cx="19" cy="12" r="1.8" fill="currentColor" />
+            </svg>
           </summary>
           <div data-mobile-category-menu-panel="true">
             <button

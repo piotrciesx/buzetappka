@@ -1,4 +1,13 @@
-import type { CSSProperties, Dispatch, KeyboardEvent, MouseEvent, PointerEvent, RefObject, SetStateAction } from 'react'
+import type {
+  CSSProperties,
+  Dispatch,
+  KeyboardEvent,
+  MouseEvent,
+  PointerEvent,
+  RefObject,
+  SetStateAction,
+} from 'react'
+import { useState } from 'react'
 import PaymentSplitEditor from '../PaymentSplitEditor'
 import { normalizeDayInput } from '../../lib/dateUtils'
 import type { DescriptionSuggestion } from '../../lib/suggestionUtils'
@@ -6,9 +15,8 @@ import { splitTagInput } from '../../lib/tagUtils'
 import type { PaymentSplitInput } from '../../lib/paymentSplitUtils'
 
 const inlineDescriptionFieldWrapStyle = {
-  flex: 1,
-  minWidth: 220,
   position: 'relative' as const,
+  minWidth: 0,
 } as const
 
 const suggestionsDropdownStyle = {
@@ -16,7 +24,7 @@ const suggestionsDropdownStyle = {
   top: 'calc(100% + 6px)',
   left: 0,
   right: 0,
-  zIndex: 30,
+  zIndex: 20020,
   background: '#ffffff',
   border: '1px solid #d1d5db',
   borderRadius: 12,
@@ -43,9 +51,9 @@ const activeSuggestionButtonStyle = {
 
 const helperTextStyle = {
   marginTop: 8,
-  fontSize: 13,
+  fontSize: 12,
   color: '#6b7280',
-  lineHeight: 1.45,
+  lineHeight: 1.4,
 } as const
 
 const tagBadgesWrapStyle = {
@@ -189,6 +197,10 @@ export default function Level3InlineAddForm({
   cancelInlineAdd,
   styles,
 }: Level3InlineAddFormProps) {
+  const [isTagsOpen, setIsTagsOpen] = useState(false)
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false)
+  const [isRecurringOpen, setIsRecurringOpen] = useState(false)
+
   const paymentSourceOptions = getPaymentSourceOptionsForCategoryId?.(categoryId) || []
   const selectedRecurringOption = recurringOptions.find(
     (option) => option.id === selectedRecurringTransactionId
@@ -217,115 +229,90 @@ export default function Level3InlineAddForm({
   }
 
   return (
-    <div style={styles.formRow} data-inline-entry-form="true">
-      <input
-        ref={inlineDayInputRef}
-        style={styles.smallInput}
-        value={inlineDay}
-        onChange={(event) => setInlineDay(normalizeDayInput(event.target.value, selectedMonth))}
-        placeholder="dzień"
-        inputMode="numeric"
-        onBlur={() => {
-          setInlineDay((prev) => normalizeDayInput(prev, selectedMonth))
-        }}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            event.preventDefault()
-            inlineDescriptionInputRef.current?.focus()
-          }
-        }}
-      />
-
-      <div style={inlineDescriptionFieldWrapStyle}>
+    <div style={styles.formRow} data-inline-entry-form="true" data-inline-entry-compact="true">
+      <div data-inline-entry-main-row="true">
         <input
-          ref={inlineDescriptionInputRef}
-          style={styles.input}
-          value={inlineDescription}
-          onChange={(event) => setInlineDescription(event.target.value)}
-          placeholder="opis"
-          autoComplete="off"
-          autoCorrect="off"
-          spellCheck={false}
-          onKeyDown={async (event) => {
-            if (handleInlineSuggestionKeyDown(event)) {
-              return
-            }
-
+          ref={inlineDayInputRef}
+          style={styles.smallInput}
+          value={inlineDay}
+          onChange={(event) => setInlineDay(normalizeDayInput(event.target.value, selectedMonth))}
+          placeholder="dzień"
+          inputMode="numeric"
+          onBlur={() => {
+            setInlineDay((prev) => normalizeDayInput(prev, selectedMonth))
+          }}
+          onKeyDown={(event) => {
             if (event.key === 'Enter') {
               event.preventDefault()
-              inlineAmountInputRef.current?.focus()
+              inlineDescriptionInputRef.current?.focus()
             }
           }}
         />
 
-        {filteredInlineSuggestions.length > 0 && (
-          <div style={suggestionsDropdownStyle}>
-            {filteredInlineSuggestions.map((suggestion, index) => {
-              const isActive = index === activeInlineSuggestionIndex
-              const isLast = index === filteredInlineSuggestions.length - 1
+        <div style={inlineDescriptionFieldWrapStyle} data-inline-description-wrap="true">
+          <input
+            ref={inlineDescriptionInputRef}
+            style={styles.input}
+            value={inlineDescription}
+            onChange={(event) => setInlineDescription(event.target.value)}
+            placeholder="opis"
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
+            onKeyDown={async (event) => {
+              if (handleInlineSuggestionKeyDown(event)) {
+                return
+              }
 
-              return (
-                <button
-                  key={suggestion.text}
-                  type="button"
-                  style={{
-                    ...(isActive ? activeSuggestionButtonStyle : suggestionButtonStyle),
-                    borderBottom: isLast ? 'none' : suggestionButtonStyle.borderBottom,
-                  }}
-                  onMouseDown={(event) => event.preventDefault()}
-                  onClick={() => {
-                    applyInlineSuggestion(suggestion.text)
-                  }}
-                  onContextMenu={(event) => {
-                    handleInlineSuggestionContextMenu(event, suggestion)
-                  }}
-                  onPointerDown={(event) => {
-                    handleInlineSuggestionPointerDown(suggestion, event)
-                  }}
-                  onPointerUp={handleInlineSuggestionPointerUp}
-                  onPointerLeave={handleInlineSuggestionPointerLeave}
-                  onPointerCancel={handleInlineSuggestionPointerLeave}
-                >
-                  {suggestion.text}
-                </button>
-              )
-            })}
-          </div>
-        )}
+              if (event.key === 'Enter') {
+                event.preventDefault()
+                inlineAmountInputRef.current?.focus()
+              }
+            }}
+          />
 
-        <div style={helperTextStyle}>
-          Sugestie filtrują się na żywo po całym wpisanym tekście. Możesz wybrać je
-          strzałkami i Enterem, a ukryć prawym przyciskiem albo długim przytrzymaniem.
+          {filteredInlineSuggestions.length > 0 && (
+            <div style={suggestionsDropdownStyle}>
+              {filteredInlineSuggestions.map((suggestion, index) => {
+                const isActive = index === activeInlineSuggestionIndex
+                const isLast = index === filteredInlineSuggestions.length - 1
+
+                return (
+                  <button
+                    key={suggestion.text}
+                    type="button"
+                    style={{
+                      ...(isActive ? activeSuggestionButtonStyle : suggestionButtonStyle),
+                      borderBottom: isLast ? 'none' : suggestionButtonStyle.borderBottom,
+                    }}
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={() => {
+                      applyInlineSuggestion(suggestion.text)
+                    }}
+                    onContextMenu={(event) => {
+                      handleInlineSuggestionContextMenu(event, suggestion)
+                    }}
+                    onPointerDown={(event) => {
+                      handleInlineSuggestionPointerDown(suggestion, event)
+                    }}
+                    onPointerUp={handleInlineSuggestionPointerUp}
+                    onPointerLeave={handleInlineSuggestionPointerLeave}
+                    onPointerCancel={handleInlineSuggestionPointerLeave}
+                  >
+                    {suggestion.text}
+                  </button>
+                )
+              })}
+            </div>
+          )}
         </div>
-      </div>
 
-      <input
-        ref={inlineAmountInputRef}
-        style={styles.smallInput}
-        value={inlineAmount}
-        onChange={(event) => setInlineAmount(normalizeAmountInput(event.target.value))}
-        placeholder="kwota"
-        onKeyDown={async (event) => {
-          if (event.key === 'Enter') {
-            event.preventDefault()
-            await saveInlineAdd()
-          }
-        }}
-      />
-
-      <div style={{ ...inlineDescriptionFieldWrapStyle, minWidth: 180 }}>
         <input
-          style={styles.input}
-          value={inlineTagInput}
-          onChange={(event) => {
-            const nextValue = event.target.value
-            setInlineTagInput(nextValue)
-            setInlineTagNames(splitTagInput(nextValue))
-          }}
-          placeholder="tagi, po przecinku"
-          autoComplete="off"
-          autoCorrect="off"
-          spellCheck={false}
+          ref={inlineAmountInputRef}
+          style={styles.smallInput}
+          value={inlineAmount}
+          onChange={(event) => setInlineAmount(normalizeAmountInput(event.target.value))}
+          placeholder="kwota"
           onKeyDown={async (event) => {
             if (event.key === 'Enter') {
               event.preventDefault()
@@ -334,30 +321,106 @@ export default function Level3InlineAddForm({
           }}
         />
 
-        {inlineTagNames.length > 0 && (
-          <div style={{ ...tagBadgesWrapStyle, marginTop: 8 }}>
-            {inlineTagNames.map((tagName) => (
-              <span key={tagName} style={tagBadgeStyle}>
-                #{tagName}
-                <button
-                  type="button"
-                  style={tagRemoveButtonStyle}
-                  onClick={() => {
-                    const nextTagNames = inlineTagNames.filter((item) => item !== tagName)
-                    setInlineTagNames(nextTagNames)
-                    setInlineTagInput(nextTagNames.join(', '))
-                  }}
-                >
-                ×
-                </button>
-              </span>
-            ))}
-          </div>
+        <button
+          style={{ ...styles.primaryButton, ...compactPrimaryButtonStyle }}
+          disabled={isInlineSaving}
+          onClick={async () => {
+            await saveInlineAdd()
+          }}
+        >
+          {isInlineSaving ? '...' : 'zapisz'}
+        </button>
+
+        <button
+          style={{ ...styles.secondaryButton, ...compactSecondaryButtonStyle }}
+          onClick={() => {
+            cancelInlineAdd()
+          }}
+        >
+          anuluj
+        </button>
+      </div>
+
+      <div data-inline-entry-options="true">
+        <button
+          type="button"
+          style={styles.secondaryButton}
+          data-inline-option-active={isTagsOpen || inlineTagNames.length > 0 ? 'true' : 'false'}
+          onClick={() => setIsTagsOpen((value) => !value)}
+        >
+          Tagi
+        </button>
+
+        {getPaymentSourceOptionsForCategoryId && (
+          <button
+            type="button"
+            style={styles.secondaryButton}
+            data-inline-option-active={isPaymentOpen || Boolean(inlinePaymentSourceId) || inlinePaymentSplitItems.length > 0 ? 'true' : 'false'}
+            onClick={() => setIsPaymentOpen((value) => !value)}
+          >
+            Źródło płatności
+          </button>
+        )}
+
+        {recurringOptions.length > 0 && (
+          <button
+            type="button"
+            style={styles.secondaryButton}
+            data-inline-option-active={isRecurringOpen || Boolean(selectedRecurringTransactionId) ? 'true' : 'false'}
+            onClick={() => setIsRecurringOpen((value) => !value)}
+          >
+            Przypomnienie
+          </button>
         )}
       </div>
 
-      {getPaymentSourceOptionsForCategoryId && (
-        <div style={{ minWidth: 280, flex: 1 }}>
+      {isTagsOpen && (
+        <div data-inline-entry-extra-row="true">
+          <input
+            style={styles.input}
+            value={inlineTagInput}
+            onChange={(event) => {
+              const nextValue = event.target.value
+              setInlineTagInput(nextValue)
+              setInlineTagNames(splitTagInput(nextValue))
+            }}
+            placeholder="tagi, po przecinku"
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
+            onKeyDown={async (event) => {
+              if (event.key === 'Enter') {
+                event.preventDefault()
+                await saveInlineAdd()
+              }
+            }}
+          />
+
+          {inlineTagNames.length > 0 && (
+            <div style={tagBadgesWrapStyle}>
+              {inlineTagNames.map((tagName) => (
+                <span key={tagName} style={tagBadgeStyle}>
+                  #{tagName}
+                  <button
+                    type="button"
+                    style={tagRemoveButtonStyle}
+                    onClick={() => {
+                      const nextTagNames = inlineTagNames.filter((item) => item !== tagName)
+                      setInlineTagNames(nextTagNames)
+                      setInlineTagInput(nextTagNames.join(', '))
+                    }}
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {isPaymentOpen && getPaymentSourceOptionsForCategoryId && (
+        <div data-inline-entry-extra-row="true">
           <PaymentSplitEditor
             amount={inlineAmount}
             isVisible
@@ -368,6 +431,7 @@ export default function Level3InlineAddForm({
             setPaymentSplitItems={setInlinePaymentSplitItems}
             styles={styles}
           />
+
           {paymentSourceOptions.length === 0 && (
             <div style={helperTextStyle}>
               Źródła płatności są włączone, ale nie masz jeszcze żadnego źródła do wyboru.
@@ -376,8 +440,8 @@ export default function Level3InlineAddForm({
         </div>
       )}
 
-      {recurringOptions.length > 0 && (
-        <div style={{ minWidth: 240, flex: 1 }}>
+      {isRecurringOpen && recurringOptions.length > 0 && (
+        <div data-inline-entry-extra-row="true">
           <label style={{ ...styles.emptyText, display: 'flex', flexDirection: 'column', gap: 6 }}>
             Powiąż z przypomnieniem
             <select
@@ -393,6 +457,7 @@ export default function Level3InlineAddForm({
               ))}
             </select>
           </label>
+
           {selectedRecurringOption?.hasTransactionInMonth && (
             <div style={{ ...styles.infoBox, marginTop: 8, background: '#fff7ed', border: '1px solid #fed7aa' }}>
               To przypomnienie ma już wpis w tym miesiącu. Możesz dodać kolejny, jeśli to celowe.
@@ -400,25 +465,6 @@ export default function Level3InlineAddForm({
           )}
         </div>
       )}
-
-      <button
-        style={{ ...styles.primaryButton, ...compactPrimaryButtonStyle }}
-        disabled={isInlineSaving}
-        onClick={async () => {
-          await saveInlineAdd()
-        }}
-      >
-        {isInlineSaving ? 'zapisywanie...' : 'zapisz'}
-      </button>
-
-      <button
-        style={{ ...styles.secondaryButton, ...compactSecondaryButtonStyle }}
-        onClick={() => {
-          cancelInlineAdd()
-        }}
-      >
-        anuluj
-      </button>
     </div>
   )
 }

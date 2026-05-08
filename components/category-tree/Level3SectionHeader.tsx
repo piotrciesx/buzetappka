@@ -29,6 +29,65 @@ type Level3SectionHeaderProps = {
   onEditBudgetLimit?: () => void
 }
 
+const Icon = ({ name }: { name: 'calendar' | 'plus' | 'limit' }) => {
+  if (name === 'calendar') {
+    return (
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+        <rect
+          x="4"
+          y="5"
+          width="16"
+          height="15"
+          rx="2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        />
+        <path
+          d="M8 3v4M16 3v4M4 10h16"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="2"
+        />
+      </svg>
+    )
+  }
+
+  if (name === 'limit') {
+    return (
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+        <path
+          d="M4 18V6"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="2"
+        />
+        <path
+          d="M8 18V10M12 18V8M16 18V12M20 18V5"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="2"
+        />
+      </svg>
+    )
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+      <path
+        d="M12 5v14M5 12h14"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="2"
+      />
+    </svg>
+  )
+}
+
 export default function Level3SectionHeader({
   name,
   categorySum,
@@ -56,9 +115,13 @@ export default function Level3SectionHeader({
   canUseBudgetLimit = false,
   onEditBudgetLimit,
 }: Level3SectionHeaderProps) {
+  const formattedSum = categorySum.toLocaleString('pl-PL')
+
   return (
     <div
       data-category-drag-row="true"
+      data-category-level="3"
+      data-category-open={isOpen ? 'true' : 'false'}
       style={{
         ...styles.l3Header,
         boxShadow: isDragging ? '0 12px 24px rgba(0, 0, 0, 0.12)' : styles.l3Header.boxShadow,
@@ -70,7 +133,7 @@ export default function Level3SectionHeader({
       }}
       {...headerDragProps}
     >
-      <div style={styles.l2Left}>
+      <div style={styles.l2Left} data-category-row-main="true">
         {dragHandle}
 
         <div style={styles.arrow} data-category-toggle-icon="true" aria-hidden="true">
@@ -86,8 +149,16 @@ export default function Level3SectionHeader({
           </svg>
         </div>
 
-        <div>
-          <div style={styles.l3Name}>{showCategorySum ? `${name} • ${categorySum}` : name}</div>
+        <div data-category-row-copy="true">
+          <div style={styles.l3Name} data-category-row-name="true">
+            {name}
+          </div>
+
+          {showCategorySum && (
+            <div data-category-row-meta="true">
+              <span>{formattedSum} zł</span>
+            </div>
+          )}
 
           {isClosingAfterSelectedMonth && (
             <div style={styles.closingBadge}>zamknie się z końcem tego miesiąca</div>
@@ -101,8 +172,11 @@ export default function Level3SectionHeader({
         {canUseMonthCalendar && (
           <button
             type="button"
-            data-category-secondary-action="true"
+            data-category-icon-action="calendar"
+            data-active={isCalendarOpen ? 'true' : 'false'}
             style={styles.secondaryButton}
+            aria-label={isCalendarOpen ? 'Zamknij kalendarz' : 'Otwórz kalendarz'}
+            title={isCalendarOpen ? 'Zamknij kalendarz' : 'Otwórz kalendarz'}
             onMouseDown={(event) => event.stopPropagation()}
             onPointerDown={(event) => event.stopPropagation()}
             onClick={(event) => {
@@ -110,45 +184,35 @@ export default function Level3SectionHeader({
               onToggleCalendar()
             }}
           >
-            {isCalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
+            <Icon name="calendar" />
           </button>
         )}
 
         {canAddHere && !isSelectedMonthLocked && (
           <button
+            type="button"
             data-category-quick-add="true"
             style={styles.primaryButton}
             aria-label={`Dodaj wpis: ${name}`}
-            onClick={() => {
+            title="Dodaj wpis"
+            onMouseDown={(event) => event.stopPropagation()}
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={(event) => {
+              event.stopPropagation()
               onInlineAdd()
             }}
           >
-            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-              <path
-                d="M12 20h9"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="1.9"
-              />
-              <path
-                d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="1.9"
-              />
-            </svg>
+            <Icon name="plus" />
           </button>
         )}
 
         {showCategoryActions && canUseBudgetLimit && onEditBudgetLimit && (
           <button
             type="button"
-            data-category-secondary-action="true"
+            data-category-icon-action="limit"
             style={styles.secondaryButton}
+            aria-label={budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
+            title={budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
             onMouseDown={(event) => event.stopPropagation()}
             onPointerDown={(event) => event.stopPropagation()}
             onClick={(event) => {
@@ -156,63 +220,9 @@ export default function Level3SectionHeader({
               onEditBudgetLimit()
             }}
           >
-            {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
+            <Icon name="limit" />
           </button>
         )}
-
-        {showCategoryActions && isClosingAfterSelectedMonth ? (
-          <button
-            data-category-secondary-action="true"
-            style={styles.secondaryButton}
-            onClick={async () => {
-              await onUndoScheduledHide()
-            }}
-          >
-            cofnij zamknięcie
-          </button>
-        ) : showCategoryActions ? (
-          <>
-            <button
-              data-category-secondary-action="true"
-              style={styles.secondaryButton}
-              onClick={async () => {
-                await onRenameCategory()
-              }}
-            >
-              zmień nazwę
-            </button>
-
-            <button
-              data-category-secondary-action="true"
-              style={styles.dangerButton}
-              onClick={async () => {
-                await onDeleteCategory()
-              }}
-            >
-              usuń podkategorię
-            </button>
-
-            <button
-              data-category-secondary-action="true"
-              style={styles.dangerButton}
-              onClick={async () => {
-                await onHideNow()
-              }}
-            >
-              ukryj teraz
-            </button>
-
-            <button
-              data-category-secondary-action="true"
-              style={styles.dangerButton}
-              onClick={async () => {
-                await onHideNext()
-              }}
-            >
-              ukryj od następnego
-            </button>
-          </>
-        ) : null}
 
         {showCategoryActions && (
           <details
@@ -220,35 +230,43 @@ export default function Level3SectionHeader({
             data-floating-dropdown="true"
             onClick={(event) => event.stopPropagation()}
           >
-            <summary style={styles.secondaryButton}>⋯</summary>
+            <summary style={styles.secondaryButton} aria-label={`Menu kategorii ${name}`} title="Menu">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                <circle cx="5" cy="12" r="1.8" fill="currentColor" />
+                <circle cx="12" cy="12" r="1.8" fill="currentColor" />
+                <circle cx="19" cy="12" r="1.8" fill="currentColor" />
+              </svg>
+            </summary>
             <div data-mobile-category-menu-panel="true">
               {canUseMonthCalendar && (
                 <button type="button" style={styles.secondaryButton} onClick={onToggleCalendar}>
-                  {isCalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
+                  {isCalendarOpen ? 'Zamknij kalendarz' : 'Otwórz kalendarz'}
                 </button>
               )}
+
               {canUseBudgetLimit && onEditBudgetLimit && (
                 <button type="button" style={styles.secondaryButton} onClick={onEditBudgetLimit}>
                   {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
                 </button>
               )}
+
               {isClosingAfterSelectedMonth ? (
                 <button style={styles.secondaryButton} onClick={async () => onUndoScheduledHide()}>
-                  cofnij zamknięcie
+                  Cofnij zamknięcie
                 </button>
               ) : (
                 <>
                   <button style={styles.secondaryButton} onClick={async () => onRenameCategory()}>
-                    zmień nazwę
+                    Zmień nazwę
                   </button>
                   <button style={styles.dangerButton} onClick={async () => onHideNow()}>
-                    ukryj teraz
+                    Ukryj teraz
                   </button>
                   <button style={styles.dangerButton} onClick={async () => onHideNext()}>
-                    ukryj od następnego
+                    Ukryj od następnego
                   </button>
                   <button style={styles.dangerButton} onClick={async () => onDeleteCategory()}>
-                    usuń
+                    Usuń
                   </button>
                 </>
               )}
