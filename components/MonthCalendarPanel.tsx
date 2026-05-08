@@ -950,14 +950,25 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
           style={{
             ...calendarExpandBadgeStyle,
             color: dynamicTextColor,
-            background: dynamicTextColor === '#ffffff' ? 'rgba(255,255,255,0.14)' : '#ffffff',
+            background:
+              dynamicTextColor === '#ffffff' ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.78)',
             border:
               dynamicTextColor === '#ffffff'
                 ? '1px solid rgba(255,255,255,0.28)'
-                : '1px solid #cbd5e1',
+                : '1px solid rgba(203, 213, 225, 0.72)',
+            fontSize: 0,
           }}
         >
-          ↗
+          <svg viewBox="0 0 16 16" width="10" height="10" aria-hidden="true">
+            <path
+              d="M6 4h6v6M12 4 4 12"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.7"
+            />
+          </svg>
         </div>
 
         <div style={{ ...calendarDayNumberStyle, color: dynamicTextColor }}>{day}</div>
@@ -972,10 +983,13 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
               style={{
                 ...calendarDayMetaStyle,
                 color: heatmapMode === 'balance' ? dynamicTextColor : calendarDayMetaStyle.color,
+                fontWeight: 700,
               }}
+              title={`${getDayMetricLabel()}: ${
+                heatmapVariant === 'balance' && getDayMetricValue(stats) > 0 ? '+' : ''
+              }${formatAmount(getDayMetricValue(stats))} zł`}
             >
-              {getDayMetricLabel()}:{' '}
-              <strong>
+              <strong style={{ whiteSpace: 'nowrap' }}>
                 {heatmapVariant === 'balance' && getDayMetricValue(stats) > 0 ? '+' : ''}
                 {formatAmount(getDayMetricValue(stats))} zł
               </strong>
@@ -986,7 +1000,7 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
                 color: heatmapMode === 'balance' ? dynamicTextColor : calendarDayCountStyle.color,
               }}
             >
-              {stats.count === 1 ? '1 wpis' : `Wpisy: ${stats.count}`}
+              {stats.count === 1 ? '1 wpis' : `${stats.count} wpisy`}
             </div>
           </>
         ) : (

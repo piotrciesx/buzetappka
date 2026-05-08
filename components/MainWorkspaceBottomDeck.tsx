@@ -33,6 +33,29 @@ export default function MainWorkspaceBottomDeck({
   const today = new Date()
   const currentMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`
   const currentDay = today.getDate()
+  const miniCalendarActivityByDay = recentTransactions.reduce<
+    Record<number, 'income' | 'expense' | 'mixed'>
+  >((activityMap, transaction) => {
+    if (!transaction.date.startsWith(`${selectedMonth}-`)) {
+      return activityMap
+    }
+
+    const dayNumber = Number(transaction.date.slice(8, 10))
+
+    if (!Number.isFinite(dayNumber) || dayNumber < 1) {
+      return activityMap
+    }
+
+    const currentActivity = activityMap[dayNumber]
+
+    if (currentActivity && currentActivity !== transaction.kind) {
+      activityMap[dayNumber] = 'mixed'
+      return activityMap
+    }
+
+    activityMap[dayNumber] = transaction.kind
+    return activityMap
+  }, {})
 
   return (
     <section data-main-workspace-deck="true" aria-label="Kalendarz i ostatnie wpisy">
@@ -82,6 +105,7 @@ export default function MainWorkspaceBottomDeck({
                   key={`${selectedMonth}-${dayNumber}`}
                   type="button"
                   data-current-day={selectedMonth === currentMonth && dayNumber === currentDay}
+                  data-mini-calendar-activity={miniCalendarActivityByDay[dayNumber] || undefined}
                   onClick={() => onOpenDay(String(dayNumber))}
                 >
                   {dayNumber}

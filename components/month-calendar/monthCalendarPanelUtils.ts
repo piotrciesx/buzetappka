@@ -169,12 +169,12 @@ export const getBalanceHeatmapVisual = (
   const effectiveValue = inverted ? value * -1 : value
 
   if (effectiveValue === 0) {
-    const neutralRgb = hslToRgb(42, 92, 56)
+    const neutralRgb = hslToRgb(42, 82, 83)
 
     return {
       background: rgbToCss(neutralRgb),
       textColor: '#111827',
-      borderColor: rgbToCss(hslToRgb(34, 92, 36)),
+      borderColor: rgbToCss(hslToRgb(38, 64, 74)),
     }
   }
 
@@ -184,16 +184,16 @@ export const getBalanceHeatmapVisual = (
     isPositive ? positiveReference : negativeReference
   )
   const hue = isPositive ? 145 : 8
-  const saturation = 88 + intensity * 8
-  const lightness = 62 - intensity * 24
-  const borderLightness = Math.max(lightness - 18, 20)
+  const saturation = 58 + intensity * 14
+  const lightness = 90 - intensity * 20
+  const borderLightness = Math.max(lightness - 12, 52)
   const backgroundRgb = hslToRgb(hue, saturation, lightness)
   const borderRgb = hslToRgb(hue, Math.min(100, saturation + 4), borderLightness)
   const luminance = getLuminance(backgroundRgb)
 
   return {
     background: rgbToCss(backgroundRgb),
-    textColor: luminance < 162 ? '#ffffff' : '#111827',
+    textColor: luminance < 132 ? '#ffffff' : '#111827',
     borderColor: rgbToCss(borderRgb),
   }
 }
@@ -209,15 +209,15 @@ export const getDirectionalHeatmapVisual = (
   const startHue = inverted ? highHue : lowHue
   const endHue = inverted ? lowHue : highHue
   const hue = startHue + (endHue - startHue) * intensity
-  const saturation = 86 + intensity * 10
-  const lightness = 62 - intensity * 22
+  const saturation = 58 + intensity * 14
+  const lightness = 90 - intensity * 20
   const backgroundRgb = hslToRgb(hue, saturation, lightness)
-  const borderRgb = hslToRgb(hue, Math.min(100, saturation + 4), Math.max(lightness - 18, 20))
+  const borderRgb = hslToRgb(hue, Math.min(100, saturation + 4), Math.max(lightness - 12, 52))
   const luminance = getLuminance(backgroundRgb)
 
   return {
     background: rgbToCss(backgroundRgb),
-    textColor: luminance < 162 ? '#ffffff' : '#111827',
+    textColor: luminance < 132 ? '#ffffff' : '#111827',
     borderColor: rgbToCss(borderRgb),
   }
 }

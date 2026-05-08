@@ -1,22 +1,22 @@
 export const calendarPanelStyle = {
-  marginBottom: 20,
+  marginBottom: 16,
   background: '#ffffff',
   border: '1px solid #e5e7eb',
   borderRadius: 14,
-  padding: 16,
+  padding: 12,
   boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
 } as const
 
 export const calendarWeekdaysStyle = {
   display: 'grid',
   gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
-  gap: 8,
-  marginTop: 12,
+  gap: 5,
+  marginTop: 8,
 } as const
 
 export const calendarWeekdayStyle = {
-  padding: '8px 10px',
-  fontSize: 12,
+  padding: '5px 7px',
+  fontSize: 10,
   fontWeight: 600,
   textTransform: 'uppercase' as const,
   color: '#6b7280',
@@ -25,66 +25,73 @@ export const calendarWeekdayStyle = {
 export const calendarGridStyle = {
   display: 'grid',
   gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
-  gap: 8,
-  marginTop: 8,
+  gap: 5,
+  marginTop: 5,
 } as const
 
 export const calendarDayCellStyle = {
-  minHeight: 108,
+  minHeight: 70,
   border: '1px solid #e5e7eb',
-  borderRadius: 12,
-  padding: 10,
+  borderRadius: 10,
+  padding: '7px 8px',
   background: '#f8fafc',
   display: 'flex',
   flexDirection: 'column' as const,
-  gap: 8,
+  gap: 4,
   cursor: 'pointer',
   position: 'relative' as const,
   textAlign: 'left' as const,
+  overflow: 'hidden' as const,
 } as const
 
 export const calendarExpandBadgeStyle = {
   position: 'absolute' as const,
-  top: 8,
-  right: 8,
-  width: 18,
-  height: 18,
+  top: 6,
+  right: 6,
+  width: 16,
+  height: 16,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: 11,
+  fontSize: 10,
   fontWeight: 600,
   color: '#475569',
-  border: '1px solid #cbd5e1',
-  borderRadius: 6,
-  background: '#ffffff',
+  border: '1px solid rgba(203, 213, 225, 0.72)',
+  borderRadius: 999,
+  background: 'rgba(255, 255, 255, 0.76)',
   lineHeight: 1.2,
   pointerEvents: 'none' as const,
 } as const
 
 export const calendarEmptyCellStyle = {
-  minHeight: 108,
+  minHeight: 70,
   border: '1px dashed #e5e7eb',
-  borderRadius: 12,
-  padding: 10,
+  borderRadius: 10,
+  padding: 8,
   background: '#f9fafb',
 } as const
 
 export const calendarDayNumberStyle = {
-  fontSize: 14,
-  fontWeight: 600,
+  fontSize: 13,
+  fontWeight: 700,
   color: '#111827',
 } as const
 
 export const calendarDayMetaStyle = {
-  fontSize: 12,
+  fontSize: 11,
   color: '#4b5563',
-  lineHeight: 1.4,
+  lineHeight: 1.2,
+  minWidth: 0,
+  overflow: 'hidden' as const,
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap' as const,
 } as const
 
 export const calendarDayCountStyle = {
-  fontSize: 12,
+  fontSize: 10,
   color: '#6b7280',
+  lineHeight: 1.2,
+  whiteSpace: 'nowrap' as const,
 } as const
 
 export const overlayStyle = {
@@ -370,12 +377,12 @@ export const heatmapLegendLabelsStyle = {
 
 export const heatmapLegendBarStyle = {
   width: '100%',
-  height: 14,
+  height: 10,
   borderRadius: 999,
   border: '1px solid #d8dee8',
   background:
-    'linear-gradient(90deg, rgb(204, 62, 47) 0%, rgb(239, 208, 124) 50%, rgb(44, 163, 92) 100%)',
-  boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.5)',
+    'linear-gradient(90deg, rgb(248, 187, 176) 0%, rgb(252, 235, 174) 50%, rgb(170, 221, 188) 100%)',
+  boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.65)',
 } as const
 
 export const heatmapSwitchRowStyle = {

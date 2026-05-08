@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 458
-Data: 2026-05-08T23:21:16.303Z
+Data: 2026-05-08T23:34:19.701Z
 
 
 ==================================================
@@ -73303,6 +73303,25 @@ PLIK: app\styles\category-tree\workspace.css
   color: #172033 !important;
 }
 
+[data-budget-alert-actions="true"] {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+[data-budget-alert-actions="true"] button {
+  min-width: 86px !important;
+  min-height: 32px !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  border-radius: 999px !important;
+  padding: 0 12px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  box-shadow: none !important;
+}
+
 [data-budget-status-right="true"] > [data-tree-sort-inline="true"] {
   left: auto !important;
   right: 0 !important;
@@ -78097,19 +78116,45 @@ PLIK: app\styles\workspace-panels.css
 }
 
 [data-workspace-trash-chip="true"] {
-  min-width: 54px !important;
-  min-height: 30px !important;
+  position: relative !important;
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
   display: inline-flex !important;
   grid-template-columns: none !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 6px !important;
   border-radius: 999px !important;
-  padding: 0 10px !important;
+  padding: 0 !important;
   border: 1px solid rgba(213, 222, 232, 0.9);
   background: rgba(255, 255, 255, 0.72);
   color: #334155;
   cursor: pointer;
+}
+
+[data-workspace-trash-chip="true"] svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+[data-workspace-trash-chip="true"] b {
+  position: absolute !important;
+  top: -5px !important;
+  right: -5px !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 2px solid #ffffff !important;
+  border-radius: 999px !important;
+  padding: 0 4px !important;
+  background: #dc2626 !important;
+  color: #ffffff !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  font-variant-numeric: tabular-nums !important;
 }
 
 [data-budget-tree-bottom-deck="true"] [data-core-workspace-footer="true"] {
@@ -79101,7 +79146,7 @@ export default function BudgetWorkspaceTopNotices({
           {openedNotice === 'alert' && previousMonthCloseReminder && (
             <div data-budget-notice-panel="alert">
               <div>Poprzedni miesiąc {previousMonthCloseReminder} nie jest jeszcze zamknięty.</div>
-              <div data-budget-actions-row="true" style={{ ...styles.actions, marginTop: 8 }}>
+              <div data-budget-alert-actions="true" data-budget-actions-row="true" style={{ ...styles.actions, marginTop: 8 }}>
                 <button
                   type="button"
                   style={styles.primaryButton}
@@ -101961,7 +102006,7 @@ PLIK: components\ImportExportPanel.tsx
 
 'use client'
 
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { ChangeEvent, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { Category, Transaction, TransactionPaymentSplit } from '../lib/budgetPageTypes'
 import PaymentSplitEditor from './PaymentSplitEditor'
 import {
@@ -102008,6 +102053,72 @@ type ImportExportPanelProps = {
 }
 
 const normalizeFileNameMonth = (month: string) => month.replace('-', '_')
+
+const panelStyle: CSSProperties = {
+  display: 'grid',
+  gap: 14,
+  border: '1px solid rgba(203, 213, 225, 0.78)',
+  borderRadius: 16,
+  padding: 14,
+  background: 'rgba(255, 255, 255, 0.72)',
+  boxShadow: '0 10px 28px rgba(15, 23, 42, 0.045)',
+}
+
+const headerStyle: CSSProperties = {
+  display: 'grid',
+  gap: 4,
+  paddingBottom: 10,
+  borderBottom: '1px solid rgba(226, 232, 240, 0.86)',
+}
+
+const titleStyle: CSSProperties = {
+  margin: 0,
+  color: '#172033',
+  fontSize: 16,
+  fontWeight: 760,
+}
+
+const descriptionStyle: CSSProperties = {
+  margin: 0,
+  color: '#64748b',
+  fontSize: 12,
+  lineHeight: 1.4,
+}
+
+const actionRowStyle: CSSProperties = {
+  display: 'flex',
+  gap: 8,
+  flexWrap: 'wrap',
+  alignItems: 'center',
+}
+
+const lightButtonStyle: CSSProperties = {
+  minHeight: 32,
+  borderRadius: 999,
+  padding: '0 12px',
+  fontSize: 12,
+  fontWeight: 680,
+  boxShadow: 'none',
+}
+
+const importSectionStyle: CSSProperties = {
+  display: 'grid',
+  gap: 10,
+  padding: 12,
+  border: '1px solid rgba(226, 232, 240, 0.9)',
+  borderRadius: 14,
+  background: 'rgba(248, 250, 252, 0.64)',
+}
+
+const compactInfoStyle: CSSProperties = {
+  border: '1px solid rgba(226, 232, 240, 0.86)',
+  borderRadius: 12,
+  padding: '9px 11px',
+  background: 'rgba(248, 250, 252, 0.74)',
+  color: '#64748b',
+  fontSize: 12,
+  lineHeight: 1.4,
+}
 
 export default function ImportExportPanel({
   selectedMonth,
@@ -102230,32 +102341,35 @@ export default function ImportExportPanel({
   }
 
   return (
-    <section style={styles.card}>
-      <div style={styles.sectionTitle}>Import / eksport danych</div>
+    <section style={panelStyle}>
+      <div style={headerStyle}>
+        <h2 style={titleStyle}>Import / eksport danych</h2>
+        <p style={descriptionStyle}>Eksportuj kopię danych albo wczytaj wpisy z pliku CSV.</p>
+      </div>
 
-      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
-        <button style={styles.secondaryButton} onClick={handleExportCsv} type="button">
+      <div style={actionRowStyle}>
+        <button style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={handleExportCsv} type="button">
           Eksport CSV aktywnych wpisów
         </button>
 
-        <button style={styles.secondaryButton} onClick={handleExportJson} type="button">
+        <button style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={handleExportJson} type="button">
           Backup JSON
         </button>
 
-        <button style={styles.secondaryButton} onClick={handleDownloadTemplate} type="button">
+        <button style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={handleDownloadTemplate} type="button">
           Pobierz template CSV
         </button>
       </div>
 
-      <div style={{ ...styles.infoBox, marginBottom: 16 }}>
+      <div style={compactInfoStyle}>
         Wybierasz plik, mapujesz kolumny, sprawdzasz podgląd, poprawiasz opis i kategorię,
         zaznaczasz tylko te rekordy, które mają wejść, i dopiero wtedy importujesz.
       </div>
 
       {canCreateTransactions ? (
         <>
-          <div style={{ display: 'grid', gap: 12, marginBottom: 16 }}>
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+          <div style={importSectionStyle}>
+            <div style={actionRowStyle}>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -102266,7 +102380,7 @@ export default function ImportExportPanel({
 
               <button
                 type="button"
-                style={styles.primaryButton}
+                style={{ ...styles.primaryButton, ...lightButtonStyle }}
                 onClick={() => fileInputRef.current?.click()}
               >
                 Wybierz plik CSV
@@ -102274,7 +102388,7 @@ export default function ImportExportPanel({
 
               <button
                 type="button"
-                style={styles.secondaryButton}
+                style={{ ...styles.secondaryButton, ...lightButtonStyle }}
                 onClick={resetImportState}
                 disabled={isImporting && !fileName}
               >
@@ -102414,22 +102528,22 @@ export default function ImportExportPanel({
                 których nie chcesz wrzucać.
               </div>
 
-              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
-                <button type="button" style={styles.secondaryButton} onClick={handleApproveAllValid}>
+              <div style={{ ...actionRowStyle, marginBottom: 16 }}>
+                <button type="button" style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={handleApproveAllValid}>
                   Zaznacz wszystkie poprawne
                 </button>
 
-                <button type="button" style={styles.secondaryButton} onClick={handleUncheckAll}>
+                <button type="button" style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={handleUncheckAll}>
                   Odznacz wszystko
                 </button>
 
-                <button type="button" style={styles.secondaryButton} onClick={resetImportState}>
+                <button type="button" style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={resetImportState}>
                   Anuluj import
                 </button>
 
                 <button
                   type="button"
-                  style={styles.primaryButton}
+                  style={{ ...styles.primaryButton, ...lightButtonStyle }}
                   onClick={() => {
                     void handleImport()
                   }}
@@ -104379,8 +104493,31 @@ export default function MainWorkspaceBottomDeck({
           onClick={onOpenTrash}
           aria-label={`Kosz, liczba elementów: ${trashedCount}`}
         >
-          <span aria-hidden="true">⌫</span>
-          <b>{trashedCount}</b>
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+            <path
+              d="M4 7h16"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeWidth="2"
+            />
+            <path
+              d="M10 11v6M14 11v6"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeWidth="2"
+            />
+            <path
+              d="M6 7l1 13h10l1-13M9 7V4h6v3"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+            />
+          </svg>
+          {trashedCount > 0 && <b>{trashedCount}</b>}
         </button>
       </footer>
     </section>
@@ -111832,7 +111969,7 @@ export default function TransactionCreatorModal(props: Props) {
 PLIK: components\TrashPanel.tsx
 ==================================================
 
-import { CSSProperties } from 'react'
+import type { CSSProperties } from 'react'
 import { getCategoryPathLabel } from '../lib/budgetPageHelpers'
 import { Category, Transaction } from '../lib/budgetPageTypes'
 
@@ -111844,6 +111981,144 @@ type Props = {
   onPermanentDeleteTransaction: (transactionId: string) => Promise<void>
   onEmptyTrash: () => Promise<void>
   styles: Record<string, CSSProperties>
+}
+
+const panelStyle: CSSProperties = {
+  display: 'grid',
+  gap: 12,
+  border: '1px solid rgba(203, 213, 225, 0.78)',
+  borderRadius: 16,
+  padding: 12,
+  background: 'rgba(255, 255, 255, 0.72)',
+  boxShadow: '0 10px 28px rgba(15, 23, 42, 0.045)',
+}
+
+const headerStyle: CSSProperties = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  gap: 12,
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  padding: '2px 2px 10px',
+  borderBottom: '1px solid rgba(226, 232, 240, 0.86)',
+}
+
+const titleStyle: CSSProperties = {
+  margin: 0,
+  color: '#172033',
+  fontSize: 16,
+  fontWeight: 760,
+}
+
+const hintStyle: CSSProperties = {
+  border: '1px solid rgba(226, 232, 240, 0.86)',
+  borderRadius: 12,
+  padding: '9px 11px',
+  background: 'rgba(248, 250, 252, 0.74)',
+  color: '#64748b',
+  fontSize: 12,
+  lineHeight: 1.4,
+}
+
+const listStyle: CSSProperties = {
+  display: 'grid',
+  gap: 8,
+}
+
+const rowStyle: CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'minmax(0, 1fr) auto',
+  alignItems: 'center',
+  gap: 12,
+  minHeight: 74,
+  border: '1px solid rgba(226, 232, 240, 0.92)',
+  borderRadius: 12,
+  padding: '10px 12px',
+  background: 'rgba(248, 250, 252, 0.72)',
+}
+
+const mainStyle: CSSProperties = {
+  minWidth: 0,
+  display: 'grid',
+  gap: 7,
+}
+
+const topLineStyle: CSSProperties = {
+  minWidth: 0,
+  display: 'flex',
+  alignItems: 'baseline',
+  gap: 9,
+}
+
+const amountStyle: CSSProperties = {
+  flex: '0 0 auto',
+  color: '#be123c',
+  fontSize: 14,
+  fontWeight: 780,
+  fontVariantNumeric: 'tabular-nums',
+}
+
+const descriptionStyle: CSSProperties = {
+  minWidth: 0,
+  overflow: 'hidden',
+  color: '#172033',
+  fontSize: 13,
+  fontWeight: 680,
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+}
+
+const detailsStyle: CSSProperties = {
+  minWidth: 0,
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+  gap: 6,
+}
+
+const fieldStyle: CSSProperties = {
+  minWidth: 0,
+  display: 'grid',
+  gap: 2,
+  color: '#334155',
+  fontSize: 12,
+}
+
+const labelStyle: CSSProperties = {
+  color: '#94a3b8',
+  fontSize: 10,
+  fontWeight: 720,
+  textTransform: 'uppercase',
+  letterSpacing: 0,
+}
+
+const valueStyle: CSSProperties = {
+  minWidth: 0,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+}
+
+const actionsStyle: CSSProperties = {
+  display: 'flex',
+  justifyContent: 'flex-end',
+  gap: 6,
+  flexWrap: 'wrap',
+}
+
+const lightButtonStyle: CSSProperties = {
+  minHeight: 30,
+  borderRadius: 999,
+  padding: '0 11px',
+  fontSize: 12,
+  fontWeight: 680,
+  boxShadow: 'none',
+}
+
+const lightDangerButtonStyle: CSSProperties = {
+  ...lightButtonStyle,
+  borderColor: 'rgba(254, 205, 211, 0.9)',
+  background: 'rgba(255, 241, 242, 0.7)',
+  color: '#be123c',
 }
 
 export default function TrashPanel(props: Props) {
@@ -111858,22 +112133,14 @@ export default function TrashPanel(props: Props) {
   } = props
 
   return (
-    <div style={styles.topPanel}>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          gap: 12,
-          flexWrap: 'wrap',
-          alignItems: 'center',
-        }}
-      >
-        <div style={styles.sectionTitle}>Kosz</div>
+    <section style={panelStyle} aria-label="Kosz">
+      <div style={headerStyle}>
+        <h2 style={titleStyle}>Kosz</h2>
 
         {transactions.length > 0 && (
           <button
             type="button"
-            style={styles.dangerButton}
+            style={{ ...styles.secondaryButton, ...lightDangerButtonStyle }}
             onClick={async () => {
               await onEmptyTrash()
             }}
@@ -111883,52 +112150,65 @@ export default function TrashPanel(props: Props) {
         )}
       </div>
 
-      <div style={{ ...styles.infoBox, marginBottom: 12 }}>
+      <div style={hintStyle}>
         {transactions.length === 0
           ? 'Brak usuniętych wpisów.'
           : `Usunięte wpisy: ${transactions.length}. Przywrócenie zwraca wpis do zwykłego widoku.`}
       </div>
 
       {transactions.length === 0 ? (
-        <div style={styles.emptyStateCard}>Kosz jest pusty.</div>
+        <div style={hintStyle}>Kosz jest pusty.</div>
       ) : (
-        <div style={styles.transactionsBox}>
+        <div style={listStyle}>
           {transactions.map((transaction) => {
             const categoryLabel = categoriesById[transaction.category_id]
               ? getCategoryPathLabel(transaction.category_id, categoriesById)
               : 'Kategoria niedostępna'
+            const deletedAtLabel = transaction.deleted_at ? transaction.deleted_at.slice(0, 16) : '-'
 
             return (
-              <div key={transaction.id} style={styles.transactionRow}>
-                <div style={styles.transactionLeft}>
-                  <div style={styles.amountText}>{getAmountNumber(transaction.amount)}</div>
-                  <div>{transaction.description || '(bez opisu)'}</div>
-                  <div style={styles.dateText}>data: {transaction.date}</div>
-                  <div style={styles.dateText}>kategoria: {categoryLabel}</div>
-                  <div style={styles.dateText}>
-                    usunięto: {transaction.deleted_at ? transaction.deleted_at.slice(0, 16) : '-'}
+              <div key={transaction.id} style={rowStyle}>
+                <div style={mainStyle}>
+                  <div style={topLineStyle}>
+                    <strong style={amountStyle}>{getAmountNumber(transaction.amount)} zł</strong>
+                    <span style={descriptionStyle}>{transaction.description || 'Bez opisu'}</span>
+                  </div>
+
+                  <div style={detailsStyle}>
+                    <div style={fieldStyle}>
+                      <span style={labelStyle}>Data</span>
+                      <span style={valueStyle}>{transaction.date}</span>
+                    </div>
+                    <div style={fieldStyle}>
+                      <span style={labelStyle}>Kategoria</span>
+                      <span style={valueStyle}>{categoryLabel}</span>
+                    </div>
+                    <div style={fieldStyle}>
+                      <span style={labelStyle}>Usunięto</span>
+                      <span style={valueStyle}>{deletedAtLabel}</span>
+                    </div>
                   </div>
                 </div>
 
-                <div style={styles.actions}>
+                <div style={actionsStyle}>
                   <button
                     type="button"
-                    style={styles.secondaryButton}
+                    style={{ ...styles.secondaryButton, ...lightButtonStyle }}
                     onClick={async () => {
                       await onRestoreTransaction(transaction.id)
                     }}
                   >
-                    przywróć
+                    Przywróć
                   </button>
 
                   <button
                     type="button"
-                    style={styles.dangerButton}
+                    style={{ ...styles.secondaryButton, ...lightDangerButtonStyle }}
                     onClick={async () => {
                       await onPermanentDeleteTransaction(transaction.id)
                     }}
                   >
-                    usuń na stałe
+                    Usuń na stałe
                   </button>
                 </div>
               </div>
@@ -111936,7 +112216,7 @@ export default function TrashPanel(props: Props) {
           })}
         </div>
       )}
-    </div>
+    </section>
   )
 }
 
