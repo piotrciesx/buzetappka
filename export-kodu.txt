@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 458
-Data: 2026-05-08T23:34:19.701Z
+Data: 2026-05-08T23:49:23.298Z
 
 
 ==================================================
@@ -77772,23 +77772,52 @@ PLIK: app\styles\workspace-panels.css
 }
 
 [data-workspace-calendar-pane="true"] {
-  border-right: 1px solid rgba(226, 232, 240, 0.9) !important;
+  position: relative !important;
+  padding-top: 18px !important;
+}
+
+[data-workspace-calendar-pane="true"]::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 52px !important;
+  right: 0 !important;
+  bottom: 28px !important;
+  width: 1px !important;
+  background: linear-gradient(
+    180deg,
+    rgba(226, 232, 240, 0),
+    rgba(203, 213, 225, 0.7) 28%,
+    rgba(203, 213, 225, 0.48) 72%,
+    rgba(226, 232, 240, 0)
+  ) !important;
+  pointer-events: none !important;
 }
 
 [data-workspace-calendar-nav="true"] {
   display: grid !important;
-  grid-template-columns: 34px 34px !important;
+  grid-template-columns: 28px !important;
   justify-content: start !important;
-  gap: 6px !important;
+  gap: 4px !important;
 }
 
 [data-workspace-calendar-nav="true"] button {
-  min-height: 30px !important;
-  border: 1px solid rgba(203, 213, 225, 0.72) !important;
-  border-radius: 8px !important;
-  background: rgba(255, 255, 255, 0.72) !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(203, 213, 225, 0.58) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.62) !important;
   color: #334155 !important;
   font-size: 12px !important;
+}
+
+[data-workspace-calendar-nav="true"] button svg {
+  width: 13px !important;
+  height: 13px !important;
+  stroke-width: 1.75 !important;
 }
 
 [data-workspace-calendar-nav="true"] button:nth-child(2) {
@@ -77802,7 +77831,7 @@ PLIK: app\styles\workspace-panels.css
   display: grid !important;
   grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
   gap: 3px !important;
-  margin: 6px auto 0 !important;
+  margin: 16px auto 0 !important;
 }
 
 [data-mini-calendar="true"] small,
@@ -77847,6 +77876,28 @@ PLIK: app\styles\workspace-panels.css
   font-weight: 760 !important;
 }
 
+[data-mini-calendar="main"] button[data-mini-calendar-activity="income"] {
+  border-color: rgba(74, 222, 128, 0.38) !important;
+  background: rgba(220, 252, 231, 0.62) !important;
+  color: #166534 !important;
+}
+
+[data-mini-calendar="main"] button[data-mini-calendar-activity="expense"] {
+  border-color: rgba(251, 113, 133, 0.36) !important;
+  background: rgba(255, 228, 230, 0.66) !important;
+  color: #9f1239 !important;
+}
+
+[data-mini-calendar="main"] button[data-mini-calendar-activity="mixed"] {
+  border-color: rgba(96, 165, 250, 0.34) !important;
+  background: rgba(219, 234, 254, 0.58) !important;
+  color: #1e3a8a !important;
+}
+
+[data-mini-calendar="main"] button[data-current-day="true"][data-mini-calendar-activity] {
+  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.22) !important;
+}
+
 [data-workspace-recent-table="true"] {
   min-width: 0 !important;
   display: grid !important;
@@ -77879,6 +77930,7 @@ PLIK: app\styles\workspace-panels.css
   display: grid !important;
   align-content: start !important;
   gap: 5px !important;
+  padding-bottom: 12px !important;
   overflow: auto !important;
 }
 
@@ -78279,7 +78331,22 @@ PLIK: app\styles\workspace-panels.css
 
   [data-workspace-calendar-pane="true"] {
     border-right: 0 !important;
-    border-bottom: 1px solid rgba(226, 232, 240, 0.9) !important;
+    border-bottom: 0 !important;
+  }
+
+  [data-workspace-calendar-pane="true"]::after {
+    top: auto !important;
+    right: 18px !important;
+    bottom: 0 !important;
+    left: 18px !important;
+    width: auto !important;
+    height: 1px !important;
+    background: linear-gradient(
+      90deg,
+      rgba(226, 232, 240, 0),
+      rgba(203, 213, 225, 0.56),
+      rgba(226, 232, 240, 0)
+    ) !important;
   }
 
   [data-pinned-categories-grid="true"] {
@@ -104397,6 +104464,29 @@ export default function MainWorkspaceBottomDeck({
   const today = new Date()
   const currentMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`
   const currentDay = today.getDate()
+  const miniCalendarActivityByDay = recentTransactions.reduce<
+    Record<number, 'income' | 'expense' | 'mixed'>
+  >((activityMap, transaction) => {
+    if (!transaction.date.startsWith(`${selectedMonth}-`)) {
+      return activityMap
+    }
+
+    const dayNumber = Number(transaction.date.slice(8, 10))
+
+    if (!Number.isFinite(dayNumber) || dayNumber < 1) {
+      return activityMap
+    }
+
+    const currentActivity = activityMap[dayNumber]
+
+    if (currentActivity && currentActivity !== transaction.kind) {
+      activityMap[dayNumber] = 'mixed'
+      return activityMap
+    }
+
+    activityMap[dayNumber] = transaction.kind
+    return activityMap
+  }, {})
 
   return (
     <section data-main-workspace-deck="true" aria-label="Kalendarz i ostatnie wpisy">
@@ -104446,6 +104536,7 @@ export default function MainWorkspaceBottomDeck({
                   key={`${selectedMonth}-${dayNumber}`}
                   type="button"
                   data-current-day={selectedMonth === currentMonth && dayNumber === currentDay}
+                  data-mini-calendar-activity={miniCalendarActivityByDay[dayNumber] || undefined}
                   onClick={() => onOpenDay(String(dayNumber))}
                 >
                   {dayNumber}
@@ -105146,12 +105237,12 @@ export const getBalanceHeatmapVisual = (
   const effectiveValue = inverted ? value * -1 : value
 
   if (effectiveValue === 0) {
-    const neutralRgb = hslToRgb(42, 92, 56)
+    const neutralRgb = hslToRgb(42, 82, 83)
 
     return {
       background: rgbToCss(neutralRgb),
       textColor: '#111827',
-      borderColor: rgbToCss(hslToRgb(34, 92, 36)),
+      borderColor: rgbToCss(hslToRgb(38, 64, 74)),
     }
   }
 
@@ -105161,16 +105252,16 @@ export const getBalanceHeatmapVisual = (
     isPositive ? positiveReference : negativeReference
   )
   const hue = isPositive ? 145 : 8
-  const saturation = 88 + intensity * 8
-  const lightness = 62 - intensity * 24
-  const borderLightness = Math.max(lightness - 18, 20)
+  const saturation = 58 + intensity * 14
+  const lightness = 90 - intensity * 20
+  const borderLightness = Math.max(lightness - 12, 52)
   const backgroundRgb = hslToRgb(hue, saturation, lightness)
   const borderRgb = hslToRgb(hue, Math.min(100, saturation + 4), borderLightness)
   const luminance = getLuminance(backgroundRgb)
 
   return {
     background: rgbToCss(backgroundRgb),
-    textColor: luminance < 162 ? '#ffffff' : '#111827',
+    textColor: luminance < 132 ? '#ffffff' : '#111827',
     borderColor: rgbToCss(borderRgb),
   }
 }
@@ -105186,15 +105277,15 @@ export const getDirectionalHeatmapVisual = (
   const startHue = inverted ? highHue : lowHue
   const endHue = inverted ? lowHue : highHue
   const hue = startHue + (endHue - startHue) * intensity
-  const saturation = 86 + intensity * 10
-  const lightness = 62 - intensity * 22
+  const saturation = 58 + intensity * 14
+  const lightness = 90 - intensity * 20
   const backgroundRgb = hslToRgb(hue, saturation, lightness)
-  const borderRgb = hslToRgb(hue, Math.min(100, saturation + 4), Math.max(lightness - 18, 20))
+  const borderRgb = hslToRgb(hue, Math.min(100, saturation + 4), Math.max(lightness - 12, 52))
   const luminance = getLuminance(backgroundRgb)
 
   return {
     background: rgbToCss(backgroundRgb),
-    textColor: luminance < 162 ? '#ffffff' : '#111827',
+    textColor: luminance < 132 ? '#ffffff' : '#111827',
     borderColor: rgbToCss(borderRgb),
   }
 }
@@ -105206,24 +105297,24 @@ PLIK: components\month-calendar\monthCalendarStyles.ts
 ==================================================
 
 export const calendarPanelStyle = {
-  marginBottom: 20,
+  marginBottom: 16,
   background: '#ffffff',
   border: '1px solid #e5e7eb',
   borderRadius: 14,
-  padding: 16,
+  padding: 12,
   boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
 } as const
 
 export const calendarWeekdaysStyle = {
   display: 'grid',
   gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
-  gap: 8,
-  marginTop: 12,
+  gap: 5,
+  marginTop: 8,
 } as const
 
 export const calendarWeekdayStyle = {
-  padding: '8px 10px',
-  fontSize: 12,
+  padding: '5px 7px',
+  fontSize: 10,
   fontWeight: 600,
   textTransform: 'uppercase' as const,
   color: '#6b7280',
@@ -105232,66 +105323,73 @@ export const calendarWeekdayStyle = {
 export const calendarGridStyle = {
   display: 'grid',
   gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
-  gap: 8,
-  marginTop: 8,
+  gap: 5,
+  marginTop: 5,
 } as const
 
 export const calendarDayCellStyle = {
-  minHeight: 108,
+  minHeight: 70,
   border: '1px solid #e5e7eb',
-  borderRadius: 12,
-  padding: 10,
+  borderRadius: 10,
+  padding: '7px 8px',
   background: '#f8fafc',
   display: 'flex',
   flexDirection: 'column' as const,
-  gap: 8,
+  gap: 4,
   cursor: 'pointer',
   position: 'relative' as const,
   textAlign: 'left' as const,
+  overflow: 'hidden' as const,
 } as const
 
 export const calendarExpandBadgeStyle = {
   position: 'absolute' as const,
-  top: 8,
-  right: 8,
-  width: 18,
-  height: 18,
+  top: 6,
+  right: 6,
+  width: 16,
+  height: 16,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: 11,
+  fontSize: 10,
   fontWeight: 600,
   color: '#475569',
-  border: '1px solid #cbd5e1',
-  borderRadius: 6,
-  background: '#ffffff',
+  border: '1px solid rgba(203, 213, 225, 0.72)',
+  borderRadius: 999,
+  background: 'rgba(255, 255, 255, 0.76)',
   lineHeight: 1.2,
   pointerEvents: 'none' as const,
 } as const
 
 export const calendarEmptyCellStyle = {
-  minHeight: 108,
+  minHeight: 70,
   border: '1px dashed #e5e7eb',
-  borderRadius: 12,
-  padding: 10,
+  borderRadius: 10,
+  padding: 8,
   background: '#f9fafb',
 } as const
 
 export const calendarDayNumberStyle = {
-  fontSize: 14,
-  fontWeight: 600,
+  fontSize: 13,
+  fontWeight: 700,
   color: '#111827',
 } as const
 
 export const calendarDayMetaStyle = {
-  fontSize: 12,
+  fontSize: 11,
   color: '#4b5563',
-  lineHeight: 1.4,
+  lineHeight: 1.2,
+  minWidth: 0,
+  overflow: 'hidden' as const,
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap' as const,
 } as const
 
 export const calendarDayCountStyle = {
-  fontSize: 12,
+  fontSize: 10,
   color: '#6b7280',
+  lineHeight: 1.2,
+  whiteSpace: 'nowrap' as const,
 } as const
 
 export const overlayStyle = {
@@ -105577,12 +105675,12 @@ export const heatmapLegendLabelsStyle = {
 
 export const heatmapLegendBarStyle = {
   width: '100%',
-  height: 14,
+  height: 10,
   borderRadius: 999,
   border: '1px solid #d8dee8',
   background:
-    'linear-gradient(90deg, rgb(204, 62, 47) 0%, rgb(239, 208, 124) 50%, rgb(44, 163, 92) 100%)',
-  boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.5)',
+    'linear-gradient(90deg, rgb(248, 187, 176) 0%, rgb(252, 235, 174) 50%, rgb(170, 221, 188) 100%)',
+  boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.65)',
 } as const
 
 export const heatmapSwitchRowStyle = {
@@ -106760,14 +106858,25 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
           style={{
             ...calendarExpandBadgeStyle,
             color: dynamicTextColor,
-            background: dynamicTextColor === '#ffffff' ? 'rgba(255,255,255,0.14)' : '#ffffff',
+            background:
+              dynamicTextColor === '#ffffff' ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.78)',
             border:
               dynamicTextColor === '#ffffff'
                 ? '1px solid rgba(255,255,255,0.28)'
-                : '1px solid #cbd5e1',
+                : '1px solid rgba(203, 213, 225, 0.72)',
+            fontSize: 0,
           }}
         >
-          ↗
+          <svg viewBox="0 0 16 16" width="10" height="10" aria-hidden="true">
+            <path
+              d="M6 4h6v6M12 4 4 12"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.7"
+            />
+          </svg>
         </div>
 
         <div style={{ ...calendarDayNumberStyle, color: dynamicTextColor }}>{day}</div>
@@ -106782,10 +106891,13 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
               style={{
                 ...calendarDayMetaStyle,
                 color: heatmapMode === 'balance' ? dynamicTextColor : calendarDayMetaStyle.color,
+                fontWeight: 700,
               }}
+              title={`${getDayMetricLabel()}: ${
+                heatmapVariant === 'balance' && getDayMetricValue(stats) > 0 ? '+' : ''
+              }${formatAmount(getDayMetricValue(stats))} zł`}
             >
-              {getDayMetricLabel()}:{' '}
-              <strong>
+              <strong style={{ whiteSpace: 'nowrap' }}>
                 {heatmapVariant === 'balance' && getDayMetricValue(stats) > 0 ? '+' : ''}
                 {formatAmount(getDayMetricValue(stats))} zł
               </strong>
@@ -106796,7 +106908,7 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
                 color: heatmapMode === 'balance' ? dynamicTextColor : calendarDayCountStyle.color,
               }}
             >
-              {stats.count === 1 ? '1 wpis' : `Wpisy: ${stats.count}`}
+              {stats.count === 1 ? '1 wpis' : `${stats.count} wpisy`}
             </div>
           </>
         ) : (

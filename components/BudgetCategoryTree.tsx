@@ -348,6 +348,9 @@ export default function BudgetCategoryTree(props: Props) {
 
   const renderLevel1LeafSection = (level1Category: Category) => {
     const calendarHeatmapVariant = getCalendarHeatmapVariantForLevel1Id(level1Category.id)
+    const directLevel1Transactions = getTransactionsForCategoryAndMonthForSelectedMonth(
+      level1Category.id
+    )
 
     return (
       <Level3Section
@@ -363,7 +366,7 @@ export default function BudgetCategoryTree(props: Props) {
           selectedMonth
         )}
         categorySum={getSumForCategoryForSelectedMonth(level1Category.id)}
-        transactions={getTransactionsForLevel1AndMonth(level1Category.id)}
+        transactions={directLevel1Transactions}
         canAddHere={true}
         isSelectedMonthLocked={isSelectedMonthLocked}
         canUseMonthCalendar={canUseMonthCalendar}
@@ -412,6 +415,19 @@ export default function BudgetCategoryTree(props: Props) {
     )
   }
 
+  const renderLevel1DirectTransactionsSection = (level1Category: Category) => {
+    const directLevel1Transactions = getTransactionsForCategoryAndMonthForSelectedMonth(
+      level1Category.id
+    )
+    const hasInlineDraftStart = (level1InlineAddTokens[level1Category.id] || 0) > 0
+
+    if (directLevel1Transactions.length === 0 && !hasInlineDraftStart) {
+      return null
+    }
+
+    return renderLevel1LeafSection(level1Category)
+  }
+
   const renderLevel2List = (level1Category: Category) => {
     const childrenLevel2 = getSortedLevel2Children(level1Category.id)
 
@@ -426,6 +442,7 @@ export default function BudgetCategoryTree(props: Props) {
     if (isLevel2DndBlocked) {
       return (
         <div>
+          {renderLevel1DirectTransactionsSection(level1Category)}
           {childrenLevel2.map((level2Category) => {
             const sortedLevel3Children = getSortedLevel3Children(level2Category.id)
 
@@ -464,6 +481,7 @@ export default function BudgetCategoryTree(props: Props) {
           )
         }}
       >
+        {renderLevel1DirectTransactionsSection(level1Category)}
         <SortableContext
           items={childrenLevel2.map((category) => category.id)}
           strategy={verticalListSortingStrategy}

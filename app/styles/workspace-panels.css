@@ -137,28 +137,6 @@
   font-weight: 760 !important;
 }
 
-[data-mini-calendar="main"] button[data-mini-calendar-activity="income"] {
-  border-color: rgba(74, 222, 128, 0.38) !important;
-  background: rgba(220, 252, 231, 0.62) !important;
-  color: #166534 !important;
-}
-
-[data-mini-calendar="main"] button[data-mini-calendar-activity="expense"] {
-  border-color: rgba(251, 113, 133, 0.36) !important;
-  background: rgba(255, 228, 230, 0.66) !important;
-  color: #9f1239 !important;
-}
-
-[data-mini-calendar="main"] button[data-mini-calendar-activity="mixed"] {
-  border-color: rgba(96, 165, 250, 0.34) !important;
-  background: rgba(219, 234, 254, 0.58) !important;
-  color: #1e3a8a !important;
-}
-
-[data-mini-calendar="main"] button[data-current-day="true"][data-mini-calendar-activity] {
-  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.22) !important;
-}
-
 [data-workspace-recent-table="true"] {
   min-width: 0 !important;
   display: grid !important;
@@ -191,7 +169,7 @@
   display: grid !important;
   align-content: start !important;
   gap: 5px !important;
-  padding-bottom: 12px !important;
+  padding-bottom: 22px !important;
   overflow: auto !important;
 }
 
