@@ -6,6 +6,7 @@ import type { Tag, TransactionPaymentSplit } from '../../lib/budgetPageTypes'
 import type { PaymentSplitInput } from '../../lib/paymentSplitUtils'
 import type { DescriptionSuggestion } from '../../lib/suggestionUtils'
 import type { Category, HideMode, MoveTarget, RecurringLinkOption, Transaction } from './Level2SectionUtils'
+import type { TransactionDraft } from '../../lib/draftUtils'
 
 type Level2TransactionsListProps = {
   l2: Category
@@ -28,6 +29,10 @@ type Level2TransactionsListProps = {
     paymentSplitItems?: PaymentSplitInput[],
     recurringTransactionId?: string | null
   ) => Promise<void>
+  saveDraft: (draft: TransactionDraft, options?: { activate?: boolean }) => Promise<TransactionDraft>
+  deleteDraft: (draftType: TransactionDraft['type']) => Promise<void>
+  inlineDraftType: TransactionDraft['type']
+  inlineDraftLevel1Id: string
   handleHideCategory: (id: string, mode?: HideMode) => Promise<void>
   handleRenameCategory: (categoryId: string) => Promise<void>
   handleDeleteCategory: (categoryId: string) => Promise<void>
@@ -95,6 +100,10 @@ export default function Level2TransactionsList({
   handleLevel3DragStart,
   openTransactionCreator,
   handleInlineSaveTransaction,
+  saveDraft,
+  deleteDraft,
+  inlineDraftType,
+  inlineDraftLevel1Id,
   handleHideCategory,
   handleRenameCategory,
   handleDeleteCategory,
@@ -148,6 +157,11 @@ export default function Level2TransactionsList({
       handleLevel3DragStart={handleLevel3DragStart}
       openTransactionCreator={openTransactionCreator}
       handleInlineSaveTransaction={handleInlineSaveTransaction}
+      saveDraft={saveDraft}
+      deleteDraft={deleteDraft}
+      inlineDraftType={inlineDraftType}
+      inlineDraftLevel1Id={inlineDraftLevel1Id}
+      inlineDraftLevel2Id={l2.id}
       handleHideCategory={handleHideCategory}
       handleRenameCategory={handleRenameCategory}
       handleDeleteCategory={handleDeleteCategory}

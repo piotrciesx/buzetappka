@@ -29,6 +29,7 @@ import { DescriptionSuggestion, DescriptionSuggestionSet } from '../lib/suggesti
 import { splitTagInput } from '../lib/tagUtils'
 import { useDescriptionSuggestions } from '../lib/useDescriptionSuggestions'
 import { useIsMobileViewport } from '../lib/useIsMobileViewport'
+import { createDraftId, type TransactionDraft } from '../lib/draftUtils'
 
 type Props = {
   l3: Category
@@ -59,6 +60,11 @@ type Props = {
     paymentSplitItems?: PaymentSplitInput[],
     recurringTransactionId?: string | null
   ) => Promise<void>
+  saveDraft: (draft: TransactionDraft, options?: { activate?: boolean }) => Promise<TransactionDraft>
+  deleteDraft: (draftType: TransactionDraft['type']) => Promise<void>
+  inlineDraftType: TransactionDraft['type']
+  inlineDraftLevel1Id: string
+  inlineDraftLevel2Id: string | null
   handleHideCategory: (id: string, mode?: HideMode) => Promise<void>
   handleRenameCategory: (categoryId: string) => Promise<void>
   handleDeleteCategory: (categoryId: string) => Promise<void>
@@ -134,6 +140,11 @@ export default function Level3Section(props: Props) {
     toggleLevel3,
     handleLevel3DragStart,
     handleInlineSaveTransaction,
+    saveDraft,
+    deleteDraft,
+    inlineDraftType,
+    inlineDraftLevel1Id,
+    inlineDraftLevel2Id,
     handleHideCategory,
     handleRenameCategory,
     handleDeleteCategory,
@@ -198,6 +209,9 @@ export default function Level3Section(props: Props) {
   const [inlineRecurringTransactionId, setInlineRecurringTransactionId] = useState('')
   const [isInlineSaving, setIsInlineSaving] = useState(false)
   const inlineSaveLockRef = useRef(false)
+  const inlineDraftIdRef = useRef<string | null>(null)
+  const latestInlineDraftRef = useRef<TransactionDraft | null>(null)
+  const suppressInlineDraftSaveRef = useRef(false)
   const inlineDayInputRef = useRef<HTMLInputElement | null>(null)
   const inlineAmountInputRef = useRef<HTMLInputElement | null>(null)
   const inlineDescriptionInputRef = useRef<HTMLInputElement | null>(null)
@@ -270,6 +284,53 @@ export default function Level3Section(props: Props) {
   }
 
   const dragHandleTitle = isDragBlocked ? 'Aby przenosić, najpierw zwiń podkategorię' : undefined
+
+  const buildInlineDraft = useCallback(() => {
+    const hasDraft =
+      inlineDay.trim() || inlineAmount.trim() || inlineDescription.trim() || inlineTagInput.trim()
+
+    if (!hasDraft) {
+      return null
+    }
+
+    const draftId = inlineDraftIdRef.current || createDraftId()
+    inlineDraftIdRef.current = draftId
+
+    return {
+      id: draftId,
+      type: inlineDraftType,
+      level1_id: inlineDraftLevel1Id,
+      level2_id: inlineDraftLevel2Id,
+      category_id: l3.id,
+      amount: inlineAmount,
+      description: inlineDescription,
+      date: buildDateFromDayInput(selectedMonth, inlineDay),
+      updated_at: null,
+    } satisfies TransactionDraft
+  }, [
+    inlineAmount,
+    inlineDay,
+    inlineDescription,
+    inlineDraftLevel1Id,
+    inlineDraftLevel2Id,
+    inlineDraftType,
+    inlineTagInput,
+    l3.id,
+    selectedMonth,
+  ])
+
+  const saveInlineDraftToSharedSystem = useCallback(
+    (draft: TransactionDraft | null) => {
+      latestInlineDraftRef.current = draft
+
+      if (!draft) {
+        return
+      }
+
+      void saveDraft(draft, { activate: false }).catch(() => {})
+    },
+    [saveDraft]
+  )
 
   const getTransactionTagNames = (transactionId: string) => {
     return (transactionTagsMap[transactionId] || []).map((tag) => tag.name)
@@ -399,7 +460,7 @@ export default function Level3Section(props: Props) {
     setIsInlineAdding(true)
     const storageKey = `budget-inline-draft-${l3.id}-${selectedMonth}`
     const storedDraft = typeof window === 'undefined' ? null : window.localStorage.getItem(storageKey)
-    let parsedDraft: Partial<{ day: string; amount: string; description: string; tags: string }> = {}
+    let parsedDraft: Partial<{ id: string; day: string; amount: string; description: string; tags: string }> = {}
 
     if (storedDraft) {
       try {
@@ -409,6 +470,7 @@ export default function Level3Section(props: Props) {
       }
     }
 
+    inlineDraftIdRef.current = parsedDraft.id || createDraftId()
     setInlineDay(parsedDraft.day || '')
     setInlineAmount(parsedDraft.amount || '')
     setInlineDescription(parsedDraft.description || '')
@@ -451,8 +513,14 @@ export default function Level3Section(props: Props) {
   }, [isSelectedMonthLocked, openInlineAdd, startInlineAddToken])
 
   const cancelInlineAdd = () => {
+    suppressInlineDraftSaveRef.current = true
+
     if (typeof window !== 'undefined') {
       window.localStorage.removeItem(`budget-inline-draft-${l3.id}-${selectedMonth}`)
+    }
+
+    if (inlineDraftIdRef.current || latestInlineDraftRef.current) {
+      void deleteDraft(inlineDraftType).catch(() => {})
     }
 
     setIsInlineAdding(false)
@@ -464,8 +532,14 @@ export default function Level3Section(props: Props) {
     setInlinePaymentSourceId('')
     setInlinePaymentSplitItems([])
     setInlineRecurringTransactionId('')
+    inlineDraftIdRef.current = null
+    latestInlineDraftRef.current = null
     inlineSaveLockRef.current = false
     setIsInlineSaving(false)
+
+    window.setTimeout(() => {
+      suppressInlineDraftSaveRef.current = false
+    }, 0)
   }
 
   const saveInlineAdd = async () => {
@@ -477,6 +551,12 @@ export default function Level3Section(props: Props) {
     setIsInlineSaving(true)
 
     try {
+      const inlineDraft = buildInlineDraft()
+
+      if (inlineDraft) {
+        await saveDraft(inlineDraft, { activate: false })
+      }
+
       await handleInlineSaveTransaction(
         l3.id,
         inlineAmount,
@@ -490,6 +570,9 @@ export default function Level3Section(props: Props) {
       if (typeof window !== 'undefined') {
         window.localStorage.removeItem(`budget-inline-draft-${l3.id}-${selectedMonth}`)
       }
+      if (inlineDraft) {
+        await deleteDraft(inlineDraft.type)
+      }
       cancelInlineAdd()
     } catch {
       inlineSaveLockRef.current = false
@@ -502,30 +585,51 @@ export default function Level3Section(props: Props) {
       return
     }
 
-    const hasDraft =
-      inlineDay.trim() || inlineAmount.trim() || inlineDescription.trim() || inlineTagInput.trim()
+    const inlineDraft = buildInlineDraft()
     const storageKey = `budget-inline-draft-${l3.id}-${selectedMonth}`
     const timeoutId = window.setTimeout(() => {
-      if (!hasDraft) {
+      if (!inlineDraft) {
         window.localStorage.removeItem(storageKey)
+        latestInlineDraftRef.current = null
+        if (inlineDraftIdRef.current) {
+          void deleteDraft(inlineDraftType).catch(() => {})
+        }
         return
       }
 
       window.localStorage.setItem(
         storageKey,
         JSON.stringify({
+          id: inlineDraft.id,
           day: inlineDay,
           amount: inlineAmount,
           description: inlineDescription,
           tags: inlineTagInput,
         })
       )
+      saveInlineDraftToSharedSystem(inlineDraft)
     }, 450)
 
     return () => {
       window.clearTimeout(timeoutId)
+
+      if (inlineDraft && !suppressInlineDraftSaveRef.current) {
+        saveInlineDraftToSharedSystem(inlineDraft)
+      }
     }
-  }, [inlineAmount, inlineDay, inlineDescription, inlineTagInput, isInlineAdding, l3.id, selectedMonth])
+  }, [
+    buildInlineDraft,
+    deleteDraft,
+    inlineAmount,
+    inlineDay,
+    inlineDescription,
+    inlineDraftType,
+    inlineTagInput,
+    isInlineAdding,
+    l3.id,
+    saveInlineDraftToSharedSystem,
+    selectedMonth,
+  ])
 
   const orderedTransactions = useMemo(() => {
     return getOrderedLevel3Transactions(transactions)

@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 458
-Data: 2026-05-08T22:51:43.501Z
+Data: 2026-05-08T23:03:14.614Z
 
 
 ==================================================
@@ -71590,6 +71590,55 @@ PLIK: app\styles\category-tree\category-row.css
   white-space: nowrap !important;
 }
 
+[data-category-drag-row="true"][data-category-level="2"] [data-category-row-name="true"],
+[data-category-drag-row="true"][data-category-level="3"] [data-category-row-name="true"] {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 10px !important;
+  font-size: 16px !important;
+  font-weight: 760 !important;
+}
+
+[data-category-drag-row="true"][data-category-level="2"] [data-category-row-name="true"] > span,
+[data-category-drag-row="true"][data-category-level="3"] [data-category-row-name="true"] > span {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+[data-category-drag-row="true"][data-category-level="2"] [data-category-row-name="true"] {
+  font-size: 17px !important;
+}
+
+[data-category-drag-row="true"][data-category-level="2"] [data-category-row-name="true"]::first-letter,
+[data-category-drag-row="true"][data-category-level="3"] [data-category-row-name="true"]::first-letter {
+  letter-spacing: 0 !important;
+}
+
+[data-category-drag-row="true"][data-category-level="2"] [data-category-row-amount="true"],
+[data-category-drag-row="true"][data-category-level="3"] [data-category-row-amount="true"] {
+  flex: 0 0 auto !important;
+  max-width: 160px !important;
+  overflow: hidden !important;
+  color: #0f172a !important;
+  font-size: 15px !important;
+  font-weight: 780 !important;
+  font-variant-numeric: tabular-nums !important;
+  line-height: 1.1 !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+[data-category-drag-row="true"][data-category-level="2"] [data-category-row-amount="true"] {
+  font-size: 16px !important;
+}
+
+[data-category-drag-row="true"][data-category-level="2"] [data-category-row-meta="true"],
+[data-category-drag-row="true"][data-category-level="3"] [data-category-row-meta="true"] {
+  display: none !important;
+}
+
 [data-level1-toggle-icon="true"],
 [data-category-toggle-icon="true"] {
   width: 28px !important;
@@ -73124,13 +73173,13 @@ PLIK: app\styles\category-tree\workspace.css
 }
 
 [data-budget-pinned-category="true"] {
-  min-width: 0 !important;
-  max-width: 156px !important;
+  width: 172px !important;
+  min-width: 172px !important;
+  max-width: 172px !important;
   min-height: 34px !important;
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) auto !important;
+  display: flex !important;
   align-items: center !important;
-  gap: 7px !important;
+  justify-content: center !important;
   border: 1px solid rgba(203, 213, 225, 0.78) !important;
   border-radius: 11px !important;
   padding: 0 9px !important;
@@ -73159,8 +73208,7 @@ PLIK: app\styles\category-tree\workspace.css
   color: #9f1239 !important;
 }
 
-[data-budget-pinned-category="true"] span,
-[data-budget-pinned-category="true"] b {
+[data-budget-pinned-category="true"] span {
   min-width: 0 !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
@@ -73168,17 +73216,11 @@ PLIK: app\styles\category-tree\workspace.css
 }
 
 [data-budget-pinned-category="true"] span {
+  width: 100% !important;
   color: inherit !important;
   font-size: 11px !important;
   font-weight: 700 !important;
-}
-
-[data-budget-pinned-category="true"] b {
-  max-width: 70px !important;
-  color: inherit !important;
-  font-size: 11px !important;
-  font-weight: 780 !important;
-  font-variant-numeric: tabular-nums !important;
+  text-align: center !important;
 }
 
 [data-budget-compact-notice="limits"] {
@@ -73408,6 +73450,8 @@ PLIK: app\styles\category-tree\workspace.css
   }
 
   [data-budget-pinned-category="true"] {
+    width: 150px !important;
+    min-width: 150px !important;
     max-width: 150px !important;
   }
 }
@@ -79112,7 +79156,6 @@ export default function BudgetWorkspaceTopNotices({
                 title={category.label}
               >
                 <span>{category.label}</span>
-                <b>{category.amount.toLocaleString('pl-PL')} zł</b>
               </button>
             ))}
           </div>
@@ -82761,7 +82804,6 @@ export default function BudgetCategoryTree(props: Props) {
         openLevel3Ids={openLevel3Ids}
         toggleLevel3={toggleLevel3}
         getSumForLevel2={getSumForLevel2ForSelectedMonth}
-        getCountForLevel2={getCountForLevel2ForSelectedMonth}
         getSumForCategory={getSumForCategoryForSelectedMonth}
         getTransactionsForCategoryAndMonth={getTransactionsForCategoryAndMonthForSelectedMonth}
         openAddSubcategoryFor={openAddSubcategoryFor}
@@ -86201,8 +86243,6 @@ import BudgetLimitIndicator, { type BudgetLimitView } from '../BudgetLimitIndica
 
 type Level2SectionHeaderProps = {
   name: string
-  level3Count: number
-  transactionCount: number
   categorySum: number
   isOpen: boolean
   isDragging: boolean
@@ -86289,8 +86329,6 @@ const Icon = ({ name }: { name: 'calendar' | 'plus' | 'limit' }) => {
 
 export default function Level2SectionHeader({
   name,
-  level3Count,
-  transactionCount,
   categorySum,
   isOpen,
   isDragging,
@@ -86351,12 +86389,8 @@ export default function Level2SectionHeader({
 
         <div data-category-row-copy="true">
           <div style={styles.l2Name} data-category-row-name="true">
-            {name}
-          </div>
-
-          <div style={styles.l2Meta} data-category-row-meta="true">
-            <span>{level3Count} podkategorie</span>
-            <span>{formattedSum} zł</span>
+            <span>{name}</span>
+            <strong data-category-row-amount="true">{formattedSum} zł</strong>
           </div>
 
           {isClosingAfterSelectedMonth && (
@@ -87511,14 +87545,9 @@ export default function Level3SectionHeader({
 
         <div data-category-row-copy="true">
           <div style={styles.l3Name} data-category-row-name="true">
-            {name}
+            <span>{name}</span>
+            {showCategorySum && <strong data-category-row-amount="true">{formattedSum} zł</strong>}
           </div>
-
-          {showCategorySum && (
-            <div data-category-row-meta="true">
-              <span>{formattedSum} zł</span>
-            </div>
-          )}
 
           {isClosingAfterSelectedMonth && (
             <div style={styles.closingBadge}>zamknie się z końcem tego miesiąca</div>
@@ -102696,7 +102725,6 @@ type Props = {
   openLevel3Ids: string[]
   toggleLevel3: (id: string) => void
   getSumForLevel2: (id: string) => number
-  getCountForLevel2: (id: string) => number
   getSumForCategory: (id: string) => number
   getTransactionsForCategoryAndMonth: (id: string) => Transaction[]
   openAddSubcategoryFor: string | null
@@ -102793,7 +102821,6 @@ export default function Level2Section(props: Props) {
     openLevel3Ids,
     toggleLevel3,
     getSumForLevel2,
-    getCountForLevel2,
     getSumForCategory,
     getTransactionsForCategoryAndMonth,
     openAddSubcategoryFor,
@@ -102959,8 +102986,6 @@ export default function Level2Section(props: Props) {
     <div ref={setNodeRef} style={wrapStyle}>
       <Level2SectionHeader
         name={l2.name}
-        level3Count={sortedLevel3Children.length}
-        transactionCount={getCountForLevel2(l2.id)}
         categorySum={getSumForLevel2(l2.id)}
         isOpen={isOpen}
         isDragging={isDragging}

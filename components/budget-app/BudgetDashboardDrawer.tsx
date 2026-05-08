@@ -30,15 +30,6 @@ export default function BudgetDashboardDrawer({
         aria-hidden={!isOpen}
       >
         <div data-dashboard-drawer-header="true">
-          <div>
-            <strong>Dashboard</strong>
-            <span>compact analytics</span>
-          </div>
-          <div data-dashboard-mode-tabs="true" aria-label="Tryb dashboardu">
-            <button type="button">compact</button>
-            <button type="button">standard</button>
-            <button type="button">full</button>
-          </div>
           <button type="button" aria-label="Zamknij dashboard" onClick={onClose}>
             ×
           </button>

@@ -26,6 +26,7 @@ import { DescriptionSuggestion } from '../lib/suggestionUtils'
 import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
 import { useIsMobileViewport } from '../lib/useIsMobileViewport'
 import { getNearestDndSwapTargetId } from '../lib/getNearestDndSwapTargetId'
+import type { TransactionDraft } from '../lib/draftUtils'
 
 type Props = {
   sortedLevel1: Category[]
@@ -83,6 +84,8 @@ type Props = {
     paymentSplitItems?: Array<{ paymentSourceId: string; amount: string }>,
     recurringTransactionId?: string | null
   ) => Promise<void>
+  saveDraft: (draft: TransactionDraft, options?: { activate?: boolean }) => Promise<TransactionDraft>
+  deleteDraft: (draftType: TransactionDraft['type']) => Promise<void>
   handleHideCategory: (id: string, mode?: HideMode) => Promise<void>
   handleRestoreCategory: (id: string, mode?: RestoreMode) => Promise<void>
   handleUndoScheduledHide: (id: string) => Promise<void>
@@ -185,6 +188,8 @@ export default function BudgetCategoryTree(props: Props) {
     handleDeleteCategory,
     openTransactionCreator,
     handleInlineSaveTransaction,
+    saveDraft,
+    deleteDraft,
     handleHideCategory,
     handleRestoreCategory,
     handleUndoScheduledHide,
@@ -299,6 +304,10 @@ export default function BudgetCategoryTree(props: Props) {
         handleDeleteCategory={handleDeleteCategory}
         openTransactionCreator={openTransactionCreator}
         handleInlineSaveTransaction={handleInlineSaveTransaction}
+        saveDraft={saveDraft}
+        deleteDraft={deleteDraft}
+        inlineDraftType={level1Category.id === expenseLevel1Id ? 'expense' : 'income'}
+        inlineDraftLevel1Id={level1Category.id}
         handleHideCategory={handleHideCategory}
         handleRestoreCategory={handleRestoreCategory}
         handleUndoScheduledHide={handleUndoScheduledHide}
@@ -363,6 +372,11 @@ export default function BudgetCategoryTree(props: Props) {
         handleLevel3DragStart={handleLevel3DragStart}
         openTransactionCreator={openTransactionCreator}
         handleInlineSaveTransaction={handleInlineSaveTransaction}
+        saveDraft={saveDraft}
+        deleteDraft={deleteDraft}
+        inlineDraftType={level1Category.id === expenseLevel1Id ? 'expense' : 'income'}
+        inlineDraftLevel1Id={level1Category.id}
+        inlineDraftLevel2Id={null}
         handleHideCategory={handleHideCategory}
         handleRenameCategory={handleRenameCategory}
         handleDeleteCategory={handleDeleteCategory}

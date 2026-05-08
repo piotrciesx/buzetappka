@@ -1,32 +1,151 @@
-import { CSSProperties } from 'react'
-import { TransactionDraft } from '../lib/draftUtils'
+import type { CSSProperties } from 'react'
+import type { TransactionDraft } from '../lib/draftUtils'
 
 const draftsPanelStyle = {
+  display: 'grid',
+  gap: 12,
   marginBottom: 20,
-  background: '#ffffff',
-  border: '1px solid #e5e7eb',
-  borderRadius: 14,
-  padding: 16,
-  boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+  border: '1px solid rgba(203, 213, 225, 0.78)',
+  borderRadius: 16,
+  padding: 12,
+  background: 'rgba(255, 255, 255, 0.72)',
+  boxShadow: '0 10px 28px rgba(15, 23, 42, 0.045)',
+} as const
+
+const draftsHeaderStyle = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  gap: 12,
+  flexWrap: 'wrap' as const,
+  alignItems: 'center',
+  minHeight: 42,
+  padding: '2px 2px 10px',
+  borderBottom: '1px solid rgba(226, 232, 240, 0.86)',
+} as const
+
+const draftsTitleStyle = {
+  margin: 0,
+  color: '#172033',
+  fontSize: 16,
+  fontWeight: 760,
+  lineHeight: 1.2,
+} as const
+
+const draftsDescriptionStyle = {
+  margin: '3px 0 0',
+  color: '#64748b',
+  fontSize: 12,
+  lineHeight: 1.35,
 } as const
 
 const draftsListStyle = {
   display: 'grid',
-  gap: 12,
-} as const
-
-const draftCardStyle = {
-  border: '1px solid #e5e7eb',
-  borderRadius: 12,
-  padding: 14,
-  background: '#f9fafb',
-} as const
-
-const draftMetaGridStyle = {
-  display: 'grid',
   gap: 8,
-  gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-  marginTop: 12,
+} as const
+
+const draftRowStyle = {
+  display: 'grid',
+  gridTemplateColumns: 'minmax(0, 1fr) auto',
+  alignItems: 'center',
+  gap: 12,
+  minHeight: 72,
+  border: '1px solid rgba(226, 232, 240, 0.92)',
+  borderRadius: 12,
+  padding: '10px 12px',
+  background: 'rgba(248, 250, 252, 0.72)',
+} as const
+
+const draftMainStyle = {
+  minWidth: 0,
+  display: 'grid',
+  gap: 7,
+} as const
+
+const draftTopLineStyle = {
+  minWidth: 0,
+  display: 'flex',
+  alignItems: 'baseline',
+  gap: 8,
+  flexWrap: 'wrap' as const,
+} as const
+
+const draftTypeStyle = {
+  color: '#172033',
+  fontSize: 13,
+  fontWeight: 760,
+} as const
+
+const draftCategoryStyle = {
+  minWidth: 0,
+  color: '#475569',
+  fontSize: 12,
+  fontWeight: 650,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap' as const,
+} as const
+
+const draftDetailsStyle = {
+  minWidth: 0,
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+  gap: 6,
+} as const
+
+const draftFieldStyle = {
+  minWidth: 0,
+  display: 'grid',
+  gap: 2,
+  color: '#334155',
+  fontSize: 12,
+} as const
+
+const draftLabelStyle = {
+  color: '#94a3b8',
+  fontSize: 10,
+  fontWeight: 720,
+  textTransform: 'uppercase' as const,
+  letterSpacing: 0,
+} as const
+
+const draftValueStyle = {
+  minWidth: 0,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap' as const,
+} as const
+
+const draftActionsStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  gap: 6,
+  flexWrap: 'wrap' as const,
+} as const
+
+const lightButtonStyle = {
+  minHeight: 30,
+  borderRadius: 999,
+  padding: '0 11px',
+  fontSize: 12,
+  fontWeight: 680,
+  boxShadow: 'none',
+} as const
+
+const lightDangerButtonStyle = {
+  ...lightButtonStyle,
+  borderColor: 'rgba(254, 205, 211, 0.9)',
+  background: 'rgba(255, 241, 242, 0.7)',
+  color: '#be123c',
+} as const
+
+const compactStatusStyle = {
+  border: '1px solid rgba(226, 232, 240, 0.86)',
+  borderRadius: 12,
+  padding: '10px 12px',
+  background: 'rgba(248, 250, 252, 0.72)',
+  color: '#64748b',
+  fontSize: 12,
 } as const
 
 type Props = {
@@ -59,85 +178,72 @@ export default function DraftsPanel(props: Props) {
   } = props
 
   return (
-    <section style={draftsPanelStyle}>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          gap: 12,
-          flexWrap: 'wrap',
-          alignItems: 'center',
-        }}
-      >
+    <section style={draftsPanelStyle} aria-label="Szkice wpisów">
+      <div style={draftsHeaderStyle}>
         <div>
-          <div style={styles.sectionTitle}>Szkice</div>
-          <div style={{ ...styles.pageSubtitle, marginBottom: 0 }}>
-            Szkic zapisuje się chwilę po wpisaniu kwoty lub opisu albo po zmianie miesiąca. Po finalnym
-            zapisie znika automatycznie.
-          </div>
+          <h2 style={draftsTitleStyle}>Szkice</h2>
+          <p style={draftsDescriptionStyle}>Niedokończone wpisy zapisują się automatycznie.</p>
         </div>
-        <div style={styles.actions}>
-          <button
-            type="button"
-            style={styles.secondaryButton}
-            onClick={() => {
-              cleanupAllDrafts()
-            }}
-            disabled={isCleaningAllDrafts}
-          >
-            {isCleaningAllDrafts ? 'Czyszczenie...' : 'Usuń wszystkie szkice'}
-          </button>
-        </div>
+        <button
+          type="button"
+          style={{ ...styles.secondaryButton, ...lightButtonStyle }}
+          onClick={() => {
+            cleanupAllDrafts()
+          }}
+          disabled={isCleaningAllDrafts || drafts.length === 0}
+        >
+          {isCleaningAllDrafts ? 'Czyszczenie...' : 'Usuń wszystkie'}
+        </button>
       </div>
 
-      {draftsStatusText && <div style={{ ...styles.infoBox, marginTop: 12 }}>{draftsStatusText}</div>}
+      {draftsStatusText && <div style={compactStatusStyle}>{draftsStatusText}</div>}
 
       {isDraftsLoading ? (
-        <div style={{ ...styles.infoBox, marginTop: 12 }}>Ładowanie szkiców...</div>
+        <div style={compactStatusStyle}>Ładowanie szkiców...</div>
       ) : drafts.length === 0 ? (
-        <div style={{ ...styles.emptyStateCard, marginTop: 12 }}>Nie ma zapisanych szkiców.</div>
+        <div style={compactStatusStyle}>Nie ma zapisanych szkiców.</div>
       ) : (
-        <div style={{ ...draftsListStyle, marginTop: 12 }}>
+        <div style={draftsListStyle}>
           {drafts.map((draft) => {
             const draftLevel1Id = getDraftLevel1Id(draft)
+            const typeLabel = draft.type === 'income' ? 'Przychód' : 'Wydatek'
+            const amountLabel = draft.amount.trim() ? `${draft.amount.trim()} zł` : 'brak'
+            const descriptionLabel = draft.description.trim() || 'brak'
+            const dateLabel = draft.date || 'brak'
+            const updatedLabel = formatDraftUpdatedAt(draft.updated_at)
 
             return (
-              <div key={draft.id} style={draftCardStyle}>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    gap: 12,
-                    flexWrap: 'wrap',
-                  }}
-                >
-                  <div style={{ fontSize: 16, fontWeight: 600 }}>
-                    {draft.type === 'income' ? 'Przychód' : 'Wydatek'}
+              <div key={draft.id} style={draftRowStyle}>
+                <div style={draftMainStyle}>
+                  <div style={draftTopLineStyle}>
+                    <strong style={draftTypeStyle}>{typeLabel}</strong>
+                    <span style={draftCategoryStyle}>{getDraftLocationLabel(draft)}</span>
                   </div>
-                  <div style={{ color: '#6b7280', fontSize: 13 }}>
-                    Ostatnia zmiana: {formatDraftUpdatedAt(draft.updated_at)}
+
+                  <div style={draftDetailsStyle}>
+                    <div style={draftFieldStyle}>
+                      <span style={draftLabelStyle}>Kwota</span>
+                      <span style={draftValueStyle}>{amountLabel}</span>
+                    </div>
+                    <div style={draftFieldStyle}>
+                      <span style={draftLabelStyle}>Opis</span>
+                      <span style={draftValueStyle}>{descriptionLabel}</span>
+                    </div>
+                    <div style={draftFieldStyle}>
+                      <span style={draftLabelStyle}>Data</span>
+                      <span style={draftValueStyle}>{dateLabel}</span>
+                    </div>
+                    <div style={draftFieldStyle}>
+                      <span style={draftLabelStyle}>Ostatnia zmiana</span>
+                      <span style={draftValueStyle}>{updatedLabel}</span>
+                    </div>
                   </div>
                 </div>
 
-                <div style={draftMetaGridStyle}>
-                  <div style={styles.infoBox}>
-                    <b>Kategoria:</b> {getDraftLocationLabel(draft)}
-                  </div>
-                  <div style={styles.infoBox}>
-                    <b>Kwota:</b> {draft.amount.trim() || 'brak'}
-                  </div>
-                  <div style={styles.infoBox}>
-                    <b>Opis:</b> {draft.description.trim() || 'brak'}
-                  </div>
-                  <div style={styles.infoBox}>
-                    <b>Data:</b> {draft.date || 'brak'}
-                  </div>
-                </div>
-
-                <div style={{ ...styles.actions, marginTop: 12 }}>
+                <div style={draftActionsStyle}>
                   <button
                     type="button"
-                    style={styles.primaryButton}
+                    style={{ ...styles.primaryButton, ...lightButtonStyle }}
                     onClick={() => {
                       if (!draftLevel1Id) {
                         return
@@ -151,7 +257,7 @@ export default function DraftsPanel(props: Props) {
                   </button>
                   <button
                     type="button"
-                    style={styles.secondaryButton}
+                    style={{ ...styles.secondaryButton, ...lightDangerButtonStyle }}
                     onClick={() => {
                       void deleteDraft(draft.type).catch(() => {})
                     }}

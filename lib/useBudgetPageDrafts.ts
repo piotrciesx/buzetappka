@@ -165,7 +165,7 @@ export const useBudgetPageDrafts = ({
   )
 
   const saveDraft = useCallback(
-    async (draft: TransactionDraft) => {
+    async (draft: TransactionDraft, options?: { activate?: boolean }) => {
       const { data, error } = await supabase
         .from('drafts')
         .upsert(
@@ -207,8 +207,10 @@ export const useBudgetPageDrafts = ({
         )
       })
       setDraftsStatusText('')
-      setTransactionDraftId(nextDraft.id)
-      setTransactionDraftType(nextDraft.type)
+      if (options?.activate !== false) {
+        setTransactionDraftId(nextDraft.id)
+        setTransactionDraftType(nextDraft.type)
+      }
 
       return nextDraft
     },

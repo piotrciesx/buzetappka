@@ -26,6 +26,7 @@ import { Tag, TransactionPaymentSplit } from '../lib/budgetPageTypes'
 import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
 import { useIsMobileViewport } from '../lib/useIsMobileViewport'
 import { getNearestDndSwapTargetId } from '../lib/getNearestDndSwapTargetId'
+import type { TransactionDraft } from '../lib/draftUtils'
 
 type Props = {
   l2: Category
@@ -64,6 +65,10 @@ type Props = {
     paymentSplitItems?: Array<{ paymentSourceId: string; amount: string }>,
     recurringTransactionId?: string | null
   ) => Promise<void>
+  saveDraft: (draft: TransactionDraft, options?: { activate?: boolean }) => Promise<TransactionDraft>
+  deleteDraft: (draftType: TransactionDraft['type']) => Promise<void>
+  inlineDraftType: TransactionDraft['type']
+  inlineDraftLevel1Id: string
   handleHideCategory: (id: string, mode?: HideMode) => Promise<void>
   handleRestoreCategory: (id: string, mode?: RestoreMode) => Promise<void>
   handleUndoScheduledHide: (id: string) => Promise<void>
@@ -151,6 +156,10 @@ export default function Level2Section(props: Props) {
     handleDeleteCategory,
     openTransactionCreator,
     handleInlineSaveTransaction,
+    saveDraft,
+    deleteDraft,
+    inlineDraftType,
+    inlineDraftLevel1Id,
     handleHideCategory,
     handleUndoScheduledHide,
     handleDeleteTransaction,
@@ -422,6 +431,10 @@ export default function Level2Section(props: Props) {
           handleLevel3DragStart={handleLevel3DragStart}
           openTransactionCreator={openTransactionCreator}
           handleInlineSaveTransaction={handleInlineSaveTransaction}
+          saveDraft={saveDraft}
+          deleteDraft={deleteDraft}
+          inlineDraftType={inlineDraftType}
+          inlineDraftLevel1Id={inlineDraftLevel1Id}
           handleHideCategory={handleHideCategory}
           handleRenameCategory={handleRenameCategory}
           handleDeleteCategory={handleDeleteCategory}
@@ -472,6 +485,10 @@ export default function Level2Section(props: Props) {
           handleLevel3DragEnd={handleLevel3DragEnd}
           openTransactionCreator={openTransactionCreator}
           handleInlineSaveTransaction={handleInlineSaveTransaction}
+          saveDraft={saveDraft}
+          deleteDraft={deleteDraft}
+          inlineDraftType={inlineDraftType}
+          inlineDraftLevel1Id={inlineDraftLevel1Id}
           handleHideCategory={handleHideCategory}
           handleRenameCategory={handleRenameCategory}
           handleDeleteCategory={handleDeleteCategory}
