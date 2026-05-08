@@ -261,6 +261,25 @@
   color: #172033 !important;
 }
 
+[data-budget-alert-actions="true"] {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+[data-budget-alert-actions="true"] button {
+  min-width: 86px !important;
+  min-height: 32px !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  border-radius: 999px !important;
+  padding: 0 12px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  box-shadow: none !important;
+}
+
 [data-budget-status-right="true"] > [data-tree-sort-inline="true"] {
   left: auto !important;
   right: 0 !important;

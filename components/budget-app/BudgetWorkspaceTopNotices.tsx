@@ -159,7 +159,7 @@ export default function BudgetWorkspaceTopNotices({
           {openedNotice === 'alert' && previousMonthCloseReminder && (
             <div data-budget-notice-panel="alert">
               <div>Poprzedni miesiąc {previousMonthCloseReminder} nie jest jeszcze zamknięty.</div>
-              <div data-budget-actions-row="true" style={{ ...styles.actions, marginTop: 8 }}>
+              <div data-budget-alert-actions="true" data-budget-actions-row="true" style={{ ...styles.actions, marginTop: 8 }}>
                 <button
                   type="button"
                   style={styles.primaryButton}

@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 458
-Data: 2026-05-08T23:03:14.614Z
+Data: 2026-05-08T23:21:16.303Z
 
 
 ==================================================
@@ -76342,12 +76342,10 @@ PLIK: app\styles\side-panels.css
   max-width: var(--dashboard-drawer-width) !important;
   height: calc(100dvh - var(--dashboard-drawer-top) - 18px) !important;
   max-height: calc(100dvh - var(--dashboard-drawer-top) - 18px) !important;
-  padding: 9px !important;
+  padding: 12px !important;
   border: 1px solid var(--workspace-border) !important;
   border-radius: var(--workspace-radius-lg) !important;
-  background:
-    linear-gradient(145deg, rgba(248, 250, 252, 0.92), rgba(241, 245, 249, 0.82)),
-    radial-gradient(circle at 15% 0%, rgba(59, 130, 246, 0.10), transparent 32%) !important;
+  background: linear-gradient(145deg, rgba(248, 250, 252, 0.96), rgba(226, 232, 240, 0.9)) !important;
   box-shadow: var(--workspace-shadow-panel) !important;
   backdrop-filter: blur(24px) saturate(1.12);
   opacity: 0 !important;
@@ -76387,9 +76385,38 @@ PLIK: app\styles\side-panels.css
 }
 
 [data-dashboard-drawer-header="true"] {
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 100%;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 5 !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 34px !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  margin: -4px 0 2px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-dashboard-drawer-header="true"] button {
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(148, 163, 184, 0.32) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.56) !important;
+  color: #334155 !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06) !important;
 }
 
 [data-sidebar-primary-backdrop="true"],
@@ -78566,15 +78593,6 @@ export default function BudgetDashboardDrawer({
         aria-hidden={!isOpen}
       >
         <div data-dashboard-drawer-header="true">
-          <div>
-            <strong>Dashboard</strong>
-            <span>compact analytics</span>
-          </div>
-          <div data-dashboard-mode-tabs="true" aria-label="Tryb dashboardu">
-            <button type="button">compact</button>
-            <button type="button">standard</button>
-            <button type="button">full</button>
-          </div>
           <button type="button" aria-label="Zamknij dashboard" onClick={onClose}>
             ×
           </button>
@@ -79935,6 +79953,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     saveFinancialGoal,
     saveGoalAllocationsForMonth,
     saveGoalPrioritiesForMonth,
+    saveDraft,
     savePaymentSource,
     saveRecurringExecution,
     saveRecurringTransaction,
@@ -80317,6 +80336,8 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
           handleDeleteCategory,
           openTransactionCreator,
           handleInlineSaveTransaction,
+          saveDraft,
+          deleteDraft,
           handleHideCategory,
           handleRestoreCategory,
           handleUndoScheduledHide,
@@ -81597,6 +81618,7 @@ export default function BudgetAppController({
     setDraftPromptState,
     loadDrafts,
     getDraftForType,
+    saveDraft,
     deleteDraft,
     cleanupAllDrafts,
     getDraftLevel1Id,
@@ -82226,7 +82248,7 @@ export default function BudgetAppController({
     isPaymentSourcesModuleEnabled, isRecurringTransactionsModuleEnabled, isReorderingLevel1, isSelectedMonthExcluded, isSelectedMonthLocked, isTransactionCreatorPaymentSourceVisible, isUpdatingSelectedMonthExclusion, lastUndoAction, level2SortDirection, level2SortMode,
     level3SortDirection, level3SortMode, loadData, lockedMonthsSet, migrationPromptMoveTargets, migrationPromptState, migrationPromptTransactions, newSubcategoryName, openAddSubcategoryFor, openBlankFloatingTransactionCreator,
     openLevel1CalendarIds, openLevel1Ids, openLevel2Ids, openLevel3Ids, openReminderTransactionCreator, openTransactionCreator, paymentSourceOptions, paymentSourceSettings, paymentSourceStats, paymentSources,
-    previousMonthCloseReminder, profileId, recurringExecutions, recurringTransactions, reorderingLevel1Id, reorderingLevel2Id, resetBankSearch, saveFinancialGoal, saveGoalAllocationsForMonth, saveGoalPrioritiesForMonth,
+    previousMonthCloseReminder, profileId, recurringExecutions, recurringTransactions, reorderingLevel1Id, reorderingLevel2Id, resetBankSearch, saveDraft, saveFinancialGoal, saveGoalAllocationsForMonth, saveGoalPrioritiesForMonth,
     savePaymentSource, saveRecurringExecution, saveRecurringTransaction, scopedTransactions, searchPanelRef, selectedMonth, selectedMonthTransactions, selectedPaymentSourceId, selectedTransactionCategoryId, selectedTransactionIds,
     selectedTransactions, setActiveUtilityPanel, setBudgetLimitEditorCategoryId, setBulkActionErrorText, setBulkMoveTargetCategoryId, setDefaultPaymentSource, setGoalModeForMonth, setHeatmapInverted, setHeatmapMode, setIsBankSearchOpen,
     setIsPreviousMonthCloseReminderHidden, setLevel2SortDirection, setLevel2SortMode, setLevel3SortDirection, setLevel3SortMode, setMigrationPromptState, setNewSubcategoryName, setNewTransactionDate, setOpenAddSubcategoryFor, setPaymentSourceFieldVisibility,
@@ -82542,6 +82564,7 @@ import { DescriptionSuggestion } from '../lib/suggestionUtils'
 import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
 import { useIsMobileViewport } from '../lib/useIsMobileViewport'
 import { getNearestDndSwapTargetId } from '../lib/getNearestDndSwapTargetId'
+import type { TransactionDraft } from '../lib/draftUtils'
 
 type Props = {
   sortedLevel1: Category[]
@@ -82599,6 +82622,8 @@ type Props = {
     paymentSplitItems?: Array<{ paymentSourceId: string; amount: string }>,
     recurringTransactionId?: string | null
   ) => Promise<void>
+  saveDraft: (draft: TransactionDraft, options?: { activate?: boolean }) => Promise<TransactionDraft>
+  deleteDraft: (draftType: TransactionDraft['type']) => Promise<void>
   handleHideCategory: (id: string, mode?: HideMode) => Promise<void>
   handleRestoreCategory: (id: string, mode?: RestoreMode) => Promise<void>
   handleUndoScheduledHide: (id: string) => Promise<void>
@@ -82701,6 +82726,8 @@ export default function BudgetCategoryTree(props: Props) {
     handleDeleteCategory,
     openTransactionCreator,
     handleInlineSaveTransaction,
+    saveDraft,
+    deleteDraft,
     handleHideCategory,
     handleRestoreCategory,
     handleUndoScheduledHide,
@@ -82815,6 +82842,10 @@ export default function BudgetCategoryTree(props: Props) {
         handleDeleteCategory={handleDeleteCategory}
         openTransactionCreator={openTransactionCreator}
         handleInlineSaveTransaction={handleInlineSaveTransaction}
+        saveDraft={saveDraft}
+        deleteDraft={deleteDraft}
+        inlineDraftType={level1Category.id === expenseLevel1Id ? 'expense' : 'income'}
+        inlineDraftLevel1Id={level1Category.id}
         handleHideCategory={handleHideCategory}
         handleRestoreCategory={handleRestoreCategory}
         handleUndoScheduledHide={handleUndoScheduledHide}
@@ -82879,6 +82910,11 @@ export default function BudgetCategoryTree(props: Props) {
         handleLevel3DragStart={handleLevel3DragStart}
         openTransactionCreator={openTransactionCreator}
         handleInlineSaveTransaction={handleInlineSaveTransaction}
+        saveDraft={saveDraft}
+        deleteDraft={deleteDraft}
+        inlineDraftType={level1Category.id === expenseLevel1Id ? 'expense' : 'income'}
+        inlineDraftLevel1Id={level1Category.id}
+        inlineDraftLevel2Id={null}
         handleHideCategory={handleHideCategory}
         handleRenameCategory={handleRenameCategory}
         handleDeleteCategory={handleDeleteCategory}
@@ -85414,6 +85450,7 @@ import {
   TransactionPaymentSplit,
 } from '../lib/budgetPageTypes'
 import { isCategoryClosingAfterSelectedMonth } from '../lib/categoryUtils'
+import type { TransactionDraft } from '../lib/draftUtils'
 
 type BudgetCategoryTreeProps = ComponentProps<typeof BudgetCategoryTree>
 
@@ -85484,6 +85521,8 @@ type Props = {
     paymentSplitItems?: Array<{ paymentSourceId: string; amount: string }>,
     recurringTransactionId?: string | null
   ) => Promise<void>
+  saveDraft: (draft: TransactionDraft, options?: { activate?: boolean }) => Promise<TransactionDraft>
+  deleteDraft: (draftType: TransactionDraft['type']) => Promise<void>
   handleHideCategory: (id: string, mode?: HideMode) => Promise<void>
   handleRestoreCategory: (id: string, mode?: RestoreMode) => Promise<void>
   handleUndoScheduledHide: (id: string) => Promise<void>
@@ -85579,6 +85618,8 @@ export default function BudgetTreeSection({
   handleDeleteCategory,
   openTransactionCreator,
   handleInlineSaveTransaction,
+  saveDraft,
+  deleteDraft,
   handleHideCategory,
   handleRestoreCategory,
   handleUndoScheduledHide,
@@ -85827,6 +85868,8 @@ export default function BudgetTreeSection({
           handleDeleteCategory={handleDeleteCategory}
           openTransactionCreator={openTransactionCreator}
           handleInlineSaveTransaction={handleInlineSaveTransaction}
+          saveDraft={saveDraft}
+          deleteDraft={deleteDraft}
           handleHideCategory={handleHideCategory}
           handleRestoreCategory={handleRestoreCategory}
           handleUndoScheduledHide={handleUndoScheduledHide}
@@ -85980,6 +86023,7 @@ import type { Tag, TransactionPaymentSplit } from '../../lib/budgetPageTypes'
 import type { PaymentSplitInput } from '../../lib/paymentSplitUtils'
 import type { DescriptionSuggestion } from '../../lib/suggestionUtils'
 import type { Category, HideMode, MoveTarget, RecurringLinkOption, Transaction } from './Level2SectionUtils'
+import type { TransactionDraft } from '../../lib/draftUtils'
 
 type Level2ChildrenProps = {
   l2: Category
@@ -86005,6 +86049,10 @@ type Level2ChildrenProps = {
     paymentSplitItems?: PaymentSplitInput[],
     recurringTransactionId?: string | null
   ) => Promise<void>
+  saveDraft: (draft: TransactionDraft, options?: { activate?: boolean }) => Promise<TransactionDraft>
+  deleteDraft: (draftType: TransactionDraft['type']) => Promise<void>
+  inlineDraftType: TransactionDraft['type']
+  inlineDraftLevel1Id: string
   handleHideCategory: (id: string, mode?: HideMode) => Promise<void>
   handleRenameCategory: (categoryId: string) => Promise<void>
   handleDeleteCategory: (categoryId: string) => Promise<void>
@@ -86078,6 +86126,10 @@ export default function Level2Children({
   handleLevel3DragEnd,
   openTransactionCreator,
   handleInlineSaveTransaction,
+  saveDraft,
+  deleteDraft,
+  inlineDraftType,
+  inlineDraftLevel1Id,
   handleHideCategory,
   handleRenameCategory,
   handleDeleteCategory,
@@ -86143,6 +86195,11 @@ export default function Level2Children({
             handleLevel3DragStart={handleLevel3DragStart}
             openTransactionCreator={openTransactionCreator}
             handleInlineSaveTransaction={handleInlineSaveTransaction}
+            saveDraft={saveDraft}
+            deleteDraft={deleteDraft}
+            inlineDraftType={inlineDraftType}
+            inlineDraftLevel1Id={inlineDraftLevel1Id}
+            inlineDraftLevel2Id={l2.id}
             handleHideCategory={handleHideCategory}
             handleRenameCategory={handleRenameCategory}
             handleDeleteCategory={handleDeleteCategory}
@@ -86588,6 +86645,7 @@ import type { Tag, TransactionPaymentSplit } from '../../lib/budgetPageTypes'
 import type { PaymentSplitInput } from '../../lib/paymentSplitUtils'
 import type { DescriptionSuggestion } from '../../lib/suggestionUtils'
 import type { Category, HideMode, MoveTarget, RecurringLinkOption, Transaction } from './Level2SectionUtils'
+import type { TransactionDraft } from '../../lib/draftUtils'
 
 type Level2TransactionsListProps = {
   l2: Category
@@ -86610,6 +86668,10 @@ type Level2TransactionsListProps = {
     paymentSplitItems?: PaymentSplitInput[],
     recurringTransactionId?: string | null
   ) => Promise<void>
+  saveDraft: (draft: TransactionDraft, options?: { activate?: boolean }) => Promise<TransactionDraft>
+  deleteDraft: (draftType: TransactionDraft['type']) => Promise<void>
+  inlineDraftType: TransactionDraft['type']
+  inlineDraftLevel1Id: string
   handleHideCategory: (id: string, mode?: HideMode) => Promise<void>
   handleRenameCategory: (categoryId: string) => Promise<void>
   handleDeleteCategory: (categoryId: string) => Promise<void>
@@ -86677,6 +86739,10 @@ export default function Level2TransactionsList({
   handleLevel3DragStart,
   openTransactionCreator,
   handleInlineSaveTransaction,
+  saveDraft,
+  deleteDraft,
+  inlineDraftType,
+  inlineDraftLevel1Id,
   handleHideCategory,
   handleRenameCategory,
   handleDeleteCategory,
@@ -86730,6 +86796,11 @@ export default function Level2TransactionsList({
       handleLevel3DragStart={handleLevel3DragStart}
       openTransactionCreator={openTransactionCreator}
       handleInlineSaveTransaction={handleInlineSaveTransaction}
+      saveDraft={saveDraft}
+      deleteDraft={deleteDraft}
+      inlineDraftType={inlineDraftType}
+      inlineDraftLevel1Id={inlineDraftLevel1Id}
+      inlineDraftLevel2Id={l2.id}
       handleHideCategory={handleHideCategory}
       handleRenameCategory={handleRenameCategory}
       handleDeleteCategory={handleDeleteCategory}
@@ -99907,35 +99978,154 @@ export default function DraftPromptModal(props: Props) {
 PLIK: components\DraftsPanel.tsx
 ==================================================
 
-import { CSSProperties } from 'react'
-import { TransactionDraft } from '../lib/draftUtils'
+import type { CSSProperties } from 'react'
+import type { TransactionDraft } from '../lib/draftUtils'
 
 const draftsPanelStyle = {
+  display: 'grid',
+  gap: 12,
   marginBottom: 20,
-  background: '#ffffff',
-  border: '1px solid #e5e7eb',
-  borderRadius: 14,
-  padding: 16,
-  boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+  border: '1px solid rgba(203, 213, 225, 0.78)',
+  borderRadius: 16,
+  padding: 12,
+  background: 'rgba(255, 255, 255, 0.72)',
+  boxShadow: '0 10px 28px rgba(15, 23, 42, 0.045)',
+} as const
+
+const draftsHeaderStyle = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  gap: 12,
+  flexWrap: 'wrap' as const,
+  alignItems: 'center',
+  minHeight: 42,
+  padding: '2px 2px 10px',
+  borderBottom: '1px solid rgba(226, 232, 240, 0.86)',
+} as const
+
+const draftsTitleStyle = {
+  margin: 0,
+  color: '#172033',
+  fontSize: 16,
+  fontWeight: 760,
+  lineHeight: 1.2,
+} as const
+
+const draftsDescriptionStyle = {
+  margin: '3px 0 0',
+  color: '#64748b',
+  fontSize: 12,
+  lineHeight: 1.35,
 } as const
 
 const draftsListStyle = {
   display: 'grid',
-  gap: 12,
-} as const
-
-const draftCardStyle = {
-  border: '1px solid #e5e7eb',
-  borderRadius: 12,
-  padding: 14,
-  background: '#f9fafb',
-} as const
-
-const draftMetaGridStyle = {
-  display: 'grid',
   gap: 8,
-  gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-  marginTop: 12,
+} as const
+
+const draftRowStyle = {
+  display: 'grid',
+  gridTemplateColumns: 'minmax(0, 1fr) auto',
+  alignItems: 'center',
+  gap: 12,
+  minHeight: 72,
+  border: '1px solid rgba(226, 232, 240, 0.92)',
+  borderRadius: 12,
+  padding: '10px 12px',
+  background: 'rgba(248, 250, 252, 0.72)',
+} as const
+
+const draftMainStyle = {
+  minWidth: 0,
+  display: 'grid',
+  gap: 7,
+} as const
+
+const draftTopLineStyle = {
+  minWidth: 0,
+  display: 'flex',
+  alignItems: 'baseline',
+  gap: 8,
+  flexWrap: 'wrap' as const,
+} as const
+
+const draftTypeStyle = {
+  color: '#172033',
+  fontSize: 13,
+  fontWeight: 760,
+} as const
+
+const draftCategoryStyle = {
+  minWidth: 0,
+  color: '#475569',
+  fontSize: 12,
+  fontWeight: 650,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap' as const,
+} as const
+
+const draftDetailsStyle = {
+  minWidth: 0,
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+  gap: 6,
+} as const
+
+const draftFieldStyle = {
+  minWidth: 0,
+  display: 'grid',
+  gap: 2,
+  color: '#334155',
+  fontSize: 12,
+} as const
+
+const draftLabelStyle = {
+  color: '#94a3b8',
+  fontSize: 10,
+  fontWeight: 720,
+  textTransform: 'uppercase' as const,
+  letterSpacing: 0,
+} as const
+
+const draftValueStyle = {
+  minWidth: 0,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap' as const,
+} as const
+
+const draftActionsStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  gap: 6,
+  flexWrap: 'wrap' as const,
+} as const
+
+const lightButtonStyle = {
+  minHeight: 30,
+  borderRadius: 999,
+  padding: '0 11px',
+  fontSize: 12,
+  fontWeight: 680,
+  boxShadow: 'none',
+} as const
+
+const lightDangerButtonStyle = {
+  ...lightButtonStyle,
+  borderColor: 'rgba(254, 205, 211, 0.9)',
+  background: 'rgba(255, 241, 242, 0.7)',
+  color: '#be123c',
+} as const
+
+const compactStatusStyle = {
+  border: '1px solid rgba(226, 232, 240, 0.86)',
+  borderRadius: 12,
+  padding: '10px 12px',
+  background: 'rgba(248, 250, 252, 0.72)',
+  color: '#64748b',
+  fontSize: 12,
 } as const
 
 type Props = {
@@ -99968,85 +100158,72 @@ export default function DraftsPanel(props: Props) {
   } = props
 
   return (
-    <section style={draftsPanelStyle}>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          gap: 12,
-          flexWrap: 'wrap',
-          alignItems: 'center',
-        }}
-      >
+    <section style={draftsPanelStyle} aria-label="Szkice wpisów">
+      <div style={draftsHeaderStyle}>
         <div>
-          <div style={styles.sectionTitle}>Szkice</div>
-          <div style={{ ...styles.pageSubtitle, marginBottom: 0 }}>
-            Szkic zapisuje się chwilę po wpisaniu kwoty lub opisu albo po zmianie miesiąca. Po finalnym
-            zapisie znika automatycznie.
-          </div>
+          <h2 style={draftsTitleStyle}>Szkice</h2>
+          <p style={draftsDescriptionStyle}>Niedokończone wpisy zapisują się automatycznie.</p>
         </div>
-        <div style={styles.actions}>
-          <button
-            type="button"
-            style={styles.secondaryButton}
-            onClick={() => {
-              cleanupAllDrafts()
-            }}
-            disabled={isCleaningAllDrafts}
-          >
-            {isCleaningAllDrafts ? 'Czyszczenie...' : 'Usuń wszystkie szkice'}
-          </button>
-        </div>
+        <button
+          type="button"
+          style={{ ...styles.secondaryButton, ...lightButtonStyle }}
+          onClick={() => {
+            cleanupAllDrafts()
+          }}
+          disabled={isCleaningAllDrafts || drafts.length === 0}
+        >
+          {isCleaningAllDrafts ? 'Czyszczenie...' : 'Usuń wszystkie'}
+        </button>
       </div>
 
-      {draftsStatusText && <div style={{ ...styles.infoBox, marginTop: 12 }}>{draftsStatusText}</div>}
+      {draftsStatusText && <div style={compactStatusStyle}>{draftsStatusText}</div>}
 
       {isDraftsLoading ? (
-        <div style={{ ...styles.infoBox, marginTop: 12 }}>Ładowanie szkiców...</div>
+        <div style={compactStatusStyle}>Ładowanie szkiców...</div>
       ) : drafts.length === 0 ? (
-        <div style={{ ...styles.emptyStateCard, marginTop: 12 }}>Nie ma zapisanych szkiców.</div>
+        <div style={compactStatusStyle}>Nie ma zapisanych szkiców.</div>
       ) : (
-        <div style={{ ...draftsListStyle, marginTop: 12 }}>
+        <div style={draftsListStyle}>
           {drafts.map((draft) => {
             const draftLevel1Id = getDraftLevel1Id(draft)
+            const typeLabel = draft.type === 'income' ? 'Przychód' : 'Wydatek'
+            const amountLabel = draft.amount.trim() ? `${draft.amount.trim()} zł` : 'brak'
+            const descriptionLabel = draft.description.trim() || 'brak'
+            const dateLabel = draft.date || 'brak'
+            const updatedLabel = formatDraftUpdatedAt(draft.updated_at)
 
             return (
-              <div key={draft.id} style={draftCardStyle}>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    gap: 12,
-                    flexWrap: 'wrap',
-                  }}
-                >
-                  <div style={{ fontSize: 16, fontWeight: 600 }}>
-                    {draft.type === 'income' ? 'Przychód' : 'Wydatek'}
+              <div key={draft.id} style={draftRowStyle}>
+                <div style={draftMainStyle}>
+                  <div style={draftTopLineStyle}>
+                    <strong style={draftTypeStyle}>{typeLabel}</strong>
+                    <span style={draftCategoryStyle}>{getDraftLocationLabel(draft)}</span>
                   </div>
-                  <div style={{ color: '#6b7280', fontSize: 13 }}>
-                    Ostatnia zmiana: {formatDraftUpdatedAt(draft.updated_at)}
+
+                  <div style={draftDetailsStyle}>
+                    <div style={draftFieldStyle}>
+                      <span style={draftLabelStyle}>Kwota</span>
+                      <span style={draftValueStyle}>{amountLabel}</span>
+                    </div>
+                    <div style={draftFieldStyle}>
+                      <span style={draftLabelStyle}>Opis</span>
+                      <span style={draftValueStyle}>{descriptionLabel}</span>
+                    </div>
+                    <div style={draftFieldStyle}>
+                      <span style={draftLabelStyle}>Data</span>
+                      <span style={draftValueStyle}>{dateLabel}</span>
+                    </div>
+                    <div style={draftFieldStyle}>
+                      <span style={draftLabelStyle}>Ostatnia zmiana</span>
+                      <span style={draftValueStyle}>{updatedLabel}</span>
+                    </div>
                   </div>
                 </div>
 
-                <div style={draftMetaGridStyle}>
-                  <div style={styles.infoBox}>
-                    <b>Kategoria:</b> {getDraftLocationLabel(draft)}
-                  </div>
-                  <div style={styles.infoBox}>
-                    <b>Kwota:</b> {draft.amount.trim() || 'brak'}
-                  </div>
-                  <div style={styles.infoBox}>
-                    <b>Opis:</b> {draft.description.trim() || 'brak'}
-                  </div>
-                  <div style={styles.infoBox}>
-                    <b>Data:</b> {draft.date || 'brak'}
-                  </div>
-                </div>
-
-                <div style={{ ...styles.actions, marginTop: 12 }}>
+                <div style={draftActionsStyle}>
                   <button
                     type="button"
-                    style={styles.primaryButton}
+                    style={{ ...styles.primaryButton, ...lightButtonStyle }}
                     onClick={() => {
                       if (!draftLevel1Id) {
                         return
@@ -100060,7 +100237,7 @@ export default function DraftsPanel(props: Props) {
                   </button>
                   <button
                     type="button"
-                    style={styles.secondaryButton}
+                    style={{ ...styles.secondaryButton, ...lightDangerButtonStyle }}
                     onClick={() => {
                       void deleteDraft(draft.type).catch(() => {})
                     }}
@@ -102707,6 +102884,7 @@ import { Tag, TransactionPaymentSplit } from '../lib/budgetPageTypes'
 import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
 import { useIsMobileViewport } from '../lib/useIsMobileViewport'
 import { getNearestDndSwapTargetId } from '../lib/getNearestDndSwapTargetId'
+import type { TransactionDraft } from '../lib/draftUtils'
 
 type Props = {
   l2: Category
@@ -102745,6 +102923,10 @@ type Props = {
     paymentSplitItems?: Array<{ paymentSourceId: string; amount: string }>,
     recurringTransactionId?: string | null
   ) => Promise<void>
+  saveDraft: (draft: TransactionDraft, options?: { activate?: boolean }) => Promise<TransactionDraft>
+  deleteDraft: (draftType: TransactionDraft['type']) => Promise<void>
+  inlineDraftType: TransactionDraft['type']
+  inlineDraftLevel1Id: string
   handleHideCategory: (id: string, mode?: HideMode) => Promise<void>
   handleRestoreCategory: (id: string, mode?: RestoreMode) => Promise<void>
   handleUndoScheduledHide: (id: string) => Promise<void>
@@ -102832,6 +103014,10 @@ export default function Level2Section(props: Props) {
     handleDeleteCategory,
     openTransactionCreator,
     handleInlineSaveTransaction,
+    saveDraft,
+    deleteDraft,
+    inlineDraftType,
+    inlineDraftLevel1Id,
     handleHideCategory,
     handleUndoScheduledHide,
     handleDeleteTransaction,
@@ -103103,6 +103289,10 @@ export default function Level2Section(props: Props) {
           handleLevel3DragStart={handleLevel3DragStart}
           openTransactionCreator={openTransactionCreator}
           handleInlineSaveTransaction={handleInlineSaveTransaction}
+          saveDraft={saveDraft}
+          deleteDraft={deleteDraft}
+          inlineDraftType={inlineDraftType}
+          inlineDraftLevel1Id={inlineDraftLevel1Id}
           handleHideCategory={handleHideCategory}
           handleRenameCategory={handleRenameCategory}
           handleDeleteCategory={handleDeleteCategory}
@@ -103153,6 +103343,10 @@ export default function Level2Section(props: Props) {
           handleLevel3DragEnd={handleLevel3DragEnd}
           openTransactionCreator={openTransactionCreator}
           handleInlineSaveTransaction={handleInlineSaveTransaction}
+          saveDraft={saveDraft}
+          deleteDraft={deleteDraft}
+          inlineDraftType={inlineDraftType}
+          inlineDraftLevel1Id={inlineDraftLevel1Id}
           handleHideCategory={handleHideCategory}
           handleRenameCategory={handleRenameCategory}
           handleDeleteCategory={handleDeleteCategory}
@@ -103230,6 +103424,7 @@ import { DescriptionSuggestion, DescriptionSuggestionSet } from '../lib/suggesti
 import { splitTagInput } from '../lib/tagUtils'
 import { useDescriptionSuggestions } from '../lib/useDescriptionSuggestions'
 import { useIsMobileViewport } from '../lib/useIsMobileViewport'
+import { createDraftId, type TransactionDraft } from '../lib/draftUtils'
 
 type Props = {
   l3: Category
@@ -103260,6 +103455,11 @@ type Props = {
     paymentSplitItems?: PaymentSplitInput[],
     recurringTransactionId?: string | null
   ) => Promise<void>
+  saveDraft: (draft: TransactionDraft, options?: { activate?: boolean }) => Promise<TransactionDraft>
+  deleteDraft: (draftType: TransactionDraft['type']) => Promise<void>
+  inlineDraftType: TransactionDraft['type']
+  inlineDraftLevel1Id: string
+  inlineDraftLevel2Id: string | null
   handleHideCategory: (id: string, mode?: HideMode) => Promise<void>
   handleRenameCategory: (categoryId: string) => Promise<void>
   handleDeleteCategory: (categoryId: string) => Promise<void>
@@ -103335,6 +103535,11 @@ export default function Level3Section(props: Props) {
     toggleLevel3,
     handleLevel3DragStart,
     handleInlineSaveTransaction,
+    saveDraft,
+    deleteDraft,
+    inlineDraftType,
+    inlineDraftLevel1Id,
+    inlineDraftLevel2Id,
     handleHideCategory,
     handleRenameCategory,
     handleDeleteCategory,
@@ -103399,6 +103604,9 @@ export default function Level3Section(props: Props) {
   const [inlineRecurringTransactionId, setInlineRecurringTransactionId] = useState('')
   const [isInlineSaving, setIsInlineSaving] = useState(false)
   const inlineSaveLockRef = useRef(false)
+  const inlineDraftIdRef = useRef<string | null>(null)
+  const latestInlineDraftRef = useRef<TransactionDraft | null>(null)
+  const suppressInlineDraftSaveRef = useRef(false)
   const inlineDayInputRef = useRef<HTMLInputElement | null>(null)
   const inlineAmountInputRef = useRef<HTMLInputElement | null>(null)
   const inlineDescriptionInputRef = useRef<HTMLInputElement | null>(null)
@@ -103471,6 +103679,53 @@ export default function Level3Section(props: Props) {
   }
 
   const dragHandleTitle = isDragBlocked ? 'Aby przenosić, najpierw zwiń podkategorię' : undefined
+
+  const buildInlineDraft = useCallback(() => {
+    const hasDraft =
+      inlineDay.trim() || inlineAmount.trim() || inlineDescription.trim() || inlineTagInput.trim()
+
+    if (!hasDraft) {
+      return null
+    }
+
+    const draftId = inlineDraftIdRef.current || createDraftId()
+    inlineDraftIdRef.current = draftId
+
+    return {
+      id: draftId,
+      type: inlineDraftType,
+      level1_id: inlineDraftLevel1Id,
+      level2_id: inlineDraftLevel2Id,
+      category_id: l3.id,
+      amount: inlineAmount,
+      description: inlineDescription,
+      date: buildDateFromDayInput(selectedMonth, inlineDay),
+      updated_at: null,
+    } satisfies TransactionDraft
+  }, [
+    inlineAmount,
+    inlineDay,
+    inlineDescription,
+    inlineDraftLevel1Id,
+    inlineDraftLevel2Id,
+    inlineDraftType,
+    inlineTagInput,
+    l3.id,
+    selectedMonth,
+  ])
+
+  const saveInlineDraftToSharedSystem = useCallback(
+    (draft: TransactionDraft | null) => {
+      latestInlineDraftRef.current = draft
+
+      if (!draft) {
+        return
+      }
+
+      void saveDraft(draft, { activate: false }).catch(() => {})
+    },
+    [saveDraft]
+  )
 
   const getTransactionTagNames = (transactionId: string) => {
     return (transactionTagsMap[transactionId] || []).map((tag) => tag.name)
@@ -103600,7 +103855,7 @@ export default function Level3Section(props: Props) {
     setIsInlineAdding(true)
     const storageKey = `budget-inline-draft-${l3.id}-${selectedMonth}`
     const storedDraft = typeof window === 'undefined' ? null : window.localStorage.getItem(storageKey)
-    let parsedDraft: Partial<{ day: string; amount: string; description: string; tags: string }> = {}
+    let parsedDraft: Partial<{ id: string; day: string; amount: string; description: string; tags: string }> = {}
 
     if (storedDraft) {
       try {
@@ -103610,6 +103865,7 @@ export default function Level3Section(props: Props) {
       }
     }
 
+    inlineDraftIdRef.current = parsedDraft.id || createDraftId()
     setInlineDay(parsedDraft.day || '')
     setInlineAmount(parsedDraft.amount || '')
     setInlineDescription(parsedDraft.description || '')
@@ -103652,8 +103908,14 @@ export default function Level3Section(props: Props) {
   }, [isSelectedMonthLocked, openInlineAdd, startInlineAddToken])
 
   const cancelInlineAdd = () => {
+    suppressInlineDraftSaveRef.current = true
+
     if (typeof window !== 'undefined') {
       window.localStorage.removeItem(`budget-inline-draft-${l3.id}-${selectedMonth}`)
+    }
+
+    if (inlineDraftIdRef.current || latestInlineDraftRef.current) {
+      void deleteDraft(inlineDraftType).catch(() => {})
     }
 
     setIsInlineAdding(false)
@@ -103665,8 +103927,14 @@ export default function Level3Section(props: Props) {
     setInlinePaymentSourceId('')
     setInlinePaymentSplitItems([])
     setInlineRecurringTransactionId('')
+    inlineDraftIdRef.current = null
+    latestInlineDraftRef.current = null
     inlineSaveLockRef.current = false
     setIsInlineSaving(false)
+
+    window.setTimeout(() => {
+      suppressInlineDraftSaveRef.current = false
+    }, 0)
   }
 
   const saveInlineAdd = async () => {
@@ -103678,6 +103946,12 @@ export default function Level3Section(props: Props) {
     setIsInlineSaving(true)
 
     try {
+      const inlineDraft = buildInlineDraft()
+
+      if (inlineDraft) {
+        await saveDraft(inlineDraft, { activate: false })
+      }
+
       await handleInlineSaveTransaction(
         l3.id,
         inlineAmount,
@@ -103691,6 +103965,9 @@ export default function Level3Section(props: Props) {
       if (typeof window !== 'undefined') {
         window.localStorage.removeItem(`budget-inline-draft-${l3.id}-${selectedMonth}`)
       }
+      if (inlineDraft) {
+        await deleteDraft(inlineDraft.type)
+      }
       cancelInlineAdd()
     } catch {
       inlineSaveLockRef.current = false
@@ -103703,30 +103980,51 @@ export default function Level3Section(props: Props) {
       return
     }
 
-    const hasDraft =
-      inlineDay.trim() || inlineAmount.trim() || inlineDescription.trim() || inlineTagInput.trim()
+    const inlineDraft = buildInlineDraft()
     const storageKey = `budget-inline-draft-${l3.id}-${selectedMonth}`
     const timeoutId = window.setTimeout(() => {
-      if (!hasDraft) {
+      if (!inlineDraft) {
         window.localStorage.removeItem(storageKey)
+        latestInlineDraftRef.current = null
+        if (inlineDraftIdRef.current) {
+          void deleteDraft(inlineDraftType).catch(() => {})
+        }
         return
       }
 
       window.localStorage.setItem(
         storageKey,
         JSON.stringify({
+          id: inlineDraft.id,
           day: inlineDay,
           amount: inlineAmount,
           description: inlineDescription,
           tags: inlineTagInput,
         })
       )
+      saveInlineDraftToSharedSystem(inlineDraft)
     }, 450)
 
     return () => {
       window.clearTimeout(timeoutId)
+
+      if (inlineDraft && !suppressInlineDraftSaveRef.current) {
+        saveInlineDraftToSharedSystem(inlineDraft)
+      }
     }
-  }, [inlineAmount, inlineDay, inlineDescription, inlineTagInput, isInlineAdding, l3.id, selectedMonth])
+  }, [
+    buildInlineDraft,
+    deleteDraft,
+    inlineAmount,
+    inlineDay,
+    inlineDescription,
+    inlineDraftType,
+    inlineTagInput,
+    isInlineAdding,
+    l3.id,
+    saveInlineDraftToSharedSystem,
+    selectedMonth,
+  ])
 
   const orderedTransactions = useMemo(() => {
     return getOrderedLevel3Transactions(transactions)
@@ -123472,7 +123770,7 @@ export const useBudgetPageDrafts = ({
   )
 
   const saveDraft = useCallback(
-    async (draft: TransactionDraft) => {
+    async (draft: TransactionDraft, options?: { activate?: boolean }) => {
       const { data, error } = await supabase
         .from('drafts')
         .upsert(
@@ -123514,8 +123812,10 @@ export const useBudgetPageDrafts = ({
         )
       })
       setDraftsStatusText('')
-      setTransactionDraftId(nextDraft.id)
-      setTransactionDraftType(nextDraft.type)
+      if (options?.activate !== false) {
+        setTransactionDraftId(nextDraft.id)
+        setTransactionDraftType(nextDraft.type)
+      }
 
       return nextDraft
     },
@@ -123881,6 +124181,7 @@ export const useBudgetPageDrafts = ({
     applyDraftToTransactionCreator,
   }
 }
+
 
 
 ==================================================

@@ -1,6 +1,6 @@
 'use client'
 
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { ChangeEvent, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { Category, Transaction, TransactionPaymentSplit } from '../lib/budgetPageTypes'
 import PaymentSplitEditor from './PaymentSplitEditor'
 import {
@@ -47,6 +47,72 @@ type ImportExportPanelProps = {
 }
 
 const normalizeFileNameMonth = (month: string) => month.replace('-', '_')
+
+const panelStyle: CSSProperties = {
+  display: 'grid',
+  gap: 14,
+  border: '1px solid rgba(203, 213, 225, 0.78)',
+  borderRadius: 16,
+  padding: 14,
+  background: 'rgba(255, 255, 255, 0.72)',
+  boxShadow: '0 10px 28px rgba(15, 23, 42, 0.045)',
+}
+
+const headerStyle: CSSProperties = {
+  display: 'grid',
+  gap: 4,
+  paddingBottom: 10,
+  borderBottom: '1px solid rgba(226, 232, 240, 0.86)',
+}
+
+const titleStyle: CSSProperties = {
+  margin: 0,
+  color: '#172033',
+  fontSize: 16,
+  fontWeight: 760,
+}
+
+const descriptionStyle: CSSProperties = {
+  margin: 0,
+  color: '#64748b',
+  fontSize: 12,
+  lineHeight: 1.4,
+}
+
+const actionRowStyle: CSSProperties = {
+  display: 'flex',
+  gap: 8,
+  flexWrap: 'wrap',
+  alignItems: 'center',
+}
+
+const lightButtonStyle: CSSProperties = {
+  minHeight: 32,
+  borderRadius: 999,
+  padding: '0 12px',
+  fontSize: 12,
+  fontWeight: 680,
+  boxShadow: 'none',
+}
+
+const importSectionStyle: CSSProperties = {
+  display: 'grid',
+  gap: 10,
+  padding: 12,
+  border: '1px solid rgba(226, 232, 240, 0.9)',
+  borderRadius: 14,
+  background: 'rgba(248, 250, 252, 0.64)',
+}
+
+const compactInfoStyle: CSSProperties = {
+  border: '1px solid rgba(226, 232, 240, 0.86)',
+  borderRadius: 12,
+  padding: '9px 11px',
+  background: 'rgba(248, 250, 252, 0.74)',
+  color: '#64748b',
+  fontSize: 12,
+  lineHeight: 1.4,
+}
 
 export default function ImportExportPanel({
   selectedMonth,
@@ -269,32 +335,35 @@ export default function ImportExportPanel({
   }
 
   return (
-    <section style={styles.card}>
-      <div style={styles.sectionTitle}>Import / eksport danych</div>
+    <section style={panelStyle}>
+      <div style={headerStyle}>
+        <h2 style={titleStyle}>Import / eksport danych</h2>
+        <p style={descriptionStyle}>Eksportuj kopię danych albo wczytaj wpisy z pliku CSV.</p>
+      </div>
 
-      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
-        <button style={styles.secondaryButton} onClick={handleExportCsv} type="button">
+      <div style={actionRowStyle}>
+        <button style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={handleExportCsv} type="button">
           Eksport CSV aktywnych wpisów
         </button>
 
-        <button style={styles.secondaryButton} onClick={handleExportJson} type="button">
+        <button style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={handleExportJson} type="button">
           Backup JSON
         </button>
 
-        <button style={styles.secondaryButton} onClick={handleDownloadTemplate} type="button">
+        <button style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={handleDownloadTemplate} type="button">
           Pobierz template CSV
         </button>
       </div>
 
-      <div style={{ ...styles.infoBox, marginBottom: 16 }}>
+      <div style={compactInfoStyle}>
         Wybierasz plik, mapujesz kolumny, sprawdzasz podgląd, poprawiasz opis i kategorię,
         zaznaczasz tylko te rekordy, które mają wejść, i dopiero wtedy importujesz.
       </div>
 
       {canCreateTransactions ? (
         <>
-          <div style={{ display: 'grid', gap: 12, marginBottom: 16 }}>
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+          <div style={importSectionStyle}>
+            <div style={actionRowStyle}>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -305,7 +374,7 @@ export default function ImportExportPanel({
 
               <button
                 type="button"
-                style={styles.primaryButton}
+                style={{ ...styles.primaryButton, ...lightButtonStyle }}
                 onClick={() => fileInputRef.current?.click()}
               >
                 Wybierz plik CSV
@@ -313,7 +382,7 @@ export default function ImportExportPanel({
 
               <button
                 type="button"
-                style={styles.secondaryButton}
+                style={{ ...styles.secondaryButton, ...lightButtonStyle }}
                 onClick={resetImportState}
                 disabled={isImporting && !fileName}
               >
@@ -453,22 +522,22 @@ export default function ImportExportPanel({
                 których nie chcesz wrzucać.
               </div>
 
-              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
-                <button type="button" style={styles.secondaryButton} onClick={handleApproveAllValid}>
+              <div style={{ ...actionRowStyle, marginBottom: 16 }}>
+                <button type="button" style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={handleApproveAllValid}>
                   Zaznacz wszystkie poprawne
                 </button>
 
-                <button type="button" style={styles.secondaryButton} onClick={handleUncheckAll}>
+                <button type="button" style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={handleUncheckAll}>
                   Odznacz wszystko
                 </button>
 
-                <button type="button" style={styles.secondaryButton} onClick={resetImportState}>
+                <button type="button" style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={resetImportState}>
                   Anuluj import
                 </button>
 
                 <button
                   type="button"
-                  style={styles.primaryButton}
+                  style={{ ...styles.primaryButton, ...lightButtonStyle }}
                   onClick={() => {
                     void handleImport()
                   }}

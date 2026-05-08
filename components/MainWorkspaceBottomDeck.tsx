@@ -129,8 +129,31 @@ export default function MainWorkspaceBottomDeck({
           onClick={onOpenTrash}
           aria-label={`Kosz, liczba elementów: ${trashedCount}`}
         >
-          <span aria-hidden="true">⌫</span>
-          <b>{trashedCount}</b>
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+            <path
+              d="M4 7h16"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeWidth="2"
+            />
+            <path
+              d="M10 11v6M14 11v6"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeWidth="2"
+            />
+            <path
+              d="M6 7l1 13h10l1-13M9 7V4h6v3"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+            />
+          </svg>
+          {trashedCount > 0 && <b>{trashedCount}</b>}
         </button>
       </footer>
     </section>
