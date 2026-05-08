@@ -31,16 +31,6 @@ type AppSettingsPanelProps = {
 
 const moduleItems: Array<{ key: AppModuleKey; label: string; description: string }> = [
   {
-    key: 'dashboard',
-    label: 'Dashboard',
-    description: 'Szybki podgląd finansów i trendów.',
-  },
-  {
-    key: 'monthCalendar',
-    label: 'Kalendarz',
-    description: 'Widok miesięczny wpisów i dni budżetowych.',
-  },
-  {
     key: 'paymentSources',
     label: 'Źródła płatności',
     description: 'Karty, konta, gotówka i domyślne źródła.',
@@ -57,19 +47,8 @@ const moduleItems: Array<{ key: AppModuleKey; label: string; description: string
   },
   {
     key: 'budgetLimits',
-    label: 'Limity',
+    label: 'Limity / alerty',
     description: 'Alerty i kontrola wydatków w kategoriach.',
-  },
-]
-
-const staticFeatureItems = [
-  {
-    label: 'Import / export',
-    description: 'Narzędzia przenoszenia i kopii danych.',
-  },
-  {
-    label: 'Wyszukiwarka',
-    description: 'Szybkie filtrowanie wpisów i tagów.',
   },
 ]
 
@@ -110,34 +89,38 @@ export default function AppSettingsPanel({
   onResetAllHistory,
   defaultOpen: ignoredDefaultOpen = false,
   userEmail,
-  onExportBackupJson,
-  onExportBackupCsv,
   profileMembersPanel,
 }: AppSettingsPanelProps) {
   void ignoredDefaultOpen
 
+  const effectiveAutoExcludePartialMonths = autoExcludePartialMonths !== false
   const isDraftDefault = moduleItems.every(
     (item) => draftVisibleModules[item.key] === DEFAULT_APP_MODULE_VISIBILITY[item.key]
   )
 
+  const handleSimpleModeChange = (value: boolean) => {
+    onSimpleModeChange(value)
+
+    if (value) {
+      moduleItems.forEach((item) => onChangeModuleVisibility(item.key, false))
+    }
+  }
+
   return (
     <section data-settings-panel-content="true">
-      <section data-settings-section="profile">
+      <section data-settings-section="profile-summary">
         <div data-settings-section-heading="true">
-          <span>Sekcja A</span>
-          <h3>Profil i zaproszenia</h3>
-          <p>Dostęp do profilu i udostępnianie budżetu innym osobom.</p>
+          <h3>Profil</h3>
+          <p>Podstawowe informacje o aktywnym użytkowniku.</p>
         </div>
         <div data-settings-profile-card="true">
           <span>Aktualny użytkownik</span>
           <strong>{userEmail || 'brak danych'}</strong>
         </div>
-        {profileMembersPanel}
       </section>
 
       <section data-settings-section="basic">
         <div data-settings-section-heading="true">
-          <span>Sekcja B</span>
           <h3>Ustawienia podstawowe</h3>
           <p>Krótka konfiguracja zachowania budżetu.</p>
         </div>
@@ -147,28 +130,27 @@ export default function AppSettingsPanel({
             <p>Niepełne miesiące nie zaburzają statystyk i trendów.</p>
           </div>
           <SettingsSwitch
-            checked={autoExcludePartialMonths}
+            checked={effectiveAutoExcludePartialMonths}
             onChange={onAutoExcludePartialMonthsChange}
           />
         </div>
         <div data-settings-row="true">
           <div>
             <strong>Tryb prosty</strong>
-            <p>Ogranicza widoczność funkcji dodatkowych do spokojniejszego widoku.</p>
+            <p>Po włączeniu wyłącza funkcje dodatkowe i blokuje ich przełączniki.</p>
           </div>
-          <SettingsSwitch checked={simpleMode} onChange={onSimpleModeChange} />
+          <SettingsSwitch checked={simpleMode} onChange={handleSimpleModeChange} />
         </div>
       </section>
 
       <section data-settings-section="features" data-simple-mode={simpleMode ? 'true' : 'false'}>
         <div data-settings-section-heading="true">
-          <span>Sekcja C</span>
           <h3>Funkcje dodatkowe</h3>
-          <p>Włączaj moduły widoczne w panelach aplikacji.</p>
+          <p>Moduły, które można ukryć w spokojniejszym trybie pracy.</p>
         </div>
         {simpleMode && (
           <div data-settings-simple-note="true">
-            Tryb prosty jest włączony. Funkcje dodatkowe mogą być wizualnie ograniczane w aplikacji.
+            Tryb prosty jest włączony. Funkcje dodatkowe są wyłączone do czasu wyłączenia trybu prostego.
           </div>
         )}
         <div data-settings-feature-grid="true">
@@ -179,18 +161,10 @@ export default function AppSettingsPanel({
                 <p>{item.description}</p>
               </div>
               <SettingsSwitch
-                checked={draftVisibleModules[item.key]}
+                checked={!simpleMode && draftVisibleModules[item.key]}
+                disabled={simpleMode}
                 onChange={(value) => onChangeModuleVisibility(item.key, value)}
               />
-            </article>
-          ))}
-          {staticFeatureItems.map((item) => (
-            <article key={item.label} data-settings-feature-card="true" data-static-feature="true">
-              <div>
-                <strong>{item.label}</strong>
-                <p>{item.description}</p>
-              </div>
-              <SettingsSwitch checked disabled />
             </article>
           ))}
         </div>
@@ -207,9 +181,8 @@ export default function AppSettingsPanel({
 
       <section data-settings-section="admin">
         <div data-settings-section-heading="true">
-          <span>Sekcja D</span>
           <h3>Narzędzia administracyjne</h3>
-          <p>Operacje techniczne dla miesięcy i kopii danych.</p>
+          <p>Operacje techniczne dla profilu i miesięcy.</p>
         </div>
         <div data-settings-admin-grid="true">
           <button type="button" onClick={() => void onLockAllPastMonths()}>
@@ -224,18 +197,15 @@ export default function AppSettingsPanel({
           <button type="button" onClick={() => void onResetAllHistory()}>
             Resetuj całą historię
           </button>
-          {onExportBackupJson && (
-            <button type="button" onClick={() => void onExportBackupJson()}>
-              Backup JSON
-            </button>
-          )}
-          {onExportBackupCsv && (
-            <button type="button" onClick={() => void onExportBackupCsv()}>
-              Backup CSV
-            </button>
-          )}
         </div>
       </section>
+
+      {profileMembersPanel && (
+        <details data-settings-advanced-profile="true">
+          <summary>Zaawansowane ustawienia profilu</summary>
+          <div data-settings-advanced-profile-body="true">{profileMembersPanel}</div>
+        </details>
+      )}
     </section>
   )
 }
