@@ -81,6 +81,66 @@
   box-shadow: 0 22px 46px rgba(15, 23, 42, 0.14) !important;
 }
 
+[data-budget-tree-toolbar="true"] [data-tree-sort-menu="true"],
+[data-budget-tree-toolbar="true"] [data-tree-view-menu="true"] {
+  display: none !important;
+}
+
+[data-tree-toolbar-actions="true"] [data-workspace-action] {
+  width: 38px !important;
+  min-width: 38px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  padding: 0 !important;
+  border: 1px solid rgba(198, 209, 221, 0.76) !important;
+  border-radius: 12px !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(238, 244, 250, 0.76)) !important;
+  color: #334155 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 8px 18px rgba(15, 23, 42, 0.04) !important;
+  line-height: 1 !important;
+}
+
+[data-tree-toolbar-actions="true"] [data-workspace-action]:hover {
+  border-color: rgba(148, 163, 184, 0.82) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 245, 249, 0.86)) !important;
+}
+
+[data-tree-toolbar-actions="true"] [data-workspace-action] svg {
+  width: 18px !important;
+  height: 18px !important;
+  display: block !important;
+}
+
+[data-tree-toolbar-actions="true"] [data-workspace-action="income"],
+[data-tree-toolbar-actions="true"] [data-workspace-action="expense"] {
+  font-size: 20px !important;
+  font-weight: 620 !important;
+}
+
+[data-tree-sort-control="true"] [data-tree-sort-menu="true"] {
+  position: relative !important;
+}
+
+[data-tree-sort-control="true"] [data-tree-sort-menu="true"] summary {
+  min-height: 34px !important;
+  height: 34px !important;
+  padding: 0 12px !important;
+  border-radius: 10px !important;
+}
+
+[data-tree-sort-control="true"] [data-tree-sort-inline="true"] {
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+  width: min(620px, calc(100vw - 240px)) !important;
+  min-width: 420px !important;
+}
+
 
 
 [data-workspace-action],

@@ -212,6 +212,75 @@ export default function BudgetTreeSection({
   workspaceTopContent,
   workspaceBottomContent,
 }: Props) {
+  const sortMenu = (
+    <details data-tree-sort-menu="true" data-floating-dropdown="true">
+      <summary>Sortuj</summary>
+      <div data-tree-sort-inline="true" style={styles.sortBar}>
+        <div style={styles.sortGroup}>
+          <label htmlFor="level2-sort-mode" style={styles.sortLabel}>
+            Sortowanie L2
+          </label>
+          <select
+            id="level2-sort-mode"
+            value={level2SortMode}
+            onChange={(event) => setLevel2SortMode(event.target.value as SortMode)}
+            style={styles.input}
+          >
+            <option value="default">domyślne</option>
+            <option value="manual">ręczne</option>
+            <option value="sum">według sumy</option>
+            <option value="frequency">według częstotliwości</option>
+          </select>
+
+          <label htmlFor="level2-sort-direction" style={styles.sortLabel}>
+            Kierunek L2
+          </label>
+          <select
+            id="level2-sort-direction"
+            value={level2SortDirection}
+            onChange={(event) => setLevel2SortDirection(event.target.value as SortDirection)}
+            style={styles.input}
+            disabled={level2SortMode !== 'sum' && level2SortMode !== 'frequency'}
+          >
+            <option value="asc">rosnąco</option>
+            <option value="desc">malejąco</option>
+          </select>
+        </div>
+
+        <div style={styles.sortGroup}>
+          <label htmlFor="level3-sort-mode" style={styles.sortLabel}>
+            Sortowanie L3
+          </label>
+          <select
+            id="level3-sort-mode"
+            value={level3SortMode}
+            onChange={(event) => setLevel3SortMode(event.target.value as SortMode)}
+            style={styles.input}
+          >
+            <option value="default">domyślne</option>
+            <option value="manual">ręczne</option>
+            <option value="sum">według sumy</option>
+            <option value="frequency">według częstotliwości</option>
+          </select>
+
+          <label htmlFor="level3-sort-direction" style={styles.sortLabel}>
+            Kierunek L3
+          </label>
+          <select
+            id="level3-sort-direction"
+            value={level3SortDirection}
+            onChange={(event) => setLevel3SortDirection(event.target.value as SortDirection)}
+            style={styles.input}
+            disabled={level3SortMode !== 'sum' && level3SortMode !== 'frequency'}
+          >
+            <option value="asc">rosnąco</option>
+            <option value="desc">malejąco</option>
+          </select>
+        </div>
+      </div>
+    </details>
+  )
+
   return (
     <div data-budget-tree-workspace="true">
       <div data-budget-tree-toolbar="true">
@@ -221,8 +290,8 @@ export default function BudgetTreeSection({
               type="button"
               data-workspace-action="income"
               onClick={onAddIncome}
-              aria-label="Dodaj przychod"
-              title="Dodaj przychod"
+              aria-label="Dodaj przychód"
+              title="Dodaj przychód"
             >
               +
             </button>
@@ -246,7 +315,23 @@ export default function BudgetTreeSection({
               aria-label="Szukaj"
               title="Szukaj"
             >
-              ⌕
+              <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
+                <circle
+                  cx="11"
+                  cy="11"
+                  r="6.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.9"
+                />
+                <path
+                  d="m16 16 4 4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeWidth="1.9"
+                />
+              </svg>
             </button>
           )}
           {onOpenCalendar && (
@@ -280,83 +365,13 @@ export default function BudgetTreeSection({
             </button>
           )}
 
-          <details data-tree-sort-menu="true" data-floating-dropdown="true">
-            <summary>Sortuj</summary>
-            <div data-tree-sort-inline="true" style={styles.sortBar}>
-              <div style={styles.sortGroup}>
-                <label htmlFor="level2-sort-mode" style={styles.sortLabel}>
-                  Sortowanie L2
-                </label>
-                <select
-                  id="level2-sort-mode"
-                  value={level2SortMode}
-                  onChange={(event) => setLevel2SortMode(event.target.value as SortMode)}
-                  style={styles.input}
-                >
-                  <option value="default">domyślne</option>
-                  <option value="manual">ręczne</option>
-                  <option value="sum">według sumy</option>
-                  <option value="frequency">według częstotliwości</option>
-                </select>
-
-                <label htmlFor="level2-sort-direction" style={styles.sortLabel}>
-                  Kierunek L2
-                </label>
-                <select
-                  id="level2-sort-direction"
-                  value={level2SortDirection}
-                  onChange={(event) => setLevel2SortDirection(event.target.value as SortDirection)}
-                  style={styles.input}
-                  disabled={level2SortMode !== 'sum' && level2SortMode !== 'frequency'}
-                >
-                  <option value="asc">rosnąco</option>
-                  <option value="desc">malejąco</option>
-                </select>
-              </div>
-
-              <div style={styles.sortGroup}>
-                <label htmlFor="level3-sort-mode" style={styles.sortLabel}>
-                  Sortowanie L3
-                </label>
-                <select
-                  id="level3-sort-mode"
-                  value={level3SortMode}
-                  onChange={(event) => setLevel3SortMode(event.target.value as SortMode)}
-                  style={styles.input}
-                >
-                  <option value="default">domyślne</option>
-                  <option value="manual">ręczne</option>
-                  <option value="sum">według sumy</option>
-                  <option value="frequency">według częstotliwości</option>
-                </select>
-
-                <label htmlFor="level3-sort-direction" style={styles.sortLabel}>
-                  Kierunek L3
-                </label>
-                <select
-                  id="level3-sort-direction"
-                  value={level3SortDirection}
-                  onChange={(event) => setLevel3SortDirection(event.target.value as SortDirection)}
-                  style={styles.input}
-                  disabled={level3SortMode !== 'sum' && level3SortMode !== 'frequency'}
-                >
-                  <option value="asc">rosnąco</option>
-                  <option value="desc">malejąco</option>
-                </select>
-              </div>
-            </div>
-          </details>
-
-          <details data-tree-view-menu="true" data-floating-dropdown="true">
-            <summary aria-label="Ustawienia widoku drzewa">⋯</summary>
-          </details>
-
         </div>
       </div>
 
-      {workspaceTopContent && (
-        <div data-budget-tree-control-deck="true">{workspaceTopContent}</div>
-      )}
+      <div data-budget-tree-control-deck="true">
+        {workspaceTopContent}
+        <div data-tree-sort-control="true">{sortMenu}</div>
+      </div>
 
       {sortedLevel1.length === 0 && (
         <div style={styles.emptyStateCard}>Brak widocznych kategorii w wybranym miesiącu</div>

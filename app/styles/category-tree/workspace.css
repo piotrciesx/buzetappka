@@ -44,6 +44,10 @@
 [data-budget-tree-control-deck="true"] {
   width: 100% !important;
   min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 10px !important;
 }
 
 [data-budget-tree-control-deck="true"] [data-budget-status-grid="true"] {
@@ -57,6 +61,12 @@
 [data-budget-tree-control-deck="true"] [data-budget-compact-notice] {
   min-height: 32px !important;
   border-radius: 10px !important;
+}
+
+[data-tree-sort-control="true"] {
+  position: relative !important;
+  justify-self: end !important;
+  align-self: center !important;
 }
 
 /*
