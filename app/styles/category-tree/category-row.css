@@ -100,6 +100,55 @@
   white-space: nowrap !important;
 }
 
+[data-category-drag-row="true"][data-category-level="2"] [data-category-row-name="true"],
+[data-category-drag-row="true"][data-category-level="3"] [data-category-row-name="true"] {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 10px !important;
+  font-size: 16px !important;
+  font-weight: 760 !important;
+}
+
+[data-category-drag-row="true"][data-category-level="2"] [data-category-row-name="true"] > span,
+[data-category-drag-row="true"][data-category-level="3"] [data-category-row-name="true"] > span {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+[data-category-drag-row="true"][data-category-level="2"] [data-category-row-name="true"] {
+  font-size: 17px !important;
+}
+
+[data-category-drag-row="true"][data-category-level="2"] [data-category-row-name="true"]::first-letter,
+[data-category-drag-row="true"][data-category-level="3"] [data-category-row-name="true"]::first-letter {
+  letter-spacing: 0 !important;
+}
+
+[data-category-drag-row="true"][data-category-level="2"] [data-category-row-amount="true"],
+[data-category-drag-row="true"][data-category-level="3"] [data-category-row-amount="true"] {
+  flex: 0 0 auto !important;
+  max-width: 160px !important;
+  overflow: hidden !important;
+  color: #0f172a !important;
+  font-size: 15px !important;
+  font-weight: 780 !important;
+  font-variant-numeric: tabular-nums !important;
+  line-height: 1.1 !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+[data-category-drag-row="true"][data-category-level="2"] [data-category-row-amount="true"] {
+  font-size: 16px !important;
+}
+
+[data-category-drag-row="true"][data-category-level="2"] [data-category-row-meta="true"],
+[data-category-drag-row="true"][data-category-level="3"] [data-category-row-meta="true"] {
+  display: none !important;
+}
+
 [data-level1-toggle-icon="true"],
 [data-category-toggle-icon="true"] {
   width: 28px !important;

@@ -232,7 +232,6 @@ export default function BudgetWorkspaceTopNotices({
                 title={category.label}
               >
                 <span>{category.label}</span>
-                <b>{category.amount.toLocaleString('pl-PL')} zł</b>
               </button>
             ))}
           </div>

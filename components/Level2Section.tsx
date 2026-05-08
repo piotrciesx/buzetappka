@@ -44,7 +44,6 @@ type Props = {
   openLevel3Ids: string[]
   toggleLevel3: (id: string) => void
   getSumForLevel2: (id: string) => number
-  getCountForLevel2: (id: string) => number
   getSumForCategory: (id: string) => number
   getTransactionsForCategoryAndMonth: (id: string) => Transaction[]
   openAddSubcategoryFor: string | null
@@ -141,7 +140,6 @@ export default function Level2Section(props: Props) {
     openLevel3Ids,
     toggleLevel3,
     getSumForLevel2,
-    getCountForLevel2,
     getSumForCategory,
     getTransactionsForCategoryAndMonth,
     openAddSubcategoryFor,
@@ -307,8 +305,6 @@ export default function Level2Section(props: Props) {
     <div ref={setNodeRef} style={wrapStyle}>
       <Level2SectionHeader
         name={l2.name}
-        level3Count={sortedLevel3Children.length}
-        transactionCount={getCountForLevel2(l2.id)}
         categorySum={getSumForLevel2(l2.id)}
         isOpen={isOpen}
         isDragging={isDragging}

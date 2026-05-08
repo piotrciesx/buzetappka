@@ -3,8 +3,6 @@ import BudgetLimitIndicator, { type BudgetLimitView } from '../BudgetLimitIndica
 
 type Level2SectionHeaderProps = {
   name: string
-  level3Count: number
-  transactionCount: number
   categorySum: number
   isOpen: boolean
   isDragging: boolean
@@ -91,8 +89,6 @@ const Icon = ({ name }: { name: 'calendar' | 'plus' | 'limit' }) => {
 
 export default function Level2SectionHeader({
   name,
-  level3Count,
-  transactionCount,
   categorySum,
   isOpen,
   isDragging,
@@ -153,12 +149,8 @@ export default function Level2SectionHeader({
 
         <div data-category-row-copy="true">
           <div style={styles.l2Name} data-category-row-name="true">
-            {name}
-          </div>
-
-          <div style={styles.l2Meta} data-category-row-meta="true">
-            <span>{level3Count} podkategorie</span>
-            <span>{formattedSum} zł</span>
+            <span>{name}</span>
+            <strong data-category-row-amount="true">{formattedSum} zł</strong>
           </div>
 
           {isClosingAfterSelectedMonth && (

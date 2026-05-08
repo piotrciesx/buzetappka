@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 458
-Data: 2026-05-08T22:38:43.978Z
+Data: 2026-05-08T22:51:43.501Z
 
 
 ==================================================
@@ -73088,6 +73088,103 @@ PLIK: app\styles\category-tree\workspace.css
   justify-self: end !important;
 }
 
+[data-budget-tree-control-deck="true"] [data-budget-status-grid="true"] {
+  grid-template-columns: auto auto minmax(0, 1fr) auto auto !important;
+  align-items: center !important;
+  column-gap: 10px !important;
+  row-gap: 6px !important;
+  min-height: 48px !important;
+  padding: 7px 10px !important;
+}
+
+[data-budget-status-left="true"] {
+  grid-column: 1 !important;
+}
+
+[data-budget-status-right="true"] {
+  grid-column: -2 / -1 !important;
+}
+
+[data-budget-status-separator="true"] {
+  width: 1px !important;
+  height: 28px !important;
+  display: block !important;
+  border-radius: 999px !important;
+  background: rgba(203, 213, 225, 0.82) !important;
+}
+
+[data-budget-pinned-categories="true"] {
+  min-width: 0 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  overflow: hidden !important;
+}
+
+[data-budget-pinned-category="true"] {
+  min-width: 0 !important;
+  max-width: 156px !important;
+  min-height: 34px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 7px !important;
+  border: 1px solid rgba(203, 213, 225, 0.78) !important;
+  border-radius: 11px !important;
+  padding: 0 9px !important;
+  background: rgba(255, 255, 255, 0.78) !important;
+  color: #334155 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 6px 16px rgba(15, 23, 42, 0.035) !important;
+  cursor: pointer !important;
+}
+
+[data-budget-pinned-category="true"]:hover {
+  border-color: rgba(148, 163, 184, 0.9) !important;
+  background: rgba(248, 250, 252, 0.92) !important;
+}
+
+[data-budget-pinned-category="true"][data-pinned-category-kind="income"] {
+  border-color: rgba(134, 239, 172, 0.62) !important;
+  background: rgba(240, 253, 244, 0.78) !important;
+  color: #166534 !important;
+}
+
+[data-budget-pinned-category="true"][data-pinned-category-kind="expense"] {
+  border-color: rgba(254, 205, 211, 0.74) !important;
+  background: rgba(255, 241, 242, 0.78) !important;
+  color: #9f1239 !important;
+}
+
+[data-budget-pinned-category="true"] span,
+[data-budget-pinned-category="true"] b {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+[data-budget-pinned-category="true"] span {
+  color: inherit !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+}
+
+[data-budget-pinned-category="true"] b {
+  max-width: 70px !important;
+  color: inherit !important;
+  font-size: 11px !important;
+  font-weight: 780 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+[data-budget-compact-notice="limits"] {
+  grid-column: 1 / -1 !important;
+}
+
 [data-budget-compact-notice="alert"],
 [data-budget-compact-notice="note"],
 [data-budget-compact-notice="sort"] {
@@ -73295,6 +73392,23 @@ PLIK: app\styles\category-tree\workspace.css
   [data-tree-category-grid="true"],
   [data-budget-tree-bottom-deck="true"] {
     margin-top: 12px;
+  }
+
+  [data-budget-tree-control-deck="true"] [data-budget-status-grid="true"] {
+    grid-template-columns: auto 1px minmax(0, 1fr) !important;
+  }
+
+  [data-budget-status-right="true"] {
+    grid-column: 1 / -1 !important;
+    justify-self: start !important;
+  }
+
+  [data-budget-pinned-categories="true"] {
+    justify-content: flex-start !important;
+  }
+
+  [data-budget-pinned-category="true"] {
+    max-width: 150px !important;
   }
 }
 
@@ -78769,6 +78883,7 @@ PLIK: components\budget-app\BudgetWorkspaceTopNotices.tsx
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import BudgetLimitAlertsPanel from '../BudgetLimitAlertsPanel'
 import ProfileMonthNotePanel from '../ProfileMonthNotePanel'
+import type { PinnedWorkspaceCategory } from '../../lib/budgetAppSummary'
 import type { Category } from '../../lib/budgetPageTypes'
 import type { BudgetLimitUsageState } from '../../lib/useBudgetLimits'
 
@@ -78783,10 +78898,12 @@ type BudgetWorkspaceTopNoticesProps = {
   activeBudgetLimitsCount: number
   activeBudgetLimitAlerts: BudgetLimitUsageState[]
   categoriesById: Record<string, Category>
+  pinnedWorkspaceCategories: PinnedWorkspaceCategory[]
   styles: Record<string, CSSProperties>
   onLockMonth: (month: string) => Promise<void>
   onHidePreviousMonthCloseReminder: () => void
   onOpenBudgetLimit: (categoryId: string | null) => void
+  onOpenPinnedCategory: (categoryId: string) => void
   sortContent?: ReactNode
 }
 
@@ -78860,14 +78977,17 @@ export default function BudgetWorkspaceTopNotices({
   activeBudgetLimitsCount,
   activeBudgetLimitAlerts,
   categoriesById,
+  pinnedWorkspaceCategories,
   styles,
   onLockMonth,
   onHidePreviousMonthCloseReminder,
   onOpenBudgetLimit,
+  onOpenPinnedCategory,
   sortContent,
 }: BudgetWorkspaceTopNoticesProps) {
   const [openedNotice, setOpenedNotice] = useState<OpenedNotice>(null)
   const noticeRef = useRef<HTMLDivElement | null>(null)
+  const visiblePinnedCategories = pinnedWorkspaceCategories.slice(0, 5)
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
@@ -78977,6 +79097,28 @@ export default function BudgetWorkspaceTopNotices({
           )}
         </div>
       </div>
+
+      {visiblePinnedCategories.length > 0 && (
+        <>
+          <i data-budget-status-separator="true" aria-hidden="true" />
+          <div data-budget-pinned-categories="true" aria-label="Przypięte kategorie">
+            {visiblePinnedCategories.map((category) => (
+              <button
+                key={category.id}
+                type="button"
+                data-budget-pinned-category="true"
+                data-pinned-category-kind={category.kind}
+                onClick={() => onOpenPinnedCategory(category.id)}
+                title={category.label}
+              >
+                <span>{category.label}</span>
+                <b>{category.amount.toLocaleString('pl-PL')} zł</b>
+              </button>
+            ))}
+          </div>
+          {sortContent && <i data-budget-status-separator="true" aria-hidden="true" />}
+        </>
+      )}
 
       {sortContent && (
         <div data-budget-status-right="true" data-budget-compact-notice="sort">
@@ -80179,10 +80321,12 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
               activeBudgetLimitsCount={activeBudgetLimits.length}
               activeBudgetLimitAlerts={activeBudgetLimitAlerts}
               categoriesById={categoriesById}
+              pinnedWorkspaceCategories={pinnedWorkspaceCategories}
               styles={styles}
               onLockMonth={handleLockMonth}
               onHidePreviousMonthCloseReminder={() => setIsPreviousMonthCloseReminderHidden(true)}
               onOpenBudgetLimit={setBudgetLimitEditorCategoryId}
+              onOpenPinnedCategory={openTransactionCreator}
             />
           ),
           workspaceBottomContent: (
@@ -80190,11 +80334,9 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
               selectedMonth={selectedMonth}
               calendarDays={contextCalendarDays}
               recentTransactions={recentTransactionPreviews}
-              pinnedCategories={pinnedWorkspaceCategories}
               trashedCount={trashedTransactions.length}
               onOpenMonthCalendar={() => openUtilityPanel('monthCalendar')}
               onOpenDay={(dayText: string) => handleOpenGlobalCalendarAddForDay(dayText)}
-              onOpenPinnedCategory={openTransactionCreator}
               onOpenTrash={() => openUtilityPanel('trash')}
             />
           ),
@@ -103796,23 +103938,13 @@ type RecentTransactionPreview = {
   categoryLabel: string
 }
 
-type PinnedWorkspaceCategory = {
-  id: string
-  label: string
-  kind: 'income' | 'expense'
-  amount: number
-  transactionCount: number
-}
-
 type Props = {
   selectedMonth: string
   calendarDays: CalendarDay[]
   recentTransactions: RecentTransactionPreview[]
-  pinnedCategories: PinnedWorkspaceCategory[]
   trashedCount: number
   onOpenMonthCalendar: () => void
   onOpenDay: (dayText: string) => void
-  onOpenPinnedCategory: (categoryId: string) => void
   onOpenTrash: () => void
 }
 
@@ -103820,11 +103952,9 @@ export default function MainWorkspaceBottomDeck({
   selectedMonth,
   calendarDays,
   recentTransactions,
-  pinnedCategories,
   trashedCount,
   onOpenMonthCalendar,
   onOpenDay,
-  onOpenPinnedCategory,
   onOpenTrash,
 }: Props) {
   const today = new Date()
@@ -103832,7 +103962,7 @@ export default function MainWorkspaceBottomDeck({
   const currentDay = today.getDate()
 
   return (
-    <section data-main-workspace-deck="true" aria-label="Kalendarz, wpisy i przypięte kategorie">
+    <section data-main-workspace-deck="true" aria-label="Kalendarz i ostatnie wpisy">
       <div data-calendar-recent-panel="true">
         <section data-workspace-calendar-pane="true" aria-label="Kalendarz miesiąca">
           <div data-workspace-panel-header="true">
@@ -103917,60 +104047,6 @@ export default function MainWorkspaceBottomDeck({
           </div>
         </section>
       </div>
-
-      <section data-pinned-category-panel="true" aria-label="Przypięte kategorie">
-        <div data-workspace-panel-header="true">
-          <div>
-            <span>Przypięte kategorie</span>
-            <strong>Szybki dostęp do najważniejszych kategorii</strong>
-          </div>
-        </div>
-
-        <div data-pinned-categories-grid="true">
-          {pinnedCategories.length === 0 ? (
-            <small data-workspace-empty-placeholder="true">Brak przypiętych kategorii.</small>
-          ) : (
-            pinnedCategories.map((category) => (
-              <article
-                key={category.id}
-                data-pinned-category-card="true"
-                data-pinned-category-kind={category.kind}
-              >
-                <button
-                  type="button"
-                  data-pinned-category-main="true"
-                  onClick={() => onOpenPinnedCategory(category.id)}
-                >
-                  <span aria-hidden="true">{category.kind === 'income' ? '↗' : '↘'}</span>
-                  <div>
-                    <strong>{category.label}</strong>
-                    <small>
-                      {category.transactionCount > 0
-                        ? `${category.transactionCount} wpisy`
-                        : 'Gotowe do szybkiego wpisu'}
-                    </small>
-                  </div>
-                  <b>{category.amount.toLocaleString('pl-PL')} zł</b>
-                </button>
-                <details data-pinned-category-menu="true" data-floating-dropdown="true">
-                  <summary aria-label={`Menu kategorii ${category.label}`}>
-                    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-                      <circle cx="5" cy="12" r="1.8" fill="currentColor" />
-                      <circle cx="12" cy="12" r="1.8" fill="currentColor" />
-                      <circle cx="19" cy="12" r="1.8" fill="currentColor" />
-                    </svg>
-                  </summary>
-                  <div>
-                    <button type="button" onClick={() => onOpenPinnedCategory(category.id)}>
-                      Dodaj wpis
-                    </button>
-                  </div>
-                </details>
-              </article>
-            ))
-          )}
-        </div>
-      </section>
 
       <footer data-workspace-bottom-bar="true">
         <span>{selectedMonth}</span>

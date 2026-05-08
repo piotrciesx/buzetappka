@@ -288,7 +288,6 @@ export default function BudgetCategoryTree(props: Props) {
         openLevel3Ids={openLevel3Ids}
         toggleLevel3={toggleLevel3}
         getSumForLevel2={getSumForLevel2ForSelectedMonth}
-        getCountForLevel2={getCountForLevel2ForSelectedMonth}
         getSumForCategory={getSumForCategoryForSelectedMonth}
         getTransactionsForCategoryAndMonth={getTransactionsForCategoryAndMonthForSelectedMonth}
         openAddSubcategoryFor={openAddSubcategoryFor}

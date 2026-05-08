@@ -151,14 +151,9 @@ export default function Level3SectionHeader({
 
         <div data-category-row-copy="true">
           <div style={styles.l3Name} data-category-row-name="true">
-            {name}
+            <span>{name}</span>
+            {showCategorySum && <strong data-category-row-amount="true">{formattedSum} zł</strong>}
           </div>
-
-          {showCategorySum && (
-            <div data-category-row-meta="true">
-              <span>{formattedSum} zł</span>
-            </div>
-          )}
 
           {isClosingAfterSelectedMonth && (
             <div style={styles.closingBadge}>zamknie się z końcem tego miesiąca</div>
