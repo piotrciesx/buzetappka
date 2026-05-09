@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
-Liczba plików: 458
-Data: 2026-05-09T01:42:43.433Z
+Liczba plików: 459
+Data: 2026-05-09T01:51:52.611Z
 
 
 ==================================================
@@ -70993,6 +70993,7 @@ PLIK: app\globals.css
 @import "./styles/modals.css";
 @import "./styles/mobile.css";
 @import "./styles/side-panels.css";
+@import "./styles/layout-depth.css";
 
 
 
@@ -74030,6 +74031,102 @@ PLIK: app\styles\dashboard.css
 
 
 ==================================================
+PLIK: app\styles\layout-depth.css
+==================================================
+
+/* Layout-only depth and popup guardrails. Imported last on purpose. */
+
+@media (min-width: 821px) {
+  [data-budget-shell-content="true"],
+  [data-budget-workspace="true"] {
+    position: relative !important;
+    overflow: visible !important;
+  }
+
+  [data-budget-workspace="true"] {
+    isolation: isolate;
+    background:
+      linear-gradient(135deg, rgba(244, 247, 250, 0.92) 0%, rgba(255, 253, 249, 0.86) 100%) !important;
+  }
+
+  [data-budget-workspace-main="true"] {
+    position: relative !important;
+    z-index: 1 !important;
+    overflow: visible !important;
+    background:
+      linear-gradient(145deg, rgba(245, 248, 251, 0.9) 0%, rgba(255, 253, 249, 0.74) 100%) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.84),
+      inset 0 0 0 1px rgba(226, 232, 240, 0.42) !important;
+  }
+
+  [data-budget-sidebar="true"] {
+    z-index: 1900 !important;
+    box-shadow:
+      inset -1px 0 0 rgba(255, 255, 255, 0.74),
+      12px 0 30px rgba(15, 23, 42, 0.055) !important;
+  }
+
+  [data-budget-context-rail="true"] {
+    z-index: 1850 !important;
+    box-shadow:
+      inset 1px 0 0 rgba(255, 255, 255, 0.78),
+      -12px 0 32px rgba(15, 23, 42, 0.06) !important;
+  }
+
+  [data-context-card="rail-actions"],
+  [data-rail-notification-wrap="true"],
+  [data-rail-search-wrap="true"] {
+    z-index: 3600 !important;
+  }
+}
+
+@media (max-width: 820px) {
+  html,
+  body,
+  [data-budget-app="true"],
+  [data-budget-shell-content="true"],
+  [data-budget-workspace="true"],
+  [data-budget-workspace-main="true"],
+  [data-budget-tree-workspace="true"] {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  [data-budget-workspace="true"],
+  [data-budget-workspace-main="true"],
+  [data-budget-tree-workspace="true"],
+  [data-level1-tree-shell="true"],
+  [data-level1-mobile-flow="true"],
+  [data-level1-mobile-block="true"] {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  [data-level1-mobile-flow="true"],
+  [data-level1-mobile-block="true"] {
+    display: grid !important;
+    gap: 10px !important;
+  }
+
+  [data-level1-mobile-block="true"] [data-level1-expanded-content="true"] {
+    margin: 0 !important;
+  }
+
+  [data-floating-dropdown="true"][open],
+  [data-mobile-category-menu="true"][open],
+  [data-transaction-menu="true"][open],
+  [data-mobile-category-menu-panel="true"],
+  [data-tree-sort-inline="true"],
+  [data-budget-month-menu="true"] {
+    max-width: calc(100vw - 20px) !important;
+    z-index: 20010 !important;
+  }
+}
+
+
+
+==================================================
 PLIK: app\styles\left-sidebar.css
 ==================================================
 
@@ -75436,14 +75533,17 @@ PLIK: app\styles\right-rail.css
 }
 
 [data-rail-notification-popover="true"] {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: -96px;
-  z-index: 4200;
+  position: fixed;
+  top: 72px;
+  right: 28px;
+  z-index: 12000;
   width: 260px;
+  max-width: calc(100vw - 24px);
+  max-height: calc(100dvh - 92px);
   display: grid;
   gap: 7px;
   padding: 12px;
+  overflow: auto;
   border: 1px solid rgba(203, 213, 225, 0.9);
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.98);
@@ -75455,8 +75555,9 @@ PLIK: app\styles\right-rail.css
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
-  z-index: 4200;
+  z-index: 12000;
   width: 220px;
+  max-width: calc(100vw - 24px);
   padding: 7px;
   border: 1px solid rgba(203, 213, 225, 0.88);
   border-radius: 13px;
@@ -75801,8 +75902,10 @@ PLIK: app\styles\right-rail.css
   }
 
   [data-rail-notification-popover="true"] {
-    right: auto;
-    left: 0;
+    top: 64px;
+    right: 12px;
+    left: auto;
+    width: min(300px, calc(100vw - 24px));
   }
 }
 
@@ -75816,8 +75919,6 @@ PLIK: app\styles\shell.css
 * {
   box-sizing: border-box;
 }
-
-
 
 /* Etap 25: main site repair pass. Keep this block last so it neutralizes older visual passes. */
 [data-budget-app="true"] {
@@ -83460,6 +83561,40 @@ export default function BudgetCategoryTree(props: Props) {
   const isLevel1DndBlocked =
     isReorderingLevel1 || sortedLevel1.some((category) => openLevel1Ids.includes(category.id))
   const isLevel1Sortable = sortedLevel1.length > 1
+
+  if (isMobileViewport) {
+    return (
+      <div data-level1-tree-shell="true" data-level1-mobile-flow="true">
+        {sortedLevel1.map((level1Category) => {
+          const isLevel1Open = openLevel1Ids.includes(level1Category.id)
+          const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
+
+          return (
+            <section key={level1Category.id} data-level1-mobile-block="true">
+              <div data-level1-header-grid="true">
+                <StaticLevel1Card
+                  level1Category={level1Category}
+                  isOpen={isLevel1Open}
+                  onToggle={() => toggleLevel1(level1Category.id)}
+                  styles={styles}
+                  kind={getLevel1Kind(level1Category)}
+                  summary={getLevel1Summary(level1Category)}
+                  dragHandle={renderBlockedLevel1DragHandle(level1Category, isLevel1Sortable)}
+                  extraActions={renderLevel1Actions(level1Category, isLevel1CalendarOpen)}
+                  limitIndicator={
+                    level1Category.id === expenseLevel1Id && getBudgetLimitView ? (
+                      <BudgetLimitIndicator view={getBudgetLimitView?.(null) ?? null} />
+                    ) : null
+                  }
+                />
+              </div>
+              {renderLevel1Content(level1Category)}
+            </section>
+          )
+        })}
+      </div>
+    )
+  }
 
   if (isLevel1DndBlocked) {
     return (

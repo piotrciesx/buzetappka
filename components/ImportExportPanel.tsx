@@ -58,20 +58,6 @@ const panelStyle: CSSProperties = {
   boxShadow: '0 10px 28px rgba(15, 23, 42, 0.045)',
 }
 
-const headerStyle: CSSProperties = {
-  display: 'grid',
-  gap: 4,
-  paddingBottom: 10,
-  borderBottom: '1px solid rgba(226, 232, 240, 0.86)',
-}
-
-const descriptionStyle: CSSProperties = {
-  margin: 0,
-  color: '#64748b',
-  fontSize: 12,
-  lineHeight: 1.4,
-}
-
 const actionRowStyle: CSSProperties = {
   display: 'flex',
   gap: 8,
@@ -329,10 +315,6 @@ export default function ImportExportPanel({
 
   return (
     <section style={panelStyle}>
-      <div style={headerStyle}>
-        <p style={descriptionStyle}>Eksportuj kopię danych albo wczytaj wpisy z pliku CSV.</p>
-      </div>
-
       <div style={actionRowStyle}>
         <button style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={handleExportCsv} type="button">
           Eksport CSV aktywnych wpisów

@@ -23,13 +23,6 @@ const draftsHeaderStyle = {
   borderBottom: '1px solid rgba(226, 232, 240, 0.86)',
 } as const
 
-const draftsDescriptionStyle = {
-  margin: 0,
-  color: '#64748b',
-  fontSize: 12,
-  lineHeight: 1.35,
-} as const
-
 const draftsListStyle = {
   display: 'grid',
   gap: 8,
@@ -172,9 +165,6 @@ export default function DraftsPanel(props: Props) {
   return (
     <section style={draftsPanelStyle} aria-label="Szkice wpisów">
       <div style={draftsHeaderStyle}>
-        <div>
-          <p style={draftsDescriptionStyle}>Niedokończone wpisy zapisują się automatycznie.</p>
-        </div>
         <button
           type="button"
           style={{ ...styles.secondaryButton, ...lightButtonStyle }}

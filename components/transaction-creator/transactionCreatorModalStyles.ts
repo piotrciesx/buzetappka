@@ -18,53 +18,54 @@ export const modalStyle = {
   background: '#ffffff',
   border: '1px solid #e5e7eb',
   borderRadius: 16,
-  padding: 20,
+  padding: 16,
   boxShadow: '0 20px 40px rgba(0,0,0,0.18)',
   boxSizing: 'border-box',
 } as const
 
 export const sectionStyle = {
-  marginTop: 16,
-  paddingTop: 16,
+  marginTop: 12,
+  paddingTop: 12,
   borderTop: '1px solid #e5e7eb',
 } as const
 
 export const treeLevel2WrapStyle = {
-  marginTop: 12,
+  marginTop: 8,
   display: 'flex',
-  gap: 8,
+  gap: 6,
   flexWrap: 'wrap' as const,
 } as const
 
 export const treeLevel3WrapStyle = {
-  marginTop: 12,
-  padding: 12,
+  marginTop: 8,
+  padding: 9,
   border: '1px solid #e5e7eb',
   borderRadius: 12,
   background: '#f9fafb',
 } as const
 
 export const treeLevel3ButtonsStyle = {
-  marginTop: 10,
+  marginTop: 8,
   display: 'flex',
-  gap: 8,
+  gap: 6,
   flexWrap: 'wrap' as const,
 } as const
 
 export const shortcutListStyle = {
-  marginTop: 10,
+  marginTop: 8,
   display: 'flex',
-  gap: 8,
+  gap: 6,
   flexWrap: 'wrap' as const,
 } as const
 
 export const shortcutButtonStyle = {
   display: 'flex',
-  flexDirection: 'column' as const,
-  alignItems: 'flex-start',
-  gap: 4,
-  minWidth: 220,
+  alignItems: 'center',
+  gap: 6,
+  minWidth: 0,
   maxWidth: '100%',
+  minHeight: 32,
+  padding: '6px 10px',
 } as const
 
 export const disabledLevel3WrapStyle = {
@@ -98,11 +99,11 @@ export const dateLabelStyle = {
 
 export const descriptionFieldWrapStyle = {
   flex: 1,
-  minWidth: 260,
+  minWidth: 220,
   maxWidth: '100%',
   display: 'flex',
   flexDirection: 'column' as const,
-  gap: 8,
+  gap: 4,
 } as const
 
 export const descriptionInputWrapStyle = {
@@ -147,8 +148,8 @@ export const helperTextStyle = {
 } as const
 
 export const finalCategoryInfoStyle = {
-  marginTop: 12,
-  padding: 12,
+  marginTop: 8,
+  padding: 9,
   borderRadius: 12,
   border: '1px solid #dbeafe',
   background: '#eff6ff',
@@ -170,7 +171,7 @@ export const finalCategoryInfoValueStyle = {
 } as const
 
 export const tagInputWrapStyle = {
-  marginTop: 12,
+  marginTop: 10,
   display: 'flex',
   flexDirection: 'column' as const,
   gap: 8,

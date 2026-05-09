@@ -202,6 +202,7 @@ export default function BudgetPageStatusPanels({
   }, [activeSidebarPrimaryPanel, onClosePrimaryPanel])
 
   const openPanel = (panel: BudgetUtilityPanel) => {
+    window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
     onOpenUtilityPanel(activeUtilityPanel === panel ? null : panel)
   }
 
@@ -218,21 +219,30 @@ export default function BudgetPageStatusPanels({
       label: 'Profil',
       icon: 'user',
       active: activeSidebarPrimaryPanel === 'profile',
-      onClick: onOpenProfilePanel,
+      onClick: () => {
+        window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
+        onOpenProfilePanel()
+      },
     },
     {
       id: 'settings',
       label: 'Ustawienia',
       icon: 'settings',
       active: isSettingsPanelVisible,
-      onClick: onOpenSettingsPanel,
+      onClick: () => {
+        window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
+        onOpenSettingsPanel()
+      },
     },
     {
       id: 'dashboard',
       label: 'Dashboard',
       icon: 'dashboard',
       active: isDashboardOpen,
-      onClick: onToggleDashboard,
+      onClick: () => {
+        window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
+        onToggleDashboard()
+      },
     },
     {
       id: 'drafts',

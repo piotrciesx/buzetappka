@@ -194,6 +194,57 @@
   color: #64748b;
 }
 
+[data-rail-reminder-list="true"] {
+  display: grid;
+  gap: 8px;
+}
+
+[data-rail-reminder-item="true"] {
+  display: grid;
+  gap: 8px;
+  padding: 9px;
+  border: 1px solid rgba(226, 232, 240, 0.92);
+  border-radius: 12px;
+  background: rgba(248, 250, 252, 0.76);
+}
+
+[data-rail-reminder-main="true"] {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+[data-rail-reminder-main="true"] span {
+  overflow: hidden;
+  color: #172033;
+  font-size: 12.5px;
+  font-weight: 720;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-rail-reminder-actions="true"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+[data-rail-reminder-actions="true"] button,
+[data-rail-reminders-open-all="true"] {
+  min-height: 28px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  padding: 0 9px !important;
+  border-radius: 999px !important;
+  font-size: 11px !important;
+  font-weight: 680 !important;
+}
+
+[data-rail-reminders-open-all="true"] {
+  justify-self: start;
+  margin-top: 2px;
+}
+
 [data-context-card="summary"] {
   grid-template-columns: minmax(0, 1fr) auto !important;
   align-items: center !important;

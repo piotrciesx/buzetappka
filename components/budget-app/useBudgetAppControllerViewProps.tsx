@@ -3,6 +3,7 @@
 import { useCallback, useMemo } from 'react'
 import type { SaveBudgetLimitInput } from '../../lib/useBudgetLimits'
 import { getCategoryPathLabel } from '../../lib/budgetPageHelpers'
+import { getPendingRecurringTransactions } from '../../lib/recurringTransactions'
 import type { BudgetLimitView } from '../BudgetLimitIndicator'
 import { useBudgetOverlayProps } from './useBudgetOverlayProps'
 import { useBudgetPageMainPanelsProps } from './useBudgetPageMainPanelsProps'
@@ -320,7 +321,22 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     incomeTotal: budgetWorkspaceSummary.selectedMonthIncomeTotal,
     expenseTotal: budgetWorkspaceSummary.selectedMonthExpenseTotal,
     draftCount: ctx.drafts.length,
-    recurringCount: ctx.recurringTransactions.length,
+    recurringCount: effectiveVisibleModules.recurringTransactions
+      ? getPendingRecurringTransactions(
+          ctx.recurringTransactions,
+          ctx.recurringExecutions,
+          selectedMonth,
+          ctx.recurringReminderMonthStatuses
+        ).length
+      : 0,
+    recurringAlerts: effectiveVisibleModules.recurringTransactions
+      ? getPendingRecurringTransactions(
+          ctx.recurringTransactions,
+          ctx.recurringExecutions,
+          selectedMonth,
+          ctx.recurringReminderMonthStatuses
+        )
+      : [],
     showRecurring: effectiveVisibleModules.recurringTransactions,
     onOpenSearch: (query?: string) => {
       ctx.setIsDashboardPanelOpen(false)
@@ -336,6 +352,14 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
       ctx.setActiveSidebarPrimaryPanel?.(null)
       ctx.setIsSettingsPanelVisible(false)
       ctx.setActiveUtilityPanel('recurringTransactions')
+    },
+    onAddFromReminder: ctx.openReminderTransactionCreator,
+    onMarkRecurringRead: async (recurring: any) => {
+      await ctx.saveRecurringReminderMonthStatus({
+        reminderId: recurring.id,
+        month: selectedMonth,
+        status: 'read',
+      })
     },
     onQuickAdd: () => ctx.openBlankFloatingTransactionCreator(null),
     onToggleProfile: () => {

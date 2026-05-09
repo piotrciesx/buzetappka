@@ -67,6 +67,19 @@ export default function UserProfileMenu({
   const avatarLetter = (userEmail.trim()[0] || 'P').toUpperCase()
 
   useEffect(() => {
+    const handleCloseFloatingUi = () => {
+      setIsOpen(false)
+      setIsBackupMenuOpen(false)
+    }
+
+    window.addEventListener('budget-close-floating-ui', handleCloseFloatingUi)
+
+    return () => {
+      window.removeEventListener('budget-close-floating-ui', handleCloseFloatingUi)
+    }
+  }, [])
+
+  useEffect(() => {
     if (!isOpen) {
       return
     }
@@ -122,8 +135,11 @@ export default function UserProfileMenu({
         style={avatarButtonStyle}
         aria-label="Menu profilu"
         onClick={() => {
+          if (!isOpen) {
+            window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
+          }
           setStatusText('')
-          setIsOpen((previousValue) => !previousValue)
+          setIsOpen(!isOpen)
         }}
       >
         {avatarLetter}

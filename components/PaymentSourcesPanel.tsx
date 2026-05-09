@@ -47,13 +47,6 @@ const badgeStyle = {
   fontWeight: 620,
 } as const
 
-const subtitleStyle = {
-  maxWidth: 620,
-  color: '#64748b',
-  fontSize: 12,
-  lineHeight: 1.45,
-} as const
-
 const settingsCardStyle = {
   display: 'grid',
   gap: 10,
@@ -299,11 +292,6 @@ export default function PaymentSourcesPanel(props: Props) {
   return (
     <section style={panelStyle}>
       <style>{responsivePaymentSourcesStyle}</style>
-      <div style={subtitleStyle}>
-        Osobno konfigurujesz listy dla przychodów i wydatków oraz decydujesz, czy pole ma być
-        widoczne w kreatorze.
-      </div>
-
       <div style={settingsGridStyle}>
         <div style={settingsCardStyle}>
           <div style={settingsTitleStyle}>Przychody</div>

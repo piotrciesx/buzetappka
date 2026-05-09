@@ -269,7 +269,7 @@ export default function BudgetLimitEditorModal({
               inputMode="decimal"
               value={amount}
               onChange={(event) => setAmount(event.target.value.replace(',', '.'))}
-              placeholder="1000"
+              placeholder="Wpisz kwotę"
             />
           </label>
 

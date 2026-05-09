@@ -19,7 +19,6 @@ import {
   finalCategoryInfoStyle,
   finalCategoryInfoTitleStyle,
   finalCategoryInfoValueStyle,
-  helperTextStyle,
   modalStyle,
   overlayStyle,
   sectionStyle,
@@ -141,6 +140,13 @@ const getCategoryPathLabel = (
 
 const normalizeAmountInput = (value: string) => {
   return value.replace(',', '.')
+}
+
+const compactCategoryButtonStyle: CSSProperties = {
+  minHeight: 32,
+  padding: '6px 10px',
+  borderRadius: 10,
+  fontSize: 13,
 }
 
 export default function TransactionCreatorModal(props: Props) {
@@ -410,6 +416,7 @@ export default function TransactionCreatorModal(props: Props) {
                     style={{
                       ...(isSelected ? styles.primaryButton : styles.secondaryButton),
                       ...shortcutButtonStyle,
+                      ...compactCategoryButtonStyle,
                     }}
                     onClick={() => handleShortcutClick(shortcut.id)}
                   >
@@ -487,7 +494,10 @@ export default function TransactionCreatorModal(props: Props) {
                 return (
                   <button
                     key={category.id}
-                    style={isSelected ? styles.primaryButton : styles.secondaryButton}
+                    style={{
+                      ...(isSelected ? styles.primaryButton : styles.secondaryButton),
+                      ...compactCategoryButtonStyle,
+                    }}
                     onClick={() => handleLevel1Click(category)}
                   >
                     {category.name}
@@ -516,7 +526,10 @@ export default function TransactionCreatorModal(props: Props) {
                 return (
                   <button
                     key={level2Category.id}
-                    style={isSelected ? styles.primaryButton : styles.secondaryButton}
+                    style={{
+                      ...(isSelected ? styles.primaryButton : styles.secondaryButton),
+                      ...compactCategoryButtonStyle,
+                    }}
                     onClick={() => handleLevel2Click(level2Category)}
                   >
                     {level2Category.name}
@@ -566,7 +579,10 @@ export default function TransactionCreatorModal(props: Props) {
                   return (
                     <button
                       key={level3Category.id}
-                      style={isSelected ? styles.primaryButton : styles.secondaryButton}
+                      style={{
+                        ...(isSelected ? styles.primaryButton : styles.secondaryButton),
+                        ...compactCategoryButtonStyle,
+                      }}
                       onClick={() => handleLevel3Click(level3Category)}
                     >
                       {getLevel3ButtonLabel(level3Category)}
@@ -606,8 +622,8 @@ export default function TransactionCreatorModal(props: Props) {
         <div style={sectionStyle}>
           <div style={styles.l2Name}>Dane wpisu</div>
 
-          <div style={{ ...styles.formRow, marginTop: 10, alignItems: 'flex-start' }}>
-            <div style={descriptionFieldWrapStyle}>
+          <div style={{ ...styles.formRow, marginTop: 10, alignItems: 'center' }}>
+            <div style={{ ...descriptionFieldWrapStyle, order: 2 }}>
               <div style={descriptionInputWrapStyle}>
                 <input
                   ref={descriptionInputRef}
@@ -653,28 +669,23 @@ export default function TransactionCreatorModal(props: Props) {
                 )}
               </div>
 
-              <div style={helperTextStyle}>
-                Sugestie filtrują się na żywo po całym wpisanym tekście. Możesz wybrać je strzałkami
-                i Enterem, a ukryć prawym przyciskiem albo długim przytrzymaniem.
-              </div>
             </div>
 
             <input
               ref={amountInputRef}
-              style={styles.smallInput}
+              style={{ ...styles.smallInput, order: 3 }}
               placeholder="kwota"
               value={amount}
               onChange={(event) => setAmount(normalizeAmountInput(event.target.value))}
               onKeyDown={(event) => {
                 if (event.key === 'Enter') {
                   event.preventDefault()
-                  dayInputRef.current?.focus()
+                  void handleSaveFromKeyboard()
                 }
               }}
             />
 
-            <label style={dateFieldStyle}>
-              <span style={dateLabelStyle}>dzień</span>
+            <label style={{ ...dateFieldStyle, order: 1 }}>
               <input
                 ref={dayInputRef}
                 style={styles.smallInput}
@@ -700,7 +711,7 @@ export default function TransactionCreatorModal(props: Props) {
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
                     event.preventDefault()
-                    void handleSaveFromKeyboard()
+                    descriptionInputRef.current?.focus()
                   }
                 }}
               />
@@ -710,6 +721,8 @@ export default function TransactionCreatorModal(props: Props) {
               ref={saveButtonRef}
               style={{
                 ...styles.primaryButton,
+                order: 4,
+                marginLeft: 'auto',
                 opacity: isSaving || !selectedLevel1Id || !effectiveCategoryId ? 0.6 : 1,
                 cursor:
                   isSaving || !selectedLevel1Id || !effectiveCategoryId ? 'not-allowed' : 'pointer',
@@ -725,7 +738,7 @@ export default function TransactionCreatorModal(props: Props) {
             {isSerialModeEnabled ? (
               <>
                 <button
-                  style={styles.secondaryButton}
+                  style={{ ...styles.secondaryButton, order: 5 }}
                   disabled={isSaving || !selectedLevel1Id || !effectiveCategoryId}
                   onClick={async () => {
                     await onSaveAndClose()
@@ -734,12 +747,12 @@ export default function TransactionCreatorModal(props: Props) {
                   {isSaving ? 'zapisywanie...' : 'zapisz i zakończ'}
                 </button>
 
-                <button style={styles.secondaryButton} onClick={onClose}>
+                <button style={{ ...styles.secondaryButton, order: 6 }} onClick={onClose}>
                   zakończ
                 </button>
               </>
             ) : (
-              <button style={styles.secondaryButton} onClick={onClose}>
+              <button style={{ ...styles.secondaryButton, order: 5 }} onClick={onClose}>
                 anuluj
               </button>
             )}
@@ -764,11 +777,6 @@ export default function TransactionCreatorModal(props: Props) {
               }}
               onKeyDown={handleTagsKeyDown}
             />
-
-            <div style={helperTextStyle}>
-              Wpisuj tagi po przecinku. Zostaną zapisane i będzie można po nich filtrować w
-              wyszukiwarce.
-            </div>
 
             {selectedTagNames.length > 0 && (
               <div style={tagBadgesWrapStyle}>
@@ -801,10 +809,6 @@ export default function TransactionCreatorModal(props: Props) {
                   styles={styles}
                 />
 
-                <div style={helperTextStyle}>
-                  To pole jest opcjonalne i zapisuje powiązanie wpisu z gotówką, kartą albo kontem.
-                  Jeśli dodasz kolejne źródło, zapisze się pełny split płatności.
-                </div>
               </>
             )}
 
