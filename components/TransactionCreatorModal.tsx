@@ -512,7 +512,11 @@ export default function TransactionCreatorModal(props: Props) {
         <div style={sectionStyle} data-transaction-entry-section="true">
           <div style={styles.l2Name}>Kategorie</div>
 
-          {!selectedLevel1Id && <div style={styles.emptyText}>Najpierw wybierz typ wpisu.</div>}
+          {!selectedLevel1Id && (
+            <div style={styles.emptyText} data-transaction-category-hint="true">
+              Najpierw wybierz typ wpisu.
+            </div>
+          )}
 
           {selectedLevel1Id && availableLevel2Categories.length > 0 && (
             <div style={treeLevel2WrapStyle}>
@@ -541,35 +545,35 @@ export default function TransactionCreatorModal(props: Props) {
           )}
 
           {selectedLevel1Id && availableLevel2Categories.length === 0 && (
-            <div style={styles.emptyText}>
+            <div style={styles.emptyText} data-transaction-category-hint="true">
               Ten typ nie ma dodatkowych kategorii — wpis zapisze się bezpośrednio tutaj.
             </div>
           )}
         </div>
 
-        <div style={sectionStyle}>
+        <div style={sectionStyle} data-transaction-subcategory-section="true">
           <div style={styles.l2Name}>Podkategorie</div>
 
           {!selectedLevel2Id && availableLevel2Categories.length > 0 && (
-            <div style={disabledLevel3WrapStyle}>
+            <div style={disabledLevel3WrapStyle} data-transaction-category-disabled="true">
               <div style={styles.l2Name}>Najpierw wybierz kategorię</div>
-              <div style={styles.emptyText}>
+              <div style={styles.emptyText} data-transaction-category-hint="true">
                 Wybór podkategorii odblokuje się po wskazaniu kategorii.
               </div>
             </div>
           )}
 
           {selectedLevel1Id && availableLevel2Categories.length === 0 && (
-            <div style={treeLevel3WrapStyle}>
+            <div style={treeLevel3WrapStyle} data-transaction-final-category-placeholder="true">
               <div style={styles.l2Name}>Kategoria końcowa</div>
-              <div style={styles.emptyText}>
+              <div style={styles.emptyText} data-transaction-category-hint="true">
                 W tym typie nie ma niższych kategorii — wpis zapisze się tutaj.
               </div>
             </div>
           )}
 
           {selectedLevel2Id && availableLevel3Categories.length > 0 && (
-            <div style={treeLevel3WrapStyle}>
+            <div style={treeLevel3WrapStyle} data-transaction-final-category-placeholder="true">
               <div style={styles.l2Name}>{categoriesById[selectedLevel2Id]?.name || ''}</div>
 
               <div style={treeLevel3ButtonsStyle}>
@@ -596,18 +600,19 @@ export default function TransactionCreatorModal(props: Props) {
           {selectedLevel2Id && availableLevel3Categories.length === 0 && (
             <div style={treeLevel3WrapStyle}>
               <div style={styles.l2Name}>{categoriesById[selectedLevel2Id]?.name || ''}</div>
-              <div style={styles.emptyText}>
+              <div style={styles.emptyText} data-transaction-category-hint="true">
                 Ta kategoria nie ma podkategorii — wpis zapisze się tutaj.
               </div>
             </div>
           )}
 
           {effectiveCategoryId && (
-            <div style={finalCategoryInfoStyle}>
+            <div style={finalCategoryInfoStyle} data-transaction-final-category="true">
               <div style={finalCategoryInfoTitleStyle}>Zapis trafi do</div>
               <div style={finalCategoryInfoValueStyle}>{effectiveCategoryLabel}</div>
               <button
                 type="button"
+                data-transaction-pin-button="true"
                 style={{ ...styles.secondaryButton, marginTop: 8 }}
                 onClick={() => onTogglePinnedCategory(effectiveCategoryId)}
               >
@@ -619,7 +624,7 @@ export default function TransactionCreatorModal(props: Props) {
           )}
         </div>
 
-        <div style={sectionStyle}>
+        <div style={sectionStyle} data-transaction-data-section="true">
           <div style={styles.l2Name}>Dane wpisu</div>
 
           <div
@@ -630,6 +635,7 @@ export default function TransactionCreatorModal(props: Props) {
               <div style={descriptionInputWrapStyle}>
                 <input
                   ref={descriptionInputRef}
+                  data-transaction-description-input="true"
                   style={styles.input}
                   placeholder="opis"
                   value={description}
@@ -676,6 +682,7 @@ export default function TransactionCreatorModal(props: Props) {
 
             <input
               ref={amountInputRef}
+              data-transaction-amount-input="true"
               style={{ ...styles.smallInput, order: 3 }}
               placeholder="kwota"
               value={amount}
@@ -691,6 +698,7 @@ export default function TransactionCreatorModal(props: Props) {
             <label style={{ ...dateFieldStyle, order: 1 }}>
               <input
                 ref={dayInputRef}
+                data-transaction-day-input="true"
                 style={styles.smallInput}
                 value={dayInputValue}
                 placeholder="dzień"
@@ -722,6 +730,7 @@ export default function TransactionCreatorModal(props: Props) {
 
             <button
               ref={saveButtonRef}
+              data-transaction-save-action="true"
               style={{
                 ...styles.primaryButton,
                 order: 4,
@@ -741,6 +750,7 @@ export default function TransactionCreatorModal(props: Props) {
             {isSerialModeEnabled ? (
               <>
                 <button
+                  data-transaction-save-close-action="true"
                   style={{ ...styles.secondaryButton, order: 5 }}
                   disabled={isSaving || !selectedLevel1Id || !effectiveCategoryId}
                   onClick={async () => {
@@ -750,12 +760,20 @@ export default function TransactionCreatorModal(props: Props) {
                   {isSaving ? 'zapisywanie...' : 'zapisz i zakończ'}
                 </button>
 
-                <button style={{ ...styles.secondaryButton, order: 6 }} onClick={onClose}>
+                <button
+                  data-transaction-cancel-action="true"
+                  style={{ ...styles.secondaryButton, order: 6 }}
+                  onClick={onClose}
+                >
                   zakończ
                 </button>
               </>
             ) : (
-              <button style={{ ...styles.secondaryButton, order: 5 }} onClick={onClose}>
+              <button
+                data-transaction-cancel-action="true"
+                style={{ ...styles.secondaryButton, order: 5 }}
+                onClick={onClose}
+              >
                 anuluj
               </button>
             )}
@@ -769,6 +787,7 @@ export default function TransactionCreatorModal(props: Props) {
             <input
               ref={tagInputRef}
               id="transaction-tags-input"
+              data-transaction-tags-input="true"
               style={styles.input}
               placeholder="np. sklep, dom, jedzenie"
               value={tagInputValue}
@@ -824,6 +843,7 @@ export default function TransactionCreatorModal(props: Props) {
 
                 <select
                   id="transaction-recurring-link"
+                  data-transaction-recurring-select="true"
                   style={styles.input}
                   value={selectedRecurringTransactionId}
                   onChange={(event) => applyRecurringLink(event.target.value)}
@@ -874,7 +894,7 @@ export default function TransactionCreatorModal(props: Props) {
           </label>
 
           {(!selectedLevel1Id || !effectiveCategoryId) && (
-            <div style={styles.emptyText}>
+            <div style={styles.emptyText} data-transaction-save-hint="true">
               Aby zapisać wpis, wybierz typ oraz najniższą dostępną kategorię.
             </div>
           )}

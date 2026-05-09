@@ -182,13 +182,15 @@ export default function PaymentSplitEditor({
         </>
       )}
 
-      <div style={splitHelpStyle}>
+      <div style={splitHelpStyle} data-payment-split-help="true">
         Przy kilku źródłach kwoty przeliczają się automatycznie. Zapis jest blokowany, jeśli suma
         nie zgadza się z kwotą transakcji albo któreś pole jest puste.
       </div>
 
       {splitState.errors.length > 0 && (
-        <div style={{ ...splitHelpStyle, color: '#b91c1c' }}>{splitState.errors.join(' • ')}</div>
+        <div style={{ ...splitHelpStyle, color: '#b91c1c' }} data-payment-split-errors="true">
+          {splitState.errors.join(' • ')}
+        </div>
       )}
     </div>
   )
