@@ -34,7 +34,7 @@
 
 [data-workspace-calendar-pane="true"] {
   position: relative !important;
-  padding-top: 18px !important;
+  padding-top: 24px !important;
 }
 
 [data-workspace-calendar-pane="true"]::after {
@@ -92,7 +92,7 @@
   display: grid !important;
   grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
   gap: 3px !important;
-  margin: 16px auto 0 !important;
+  margin: 24px auto 0 !important;
 }
 
 [data-mini-calendar="true"] small,
@@ -169,7 +169,7 @@
   display: grid !important;
   align-content: start !important;
   gap: 5px !important;
-  padding-bottom: 22px !important;
+  padding-bottom: 32px !important;
   overflow: auto !important;
 }
 

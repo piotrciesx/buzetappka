@@ -22,9 +22,22 @@ export default function Level2InlineAddForm({
         placeholder="Nazwa podkategorii"
         value={value}
         onChange={(e) => setValue(e.target.value)}
+        onKeyDown={async (event) => {
+          if (event.key === 'Escape') {
+            event.preventDefault()
+            onCancel()
+            return
+          }
+
+          if (event.key === 'Enter') {
+            event.preventDefault()
+            await onSave()
+          }
+        }}
       />
 
       <button
+        type="button"
         style={styles.primaryButton}
         onClick={async () => {
           await onSave()
@@ -33,7 +46,7 @@ export default function Level2InlineAddForm({
         zapisz
       </button>
 
-      <button style={styles.secondaryButton} onClick={onCancel}>
+      <button type="button" style={styles.secondaryButton} onClick={onCancel}>
         anuluj
       </button>
     </div>

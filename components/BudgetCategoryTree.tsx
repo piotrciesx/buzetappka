@@ -642,8 +642,22 @@ export default function BudgetCategoryTree(props: Props) {
           placeholder={placeholder}
           value={newSubcategoryName}
           onChange={(event) => setNewSubcategoryName(event.target.value)}
+          onKeyDown={async (event) => {
+            if (event.key === 'Escape') {
+              event.preventDefault()
+              setOpenAddSubcategoryFor(null)
+              setNewSubcategoryName('')
+              return
+            }
+
+            if (event.key === 'Enter') {
+              event.preventDefault()
+              await handleAddSubcategory(parentId)
+            }
+          }}
         />
         <button
+          type="button"
           style={styles.primaryButton}
           onClick={async () => {
             await handleAddSubcategory(parentId)
@@ -652,6 +666,7 @@ export default function BudgetCategoryTree(props: Props) {
           zapisz
         </button>
         <button
+          type="button"
           style={styles.secondaryButton}
           onClick={() => {
             setOpenAddSubcategoryFor(null)

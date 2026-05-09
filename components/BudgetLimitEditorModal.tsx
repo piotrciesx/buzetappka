@@ -20,7 +20,7 @@ type Props = {
 const overlayStyle: CSSProperties = {
   position: 'fixed',
   inset: 0,
-  zIndex: 100,
+  zIndex: 3000,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -81,6 +81,16 @@ const helpTextStyle: CSSProperties = {
   color: '#64748b',
   fontSize: 12,
   fontWeight: 400,
+  lineHeight: 1.35,
+}
+
+const errorTextStyle: CSSProperties = {
+  padding: '10px 12px',
+  borderRadius: 10,
+  border: '1px solid #fecaca',
+  background: '#fff1f2',
+  color: '#991b1b',
+  fontSize: 13,
   lineHeight: 1.35,
 }
 
@@ -145,6 +155,7 @@ export default function BudgetLimitEditorModal({
   const [isOnlySelectedMonth, setIsOnlySelectedMonth] = useState(false)
   const [hasCustomEndMonth, setHasCustomEndMonth] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+  const [errorText, setErrorText] = useState('')
 
   useEffect(() => {
     if (!isOpen) {
@@ -160,6 +171,7 @@ export default function BudgetLimitEditorModal({
         ? existingLimit.end_month
         : selectedMonth
     )
+    setErrorText('')
   }, [existingLimit, isOpen, selectedMonth])
 
   if (!isOpen) {
@@ -181,6 +193,7 @@ export default function BudgetLimitEditorModal({
     }
 
     setIsSaving(true)
+    setErrorText('')
 
     try {
       await onSave({
@@ -191,6 +204,8 @@ export default function BudgetLimitEditorModal({
         mode,
       })
       onClose()
+    } catch (error) {
+      setErrorText(error instanceof Error ? error.message : 'Nie udało się zapisać limitu.')
     } finally {
       setIsSaving(false)
     }
@@ -210,10 +225,13 @@ export default function BudgetLimitEditorModal({
     }
 
     setIsSaving(true)
+    setErrorText('')
 
     try {
       await onDelete(existingLimit.id)
       onClose()
+    } catch (error) {
+      setErrorText(error instanceof Error ? error.message : 'Nie udało się usunąć limitu.')
     } finally {
       setIsSaving(false)
     }
@@ -225,10 +243,13 @@ export default function BudgetLimitEditorModal({
     }
 
     setIsSaving(true)
+    setErrorText('')
 
     try {
       await onDisable(existingLimit.id)
       onClose()
+    } catch (error) {
+      setErrorText(error instanceof Error ? error.message : 'Nie udało się wyłączyć limitu.')
     } finally {
       setIsSaving(false)
     }
@@ -317,6 +338,8 @@ export default function BudgetLimitEditorModal({
               <span style={helpTextStyle}>Data końca nie może być wcześniejsza niż {selectedMonth}.</span>
             </label>
           )}
+
+          {errorText && <div style={errorTextStyle}>{errorText}</div>}
         </div>
 
         <div style={actionsStyle}>

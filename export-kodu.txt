@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 458
-Data: 2026-05-08T23:49:23.298Z
+Data: 2026-05-08T23:58:41.211Z
 
 
 ==================================================
@@ -77876,28 +77876,6 @@ PLIK: app\styles\workspace-panels.css
   font-weight: 760 !important;
 }
 
-[data-mini-calendar="main"] button[data-mini-calendar-activity="income"] {
-  border-color: rgba(74, 222, 128, 0.38) !important;
-  background: rgba(220, 252, 231, 0.62) !important;
-  color: #166534 !important;
-}
-
-[data-mini-calendar="main"] button[data-mini-calendar-activity="expense"] {
-  border-color: rgba(251, 113, 133, 0.36) !important;
-  background: rgba(255, 228, 230, 0.66) !important;
-  color: #9f1239 !important;
-}
-
-[data-mini-calendar="main"] button[data-mini-calendar-activity="mixed"] {
-  border-color: rgba(96, 165, 250, 0.34) !important;
-  background: rgba(219, 234, 254, 0.58) !important;
-  color: #1e3a8a !important;
-}
-
-[data-mini-calendar="main"] button[data-current-day="true"][data-mini-calendar-activity] {
-  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.22) !important;
-}
-
 [data-workspace-recent-table="true"] {
   min-width: 0 !important;
   display: grid !important;
@@ -77930,7 +77908,7 @@ PLIK: app\styles\workspace-panels.css
   display: grid !important;
   align-content: start !important;
   gap: 5px !important;
-  padding-bottom: 12px !important;
+  padding-bottom: 22px !important;
   overflow: auto !important;
 }
 
@@ -82998,6 +82976,9 @@ export default function BudgetCategoryTree(props: Props) {
 
   const renderLevel1LeafSection = (level1Category: Category) => {
     const calendarHeatmapVariant = getCalendarHeatmapVariantForLevel1Id(level1Category.id)
+    const directLevel1Transactions = getTransactionsForCategoryAndMonthForSelectedMonth(
+      level1Category.id
+    )
 
     return (
       <Level3Section
@@ -83013,7 +82994,7 @@ export default function BudgetCategoryTree(props: Props) {
           selectedMonth
         )}
         categorySum={getSumForCategoryForSelectedMonth(level1Category.id)}
-        transactions={getTransactionsForLevel1AndMonth(level1Category.id)}
+        transactions={directLevel1Transactions}
         canAddHere={true}
         isSelectedMonthLocked={isSelectedMonthLocked}
         canUseMonthCalendar={canUseMonthCalendar}
@@ -83062,6 +83043,19 @@ export default function BudgetCategoryTree(props: Props) {
     )
   }
 
+  const renderLevel1DirectTransactionsSection = (level1Category: Category) => {
+    const directLevel1Transactions = getTransactionsForCategoryAndMonthForSelectedMonth(
+      level1Category.id
+    )
+    const hasInlineDraftStart = (level1InlineAddTokens[level1Category.id] || 0) > 0
+
+    if (directLevel1Transactions.length === 0 && !hasInlineDraftStart) {
+      return null
+    }
+
+    return renderLevel1LeafSection(level1Category)
+  }
+
   const renderLevel2List = (level1Category: Category) => {
     const childrenLevel2 = getSortedLevel2Children(level1Category.id)
 
@@ -83076,6 +83070,7 @@ export default function BudgetCategoryTree(props: Props) {
     if (isLevel2DndBlocked) {
       return (
         <div>
+          {renderLevel1DirectTransactionsSection(level1Category)}
           {childrenLevel2.map((level2Category) => {
             const sortedLevel3Children = getSortedLevel3Children(level2Category.id)
 
@@ -83114,6 +83109,7 @@ export default function BudgetCategoryTree(props: Props) {
           )
         }}
       >
+        {renderLevel1DirectTransactionsSection(level1Category)}
         <SortableContext
           items={childrenLevel2.map((category) => category.id)}
           strategy={verticalListSortingStrategy}
@@ -104464,29 +104460,6 @@ export default function MainWorkspaceBottomDeck({
   const today = new Date()
   const currentMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`
   const currentDay = today.getDate()
-  const miniCalendarActivityByDay = recentTransactions.reduce<
-    Record<number, 'income' | 'expense' | 'mixed'>
-  >((activityMap, transaction) => {
-    if (!transaction.date.startsWith(`${selectedMonth}-`)) {
-      return activityMap
-    }
-
-    const dayNumber = Number(transaction.date.slice(8, 10))
-
-    if (!Number.isFinite(dayNumber) || dayNumber < 1) {
-      return activityMap
-    }
-
-    const currentActivity = activityMap[dayNumber]
-
-    if (currentActivity && currentActivity !== transaction.kind) {
-      activityMap[dayNumber] = 'mixed'
-      return activityMap
-    }
-
-    activityMap[dayNumber] = transaction.kind
-    return activityMap
-  }, {})
 
   return (
     <section data-main-workspace-deck="true" aria-label="Kalendarz i ostatnie wpisy">
@@ -104536,7 +104509,6 @@ export default function MainWorkspaceBottomDeck({
                   key={`${selectedMonth}-${dayNumber}`}
                   type="button"
                   data-current-day={selectedMonth === currentMonth && dayNumber === currentDay}
-                  data-mini-calendar-activity={miniCalendarActivityByDay[dayNumber] || undefined}
                   onClick={() => onOpenDay(String(dayNumber))}
                 >
                   {dayNumber}
