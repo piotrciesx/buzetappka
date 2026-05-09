@@ -13,8 +13,8 @@
 [data-calendar-recent-panel="true"] {
   display: grid !important;
   grid-template-columns: minmax(240px, 0.78fr) minmax(0, 1.22fr) !important;
-  height: 340px !important;
-  min-height: 340px !important;
+  height: 376px !important;
+  min-height: 376px !important;
   overflow: hidden !important;
   border: 1px solid rgba(203, 213, 225, 0.78) !important;
   border-radius: 20px !important;
@@ -34,21 +34,29 @@
 
 [data-workspace-calendar-pane="true"] {
   position: relative !important;
-  padding-top: 24px !important;
+  padding-top: 28px !important;
+}
+
+[data-workspace-recent-pane="true"] {
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  align-content: stretch !important;
+  padding-top: 28px !important;
+  padding-bottom: 26px !important;
 }
 
 [data-workspace-calendar-pane="true"]::after {
   content: "" !important;
   position: absolute !important;
-  top: 52px !important;
+  top: 58px !important;
   right: 0 !important;
-  bottom: 28px !important;
+  bottom: 34px !important;
   width: 1px !important;
   background: linear-gradient(
     180deg,
     rgba(226, 232, 240, 0),
-    rgba(203, 213, 225, 0.7) 28%,
-    rgba(203, 213, 225, 0.48) 72%,
+    rgba(203, 213, 225, 0.58) 30%,
+    rgba(203, 213, 225, 0.38) 70%,
     rgba(226, 232, 240, 0)
   ) !important;
   pointer-events: none !important;
@@ -92,7 +100,7 @@
   display: grid !important;
   grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
   gap: 3px !important;
-  margin: 24px auto 0 !important;
+  margin: 30px auto 0 !important;
 }
 
 [data-mini-calendar="true"] small,
@@ -169,8 +177,8 @@
   display: grid !important;
   align-content: start !important;
   gap: 5px !important;
-  padding-bottom: 32px !important;
-  overflow: auto !important;
+  padding-bottom: 24px !important;
+  overflow: hidden !important;
 }
 
 [data-workspace-recent-row="true"] {

@@ -33,6 +33,7 @@ export default function MainWorkspaceBottomDeck({
   const today = new Date()
   const currentMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`
   const currentDay = today.getDate()
+  const visibleRecentTransactions = recentTransactions.slice(0, 8)
 
   return (
     <section data-main-workspace-deck="true" aria-label="Kalendarz i ostatnie wpisy">
@@ -97,14 +98,14 @@ export default function MainWorkspaceBottomDeck({
           <div data-workspace-panel-header="true">
             <div>
               <span>Ostatnie wpisy</span>
-              <strong>{recentTransactions.length} w podglądzie</strong>
+              <strong>{visibleRecentTransactions.length} w podglądzie</strong>
             </div>
           </div>
           <div data-workspace-recent-rows="true">
-            {recentTransactions.length === 0 ? (
+            {visibleRecentTransactions.length === 0 ? (
               <small data-workspace-empty-placeholder="true">Brak wpisów w tym zakresie.</small>
             ) : (
-              recentTransactions.slice(0, 7).map((transaction) => (
+              visibleRecentTransactions.map((transaction) => (
                 <div
                   key={transaction.id}
                   data-workspace-recent-row="true"

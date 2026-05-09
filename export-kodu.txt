@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 458
-Data: 2026-05-08T23:58:41.211Z
+Data: 2026-05-09T00:06:20.969Z
 
 
 ==================================================
@@ -77773,7 +77773,7 @@ PLIK: app\styles\workspace-panels.css
 
 [data-workspace-calendar-pane="true"] {
   position: relative !important;
-  padding-top: 18px !important;
+  padding-top: 24px !important;
 }
 
 [data-workspace-calendar-pane="true"]::after {
@@ -77831,7 +77831,7 @@ PLIK: app\styles\workspace-panels.css
   display: grid !important;
   grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
   gap: 3px !important;
-  margin: 16px auto 0 !important;
+  margin: 24px auto 0 !important;
 }
 
 [data-mini-calendar="true"] small,
@@ -77908,7 +77908,7 @@ PLIK: app\styles\workspace-panels.css
   display: grid !important;
   align-content: start !important;
   gap: 5px !important;
-  padding-bottom: 22px !important;
+  padding-bottom: 32px !important;
   overflow: auto !important;
 }
 
@@ -83270,8 +83270,22 @@ export default function BudgetCategoryTree(props: Props) {
           placeholder={placeholder}
           value={newSubcategoryName}
           onChange={(event) => setNewSubcategoryName(event.target.value)}
+          onKeyDown={async (event) => {
+            if (event.key === 'Escape') {
+              event.preventDefault()
+              setOpenAddSubcategoryFor(null)
+              setNewSubcategoryName('')
+              return
+            }
+
+            if (event.key === 'Enter') {
+              event.preventDefault()
+              await handleAddSubcategory(parentId)
+            }
+          }}
         />
         <button
+          type="button"
           style={styles.primaryButton}
           onClick={async () => {
             await handleAddSubcategory(parentId)
@@ -83280,6 +83294,7 @@ export default function BudgetCategoryTree(props: Props) {
           zapisz
         </button>
         <button
+          type="button"
           style={styles.secondaryButton}
           onClick={() => {
             setOpenAddSubcategoryFor(null)
@@ -83978,7 +83993,7 @@ type Props = {
 const overlayStyle: CSSProperties = {
   position: 'fixed',
   inset: 0,
-  zIndex: 100,
+  zIndex: 3000,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -84039,6 +84054,16 @@ const helpTextStyle: CSSProperties = {
   color: '#64748b',
   fontSize: 12,
   fontWeight: 400,
+  lineHeight: 1.35,
+}
+
+const errorTextStyle: CSSProperties = {
+  padding: '10px 12px',
+  borderRadius: 10,
+  border: '1px solid #fecaca',
+  background: '#fff1f2',
+  color: '#991b1b',
+  fontSize: 13,
   lineHeight: 1.35,
 }
 
@@ -84103,6 +84128,7 @@ export default function BudgetLimitEditorModal({
   const [isOnlySelectedMonth, setIsOnlySelectedMonth] = useState(false)
   const [hasCustomEndMonth, setHasCustomEndMonth] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+  const [errorText, setErrorText] = useState('')
 
   useEffect(() => {
     if (!isOpen) {
@@ -84118,6 +84144,7 @@ export default function BudgetLimitEditorModal({
         ? existingLimit.end_month
         : selectedMonth
     )
+    setErrorText('')
   }, [existingLimit, isOpen, selectedMonth])
 
   if (!isOpen) {
@@ -84139,6 +84166,7 @@ export default function BudgetLimitEditorModal({
     }
 
     setIsSaving(true)
+    setErrorText('')
 
     try {
       await onSave({
@@ -84149,6 +84177,8 @@ export default function BudgetLimitEditorModal({
         mode,
       })
       onClose()
+    } catch (error) {
+      setErrorText(error instanceof Error ? error.message : 'Nie udało się zapisać limitu.')
     } finally {
       setIsSaving(false)
     }
@@ -84168,10 +84198,13 @@ export default function BudgetLimitEditorModal({
     }
 
     setIsSaving(true)
+    setErrorText('')
 
     try {
       await onDelete(existingLimit.id)
       onClose()
+    } catch (error) {
+      setErrorText(error instanceof Error ? error.message : 'Nie udało się usunąć limitu.')
     } finally {
       setIsSaving(false)
     }
@@ -84183,10 +84216,13 @@ export default function BudgetLimitEditorModal({
     }
 
     setIsSaving(true)
+    setErrorText('')
 
     try {
       await onDisable(existingLimit.id)
       onClose()
+    } catch (error) {
+      setErrorText(error instanceof Error ? error.message : 'Nie udało się wyłączyć limitu.')
     } finally {
       setIsSaving(false)
     }
@@ -84275,6 +84311,8 @@ export default function BudgetLimitEditorModal({
               <span style={helpTextStyle}>Data końca nie może być wcześniejsza niż {selectedMonth}.</span>
             </label>
           )}
+
+          {errorText && <div style={errorTextStyle}>{errorText}</div>}
         </div>
 
         <div style={actionsStyle}>
@@ -86379,9 +86417,22 @@ export default function Level2InlineAddForm({
         placeholder="Nazwa podkategorii"
         value={value}
         onChange={(e) => setValue(e.target.value)}
+        onKeyDown={async (event) => {
+          if (event.key === 'Escape') {
+            event.preventDefault()
+            onCancel()
+            return
+          }
+
+          if (event.key === 'Enter') {
+            event.preventDefault()
+            await onSave()
+          }
+        }}
       />
 
       <button
+        type="button"
         style={styles.primaryButton}
         onClick={async () => {
           await onSave()
@@ -86390,7 +86441,7 @@ export default function Level2InlineAddForm({
         zapisz
       </button>
 
-      <button style={styles.secondaryButton} onClick={onCancel}>
+      <button type="button" style={styles.secondaryButton} onClick={onCancel}>
         anuluj
       </button>
     </div>
@@ -130099,7 +130150,7 @@ PLIK: next-env.d.ts
 
 /// <reference types="next" />
 /// <reference types="next/image-types/global" />
-import "./.next/types/routes.d.ts";
+import "./.next/dev/types/routes.d.ts";
 
 // NOTE: This file should not be edited
 // see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
