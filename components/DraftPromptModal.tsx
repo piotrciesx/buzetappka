@@ -47,12 +47,17 @@ export default function DraftPromptModal(props: Props) {
 
   return (
     <div
+      data-draft-prompt-overlay="true"
       style={draftPromptOverlayStyle}
       onClick={() => {
         setDraftPromptState(null)
       }}
     >
-      <div style={draftPromptCardStyle} onClick={(event) => event.stopPropagation()}>
+      <div
+        data-draft-prompt-card="true"
+        style={draftPromptCardStyle}
+        onClick={(event) => event.stopPropagation()}
+      >
         <div style={styles.sectionTitle}>Masz niedokończony wpis</div>
         <div style={{ ...styles.pageSubtitle, marginTop: 8 }}>
           Możesz wrócić do wersji roboczej albo ją usunąć i zacząć od pustego formularza.

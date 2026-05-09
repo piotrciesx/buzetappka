@@ -384,7 +384,7 @@ export default function TransactionCreatorModal(props: Props) {
   return (
     <div data-transaction-modal-overlay="true" style={overlayStyle} onClick={onClose}>
       <div data-transaction-modal="true" style={modalStyle} onClick={(event) => event.stopPropagation()}>
-        <div style={styles.sectionTitle}>Nowy wpis</div>
+        <div style={styles.sectionTitle} data-transaction-modal-title="true">Nowy wpis</div>
 
         <div style={styles.pageSubtitle}>
           Miesiąc zapisu: <b>{selectedMonth}</b>
@@ -509,7 +509,7 @@ export default function TransactionCreatorModal(props: Props) {
           </div>
         )}
 
-        <div style={sectionStyle}>
+        <div style={sectionStyle} data-transaction-entry-section="true">
           <div style={styles.l2Name}>Kategorie</div>
 
           {!selectedLevel1Id && <div style={styles.emptyText}>Najpierw wybierz typ wpisu.</div>}
@@ -622,7 +622,10 @@ export default function TransactionCreatorModal(props: Props) {
         <div style={sectionStyle}>
           <div style={styles.l2Name}>Dane wpisu</div>
 
-          <div style={{ ...styles.formRow, marginTop: 10, alignItems: 'center' }}>
+          <div
+            style={{ ...styles.formRow, marginTop: 10, alignItems: 'center' }}
+            data-transaction-entry-form="true"
+          >
             <div style={{ ...descriptionFieldWrapStyle, order: 2 }}>
               <div style={descriptionInputWrapStyle}>
                 <input
@@ -758,7 +761,7 @@ export default function TransactionCreatorModal(props: Props) {
             )}
           </div>
 
-          <div style={tagInputWrapStyle}>
+          <div style={tagInputWrapStyle} data-transaction-entry-extra="true">
             <label style={dateLabelStyle} htmlFor="transaction-tags-input">
               Tagi
             </label>
@@ -847,7 +850,7 @@ export default function TransactionCreatorModal(props: Props) {
             )}
           </div>
 
-          <label style={serialToggleStyle}>
+          <label style={serialToggleStyle} data-transaction-entry-toggle="true">
             <input
               type="checkbox"
               checked={isSerialModeEnabled}
@@ -856,7 +859,7 @@ export default function TransactionCreatorModal(props: Props) {
             dodawaj seryjnie
           </label>
 
-          <label style={serialToggleStyle}>
+          <label style={serialToggleStyle} data-transaction-entry-toggle="true">
             <input
               type="checkbox"
               checked={isQuickDayModeEnabled}

@@ -114,10 +114,11 @@ export default function PaymentSplitEditor({
   }
 
   return (
-    <div style={splitWrapStyle}>
+    <div style={splitWrapStyle} data-payment-split-editor="true">
       {!isSplitActive ? (
         <>
           <select
+            data-payment-source-select="true"
             style={styles.input}
             value={selectedPaymentSourceId}
             onChange={(event) => setSelectedPaymentSourceId(event.target.value)}
@@ -130,7 +131,7 @@ export default function PaymentSplitEditor({
             ))}
           </select>
 
-          <div style={splitRowStyle}>
+          <div style={splitRowStyle} data-payment-split-row="true">
             <button type="button" style={styles.secondaryButton} onClick={handleAddPaymentSource}>
               + dodaj źródło
             </button>
@@ -139,8 +140,9 @@ export default function PaymentSplitEditor({
       ) : (
         <>
           {paymentSplitItems.map((item, index) => (
-            <div key={`split-item-${index}`} style={splitRowStyle}>
+            <div key={`split-item-${index}`} style={splitRowStyle} data-payment-split-row="true">
               <select
+                data-payment-source-select="true"
                 style={{ ...styles.input, flex: '1 1 220px', minWidth: 220 }}
                 value={item.paymentSourceId}
                 onChange={(event) => handleSplitSourceChange(index, event.target.value)}
@@ -154,6 +156,7 @@ export default function PaymentSplitEditor({
               </select>
 
               <input
+                data-payment-split-amount="true"
                 style={{ ...styles.smallInput, width: 110 }}
                 placeholder="kwota"
                 inputMode="decimal"
@@ -171,7 +174,7 @@ export default function PaymentSplitEditor({
             </div>
           ))}
 
-          <div style={splitRowStyle}>
+          <div style={splitRowStyle} data-payment-split-row="true">
             <button type="button" style={styles.secondaryButton} onClick={handleAddPaymentSource}>
               + dodaj źródło
             </button>

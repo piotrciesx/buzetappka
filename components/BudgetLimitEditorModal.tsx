@@ -256,12 +256,18 @@ export default function BudgetLimitEditorModal({
   }
 
   return (
-    <div style={overlayStyle} role="dialog" aria-modal="true" aria-label="Limit wydatków">
-      <div style={modalStyle}>
+    <div
+      style={overlayStyle}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Limit wydatków"
+      data-budget-limit-modal-overlay="true"
+    >
+      <div style={modalStyle} data-budget-limit-modal="true">
         <h2 style={titleStyle}>{existingLimit ? 'Edytuj limit' : 'Ustaw limit'}</h2>
         <div style={subtitleStyle}>{categoryLabel}</div>
 
-        <div style={formStyle}>
+        <div style={formStyle} data-budget-limit-form="true">
           <label style={labelStyle}>
             Kwota limitu
             <input
@@ -342,8 +348,8 @@ export default function BudgetLimitEditorModal({
           {errorText && <div style={errorTextStyle}>{errorText}</div>}
         </div>
 
-        <div style={actionsStyle}>
-          <div style={groupStyle}>
+        <div style={actionsStyle} data-budget-limit-actions="true">
+          <div style={groupStyle} data-budget-limit-action-group="true">
             {existingLimit && (
               <>
                 <button type="button" style={dangerButtonStyle} onClick={handleDelete}>
@@ -356,7 +362,7 @@ export default function BudgetLimitEditorModal({
             )}
           </div>
 
-          <div style={groupStyle}>
+          <div style={groupStyle} data-budget-limit-action-group="true">
             <button type="button" style={secondaryButtonStyle} onClick={onClose}>
               Anuluj
             </button>
