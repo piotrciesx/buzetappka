@@ -196,7 +196,6 @@ export default function RecurringTransactionsPanel(props: Props) {
 
   return (
     <section style={panelStyle}>
-      <div style={styles.sectionTitle}>Przypomnienia, stałe zlecenia i raty</div>
       <div style={styles.pageSubtitle}>
         Aktywne przypomnienia, raty oraz historia cykli dla całego miesiąca.
       </div>

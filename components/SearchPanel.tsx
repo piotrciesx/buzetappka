@@ -43,11 +43,13 @@ const panelStyle = {
   padding: 0,
   marginBottom: 0,
   background: 'transparent',
+  fontFamily:
+    'var(--font-app-sans), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
 } as const
 
 const filtersGridStyle = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(6, minmax(0, 1fr))',
+  gridTemplateColumns: 'repeat(5, minmax(0, 1fr))',
   gap: 10,
   marginBottom: 14,
 } as const
@@ -73,22 +75,21 @@ const compactFilterFieldStyle = {
   gridColumn: 'span 1',
 } as const
 
+const actionFilterFieldStyle = {
+  ...filterFieldStyle,
+  gridColumn: 'span 3',
+  alignSelf: 'end',
+  justifyItems: 'end',
+} as const
+
 const searchInputStyle: CSSProperties = {
   width: '100%',
   minWidth: 0,
 }
 
-const actionsRowStyle = {
-  display: 'flex',
-  justifyContent: 'flex-end',
-  gap: 10,
-  flexWrap: 'wrap' as const,
-  marginBottom: 14,
-} as const
-
 const resetButtonStyle = {
-  minHeight: 30,
-  padding: '0 10px',
+  minHeight: 34,
+  padding: '0 12px',
   borderRadius: 999,
   border: '1px solid rgba(203, 213, 225, 0.82)',
   background: 'rgba(255, 255, 255, 0.68)',
@@ -204,6 +205,10 @@ const responsiveSearchStyle = `
       grid-column: span 1 !important;
     }
 
+    [data-search-filter-field="actions"] {
+      grid-column: span 2 !important;
+    }
+
     [data-bank-search-stats="true"] {
       grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     }
@@ -215,6 +220,11 @@ const responsiveSearchStyle = `
     [data-bank-search-history-header="true"],
     [data-bank-search-history-row="true"] {
       grid-template-columns: 1fr !important;
+    }
+
+    [data-search-filter-field="actions"] {
+      grid-column: span 1 !important;
+      justify-items: stretch !important;
     }
   }
 `
@@ -413,6 +423,12 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                 <option value="amount-asc">najmniejsza kwota</option>
               </select>
             </div>
+
+            <div data-search-filter-field="actions" style={actionFilterFieldStyle}>
+              <button type="button" onClick={onReset} style={resetButtonStyle}>
+                Wyczyść filtry
+              </button>
+            </div>
           </div>
 
           {tagOptions.length > 0 && (
@@ -443,12 +459,6 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
               </div>
             </div>
           )}
-
-          <div style={actionsRowStyle}>
-            <button type="button" onClick={onReset} style={resetButtonStyle}>
-              Wyczyść filtry
-            </button>
-          </div>
 
           <div data-bank-search-stats="true" style={statsGridStyle}>
             <div style={incomeStatCardStyle}>

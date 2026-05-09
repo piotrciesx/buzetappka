@@ -18,21 +18,13 @@ const draftsHeaderStyle = {
   gap: 12,
   flexWrap: 'wrap' as const,
   alignItems: 'center',
-  minHeight: 42,
-  padding: '2px 2px 10px',
+  minHeight: 34,
+  padding: '0 2px 10px',
   borderBottom: '1px solid rgba(226, 232, 240, 0.86)',
 } as const
 
-const draftsTitleStyle = {
-  margin: 0,
-  color: '#172033',
-  fontSize: 16,
-  fontWeight: 760,
-  lineHeight: 1.2,
-} as const
-
 const draftsDescriptionStyle = {
-  margin: '3px 0 0',
+  margin: 0,
   color: '#64748b',
   fontSize: 12,
   lineHeight: 1.35,
@@ -181,7 +173,6 @@ export default function DraftsPanel(props: Props) {
     <section style={draftsPanelStyle} aria-label="Szkice wpisów">
       <div style={draftsHeaderStyle}>
         <div>
-          <h2 style={draftsTitleStyle}>Szkice</h2>
           <p style={draftsDescriptionStyle}>Niedokończone wpisy zapisują się automatycznie.</p>
         </div>
         <button

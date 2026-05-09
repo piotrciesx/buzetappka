@@ -14,6 +14,8 @@ const panelStyle = {
   marginBottom: 20,
   display: 'grid',
   gap: 14,
+  maxWidth: '100%',
+  overflowX: 'hidden' as const,
   background: 'transparent',
   border: 0,
   borderRadius: 0,
@@ -30,8 +32,9 @@ const cardStyle = {
 
 const settingsGridStyle = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
   gap: 10,
+  minWidth: 0,
 } as const
 
 const badgeStyle = {
@@ -42,18 +45,6 @@ const badgeStyle = {
   borderRadius: 999,
   fontSize: 11,
   fontWeight: 620,
-} as const
-
-const headerStyle = {
-  display: 'grid',
-  gap: 4,
-} as const
-
-const titleStyle = {
-  color: '#172033',
-  fontSize: 15,
-  fontWeight: 680,
-  letterSpacing: 0,
 } as const
 
 const subtitleStyle = {
@@ -67,6 +58,7 @@ const settingsCardStyle = {
   display: 'grid',
   gap: 10,
   alignContent: 'start',
+  minWidth: 0,
   minHeight: 174,
   padding: 12,
   border: '1px solid rgba(226, 232, 240, 0.92)',
@@ -117,6 +109,7 @@ const lightButtonStyle = {
   fontSize: 12,
   fontWeight: 580,
   boxShadow: 'none',
+  whiteSpace: 'normal' as const,
 } as const
 
 const lightDangerButtonStyle = {
@@ -136,9 +129,11 @@ const primaryActionStyle = {
 
 const sourceFormStyle = {
   display: 'grid',
-  gridTemplateColumns: 'minmax(180px, 1.4fr) minmax(130px, 0.8fr) 76px 64px minmax(96px, auto) minmax(96px, auto) auto auto',
+  gridTemplateColumns: 'minmax(0, 1.5fr) minmax(0, 1fr) minmax(72px, 0.6fr) minmax(64px, 0.5fr)',
   alignItems: 'end',
   gap: 9,
+  maxWidth: '100%',
+  minWidth: 0,
   padding: 12,
   border: '1px solid rgba(226, 232, 240, 0.92)',
   borderRadius: 12,
@@ -191,6 +186,20 @@ const responsivePaymentSourcesStyle = `
     [data-payment-source-form="true"] {
       grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     }
+  }
+
+  [data-payment-source-form="true"] > label,
+  [data-payment-source-form="true"] > button {
+    align-self: end;
+  }
+
+  [data-payment-source-form="true"] > button {
+    justify-self: start;
+  }
+
+  [data-payment-source-form="true"] input,
+  [data-payment-source-form="true"] select {
+    min-width: 0 !important;
   }
 
   @media (max-width: 560px) {
@@ -290,12 +299,9 @@ export default function PaymentSourcesPanel(props: Props) {
   return (
     <section style={panelStyle}>
       <style>{responsivePaymentSourcesStyle}</style>
-      <div style={headerStyle}>
-        <div style={titleStyle}>Źródła płatności i konta</div>
-        <div style={subtitleStyle}>
-          Osobno konfigurujesz listy dla przychodów i wydatków oraz decydujesz, czy pole ma być
-          widoczne w kreatorze.
-        </div>
+      <div style={subtitleStyle}>
+        Osobno konfigurujesz listy dla przychodów i wydatków oraz decydujesz, czy pole ma być
+        widoczne w kreatorze.
       </div>
 
       <div style={settingsGridStyle}>

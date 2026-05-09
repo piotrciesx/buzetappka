@@ -65,13 +65,6 @@ const headerStyle: CSSProperties = {
   borderBottom: '1px solid rgba(226, 232, 240, 0.86)',
 }
 
-const titleStyle: CSSProperties = {
-  margin: 0,
-  color: '#172033',
-  fontSize: 16,
-  fontWeight: 760,
-}
-
 const descriptionStyle: CSSProperties = {
   margin: 0,
   color: '#64748b',
@@ -337,7 +330,6 @@ export default function ImportExportPanel({
   return (
     <section style={panelStyle}>
       <div style={headerStyle}>
-        <h2 style={titleStyle}>Import / eksport danych</h2>
         <p style={descriptionStyle}>Eksportuj kopię danych albo wczytaj wpisy z pliku CSV.</p>
       </div>
 

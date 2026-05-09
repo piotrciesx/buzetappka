@@ -24,19 +24,12 @@ const panelStyle: CSSProperties = {
 
 const headerStyle: CSSProperties = {
   display: 'flex',
-  justifyContent: 'space-between',
+  justifyContent: 'flex-end',
   gap: 12,
   flexWrap: 'wrap',
   alignItems: 'center',
-  padding: '2px 2px 10px',
+  padding: '0 2px 10px',
   borderBottom: '1px solid rgba(226, 232, 240, 0.86)',
-}
-
-const titleStyle: CSSProperties = {
-  margin: 0,
-  color: '#172033',
-  fontSize: 16,
-  fontWeight: 760,
 }
 
 const hintStyle: CSSProperties = {
@@ -164,8 +157,6 @@ export default function TrashPanel(props: Props) {
   return (
     <section style={panelStyle} aria-label="Kosz">
       <div style={headerStyle}>
-        <h2 style={titleStyle}>Kosz</h2>
-
         {transactions.length > 0 && (
           <button
             type="button"

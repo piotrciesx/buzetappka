@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 458
-Data: 2026-05-09T00:22:23.039Z
+Data: 2026-05-09T00:38:44.060Z
 
 
 ==================================================
@@ -107076,36 +107076,193 @@ import {
 
 const panelStyle = {
   marginBottom: 20,
-  background: '#ffffff',
-  border: '1px solid #e5e7eb',
-  borderRadius: 14,
-  padding: 16,
-  boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+  display: 'grid',
+  gap: 14,
+  background: 'transparent',
+  border: 0,
+  borderRadius: 0,
+  padding: 0,
+  boxShadow: 'none',
 } as const
 
 const cardStyle = {
-  border: '1px solid #e5e7eb',
+  border: '1px solid rgba(226, 232, 240, 0.92)',
   borderRadius: 12,
-  padding: 14,
-  background: '#ffffff',
+  padding: 12,
+  background: 'rgba(255, 255, 255, 0.72)',
 } as const
 
 const settingsGridStyle = {
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-  gap: 12,
-  marginTop: 12,
+  gap: 10,
 } as const
 
 const badgeStyle = {
   display: 'inline-flex',
   alignItems: 'center',
   gap: 6,
-  padding: '4px 8px',
+  padding: '3px 8px',
   borderRadius: 999,
-  fontSize: 12,
-  fontWeight: 600,
+  fontSize: 11,
+  fontWeight: 620,
 } as const
+
+const headerStyle = {
+  display: 'grid',
+  gap: 4,
+} as const
+
+const titleStyle = {
+  color: '#172033',
+  fontSize: 15,
+  fontWeight: 680,
+  letterSpacing: 0,
+} as const
+
+const subtitleStyle = {
+  maxWidth: 620,
+  color: '#64748b',
+  fontSize: 12,
+  lineHeight: 1.45,
+} as const
+
+const settingsCardStyle = {
+  display: 'grid',
+  gap: 10,
+  alignContent: 'start',
+  minHeight: 174,
+  padding: 12,
+  border: '1px solid rgba(226, 232, 240, 0.92)',
+  borderRadius: 12,
+  background: 'rgba(255, 255, 255, 0.64)',
+} as const
+
+const settingsTitleStyle = {
+  color: '#172033',
+  fontSize: 13,
+  fontWeight: 680,
+} as const
+
+const checkboxLabelStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 8,
+  color: '#475569',
+  fontSize: 12,
+  fontWeight: 560,
+  lineHeight: 1.35,
+} as const
+
+const checkboxStyle = {
+  width: 15,
+  height: 15,
+  accentColor: '#2563eb',
+} as const
+
+const fieldStyle = {
+  minWidth: 0,
+  display: 'grid',
+  gap: 5,
+} as const
+
+const fullInputStyle: CSSProperties = {
+  width: '100%',
+  minWidth: 0,
+}
+
+const lightButtonStyle = {
+  minHeight: 30,
+  borderRadius: 999,
+  padding: '0 10px',
+  border: '1px solid rgba(203, 213, 225, 0.82)',
+  background: 'rgba(255, 255, 255, 0.68)',
+  color: '#475569',
+  fontSize: 12,
+  fontWeight: 580,
+  boxShadow: 'none',
+} as const
+
+const lightDangerButtonStyle = {
+  ...lightButtonStyle,
+  borderColor: 'rgba(248, 113, 113, 0.34)',
+  background: 'rgba(254, 242, 242, 0.66)',
+  color: '#b91c1c',
+} as const
+
+const primaryActionStyle = {
+  minHeight: 32,
+  borderRadius: 999,
+  padding: '0 12px',
+  fontSize: 12,
+  fontWeight: 640,
+} as const
+
+const sourceFormStyle = {
+  display: 'grid',
+  gridTemplateColumns: 'minmax(180px, 1.4fr) minmax(130px, 0.8fr) 76px 64px minmax(96px, auto) minmax(96px, auto) auto auto',
+  alignItems: 'end',
+  gap: 9,
+  padding: 12,
+  border: '1px solid rgba(226, 232, 240, 0.92)',
+  borderRadius: 12,
+  background: 'rgba(248, 250, 252, 0.62)',
+} as const
+
+const listStyle = {
+  display: 'grid',
+  gap: 10,
+} as const
+
+const sourceHeaderStyle = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  gap: 12,
+  flexWrap: 'wrap' as const,
+} as const
+
+const sourceNameStyle = {
+  color: '#172033',
+  fontSize: 14,
+  fontWeight: 680,
+} as const
+
+const sourceMetaStyle = {
+  marginTop: 3,
+  color: '#64748b',
+  fontSize: 12,
+} as const
+
+const sourceStatsGridStyle = {
+  display: 'grid',
+  gap: 8,
+  gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+  marginTop: 10,
+} as const
+
+const sourceStatStyle = {
+  padding: '8px 9px',
+  border: '1px solid rgba(226, 232, 240, 0.9)',
+  borderRadius: 10,
+  background: 'rgba(248, 250, 252, 0.7)',
+  color: '#475569',
+  fontSize: 12,
+} as const
+
+const responsivePaymentSourcesStyle = `
+  @media (max-width: 980px) {
+    [data-payment-source-form="true"] {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+  }
+
+  @media (max-width: 560px) {
+    [data-payment-source-form="true"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+`
 
 type PaymentSourceStats = {
   sourceId: string
@@ -107196,18 +107353,22 @@ export default function PaymentSourcesPanel(props: Props) {
 
   return (
     <section style={panelStyle}>
-      <div style={styles.sectionTitle}>Źródła płatności i konta</div>
-      <div style={{ ...styles.pageSubtitle, marginBottom: 0 }}>
-        Osobno konfigurujesz listy dla przychodów i wydatków oraz decydujesz, czy pole ma być
-        widoczne w kreatorze.
+      <style>{responsivePaymentSourcesStyle}</style>
+      <div style={headerStyle}>
+        <div style={titleStyle}>Źródła płatności i konta</div>
+        <div style={subtitleStyle}>
+          Osobno konfigurujesz listy dla przychodów i wydatków oraz decydujesz, czy pole ma być
+          widoczne w kreatorze.
+        </div>
       </div>
 
       <div style={settingsGridStyle}>
-        <div style={styles.infoBox}>
-          <div style={{ fontWeight: 600, marginBottom: 10 }}>Przychody</div>
+        <div style={settingsCardStyle}>
+          <div style={settingsTitleStyle}>Przychody</div>
 
-          <label style={styles.sortLabel}>
+          <label style={checkboxLabelStyle}>
             <input
+              style={checkboxStyle}
               type="checkbox"
               checked={paymentSourceSettings.showIncomePaymentSource}
               onChange={async (event) => {
@@ -107223,13 +107384,13 @@ export default function PaymentSourcesPanel(props: Props) {
             Pokaż pole źródła w kreatorze przychodów
           </label>
 
-          <div style={{ marginTop: 10 }}>
+          <div style={fieldStyle}>
             <label htmlFor="income-default-payment-source" style={styles.sortLabel}>
               Domyślne źródło dla przychodów
             </label>
             <select
               id="income-default-payment-source"
-              style={styles.input}
+              style={{ ...styles.input, ...fullInputStyle }}
               value={paymentSourceSettings.defaultIncomePaymentSourceId || ''}
               onChange={async (event) => {
                 setIsConfigSaving(true)
@@ -107255,7 +107416,7 @@ export default function PaymentSourcesPanel(props: Props) {
 
           <button
             type="button"
-            style={{ ...styles.secondaryButton, marginTop: 10 }}
+            style={lightButtonStyle}
             disabled={isConfigSaving}
             onClick={async () => {
               setIsConfigSaving(true)
@@ -107271,11 +107432,12 @@ export default function PaymentSourcesPanel(props: Props) {
           </button>
         </div>
 
-        <div style={styles.infoBox}>
-          <div style={{ fontWeight: 600, marginBottom: 10 }}>Wydatki</div>
+        <div style={settingsCardStyle}>
+          <div style={settingsTitleStyle}>Wydatki</div>
 
-          <label style={styles.sortLabel}>
+          <label style={checkboxLabelStyle}>
             <input
+              style={checkboxStyle}
               type="checkbox"
               checked={paymentSourceSettings.showExpensePaymentSource}
               onChange={async (event) => {
@@ -107291,13 +107453,13 @@ export default function PaymentSourcesPanel(props: Props) {
             Pokaż pole źródła w kreatorze wydatków
           </label>
 
-          <div style={{ marginTop: 10 }}>
+          <div style={fieldStyle}>
             <label htmlFor="expense-default-payment-source" style={styles.sortLabel}>
               Domyślne źródło dla wydatków
             </label>
             <select
               id="expense-default-payment-source"
-              style={styles.input}
+              style={{ ...styles.input, ...fullInputStyle }}
               value={paymentSourceSettings.defaultExpensePaymentSourceId || ''}
               onChange={async (event) => {
                 setIsConfigSaving(true)
@@ -107323,7 +107485,7 @@ export default function PaymentSourcesPanel(props: Props) {
 
           <button
             type="button"
-            style={{ ...styles.secondaryButton, marginTop: 10 }}
+            style={lightButtonStyle}
             disabled={isConfigSaving}
             onClick={async () => {
               setIsConfigSaving(true)
@@ -107340,52 +107502,65 @@ export default function PaymentSourcesPanel(props: Props) {
         </div>
       </div>
 
-      <div style={{ ...styles.formRow, marginTop: 12 }}>
-        <input
-          style={styles.input}
-          placeholder="np. Karta Visa, Gotówka, Konto firmowe"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-        />
-
-        <select
-          style={styles.input}
-          value={type}
-          onChange={(event) => {
-            const nextType = event.target.value as PaymentSourceType
-            setType(nextType)
-
-            if (!emoji.trim() || emoji === DEFAULT_PAYMENT_SOURCE_EMOJI[type]) {
-              setEmoji(DEFAULT_PAYMENT_SOURCE_EMOJI[nextType])
-            }
-
-            if (!color.trim() || color === DEFAULT_PAYMENT_SOURCE_COLOR[type]) {
-              setColor(DEFAULT_PAYMENT_SOURCE_COLOR[nextType])
-            }
-          }}
-        >
-          <option value="cash">Gotówka</option>
-          <option value="card">Karta</option>
-          <option value="account">Konto</option>
-          <option value="other">Inne</option>
-        </select>
-
-        <input
-          style={{ ...styles.smallInput, width: 90 }}
-          placeholder="Emoji"
-          value={emoji}
-          onChange={(event) => setEmoji(event.target.value)}
-        />
-
-        <input
-          style={{ ...styles.smallInput, width: 120 }}
-          type="color"
-          value={color}
-          onChange={(event) => setColor(event.target.value)}
-        />
-
-        <label style={styles.sortLabel}>
+      <div data-payment-source-form="true" style={sourceFormStyle}>
+        <div style={fieldStyle}>
+          <label style={styles.sortLabel}>Nazwa</label>
           <input
+            style={{ ...styles.input, ...fullInputStyle }}
+            placeholder="np. Karta Visa, Gotówka, Konto firmowe"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
+        </div>
+
+        <div style={fieldStyle}>
+          <label style={styles.sortLabel}>Typ</label>
+          <select
+            style={{ ...styles.input, ...fullInputStyle }}
+            value={type}
+            onChange={(event) => {
+              const nextType = event.target.value as PaymentSourceType
+              setType(nextType)
+
+              if (!emoji.trim() || emoji === DEFAULT_PAYMENT_SOURCE_EMOJI[type]) {
+                setEmoji(DEFAULT_PAYMENT_SOURCE_EMOJI[nextType])
+              }
+
+              if (!color.trim() || color === DEFAULT_PAYMENT_SOURCE_COLOR[type]) {
+                setColor(DEFAULT_PAYMENT_SOURCE_COLOR[nextType])
+              }
+            }}
+          >
+            <option value="cash">Gotówka</option>
+            <option value="card">Karta</option>
+            <option value="account">Konto</option>
+            <option value="other">Inne</option>
+          </select>
+        </div>
+
+        <div style={fieldStyle}>
+          <label style={styles.sortLabel}>Ikonka</label>
+          <input
+            style={{ ...styles.smallInput, width: '100%' }}
+            placeholder="Emoji"
+            value={emoji}
+            onChange={(event) => setEmoji(event.target.value)}
+          />
+        </div>
+
+        <div style={fieldStyle}>
+          <label style={styles.sortLabel}>Kolor</label>
+          <input
+            style={{ ...styles.smallInput, width: '100%', padding: 4 }}
+            type="color"
+            value={color}
+            onChange={(event) => setColor(event.target.value)}
+          />
+        </div>
+
+        <label style={checkboxLabelStyle}>
+          <input
+            style={checkboxStyle}
             type="checkbox"
             checked={isIncomeSource}
             onChange={(event) => setIsIncomeSource(event.target.checked)}
@@ -107393,8 +107568,9 @@ export default function PaymentSourcesPanel(props: Props) {
           Przychody
         </label>
 
-        <label style={styles.sortLabel}>
+        <label style={checkboxLabelStyle}>
           <input
+            style={checkboxStyle}
             type="checkbox"
             checked={isExpenseSource}
             onChange={(event) => setIsExpenseSource(event.target.checked)}
@@ -107404,7 +107580,7 @@ export default function PaymentSourcesPanel(props: Props) {
 
         <button
           type="button"
-          style={styles.primaryButton}
+          style={{ ...styles.primaryButton, ...primaryActionStyle }}
           disabled={isSaving || !name.trim() || (!isIncomeSource && !isExpenseSource)}
           onClick={async () => {
             setIsSaving(true)
@@ -107429,13 +107605,13 @@ export default function PaymentSourcesPanel(props: Props) {
         </button>
 
         {editingId && (
-          <button type="button" style={styles.secondaryButton} onClick={resetForm}>
+          <button type="button" style={lightButtonStyle} onClick={resetForm}>
             Anuluj edycję
           </button>
         )}
       </div>
 
-      <div style={{ display: 'grid', gap: 12, marginTop: 16 }}>
+      <div style={listStyle}>
         {paymentSources.length === 0 ? (
           <div style={styles.emptyStateCard}>Brak zapisanych źródeł płatności.</div>
         ) : (
@@ -107449,19 +107625,12 @@ export default function PaymentSourcesPanel(props: Props) {
 
             return (
               <div key={source.id} style={cardStyle}>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    gap: 12,
-                    flexWrap: 'wrap',
-                  }}
-                >
+                <div style={sourceHeaderStyle}>
                   <div>
-                    <div style={{ fontWeight: 600, fontSize: 16 }}>
+                    <div style={sourceNameStyle}>
                       {getPaymentSourceOptionLabel(source)}
                     </div>
-                    <div style={{ ...styles.pageSubtitle, margin: '4px 0 0' }}>
+                    <div style={sourceMetaStyle}>
                       Typ: {getPaymentSourceTypeLabel(source.type)}
                     </div>
                   </div>
@@ -107469,7 +107638,7 @@ export default function PaymentSourcesPanel(props: Props) {
                   <div style={styles.actions}>
                     <button
                       type="button"
-                      style={styles.secondaryButton}
+                      style={lightButtonStyle}
                       onClick={() => {
                         setEditingId(source.id)
                         setName(source.name)
@@ -107485,7 +107654,7 @@ export default function PaymentSourcesPanel(props: Props) {
 
                     <button
                       type="button"
-                      style={styles.dangerButton}
+                      style={lightDangerButtonStyle}
                       onClick={() => {
                         void onDelete(source.id)
                       }}
@@ -107500,21 +107669,14 @@ export default function PaymentSourcesPanel(props: Props) {
                   {renderMembershipBadge('Wydatki', source.is_expense_source !== false, '#b91c1c')}
                 </div>
 
-                <div
-                  style={{
-                    display: 'grid',
-                    gap: 8,
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                    marginTop: 12,
-                  }}
-                >
-                  <div style={styles.infoBox}>
+                <div style={sourceStatsGridStyle}>
+                  <div style={sourceStatStyle}>
                     <b>Liczba wpisów:</b> {stats.transactionCount}
                   </div>
-                  <div style={styles.infoBox}>
+                  <div style={sourceStatStyle}>
                     <b>Suma przychodów:</b> {stats.incomeTotal.toFixed(2)} zł
                   </div>
-                  <div style={styles.infoBox}>
+                  <div style={sourceStatStyle}>
                     <b>Suma wydatków:</b> {stats.expenseTotal.toFixed(2)} zł
                   </div>
                 </div>
@@ -110515,63 +110677,71 @@ const panelStyle = {
   background: 'transparent',
 } as const
 
-const panelHeaderStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  gap: 12,
-  flexWrap: 'wrap' as const,
-} as const
-
-const subtitleStyle = {
-  fontSize: 13,
-  opacity: 0.75,
-  marginTop: 4,
-} as const
-
-const toggleButtonStyle = {
-  padding: '10px 14px',
-  borderRadius: 8,
-  border: '1px solid #c9c9c9',
-  background: '#f7f7f7',
-  cursor: 'pointer',
-} as const
-
 const filtersGridStyle = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-  gap: 12,
-  marginTop: 16,
-  marginBottom: 16,
+  gridTemplateColumns: 'repeat(6, minmax(0, 1fr))',
+  gap: 10,
+  marginBottom: 14,
 } as const
+
+const filterFieldStyle = {
+  minWidth: 0,
+  display: 'grid',
+  gap: 5,
+} as const
+
+const wideFilterFieldStyle = {
+  ...filterFieldStyle,
+  gridColumn: 'span 3',
+} as const
+
+const regularFilterFieldStyle = {
+  ...filterFieldStyle,
+  gridColumn: 'span 2',
+} as const
+
+const compactFilterFieldStyle = {
+  ...filterFieldStyle,
+  gridColumn: 'span 1',
+} as const
+
+const searchInputStyle: CSSProperties = {
+  width: '100%',
+  minWidth: 0,
+}
 
 const actionsRowStyle = {
   display: 'flex',
+  justifyContent: 'flex-end',
   gap: 10,
   flexWrap: 'wrap' as const,
-  marginBottom: 16,
+  marginBottom: 14,
 } as const
 
 const resetButtonStyle = {
-  padding: '10px 14px',
-  borderRadius: 8,
-  border: '1px solid #c9c9c9',
-  background: '#fafafa',
+  minHeight: 30,
+  padding: '0 10px',
+  borderRadius: 999,
+  border: '1px solid rgba(203, 213, 225, 0.82)',
+  background: 'rgba(255, 255, 255, 0.68)',
+  color: '#475569',
   cursor: 'pointer',
+  fontSize: 12,
+  fontWeight: 560,
 } as const
 
 const statsGridStyle = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-  gap: 12,
-  marginBottom: 16,
+  gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+  gap: 10,
+  marginBottom: 14,
 } as const
 
 const statCardStyle = {
-  border: '1px solid #e2e8f0',
-  borderRadius: 10,
-  padding: 12,
-  background: '#fcfcfc',
+  border: '1px solid rgba(226, 232, 240, 0.92)',
+  borderRadius: 12,
+  padding: '10px 11px',
+  background: 'rgba(255, 255, 255, 0.72)',
 } as const
 
 const incomeStatCardStyle = {
@@ -110599,15 +110769,15 @@ const statLabelStyle = {
 } as const
 
 const statValueStyle = {
-  fontSize: 22,
-  fontWeight: 600,
+  fontSize: 18,
+  fontWeight: 680,
 } as const
 
 const tagsWrapStyle = {
   display: 'flex',
   gap: 8,
   flexWrap: 'wrap' as const,
-  marginBottom: 16,
+  marginBottom: 14,
 } as const
 
 const tagButtonBaseStyle = {
@@ -110620,31 +110790,66 @@ const tagButtonBaseStyle = {
 } as const
 
 const historyWrapStyle = {
-  border: '1px solid #e2e8f0',
-  borderRadius: 10,
+  border: '1px solid rgba(226, 232, 240, 0.92)',
+  borderRadius: 12,
   overflow: 'hidden',
+  background: 'rgba(255, 255, 255, 0.72)',
 } as const
 
 const historyHeaderStyle = {
   display: 'grid',
   gridTemplateColumns: '120px minmax(180px, 1.2fr) minmax(220px, 2fr) 130px',
   gap: 12,
-  padding: '12px 14px',
-  background: '#f8fafc',
-  fontWeight: 600,
-  fontSize: 13,
-  borderBottom: '1px solid #e2e8f0',
+  padding: '10px 12px',
+  background: 'rgba(248, 250, 252, 0.88)',
+  color: '#475569',
+  fontWeight: 680,
+  fontSize: 12,
+  borderBottom: '1px solid rgba(226, 232, 240, 0.92)',
 } as const
 
 const historyRowStyle = {
   display: 'grid',
   gridTemplateColumns: '120px minmax(180px, 1.2fr) minmax(220px, 2fr) 130px',
   gap: 12,
-  padding: '12px 14px',
-  borderBottom: '1px solid #eef2f7',
+  padding: '11px 12px',
+  borderBottom: '1px solid rgba(238, 242, 247, 0.92)',
   alignItems: 'start',
-  fontSize: 14,
+  fontSize: 13,
 } as const
+
+const responsiveSearchStyle = `
+  [data-search-filter-field="wide"],
+  [data-search-filter-field="regular"],
+  [data-search-filter-field="compact"] {
+    min-width: 0;
+  }
+
+  @media (max-width: 920px) {
+    [data-bank-search-filters="true"] {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    [data-search-filter-field="wide"],
+    [data-search-filter-field="regular"],
+    [data-search-filter-field="compact"] {
+      grid-column: span 1 !important;
+    }
+
+    [data-bank-search-stats="true"] {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+  }
+
+  @media (max-width: 560px) {
+    [data-bank-search-filters="true"],
+    [data-bank-search-stats="true"],
+    [data-bank-search-history-header="true"],
+    [data-bank-search-history-row="true"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+`
 
 const categoryNameStyle = {
   fontWeight: 600,
@@ -110695,8 +110900,6 @@ const getTransactionDateLabel = (dayIsNull: boolean | undefined, date: string) =
 
 const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props, ref) {
   const {
-    isOpen,
-    setIsOpen,
     searchState,
     onFieldChange,
     onToggleTagId,
@@ -110716,20 +110919,10 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
 
   return (
     <div ref={ref} style={panelStyle}>
-      <div style={panelHeaderStyle}>
-        <div>
-          <div style={styles.sectionTitle}>Wyszukiwarka</div>
-        </div>
-
-        <button type="button" onClick={() => setIsOpen((prev) => !prev)} style={toggleButtonStyle}>
-          {isOpen ? 'Zwiń panel' : 'Pokaż panel'}
-        </button>
-      </div>
-
-      {isOpen && (
-        <>
-          <div style={filtersGridStyle}>
-            <div>
+      <style>{responsiveSearchStyle}</style>
+      <>
+          <div data-bank-search-filters="true" style={filtersGridStyle}>
+            <div data-search-filter-field="wide" style={wideFilterFieldStyle}>
               <label htmlFor="bank-search-description" style={styles.sortLabel}>
                 Szukaj po opisie
               </label>
@@ -110738,11 +110931,11 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                 value={searchState.description}
                 onChange={(event) => onFieldChange('description', event.target.value)}
                 placeholder="np. biedronka, czynsz, premia"
-                style={styles.input}
+                style={{ ...styles.input, ...searchInputStyle }}
               />
             </div>
 
-            <div>
+            <div data-search-filter-field="regular" style={regularFilterFieldStyle}>
               <label htmlFor="bank-search-category" style={styles.sortLabel}>
                 Kategoria
               </label>
@@ -110750,7 +110943,7 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                 id="bank-search-category"
                 value={searchState.categoryId}
                 onChange={(event) => onFieldChange('categoryId', event.target.value)}
-                style={styles.input}
+                style={{ ...styles.input, ...searchInputStyle }}
               >
                 <option value="">Wszystkie kategorie</option>
                 {categoryOptions.map((option) => (
@@ -110761,7 +110954,61 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
               </select>
             </div>
 
-            <div>
+            <div data-search-filter-field="compact" style={compactFilterFieldStyle}>
+              <label htmlFor="bank-search-date-from" style={styles.sortLabel}>
+                Data od
+              </label>
+              <input
+                id="bank-search-date-from"
+                type="date"
+                value={searchState.dateFrom}
+                onChange={(event) => onFieldChange('dateFrom', event.target.value)}
+                style={{ ...styles.input, ...searchInputStyle }}
+              />
+            </div>
+
+            <div data-search-filter-field="compact" style={compactFilterFieldStyle}>
+              <label htmlFor="bank-search-date-to" style={styles.sortLabel}>
+                Data do
+              </label>
+              <input
+                id="bank-search-date-to"
+                type="date"
+                value={searchState.dateTo}
+                onChange={(event) => onFieldChange('dateTo', event.target.value)}
+                style={{ ...styles.input, ...searchInputStyle }}
+              />
+            </div>
+
+            <div data-search-filter-field="compact" style={compactFilterFieldStyle}>
+              <label htmlFor="bank-search-amount-min" style={styles.sortLabel}>
+                Kwota min
+              </label>
+              <input
+                id="bank-search-amount-min"
+                inputMode="decimal"
+                value={searchState.amountMin}
+                onChange={(event) => onFieldChange('amountMin', event.target.value)}
+                placeholder="np. 100"
+                style={{ ...styles.input, ...searchInputStyle }}
+              />
+            </div>
+
+            <div data-search-filter-field="compact" style={compactFilterFieldStyle}>
+              <label htmlFor="bank-search-amount-max" style={styles.sortLabel}>
+                Kwota max
+              </label>
+              <input
+                id="bank-search-amount-max"
+                inputMode="decimal"
+                value={searchState.amountMax}
+                onChange={(event) => onFieldChange('amountMax', event.target.value)}
+                placeholder="np. 1500"
+                style={{ ...styles.input, ...searchInputStyle }}
+              />
+            </div>
+
+            <div data-search-filter-field="regular" style={regularFilterFieldStyle}>
               <label htmlFor="bank-search-payment-source" style={styles.sortLabel}>
                 Źródło płatności
               </label>
@@ -110769,7 +111016,7 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                 id="bank-search-payment-source"
                 value={searchState.paymentSourceId}
                 onChange={(event) => onFieldChange('paymentSourceId', event.target.value)}
-                style={styles.input}
+                style={{ ...styles.input, ...searchInputStyle }}
               >
                 <option value="">Wszystkie źródła</option>
                 {paymentSourceOptions.map((option) => (
@@ -110780,61 +111027,7 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
               </select>
             </div>
 
-            <div>
-              <label htmlFor="bank-search-date-from" style={styles.sortLabel}>
-                Data od
-              </label>
-              <input
-                id="bank-search-date-from"
-                type="date"
-                value={searchState.dateFrom}
-                onChange={(event) => onFieldChange('dateFrom', event.target.value)}
-                style={styles.input}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="bank-search-date-to" style={styles.sortLabel}>
-                Data do
-              </label>
-              <input
-                id="bank-search-date-to"
-                type="date"
-                value={searchState.dateTo}
-                onChange={(event) => onFieldChange('dateTo', event.target.value)}
-                style={styles.input}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="bank-search-amount-min" style={styles.sortLabel}>
-                Kwota min
-              </label>
-              <input
-                id="bank-search-amount-min"
-                inputMode="decimal"
-                value={searchState.amountMin}
-                onChange={(event) => onFieldChange('amountMin', event.target.value)}
-                placeholder="np. 100"
-                style={styles.input}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="bank-search-amount-max" style={styles.sortLabel}>
-                Kwota max
-              </label>
-              <input
-                id="bank-search-amount-max"
-                inputMode="decimal"
-                value={searchState.amountMax}
-                onChange={(event) => onFieldChange('amountMax', event.target.value)}
-                placeholder="np. 1500"
-                style={styles.input}
-              />
-            </div>
-
-            <div>
+            <div data-search-filter-field="regular" style={regularFilterFieldStyle}>
               <label htmlFor="bank-search-sort-mode" style={styles.sortLabel}>
                 Sortowanie wyników
               </label>
@@ -110844,7 +111037,7 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                 onChange={(event) =>
                   onFieldChange('sortMode', event.target.value as BankSearchSortMode)
                 }
-                style={styles.input}
+                style={{ ...styles.input, ...searchInputStyle }}
               >
                 <option value="newest">najnowsze najpierw</option>
                 <option value="oldest">najstarsze najpierw</option>
@@ -110889,7 +111082,7 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
             </button>
           </div>
 
-          <div style={statsGridStyle}>
+          <div data-bank-search-stats="true" style={statsGridStyle}>
             <div style={incomeStatCardStyle}>
               <div style={statLabelStyle}>Przychody</div>
               <div style={{ ...statValueStyle, color: '#15803d' }}>{formatMoney(summary.incomeTotal)}</div>
@@ -110991,7 +111184,6 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
             )}
           </div>
         </>
-      )}
     </div>
   )
 })
@@ -130157,7 +130349,7 @@ PLIK: next-env.d.ts
 
 /// <reference types="next" />
 /// <reference types="next/image-types/global" />
-import "./.next/dev/types/routes.d.ts";
+import "./.next/types/routes.d.ts";
 
 // NOTE: This file should not be edited
 // see https://nextjs.org/docs/app/api-reference/config/typescript for more information.

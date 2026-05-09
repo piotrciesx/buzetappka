@@ -207,6 +207,16 @@
   backdrop-filter: blur(14px);
 }
 
+[data-budget-utility-header="true"] {
+  min-height: 38px !important;
+  align-items: center !important;
+  color: #172033 !important;
+  font-family: var(--font-app-sans), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 680 !important;
+  letter-spacing: 0 !important;
+}
+
 [data-app-view="settings"] [data-floating-dropdown],
 [data-app-view="profile"] [data-floating-dropdown],
 [data-budget-utility-panel="true"] [data-floating-dropdown],

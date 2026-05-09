@@ -7,14 +7,12 @@ type MonthCalendarHeaderProps = {
 }
 
 export default function MonthCalendarHeader({
-  title,
   subtitle,
   styles,
 }: MonthCalendarHeaderProps) {
   return (
     <>
-      <div style={styles.sectionTitle}>{title}</div>
-      <div style={{ ...styles.pageSubtitle, marginBottom: 0 }}>{subtitle}</div>
+      {subtitle && <div style={{ ...styles.pageSubtitle, marginBottom: 0 }}>{subtitle}</div>}
     </>
   )
 }
