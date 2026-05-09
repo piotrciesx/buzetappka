@@ -752,33 +752,62 @@ export default function BudgetCategoryTree(props: Props) {
   if (isMobileViewport) {
     return (
       <div data-level1-tree-shell="true" data-level1-mobile-flow="true">
-        {sortedLevel1.map((level1Category) => {
-          const isLevel1Open = openLevel1Ids.includes(level1Category.id)
-          const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
+        <DndContext
+          sensors={dndSensors}
+          collisionDetection={closestCenter}
+          onDragStart={() => {
+            handleLevel1DragStart()
+          }}
+          onDragEnd={async (event: DragEndEvent) => {
+            const { active, over } = event
 
-          return (
-            <section key={level1Category.id} data-level1-mobile-block="true">
-              <div data-level1-header-grid="true">
-                <StaticLevel1Card
+            if (!over || active.id === over.id) {
+              return
+            }
+
+            const level1Ids = sortedLevel1.map((category) => category.id)
+            await handleReorderLevel1(
+              String(active.id),
+              getNearestDndSwapTargetId(
+                level1Ids,
+                String(active.id),
+                String(over.id),
+                true
+              )
+            )
+          }}
+        >
+          <SortableContext
+            items={sortedLevel1.map((category) => category.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            {sortedLevel1.map((level1Category) => {
+              const isLevel1Open = openLevel1Ids.includes(level1Category.id)
+              const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
+
+              return (
+                <SortableLevel1Card
+                  key={level1Category.id}
                   level1Category={level1Category}
                   isOpen={isLevel1Open}
                   onToggle={() => toggleLevel1(level1Category.id)}
+                  isSortable={isLevel1Sortable}
                   styles={styles}
                   kind={getLevel1Kind(level1Category)}
                   summary={getLevel1Summary(level1Category)}
-                  dragHandle={renderBlockedLevel1DragHandle(level1Category, isLevel1Sortable)}
                   extraActions={renderLevel1Actions(level1Category, isLevel1CalendarOpen)}
                   limitIndicator={
                     level1Category.id === expenseLevel1Id && getBudgetLimitView ? (
                       <BudgetLimitIndicator view={getBudgetLimitView?.(null) ?? null} />
                     ) : null
                   }
-                />
-              </div>
-              {renderLevel1Content(level1Category)}
-            </section>
-          )
-        })}
+                >
+                  {renderLevel1Content(level1Category)}
+                </SortableLevel1Card>
+              )
+            })}
+          </SortableContext>
+        </DndContext>
       </div>
     )
   }

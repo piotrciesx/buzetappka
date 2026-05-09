@@ -186,7 +186,12 @@ export function SortableLevel1Card(props: SortableProps) {
   }
 
   return (
-    <div ref={setNodeRef} style={wrapStyle} data-level1-card-shell="true">
+    <div
+      ref={setNodeRef}
+      style={wrapStyle}
+      data-level1-card-shell="true"
+      data-level1-mobile-block={isMobileViewport ? 'true' : undefined}
+    >
       <Level1CardBase
         level1Category={level1Category}
         isOpen={isOpen}

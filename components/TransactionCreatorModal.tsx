@@ -384,7 +384,18 @@ export default function TransactionCreatorModal(props: Props) {
   return (
     <div data-transaction-modal-overlay="true" style={overlayStyle} onClick={onClose}>
       <div data-transaction-modal="true" style={modalStyle} onClick={(event) => event.stopPropagation()}>
-        <div style={styles.sectionTitle} data-transaction-modal-title="true">Nowy wpis</div>
+        <div style={styles.sectionTitle} data-transaction-modal-title="true">
+          <span>Nowy wpis</span>
+          <button
+            type="button"
+            data-transaction-close-action="true"
+            aria-label="Zamknij kreator wpisu"
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={onClose}
+          >
+            ×
+          </button>
+        </div>
 
         <div style={styles.pageSubtitle}>
           Miesiąc zapisu: <b>{selectedMonth}</b>
