@@ -3,8 +3,6 @@
   box-sizing: border-box;
 }
 
-
-
 /* Etap 25: main site repair pass. Keep this block last so it neutralizes older visual passes. */
 [data-budget-app="true"] {
   background: #f4f7fb !important;

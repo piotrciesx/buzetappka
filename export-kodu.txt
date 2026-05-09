@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 458
-Data: 2026-05-09T01:32:08.669Z
+Data: 2026-05-09T01:42:43.433Z
 
 
 ==================================================
@@ -75309,6 +75309,7 @@ PLIK: app\styles\right-rail.css
 [data-budget-context-rail="true"] {
   position: sticky;
   top: 66px;
+  z-index: 1200;
   display: grid;
   align-content: start;
   gap: 10px;
@@ -75347,6 +75348,7 @@ PLIK: app\styles\right-rail.css
 
 [data-context-card="rail-actions"] {
   position: relative;
+  z-index: 3600;
   display: grid !important;
   grid-template-columns: repeat(4, 36px) !important;
   justify-content: start !important;
@@ -75360,6 +75362,13 @@ PLIK: app\styles\right-rail.css
 }
 
 [data-rail-notification-wrap="true"] {
+  position: relative;
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+}
+
+[data-rail-search-wrap="true"] {
   position: relative;
   width: 36px;
   min-width: 36px;
@@ -75415,20 +75424,22 @@ PLIK: app\styles\right-rail.css
 }
 
 [data-context-card="rail-actions"] [data-rail-profile-action="true"] {
-  border-color: #111827 !important;
+  border-color: rgba(198, 209, 221, 0.82) !important;
   border-radius: 999px !important;
-  background: #111827 !important;
-  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.84) !important;
+  color: #334155 !important;
   font-size: 13px !important;
-  font-weight: 780 !important;
-  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12) !important;
+  font-weight: 740 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 6px 14px rgba(15, 23, 42, 0.045) !important;
 }
 
 [data-rail-notification-popover="true"] {
   position: absolute;
-  top: calc(100% + 10px);
-  right: -50px;
-  z-index: 40;
+  top: calc(100% + 8px);
+  right: -96px;
+  z-index: 4200;
   width: 260px;
   display: grid;
   gap: 7px;
@@ -75438,6 +75449,33 @@ PLIK: app\styles\right-rail.css
   background: rgba(255, 255, 255, 0.98);
   color: #334155;
   box-shadow: 0 18px 42px rgba(15, 23, 42, 0.16);
+}
+
+[data-rail-quick-search="true"] {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 4200;
+  width: 220px;
+  padding: 7px;
+  border: 1px solid rgba(203, 213, 225, 0.88);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.16);
+}
+
+[data-rail-quick-search="true"] input {
+  width: 100%;
+  height: 32px;
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px solid rgba(203, 213, 225, 0.86);
+  border-radius: 10px;
+  padding: 0 10px;
+  background: rgba(248, 250, 252, 0.8);
+  color: #172033;
+  font-size: 12px;
+  outline: none;
 }
 
 [data-rail-notification-popover="true"] strong {
@@ -75767,6 +75805,7 @@ PLIK: app\styles\right-rail.css
     left: 0;
   }
 }
+
 
 
 ==================================================
@@ -76497,7 +76536,14 @@ PLIK: app\styles\side-panels.css
 }
 
 [data-app-view="profile"] {
-  --side-panel-width: min(420px, calc(100vw - var(--side-panel-left) - 24px));
+  --side-panel-width: min(420px, calc(100vw - 372px));
+  left: auto !important;
+  right: 344px !important;
+  top: 76px !important;
+  height: auto !important;
+  max-height: calc(100dvh - 100px) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 22px 58px rgba(15, 23, 42, 0.16) !important;
 }
 
 [data-app-view="settings"] {
@@ -79649,10 +79695,13 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     draftCount: ctx.drafts.length,
     recurringCount: ctx.recurringTransactions.length,
     showRecurring: effectiveVisibleModules.recurringTransactions,
-    onOpenSearch: () => {
+    onOpenSearch: (query?: string) => {
       ctx.setIsDashboardPanelOpen(false)
       ctx.setActiveSidebarPrimaryPanel?.(null)
       ctx.setIsSettingsPanelVisible(false)
+      if (query?.trim()) {
+        ctx.handleBankSearchFieldChange('description', query.trim())
+      }
       ctx.setActiveUtilityPanel('search')
     },
     onOpenNotifications: () => {
@@ -84881,7 +84930,7 @@ PLIK: components\BudgetPageStatusPanels.tsx
 
 'use client'
 
-import { ComponentProps, CSSProperties, useState } from 'react'
+import { ComponentProps, CSSProperties, useEffect, useState } from 'react'
 import AppSettingsPanel from './AppSettingsPanel'
 import BudgetHeaderPanel from './BudgetHeaderPanel'
 import UserProfileMenu from './UserProfileMenu'
@@ -85063,6 +85112,24 @@ export default function BudgetPageStatusPanels({
   onQuickAdd,
 }: Props) {
   const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false)
+
+  useEffect(() => {
+    if (!activeSidebarPrimaryPanel) {
+      return
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClosePrimaryPanel()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [activeSidebarPrimaryPanel, onClosePrimaryPanel])
 
   const openPanel = (panel: BudgetUtilityPanel) => {
     onOpenUtilityPanel(activeUtilityPanel === panel ? null : panel)
@@ -85369,7 +85436,7 @@ PLIK: components\BudgetRightRail.tsx
 
 'use client'
 
-import { useState } from 'react'
+import { KeyboardEvent, useEffect, useRef, useState } from 'react'
 
 type LiveView = 'overview' | 'payments' | 'alerts'
 
@@ -85384,7 +85451,7 @@ type Props = {
   draftCount: number
   recurringCount: number
   showRecurring: boolean
-  onOpenSearch: () => void
+  onOpenSearch: (query?: string) => void
   onOpenNotifications: () => void
   onQuickAdd: () => void
   onToggleProfile: () => void
@@ -85406,7 +85473,11 @@ export default function BudgetRightRail({
   onToggleProfile,
 }: Props) {
   const [isNotificationsPreviewOpen, setIsNotificationsPreviewOpen] = useState(false)
+  const [isQuickSearchOpen, setIsQuickSearchOpen] = useState(false)
+  const [quickSearchText, setQuickSearchText] = useState('')
   const [liveView, setLiveView] = useState<LiveView>('overview')
+  const quickSearchRef = useRef<HTMLDivElement | null>(null)
+  const quickSearchInputRef = useRef<HTMLInputElement | null>(null)
 
   const balanceState = balance > 0 ? 'positive' : balance < 0 ? 'negative' : 'neutral'
   const hasOverviewData = incomeTotal > 0 || expenseTotal > 0
@@ -85415,15 +85486,82 @@ export default function BudgetRightRail({
   const expenseShare = totalFlow > 0 ? 100 - incomeShare : 0
   const hasRecurringAlerts = showRecurring && recurringCount > 0
 
+  useEffect(() => {
+    if (!isQuickSearchOpen) {
+      return
+    }
+
+    quickSearchInputRef.current?.focus()
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null
+
+      if (target && quickSearchRef.current?.contains(target)) {
+        return
+      }
+
+      setIsQuickSearchOpen(false)
+    }
+
+    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsQuickSearchOpen(false)
+      }
+    }
+
+    window.addEventListener('pointerdown', handlePointerDown)
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('pointerdown', handlePointerDown)
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isQuickSearchOpen])
+
+  const handleQuickSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Enter') {
+      return
+    }
+
+    const query = quickSearchText.trim()
+
+    if (!query) {
+      return
+    }
+
+    onOpenSearch(query)
+    setQuickSearchText('')
+    setIsQuickSearchOpen(false)
+  }
+
   return (
     <aside data-budget-context-rail="true" aria-label="Kontekst workspace">
       <section data-context-card="rail-actions" aria-label="Akcje">
-        <button type="button" aria-label="Szukaj" title="Szukaj" onClick={onOpenSearch}>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="11" cy="11" r="6" />
-            <path d="m16 16 4 4" />
-          </svg>
-        </button>
+        <div data-rail-search-wrap="true" ref={quickSearchRef}>
+          <button
+            type="button"
+            aria-label="Szukaj"
+            title="Szukaj"
+            onClick={() => setIsQuickSearchOpen((value) => !value)}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="6" />
+              <path d="m16 16 4 4" />
+            </svg>
+          </button>
+
+          {isQuickSearchOpen && (
+            <div data-rail-quick-search="true">
+              <input
+                ref={quickSearchInputRef}
+                value={quickSearchText}
+                onChange={(event) => setQuickSearchText(event.target.value)}
+                onKeyDown={handleQuickSearchKeyDown}
+                placeholder="Szukaj wpisu..."
+              />
+            </div>
+          )}
+        </div>
 
         <div data-rail-notification-wrap="true">
           <button
@@ -85601,6 +85739,7 @@ export default function BudgetRightRail({
     </aside>
   )
 }
+
 
 
 ==================================================
@@ -109033,11 +109172,11 @@ const mutedTextStyle: CSSProperties = {
 }
 
 const lightButtonStyle: CSSProperties = {
-  minHeight: 32,
+  minHeight: 28,
   borderRadius: 999,
-  padding: '0 12px',
-  fontSize: 12,
-  fontWeight: 640,
+  padding: '0 10px',
+  fontSize: 11,
+  fontWeight: 620,
   boxShadow: 'none',
 }
 
@@ -109084,16 +109223,16 @@ const sectionTitleStyle: CSSProperties = {
 
 const listStyle: CSSProperties = {
   display: 'grid',
-  gap: 10,
+  gap: 8,
 }
 
 const cardStyle: CSSProperties = {
   display: 'grid',
-  gap: 10,
-  padding: 12,
-  border: '1px solid rgba(226, 232, 240, 0.92)',
-  borderRadius: 14,
-  background: 'rgba(255, 255, 255, 0.72)',
+  gap: 8,
+  padding: 10,
+  border: '1px solid rgba(226, 232, 240, 0.78)',
+  borderRadius: 12,
+  background: 'rgba(255, 255, 255, 0.62)',
 }
 
 const cardHeaderStyle: CSSProperties = {
@@ -109106,23 +109245,23 @@ const cardHeaderStyle: CSSProperties = {
 
 const cardNameStyle: CSSProperties = {
   color: '#172033',
-  fontSize: 14,
-  fontWeight: 720,
+  fontSize: 13,
+  fontWeight: 700,
 }
 
 const metaGridStyle: CSSProperties = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-  gap: 8,
+  gridTemplateColumns: 'repeat(auto-fit, minmax(132px, 1fr))',
+  gap: 6,
 }
 
 const infoPillStyle: CSSProperties = {
-  padding: '8px 9px',
-  border: '1px solid rgba(226, 232, 240, 0.88)',
-  borderRadius: 10,
-  background: 'rgba(248, 250, 252, 0.72)',
+  padding: '6px 8px',
+  border: '1px solid rgba(226, 232, 240, 0.74)',
+  borderRadius: 9,
+  background: 'rgba(248, 250, 252, 0.54)',
   color: '#475569',
-  fontSize: 12,
+  fontSize: 11,
   lineHeight: 1.35,
 }
 
@@ -109270,6 +109409,14 @@ export default function RecurringTransactionsPanel(props: Props) {
       (item) => getRecurringEffectiveStatus(item, recurringExecutions, selectedMonth) !== 'active'
     )
   }, [recurringExecutions, recurringTransactions, selectedMonth])
+  const pendingRecurringIds = useMemo(
+    () => new Set(pendingRecurring.map((item) => item.id)),
+    [pendingRecurring]
+  )
+  const remainingActiveRecurring = useMemo(
+    () => activeRecurring.filter((item) => !pendingRecurringIds.has(item.id)),
+    [activeRecurring, pendingRecurringIds]
+  )
 
   const resetForm = () => {
     setFormState(getInitialFormState())
@@ -109363,7 +109510,7 @@ export default function RecurringTransactionsPanel(props: Props) {
     const hasDuplicate = hasLinkedTransactionInMonth(recurring.id)
 
     return (
-      <div key={`${mode}-${recurring.id}`} style={mode === 'pending' ? { ...cardStyle, borderColor: 'rgba(96, 165, 250, 0.55)' } : cardStyle}>
+      <div key={`${mode}-${recurring.id}`} style={cardStyle}>
         <div style={cardHeaderStyle}>
           <div>
             <div style={cardNameStyle}>{recurring.name}</div>
@@ -109724,23 +109871,19 @@ export default function RecurringTransactionsPanel(props: Props) {
         )}
       </section>
 
-      <section style={listStyle}>
-        <div style={sectionTitleStyle}>Wszystkie aktywne</div>
-        {activeRecurring.length === 0 ? (
-          <div style={styles.emptyStateCard}>Brak aktywnych przypomnień.</div>
-        ) : (
-          activeRecurring.map((recurring) => renderReminderCard(recurring, 'active'))
-        )}
-      </section>
+      {remainingActiveRecurring.length > 0 && (
+        <section style={listStyle}>
+          <div style={sectionTitleStyle}>Pozostałe przypomnienia</div>
+          {remainingActiveRecurring.map((recurring) => renderReminderCard(recurring, 'active'))}
+        </section>
+      )}
 
-      <section style={listStyle}>
-        <div style={sectionTitleStyle}>Archiwalne przypomnienia / zakończone plany</div>
-        {archivedRecurring.length === 0 ? (
-          <div style={styles.emptyStateCard}>Brak przypomnień w archiwum.</div>
-        ) : (
-          archivedRecurring.map((recurring) => renderReminderCard(recurring, 'archived'))
-        )}
-      </section>
+      {archivedRecurring.length > 0 && (
+        <section style={listStyle}>
+          <div style={sectionTitleStyle}>Archiwum</div>
+          {archivedRecurring.map((recurring) => renderReminderCard(recurring, 'archived'))}
+        </section>
+      )}
     </section>
   )
 }
@@ -112727,10 +112870,10 @@ type UserProfileMenuProps = {
 }
 
 const dropdownStyle: CSSProperties = {
-  position: 'absolute',
+  position: 'fixed',
   right: 0,
-  top: 'calc(100% + 8px)',
-  zIndex: 30,
+  top: 62,
+  zIndex: 4200,
   width: 240,
   border: '1px solid #e5e7eb',
   borderRadius: 8,

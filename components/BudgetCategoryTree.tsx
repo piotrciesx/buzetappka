@@ -749,6 +749,40 @@ export default function BudgetCategoryTree(props: Props) {
     isReorderingLevel1 || sortedLevel1.some((category) => openLevel1Ids.includes(category.id))
   const isLevel1Sortable = sortedLevel1.length > 1
 
+  if (isMobileViewport) {
+    return (
+      <div data-level1-tree-shell="true" data-level1-mobile-flow="true">
+        {sortedLevel1.map((level1Category) => {
+          const isLevel1Open = openLevel1Ids.includes(level1Category.id)
+          const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
+
+          return (
+            <section key={level1Category.id} data-level1-mobile-block="true">
+              <div data-level1-header-grid="true">
+                <StaticLevel1Card
+                  level1Category={level1Category}
+                  isOpen={isLevel1Open}
+                  onToggle={() => toggleLevel1(level1Category.id)}
+                  styles={styles}
+                  kind={getLevel1Kind(level1Category)}
+                  summary={getLevel1Summary(level1Category)}
+                  dragHandle={renderBlockedLevel1DragHandle(level1Category, isLevel1Sortable)}
+                  extraActions={renderLevel1Actions(level1Category, isLevel1CalendarOpen)}
+                  limitIndicator={
+                    level1Category.id === expenseLevel1Id && getBudgetLimitView ? (
+                      <BudgetLimitIndicator view={getBudgetLimitView?.(null) ?? null} />
+                    ) : null
+                  }
+                />
+              </div>
+              {renderLevel1Content(level1Category)}
+            </section>
+          )
+        })}
+      </div>
+    )
+  }
+
   if (isLevel1DndBlocked) {
     return (
       <div data-level1-tree-shell="true">
