@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { KeyboardEvent, useEffect, useRef, useState } from 'react'
 
 type LiveView = 'overview' | 'payments' | 'alerts'
 
@@ -15,7 +15,7 @@ type Props = {
   draftCount: number
   recurringCount: number
   showRecurring: boolean
-  onOpenSearch: () => void
+  onOpenSearch: (query?: string) => void
   onOpenNotifications: () => void
   onQuickAdd: () => void
   onToggleProfile: () => void
@@ -37,7 +37,11 @@ export default function BudgetRightRail({
   onToggleProfile,
 }: Props) {
   const [isNotificationsPreviewOpen, setIsNotificationsPreviewOpen] = useState(false)
+  const [isQuickSearchOpen, setIsQuickSearchOpen] = useState(false)
+  const [quickSearchText, setQuickSearchText] = useState('')
   const [liveView, setLiveView] = useState<LiveView>('overview')
+  const quickSearchRef = useRef<HTMLDivElement | null>(null)
+  const quickSearchInputRef = useRef<HTMLInputElement | null>(null)
 
   const balanceState = balance > 0 ? 'positive' : balance < 0 ? 'negative' : 'neutral'
   const hasOverviewData = incomeTotal > 0 || expenseTotal > 0
@@ -46,15 +50,82 @@ export default function BudgetRightRail({
   const expenseShare = totalFlow > 0 ? 100 - incomeShare : 0
   const hasRecurringAlerts = showRecurring && recurringCount > 0
 
+  useEffect(() => {
+    if (!isQuickSearchOpen) {
+      return
+    }
+
+    quickSearchInputRef.current?.focus()
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null
+
+      if (target && quickSearchRef.current?.contains(target)) {
+        return
+      }
+
+      setIsQuickSearchOpen(false)
+    }
+
+    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsQuickSearchOpen(false)
+      }
+    }
+
+    window.addEventListener('pointerdown', handlePointerDown)
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('pointerdown', handlePointerDown)
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isQuickSearchOpen])
+
+  const handleQuickSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Enter') {
+      return
+    }
+
+    const query = quickSearchText.trim()
+
+    if (!query) {
+      return
+    }
+
+    onOpenSearch(query)
+    setQuickSearchText('')
+    setIsQuickSearchOpen(false)
+  }
+
   return (
     <aside data-budget-context-rail="true" aria-label="Kontekst workspace">
       <section data-context-card="rail-actions" aria-label="Akcje">
-        <button type="button" aria-label="Szukaj" title="Szukaj" onClick={onOpenSearch}>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="11" cy="11" r="6" />
-            <path d="m16 16 4 4" />
-          </svg>
-        </button>
+        <div data-rail-search-wrap="true" ref={quickSearchRef}>
+          <button
+            type="button"
+            aria-label="Szukaj"
+            title="Szukaj"
+            onClick={() => setIsQuickSearchOpen((value) => !value)}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="6" />
+              <path d="m16 16 4 4" />
+            </svg>
+          </button>
+
+          {isQuickSearchOpen && (
+            <div data-rail-quick-search="true">
+              <input
+                ref={quickSearchInputRef}
+                value={quickSearchText}
+                onChange={(event) => setQuickSearchText(event.target.value)}
+                onKeyDown={handleQuickSearchKeyDown}
+                placeholder="Szukaj wpisu..."
+              />
+            </div>
+          )}
+        </div>
 
         <div data-rail-notification-wrap="true">
           <button

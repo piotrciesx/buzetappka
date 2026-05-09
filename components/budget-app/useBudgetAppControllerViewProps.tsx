@@ -322,10 +322,13 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     draftCount: ctx.drafts.length,
     recurringCount: ctx.recurringTransactions.length,
     showRecurring: effectiveVisibleModules.recurringTransactions,
-    onOpenSearch: () => {
+    onOpenSearch: (query?: string) => {
       ctx.setIsDashboardPanelOpen(false)
       ctx.setActiveSidebarPrimaryPanel?.(null)
       ctx.setIsSettingsPanelVisible(false)
+      if (query?.trim()) {
+        ctx.handleBankSearchFieldChange('description', query.trim())
+      }
       ctx.setActiveUtilityPanel('search')
     },
     onOpenNotifications: () => {

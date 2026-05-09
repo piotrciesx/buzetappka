@@ -181,7 +181,14 @@
 }
 
 [data-app-view="profile"] {
-  --side-panel-width: min(420px, calc(100vw - var(--side-panel-left) - 24px));
+  --side-panel-width: min(420px, calc(100vw - 372px));
+  left: auto !important;
+  right: 344px !important;
+  top: 76px !important;
+  height: auto !important;
+  max-height: calc(100dvh - 100px) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 22px 58px rgba(15, 23, 42, 0.16) !important;
 }
 
 [data-app-view="settings"] {

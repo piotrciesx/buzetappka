@@ -13,10 +13,10 @@ type UserProfileMenuProps = {
 }
 
 const dropdownStyle: CSSProperties = {
-  position: 'absolute',
+  position: 'fixed',
   right: 0,
-  top: 'calc(100% + 8px)',
-  zIndex: 30,
+  top: 62,
+  zIndex: 4200,
   width: 240,
   border: '1px solid #e5e7eb',
   borderRadius: 8,

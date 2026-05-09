@@ -1,6 +1,6 @@
 'use client'
 
-import { ComponentProps, CSSProperties, useState } from 'react'
+import { ComponentProps, CSSProperties, useEffect, useState } from 'react'
 import AppSettingsPanel from './AppSettingsPanel'
 import BudgetHeaderPanel from './BudgetHeaderPanel'
 import UserProfileMenu from './UserProfileMenu'
@@ -182,6 +182,24 @@ export default function BudgetPageStatusPanels({
   onQuickAdd,
 }: Props) {
   const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false)
+
+  useEffect(() => {
+    if (!activeSidebarPrimaryPanel) {
+      return
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClosePrimaryPanel()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [activeSidebarPrimaryPanel, onClosePrimaryPanel])
 
   const openPanel = (panel: BudgetUtilityPanel) => {
     onOpenUtilityPanel(activeUtilityPanel === panel ? null : panel)

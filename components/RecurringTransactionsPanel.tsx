@@ -93,11 +93,11 @@ const mutedTextStyle: CSSProperties = {
 }
 
 const lightButtonStyle: CSSProperties = {
-  minHeight: 32,
+  minHeight: 28,
   borderRadius: 999,
-  padding: '0 12px',
-  fontSize: 12,
-  fontWeight: 640,
+  padding: '0 10px',
+  fontSize: 11,
+  fontWeight: 620,
   boxShadow: 'none',
 }
 
@@ -144,16 +144,16 @@ const sectionTitleStyle: CSSProperties = {
 
 const listStyle: CSSProperties = {
   display: 'grid',
-  gap: 10,
+  gap: 8,
 }
 
 const cardStyle: CSSProperties = {
   display: 'grid',
-  gap: 10,
-  padding: 12,
-  border: '1px solid rgba(226, 232, 240, 0.92)',
-  borderRadius: 14,
-  background: 'rgba(255, 255, 255, 0.72)',
+  gap: 8,
+  padding: 10,
+  border: '1px solid rgba(226, 232, 240, 0.78)',
+  borderRadius: 12,
+  background: 'rgba(255, 255, 255, 0.62)',
 }
 
 const cardHeaderStyle: CSSProperties = {
@@ -166,23 +166,23 @@ const cardHeaderStyle: CSSProperties = {
 
 const cardNameStyle: CSSProperties = {
   color: '#172033',
-  fontSize: 14,
-  fontWeight: 720,
+  fontSize: 13,
+  fontWeight: 700,
 }
 
 const metaGridStyle: CSSProperties = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-  gap: 8,
+  gridTemplateColumns: 'repeat(auto-fit, minmax(132px, 1fr))',
+  gap: 6,
 }
 
 const infoPillStyle: CSSProperties = {
-  padding: '8px 9px',
-  border: '1px solid rgba(226, 232, 240, 0.88)',
-  borderRadius: 10,
-  background: 'rgba(248, 250, 252, 0.72)',
+  padding: '6px 8px',
+  border: '1px solid rgba(226, 232, 240, 0.74)',
+  borderRadius: 9,
+  background: 'rgba(248, 250, 252, 0.54)',
   color: '#475569',
-  fontSize: 12,
+  fontSize: 11,
   lineHeight: 1.35,
 }
 
@@ -330,6 +330,14 @@ export default function RecurringTransactionsPanel(props: Props) {
       (item) => getRecurringEffectiveStatus(item, recurringExecutions, selectedMonth) !== 'active'
     )
   }, [recurringExecutions, recurringTransactions, selectedMonth])
+  const pendingRecurringIds = useMemo(
+    () => new Set(pendingRecurring.map((item) => item.id)),
+    [pendingRecurring]
+  )
+  const remainingActiveRecurring = useMemo(
+    () => activeRecurring.filter((item) => !pendingRecurringIds.has(item.id)),
+    [activeRecurring, pendingRecurringIds]
+  )
 
   const resetForm = () => {
     setFormState(getInitialFormState())
@@ -423,7 +431,7 @@ export default function RecurringTransactionsPanel(props: Props) {
     const hasDuplicate = hasLinkedTransactionInMonth(recurring.id)
 
     return (
-      <div key={`${mode}-${recurring.id}`} style={mode === 'pending' ? { ...cardStyle, borderColor: 'rgba(96, 165, 250, 0.55)' } : cardStyle}>
+      <div key={`${mode}-${recurring.id}`} style={cardStyle}>
         <div style={cardHeaderStyle}>
           <div>
             <div style={cardNameStyle}>{recurring.name}</div>
@@ -784,23 +792,19 @@ export default function RecurringTransactionsPanel(props: Props) {
         )}
       </section>
 
-      <section style={listStyle}>
-        <div style={sectionTitleStyle}>Wszystkie aktywne</div>
-        {activeRecurring.length === 0 ? (
-          <div style={styles.emptyStateCard}>Brak aktywnych przypomnień.</div>
-        ) : (
-          activeRecurring.map((recurring) => renderReminderCard(recurring, 'active'))
-        )}
-      </section>
+      {remainingActiveRecurring.length > 0 && (
+        <section style={listStyle}>
+          <div style={sectionTitleStyle}>Pozostałe przypomnienia</div>
+          {remainingActiveRecurring.map((recurring) => renderReminderCard(recurring, 'active'))}
+        </section>
+      )}
 
-      <section style={listStyle}>
-        <div style={sectionTitleStyle}>Archiwalne przypomnienia / zakończone plany</div>
-        {archivedRecurring.length === 0 ? (
-          <div style={styles.emptyStateCard}>Brak przypomnień w archiwum.</div>
-        ) : (
-          archivedRecurring.map((recurring) => renderReminderCard(recurring, 'archived'))
-        )}
-      </section>
+      {archivedRecurring.length > 0 && (
+        <section style={listStyle}>
+          <div style={sectionTitleStyle}>Archiwum</div>
+          {archivedRecurring.map((recurring) => renderReminderCard(recurring, 'archived'))}
+        </section>
+      )}
     </section>
   )
 }
