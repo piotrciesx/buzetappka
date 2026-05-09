@@ -11,6 +11,7 @@ import Level2Section from './Level2Section'
 import Level3Section from './Level3Section'
 import MonthCalendarPanel from './MonthCalendarPanel'
 import BudgetLimitIndicator, { BudgetLimitView } from './BudgetLimitIndicator'
+import CategoryIconPicker from './CategoryIconPicker'
 import type { HeatmapMode } from './month-calendar/monthCalendarTypes'
 import { SortableLevel1Card, StaticLevel1Card } from './Level1Cards'
 import {
@@ -39,6 +40,7 @@ type Props = {
   isSelectedMonthLocked: boolean
   canUseMonthCalendar?: boolean
   openAddSubcategoryFor: string | null
+  newSubcategoryIconKey: string | null
   newSubcategoryName: string
   selectedTransactionIds: string[]
   isReorderingLevel1: boolean
@@ -51,6 +53,7 @@ type Props = {
   toggleLevel2: (id: string) => void
   toggleLevel3: (id: string) => void
   setOpenAddSubcategoryFor: (id: string | null) => void
+  setNewSubcategoryIconKey: (value: string | null) => void
   setNewSubcategoryName: (value: string) => void
   getSortedLevel2Children: (level1Id: string) => Category[]
   getSortedLevel3Children: (level2Id: string) => Category[]
@@ -70,7 +73,7 @@ type Props = {
   onHeatmapModeChange: (value: HeatmapMode) => void
   onHeatmapInvertedChange: (value: boolean) => void
   isCategoryClosingAfterSelectedMonth: (category: Category, selectedMonth: string) => boolean
-  handleAddSubcategory: (level2Id: string) => Promise<void>
+  handleAddSubcategory: (level2Id: string, iconKey?: string | null) => Promise<void>
   handleRenameCategory: (categoryId: string) => Promise<void>
   handleUpdateCategoryIcon: (categoryId: string, iconKey: string | null) => Promise<void>
   handleDeleteCategory: (categoryId: string) => Promise<void>
@@ -155,6 +158,7 @@ export default function BudgetCategoryTree(props: Props) {
     isSelectedMonthLocked,
     canUseMonthCalendar = true,
     openAddSubcategoryFor,
+    newSubcategoryIconKey,
     newSubcategoryName,
     selectedTransactionIds,
     isReorderingLevel1,
@@ -167,6 +171,7 @@ export default function BudgetCategoryTree(props: Props) {
     toggleLevel2,
     toggleLevel3,
     setOpenAddSubcategoryFor,
+    setNewSubcategoryIconKey,
     setNewSubcategoryName,
     getSortedLevel2Children,
     getSortedLevel3Children,
@@ -298,8 +303,10 @@ export default function BudgetCategoryTree(props: Props) {
         getSumForCategory={getSumForCategoryForSelectedMonth}
         getTransactionsForCategoryAndMonth={getTransactionsForCategoryAndMonthForSelectedMonth}
         openAddSubcategoryFor={openAddSubcategoryFor}
+        newSubcategoryIconKey={newSubcategoryIconKey}
         setOpenAddSubcategoryFor={setOpenAddSubcategoryFor}
         newSubcategoryName={newSubcategoryName}
+        setNewSubcategoryIconKey={setNewSubcategoryIconKey}
         setNewSubcategoryName={setNewSubcategoryName}
         handleAddSubcategory={handleAddSubcategory}
         handleRenameCategory={handleRenameCategory}
@@ -594,6 +601,7 @@ export default function BudgetCategoryTree(props: Props) {
                 event.stopPropagation()
                 setOpenAddSubcategoryFor(level1Category.id)
                 setNewSubcategoryName('')
+                setNewSubcategoryIconKey(null)
 
                 if (!openLevel1Ids.includes(level1Category.id)) {
                   toggleLevel1(level1Category.id)
@@ -651,20 +659,31 @@ export default function BudgetCategoryTree(props: Props) {
               event.preventDefault()
               setOpenAddSubcategoryFor(null)
               setNewSubcategoryName('')
+              setNewSubcategoryIconKey(null)
               return
             }
 
             if (event.key === 'Enter') {
               event.preventDefault()
-              await handleAddSubcategory(parentId)
+              await handleAddSubcategory(parentId, newSubcategoryIconKey)
             }
           }}
         />
+        <details data-category-icon-picker-menu="true" data-category-icon-picker-inline="true">
+          <summary style={styles.secondaryButton} data-category-icon-picker-trigger="true">
+            <span>Ikona</span>
+            <strong>{newSubcategoryIconKey ? 'Wybrana' : 'Bez ikony'}</strong>
+          </summary>
+          <CategoryIconPicker
+            value={newSubcategoryIconKey}
+            onChange={setNewSubcategoryIconKey}
+          />
+        </details>
         <button
           type="button"
           style={styles.primaryButton}
           onClick={async () => {
-            await handleAddSubcategory(parentId)
+            await handleAddSubcategory(parentId, newSubcategoryIconKey)
           }}
         >
           zapisz
@@ -675,6 +694,7 @@ export default function BudgetCategoryTree(props: Props) {
           onClick={() => {
             setOpenAddSubcategoryFor(null)
             setNewSubcategoryName('')
+            setNewSubcategoryIconKey(null)
           }}
         >
           anuluj

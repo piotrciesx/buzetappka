@@ -37,6 +37,7 @@ type Props = {
   isSelectedMonthLocked: boolean
   canUseMonthCalendar?: boolean
   openAddSubcategoryFor: string | null
+  newSubcategoryIconKey: string | null
   newSubcategoryName: string
   selectedTransactionIds: string[]
   isReorderingLevel1: boolean
@@ -59,6 +60,7 @@ type Props = {
   toggleLevel2: (id: string) => void
   toggleLevel3: (id: string) => void
   setOpenAddSubcategoryFor: (id: string | null) => void
+  setNewSubcategoryIconKey: (value: string | null) => void
   setNewSubcategoryName: (value: string) => void
 
   getSortedLevel2Children: (level1Id: string) => Category[]
@@ -79,7 +81,7 @@ type Props = {
   onHeatmapModeChange: BudgetCategoryTreeProps['onHeatmapModeChange']
   onHeatmapInvertedChange: BudgetCategoryTreeProps['onHeatmapInvertedChange']
 
-  handleAddSubcategory: (level2Id: string) => Promise<void>
+  handleAddSubcategory: (level2Id: string, iconKey?: string | null) => Promise<void>
   handleRenameCategory: (categoryId: string) => Promise<void>
   handleUpdateCategoryIcon: (categoryId: string, iconKey: string | null) => Promise<void>
   handleDeleteCategory: (categoryId: string) => Promise<void>
@@ -150,6 +152,7 @@ export default function BudgetTreeSection({
   isSelectedMonthLocked,
   canUseMonthCalendar = true,
   openAddSubcategoryFor,
+  newSubcategoryIconKey,
   newSubcategoryName,
   selectedTransactionIds,
   isReorderingLevel1,
@@ -170,6 +173,7 @@ export default function BudgetTreeSection({
   toggleLevel2,
   toggleLevel3,
   setOpenAddSubcategoryFor,
+  setNewSubcategoryIconKey,
   setNewSubcategoryName,
   getSortedLevel2Children,
   getSortedLevel3Children,
@@ -406,6 +410,7 @@ export default function BudgetTreeSection({
           isSelectedMonthLocked={isSelectedMonthLocked}
           canUseMonthCalendar={canUseMonthCalendar}
           openAddSubcategoryFor={openAddSubcategoryFor}
+          newSubcategoryIconKey={newSubcategoryIconKey}
           newSubcategoryName={newSubcategoryName}
           selectedTransactionIds={selectedTransactionIds}
           isReorderingLevel1={isReorderingLevel1}
@@ -418,6 +423,7 @@ export default function BudgetTreeSection({
           toggleLevel2={toggleLevel2}
           toggleLevel3={toggleLevel3}
           setOpenAddSubcategoryFor={setOpenAddSubcategoryFor}
+          setNewSubcategoryIconKey={setNewSubcategoryIconKey}
           setNewSubcategoryName={setNewSubcategoryName}
           getSortedLevel2Children={getSortedLevel2Children}
           getSortedLevel3Children={getSortedLevel3Children}

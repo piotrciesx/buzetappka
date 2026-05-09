@@ -12,8 +12,10 @@ type UseBudgetPageActionsParams = {
   transactions: Transaction[]
   isPaymentSourcesEnabled: boolean
   newSubcategoryName: string
+  newSubcategoryIconKey: string | null
   setOpenAddSubcategoryFor: (value: string | null) => void
   setNewSubcategoryName: (value: string) => void
+  setNewSubcategoryIconKey: (value: string | null) => void
   loadData: () => Promise<void>
 }
 
@@ -29,8 +31,10 @@ export function useBudgetPageActions({
   transactions,
   isPaymentSourcesEnabled,
   newSubcategoryName,
+  newSubcategoryIconKey,
   setOpenAddSubcategoryFor,
   setNewSubcategoryName,
+  setNewSubcategoryIconKey,
   loadData,
 }: UseBudgetPageActionsParams) {
   const handleImportTransactions = useCallback(
@@ -93,7 +97,7 @@ export function useBudgetPageActions({
   )
 
   const handleAddSubcategory = useCallback(
-    async (parentId: string) => {
+    async (parentId: string, iconKey?: string | null) => {
       const cleanName = newSubcategoryName.trim()
       const parent = categories.find((category) => category.id === parentId)
 
@@ -134,6 +138,7 @@ export function useBudgetPageActions({
           profile_id: profileId,
           sort_order: nextSortOrder,
           is_active: true,
+          icon_key: iconKey ?? newSubcategoryIconKey ?? null,
         },
       ])
 
@@ -144,13 +149,16 @@ export function useBudgetPageActions({
 
       setOpenAddSubcategoryFor(null)
       setNewSubcategoryName('')
+      setNewSubcategoryIconKey(null)
       await loadData()
     },
     [
       categories,
       loadData,
       newSubcategoryName,
+      newSubcategoryIconKey,
       profileId,
+      setNewSubcategoryIconKey,
       setNewSubcategoryName,
       setOpenAddSubcategoryFor,
     ]

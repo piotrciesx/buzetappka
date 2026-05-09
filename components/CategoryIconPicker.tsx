@@ -7,15 +7,23 @@ type CategoryIconPickerProps = {
 }
 
 export default function CategoryIconPicker({ value, onChange }: CategoryIconPickerProps) {
+  const selectedIcon = CATEGORY_ICONS.find((icon) => icon.key === value)
+
   return (
     <div data-category-icon-picker="true" onClick={(event) => event.stopPropagation()}>
+      <div data-category-icon-picker-header="true">
+        <span>Wybierz ikonę</span>
+        <strong>{selectedIcon?.label || 'Bez ikony'}</strong>
+      </div>
       <button
         type="button"
         data-category-icon-option="clear"
         data-active={!value ? 'true' : 'false'}
+        title="Bez ikony"
         onClick={() => onChange(null)}
       >
-        bez ikony
+        <span data-category-icon-empty="true" aria-hidden="true">-</span>
+        <span>Bez ikony</span>
       </button>
       {CATEGORY_ICONS.map((icon) => (
         <button

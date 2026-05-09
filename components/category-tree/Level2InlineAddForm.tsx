@@ -1,8 +1,11 @@
 import type { CSSProperties } from 'react'
+import CategoryIconPicker from '../CategoryIconPicker'
 
 type Level2InlineAddFormProps = {
   value: string
   setValue: (value: string) => void
+  iconValue: string | null
+  setIconValue: (value: string | null) => void
   onSave: () => Promise<void>
   onCancel: () => void
   styles: Record<string, CSSProperties>
@@ -11,6 +14,8 @@ type Level2InlineAddFormProps = {
 export default function Level2InlineAddForm({
   value,
   setValue,
+  iconValue,
+  setIconValue,
   onSave,
   onCancel,
   styles,
@@ -35,6 +40,14 @@ export default function Level2InlineAddForm({
           }
         }}
       />
+
+      <details data-category-icon-picker-menu="true" data-category-icon-picker-inline="true">
+        <summary style={styles.secondaryButton} data-category-icon-picker-trigger="true">
+          <span>Ikona</span>
+          <strong>{iconValue ? 'Wybrana' : 'Bez ikony'}</strong>
+        </summary>
+        <CategoryIconPicker value={iconValue} onChange={setIconValue} />
+      </details>
 
       <button
         type="button"

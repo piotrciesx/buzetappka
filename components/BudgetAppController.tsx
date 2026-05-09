@@ -118,6 +118,7 @@ export default function BudgetAppController({
 
   const [openAddSubcategoryFor, setOpenAddSubcategoryFor] = useState<string | null>(null)
   const [newSubcategoryName, setNewSubcategoryName] = useState('')
+  const [newSubcategoryIconKey, setNewSubcategoryIconKey] = useState<string | null>(null)
 
   const [isTransactionCreatorOpen, setIsTransactionCreatorOpen] = useState(false)
   const [transactionCreatorSuggestionId, setTransactionCreatorSuggestionId] = useState<
@@ -846,8 +847,10 @@ export default function BudgetAppController({
     transactions: scopedTransactions,
     isPaymentSourcesEnabled: isPaymentSourcesModuleEnabled,
     newSubcategoryName,
+    newSubcategoryIconKey,
     setOpenAddSubcategoryFor,
     setNewSubcategoryName,
+    setNewSubcategoryIconKey,
     loadData,
   })
 
@@ -1089,6 +1092,7 @@ export default function BudgetAppController({
     setLastUndoAction,
     setOpenAddSubcategoryFor,
     setNewSubcategoryName,
+    setNewSubcategoryIconKey,
   })
 
   const {
@@ -1269,12 +1273,12 @@ export default function BudgetAppController({
     handleRenameCategory, handleUpdateCategoryIcon, handleReorderLevel1, handleReorderLevel2, handleReorderLevel3, handleRestoreCategory, handleRestoreTransaction, handleToggleSelectedMonthExcludedWithConfirm, handleUndoLastAction, handleUndoScheduledHide, handleUpdateTransaction,
     heatmapInverted, heatmapMode, hiddenCategoriesInSelectedMonth, incomeLevel1Id, isAllowedMoveTarget, isBankSearchOpen, isBudgetLimitsModuleEnabled, isCleaningAllDrafts, isDraftsLoading, isMonthCalendarModuleEnabled,
     isPaymentSourcesModuleEnabled, isRecurringTransactionsModuleEnabled, isReorderingLevel1, isSelectedMonthExcluded, isSelectedMonthLocked, isTransactionCreatorPaymentSourceVisible, isUpdatingSelectedMonthExclusion, lastUndoAction, level2SortDirection, level2SortMode,
-    level3SortDirection, level3SortMode, loadData, lockedMonthsSet, migrationPromptMoveTargets, migrationPromptState, migrationPromptTransactions, newSubcategoryName, openAddSubcategoryFor, openBlankFloatingTransactionCreator,
+    level3SortDirection, level3SortMode, loadData, lockedMonthsSet, migrationPromptMoveTargets, migrationPromptState, migrationPromptTransactions, newSubcategoryIconKey, newSubcategoryName, openAddSubcategoryFor, openBlankFloatingTransactionCreator,
     openLevel1CalendarIds, openLevel1Ids, openLevel2Ids, openLevel3Ids, openReminderTransactionCreator, openTransactionCreator, paymentSourceOptions, paymentSourceSettings, paymentSourceStats, paymentSources,
     previousMonthCloseReminder, profileId, recurringExecutions, recurringTransactions, reorderingLevel1Id, reorderingLevel2Id, resetBankSearch, saveDraft, saveFinancialGoal, saveGoalAllocationsForMonth, saveGoalPrioritiesForMonth,
     savePaymentSource, saveRecurringExecution, saveRecurringTransaction, scopedTransactions, searchPanelRef, selectedMonth, selectedMonthTransactions, selectedPaymentSourceId, selectedTransactionCategoryId, selectedTransactionIds,
     selectedTransactions, setActiveUtilityPanel, setBudgetLimitEditorCategoryId, setBulkActionErrorText, setBulkMoveTargetCategoryId, setDefaultPaymentSource, setGoalModeForMonth, setHeatmapInverted, setHeatmapMode, setIsBankSearchOpen,
-    setIsPreviousMonthCloseReminderHidden, setLevel2SortDirection, setLevel2SortMode, setLevel3SortDirection, setLevel3SortMode, setMigrationPromptState, setNewSubcategoryName, setNewTransactionDate, setOpenAddSubcategoryFor, setPaymentSourceFieldVisibility,
+    setIsPreviousMonthCloseReminderHidden, setLevel2SortDirection, setLevel2SortMode, setLevel3SortDirection, setLevel3SortMode, setMigrationPromptState, setNewSubcategoryIconKey, setNewSubcategoryName, setNewTransactionDate, setOpenAddSubcategoryFor, setPaymentSourceFieldVisibility,
     setSelectedPaymentSourceId, showHiddenCategories, sortedLevel1, status, styles, supabase, toggleLevel1, toggleLevel1Calendar, toggleLevel2, toggleLevel3,
     toggleTransactionSelection, transactionCategoryPathLabels, transactionPaymentSplitsMap, transactionTagsMap, transactions, trashedTransactions, trashedTransactionsById, userId, visibleModules, autoExcludePartialMonths,
     copyInviteLink, createInvitation, currentMonth, draftVisibleModules, goToNextMonth, goToPrevMonth, handleLockAllPastMonths, handleLockSelectedMonth, handleResetAllHistory, handleResetHeatmapSettings,

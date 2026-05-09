@@ -48,10 +48,12 @@ type Props = {
   getSumForCategory: (id: string) => number
   getTransactionsForCategoryAndMonth: (id: string) => Transaction[]
   openAddSubcategoryFor: string | null
+  newSubcategoryIconKey: string | null
   setOpenAddSubcategoryFor: (id: string | null) => void
   newSubcategoryName: string
+  setNewSubcategoryIconKey: (value: string | null) => void
   setNewSubcategoryName: (value: string) => void
-  handleAddSubcategory: (level2Id: string) => Promise<void>
+  handleAddSubcategory: (level2Id: string, iconKey?: string | null) => Promise<void>
   handleRenameCategory: (categoryId: string) => Promise<void>
   handleUpdateCategoryIcon: (categoryId: string, iconKey: string | null) => Promise<void>
   handleDeleteCategory: (categoryId: string) => Promise<void>
@@ -149,8 +151,10 @@ export default function Level2Section(props: Props) {
     getSumForCategory,
     getTransactionsForCategoryAndMonth,
     openAddSubcategoryFor,
+    newSubcategoryIconKey,
     setOpenAddSubcategoryFor,
     newSubcategoryName,
+    setNewSubcategoryIconKey,
     setNewSubcategoryName,
     handleAddSubcategory,
     handleRenameCategory,
@@ -306,6 +310,7 @@ export default function Level2Section(props: Props) {
   const openAddSubcategory = () => {
     setOpenAddSubcategoryFor(l2.id)
     setNewSubcategoryName('')
+    setNewSubcategoryIconKey(null)
 
     if (!isOpen) {
       toggleLevel2(l2.id)
@@ -413,10 +418,13 @@ export default function Level2Section(props: Props) {
         <Level2InlineAddForm
           value={newSubcategoryName}
           setValue={setNewSubcategoryName}
-          onSave={() => handleAddSubcategory(l2.id)}
+          iconValue={newSubcategoryIconKey}
+          setIconValue={setNewSubcategoryIconKey}
+          onSave={() => handleAddSubcategory(l2.id, newSubcategoryIconKey)}
           onCancel={() => {
             setOpenAddSubcategoryFor(null)
             setNewSubcategoryName('')
+            setNewSubcategoryIconKey(null)
           }}
           styles={styles}
         />

@@ -258,7 +258,10 @@ export default function Level2SectionHeader({
             </button>
 
             <details data-category-icon-picker-menu="true">
-              <summary style={styles.secondaryButton}>Ikona</summary>
+              <summary style={styles.secondaryButton} data-category-icon-picker-trigger="true">
+                <span>{iconKey ? 'Zmień ikonę' : 'Ikona'}</span>
+                <strong>{iconKey ? 'Wybrana' : 'Bez ikony'}</strong>
+              </summary>
               <CategoryIconPicker
                 value={iconKey}
                 onChange={(nextIconKey) => void onIconChange(nextIconKey)}

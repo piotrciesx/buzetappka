@@ -38,6 +38,7 @@ type UseCategoryVisibilityActionsParams = {
   setLastUndoAction: React.Dispatch<React.SetStateAction<UndoAction | null>>
   setOpenAddSubcategoryFor: React.Dispatch<React.SetStateAction<string | null>>
   setNewSubcategoryName: React.Dispatch<React.SetStateAction<string>>
+  setNewSubcategoryIconKey?: React.Dispatch<React.SetStateAction<string | null>>
 }
 
 export function useCategoryVisibilityActions({
@@ -56,6 +57,7 @@ export function useCategoryVisibilityActions({
   setLastUndoAction,
   setOpenAddSubcategoryFor,
   setNewSubcategoryName,
+  setNewSubcategoryIconKey,
 }: UseCategoryVisibilityActionsParams) {
   const performHideCategoryUpdate = useCallback(
     async (categoryId: string, mode: HideMode) => {
@@ -82,6 +84,7 @@ export function useCategoryVisibilityActions({
 
       setOpenAddSubcategoryFor(null)
       setNewSubcategoryName('')
+      setNewSubcategoryIconKey?.(null)
       resetTransactionCreator()
       clearTransactionOperationUi()
 
@@ -100,6 +103,7 @@ export function useCategoryVisibilityActions({
       resetTransactionCreator,
       selectedMonth,
       setNewSubcategoryName,
+      setNewSubcategoryIconKey,
       setOpenAddSubcategoryFor,
       supabase,
     ]
@@ -355,6 +359,7 @@ export function useCategoryVisibilityActions({
 
       setOpenAddSubcategoryFor(null)
       setNewSubcategoryName('')
+      setNewSubcategoryIconKey?.(null)
       resetTransactionCreator()
 
       await loadData()
@@ -366,6 +371,7 @@ export function useCategoryVisibilityActions({
       resetTransactionCreator,
       selectedMonth,
       setNewSubcategoryName,
+      setNewSubcategoryIconKey,
       setOpenAddSubcategoryFor,
       supabase,
     ]
