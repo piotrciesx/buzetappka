@@ -67,6 +67,7 @@ type Props = {
   inlineDraftLevel2Id: string | null
   handleHideCategory: (id: string, mode?: HideMode) => Promise<void>
   handleRenameCategory: (categoryId: string) => Promise<void>
+  handleUpdateCategoryIcon: (categoryId: string, iconKey: string | null) => Promise<void>
   handleDeleteCategory: (categoryId: string) => Promise<void>
   handleUndoScheduledHide: (id: string) => Promise<void>
   handleDeleteTransaction: (id: string) => Promise<void>
@@ -147,6 +148,7 @@ export default function Level3Section(props: Props) {
     inlineDraftLevel2Id,
     handleHideCategory,
     handleRenameCategory,
+    handleUpdateCategoryIcon,
     handleDeleteCategory,
     handleUndoScheduledHide,
     handleDeleteTransaction,
@@ -640,6 +642,7 @@ export default function Level3Section(props: Props) {
       {!hideHeader && (
       <Level3SectionHeader
         name={headerName || l3.name}
+        iconKey={l3.icon_key}
         categorySum={categorySum}
         showCategorySum={showHeaderSum}
         showCategoryActions={showCategoryActions}
@@ -657,6 +660,7 @@ export default function Level3Section(props: Props) {
         onHideNow={() => handleHideCategory(l3.id, 'now')}
         onHideNext={() => handleHideCategory(l3.id, 'next')}
         onRenameCategory={() => handleRenameCategory(l3.id)}
+        onIconChange={(iconKey) => handleUpdateCategoryIcon(l3.id, iconKey)}
         onDeleteCategory={() => handleDeleteCategory(l3.id)}
         onUndoScheduledHide={() => handleUndoScheduledHide(l3.id)}
         budgetLimitView={budgetLimitView}

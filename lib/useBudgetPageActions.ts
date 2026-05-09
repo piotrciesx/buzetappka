@@ -272,10 +272,35 @@ export function useBudgetPageActions({
     [categories, loadData, profileId, transactions]
   )
 
+  const handleUpdateCategoryIcon = useCallback(
+    async (categoryId: string, iconKey: string | null) => {
+      const category = categories.find((item) => item.id === categoryId)
+
+      if (!category || category.level === 1) {
+        return
+      }
+
+      const { error } = await supabase
+        .from('categories')
+        .update({ icon_key: iconKey })
+        .eq('id', category.id)
+        .eq('profile_id', profileId)
+
+      if (error) {
+        alert(`Nie udało się zapisać ikony kategorii: ${error.message}`)
+        return
+      }
+
+      await loadData()
+    },
+    [categories, loadData, profileId]
+  )
+
   return {
     handleImportTransactions,
     handleAddSubcategory,
     handleRenameCategory,
+    handleUpdateCategoryIcon,
     handleDeleteCategory,
   }
 }

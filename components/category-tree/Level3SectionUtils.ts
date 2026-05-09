@@ -6,6 +6,7 @@ export type Category = {
   sort_order?: number | null
   active_to?: string | null
   reactivate_from?: string | null
+  icon_key?: string | null
 }
 
 export type Transaction = {

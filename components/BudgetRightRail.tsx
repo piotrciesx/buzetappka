@@ -3,6 +3,7 @@
 import { KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 import type { RecurringTransaction } from '../lib/budgetPageTypes'
 import { getMonthCycleDate } from '../lib/recurringTransactions'
+import UserAvatar from './UserAvatar'
 
 type LiveWidgetCard = {
   id: string
@@ -46,6 +47,8 @@ type Props = {
   recurringAlerts: RecurringTransaction[]
   budgetAlerts: BudgetAlertPreview[]
   financialGoals: FinancialGoalPreview[]
+  userDisplayName?: string
+  userAvatarKey?: string | null
   showRecurring: boolean
   onOpenSearch: (query?: string) => void
   onOpenNotifications: () => void
@@ -79,6 +82,8 @@ export default function BudgetRightRail({
   recurringAlerts,
   budgetAlerts,
   financialGoals,
+  userDisplayName,
+  userAvatarKey,
   showRecurring,
   onOpenSearch,
   onOpenNotifications,
@@ -454,7 +459,7 @@ export default function BudgetRightRail({
             onToggleProfile()
           }}
         >
-          P
+          <UserAvatar avatarKey={userAvatarKey} label={userDisplayName || 'Profil'} size="sm" />
         </button>
       </section>
 

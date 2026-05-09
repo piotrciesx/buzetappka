@@ -9,6 +9,7 @@ import type { BudgetLimitView } from '../BudgetLimitIndicator'
 import { useBudgetOverlayProps } from './useBudgetOverlayProps'
 import { useBudgetPageMainPanelsProps } from './useBudgetPageMainPanelsProps'
 import { useBudgetWorkspaceSummary } from './useBudgetWorkspaceSummary'
+import { useUserPublicProfile } from '../../lib/useUserPublicProfile'
 
 type BudgetAppControllerViewPropsContext = Record<string, any>
 
@@ -149,6 +150,10 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     getSumForCategoryForSelectedMonth,
     getCategoryCountForSelectedMonth,
   })
+  const { displayName: userDisplayName, avatarKey: userAvatarKey } = useUserPublicProfile(
+    ctx.userId,
+    ctx.userEmail
+  )
 
   const viewCtx = {
     ...ctx,
@@ -308,6 +313,8 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     styles: ctx.styles,
     supabase: ctx.supabase,
     userEmail: ctx.userEmail,
+    userDisplayName,
+    userAvatarKey,
     userId: ctx.userId,
     visibleCategories: ctx.visibleCategories,
     visibleModules: ctx.visibleModules,
@@ -408,6 +415,8 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
       : [],
     budgetAlerts: rightRailBudgetAlerts,
     financialGoals: rightRailFinancialGoals,
+    userDisplayName,
+    userAvatarKey,
     showRecurring: effectiveVisibleModules.recurringTransactions,
     onOpenSearch: (query?: string) => {
       ctx.setIsDashboardPanelOpen(false)

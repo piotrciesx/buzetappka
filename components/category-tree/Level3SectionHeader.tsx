@@ -1,8 +1,11 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react'
 import BudgetLimitIndicator, { BudgetLimitView } from '../BudgetLimitIndicator'
+import CategoryIcon from '../CategoryIcon'
+import CategoryIconPicker from '../CategoryIconPicker'
 
 type Level3SectionHeaderProps = {
   name: string
+  iconKey?: string | null
   categorySum: number
   showCategorySum?: boolean
   showCategoryActions?: boolean
@@ -22,6 +25,7 @@ type Level3SectionHeaderProps = {
   onHideNow: () => Promise<void>
   onHideNext: () => Promise<void>
   onRenameCategory: () => Promise<void>
+  onIconChange: (iconKey: string | null) => Promise<void>
   onDeleteCategory: () => Promise<void>
   onUndoScheduledHide: () => Promise<void>
   budgetLimitView?: BudgetLimitView | null
@@ -90,6 +94,7 @@ const Icon = ({ name }: { name: 'calendar' | 'plus' | 'limit' }) => {
 
 export default function Level3SectionHeader({
   name,
+  iconKey,
   categorySum,
   showCategorySum = true,
   showCategoryActions = true,
@@ -109,6 +114,7 @@ export default function Level3SectionHeader({
   onHideNow,
   onHideNext,
   onRenameCategory,
+  onIconChange,
   onDeleteCategory,
   onUndoScheduledHide,
   budgetLimitView = null,
@@ -151,6 +157,7 @@ export default function Level3SectionHeader({
 
         <div data-category-row-copy="true">
           <div style={styles.l3Name} data-category-row-name="true">
+            <CategoryIcon iconKey={iconKey} level={3} />
             <span>{name}</span>
             {showCategorySum && <strong data-category-row-amount="true">{formattedSum} zł</strong>}
           </div>
@@ -254,6 +261,13 @@ export default function Level3SectionHeader({
                   <button style={styles.secondaryButton} onClick={async () => onRenameCategory()}>
                     Zmień nazwę
                   </button>
+                  <details data-category-icon-picker-menu="true">
+                    <summary style={styles.secondaryButton}>Ikona</summary>
+                    <CategoryIconPicker
+                      value={iconKey}
+                      onChange={(nextIconKey) => void onIconChange(nextIconKey)}
+                    />
+                  </details>
                   <button style={styles.dangerButton} onClick={async () => onHideNow()}>
                     Ukryj teraz
                   </button>

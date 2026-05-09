@@ -1,8 +1,11 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react'
 import BudgetLimitIndicator, { type BudgetLimitView } from '../BudgetLimitIndicator'
+import CategoryIcon from '../CategoryIcon'
+import CategoryIconPicker from '../CategoryIconPicker'
 
 type Level2SectionHeaderProps = {
   name: string
+  iconKey?: string | null
   categorySum: number
   isOpen: boolean
   isDragging: boolean
@@ -21,6 +24,7 @@ type Level2SectionHeaderProps = {
   onEditBudgetLimit?: () => void
   onInlineAdd: () => void
   onRenameCategory: () => Promise<void>
+  onIconChange: (iconKey: string | null) => Promise<void>
   onDeleteCategory: () => Promise<void>
   onAddSubcategory: () => void
   onUndoScheduledHide: () => Promise<void>
@@ -89,6 +93,7 @@ const Icon = ({ name }: { name: 'calendar' | 'plus' | 'limit' }) => {
 
 export default function Level2SectionHeader({
   name,
+  iconKey,
   categorySum,
   isOpen,
   isDragging,
@@ -107,6 +112,7 @@ export default function Level2SectionHeader({
   onEditBudgetLimit,
   onInlineAdd,
   onRenameCategory,
+  onIconChange,
   onDeleteCategory,
   onAddSubcategory,
   onUndoScheduledHide,
@@ -149,6 +155,7 @@ export default function Level2SectionHeader({
 
         <div data-category-row-copy="true">
           <div style={styles.l2Name} data-category-row-name="true">
+            <CategoryIcon iconKey={iconKey} level={2} />
             <span>{name}</span>
             <strong data-category-row-amount="true">{formattedSum} zł</strong>
           </div>
@@ -249,6 +256,14 @@ export default function Level2SectionHeader({
             <button style={styles.secondaryButton} onClick={async () => onRenameCategory()}>
               Zmień nazwę
             </button>
+
+            <details data-category-icon-picker-menu="true">
+              <summary style={styles.secondaryButton}>Ikona</summary>
+              <CategoryIconPicker
+                value={iconKey}
+                onChange={(nextIconKey) => void onIconChange(nextIconKey)}
+              />
+            </details>
 
             {isClosingAfterSelectedMonth ? (
               <button style={styles.secondaryButton} onClick={async () => onUndoScheduledHide()}>

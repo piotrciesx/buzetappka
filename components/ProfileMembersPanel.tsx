@@ -2,6 +2,8 @@
 
 import { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import UserAvatar from './UserAvatar'
+import { USER_AVATARS, getUserDisplayName, type UserPublicProfile } from '../lib/userAppearance'
 
 type ProfileMemberRole = 'owner' | 'member'
 
@@ -67,6 +69,10 @@ export default function ProfileMembersPanel({
   const [isDeleteAccountPanelOpen, setIsDeleteAccountPanelOpen] = useState(false)
   const [isDeletingAccount, setIsDeletingAccount] = useState(false)
   const [deleteAccountConfirmationText, setDeleteAccountConfirmationText] = useState('')
+  const [publicProfilesByUserId, setPublicProfilesByUserId] = useState<Record<string, UserPublicProfile>>({})
+  const [displayNameDraft, setDisplayNameDraft] = useState('')
+  const [avatarKeyDraft, setAvatarKeyDraft] = useState(USER_AVATARS[0]?.key || '')
+  const [isSavingPublicProfile, setIsSavingPublicProfile] = useState(false)
   const [errorText, setErrorText] = useState('')
   const [statusText, setStatusText] = useState('')
   const [deleteAccountStatusText, setDeleteAccountStatusText] = useState('')
@@ -104,9 +110,42 @@ export default function ProfileMembersPanel({
     }
   }, [profileId])
 
+  const loadPublicProfiles = useCallback(async (nextMembers: ProfileMemberRow[] = members) => {
+    const userIds = Array.from(new Set(nextMembers.map((member) => member.user_id).filter(Boolean)))
+
+    if (userIds.length === 0) {
+      setPublicProfilesByUserId({})
+      return
+    }
+
+    const { data, error } = await supabase
+      .from('user_public_profiles')
+      .select('user_id, display_name, avatar_key')
+      .in('user_id', userIds)
+
+    if (error) {
+      setPublicProfilesByUserId({})
+      return
+    }
+
+    setPublicProfilesByUserId(
+      Object.fromEntries(((data as UserPublicProfile[] | null) || []).map((profile) => [profile.user_id, profile]))
+    )
+  }, [members])
+
   useEffect(() => {
     void loadMembers()
   }, [loadMembers])
+
+  useEffect(() => {
+    void loadPublicProfiles()
+  }, [loadPublicProfiles])
+
+  useEffect(() => {
+    const currentProfile = publicProfilesByUserId[userId]
+    setDisplayNameDraft(currentProfile?.display_name || userEmail || '')
+    setAvatarKeyDraft(currentProfile?.avatar_key || USER_AVATARS[0]?.key || '')
+  }, [publicProfilesByUserId, userEmail, userId])
 
   const currentMember = useMemo(
     () => members.find((member) => member.user_id === userId) || null,
@@ -123,13 +162,46 @@ export default function ProfileMembersPanel({
   const isSoleOwner = isCurrentUserOwner && !hasOtherProfileMembers
   const isOwnerWithOtherMembers = isCurrentUserOwner && hasOtherProfileMembers
 
-  const getMemberLabel = (member: ProfileMemberRow) => {
-    if (member.user_id === userId && userEmail) {
-      return userEmail
+  const getMemberProfile = (member: ProfileMemberRow) => publicProfilesByUserId[member.user_id] || null
+
+  const getMemberLabel = (member: ProfileMemberRow) =>
+    getUserDisplayName(
+      getMemberProfile(member),
+      member.user_id === userId ? userEmail : '',
+      member.user_id === userId ? 'Ty' : 'Członek profilu'
+    )
+
+  const handleSavePublicProfile = async () => {
+    if (!userId) {
+      return
     }
 
-    // TODO: replace this fallback with public.user_profiles/user_public_profiles when available.
-    return member.user_id
+    setIsSavingPublicProfile(true)
+    setErrorText('')
+    setStatusText('')
+
+    try {
+      const { error } = await supabase.from('user_public_profiles').upsert(
+        {
+          user_id: userId,
+          display_name: displayNameDraft.trim() || null,
+          avatar_key: avatarKeyDraft || null,
+        },
+        { onConflict: 'user_id' }
+      )
+
+      if (error) {
+        throw new Error(error.message)
+      }
+
+      await loadPublicProfiles()
+      window.dispatchEvent(new CustomEvent('budget-user-profile-updated'))
+      setStatusText('Zapisano profil użytkownika.')
+    } catch (error) {
+      setErrorText(error instanceof Error ? error.message : 'Nie udało się zapisać profilu użytkownika.')
+    } finally {
+      setIsSavingPublicProfile(false)
+    }
   }
 
   const handleRemoveMember = async (member: ProfileMemberRow) => {
@@ -337,6 +409,48 @@ export default function ProfileMembersPanel({
 
   return (
     <section style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid #e5e7eb' }}>
+      <div data-user-public-profile-editor="true">
+        <div data-user-public-profile-preview="true">
+          <UserAvatar avatarKey={avatarKeyDraft} label={displayNameDraft || userEmail} size="lg" />
+          <div>
+            <strong>{displayNameDraft || userEmail || 'Użytkownik'}</strong>
+            <span>{userEmail}</span>
+          </div>
+        </div>
+        <label>
+          Nazwa użytkownika
+          <input
+            value={displayNameDraft}
+            onChange={(event) => setDisplayNameDraft(event.target.value)}
+            maxLength={48}
+            placeholder="np. Jacek"
+            disabled={isSavingPublicProfile}
+          />
+        </label>
+        <div data-user-avatar-picker="true">
+          {USER_AVATARS.map((avatar) => (
+            <button
+              key={avatar.key}
+              type="button"
+              data-active={avatarKeyDraft === avatar.key ? 'true' : 'false'}
+              title={avatar.label}
+              onClick={() => setAvatarKeyDraft(avatar.key)}
+              disabled={isSavingPublicProfile}
+            >
+              <UserAvatar avatarKey={avatar.key} label={displayNameDraft || avatar.label} size="sm" />
+            </button>
+          ))}
+        </div>
+        <button
+          type="button"
+          style={styles.secondaryButton}
+          disabled={isSavingPublicProfile}
+          onClick={() => void handleSavePublicProfile()}
+        >
+          {isSavingPublicProfile ? 'Zapisywanie...' : 'Zapisz profil'}
+        </button>
+      </div>
+
       <div style={styles.l2Name}>Członkowie profilu</div>
 
       <div style={{ display: 'grid', gap: 8, marginTop: 10 }}>
@@ -357,9 +471,18 @@ export default function ProfileMembersPanel({
                 flexWrap: 'wrap',
               }}
             >
-              <div>
-                <div style={{ fontWeight: 600 }}>{getMemberLabel(member)}</div>
-                <div style={styles.smallMutedText}>{member.user_id}</div>
+              <div data-profile-member-identity="true">
+                <UserAvatar
+                  avatarKey={getMemberProfile(member)?.avatar_key}
+                  label={getMemberLabel(member)}
+                  size="md"
+                />
+                <div>
+                  <div style={{ fontWeight: 600 }}>{getMemberLabel(member)}</div>
+                  <div style={styles.smallMutedText}>
+                    {member.user_id === userId ? userEmail : 'członek profilu'}
+                  </div>
+                </div>
               </div>
               <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
                 <span>{member.role || 'member'}</span>

@@ -1,9 +1,12 @@
 'use client'
 
 import { CSSProperties, useEffect, useRef, useState } from 'react'
+import UserAvatar from './UserAvatar'
 
 type UserProfileMenuProps = {
   userEmail: string
+  displayName?: string
+  avatarKey?: string | null
   onToggleSettings: () => void
   onToggleImportExport: () => void
   onExportBackupJson: () => Promise<void>
@@ -51,6 +54,8 @@ const menuButtonStyle: CSSProperties = {
 
 export default function UserProfileMenu({
   userEmail,
+  displayName,
+  avatarKey,
   onToggleSettings,
   onToggleImportExport,
   onExportBackupJson,
@@ -64,7 +69,7 @@ export default function UserProfileMenu({
   const [statusText, setStatusText] = useState('')
   const rootRef = useRef<HTMLDivElement | null>(null)
 
-  const avatarLetter = (userEmail.trim()[0] || 'P').toUpperCase()
+  const profileLabel = displayName || userEmail || 'Użytkownik'
 
   useEffect(() => {
     const handleCloseFloatingUi = () => {
@@ -142,14 +147,15 @@ export default function UserProfileMenu({
           setIsOpen(!isOpen)
         }}
       >
-        {avatarLetter}
+        <UserAvatar avatarKey={avatarKey} label={profileLabel} size="md" />
       </button>
 
       {isOpen && (
         <div data-profile-menu-dropdown="true" style={dropdownStyle}>
-          {userEmail && (
-            <div style={{ ...styles.smallMutedText, padding: '6px 10px 9px' }}>{userEmail}</div>
-          )}
+          <div style={{ padding: '6px 10px 9px' }}>
+            <strong>{profileLabel}</strong>
+            {userEmail && <div style={styles.smallMutedText}>{userEmail}</div>}
+          </div>
 
           <button type="button" style={menuButtonStyle} onClick={showPlaceholder}>
             Profil

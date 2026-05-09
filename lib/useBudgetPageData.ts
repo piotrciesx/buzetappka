@@ -100,13 +100,29 @@ export function useBudgetPageData({
       return
     }
 
-    const { data: categoriesData, error: categoriesError } = await supabase
+    let { data: categoriesData, error: categoriesError } = await supabase
       .from('categories')
-      .select('id, name, parent_id, level, default_order, sort_order, active_to, reactivate_from')
+      .select('id, name, parent_id, level, default_order, sort_order, active_to, reactivate_from, icon_key')
       .eq('profile_id', profileId)
       .order('level', { ascending: true })
       .order('sort_order', { ascending: true })
       .order('name', { ascending: true })
+
+    if (categoriesError && /icon_key|column/i.test(categoriesError.message)) {
+      const fallbackResult = await supabase
+        .from('categories')
+        .select('id, name, parent_id, level, default_order, sort_order, active_to, reactivate_from')
+        .eq('profile_id', profileId)
+        .order('level', { ascending: true })
+        .order('sort_order', { ascending: true })
+        .order('name', { ascending: true })
+
+      categoriesData = ((fallbackResult.data || []).map((category) => ({
+        ...category,
+        icon_key: null,
+      })) as typeof categoriesData)
+      categoriesError = fallbackResult.error
+    }
 
     if (categoriesError) {
       setErrorText(categoriesError.message)

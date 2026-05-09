@@ -836,6 +836,7 @@ export default function BudgetAppController({
     handleImportTransactions,
     handleAddSubcategory,
     handleRenameCategory,
+    handleUpdateCategoryIcon,
     handleDeleteCategory,
   } = useBudgetPageActions({
     profileId,
@@ -1265,7 +1266,7 @@ export default function BudgetAppController({
     getSignedAmountForTransaction, getRootLevel1IdForCategory, getSortedLevel2Children, getSortedLevel3Children, getSumForCategoryForSelectedMonth, getSumForLevel2ForSelectedMonth, getTransactionsForCategoryAndMonthForSelectedMonth, getTransactionsForLevel1AndMonth, handleAddSubcategory, handleBankSearchFieldChange,
     handleBulkDeleteSelected, handleBulkMoveSelected, handleConfirmCategoryMigration, handleDeleteCategory, handleDeleteDescriptionSuggestion, handleDeleteTransaction, handleDuplicateTransaction, handleEmptyTrash, handleHideCategory, handleImportTransactions,
     handleInlineSaveTransaction, handleLevel1DragStart, handleLevel3DragStart, handleLockMonth, handleMoveTransaction, handleOpenCategoryCalendarAddForDay, handleOpenGlobalCalendarAddForDay, handleOpenLevel1CalendarAddForDay, handleOpenSearchForTag, handlePermanentDeleteTransaction,
-    handleRenameCategory, handleReorderLevel1, handleReorderLevel2, handleReorderLevel3, handleRestoreCategory, handleRestoreTransaction, handleToggleSelectedMonthExcludedWithConfirm, handleUndoLastAction, handleUndoScheduledHide, handleUpdateTransaction,
+    handleRenameCategory, handleUpdateCategoryIcon, handleReorderLevel1, handleReorderLevel2, handleReorderLevel3, handleRestoreCategory, handleRestoreTransaction, handleToggleSelectedMonthExcludedWithConfirm, handleUndoLastAction, handleUndoScheduledHide, handleUpdateTransaction,
     heatmapInverted, heatmapMode, hiddenCategoriesInSelectedMonth, incomeLevel1Id, isAllowedMoveTarget, isBankSearchOpen, isBudgetLimitsModuleEnabled, isCleaningAllDrafts, isDraftsLoading, isMonthCalendarModuleEnabled,
     isPaymentSourcesModuleEnabled, isRecurringTransactionsModuleEnabled, isReorderingLevel1, isSelectedMonthExcluded, isSelectedMonthLocked, isTransactionCreatorPaymentSourceVisible, isUpdatingSelectedMonthExclusion, lastUndoAction, level2SortDirection, level2SortMode,
     level3SortDirection, level3SortMode, loadData, lockedMonthsSet, migrationPromptMoveTargets, migrationPromptState, migrationPromptTransactions, newSubcategoryName, openAddSubcategoryFor, openBlankFloatingTransactionCreator,

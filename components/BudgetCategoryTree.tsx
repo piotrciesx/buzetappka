@@ -72,6 +72,7 @@ type Props = {
   isCategoryClosingAfterSelectedMonth: (category: Category, selectedMonth: string) => boolean
   handleAddSubcategory: (level2Id: string) => Promise<void>
   handleRenameCategory: (categoryId: string) => Promise<void>
+  handleUpdateCategoryIcon: (categoryId: string, iconKey: string | null) => Promise<void>
   handleDeleteCategory: (categoryId: string) => Promise<void>
   openTransactionCreator: (suggestedCategoryId: string) => void
   handleInlineSaveTransaction: (
@@ -185,6 +186,7 @@ export default function BudgetCategoryTree(props: Props) {
     isCategoryClosingAfterSelectedMonth,
     handleAddSubcategory,
     handleRenameCategory,
+    handleUpdateCategoryIcon,
     handleDeleteCategory,
     openTransactionCreator,
     handleInlineSaveTransaction,
@@ -301,6 +303,7 @@ export default function BudgetCategoryTree(props: Props) {
         setNewSubcategoryName={setNewSubcategoryName}
         handleAddSubcategory={handleAddSubcategory}
         handleRenameCategory={handleRenameCategory}
+        handleUpdateCategoryIcon={handleUpdateCategoryIcon}
         handleDeleteCategory={handleDeleteCategory}
         openTransactionCreator={openTransactionCreator}
         handleInlineSaveTransaction={handleInlineSaveTransaction}
@@ -382,6 +385,7 @@ export default function BudgetCategoryTree(props: Props) {
         inlineDraftLevel2Id={null}
         handleHideCategory={handleHideCategory}
         handleRenameCategory={handleRenameCategory}
+        handleUpdateCategoryIcon={handleUpdateCategoryIcon}
         handleDeleteCategory={handleDeleteCategory}
         handleUndoScheduledHide={handleUndoScheduledHide}
         handleDeleteTransaction={handleDeleteTransaction}

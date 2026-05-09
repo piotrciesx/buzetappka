@@ -35,6 +35,7 @@ type Level2TransactionsListProps = {
   inlineDraftLevel1Id: string
   handleHideCategory: (id: string, mode?: HideMode) => Promise<void>
   handleRenameCategory: (categoryId: string) => Promise<void>
+  handleUpdateCategoryIcon: (categoryId: string, iconKey: string | null) => Promise<void>
   handleDeleteCategory: (categoryId: string) => Promise<void>
   handleUndoScheduledHide: (id: string) => Promise<void>
   handleDeleteTransaction: (id: string) => Promise<void>
@@ -106,6 +107,7 @@ export default function Level2TransactionsList({
   inlineDraftLevel1Id,
   handleHideCategory,
   handleRenameCategory,
+  handleUpdateCategoryIcon,
   handleDeleteCategory,
   handleUndoScheduledHide,
   handleDeleteTransaction,
@@ -164,6 +166,7 @@ export default function Level2TransactionsList({
       inlineDraftLevel2Id={l2.id}
       handleHideCategory={handleHideCategory}
       handleRenameCategory={handleRenameCategory}
+      handleUpdateCategoryIcon={handleUpdateCategoryIcon}
       handleDeleteCategory={handleDeleteCategory}
       handleUndoScheduledHide={handleUndoScheduledHide}
       handleDeleteTransaction={handleDeleteTransaction}

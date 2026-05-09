@@ -34,6 +34,8 @@ type AppSettingsPanelProps = {
   styles: Record<string, CSSProperties>
   defaultOpen?: boolean
   userEmail?: string
+  displayName?: string
+  avatarKey?: string | null
   onExportBackupJson?: () => void | Promise<void>
   onExportBackupCsv?: () => void | Promise<void>
   profileMembersPanel?: ReactNode
@@ -120,6 +122,7 @@ export default function AppSettingsPanel({
   onResetAllHistory,
   defaultOpen: ignoredDefaultOpen = false,
   userEmail,
+  displayName,
   profileMembersPanel,
 }: AppSettingsPanelProps) {
   void ignoredDefaultOpen
@@ -147,7 +150,8 @@ export default function AppSettingsPanel({
         </div>
         <div data-settings-profile-card="true">
           <span>Aktualny użytkownik</span>
-          <strong>{userEmail || 'brak danych'}</strong>
+          <strong>{displayName || userEmail || 'brak danych'}</strong>
+          {displayName && userEmail && <small>{userEmail}</small>}
         </div>
       </section>
 

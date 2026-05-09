@@ -53,6 +53,7 @@ type Props = {
   setNewSubcategoryName: (value: string) => void
   handleAddSubcategory: (level2Id: string) => Promise<void>
   handleRenameCategory: (categoryId: string) => Promise<void>
+  handleUpdateCategoryIcon: (categoryId: string, iconKey: string | null) => Promise<void>
   handleDeleteCategory: (categoryId: string) => Promise<void>
   openTransactionCreator: (suggestedCategoryId: string) => void
   handleInlineSaveTransaction: (
@@ -153,6 +154,7 @@ export default function Level2Section(props: Props) {
     setNewSubcategoryName,
     handleAddSubcategory,
     handleRenameCategory,
+    handleUpdateCategoryIcon,
     handleDeleteCategory,
     openTransactionCreator,
     handleInlineSaveTransaction,
@@ -314,6 +316,7 @@ export default function Level2Section(props: Props) {
     <div ref={setNodeRef} style={wrapStyle}>
       <Level2SectionHeader
         name={l2.name}
+        iconKey={l2.icon_key}
         categorySum={getSumForLevel2(l2.id)}
         isOpen={isOpen}
         isDragging={isDragging}
@@ -330,6 +333,7 @@ export default function Level2Section(props: Props) {
         onEditBudgetLimit={onEditBudgetLimit ? () => onEditBudgetLimit(l2.id) : undefined}
         onInlineAdd={openLevel2InlineAdd}
         onRenameCategory={() => handleRenameCategory(l2.id)}
+        onIconChange={(iconKey) => handleUpdateCategoryIcon(l2.id, iconKey)}
         onDeleteCategory={() => handleDeleteCategory(l2.id)}
         onAddSubcategory={openAddSubcategory}
         onUndoScheduledHide={() => handleUndoScheduledHide(l2.id)}
@@ -437,6 +441,7 @@ export default function Level2Section(props: Props) {
           inlineDraftLevel1Id={inlineDraftLevel1Id}
           handleHideCategory={handleHideCategory}
           handleRenameCategory={handleRenameCategory}
+          handleUpdateCategoryIcon={handleUpdateCategoryIcon}
           handleDeleteCategory={handleDeleteCategory}
           handleUndoScheduledHide={handleUndoScheduledHide}
           handleDeleteTransaction={handleDeleteTransaction}
@@ -491,6 +496,7 @@ export default function Level2Section(props: Props) {
           inlineDraftLevel1Id={inlineDraftLevel1Id}
           handleHideCategory={handleHideCategory}
           handleRenameCategory={handleRenameCategory}
+          handleUpdateCategoryIcon={handleUpdateCategoryIcon}
           handleDeleteCategory={handleDeleteCategory}
           handleUndoScheduledHide={handleUndoScheduledHide}
           handleDeleteTransaction={handleDeleteTransaction}

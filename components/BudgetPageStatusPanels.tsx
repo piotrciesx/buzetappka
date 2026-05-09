@@ -4,6 +4,7 @@ import { ComponentProps, CSSProperties, useEffect, useState } from 'react'
 import AppSettingsPanel from './AppSettingsPanel'
 import BudgetHeaderPanel from './BudgetHeaderPanel'
 import UserProfileMenu from './UserProfileMenu'
+import UserAvatar from './UserAvatar'
 import type { BudgetUtilityPanel } from './BudgetPageMainPanels'
 import type { AppModuleVisibility } from '../lib/useAppModuleVisibility'
 
@@ -11,6 +12,8 @@ type SidebarPrimaryPanel = 'profile' | 'settings' | null
 
 type ProfilePanelProps = {
   userEmail: string
+  displayName?: string
+  avatarKey?: string | null
   accountCreatedAt: string | null
   transactionsCount: number
   categoriesCount: number
@@ -315,7 +318,13 @@ export default function BudgetPageStatusPanels({
   return (
     <>
       <aside data-budget-sidebar="true" aria-label="Moduły aplikacji">
-        <div data-budget-sidebar-avatar="true">B</div>
+        <div data-budget-sidebar-avatar="true">
+          <UserAvatar
+            avatarKey={profilePanelProps.avatarKey}
+            label={profilePanelProps.displayName || profilePanelProps.userEmail || 'Profil'}
+            size="md"
+          />
+        </div>
         <nav data-budget-sidebar-nav="true" data-sidebar-desktop-nav="true">
           <div data-sidebar-section="primary">
             <span data-sidebar-section-label="true">Podstawowe</span>
@@ -454,7 +463,7 @@ export default function BudgetPageStatusPanels({
             <div data-app-view-header="true">
               <div>
                 <strong>Profil</strong>
-                <span>Podsumowanie profilu</span>
+                <span>{profilePanelProps.displayName || 'Podsumowanie profilu'}</span>
               </div>
               <button type="button" onClick={onClosePrimaryPanel}>
                 Zamknij
@@ -462,6 +471,17 @@ export default function BudgetPageStatusPanels({
             </div>
             <div data-profile-panel-body="true">
               <section data-profile-summary-card="true">
+                <div data-profile-main-identity="true">
+                  <UserAvatar
+                    avatarKey={profilePanelProps.avatarKey}
+                    label={profilePanelProps.displayName || profilePanelProps.userEmail}
+                    size="lg"
+                  />
+                  <div>
+                    <span>Nazwa użytkownika</span>
+                    <strong>{profilePanelProps.displayName || 'brak nazwy'}</strong>
+                  </div>
+                </div>
                 <div>
                   <span>E-mail użytkownika</span>
                   <strong>{profilePanelProps.userEmail || 'brak danych'}</strong>

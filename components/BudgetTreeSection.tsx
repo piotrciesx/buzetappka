@@ -81,6 +81,7 @@ type Props = {
 
   handleAddSubcategory: (level2Id: string) => Promise<void>
   handleRenameCategory: (categoryId: string) => Promise<void>
+  handleUpdateCategoryIcon: (categoryId: string, iconKey: string | null) => Promise<void>
   handleDeleteCategory: (categoryId: string) => Promise<void>
   openTransactionCreator: (suggestedCategoryId: string) => void
   handleInlineSaveTransaction: (
@@ -187,6 +188,7 @@ export default function BudgetTreeSection({
   onHeatmapInvertedChange,
   handleAddSubcategory,
   handleRenameCategory,
+  handleUpdateCategoryIcon,
   handleDeleteCategory,
   openTransactionCreator,
   handleInlineSaveTransaction,
@@ -437,6 +439,7 @@ export default function BudgetTreeSection({
           isCategoryClosingAfterSelectedMonth={isCategoryClosingAfterSelectedMonth}
           handleAddSubcategory={handleAddSubcategory}
           handleRenameCategory={handleRenameCategory}
+          handleUpdateCategoryIcon={handleUpdateCategoryIcon}
           handleDeleteCategory={handleDeleteCategory}
           openTransactionCreator={openTransactionCreator}
           handleInlineSaveTransaction={handleInlineSaveTransaction}

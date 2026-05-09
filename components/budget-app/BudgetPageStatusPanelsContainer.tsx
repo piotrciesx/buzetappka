@@ -3,6 +3,7 @@
 import BudgetPageStatusPanels from '../BudgetPageStatusPanels'
 import ProfileMembersPanel from '../ProfileMembersPanel'
 import { downloadProfileBackupCsv, downloadProfileBackupJson } from '../../lib/exportBackup'
+import { useUserPublicProfile } from '../../lib/useUserPublicProfile'
 
 type BudgetPageStatusPanelsContainerProps = {
   ctx: Record<string, any>
@@ -94,6 +95,10 @@ export default function BudgetPageStatusPanelsContainer({
     visibleCategories,
     visibleModules,
   } = ctx
+  const {
+    displayName: userDisplayName,
+    avatarKey: userAvatarKey,
+  } = useUserPublicProfile(userId, userEmail)
 
   const profileTransactions = (
     Array.isArray(transactions) ? transactions : scopedTransactions
@@ -175,6 +180,8 @@ export default function BudgetPageStatusPanelsContainer({
         styles={styles}
         userProfileMenuProps={{
           userEmail,
+          displayName: userDisplayName,
+          avatarKey: userAvatarKey,
           onToggleSettings: handleOpenSettingsPanel,
           onToggleImportExport: handleToggleImportExport,
           onExportBackupJson: () => downloadProfileBackupJson(supabase, profileId),
@@ -256,6 +263,8 @@ export default function BudgetPageStatusPanelsContainer({
           draftVisibleModules,
           saveStatusText: moduleVisibilitySaveStatusText,
           userEmail,
+          displayName: userDisplayName,
+          avatarKey: userAvatarKey,
           onChangeModuleVisibility: setDraftModuleVisibility,
           onSave: async () => {
             await handleSaveMonthNavigationSettingsWithStartDateWarning()
@@ -297,6 +306,8 @@ export default function BudgetPageStatusPanelsContainer({
         onClosePrimaryPanel={handleClosePrimaryPanel}
         profilePanelProps={{
           userEmail,
+          displayName: userDisplayName,
+          avatarKey: userAvatarKey,
           accountCreatedAt: null,
           transactionsCount: profileTransactions.length,
           categoriesCount: categories.length,
