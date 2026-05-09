@@ -1,6 +1,6 @@
 'use client'
 
-import { CSSProperties, HTMLAttributes, ReactNode } from 'react'
+import { CSSProperties, HTMLAttributes, ReactNode, useEffect, useRef } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useIsMobileViewport } from '../lib/useIsMobileViewport'
@@ -170,6 +170,21 @@ export function SortableLevel1Card(props: SortableProps) {
     disabled: !isSortable,
   })
   const isMobileViewport = useIsMobileViewport()
+  const suppressNextToggleRef = useRef(false)
+
+  useEffect(() => {
+    if (!isDragging) {
+      return
+    }
+
+    suppressNextToggleRef.current = true
+
+    const timer = window.setTimeout(() => {
+      suppressNextToggleRef.current = false
+    }, 260)
+
+    return () => window.clearTimeout(timer)
+  }, [isDragging])
 
   const wrapStyle: CSSProperties = {
     ...styles.l1Card,
@@ -196,6 +211,11 @@ export function SortableLevel1Card(props: SortableProps) {
         level1Category={level1Category}
         isOpen={isOpen}
         onToggle={() => {
+          if (suppressNextToggleRef.current) {
+            suppressNextToggleRef.current = false
+            return
+          }
+
           if (!isDragging) onToggle()
         }}
         styles={styles}

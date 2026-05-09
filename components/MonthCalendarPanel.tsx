@@ -97,10 +97,12 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
     calendarTitle = 'Kalendarz miesiąca',
     calendarSubtitle = '',
     heatmapVariant = 'balance',
+    onHeatmapVariantChange,
     heatmapMode: controlledHeatmapMode,
     onHeatmapModeChange,
     heatmapInverted: controlledHeatmapInverted,
     onHeatmapInvertedChange,
+    onResetHeatmapSettings,
     defaultHeatmapMode = 'balance',
     defaultHeatmapInverted = false,
     heatmapStorageKey,
@@ -1022,10 +1024,13 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
           subtitle={calendarSubtitle}
           styles={styles}
           heatmapMode={heatmapMode}
+          heatmapVariant={heatmapVariant}
           heatmapInverted={heatmapInverted}
           showHeatmapControls={showHeatmapControls}
           onHeatmapModeChange={handleHeatmapModeChange}
+          onHeatmapVariantChange={onHeatmapVariantChange}
           onHeatmapInvertedChange={handleHeatmapInvertedChange}
+          onResetHeatmapSettings={onResetHeatmapSettings}
         />
       }
       notices={

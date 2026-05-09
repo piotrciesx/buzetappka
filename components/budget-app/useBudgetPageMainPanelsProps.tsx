@@ -102,6 +102,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     handleReorderLevel3,
     handleRestoreCategory,
     handleRestoreTransaction,
+    handleResetHeatmapSettings,
     handleToggleSelectedMonthExcludedWithConfirm,
     handleUndoLastAction,
     handleUndoScheduledHide,
@@ -184,6 +185,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     setBudgetLimitEditorCategoryId,
     setBulkActionErrorText,
     setBulkMoveTargetCategoryId,
+    setCalendarHeatmapVariant,
     setDefaultPaymentSource,
     setGoalModeForMonth,
     setHeatmapInverted,
@@ -492,7 +494,9 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
           heatmapInverted,
           onHeatmapInvertedChange: setHeatmapInverted,
           heatmapVariant: calendarHeatmapVariant,
-          showHeatmapControls: false,
+          onHeatmapVariantChange: setCalendarHeatmapVariant,
+          onResetHeatmapSettings: handleResetHeatmapSettings,
+          showHeatmapControls: true,
           descriptionSuggestions,
           getPaymentSourceOptionsForCategoryId: isPaymentSourcesModuleEnabled
             ? getPaymentSourceOptionsForCategoryId

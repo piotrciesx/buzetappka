@@ -12,6 +12,16 @@ type AppSettingsPanelProps = {
   onSimpleModeChange: (value: boolean) => void
   autoExcludePartialMonths: boolean
   onAutoExcludePartialMonthsChange: (value: boolean) => void
+  budgetStartDate: string
+  currentMonth: string
+  minAllowedMonth: string | null
+  maxAllowedMonth: string | null
+  monthNavigationFutureLocked: boolean
+  isSavingMonthNavigationSettings: boolean
+  monthNavigationErrorText: string
+  onBudgetStartDateChange: (value: string) => void
+  onMonthNavigationFutureLockedChange: (value: boolean) => void
+  onSaveMonthNavigationSettings: () => void
   draftVisibleModules: AppModuleVisibility
   saveStatusText: string
   onChangeModuleVisibility: (moduleKey: AppModuleKey, isVisible: boolean) => void
@@ -73,11 +83,32 @@ const SettingsSwitch = ({ checked, disabled = false, onChange }: SwitchProps) =>
   </button>
 )
 
+const getLastDateOfMonth = (monthText: string) => {
+  const [year, month] = monthText.split('-').map(Number)
+
+  if (!year || !month) {
+    return undefined
+  }
+
+  const lastDay = new Date(year, month, 0).getDate()
+  return `${monthText}-${String(lastDay).padStart(2, '0')}`
+}
+
 export default function AppSettingsPanel({
   simpleMode,
   onSimpleModeChange,
   autoExcludePartialMonths,
   onAutoExcludePartialMonthsChange,
+  budgetStartDate,
+  currentMonth,
+  minAllowedMonth,
+  maxAllowedMonth,
+  monthNavigationFutureLocked,
+  isSavingMonthNavigationSettings,
+  monthNavigationErrorText,
+  onBudgetStartDateChange,
+  onMonthNavigationFutureLockedChange,
+  onSaveMonthNavigationSettings,
   draftVisibleModules,
   saveStatusText,
   onChangeModuleVisibility,
@@ -94,6 +125,7 @@ export default function AppSettingsPanel({
   void ignoredDefaultOpen
 
   const effectiveAutoExcludePartialMonths = autoExcludePartialMonths !== false
+  const budgetStartMaxDate = currentMonth ? getLastDateOfMonth(currentMonth) : undefined
   const isDraftDefault = moduleItems.every(
     (item) => draftVisibleModules[item.key] === DEFAULT_APP_MODULE_VISIBILITY[item.key]
   )
@@ -117,6 +149,51 @@ export default function AppSettingsPanel({
           <span>Aktualny użytkownik</span>
           <strong>{userEmail || 'brak danych'}</strong>
         </div>
+      </section>
+
+      <section data-settings-section="date-range">
+        <div data-settings-section-heading="true">
+          <h3>Ustawienia daty i zakresu</h3>
+          <p>Zakres historii budżetu i dostępność przyszłych miesięcy.</p>
+        </div>
+        <div data-settings-row="true" data-settings-date-row="true">
+          <label data-settings-field="true">
+            <span>Data startowa budżetu</span>
+            <input
+              type="date"
+              value={budgetStartDate}
+              max={budgetStartMaxDate}
+              onChange={(event) => onBudgetStartDateChange(event.target.value)}
+            />
+          </label>
+          <div>
+            <strong>Blokuj miesiące przyszłe</strong>
+            <p>Po włączeniu nawigacja nie przejdzie poza bieżący miesiąc.</p>
+          </div>
+          <SettingsSwitch
+            checked={monthNavigationFutureLocked}
+            onChange={onMonthNavigationFutureLockedChange}
+          />
+        </div>
+        <div data-settings-actions="true">
+          <button
+            type="button"
+            data-settings-primary-action="true"
+            onClick={onSaveMonthNavigationSettings}
+            disabled={isSavingMonthNavigationSettings}
+          >
+            {isSavingMonthNavigationSettings ? 'Zapisywanie...' : 'Zapisz zakres'}
+          </button>
+        </div>
+        <div data-settings-status="true">
+          Zakres: <b>{minAllowedMonth || 'bez dolnego limitu'}</b> -{' '}
+          <b>{maxAllowedMonth || 'bez górnego limitu'}</b>
+        </div>
+        {monthNavigationErrorText && (
+          <div data-settings-status="true">
+            <b>Błąd blokad miesięcy:</b> {monthNavigationErrorText}
+          </div>
+        )}
       </section>
 
       <section data-settings-section="basic">

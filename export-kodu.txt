@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 459
-Data: 2026-05-09T05:44:42.763Z
+Data: 2026-05-09T06:40:58.255Z
 
 
 ==================================================
@@ -74146,6 +74146,943 @@ PLIK: app\styles\layout-depth.css
   }
 }
 
+/* Mobile stabilization layer. Keep this last: it neutralizes desktop-sized inline styles. */
+@media (max-width: 820px) {
+  :root {
+    --mobile-nav-height: 74px;
+    --mobile-safe-bottom: env(safe-area-inset-bottom);
+    --mobile-bottom-space: calc(var(--mobile-nav-height) + var(--mobile-safe-bottom) + 18px);
+    --mobile-panel-margin: 8px;
+  }
+
+  html,
+  body {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    overscroll-behavior-x: none;
+  }
+
+  [data-budget-app="true"],
+  [data-budget-app="true"] *,
+  [data-budget-app="true"] *::before,
+  [data-budget-app="true"] *::after {
+    box-sizing: border-box !important;
+  }
+
+  [data-budget-app="true"] {
+    width: 100% !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+    overflow-x: clip !important;
+    padding: 64px 8px var(--mobile-bottom-space) !important;
+  }
+
+  [data-budget-shell-content="true"],
+  [data-budget-workspace="true"],
+  [data-budget-workspace-main="true"],
+  [data-budget-tree-workspace="true"],
+  [data-main-workspace-deck="true"],
+  [data-calendar-recent-panel="true"],
+  [data-level1-tree-shell="true"],
+  [data-level1-mobile-flow="true"],
+  [data-level1-mobile-block="true"],
+  [data-level1-expanded-content="true"],
+  [data-budget-tree-bottom-deck="true"],
+  [data-core-workspace-footer="true"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-x: clip !important;
+  }
+
+  [data-budget-workspace="true"],
+  [data-budget-workspace-main="true"] {
+    display: block !important;
+    padding-bottom: var(--mobile-bottom-space) !important;
+  }
+
+  [data-budget-tree-workspace="true"] {
+    padding-inline: 6px !important;
+  }
+
+  [data-budget-app="true"] input,
+  [data-budget-app="true"] select,
+  [data-budget-app="true"] textarea,
+  [data-budget-app="true"] button {
+    max-width: 100% !important;
+  }
+
+  [data-budget-app="true"] input,
+  [data-budget-app="true"] select,
+  [data-budget-app="true"] textarea {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  [data-budget-app="true"] button {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  [data-budget-mobile-nav="true"] {
+    width: 100% !important;
+    max-width: 520px !important;
+  }
+
+  [data-budget-sidebar="true"] {
+    z-index: 2400 !important;
+    height: var(--mobile-nav-height) !important;
+    padding-bottom: max(7px, var(--mobile-safe-bottom)) !important;
+  }
+
+  [data-budget-mobile-more-menu="true"] {
+    max-width: calc(100vw - 16px) !important;
+    overflow-x: hidden !important;
+  }
+
+  [data-budget-header-row="true"] {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  [data-budget-topbar-month="true"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  [data-level1-mobile-flow="true"] {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  [data-level1-mobile-block="true"] {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  [data-level1-mobile-block="true"] > [data-level1-header-grid="true"] {
+    display: block !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  [data-level1-content-stack="true"] {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  [data-level1-header-grid="true"] [data-level1-card="true"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 106px !important;
+    padding: 14px 12px !important;
+    gap: 8px !important;
+  }
+
+  [data-level1-header-grid="true"] [data-category-actions="true"] {
+    flex-wrap: nowrap !important;
+    gap: 5px !important;
+  }
+
+  [data-level1-title-block="true"] > div:first-child,
+  [data-level1-summary="true"] strong,
+  [data-settings-profile-card="true"] strong,
+  [data-settings-row="true"] strong,
+  [data-settings-feature-card="true"] strong,
+  [data-bank-search-history-row="true"],
+  [data-workspace-recent-row="true"] * {
+    min-width: 0 !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+  }
+
+  [data-calendar-recent-panel="true"] {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+    min-height: 0 !important;
+    border-radius: 14px !important;
+  }
+
+  [data-workspace-calendar-pane="true"],
+  [data-workspace-recent-pane="true"],
+  [data-pinned-category-panel="true"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 10px !important;
+  }
+
+  [data-mini-calendar="true"],
+  [data-mini-calendar="main"] {
+    width: min(100%, 238px) !important;
+    max-width: 100% !important;
+    margin-inline: auto !important;
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  }
+
+  [data-mini-calendar="true"] button,
+  [data-mini-calendar="true"] i,
+  [data-mini-calendar="main"] button,
+  [data-mini-calendar="main"] i {
+    width: auto !important;
+    min-width: 0 !important;
+  }
+
+  [data-workspace-recent-rows="true"] {
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  [data-workspace-recent-row="true"] {
+    grid-template-columns: minmax(68px, 0.34fr) minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
+    gap: 5px 8px !important;
+    padding: 8px !important;
+  }
+
+  [data-workspace-recent-row="true"] b {
+    text-align: left !important;
+  }
+
+  [data-workspace-recent-row="true"] small,
+  [data-workspace-recent-row="true"] time {
+    grid-column: 2 !important;
+  }
+
+  [data-core-workspace-footer="true"] {
+    padding-bottom: var(--mobile-bottom-space) !important;
+  }
+
+  [data-transaction-modal-overlay="true"],
+  [data-calendar-modal-overlay="true"],
+  [data-budget-limit-modal-overlay="true"],
+  [data-draft-prompt-overlay="true"] {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    padding: max(8px, env(safe-area-inset-top)) 8px max(8px, var(--mobile-safe-bottom)) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+
+  [data-transaction-modal-overlay="true"] {
+    z-index: 3100 !important;
+  }
+
+  [data-calendar-modal-overlay="true"],
+  [data-budget-limit-modal-overlay="true"],
+  [data-draft-prompt-overlay="true"] {
+    z-index: 3200 !important;
+  }
+
+  [data-transaction-modal="true"],
+  [data-calendar-modal="true"],
+  [data-budget-limit-modal="true"],
+  [data-draft-prompt-card="true"] {
+    width: calc(100vw - 16px) !important;
+    min-width: 0 !important;
+    max-width: calc(100vw - 16px) !important;
+    max-height: calc(100dvh - max(16px, env(safe-area-inset-top)) - max(16px, var(--mobile-safe-bottom))) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    border-radius: 16px !important;
+    padding: 12px !important;
+    margin: 0 auto !important;
+  }
+
+  [data-transaction-modal="true"] {
+    scroll-padding-bottom: calc(140px + var(--mobile-safe-bottom)) !important;
+    padding-bottom: calc(20px + var(--mobile-safe-bottom)) !important;
+  }
+
+  [data-transaction-modal-title="true"] {
+    position: sticky !important;
+    top: -12px !important;
+    z-index: 3 !important;
+    padding: 8px 0 !important;
+    margin: -4px 0 4px !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+  }
+
+  [data-transaction-modal="true"] [data-transaction-entry-section="true"],
+  [data-transaction-modal="true"] [style*="borderTop"],
+  [data-budget-limit-form="true"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  [data-transaction-entry-form="true"],
+  [data-inline-entry-form="true"],
+  [data-inline-entry-main-row="true"] {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    gap: 7px !important;
+    padding: 8px !important;
+  }
+
+  [data-transaction-entry-form="true"] > *,
+  [data-inline-entry-form="true"] > *,
+  [data-inline-entry-main-row="true"] > *,
+  [data-inline-entry-options="true"],
+  [data-inline-entry-extra-row="true"],
+  [data-transaction-entry-extra="true"],
+  [data-payment-split-editor="true"],
+  [data-payment-split-row="true"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    grid-column: 1 / -1 !important;
+    margin-left: 0 !important;
+  }
+
+  [data-transaction-entry-form="true"] input,
+  [data-transaction-entry-form="true"] select,
+  [data-inline-entry-form="true"] input,
+  [data-inline-entry-form="true"] select,
+  [data-payment-split-editor="true"] input,
+  [data-payment-split-editor="true"] select,
+  [data-payment-source-select="true"],
+  [data-payment-split-amount="true"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    flex: 1 1 100% !important;
+  }
+
+  [data-transaction-entry-form="true"] button,
+  [data-inline-entry-form="true"] button {
+    width: 100% !important;
+    min-height: 36px !important;
+  }
+
+  [data-transaction-entry-toggle="true"],
+  [data-budget-limit-form="true"] label[style*="display: flex"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    display: grid !important;
+    grid-template-columns: auto minmax(0, 1fr) !important;
+    align-items: center !important;
+    justify-content: start !important;
+    gap: 8px !important;
+  }
+
+  [data-transaction-entry-toggle="true"] input,
+  [data-budget-limit-form="true"] label[style*="display: flex"] input {
+    width: auto !important;
+    min-width: 16px !important;
+    max-width: 18px !important;
+  }
+
+  [data-payment-split-row="true"] {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 7px !important;
+  }
+
+  [data-budget-limit-modal="true"] {
+    max-height: calc(100dvh - 16px - var(--mobile-safe-bottom)) !important;
+  }
+
+  [data-budget-limit-actions="true"],
+  [data-budget-limit-action-group="true"] {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    gap: 7px !important;
+  }
+
+  [data-budget-limit-actions="true"] button {
+    width: 100% !important;
+  }
+
+  [data-app-view="settings"],
+  [data-app-view="profile"],
+  [data-budget-utility-panel="true"],
+  [data-budget-utility-panel="true"][data-utility-panel-kind="importExport"] {
+    --side-panel-left: var(--mobile-panel-margin);
+    --side-panel-top: 58px;
+    --side-panel-bottom-gap: calc(var(--mobile-nav-height) + var(--mobile-safe-bottom) + 8px);
+    --side-panel-width: calc(100vw - (var(--mobile-panel-margin) * 2));
+    left: var(--side-panel-left) !important;
+    right: auto !important;
+    top: var(--side-panel-top) !important;
+    width: var(--side-panel-width) !important;
+    min-width: 0 !important;
+    max-width: var(--side-panel-width) !important;
+    height: calc(100dvh - var(--side-panel-top) - var(--side-panel-bottom-gap)) !important;
+    max-height: calc(100dvh - var(--side-panel-top) - var(--side-panel-bottom-gap)) !important;
+    padding: 10px !important;
+    overflow: hidden !important;
+  }
+
+  [data-budget-utility-body="true"],
+  [data-app-view="settings"] {
+    overflow-x: hidden !important;
+    scroll-padding-bottom: calc(80px + var(--mobile-safe-bottom)) !important;
+  }
+
+  [data-budget-utility-body="true"] {
+    padding-bottom: calc(22px + var(--mobile-safe-bottom)) !important;
+  }
+
+  [data-month-calendar-panel="true"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: 8px !important;
+  }
+
+  [data-month-calendar-weekdays="true"],
+  [data-month-calendar-grid="true"] {
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  [data-month-calendar-grid="true"] > button,
+  [data-month-calendar-grid="true"] > div {
+    min-width: 0 !important;
+  }
+
+  [data-financial-goals-panel="true"],
+  [data-bank-search-history="true"],
+  [data-settings-panel-content="true"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  [data-financial-goals-summary="true"],
+  [data-financial-goal-form="true"],
+  [data-bank-search-filters="true"],
+  [data-bank-search-stats="true"],
+  [data-settings-feature-grid="true"],
+  [data-settings-admin-grid="true"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  [data-financial-goal-form="true"] > *,
+  [data-bank-search-filters="true"] > *,
+  [data-bank-search-stats="true"] > * {
+    grid-column: 1 / -1 !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  [data-settings-row="true"],
+  [data-settings-feature-card="true"] {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+  }
+
+  [data-settings-row="true"] p,
+  [data-settings-feature-card="true"] p {
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    hyphens: none !important;
+  }
+
+  [data-bank-search-history-row="true"] {
+    grid-template-columns: 1fr !important;
+    overflow-x: hidden !important;
+  }
+
+  [data-budget-month-menu="true"],
+  [data-notifications-dropdown="true"],
+  [data-tree-sort-inline="true"],
+  [data-mobile-category-menu-panel="true"],
+  [data-profile-menu-dropdown="true"] {
+    max-width: calc(100vw - 16px) !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+  }
+}
+
+@media (max-width: 430px) {
+  [data-budget-app="true"] {
+    padding-inline: 6px !important;
+  }
+
+  [data-budget-tree-workspace="true"],
+  [data-level1-expanded-content="true"],
+  [data-workspace-calendar-pane="true"],
+  [data-workspace-recent-pane="true"] {
+    padding-inline: 6px !important;
+  }
+
+  [data-level1-header-grid="true"] [data-level1-card="true"] {
+    padding: 12px 10px !important;
+  }
+}
+
+@media (max-width: 340px) {
+  [data-budget-mobile-nav="true"] button {
+    font-size: 9px !important;
+  }
+
+  [data-budget-mobile-nav="true"] svg {
+    width: 19px !important;
+    height: 19px !important;
+  }
+
+  [data-level1-summary="true"] strong {
+    font-size: 18px !important;
+  }
+}
+
+/* Mobile keyboard and transaction-creator stabilization. */
+@media (max-width: 820px) {
+  [data-budget-app="true"] input:focus,
+  [data-budget-app="true"] select:focus,
+  [data-budget-app="true"] textarea:focus,
+  [data-budget-app="true"] button:focus {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    transform: none !important;
+  }
+
+  [data-budget-app="true"] input,
+  [data-budget-app="true"] select,
+  [data-budget-app="true"] textarea {
+    appearance: none;
+    -webkit-appearance: none;
+    font-size: 16px !important;
+    text-overflow: ellipsis;
+  }
+
+  [data-budget-app="true"] input::placeholder,
+  [data-budget-app="true"] textarea::placeholder {
+    text-overflow: ellipsis;
+  }
+
+  [data-transaction-modal-overlay="true"] {
+    overscroll-behavior: contain !important;
+    padding-bottom: max(10px, env(safe-area-inset-bottom)) !important;
+  }
+
+  [data-transaction-modal="true"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    max-height: calc(100dvh - 18px - env(safe-area-inset-bottom)) !important;
+    min-height: 0 !important;
+    overscroll-behavior: contain !important;
+    scroll-padding-top: 54px !important;
+    scroll-padding-bottom: calc(96px + env(safe-area-inset-bottom)) !important;
+    padding-bottom: calc(74px + env(safe-area-inset-bottom)) !important;
+  }
+
+  @supports (height: 100svh) {
+    [data-transaction-modal="true"] {
+      max-height: calc(100svh - 18px - env(safe-area-inset-bottom)) !important;
+    }
+  }
+
+  [data-transaction-modal-title="true"] {
+    min-height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    font-size: 16px !important;
+    line-height: 1.15 !important;
+  }
+
+  [data-transaction-modal="true"] > [style*="pageSubtitle"],
+  [data-transaction-modal="true"] > [style*="infoBox"] {
+    margin: 0 !important;
+    padding: 6px 8px !important;
+    font-size: 11px !important;
+  }
+
+  [data-transaction-modal="true"] [style*="borderTop"] {
+    margin-top: 6px !important;
+    padding-top: 6px !important;
+  }
+
+  [data-transaction-entry-section="true"],
+  [data-transaction-subcategory-section="true"],
+  [data-transaction-data-section="true"] {
+    margin-top: 6px !important;
+    padding-top: 6px !important;
+  }
+
+  [data-transaction-entry-section="true"] > [style],
+  [data-transaction-subcategory-section="true"] > [style],
+  [data-transaction-data-section="true"] > [style] {
+    min-width: 0 !important;
+  }
+
+  [data-transaction-entry-section="true"] [style*="display: flex"],
+  [data-transaction-subcategory-section="true"] [style*="display: flex"] {
+    gap: 5px !important;
+  }
+
+  [data-transaction-entry-section="true"] button,
+  [data-transaction-subcategory-section="true"] button {
+    min-height: 30px !important;
+    width: auto !important;
+    max-width: 100% !important;
+    padding: 5px 8px !important;
+    border-radius: 9px !important;
+    font-size: 12px !important;
+    line-height: 1.15 !important;
+  }
+
+  [data-transaction-category-hint="true"],
+  [data-transaction-category-disabled="true"],
+  [data-transaction-final-category-placeholder="true"] {
+    display: none !important;
+  }
+
+  [data-transaction-final-category="true"] {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 6px 8px !important;
+    margin-top: 6px !important;
+    padding: 7px 8px !important;
+    border-radius: 10px !important;
+  }
+
+  [data-transaction-final-category="true"] > div:first-child {
+    grid-column: 1 / -1 !important;
+    margin: 0 !important;
+    font-size: 9px !important;
+    letter-spacing: 0 !important;
+  }
+
+  [data-transaction-final-category="true"] > div:nth-child(2) {
+    min-width: 0 !important;
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  [data-transaction-pin-button="true"] {
+    width: 34px !important;
+    min-width: 34px !important;
+    height: 30px !important;
+    min-height: 30px !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border-radius: 999px !important;
+    font-size: 0 !important;
+  }
+
+  [data-transaction-pin-button="true"]::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    display: inline-block;
+    border: 1.5px solid currentColor;
+    border-radius: 999px;
+    box-shadow: 0 5px 0 -1px currentColor;
+    transform: rotate(35deg);
+  }
+
+  [data-transaction-pin-button="true"]::after {
+    content: "przypnij";
+    font-size: 10px;
+    line-height: 1;
+  }
+
+  [data-transaction-pin-button="true"][data-transaction-pinned="true"]::after {
+    content: "odepnij";
+  }
+
+  [data-transaction-data-section="true"] {
+    border-top-color: rgba(203, 213, 225, 0.78) !important;
+  }
+
+  [data-transaction-entry-form="true"] {
+    position: relative !important;
+    grid-template-columns: 1fr !important;
+    gap: 6px !important;
+    padding: 7px !important;
+    margin-top: 6px !important;
+    border-radius: 12px !important;
+  }
+
+  [data-transaction-entry-form="true"] label,
+  [data-transaction-entry-form="true"] div {
+    min-width: 0 !important;
+  }
+
+  [data-transaction-day-input="true"],
+  [data-transaction-description-input="true"],
+  [data-transaction-amount-input="true"],
+  [data-transaction-tags-input="true"],
+  [data-transaction-recurring-select="true"],
+  [data-payment-source-select="true"],
+  [data-payment-split-amount="true"] {
+    height: 40px !important;
+    min-height: 40px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: 0 10px !important;
+    border-radius: 10px !important;
+    line-height: 40px !important;
+  }
+
+  [data-transaction-description-input="true"] {
+    order: 2 !important;
+  }
+
+  [data-transaction-amount-input="true"] {
+    order: 3 !important;
+  }
+
+  [data-transaction-entry-form="true"] label:has([data-transaction-day-input="true"]) {
+    order: 1 !important;
+  }
+
+  [data-transaction-save-action="true"],
+  [data-transaction-save-close-action="true"],
+  [data-transaction-cancel-action="true"] {
+    min-height: 38px !important;
+    height: 38px !important;
+    padding: 0 10px !important;
+    border-radius: 10px !important;
+    font-size: 13px !important;
+  }
+
+  [data-transaction-save-action="true"] {
+    order: 20 !important;
+    position: sticky !important;
+    bottom: calc(42px + env(safe-area-inset-bottom)) !important;
+    z-index: 4 !important;
+    box-shadow: 0 -8px 20px rgba(15, 23, 42, 0.08) !important;
+  }
+
+  [data-transaction-save-close-action="true"],
+  [data-transaction-cancel-action="true"] {
+    order: 21 !important;
+    position: sticky !important;
+    bottom: env(safe-area-inset-bottom) !important;
+    z-index: 4 !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+  }
+
+  [data-transaction-entry-extra="true"] {
+    gap: 6px !important;
+    margin-top: 8px !important;
+  }
+
+  [data-transaction-entry-extra="true"] label {
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+  }
+
+  [data-transaction-entry-toggle="true"] {
+    margin-top: 7px !important;
+    font-size: 12px !important;
+    font-weight: 560 !important;
+  }
+
+  [data-payment-split-help="true"] {
+    display: none !important;
+  }
+
+  [data-payment-split-errors="true"] {
+    font-size: 12px !important;
+  }
+
+  [data-transaction-save-hint="true"] {
+    margin-top: 6px !important;
+    font-size: 11px !important;
+  }
+
+  [data-inline-entry-form="true"],
+  [data-inline-entry-main-row="true"],
+  [data-inline-entry-options="true"],
+  [data-inline-entry-extra-row="true"] {
+    overflow-x: hidden !important;
+  }
+
+  [data-inline-entry-options="true"] {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 6px !important;
+  }
+
+  [data-inline-entry-options="true"] button {
+    width: 100% !important;
+    min-height: 34px !important;
+  }
+
+  [data-level1-mobile-flow="true"],
+  [data-level1-mobile-block="true"] {
+    display: block !important;
+  }
+
+  [data-level1-mobile-block="true"] + [data-level1-mobile-block="true"] {
+    margin-top: 10px !important;
+  }
+
+  [data-level1-mobile-block="true"] > [data-level1-expanded-content="true"] {
+    display: block !important;
+    margin-top: 8px !important;
+  }
+
+  [data-level1-header-grid="true"] [data-category-actions="true"] {
+    align-self: start !important;
+    display: grid !important;
+    grid-auto-flow: column !important;
+    grid-auto-columns: 32px !important;
+    gap: 5px !important;
+  }
+
+  [data-level1-header-grid="true"] [data-category-quick-add="true"],
+  [data-level1-header-grid="true"] [data-mobile-category-menu="true"] > summary,
+  [data-level1-header-grid="true"] [data-level1-action-menu-trigger="true"] {
+    width: 32px !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  [data-transaction-modal="true"] {
+    padding-inline: 10px !important;
+  }
+
+  [data-transaction-entry-section="true"] button,
+  [data-transaction-subcategory-section="true"] button {
+    font-size: 11px !important;
+    padding-inline: 7px !important;
+  }
+}
+
+/* Small mobile fix: creator actions stay in flow and Level 1 has no dead drag handle. */
+@media (max-width: 820px) {
+  [data-transaction-modal="true"] {
+    padding-bottom: calc(14px + env(safe-area-inset-bottom)) !important;
+  }
+
+  [data-transaction-modal-title="true"] {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 34px !important;
+    gap: 8px !important;
+    align-items: center !important;
+  }
+
+  [data-transaction-modal-title="true"] span {
+    min-width: 0 !important;
+  }
+
+  [data-transaction-close-action="true"] {
+    width: 34px !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    display: grid !important;
+    place-items: center !important;
+    padding: 0 !important;
+    border: 1px solid rgba(203, 213, 225, 0.86) !important;
+    border-radius: 999px !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    color: #334155 !important;
+    font-size: 20px !important;
+    line-height: 1 !important;
+    transform: none !important;
+  }
+
+  [data-transaction-entry-form="true"] {
+    padding-bottom: 8px !important;
+  }
+
+  [data-transaction-save-action="true"],
+  [data-transaction-save-close-action="true"],
+  [data-transaction-cancel-action="true"] {
+    position: static !important;
+    bottom: auto !important;
+    z-index: auto !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  [data-transaction-save-action="true"] {
+    order: 4 !important;
+  }
+
+  [data-transaction-save-close-action="true"],
+  [data-transaction-cancel-action="true"] {
+    order: 5 !important;
+  }
+
+  [data-transaction-data-section="true"] {
+    padding-bottom: 4px !important;
+  }
+
+  [data-level1-mobile-flow="true"] [data-category-drag-handle="true"] {
+    display: none !important;
+  }
+
+  [data-level1-mobile-flow="true"] [data-level1-card-shell="true"] {
+    touch-action: pan-y !important;
+  }
+
+  [data-level1-mobile-flow="true"] [data-level1-card="true"][data-level1-kind="income"] {
+    border-color: rgba(134, 239, 172, 0.5) !important;
+    background:
+      radial-gradient(circle at 92% 8%, rgba(34, 197, 94, 0.13), transparent 34%),
+      linear-gradient(180deg, rgba(250, 255, 252, 0.94), rgba(240, 253, 244, 0.78)) !important;
+    color: #166534 !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.86),
+      0 12px 26px rgba(22, 101, 52, 0.06) !important;
+  }
+
+  [data-level1-mobile-flow="true"] [data-level1-card="true"][data-level1-kind="expense"] {
+    border-color: rgba(254, 205, 211, 0.62) !important;
+    background:
+      radial-gradient(circle at 92% 8%, rgba(244, 63, 94, 0.12), transparent 34%),
+      linear-gradient(180deg, rgba(255, 251, 251, 0.94), rgba(255, 241, 242, 0.78)) !important;
+    color: #be123c !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.86),
+      0 12px 26px rgba(159, 18, 57, 0.055) !important;
+  }
+
+  [data-level1-mobile-flow="true"] [data-level1-card="true"]::before {
+    opacity: 0.72 !important;
+  }
+
+  [data-level1-mobile-flow="true"] [data-level1-card="true"]::after {
+    height: 58px !important;
+    bottom: -12px !important;
+    opacity: 0.16 !important;
+  }
+
+  [data-transaction-pin-button="true"] {
+    width: auto !important;
+    min-width: 72px !important;
+    max-width: 86px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    padding: 0 8px !important;
+    font-size: 0 !important;
+  }
+}
+
 
 
 ==================================================
@@ -84249,33 +85186,62 @@ export default function BudgetCategoryTree(props: Props) {
   if (isMobileViewport) {
     return (
       <div data-level1-tree-shell="true" data-level1-mobile-flow="true">
-        {sortedLevel1.map((level1Category) => {
-          const isLevel1Open = openLevel1Ids.includes(level1Category.id)
-          const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
+        <DndContext
+          sensors={dndSensors}
+          collisionDetection={closestCenter}
+          onDragStart={() => {
+            handleLevel1DragStart()
+          }}
+          onDragEnd={async (event: DragEndEvent) => {
+            const { active, over } = event
 
-          return (
-            <section key={level1Category.id} data-level1-mobile-block="true">
-              <div data-level1-header-grid="true">
-                <StaticLevel1Card
+            if (!over || active.id === over.id) {
+              return
+            }
+
+            const level1Ids = sortedLevel1.map((category) => category.id)
+            await handleReorderLevel1(
+              String(active.id),
+              getNearestDndSwapTargetId(
+                level1Ids,
+                String(active.id),
+                String(over.id),
+                true
+              )
+            )
+          }}
+        >
+          <SortableContext
+            items={sortedLevel1.map((category) => category.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            {sortedLevel1.map((level1Category) => {
+              const isLevel1Open = openLevel1Ids.includes(level1Category.id)
+              const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
+
+              return (
+                <SortableLevel1Card
+                  key={level1Category.id}
                   level1Category={level1Category}
                   isOpen={isLevel1Open}
                   onToggle={() => toggleLevel1(level1Category.id)}
+                  isSortable={isLevel1Sortable}
                   styles={styles}
                   kind={getLevel1Kind(level1Category)}
                   summary={getLevel1Summary(level1Category)}
-                  dragHandle={renderBlockedLevel1DragHandle(level1Category, isLevel1Sortable)}
                   extraActions={renderLevel1Actions(level1Category, isLevel1CalendarOpen)}
                   limitIndicator={
                     level1Category.id === expenseLevel1Id && getBudgetLimitView ? (
                       <BudgetLimitIndicator view={getBudgetLimitView?.(null) ?? null} />
                     ) : null
                   }
-                />
-              </div>
-              {renderLevel1Content(level1Category)}
-            </section>
-          )
-        })}
+                >
+                  {renderLevel1Content(level1Category)}
+                </SortableLevel1Card>
+              )
+            })}
+          </SortableContext>
+        </DndContext>
       </div>
     )
   }
@@ -85132,12 +86098,18 @@ export default function BudgetLimitEditorModal({
   }
 
   return (
-    <div style={overlayStyle} role="dialog" aria-modal="true" aria-label="Limit wydatków">
-      <div style={modalStyle}>
+    <div
+      style={overlayStyle}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Limit wydatków"
+      data-budget-limit-modal-overlay="true"
+    >
+      <div style={modalStyle} data-budget-limit-modal="true">
         <h2 style={titleStyle}>{existingLimit ? 'Edytuj limit' : 'Ustaw limit'}</h2>
         <div style={subtitleStyle}>{categoryLabel}</div>
 
-        <div style={formStyle}>
+        <div style={formStyle} data-budget-limit-form="true">
           <label style={labelStyle}>
             Kwota limitu
             <input
@@ -85218,8 +86190,8 @@ export default function BudgetLimitEditorModal({
           {errorText && <div style={errorTextStyle}>{errorText}</div>}
         </div>
 
-        <div style={actionsStyle}>
-          <div style={groupStyle}>
+        <div style={actionsStyle} data-budget-limit-actions="true">
+          <div style={groupStyle} data-budget-limit-action-group="true">
             {existingLimit && (
               <>
                 <button type="button" style={dangerButtonStyle} onClick={handleDelete}>
@@ -85232,7 +86204,7 @@ export default function BudgetLimitEditorModal({
             )}
           </div>
 
-          <div style={groupStyle}>
+          <div style={groupStyle} data-budget-limit-action-group="true">
             <button type="button" style={secondaryButtonStyle} onClick={onClose}>
               Anuluj
             </button>
@@ -101203,12 +102175,17 @@ export default function DraftPromptModal(props: Props) {
 
   return (
     <div
+      data-draft-prompt-overlay="true"
       style={draftPromptOverlayStyle}
       onClick={() => {
         setDraftPromptState(null)
       }}
     >
-      <div style={draftPromptCardStyle} onClick={(event) => event.stopPropagation()}>
+      <div
+        data-draft-prompt-card="true"
+        style={draftPromptCardStyle}
+        onClick={(event) => event.stopPropagation()}
+      >
         <div style={styles.sectionTitle}>Masz niedokończony wpis</div>
         <div style={{ ...styles.pageSubtitle, marginTop: 8 }}>
           Możesz wrócić do wersji roboczej albo ją usunąć i zacząć od pustego formularza.
@@ -104089,7 +105066,12 @@ export function SortableLevel1Card(props: SortableProps) {
   }
 
   return (
-    <div ref={setNodeRef} style={wrapStyle} data-level1-card-shell="true">
+    <div
+      ref={setNodeRef}
+      style={wrapStyle}
+      data-level1-card-shell="true"
+      data-level1-mobile-block={isMobileViewport ? 'true' : undefined}
+    >
       <Level1CardBase
         level1Category={level1Category}
         isOpen={isOpen}
@@ -104141,6 +105123,7 @@ export function SortableLevel1Card(props: SortableProps) {
     </div>
   )
 }
+
 
 
 ==================================================
@@ -108859,10 +109842,11 @@ export default function PaymentSplitEditor({
   }
 
   return (
-    <div style={splitWrapStyle}>
+    <div style={splitWrapStyle} data-payment-split-editor="true">
       {!isSplitActive ? (
         <>
           <select
+            data-payment-source-select="true"
             style={styles.input}
             value={selectedPaymentSourceId}
             onChange={(event) => setSelectedPaymentSourceId(event.target.value)}
@@ -108875,7 +109859,7 @@ export default function PaymentSplitEditor({
             ))}
           </select>
 
-          <div style={splitRowStyle}>
+          <div style={splitRowStyle} data-payment-split-row="true">
             <button type="button" style={styles.secondaryButton} onClick={handleAddPaymentSource}>
               + dodaj źródło
             </button>
@@ -108884,8 +109868,9 @@ export default function PaymentSplitEditor({
       ) : (
         <>
           {paymentSplitItems.map((item, index) => (
-            <div key={`split-item-${index}`} style={splitRowStyle}>
+            <div key={`split-item-${index}`} style={splitRowStyle} data-payment-split-row="true">
               <select
+                data-payment-source-select="true"
                 style={{ ...styles.input, flex: '1 1 220px', minWidth: 220 }}
                 value={item.paymentSourceId}
                 onChange={(event) => handleSplitSourceChange(index, event.target.value)}
@@ -108899,6 +109884,7 @@ export default function PaymentSplitEditor({
               </select>
 
               <input
+                data-payment-split-amount="true"
                 style={{ ...styles.smallInput, width: 110 }}
                 placeholder="kwota"
                 inputMode="decimal"
@@ -108916,7 +109902,7 @@ export default function PaymentSplitEditor({
             </div>
           ))}
 
-          <div style={splitRowStyle}>
+          <div style={splitRowStyle} data-payment-split-row="true">
             <button type="button" style={styles.secondaryButton} onClick={handleAddPaymentSource}>
               + dodaj źródło
             </button>
@@ -108924,13 +109910,15 @@ export default function PaymentSplitEditor({
         </>
       )}
 
-      <div style={splitHelpStyle}>
+      <div style={splitHelpStyle} data-payment-split-help="true">
         Przy kilku źródłach kwoty przeliczają się automatycznie. Zapis jest blokowany, jeśli suma
         nie zgadza się z kwotą transakcji albo któreś pole jest puste.
       </div>
 
       {splitState.errors.length > 0 && (
-        <div style={{ ...splitHelpStyle, color: '#b91c1c' }}>{splitState.errors.join(' • ')}</div>
+        <div style={{ ...splitHelpStyle, color: '#b91c1c' }} data-payment-split-errors="true">
+          {splitState.errors.join(' • ')}
+        </div>
       )}
     </div>
   )
@@ -112934,7 +113922,18 @@ export default function TransactionCreatorModal(props: Props) {
   return (
     <div data-transaction-modal-overlay="true" style={overlayStyle} onClick={onClose}>
       <div data-transaction-modal="true" style={modalStyle} onClick={(event) => event.stopPropagation()}>
-        <div style={styles.sectionTitle}>Nowy wpis</div>
+        <div style={styles.sectionTitle} data-transaction-modal-title="true">
+          <span>Nowy wpis</span>
+          <button
+            type="button"
+            data-transaction-close-action="true"
+            aria-label="Zamknij kreator wpisu"
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={onClose}
+          >
+            ×
+          </button>
+        </div>
 
         <div style={styles.pageSubtitle}>
           Miesiąc zapisu: <b>{selectedMonth}</b>
@@ -113059,10 +114058,14 @@ export default function TransactionCreatorModal(props: Props) {
           </div>
         )}
 
-        <div style={sectionStyle}>
+        <div style={sectionStyle} data-transaction-entry-section="true">
           <div style={styles.l2Name}>Kategorie</div>
 
-          {!selectedLevel1Id && <div style={styles.emptyText}>Najpierw wybierz typ wpisu.</div>}
+          {!selectedLevel1Id && (
+            <div style={styles.emptyText} data-transaction-category-hint="true">
+              Najpierw wybierz typ wpisu.
+            </div>
+          )}
 
           {selectedLevel1Id && availableLevel2Categories.length > 0 && (
             <div style={treeLevel2WrapStyle}>
@@ -113091,35 +114094,35 @@ export default function TransactionCreatorModal(props: Props) {
           )}
 
           {selectedLevel1Id && availableLevel2Categories.length === 0 && (
-            <div style={styles.emptyText}>
+            <div style={styles.emptyText} data-transaction-category-hint="true">
               Ten typ nie ma dodatkowych kategorii — wpis zapisze się bezpośrednio tutaj.
             </div>
           )}
         </div>
 
-        <div style={sectionStyle}>
+        <div style={sectionStyle} data-transaction-subcategory-section="true">
           <div style={styles.l2Name}>Podkategorie</div>
 
           {!selectedLevel2Id && availableLevel2Categories.length > 0 && (
-            <div style={disabledLevel3WrapStyle}>
+            <div style={disabledLevel3WrapStyle} data-transaction-category-disabled="true">
               <div style={styles.l2Name}>Najpierw wybierz kategorię</div>
-              <div style={styles.emptyText}>
+              <div style={styles.emptyText} data-transaction-category-hint="true">
                 Wybór podkategorii odblokuje się po wskazaniu kategorii.
               </div>
             </div>
           )}
 
           {selectedLevel1Id && availableLevel2Categories.length === 0 && (
-            <div style={treeLevel3WrapStyle}>
+            <div style={treeLevel3WrapStyle} data-transaction-final-category-placeholder="true">
               <div style={styles.l2Name}>Kategoria końcowa</div>
-              <div style={styles.emptyText}>
+              <div style={styles.emptyText} data-transaction-category-hint="true">
                 W tym typie nie ma niższych kategorii — wpis zapisze się tutaj.
               </div>
             </div>
           )}
 
           {selectedLevel2Id && availableLevel3Categories.length > 0 && (
-            <div style={treeLevel3WrapStyle}>
+            <div style={treeLevel3WrapStyle} data-transaction-final-category-placeholder="true">
               <div style={styles.l2Name}>{categoriesById[selectedLevel2Id]?.name || ''}</div>
 
               <div style={treeLevel3ButtonsStyle}>
@@ -113146,18 +114149,32 @@ export default function TransactionCreatorModal(props: Props) {
           {selectedLevel2Id && availableLevel3Categories.length === 0 && (
             <div style={treeLevel3WrapStyle}>
               <div style={styles.l2Name}>{categoriesById[selectedLevel2Id]?.name || ''}</div>
-              <div style={styles.emptyText}>
+              <div style={styles.emptyText} data-transaction-category-hint="true">
                 Ta kategoria nie ma podkategorii — wpis zapisze się tutaj.
               </div>
             </div>
           )}
 
           {effectiveCategoryId && (
-            <div style={finalCategoryInfoStyle}>
+            <div style={finalCategoryInfoStyle} data-transaction-final-category="true">
               <div style={finalCategoryInfoTitleStyle}>Zapis trafi do</div>
               <div style={finalCategoryInfoValueStyle}>{effectiveCategoryLabel}</div>
               <button
                 type="button"
+                data-transaction-pin-button="true"
+                data-transaction-pinned={
+                  pinnedCategoryIds.includes(effectiveCategoryId) ? 'true' : 'false'
+                }
+                aria-label={
+                  pinnedCategoryIds.includes(effectiveCategoryId)
+                    ? 'Odepnij kategorię'
+                    : 'Przypnij kategorię'
+                }
+                title={
+                  pinnedCategoryIds.includes(effectiveCategoryId)
+                    ? 'Odepnij kategorię'
+                    : 'Przypnij kategorię'
+                }
                 style={{ ...styles.secondaryButton, marginTop: 8 }}
                 onClick={() => onTogglePinnedCategory(effectiveCategoryId)}
               >
@@ -113169,14 +114186,18 @@ export default function TransactionCreatorModal(props: Props) {
           )}
         </div>
 
-        <div style={sectionStyle}>
+        <div style={sectionStyle} data-transaction-data-section="true">
           <div style={styles.l2Name}>Dane wpisu</div>
 
-          <div style={{ ...styles.formRow, marginTop: 10, alignItems: 'center' }}>
+          <div
+            style={{ ...styles.formRow, marginTop: 10, alignItems: 'center' }}
+            data-transaction-entry-form="true"
+          >
             <div style={{ ...descriptionFieldWrapStyle, order: 2 }}>
               <div style={descriptionInputWrapStyle}>
                 <input
                   ref={descriptionInputRef}
+                  data-transaction-description-input="true"
                   style={styles.input}
                   placeholder="opis"
                   value={description}
@@ -113223,6 +114244,7 @@ export default function TransactionCreatorModal(props: Props) {
 
             <input
               ref={amountInputRef}
+              data-transaction-amount-input="true"
               style={{ ...styles.smallInput, order: 3 }}
               placeholder="kwota"
               value={amount}
@@ -113238,6 +114260,7 @@ export default function TransactionCreatorModal(props: Props) {
             <label style={{ ...dateFieldStyle, order: 1 }}>
               <input
                 ref={dayInputRef}
+                data-transaction-day-input="true"
                 style={styles.smallInput}
                 value={dayInputValue}
                 placeholder="dzień"
@@ -113269,6 +114292,7 @@ export default function TransactionCreatorModal(props: Props) {
 
             <button
               ref={saveButtonRef}
+              data-transaction-save-action="true"
               style={{
                 ...styles.primaryButton,
                 order: 4,
@@ -113288,6 +114312,7 @@ export default function TransactionCreatorModal(props: Props) {
             {isSerialModeEnabled ? (
               <>
                 <button
+                  data-transaction-save-close-action="true"
                   style={{ ...styles.secondaryButton, order: 5 }}
                   disabled={isSaving || !selectedLevel1Id || !effectiveCategoryId}
                   onClick={async () => {
@@ -113297,18 +114322,26 @@ export default function TransactionCreatorModal(props: Props) {
                   {isSaving ? 'zapisywanie...' : 'zapisz i zakończ'}
                 </button>
 
-                <button style={{ ...styles.secondaryButton, order: 6 }} onClick={onClose}>
+                <button
+                  data-transaction-cancel-action="true"
+                  style={{ ...styles.secondaryButton, order: 6 }}
+                  onClick={onClose}
+                >
                   zakończ
                 </button>
               </>
             ) : (
-              <button style={{ ...styles.secondaryButton, order: 5 }} onClick={onClose}>
+              <button
+                data-transaction-cancel-action="true"
+                style={{ ...styles.secondaryButton, order: 5 }}
+                onClick={onClose}
+              >
                 anuluj
               </button>
             )}
           </div>
 
-          <div style={tagInputWrapStyle}>
+          <div style={tagInputWrapStyle} data-transaction-entry-extra="true">
             <label style={dateLabelStyle} htmlFor="transaction-tags-input">
               Tagi
             </label>
@@ -113316,6 +114349,7 @@ export default function TransactionCreatorModal(props: Props) {
             <input
               ref={tagInputRef}
               id="transaction-tags-input"
+              data-transaction-tags-input="true"
               style={styles.input}
               placeholder="np. sklep, dom, jedzenie"
               value={tagInputValue}
@@ -113371,6 +114405,7 @@ export default function TransactionCreatorModal(props: Props) {
 
                 <select
                   id="transaction-recurring-link"
+                  data-transaction-recurring-select="true"
                   style={styles.input}
                   value={selectedRecurringTransactionId}
                   onChange={(event) => applyRecurringLink(event.target.value)}
@@ -113397,7 +114432,7 @@ export default function TransactionCreatorModal(props: Props) {
             )}
           </div>
 
-          <label style={serialToggleStyle}>
+          <label style={serialToggleStyle} data-transaction-entry-toggle="true">
             <input
               type="checkbox"
               checked={isSerialModeEnabled}
@@ -113406,7 +114441,7 @@ export default function TransactionCreatorModal(props: Props) {
             dodawaj seryjnie
           </label>
 
-          <label style={serialToggleStyle}>
+          <label style={serialToggleStyle} data-transaction-entry-toggle="true">
             <input
               type="checkbox"
               checked={isQuickDayModeEnabled}
@@ -113421,7 +114456,7 @@ export default function TransactionCreatorModal(props: Props) {
           </label>
 
           {(!selectedLevel1Id || !effectiveCategoryId) && (
-            <div style={styles.emptyText}>
+            <div style={styles.emptyText} data-transaction-save-hint="true">
               Aby zapisać wpis, wybierz typ oraz najniższą dostępną kategorię.
             </div>
           )}

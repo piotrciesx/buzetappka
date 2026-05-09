@@ -62,10 +62,12 @@ export type MonthCalendarPanelProps = {
   calendarTitle?: string
   calendarSubtitle?: string
   heatmapVariant?: HeatmapVariant
+  onHeatmapVariantChange?: (value: HeatmapVariant) => void
   heatmapMode?: HeatmapMode
   onHeatmapModeChange?: (value: HeatmapMode) => void
   heatmapInverted?: boolean
   onHeatmapInvertedChange?: (value: boolean) => void
+  onResetHeatmapSettings?: () => void
   defaultHeatmapMode?: HeatmapMode
   defaultHeatmapInverted?: boolean
   heatmapStorageKey?: string

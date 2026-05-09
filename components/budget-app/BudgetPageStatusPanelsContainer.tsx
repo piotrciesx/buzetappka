@@ -236,6 +236,23 @@ export default function BudgetPageStatusPanelsContainer({
           onSimpleModeChange: setSimpleMode,
           autoExcludePartialMonths,
           onAutoExcludePartialMonthsChange: setAutoExcludePartialMonths,
+          budgetStartDate,
+          currentMonth,
+          minAllowedMonth,
+          maxAllowedMonth,
+          monthNavigationFutureLocked: isFutureMonthNavigationLocked,
+          isSavingMonthNavigationSettings,
+          monthNavigationErrorText,
+          onBudgetStartDateChange: (value: string) => {
+            setBudgetStartDate(value)
+            setMonthNavigationStartMonth(value ? value.slice(0, 7) : '')
+            setMonthNavigationErrorText('')
+          },
+          onMonthNavigationFutureLockedChange: (value: boolean) => {
+            setIsFutureMonthNavigationLocked(value)
+            setMonthNavigationErrorText('')
+          },
+          onSaveMonthNavigationSettings: handleSaveMonthNavigationSettingsWithStartDateWarning,
           draftVisibleModules,
           saveStatusText: moduleVisibilitySaveStatusText,
           userEmail,

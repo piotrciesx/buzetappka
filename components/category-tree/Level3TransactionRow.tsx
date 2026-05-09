@@ -172,6 +172,8 @@ export default function Level3TransactionRow({
 
   const amount = getAmountNumber(transaction.amount)
   const transactionKind = amount >= 0 ? 'income' : 'expense'
+  const paymentSourceSymbol =
+    paymentSourceLabels[0]?.trim().slice(0, 1).toLocaleUpperCase('pl-PL') || '–'
 
   return (
     <div
@@ -357,6 +359,18 @@ export default function Level3TransactionRow({
             </select>
           </div>
         ) : (
+          <>
+          <span
+            data-transaction-payment-symbol="true"
+            aria-label={
+              paymentSourceLabels.length > 0
+                ? `Źródło płatności: ${paymentSourceLabels.join(', ')}`
+                : 'Brak źródła płatności'
+            }
+            title={paymentSourceLabels.join(' · ') || 'Brak źródła płatności'}
+          >
+            {paymentSourceSymbol}
+          </span>
           <div data-transaction-display-grid="true">
             <b data-transaction-amount="true">{amount.toLocaleString('pl-PL')} zł</b>
             <span data-transaction-description="true">{transaction.description || 'Bez opisu'}</span>
@@ -383,6 +397,7 @@ export default function Level3TransactionRow({
               </div>
             )}
           </div>
+          </>
         )}
       </div>
 
