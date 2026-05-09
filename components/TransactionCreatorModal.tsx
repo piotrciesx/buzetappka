@@ -624,6 +624,19 @@ export default function TransactionCreatorModal(props: Props) {
               <button
                 type="button"
                 data-transaction-pin-button="true"
+                data-transaction-pinned={
+                  pinnedCategoryIds.includes(effectiveCategoryId) ? 'true' : 'false'
+                }
+                aria-label={
+                  pinnedCategoryIds.includes(effectiveCategoryId)
+                    ? 'Odepnij kategorię'
+                    : 'Przypnij kategorię'
+                }
+                title={
+                  pinnedCategoryIds.includes(effectiveCategoryId)
+                    ? 'Odepnij kategorię'
+                    : 'Przypnij kategorię'
+                }
                 style={{ ...styles.secondaryButton, marginTop: 8 }}
                 onClick={() => onTogglePinnedCategory(effectiveCategoryId)}
               >
