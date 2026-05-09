@@ -53,7 +53,7 @@ type Props = {
   onOpenSearch: (query?: string) => void
   onOpenNotifications: () => void
   onAddFromReminder: (reminder: RecurringTransaction) => void
-  onMarkRecurringRead: (reminder: RecurringTransaction) => Promise<void>
+  onSnoozeRecurring: (reminder: RecurringTransaction) => void
   onQuickAdd: () => void
   onToggleProfile: () => void
 }
@@ -88,7 +88,7 @@ export default function BudgetRightRail({
   onOpenSearch,
   onOpenNotifications,
   onAddFromReminder,
-  onMarkRecurringRead,
+  onSnoozeRecurring,
   onQuickAdd,
   onToggleProfile,
 }: Props) {
@@ -414,12 +414,11 @@ export default function BudgetRightRail({
                         </button>
                         <button
                           type="button"
-                          aria-label={`Oznacz przypomnienie ${reminder.name} jako przeczytane`}
-                          title="Oznacz jako przeczytane"
+                          aria-label={`Przypomnij za tydzień: ${reminder.name}`}
+                          title="Przypomnij za tydzień"
                           onClick={() => {
-                            void onMarkRecurringRead(reminder).then(() => {
-                              setIsNotificationsPreviewOpen(false)
-                            })
+                            onSnoozeRecurring(reminder)
+                            setIsNotificationsPreviewOpen(false)
                           }}
                         >
                           ✓
@@ -503,6 +502,35 @@ export default function BudgetRightRail({
             {activeLiveCard.value && <b>{activeLiveCard.value}</b>}
           </div>
           <p>{activeLiveCard.description}</p>
+          <div data-live-widget-viz="true" aria-hidden="true">
+            {activeLiveCard.kind === 'dashboard' ? (
+              <svg viewBox="0 0 120 34" focusable="false">
+                <path d="M4 25c14-2 18-17 31-15 12 2 15 14 29 12 16-2 19-18 34-17 8 1 13 6 18 12" />
+                <path d="M4 30h112" />
+              </svg>
+            ) : activeLiveCard.kind === 'alert' ? (
+              <div data-live-widget-mini-bars="true">
+                {[42, 68, 54, activeLiveCard.progressPercent || 78].map((value, index) => (
+                  <i key={index} style={{ height: `${Math.min(Math.max(value, 18), 100)}%` }} />
+                ))}
+              </div>
+            ) : activeLiveCard.kind === 'goal' ? (
+              <div data-live-widget-mini-heatmap="true">
+                {Array.from({ length: 14 }).map((_, index) => (
+                  <i
+                    key={index}
+                    data-active={index < Math.round(((activeLiveCard.progressPercent || 0) / 100) * 14) ? 'true' : 'false'}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div data-live-widget-mini-bars="true">
+                {[30, 46, 62, 84].map((value, index) => (
+                  <i key={index} style={{ height: `${value}%` }} />
+                ))}
+              </div>
+            )}
+          </div>
           {typeof activeLiveCard.progressPercent === 'number' && (
             <div data-live-widget-progress="true">
               <i style={{ width: `${activeLiveCard.progressPercent}%` }} />

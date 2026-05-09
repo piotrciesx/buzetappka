@@ -143,7 +143,7 @@ export default function ProfileMembersPanel({
 
   useEffect(() => {
     const currentProfile = publicProfilesByUserId[userId]
-    setDisplayNameDraft(currentProfile?.display_name || userEmail || '')
+    setDisplayNameDraft(currentProfile?.display_name || '')
     setAvatarKeyDraft(currentProfile?.avatar_key || USER_AVATARS[0]?.key || '')
   }, [publicProfilesByUserId, userEmail, userId])
 
@@ -411,7 +411,7 @@ export default function ProfileMembersPanel({
     <section style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid #e5e7eb' }}>
       <div data-user-public-profile-editor="true">
         <div data-user-public-profile-preview="true">
-          <UserAvatar avatarKey={avatarKeyDraft} label={displayNameDraft || userEmail} size="lg" />
+          <UserAvatar avatarKey={avatarKeyDraft} label={displayNameDraft || 'Użytkownik'} size="lg" />
           <div>
             <strong>{displayNameDraft || userEmail || 'Użytkownik'}</strong>
             <span>{userEmail}</span>

@@ -5,12 +5,22 @@ export type UserPublicProfile = {
 }
 
 export const USER_AVATARS = [
-  { key: 'aura', label: 'Aura', initials: 'A', color: '#2563eb' },
-  { key: 'mint', label: 'Mięta', initials: 'M', color: '#059669' },
-  { key: 'rose', label: 'Róża', initials: 'R', color: '#be123c' },
-  { key: 'sun', label: 'Słońce', initials: 'S', color: '#d97706' },
-  { key: 'violet', label: 'Violet', initials: 'V', color: '#7c3aed' },
-  { key: 'graphite', label: 'Grafit', initials: 'G', color: '#334155' },
+  { key: 'dog', label: 'Pies', color: '#2563eb' },
+  { key: 'cat', label: 'Kot', color: '#7c3aed' },
+  { key: 'fox', label: 'Lis', color: '#ea580c' },
+  { key: 'owl', label: 'Sowa', color: '#0f766e' },
+  { key: 'rocket', label: 'Rakieta', color: '#dc2626' },
+  { key: 'robot', label: 'Robot', color: '#475569' },
+  { key: 'planet', label: 'Planeta', color: '#0891b2' },
+  { key: 'coffee', label: 'Kawa', color: '#92400e' },
+  { key: 'pixel', label: 'Pixel', color: '#16a34a' },
+  { key: 'spark', label: 'Iskra', color: '#d97706' },
+  { key: 'aura', label: 'Aura', color: '#2563eb' },
+  { key: 'mint', label: 'Mięta', color: '#059669' },
+  { key: 'rose', label: 'Róża', color: '#be123c' },
+  { key: 'sun', label: 'Słońce', color: '#d97706' },
+  { key: 'violet', label: 'Violet', color: '#7c3aed' },
+  { key: 'graphite', label: 'Grafit', color: '#334155' },
 ]
 
 export type CategoryIconKey =
@@ -35,6 +45,7 @@ export type CategoryIconKey =
   | 'books'
   | 'sport'
   | 'gym'
+  | 'gaming'
   | 'entertainment'
   | 'cinema'
   | 'gift'
@@ -45,6 +56,7 @@ export type CategoryIconKey =
   | 'cash'
   | 'card'
   | 'bank'
+  | 'investments'
   | 'restaurant'
   | 'coffee'
   | 'fuel'
@@ -72,6 +84,7 @@ export const CATEGORY_ICONS: Array<{ key: CategoryIconKey; label: string }> = [
   { key: 'books', label: 'Książki' },
   { key: 'sport', label: 'Sport' },
   { key: 'gym', label: 'Siłownia' },
+  { key: 'gaming', label: 'Gaming' },
   { key: 'entertainment', label: 'Rozrywka' },
   { key: 'cinema', label: 'Kino' },
   { key: 'gift', label: 'Prezent' },
@@ -82,6 +95,7 @@ export const CATEGORY_ICONS: Array<{ key: CategoryIconKey; label: string }> = [
   { key: 'cash', label: 'Gotówka' },
   { key: 'card', label: 'Karta' },
   { key: 'bank', label: 'Bank' },
+  { key: 'investments', label: 'Inwestycje' },
   { key: 'restaurant', label: 'Restauracja' },
   { key: 'coffee', label: 'Kawa' },
   { key: 'fuel', label: 'Paliwo' },

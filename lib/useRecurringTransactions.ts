@@ -12,7 +12,6 @@ import {
   mapRecurringReminderMonthStatusRow,
   mapRecurringTransactionRow,
 } from './recurringTransactions'
-import { getNextMonthText } from './dateUtils'
 
 type SaveRecurringInput = Omit<RecurringTransaction, 'id' | 'profile_id' | 'created_at'> & {
   id?: string
@@ -45,15 +44,11 @@ export function useRecurringTransactions({ profileId, selectedMonth }: UseRecurr
     }
 
     const monthStartDate = `${selectedMonth}-01`
-    const nextMonthStartDate = `${getNextMonthText(selectedMonth)}-01`
 
     const { data: recurringData, error: recurringError } = await supabase
       .from('recurring_transactions')
       .select('*')
       .eq('profile_id', profileId)
-      .eq('status', 'active')
-      .or(`start_date.is.null,start_date.lt.${nextMonthStartDate}`)
-      .or(`end_date.is.null,end_date.gte.${monthStartDate}`)
       .order('created_at', { ascending: false })
 
     if (recurringError) {
@@ -77,8 +72,6 @@ export function useRecurringTransactions({ profileId, selectedMonth }: UseRecurr
       .from('recurring_transaction_executions')
       .select('*')
       .in('recurring_transaction_id', recurringIds)
-      .gte('generated_for_date', monthStartDate)
-      .lt('generated_for_date', nextMonthStartDate)
       .order('generated_for_date', { ascending: false })
 
     if (executionsError) {

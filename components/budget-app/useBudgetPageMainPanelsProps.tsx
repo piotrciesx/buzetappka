@@ -41,6 +41,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     deleteDraft,
     deleteFinancialGoal,
     deletePaymentSource,
+    deleteRecurringTransaction,
     descriptionSuggestions,
     drafts,
     draftsStatusText,
@@ -104,6 +105,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     handleRestoreCategory,
     handleRestoreTransaction,
     handleResetHeatmapSettings,
+    handleSnoozeRecurringReminder,
     handleToggleSelectedMonthExcludedWithConfirm,
     handleUndoLastAction,
     handleUndoScheduledHide,
@@ -440,13 +442,10 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
           transactionsById: activeTransactionsById,
           categoryOptions: finalCategoryOptions,
           onSaveRecurringTransaction: saveRecurringTransaction,
-          onMarkRecurringRead: async (recurring: any) => {
-            await saveRecurringReminderMonthStatus({
-              reminderId: recurring.id,
-              month: selectedMonth,
-              status: 'read',
-            })
+          onDeleteRecurringTransaction: async (recurring: any) => {
+            await deleteRecurringTransaction(recurring.id)
           },
+          onSnoozeRecurring: handleSnoozeRecurringReminder,
           onOpenCreateFromRecurring: openReminderTransactionCreator,
           onOpenCreateFromExecution: (recurring: any, execution: any) => {
             openReminderTransactionCreator(recurring)

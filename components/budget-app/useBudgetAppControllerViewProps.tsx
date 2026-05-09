@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { SaveBudgetLimitInput } from '../../lib/useBudgetLimits'
 import { getCategoryPathLabel } from '../../lib/budgetPageHelpers'
 import { getPendingRecurringTransactions } from '../../lib/recurringTransactions'
@@ -19,6 +19,25 @@ const getBudgetLimitKey = (categoryId: string | null) => categoryId || GLOBAL_BU
 const zeroForCategory = () => 0
 const noRootCategory = () => null
 const fallbackSignedAmount = () => 0
+const getSnoozeStorageKey = (profileId: string, month: string) =>
+  `budget-recurring-snooze:${profileId}:${month}`
+
+const getLastDateOfMonth = (monthText: string) => {
+  const [year, month] = monthText.split('-').map(Number)
+  const lastDay = new Date(year, month, 0).getDate()
+  return `${monthText}-${String(lastDay).padStart(2, '0')}`
+}
+
+const getSnoozeTargetDate = (monthText: string) => {
+  const today = new Date()
+  const target = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7)
+  const targetText = `${target.getFullYear()}-${String(target.getMonth() + 1).padStart(2, '0')}-${String(
+    target.getDate()
+  ).padStart(2, '0')}`
+  const monthEnd = getLastDateOfMonth(monthText)
+
+  return targetText.slice(0, 7) === monthText && targetText <= monthEnd ? targetText : monthEnd
+}
 
 export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewPropsContext) {
   const {
@@ -40,6 +59,47 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
   } = ctx
 
   void ignoredEditedBudgetLimitView
+
+  const [recurringSnoozes, setRecurringSnoozes] = useState<Record<string, string>>({})
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+    if (!ctx.profileId || !selectedMonth || typeof window === 'undefined') {
+      setRecurringSnoozes({})
+      return
+    }
+
+    try {
+      const stored = window.localStorage.getItem(getSnoozeStorageKey(ctx.profileId, selectedMonth))
+      setRecurringSnoozes(stored ? JSON.parse(stored) : {})
+    } catch {
+      setRecurringSnoozes({})
+    }
+    }, 0)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [ctx.profileId, selectedMonth])
+
+  const handleSnoozeRecurringReminder = useCallback(
+    (recurring: { id: string; name?: string }) => {
+      if (!ctx.profileId || !selectedMonth || typeof window === 'undefined') {
+        return
+      }
+
+      const targetDate = getSnoozeTargetDate(selectedMonth)
+      const nextSnoozes = {
+        ...recurringSnoozes,
+        [recurring.id]: targetDate,
+      }
+      setRecurringSnoozes(nextSnoozes)
+      window.localStorage.setItem(
+        getSnoozeStorageKey(ctx.profileId, selectedMonth),
+        JSON.stringify(nextSnoozes)
+      )
+      alert(`Przypomnienie wróci ${targetDate}.`)
+    },
+    [ctx.profileId, recurringSnoozes, selectedMonth]
+  )
 
   const editedBudgetLimitView = useMemo(() => {
     if (budgetLimitEditorCategoryId === undefined) {
@@ -162,6 +222,7 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     getRootLevel1IdForCategory,
     getSumForCategoryForSelectedMonth,
     getCategoryCountForSelectedMonth,
+    handleSnoozeRecurringReminder,
   }
 
   const budgetPageOverlayProps = useBudgetOverlayProps({
@@ -388,6 +449,31 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     [activeBudgetLimitAlerts, categoriesById, effectiveVisibleModules.budgetLimits]
   )
 
+  const rightRailRecurringAlerts = useMemo(() => {
+    if (!effectiveVisibleModules.recurringTransactions) {
+      return []
+    }
+
+    const todayText = new Date().toISOString().slice(0, 10)
+
+    return getPendingRecurringTransactions(
+      ctx.recurringTransactions,
+      ctx.recurringExecutions,
+      selectedMonth,
+      ctx.recurringReminderMonthStatuses
+    ).filter((recurring: any) => {
+      const snoozedUntil = recurringSnoozes[recurring.id]
+      return !snoozedUntil || snoozedUntil <= todayText
+    })
+  }, [
+    ctx.recurringExecutions,
+    ctx.recurringReminderMonthStatuses,
+    ctx.recurringTransactions,
+    effectiveVisibleModules.recurringTransactions,
+    recurringSnoozes,
+    selectedMonth,
+  ])
+
   const rightRailProps = {
     selectedMonth,
     isSelectedMonthLocked: ctx.isSelectedMonthLocked,
@@ -397,22 +483,8 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     incomeTotal: budgetWorkspaceSummary.selectedMonthIncomeTotal,
     expenseTotal: budgetWorkspaceSummary.selectedMonthExpenseTotal,
     draftCount: ctx.drafts.length,
-    recurringCount: effectiveVisibleModules.recurringTransactions
-      ? getPendingRecurringTransactions(
-          ctx.recurringTransactions,
-          ctx.recurringExecutions,
-          selectedMonth,
-          ctx.recurringReminderMonthStatuses
-        ).length
-      : 0,
-    recurringAlerts: effectiveVisibleModules.recurringTransactions
-      ? getPendingRecurringTransactions(
-          ctx.recurringTransactions,
-          ctx.recurringExecutions,
-          selectedMonth,
-          ctx.recurringReminderMonthStatuses
-      )
-      : [],
+    recurringCount: rightRailRecurringAlerts.length,
+    recurringAlerts: rightRailRecurringAlerts,
     budgetAlerts: rightRailBudgetAlerts,
     financialGoals: rightRailFinancialGoals,
     userDisplayName,
@@ -434,13 +506,7 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
       ctx.setActiveUtilityPanel('recurringTransactions')
     },
     onAddFromReminder: ctx.openReminderTransactionCreator,
-    onMarkRecurringRead: async (recurring: any) => {
-      await ctx.saveRecurringReminderMonthStatus({
-        reminderId: recurring.id,
-        month: selectedMonth,
-        status: 'read',
-      })
-    },
+    onSnoozeRecurring: handleSnoozeRecurringReminder,
     onQuickAdd: () => ctx.openBlankFloatingTransactionCreator(null),
     onToggleProfile: () => {
       ctx.setIsDashboardPanelOpen(false)

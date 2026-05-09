@@ -1292,10 +1292,22 @@
 }
 
 [data-category-icon-option="true"] [data-category-icon="true"] {
-  width: 28px !important;
-  height: 28px !important;
+  width: 32px !important;
+  height: 32px !important;
   border-radius: 10px !important;
   background: #ffffff !important;
+}
+
+[data-category-icon-option="true"] [data-category-icon="true"] svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+[data-category-icon-option="true"]:hover,
+[data-category-icon-option="clear"]:hover {
+  border-color: rgba(148, 163, 184, 0.9) !important;
+  background: #ffffff !important;
+  transform: translateY(-1px) !important;
 }
 
 [data-category-icon-empty="true"] {
@@ -1387,19 +1399,25 @@
 }
 
 [data-user-avatar-picker="true"] {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 7px !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)) !important;
+  gap: 9px !important;
 }
 
 [data-user-avatar-picker="true"] button {
-  width: 34px !important;
-  min-width: 34px !important;
-  height: 34px !important;
+  width: 100% !important;
+  min-width: 40px !important;
+  height: 40px !important;
   padding: 0 !important;
   border: 1px solid rgba(203, 213, 225, 0.78) !important;
-  border-radius: 999px !important;
+  border-radius: 12px !important;
   background: rgba(255, 255, 255, 0.72) !important;
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease !important;
+}
+
+[data-user-avatar-picker="true"] button:hover {
+  border-color: rgba(148, 163, 184, 0.92) !important;
+  transform: translateY(-1px) !important;
 }
 
 [data-user-avatar-picker="true"] button[data-active="true"] {

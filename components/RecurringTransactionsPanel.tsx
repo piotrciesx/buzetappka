@@ -13,7 +13,6 @@ import {
   getInstallmentNumberForMonth,
   getInstallmentSummary,
   getMonthCycleDate,
-  getPendingRecurringTransactions,
   getRecurringDisplayLabel,
   getRecurringEffectiveStatus,
   getRecurringFrequencyLabel,
@@ -58,7 +57,8 @@ type Props = {
       referenceMonth?: string
     }
   ) => Promise<void>
-  onMarkRecurringRead: (recurring: RecurringTransaction) => Promise<void>
+  onDeleteRecurringTransaction: (recurring: RecurringTransaction) => Promise<void>
+  onSnoozeRecurring?: (recurring: RecurringTransaction) => void
   onOpenCreateFromRecurring: (recurring: RecurringTransaction) => void
   onOpenCreateFromExecution?: (
     recurring: RecurringTransaction,
@@ -275,7 +275,8 @@ export default function RecurringTransactionsPanel(props: Props) {
     paymentSources,
     categoryOptions,
     onSaveRecurringTransaction,
-    onMarkRecurringRead,
+    onDeleteRecurringTransaction,
+    onSnoozeRecurring,
     onOpenCreateFromRecurring,
     styles,
   } = props
@@ -300,25 +301,6 @@ export default function RecurringTransactionsPanel(props: Props) {
       )
     )
 
-  const pendingRecurring = useMemo(() => {
-    return getPendingRecurringTransactions(
-      recurringTransactions,
-      recurringExecutions,
-      selectedMonth,
-      recurringReminderMonthStatuses
-    ).filter(
-      (item) =>
-        getRecurringEffectiveStatus(item, recurringExecutions, selectedMonth) === 'active' &&
-        !hasLinkedTransactionInMonth(item.id)
-    )
-  }, [
-    recurringExecutions,
-    recurringReminderMonthStatuses,
-    recurringTransactions,
-    selectedMonth,
-    linkedTransactionsByReminderId,
-  ])
-
   const activeRecurring = useMemo(() => {
     return recurringTransactions.filter(
       (item) => getRecurringEffectiveStatus(item, recurringExecutions, selectedMonth) === 'active'
@@ -330,15 +312,7 @@ export default function RecurringTransactionsPanel(props: Props) {
       (item) => getRecurringEffectiveStatus(item, recurringExecutions, selectedMonth) !== 'active'
     )
   }, [recurringExecutions, recurringTransactions, selectedMonth])
-  const pendingRecurringIds = useMemo(
-    () => new Set(pendingRecurring.map((item) => item.id)),
-    [pendingRecurring]
-  )
-  const remainingActiveRecurring = useMemo(
-    () => activeRecurring.filter((item) => !pendingRecurringIds.has(item.id)),
-    [activeRecurring, pendingRecurringIds]
-  )
-
+  const remainingActiveRecurring: RecurringTransaction[] = []
   const resetForm = () => {
     setFormState(getInitialFormState())
     setIsFormOpen(false)
@@ -416,7 +390,19 @@ export default function RecurringTransactionsPanel(props: Props) {
     }
   }
 
-  const renderReminderCard = (recurring: RecurringTransaction, mode: 'pending' | 'active' | 'archived') => {
+  const handleDeleteRecurring = async (recurring: RecurringTransaction) => {
+    const confirmed = confirm(
+      `Czy na pewno usunąć stałą płatność "${recurring.name}"? Istniejące wpisy w historii zostaną zachowane.`
+    )
+
+    if (!confirmed) {
+      return
+    }
+
+    await onDeleteRecurringTransaction(recurring)
+  }
+
+  const renderReminderCard = (recurring: RecurringTransaction, mode: 'active' | 'archived') => {
     const linkedTransactions = linkedTransactionsByReminderId[recurring.id] || []
     const linkedSum = linkedTransactions.reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0)
     const lastLinkedTransaction = [...linkedTransactions].sort((left, right) =>
@@ -443,28 +429,37 @@ export default function RecurringTransactionsPanel(props: Props) {
                 Edytuj
               </button>
             )}
-            {mode === 'pending' && !isSelectedMonthLocked && (
-              <>
-                <button
-                  type="button"
-                  style={{ ...styles.primaryButton, ...lightButtonStyle }}
-                  onClick={() => onOpenCreateFromRecurring(recurring)}
-                >
-                  Dodaj wpis
-                </button>
-                <button
-                  type="button"
-                  style={{ ...styles.secondaryButton, ...lightButtonStyle }}
-                  onClick={() => void onMarkRecurringRead(recurring)}
-                >
-                  Oznacz jako przeczytane
-                </button>
-              </>
+            {mode === 'active' && !isSelectedMonthLocked && (
+              <button
+                type="button"
+                style={{ ...styles.primaryButton, ...lightButtonStyle }}
+                onClick={() => onOpenCreateFromRecurring(recurring)}
+              >
+                Dodaj wpis
+              </button>
+            )}
+            {mode === 'active' && onSnoozeRecurring && (
+              <button
+                type="button"
+                style={{ ...styles.secondaryButton, ...lightButtonStyle }}
+                onClick={() => onSnoozeRecurring(recurring)}
+              >
+                Przypomnij za tydzień
+              </button>
+            )}
+            {mode === 'active' && (
+              <button
+                type="button"
+                style={{ ...styles.dangerButton, ...lightButtonStyle }}
+                onClick={() => void handleDeleteRecurring(recurring)}
+              >
+                Usuń
+              </button>
             )}
           </div>
         </div>
 
-        {hasDuplicate && mode === 'pending' && (
+        {hasDuplicate && mode === 'active' && (
           <div style={warningStyle}>
             W tym miesiącu istnieje już wpis powiązany z tym przypomnieniem. Możesz dodać kolejny,
             jeśli to celowe.
@@ -785,14 +780,14 @@ export default function RecurringTransactionsPanel(props: Props) {
 
       <section style={listStyle}>
         <div style={sectionTitleStyle}>Aktywne przypomnienia</div>
-        {pendingRecurring.length === 0 ? (
+        {activeRecurring.length === 0 ? (
           <div style={styles.emptyStateCard}>Brak przypomnień wymagających decyzji w tym miesiącu.</div>
         ) : (
-          pendingRecurring.map((recurring) => renderReminderCard(recurring, 'pending'))
+          activeRecurring.map((recurring) => renderReminderCard(recurring, 'active'))
         )}
       </section>
 
-      {remainingActiveRecurring.length > 0 && (
+      {false && remainingActiveRecurring.length > 0 && (
         <section style={listStyle}>
           <div style={sectionTitleStyle}>Pozostałe przypomnienia</div>
           {remainingActiveRecurring.map((recurring) => renderReminderCard(recurring, 'active'))}

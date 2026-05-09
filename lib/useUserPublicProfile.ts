@@ -5,6 +5,7 @@ import { supabase } from './supabaseClient'
 import type { UserPublicProfile } from './userAppearance'
 
 export function useUserPublicProfile(userId: string, fallbackEmail = '') {
+  void fallbackEmail
   const [profile, setProfile] = useState<UserPublicProfile | null>(null)
   const [isAvailable, setIsAvailable] = useState(true)
 
@@ -29,7 +30,11 @@ export function useUserPublicProfile(userId: string, fallbackEmail = '') {
   }, [isAvailable, userId])
 
   useEffect(() => {
-    void loadProfile()
+    const timeoutId = window.setTimeout(() => {
+      void loadProfile()
+    }, 0)
+
+    return () => window.clearTimeout(timeoutId)
   }, [loadProfile])
 
   useEffect(() => {
@@ -65,8 +70,8 @@ export function useUserPublicProfile(userId: string, fallbackEmail = '') {
   )
 
   const displayName = useMemo(
-    () => profile?.display_name?.trim() || fallbackEmail || 'Użytkownik',
-    [fallbackEmail, profile?.display_name]
+    () => profile?.display_name?.trim() || 'Użytkownik',
+    [profile?.display_name]
   )
 
   return {
