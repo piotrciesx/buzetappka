@@ -197,6 +197,10 @@ export default function BudgetRightRail({
             : balanceState === 'negative'
               ? 'expense'
               : 'neutral',
+        progressPercent:
+          incomeTotal + expenseTotal > 0
+            ? Math.round((incomeTotal / (incomeTotal + expenseTotal)) * 100)
+            : undefined,
       },
       {
         id: 'dashboard-entries',
@@ -394,22 +398,26 @@ export default function BudgetRightRail({
                       <div data-rail-reminder-actions="true">
                         <button
                           type="button"
+                          aria-label={`Dodaj wpis z przypomnienia ${reminder.name}`}
+                          title="Dodaj wpis"
                           onClick={() => {
                             setIsNotificationsPreviewOpen(false)
                             onAddFromReminder(reminder)
                           }}
                         >
-                          Dodaj wpis
+                          +
                         </button>
                         <button
                           type="button"
+                          aria-label={`Oznacz przypomnienie ${reminder.name} jako przeczytane`}
+                          title="Oznacz jako przeczytane"
                           onClick={() => {
                             void onMarkRecurringRead(reminder).then(() => {
                               setIsNotificationsPreviewOpen(false)
                             })
                           }}
                         >
-                          Oznacz jako przeczytane
+                          ✓
                         </button>
                       </div>
                     </div>
@@ -418,16 +426,6 @@ export default function BudgetRightRail({
               ) : (
                 <p>Brak aktywnych przypomnień.</p>
               )}
-              <button
-                type="button"
-                data-rail-reminders-open-all="true"
-                onClick={() => {
-                  setIsNotificationsPreviewOpen(false)
-                  onOpenNotifications()
-                }}
-              >
-                Pokaż wszystkie
-              </button>
             </div>
           )}
         </div>

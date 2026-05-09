@@ -134,12 +134,12 @@
   top: 72px;
   right: 28px;
   z-index: 12000;
-  width: 260px;
+  width: 250px;
   max-width: calc(100vw - 24px);
   max-height: calc(100dvh - 92px);
   display: grid;
-  gap: 7px;
-  padding: 12px;
+  gap: 6px;
+  padding: 10px;
   overflow: auto;
   border: 1px solid rgba(203, 213, 225, 0.9);
   border-radius: 14px;
@@ -196,13 +196,15 @@
 
 [data-rail-reminder-list="true"] {
   display: grid;
-  gap: 8px;
+  gap: 6px;
 }
 
 [data-rail-reminder-item="true"] {
   display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
   gap: 8px;
-  padding: 9px;
+  padding: 7px 8px;
   border: 1px solid rgba(226, 232, 240, 0.92);
   border-radius: 12px;
   background: rgba(248, 250, 252, 0.76);
@@ -217,7 +219,7 @@
 [data-rail-reminder-main="true"] span {
   overflow: hidden;
   color: #172033;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 720;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -225,24 +227,39 @@
 
 [data-rail-reminder-actions="true"] {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  flex-wrap: nowrap;
+  gap: 5px;
 }
 
-[data-rail-reminder-actions="true"] button,
-[data-rail-reminders-open-all="true"] {
-  min-height: 28px !important;
-  width: auto !important;
-  min-width: 0 !important;
-  padding: 0 9px !important;
+[data-rail-reminder-actions="true"] button {
+  width: 26px !important;
+  min-width: 26px !important;
+  height: 26px !important;
+  min-height: 26px !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 0 !important;
   border-radius: 999px !important;
-  font-size: 11px !important;
-  font-weight: 680 !important;
+  font-size: 15px !important;
+  font-weight: 820 !important;
+  line-height: 1 !important;
+}
+
+[data-rail-reminder-actions="true"] button:first-child {
+  border-color: rgba(34, 197, 94, 0.3) !important;
+  background: rgba(240, 253, 244, 0.92) !important;
+  color: #15803d !important;
+}
+
+[data-rail-reminder-actions="true"] button:last-child {
+  border-color: rgba(59, 130, 246, 0.28) !important;
+  background: rgba(239, 246, 255, 0.92) !important;
+  color: #1d4ed8 !important;
 }
 
 [data-rail-reminders-open-all="true"] {
-  justify-self: start;
-  margin-top: 2px;
+  display: none !important;
+  min-width: 0 !important;
 }
 
 [data-context-card="summary"] {
@@ -411,6 +428,39 @@
   animation: liveWidgetSoftIn 220ms ease both;
 }
 
+[data-live-widget-card="true"]::before {
+  width: 30px !important;
+  height: 30px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(203, 213, 225, 0.68) !important;
+  border-radius: 12px !important;
+  background: rgba(248, 250, 252, 0.82) !important;
+  color: #475569 !important;
+  font-size: 15px !important;
+  font-weight: 820 !important;
+}
+
+[data-live-widget-card="true"][data-live-card-kind="payment"]::before {
+  content: "○";
+  color: #2563eb !important;
+}
+
+[data-live-widget-card="true"][data-live-card-kind="alert"]::before {
+  content: "!";
+  color: #b45309 !important;
+}
+
+[data-live-widget-card="true"][data-live-card-kind="goal"]::before {
+  content: "✓";
+  color: #15803d !important;
+}
+
+[data-live-widget-card="true"][data-live-card-kind="dashboard"]::before {
+  content: "∑";
+  color: #334155 !important;
+}
+
 [data-live-widget-eyebrow="true"] {
   width: max-content !important;
   max-width: 100% !important;
@@ -487,6 +537,15 @@
   height: 100% !important;
   border-radius: inherit !important;
   background: linear-gradient(90deg, #86efac, #22c55e) !important;
+}
+
+[data-live-widget-card="true"][data-live-card-kind="dashboard"] [data-live-widget-progress="true"] {
+  height: 9px !important;
+}
+
+[data-live-widget-card="true"][data-live-card-kind="dashboard"] [data-live-widget-progress="true"] i {
+  background: linear-gradient(90deg, #86efac, #bbf7d0) !important;
+  box-shadow: 999px 0 0 #fecdd3 !important;
 }
 
 [data-live-widget-card="true"][data-live-card-tone="warning"] [data-live-widget-progress="true"] i {
