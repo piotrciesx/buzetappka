@@ -33,7 +33,7 @@ export default function MainWorkspaceBottomDeck({
   const today = new Date()
   const currentMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`
   const currentDay = today.getDate()
-  const visibleRecentTransactions = recentTransactions.slice(0, 8)
+  const visibleRecentTransactions = recentTransactions.slice(0, 6)
 
   return (
     <section data-main-workspace-deck="true" aria-label="Kalendarz i ostatnie wpisy">

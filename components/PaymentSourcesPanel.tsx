@@ -12,36 +12,193 @@ import {
 
 const panelStyle = {
   marginBottom: 20,
-  background: '#ffffff',
-  border: '1px solid #e5e7eb',
-  borderRadius: 14,
-  padding: 16,
-  boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+  display: 'grid',
+  gap: 14,
+  background: 'transparent',
+  border: 0,
+  borderRadius: 0,
+  padding: 0,
+  boxShadow: 'none',
 } as const
 
 const cardStyle = {
-  border: '1px solid #e5e7eb',
+  border: '1px solid rgba(226, 232, 240, 0.92)',
   borderRadius: 12,
-  padding: 14,
-  background: '#ffffff',
+  padding: 12,
+  background: 'rgba(255, 255, 255, 0.72)',
 } as const
 
 const settingsGridStyle = {
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-  gap: 12,
-  marginTop: 12,
+  gap: 10,
 } as const
 
 const badgeStyle = {
   display: 'inline-flex',
   alignItems: 'center',
   gap: 6,
-  padding: '4px 8px',
+  padding: '3px 8px',
   borderRadius: 999,
-  fontSize: 12,
-  fontWeight: 600,
+  fontSize: 11,
+  fontWeight: 620,
 } as const
+
+const headerStyle = {
+  display: 'grid',
+  gap: 4,
+} as const
+
+const titleStyle = {
+  color: '#172033',
+  fontSize: 15,
+  fontWeight: 680,
+  letterSpacing: 0,
+} as const
+
+const subtitleStyle = {
+  maxWidth: 620,
+  color: '#64748b',
+  fontSize: 12,
+  lineHeight: 1.45,
+} as const
+
+const settingsCardStyle = {
+  display: 'grid',
+  gap: 10,
+  alignContent: 'start',
+  minHeight: 174,
+  padding: 12,
+  border: '1px solid rgba(226, 232, 240, 0.92)',
+  borderRadius: 12,
+  background: 'rgba(255, 255, 255, 0.64)',
+} as const
+
+const settingsTitleStyle = {
+  color: '#172033',
+  fontSize: 13,
+  fontWeight: 680,
+} as const
+
+const checkboxLabelStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 8,
+  color: '#475569',
+  fontSize: 12,
+  fontWeight: 560,
+  lineHeight: 1.35,
+} as const
+
+const checkboxStyle = {
+  width: 15,
+  height: 15,
+  accentColor: '#2563eb',
+} as const
+
+const fieldStyle = {
+  minWidth: 0,
+  display: 'grid',
+  gap: 5,
+} as const
+
+const fullInputStyle: CSSProperties = {
+  width: '100%',
+  minWidth: 0,
+}
+
+const lightButtonStyle = {
+  minHeight: 30,
+  borderRadius: 999,
+  padding: '0 10px',
+  border: '1px solid rgba(203, 213, 225, 0.82)',
+  background: 'rgba(255, 255, 255, 0.68)',
+  color: '#475569',
+  fontSize: 12,
+  fontWeight: 580,
+  boxShadow: 'none',
+} as const
+
+const lightDangerButtonStyle = {
+  ...lightButtonStyle,
+  borderColor: 'rgba(248, 113, 113, 0.34)',
+  background: 'rgba(254, 242, 242, 0.66)',
+  color: '#b91c1c',
+} as const
+
+const primaryActionStyle = {
+  minHeight: 32,
+  borderRadius: 999,
+  padding: '0 12px',
+  fontSize: 12,
+  fontWeight: 640,
+} as const
+
+const sourceFormStyle = {
+  display: 'grid',
+  gridTemplateColumns: 'minmax(180px, 1.4fr) minmax(130px, 0.8fr) 76px 64px minmax(96px, auto) minmax(96px, auto) auto auto',
+  alignItems: 'end',
+  gap: 9,
+  padding: 12,
+  border: '1px solid rgba(226, 232, 240, 0.92)',
+  borderRadius: 12,
+  background: 'rgba(248, 250, 252, 0.62)',
+} as const
+
+const listStyle = {
+  display: 'grid',
+  gap: 10,
+} as const
+
+const sourceHeaderStyle = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  gap: 12,
+  flexWrap: 'wrap' as const,
+} as const
+
+const sourceNameStyle = {
+  color: '#172033',
+  fontSize: 14,
+  fontWeight: 680,
+} as const
+
+const sourceMetaStyle = {
+  marginTop: 3,
+  color: '#64748b',
+  fontSize: 12,
+} as const
+
+const sourceStatsGridStyle = {
+  display: 'grid',
+  gap: 8,
+  gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+  marginTop: 10,
+} as const
+
+const sourceStatStyle = {
+  padding: '8px 9px',
+  border: '1px solid rgba(226, 232, 240, 0.9)',
+  borderRadius: 10,
+  background: 'rgba(248, 250, 252, 0.7)',
+  color: '#475569',
+  fontSize: 12,
+} as const
+
+const responsivePaymentSourcesStyle = `
+  @media (max-width: 980px) {
+    [data-payment-source-form="true"] {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+  }
+
+  @media (max-width: 560px) {
+    [data-payment-source-form="true"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+`
 
 type PaymentSourceStats = {
   sourceId: string
@@ -132,18 +289,22 @@ export default function PaymentSourcesPanel(props: Props) {
 
   return (
     <section style={panelStyle}>
-      <div style={styles.sectionTitle}>Źródła płatności i konta</div>
-      <div style={{ ...styles.pageSubtitle, marginBottom: 0 }}>
-        Osobno konfigurujesz listy dla przychodów i wydatków oraz decydujesz, czy pole ma być
-        widoczne w kreatorze.
+      <style>{responsivePaymentSourcesStyle}</style>
+      <div style={headerStyle}>
+        <div style={titleStyle}>Źródła płatności i konta</div>
+        <div style={subtitleStyle}>
+          Osobno konfigurujesz listy dla przychodów i wydatków oraz decydujesz, czy pole ma być
+          widoczne w kreatorze.
+        </div>
       </div>
 
       <div style={settingsGridStyle}>
-        <div style={styles.infoBox}>
-          <div style={{ fontWeight: 600, marginBottom: 10 }}>Przychody</div>
+        <div style={settingsCardStyle}>
+          <div style={settingsTitleStyle}>Przychody</div>
 
-          <label style={styles.sortLabel}>
+          <label style={checkboxLabelStyle}>
             <input
+              style={checkboxStyle}
               type="checkbox"
               checked={paymentSourceSettings.showIncomePaymentSource}
               onChange={async (event) => {
@@ -159,13 +320,13 @@ export default function PaymentSourcesPanel(props: Props) {
             Pokaż pole źródła w kreatorze przychodów
           </label>
 
-          <div style={{ marginTop: 10 }}>
+          <div style={fieldStyle}>
             <label htmlFor="income-default-payment-source" style={styles.sortLabel}>
               Domyślne źródło dla przychodów
             </label>
             <select
               id="income-default-payment-source"
-              style={styles.input}
+              style={{ ...styles.input, ...fullInputStyle }}
               value={paymentSourceSettings.defaultIncomePaymentSourceId || ''}
               onChange={async (event) => {
                 setIsConfigSaving(true)
@@ -191,7 +352,7 @@ export default function PaymentSourcesPanel(props: Props) {
 
           <button
             type="button"
-            style={{ ...styles.secondaryButton, marginTop: 10 }}
+            style={lightButtonStyle}
             disabled={isConfigSaving}
             onClick={async () => {
               setIsConfigSaving(true)
@@ -207,11 +368,12 @@ export default function PaymentSourcesPanel(props: Props) {
           </button>
         </div>
 
-        <div style={styles.infoBox}>
-          <div style={{ fontWeight: 600, marginBottom: 10 }}>Wydatki</div>
+        <div style={settingsCardStyle}>
+          <div style={settingsTitleStyle}>Wydatki</div>
 
-          <label style={styles.sortLabel}>
+          <label style={checkboxLabelStyle}>
             <input
+              style={checkboxStyle}
               type="checkbox"
               checked={paymentSourceSettings.showExpensePaymentSource}
               onChange={async (event) => {
@@ -227,13 +389,13 @@ export default function PaymentSourcesPanel(props: Props) {
             Pokaż pole źródła w kreatorze wydatków
           </label>
 
-          <div style={{ marginTop: 10 }}>
+          <div style={fieldStyle}>
             <label htmlFor="expense-default-payment-source" style={styles.sortLabel}>
               Domyślne źródło dla wydatków
             </label>
             <select
               id="expense-default-payment-source"
-              style={styles.input}
+              style={{ ...styles.input, ...fullInputStyle }}
               value={paymentSourceSettings.defaultExpensePaymentSourceId || ''}
               onChange={async (event) => {
                 setIsConfigSaving(true)
@@ -259,7 +421,7 @@ export default function PaymentSourcesPanel(props: Props) {
 
           <button
             type="button"
-            style={{ ...styles.secondaryButton, marginTop: 10 }}
+            style={lightButtonStyle}
             disabled={isConfigSaving}
             onClick={async () => {
               setIsConfigSaving(true)
@@ -276,52 +438,65 @@ export default function PaymentSourcesPanel(props: Props) {
         </div>
       </div>
 
-      <div style={{ ...styles.formRow, marginTop: 12 }}>
-        <input
-          style={styles.input}
-          placeholder="np. Karta Visa, Gotówka, Konto firmowe"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-        />
-
-        <select
-          style={styles.input}
-          value={type}
-          onChange={(event) => {
-            const nextType = event.target.value as PaymentSourceType
-            setType(nextType)
-
-            if (!emoji.trim() || emoji === DEFAULT_PAYMENT_SOURCE_EMOJI[type]) {
-              setEmoji(DEFAULT_PAYMENT_SOURCE_EMOJI[nextType])
-            }
-
-            if (!color.trim() || color === DEFAULT_PAYMENT_SOURCE_COLOR[type]) {
-              setColor(DEFAULT_PAYMENT_SOURCE_COLOR[nextType])
-            }
-          }}
-        >
-          <option value="cash">Gotówka</option>
-          <option value="card">Karta</option>
-          <option value="account">Konto</option>
-          <option value="other">Inne</option>
-        </select>
-
-        <input
-          style={{ ...styles.smallInput, width: 90 }}
-          placeholder="Emoji"
-          value={emoji}
-          onChange={(event) => setEmoji(event.target.value)}
-        />
-
-        <input
-          style={{ ...styles.smallInput, width: 120 }}
-          type="color"
-          value={color}
-          onChange={(event) => setColor(event.target.value)}
-        />
-
-        <label style={styles.sortLabel}>
+      <div data-payment-source-form="true" style={sourceFormStyle}>
+        <div style={fieldStyle}>
+          <label style={styles.sortLabel}>Nazwa</label>
           <input
+            style={{ ...styles.input, ...fullInputStyle }}
+            placeholder="np. Karta Visa, Gotówka, Konto firmowe"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
+        </div>
+
+        <div style={fieldStyle}>
+          <label style={styles.sortLabel}>Typ</label>
+          <select
+            style={{ ...styles.input, ...fullInputStyle }}
+            value={type}
+            onChange={(event) => {
+              const nextType = event.target.value as PaymentSourceType
+              setType(nextType)
+
+              if (!emoji.trim() || emoji === DEFAULT_PAYMENT_SOURCE_EMOJI[type]) {
+                setEmoji(DEFAULT_PAYMENT_SOURCE_EMOJI[nextType])
+              }
+
+              if (!color.trim() || color === DEFAULT_PAYMENT_SOURCE_COLOR[type]) {
+                setColor(DEFAULT_PAYMENT_SOURCE_COLOR[nextType])
+              }
+            }}
+          >
+            <option value="cash">Gotówka</option>
+            <option value="card">Karta</option>
+            <option value="account">Konto</option>
+            <option value="other">Inne</option>
+          </select>
+        </div>
+
+        <div style={fieldStyle}>
+          <label style={styles.sortLabel}>Ikonka</label>
+          <input
+            style={{ ...styles.smallInput, width: '100%' }}
+            placeholder="Emoji"
+            value={emoji}
+            onChange={(event) => setEmoji(event.target.value)}
+          />
+        </div>
+
+        <div style={fieldStyle}>
+          <label style={styles.sortLabel}>Kolor</label>
+          <input
+            style={{ ...styles.smallInput, width: '100%', padding: 4 }}
+            type="color"
+            value={color}
+            onChange={(event) => setColor(event.target.value)}
+          />
+        </div>
+
+        <label style={checkboxLabelStyle}>
+          <input
+            style={checkboxStyle}
             type="checkbox"
             checked={isIncomeSource}
             onChange={(event) => setIsIncomeSource(event.target.checked)}
@@ -329,8 +504,9 @@ export default function PaymentSourcesPanel(props: Props) {
           Przychody
         </label>
 
-        <label style={styles.sortLabel}>
+        <label style={checkboxLabelStyle}>
           <input
+            style={checkboxStyle}
             type="checkbox"
             checked={isExpenseSource}
             onChange={(event) => setIsExpenseSource(event.target.checked)}
@@ -340,7 +516,7 @@ export default function PaymentSourcesPanel(props: Props) {
 
         <button
           type="button"
-          style={styles.primaryButton}
+          style={{ ...styles.primaryButton, ...primaryActionStyle }}
           disabled={isSaving || !name.trim() || (!isIncomeSource && !isExpenseSource)}
           onClick={async () => {
             setIsSaving(true)
@@ -365,13 +541,13 @@ export default function PaymentSourcesPanel(props: Props) {
         </button>
 
         {editingId && (
-          <button type="button" style={styles.secondaryButton} onClick={resetForm}>
+          <button type="button" style={lightButtonStyle} onClick={resetForm}>
             Anuluj edycję
           </button>
         )}
       </div>
 
-      <div style={{ display: 'grid', gap: 12, marginTop: 16 }}>
+      <div style={listStyle}>
         {paymentSources.length === 0 ? (
           <div style={styles.emptyStateCard}>Brak zapisanych źródeł płatności.</div>
         ) : (
@@ -385,19 +561,12 @@ export default function PaymentSourcesPanel(props: Props) {
 
             return (
               <div key={source.id} style={cardStyle}>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    gap: 12,
-                    flexWrap: 'wrap',
-                  }}
-                >
+                <div style={sourceHeaderStyle}>
                   <div>
-                    <div style={{ fontWeight: 600, fontSize: 16 }}>
+                    <div style={sourceNameStyle}>
                       {getPaymentSourceOptionLabel(source)}
                     </div>
-                    <div style={{ ...styles.pageSubtitle, margin: '4px 0 0' }}>
+                    <div style={sourceMetaStyle}>
                       Typ: {getPaymentSourceTypeLabel(source.type)}
                     </div>
                   </div>
@@ -405,7 +574,7 @@ export default function PaymentSourcesPanel(props: Props) {
                   <div style={styles.actions}>
                     <button
                       type="button"
-                      style={styles.secondaryButton}
+                      style={lightButtonStyle}
                       onClick={() => {
                         setEditingId(source.id)
                         setName(source.name)
@@ -421,7 +590,7 @@ export default function PaymentSourcesPanel(props: Props) {
 
                     <button
                       type="button"
-                      style={styles.dangerButton}
+                      style={lightDangerButtonStyle}
                       onClick={() => {
                         void onDelete(source.id)
                       }}
@@ -436,21 +605,14 @@ export default function PaymentSourcesPanel(props: Props) {
                   {renderMembershipBadge('Wydatki', source.is_expense_source !== false, '#b91c1c')}
                 </div>
 
-                <div
-                  style={{
-                    display: 'grid',
-                    gap: 8,
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                    marginTop: 12,
-                  }}
-                >
-                  <div style={styles.infoBox}>
+                <div style={sourceStatsGridStyle}>
+                  <div style={sourceStatStyle}>
                     <b>Liczba wpisów:</b> {stats.transactionCount}
                   </div>
-                  <div style={styles.infoBox}>
+                  <div style={sourceStatStyle}>
                     <b>Suma przychodów:</b> {stats.incomeTotal.toFixed(2)} zł
                   </div>
-                  <div style={styles.infoBox}>
+                  <div style={sourceStatStyle}>
                     <b>Suma wydatków:</b> {stats.expenseTotal.toFixed(2)} zł
                   </div>
                 </div>

@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 458
-Data: 2026-05-09T00:06:20.969Z
+Data: 2026-05-09T00:22:23.039Z
 
 
 ==================================================
@@ -77752,8 +77752,8 @@ PLIK: app\styles\workspace-panels.css
 [data-calendar-recent-panel="true"] {
   display: grid !important;
   grid-template-columns: minmax(240px, 0.78fr) minmax(0, 1.22fr) !important;
-  height: 340px !important;
-  min-height: 340px !important;
+  height: 376px !important;
+  min-height: 376px !important;
   overflow: hidden !important;
   border: 1px solid rgba(203, 213, 225, 0.78) !important;
   border-radius: 20px !important;
@@ -77773,21 +77773,29 @@ PLIK: app\styles\workspace-panels.css
 
 [data-workspace-calendar-pane="true"] {
   position: relative !important;
-  padding-top: 24px !important;
+  padding-top: 28px !important;
+}
+
+[data-workspace-recent-pane="true"] {
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  align-content: stretch !important;
+  padding-top: 28px !important;
+  padding-bottom: 26px !important;
 }
 
 [data-workspace-calendar-pane="true"]::after {
   content: "" !important;
   position: absolute !important;
-  top: 52px !important;
+  top: 58px !important;
   right: 0 !important;
-  bottom: 28px !important;
+  bottom: 34px !important;
   width: 1px !important;
   background: linear-gradient(
     180deg,
     rgba(226, 232, 240, 0),
-    rgba(203, 213, 225, 0.7) 28%,
-    rgba(203, 213, 225, 0.48) 72%,
+    rgba(203, 213, 225, 0.58) 30%,
+    rgba(203, 213, 225, 0.38) 70%,
     rgba(226, 232, 240, 0)
   ) !important;
   pointer-events: none !important;
@@ -77831,7 +77839,7 @@ PLIK: app\styles\workspace-panels.css
   display: grid !important;
   grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
   gap: 3px !important;
-  margin: 24px auto 0 !important;
+  margin: 30px auto 0 !important;
 }
 
 [data-mini-calendar="true"] small,
@@ -77908,8 +77916,8 @@ PLIK: app\styles\workspace-panels.css
   display: grid !important;
   align-content: start !important;
   gap: 5px !important;
-  padding-bottom: 32px !important;
-  overflow: auto !important;
+  padding-bottom: 24px !important;
+  overflow: hidden !important;
 }
 
 [data-workspace-recent-row="true"] {
@@ -78331,7 +78339,6 @@ PLIK: app\styles\workspace-panels.css
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-
 
 
 ==================================================
@@ -104511,6 +104518,7 @@ export default function MainWorkspaceBottomDeck({
   const today = new Date()
   const currentMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`
   const currentDay = today.getDate()
+  const visibleRecentTransactions = recentTransactions.slice(0, 6)
 
   return (
     <section data-main-workspace-deck="true" aria-label="Kalendarz i ostatnie wpisy">
@@ -104575,14 +104583,14 @@ export default function MainWorkspaceBottomDeck({
           <div data-workspace-panel-header="true">
             <div>
               <span>Ostatnie wpisy</span>
-              <strong>{recentTransactions.length} w podglądzie</strong>
+              <strong>{visibleRecentTransactions.length} w podglądzie</strong>
             </div>
           </div>
           <div data-workspace-recent-rows="true">
-            {recentTransactions.length === 0 ? (
+            {visibleRecentTransactions.length === 0 ? (
               <small data-workspace-empty-placeholder="true">Brak wpisów w tym zakresie.</small>
             ) : (
-              recentTransactions.slice(0, 7).map((transaction) => (
+              visibleRecentTransactions.map((transaction) => (
                 <div
                   key={transaction.id}
                   data-workspace-recent-row="true"
@@ -104637,7 +104645,6 @@ export default function MainWorkspaceBottomDeck({
     </section>
   )
 }
-
 
 
 ==================================================
