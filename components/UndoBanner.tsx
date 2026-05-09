@@ -11,7 +11,7 @@ export default function UndoBanner(props: Props) {
   const [isUndoing, setIsUndoing] = useState(false)
 
   return (
-    <div style={styles.topPanel}>
+    <div style={styles.topPanel} data-undo-banner="true">
       <div style={styles.sectionTitle}>Ostatnia akcja</div>
       <div
         style={{

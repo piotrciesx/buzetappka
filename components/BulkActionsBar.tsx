@@ -31,7 +31,7 @@ export default function BulkActionsBar(props: Props) {
   }
 
   return (
-    <div style={styles.topPanel}>
+    <div style={styles.topPanel} data-bulk-actions-bar="true">
       <div style={styles.sectionTitle}>Zaznaczone wpisy</div>
       <div style={{ ...styles.infoBox, marginBottom: 12 }}>
         Zaznaczono: <b>{selectedCount}</b>

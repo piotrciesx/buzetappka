@@ -22,7 +22,7 @@ export default function FinancialGoalsModeControls({
   onModeChange,
 }: FinancialGoalsModeControlsProps) {
   return (
-    <div style={modeButtonRowStyle}>
+    <div style={modeButtonRowStyle} data-financial-goals-mode-controls="true">
       <button
         type="button"
         style={effectiveMode === 'priority' ? styles.primaryButton : styles.secondaryButton}

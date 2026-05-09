@@ -723,7 +723,7 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
   }
 
   return (
-    <section style={panelStyle}>
+    <section style={panelStyle} data-financial-goals-panel="true">
       <FinancialGoalsHeader styles={styles} />
 
       <FinancialGoalsModeControls
@@ -733,7 +733,7 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         onModeChange={handleModeChange}
       />
 
-      <div style={styles.infoRow}>
+      <div style={styles.infoRow} data-financial-goals-summary="true">
         <div style={styles.infoBox}>
           <b>Bilans miesiąca:</b> {monthBalance.toFixed(2)} zł
         </div>
@@ -781,7 +781,7 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         </div>
       )}
 
-      <div style={{ marginTop: 18 }}>
+      <div style={{ marginTop: 18 }} data-financial-goals-current-list="true">
         <div style={styles.l2Name}>Cele aktualne</div>
 
         {activeGoals.length === 0 ? (
@@ -868,7 +868,7 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         )}
       </div>
 
-      <div style={{ marginTop: 22 }}>
+      <div style={{ marginTop: 22 }} data-financial-goals-archived-list="true">
         <div style={styles.l2Name}>Cele archiwalne</div>
 
         {archivedGoals.length === 0 ? (

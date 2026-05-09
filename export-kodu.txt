@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 459
-Data: 2026-05-09T01:51:52.611Z
+Data: 2026-05-09T02:06:53.379Z
 
 
 ==================================================
@@ -71785,13 +71785,31 @@ PLIK: app\styles\category-tree\category-row.css
 
 [data-inline-entry-main-row="true"] {
   display: grid !important;
-  grid-template-columns: 58px minmax(180px, 1fr) 86px auto auto !important;
+  grid-template-columns: 58px minmax(180px, 1fr) 86px max-content max-content !important;
   align-items: center !important;
   gap: 8px !important;
 }
 
 [data-inline-entry-main-row="true"] input {
   min-height: 32px !important;
+}
+
+[data-inline-entry-main-row="true"] > button {
+  width: auto !important;
+  min-width: 66px !important;
+  max-width: none !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 11px !important;
+  border-radius: 9px !important;
+  white-space: nowrap !important;
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
 }
 
 [data-inline-description-wrap="true"] {
@@ -71979,6 +71997,10 @@ PLIK: app\styles\category-tree\category-row.css
   [data-transaction-move-grid="true"],
   [data-transaction-display-grid="true"] {
     grid-template-columns: 1fr !important;
+  }
+
+  [data-inline-entry-main-row="true"] > button {
+    width: 100% !important;
   }
 
   [data-category-drag-row="true"][data-category-level="3"] {
@@ -75595,6 +75617,57 @@ PLIK: app\styles\right-rail.css
 
 [data-rail-notification-popover="true"] small {
   color: #64748b;
+}
+
+[data-rail-reminder-list="true"] {
+  display: grid;
+  gap: 8px;
+}
+
+[data-rail-reminder-item="true"] {
+  display: grid;
+  gap: 8px;
+  padding: 9px;
+  border: 1px solid rgba(226, 232, 240, 0.92);
+  border-radius: 12px;
+  background: rgba(248, 250, 252, 0.76);
+}
+
+[data-rail-reminder-main="true"] {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+[data-rail-reminder-main="true"] span {
+  overflow: hidden;
+  color: #172033;
+  font-size: 12.5px;
+  font-weight: 720;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-rail-reminder-actions="true"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+[data-rail-reminder-actions="true"] button,
+[data-rail-reminders-open-all="true"] {
+  min-height: 28px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  padding: 0 9px !important;
+  border-radius: 999px !important;
+  font-size: 11px !important;
+  font-weight: 680 !important;
+}
+
+[data-rail-reminders-open-all="true"] {
+  justify-self: start;
+  margin-top: 2px;
 }
 
 [data-context-card="summary"] {
@@ -79477,6 +79550,7 @@ PLIK: components\budget-app\useBudgetAppControllerViewProps.tsx
 import { useCallback, useMemo } from 'react'
 import type { SaveBudgetLimitInput } from '../../lib/useBudgetLimits'
 import { getCategoryPathLabel } from '../../lib/budgetPageHelpers'
+import { getPendingRecurringTransactions } from '../../lib/recurringTransactions'
 import type { BudgetLimitView } from '../BudgetLimitIndicator'
 import { useBudgetOverlayProps } from './useBudgetOverlayProps'
 import { useBudgetPageMainPanelsProps } from './useBudgetPageMainPanelsProps'
@@ -79794,7 +79868,22 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     incomeTotal: budgetWorkspaceSummary.selectedMonthIncomeTotal,
     expenseTotal: budgetWorkspaceSummary.selectedMonthExpenseTotal,
     draftCount: ctx.drafts.length,
-    recurringCount: ctx.recurringTransactions.length,
+    recurringCount: effectiveVisibleModules.recurringTransactions
+      ? getPendingRecurringTransactions(
+          ctx.recurringTransactions,
+          ctx.recurringExecutions,
+          selectedMonth,
+          ctx.recurringReminderMonthStatuses
+        ).length
+      : 0,
+    recurringAlerts: effectiveVisibleModules.recurringTransactions
+      ? getPendingRecurringTransactions(
+          ctx.recurringTransactions,
+          ctx.recurringExecutions,
+          selectedMonth,
+          ctx.recurringReminderMonthStatuses
+        )
+      : [],
     showRecurring: effectiveVisibleModules.recurringTransactions,
     onOpenSearch: (query?: string) => {
       ctx.setIsDashboardPanelOpen(false)
@@ -79810,6 +79899,14 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
       ctx.setActiveSidebarPrimaryPanel?.(null)
       ctx.setIsSettingsPanelVisible(false)
       ctx.setActiveUtilityPanel('recurringTransactions')
+    },
+    onAddFromReminder: ctx.openReminderTransactionCreator,
+    onMarkRecurringRead: async (recurring: any) => {
+      await ctx.saveRecurringReminderMonthStatus({
+        reminderId: recurring.id,
+        month: selectedMonth,
+        status: 'read',
+      })
     },
     onQuickAdd: () => ctx.openBlankFloatingTransactionCreator(null),
     onToggleProfile: () => {
@@ -84461,7 +84558,7 @@ export default function BudgetLimitEditorModal({
               inputMode="decimal"
               value={amount}
               onChange={(event) => setAmount(event.target.value.replace(',', '.'))}
-              placeholder="1000"
+              placeholder="Wpisz kwotę"
             />
           </label>
 
@@ -85267,6 +85364,7 @@ export default function BudgetPageStatusPanels({
   }, [activeSidebarPrimaryPanel, onClosePrimaryPanel])
 
   const openPanel = (panel: BudgetUtilityPanel) => {
+    window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
     onOpenUtilityPanel(activeUtilityPanel === panel ? null : panel)
   }
 
@@ -85283,21 +85381,30 @@ export default function BudgetPageStatusPanels({
       label: 'Profil',
       icon: 'user',
       active: activeSidebarPrimaryPanel === 'profile',
-      onClick: onOpenProfilePanel,
+      onClick: () => {
+        window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
+        onOpenProfilePanel()
+      },
     },
     {
       id: 'settings',
       label: 'Ustawienia',
       icon: 'settings',
       active: isSettingsPanelVisible,
-      onClick: onOpenSettingsPanel,
+      onClick: () => {
+        window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
+        onOpenSettingsPanel()
+      },
     },
     {
       id: 'dashboard',
       label: 'Dashboard',
       icon: 'dashboard',
       active: isDashboardOpen,
-      onClick: onToggleDashboard,
+      onClick: () => {
+        window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
+        onToggleDashboard()
+      },
     },
     {
       id: 'drafts',
@@ -85572,6 +85679,8 @@ PLIK: components\BudgetRightRail.tsx
 'use client'
 
 import { KeyboardEvent, useEffect, useRef, useState } from 'react'
+import type { RecurringTransaction } from '../lib/budgetPageTypes'
+import { getMonthCycleDate } from '../lib/recurringTransactions'
 
 type LiveView = 'overview' | 'payments' | 'alerts'
 
@@ -85585,11 +85694,18 @@ type Props = {
   expenseTotal: number
   draftCount: number
   recurringCount: number
+  recurringAlerts: RecurringTransaction[]
   showRecurring: boolean
   onOpenSearch: (query?: string) => void
   onOpenNotifications: () => void
+  onAddFromReminder: (reminder: RecurringTransaction) => void
+  onMarkRecurringRead: (reminder: RecurringTransaction) => Promise<void>
   onQuickAdd: () => void
   onToggleProfile: () => void
+}
+
+const emitCloseFloatingUi = () => {
+  window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
 }
 
 export default function BudgetRightRail({
@@ -85602,8 +85718,12 @@ export default function BudgetRightRail({
   expenseTotal,
   draftCount,
   recurringCount,
+  recurringAlerts,
   showRecurring,
   onOpenSearch,
+  onOpenNotifications,
+  onAddFromReminder,
+  onMarkRecurringRead,
   onQuickAdd,
   onToggleProfile,
 }: Props) {
@@ -85612,6 +85732,7 @@ export default function BudgetRightRail({
   const [quickSearchText, setQuickSearchText] = useState('')
   const [liveView, setLiveView] = useState<LiveView>('overview')
   const quickSearchRef = useRef<HTMLDivElement | null>(null)
+  const notificationsRef = useRef<HTMLDivElement | null>(null)
   const quickSearchInputRef = useRef<HTMLInputElement | null>(null)
 
   const balanceState = balance > 0 ? 'positive' : balance < 0 ? 'negative' : 'neutral'
@@ -85622,11 +85743,26 @@ export default function BudgetRightRail({
   const hasRecurringAlerts = showRecurring && recurringCount > 0
 
   useEffect(() => {
-    if (!isQuickSearchOpen) {
+    const handleCloseFloatingUi = () => {
+      setIsQuickSearchOpen(false)
+      setIsNotificationsPreviewOpen(false)
+    }
+
+    window.addEventListener('budget-close-floating-ui', handleCloseFloatingUi)
+
+    return () => {
+      window.removeEventListener('budget-close-floating-ui', handleCloseFloatingUi)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!isQuickSearchOpen && !isNotificationsPreviewOpen) {
       return
     }
 
-    quickSearchInputRef.current?.focus()
+    if (isQuickSearchOpen) {
+      quickSearchInputRef.current?.focus()
+    }
 
     const handlePointerDown = (event: PointerEvent) => {
       const target = event.target as Node | null
@@ -85635,12 +85771,18 @@ export default function BudgetRightRail({
         return
       }
 
+      if (target && notificationsRef.current?.contains(target)) {
+        return
+      }
+
       setIsQuickSearchOpen(false)
+      setIsNotificationsPreviewOpen(false)
     }
 
     const handleKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key === 'Escape') {
         setIsQuickSearchOpen(false)
+        setIsNotificationsPreviewOpen(false)
       }
     }
 
@@ -85651,7 +85793,7 @@ export default function BudgetRightRail({
       window.removeEventListener('pointerdown', handlePointerDown)
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [isQuickSearchOpen])
+  }, [isNotificationsPreviewOpen, isQuickSearchOpen])
 
   const handleQuickSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key !== 'Enter') {
@@ -85669,6 +85811,15 @@ export default function BudgetRightRail({
     setIsQuickSearchOpen(false)
   }
 
+  const formatReminderAmount = (amount: number | null) =>
+    amount === null
+      ? ''
+      : new Intl.NumberFormat('pl-PL', {
+          style: 'currency',
+          currency: 'PLN',
+          maximumFractionDigits: 2,
+        }).format(amount)
+
   return (
     <aside data-budget-context-rail="true" aria-label="Kontekst workspace">
       <section data-context-card="rail-actions" aria-label="Akcje">
@@ -85677,7 +85828,13 @@ export default function BudgetRightRail({
             type="button"
             aria-label="Szukaj"
             title="Szukaj"
-            onClick={() => setIsQuickSearchOpen((value) => !value)}
+            onClick={() => {
+              const nextIsOpen = !isQuickSearchOpen
+              if (nextIsOpen) {
+                emitCloseFloatingUi()
+              }
+              setIsQuickSearchOpen(nextIsOpen)
+            }}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="11" cy="11" r="6" />
@@ -85698,13 +85855,19 @@ export default function BudgetRightRail({
           )}
         </div>
 
-        <div data-rail-notification-wrap="true">
+        <div data-rail-notification-wrap="true" ref={notificationsRef}>
           <button
             type="button"
             aria-label="Powiadomienia"
             title="Powiadomienia"
             data-has-alerts={hasRecurringAlerts ? 'true' : 'false'}
-            onClick={() => setIsNotificationsPreviewOpen((value) => !value)}
+            onClick={() => {
+              const nextIsOpen = !isNotificationsPreviewOpen
+              if (nextIsOpen) {
+                emitCloseFloatingUi()
+              }
+              setIsNotificationsPreviewOpen(nextIsOpen)
+            }}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M6.5 10a5.5 5.5 0 0 1 11 0c0 5 1.7 5.8 2.2 7H4.3c.5-1.2 2.2-2 2.2-7Z" />
@@ -85716,16 +85879,68 @@ export default function BudgetRightRail({
             <div data-rail-notification-popover="true">
               <strong>Powiadomienia</strong>
               {hasRecurringAlerts ? (
-                <p>Masz aktywne przypomnienia lub raty do sprawdzenia w tym miesiącu.</p>
+                <div data-rail-reminder-list="true">
+                  {recurringAlerts.slice(0, 5).map((reminder) => (
+                    <div key={reminder.id} data-rail-reminder-item="true">
+                      <div data-rail-reminder-main="true">
+                        <span>{reminder.name}</span>
+                        <small>
+                          Termin {getMonthCycleDate(reminder, selectedMonth).slice(8, 10)}
+                          {reminder.amount !== null
+                            ? ` · ${formatReminderAmount(reminder.amount)}`
+                            : ''}
+                        </small>
+                      </div>
+                      <div data-rail-reminder-actions="true">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsNotificationsPreviewOpen(false)
+                            onAddFromReminder(reminder)
+                          }}
+                        >
+                          Dodaj wpis
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            void onMarkRecurringRead(reminder).then(() => {
+                              setIsNotificationsPreviewOpen(false)
+                            })
+                          }}
+                        >
+                          Oznacz jako przeczytane
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               ) : (
-                <p>Brak aktywnych przypomnień do obsłużenia.</p>
+                <p>Brak aktywnych przypomnień.</p>
               )}
-              <small>Konfiguracja przypomnień jest dostępna w menu po lewej.</small>
+              <button
+                type="button"
+                data-rail-reminders-open-all="true"
+                onClick={() => {
+                  setIsNotificationsPreviewOpen(false)
+                  onOpenNotifications()
+                }}
+              >
+                Pokaż wszystkie
+              </button>
             </div>
           )}
         </div>
 
-        <button type="button" aria-label="Dodaj wpis" title="Dodaj wpis" onClick={onQuickAdd}>
+        <button
+          type="button"
+          aria-label="Dodaj wpis"
+          title="Dodaj wpis"
+          onClick={() => {
+            emitCloseFloatingUi()
+            onQuickAdd()
+          }}
+        >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 5v14M5 12h14" />
           </svg>
@@ -85736,7 +85951,10 @@ export default function BudgetRightRail({
           aria-label="Profil"
           title="Profil"
           data-rail-profile-action="true"
-          onClick={onToggleProfile}
+          onClick={() => {
+            emitCloseFloatingUi()
+            onToggleProfile()
+          }}
         >
           P
         </button>
@@ -85867,7 +86085,7 @@ export default function BudgetRightRail({
         </div>
         <p>
           {showRecurring && recurringCount > 0
-            ? 'Masz aktywne przypomnienia lub raty do sprawdzenia.'
+            ? 'Masz przypomnienia do decyzji.'
             : 'Brak aktywnych płatności w podglądzie.'}
         </p>
       </section>
@@ -100471,13 +100689,6 @@ const draftsHeaderStyle = {
   borderBottom: '1px solid rgba(226, 232, 240, 0.86)',
 } as const
 
-const draftsDescriptionStyle = {
-  margin: 0,
-  color: '#64748b',
-  fontSize: 12,
-  lineHeight: 1.35,
-} as const
-
 const draftsListStyle = {
   display: 'grid',
   gap: 8,
@@ -100620,9 +100831,6 @@ export default function DraftsPanel(props: Props) {
   return (
     <section style={draftsPanelStyle} aria-label="Szkice wpisów">
       <div style={draftsHeaderStyle}>
-        <div>
-          <p style={draftsDescriptionStyle}>Niedokończone wpisy zapisują się automatycznie.</p>
-        </div>
         <button
           type="button"
           style={{ ...styles.secondaryButton, ...lightButtonStyle }}
@@ -101139,25 +101347,12 @@ PLIK: components\financial-goals\FinancialGoalsHeader.tsx
 
 import type { CSSProperties } from 'react'
 
-const descriptionStyle: CSSProperties = {
-  margin: 0,
-  color: '#64748b',
-  fontSize: 12,
-  lineHeight: 1.4,
-}
-
 type FinancialGoalsHeaderProps = {
   styles: Record<string, CSSProperties>
 }
 
 export default function FinancialGoalsHeader(_props: FinancialGoalsHeaderProps) {
-  return (
-    <div style={descriptionStyle}>
-        Start celu ustawiamy na miesiąc utworzenia. Nadwyżka dodatnia jest rozdzielana według
-        aktywnego trybu z konfiguracją dziedziczoną od wybranego miesiąca do przodu, bez zmiany
-        historii wcześniejszych miesięcy.
-    </div>
-  )
+  return null
 }
 
 
@@ -102482,20 +102677,6 @@ const panelStyle: CSSProperties = {
   boxShadow: '0 10px 28px rgba(15, 23, 42, 0.045)',
 }
 
-const headerStyle: CSSProperties = {
-  display: 'grid',
-  gap: 4,
-  paddingBottom: 10,
-  borderBottom: '1px solid rgba(226, 232, 240, 0.86)',
-}
-
-const descriptionStyle: CSSProperties = {
-  margin: 0,
-  color: '#64748b',
-  fontSize: 12,
-  lineHeight: 1.4,
-}
-
 const actionRowStyle: CSSProperties = {
   display: 'flex',
   gap: 8,
@@ -102753,10 +102934,6 @@ export default function ImportExportPanel({
 
   return (
     <section style={panelStyle}>
-      <div style={headerStyle}>
-        <p style={descriptionStyle}>Eksportuj kopię danych albo wczytaj wpisy z pliku CSV.</p>
-      </div>
-
       <div style={actionRowStyle}>
         <button style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={handleExportCsv} type="button">
           Eksport CSV aktywnych wpisów
@@ -107398,13 +107575,6 @@ const badgeStyle = {
   fontWeight: 620,
 } as const
 
-const subtitleStyle = {
-  maxWidth: 620,
-  color: '#64748b',
-  fontSize: 12,
-  lineHeight: 1.45,
-} as const
-
 const settingsCardStyle = {
   display: 'grid',
   gap: 10,
@@ -107650,11 +107820,6 @@ export default function PaymentSourcesPanel(props: Props) {
   return (
     <section style={panelStyle}>
       <style>{responsivePaymentSourcesStyle}</style>
-      <div style={subtitleStyle}>
-        Osobno konfigurujesz listy dla przychodów i wydatków oraz decydujesz, czy pole ma być
-        widoczne w kreatorze.
-      </div>
-
       <div style={settingsGridStyle}>
         <div style={settingsCardStyle}>
           <div style={settingsTitleStyle}>Przychody</div>
@@ -111599,53 +111764,54 @@ export const modalStyle = {
   background: '#ffffff',
   border: '1px solid #e5e7eb',
   borderRadius: 16,
-  padding: 20,
+  padding: 16,
   boxShadow: '0 20px 40px rgba(0,0,0,0.18)',
   boxSizing: 'border-box',
 } as const
 
 export const sectionStyle = {
-  marginTop: 16,
-  paddingTop: 16,
+  marginTop: 12,
+  paddingTop: 12,
   borderTop: '1px solid #e5e7eb',
 } as const
 
 export const treeLevel2WrapStyle = {
-  marginTop: 12,
+  marginTop: 8,
   display: 'flex',
-  gap: 8,
+  gap: 6,
   flexWrap: 'wrap' as const,
 } as const
 
 export const treeLevel3WrapStyle = {
-  marginTop: 12,
-  padding: 12,
+  marginTop: 8,
+  padding: 9,
   border: '1px solid #e5e7eb',
   borderRadius: 12,
   background: '#f9fafb',
 } as const
 
 export const treeLevel3ButtonsStyle = {
-  marginTop: 10,
+  marginTop: 8,
   display: 'flex',
-  gap: 8,
+  gap: 6,
   flexWrap: 'wrap' as const,
 } as const
 
 export const shortcutListStyle = {
-  marginTop: 10,
+  marginTop: 8,
   display: 'flex',
-  gap: 8,
+  gap: 6,
   flexWrap: 'wrap' as const,
 } as const
 
 export const shortcutButtonStyle = {
   display: 'flex',
-  flexDirection: 'column' as const,
-  alignItems: 'flex-start',
-  gap: 4,
-  minWidth: 220,
+  alignItems: 'center',
+  gap: 6,
+  minWidth: 0,
   maxWidth: '100%',
+  minHeight: 32,
+  padding: '6px 10px',
 } as const
 
 export const disabledLevel3WrapStyle = {
@@ -111679,11 +111845,11 @@ export const dateLabelStyle = {
 
 export const descriptionFieldWrapStyle = {
   flex: 1,
-  minWidth: 260,
+  minWidth: 220,
   maxWidth: '100%',
   display: 'flex',
   flexDirection: 'column' as const,
-  gap: 8,
+  gap: 4,
 } as const
 
 export const descriptionInputWrapStyle = {
@@ -111728,8 +111894,8 @@ export const helperTextStyle = {
 } as const
 
 export const finalCategoryInfoStyle = {
-  marginTop: 12,
-  padding: 12,
+  marginTop: 8,
+  padding: 9,
   borderRadius: 12,
   border: '1px solid #dbeafe',
   background: '#eff6ff',
@@ -111751,7 +111917,7 @@ export const finalCategoryInfoValueStyle = {
 } as const
 
 export const tagInputWrapStyle = {
-  marginTop: 12,
+  marginTop: 10,
   display: 'flex',
   flexDirection: 'column' as const,
   gap: 8,
@@ -111813,7 +111979,6 @@ import {
   finalCategoryInfoStyle,
   finalCategoryInfoTitleStyle,
   finalCategoryInfoValueStyle,
-  helperTextStyle,
   modalStyle,
   overlayStyle,
   sectionStyle,
@@ -111935,6 +112100,13 @@ const getCategoryPathLabel = (
 
 const normalizeAmountInput = (value: string) => {
   return value.replace(',', '.')
+}
+
+const compactCategoryButtonStyle: CSSProperties = {
+  minHeight: 32,
+  padding: '6px 10px',
+  borderRadius: 10,
+  fontSize: 13,
 }
 
 export default function TransactionCreatorModal(props: Props) {
@@ -112204,6 +112376,7 @@ export default function TransactionCreatorModal(props: Props) {
                     style={{
                       ...(isSelected ? styles.primaryButton : styles.secondaryButton),
                       ...shortcutButtonStyle,
+                      ...compactCategoryButtonStyle,
                     }}
                     onClick={() => handleShortcutClick(shortcut.id)}
                   >
@@ -112281,7 +112454,10 @@ export default function TransactionCreatorModal(props: Props) {
                 return (
                   <button
                     key={category.id}
-                    style={isSelected ? styles.primaryButton : styles.secondaryButton}
+                    style={{
+                      ...(isSelected ? styles.primaryButton : styles.secondaryButton),
+                      ...compactCategoryButtonStyle,
+                    }}
                     onClick={() => handleLevel1Click(category)}
                   >
                     {category.name}
@@ -112310,7 +112486,10 @@ export default function TransactionCreatorModal(props: Props) {
                 return (
                   <button
                     key={level2Category.id}
-                    style={isSelected ? styles.primaryButton : styles.secondaryButton}
+                    style={{
+                      ...(isSelected ? styles.primaryButton : styles.secondaryButton),
+                      ...compactCategoryButtonStyle,
+                    }}
                     onClick={() => handleLevel2Click(level2Category)}
                   >
                     {level2Category.name}
@@ -112360,7 +112539,10 @@ export default function TransactionCreatorModal(props: Props) {
                   return (
                     <button
                       key={level3Category.id}
-                      style={isSelected ? styles.primaryButton : styles.secondaryButton}
+                      style={{
+                        ...(isSelected ? styles.primaryButton : styles.secondaryButton),
+                        ...compactCategoryButtonStyle,
+                      }}
                       onClick={() => handleLevel3Click(level3Category)}
                     >
                       {getLevel3ButtonLabel(level3Category)}
@@ -112400,8 +112582,8 @@ export default function TransactionCreatorModal(props: Props) {
         <div style={sectionStyle}>
           <div style={styles.l2Name}>Dane wpisu</div>
 
-          <div style={{ ...styles.formRow, marginTop: 10, alignItems: 'flex-start' }}>
-            <div style={descriptionFieldWrapStyle}>
+          <div style={{ ...styles.formRow, marginTop: 10, alignItems: 'center' }}>
+            <div style={{ ...descriptionFieldWrapStyle, order: 2 }}>
               <div style={descriptionInputWrapStyle}>
                 <input
                   ref={descriptionInputRef}
@@ -112447,28 +112629,23 @@ export default function TransactionCreatorModal(props: Props) {
                 )}
               </div>
 
-              <div style={helperTextStyle}>
-                Sugestie filtrują się na żywo po całym wpisanym tekście. Możesz wybrać je strzałkami
-                i Enterem, a ukryć prawym przyciskiem albo długim przytrzymaniem.
-              </div>
             </div>
 
             <input
               ref={amountInputRef}
-              style={styles.smallInput}
+              style={{ ...styles.smallInput, order: 3 }}
               placeholder="kwota"
               value={amount}
               onChange={(event) => setAmount(normalizeAmountInput(event.target.value))}
               onKeyDown={(event) => {
                 if (event.key === 'Enter') {
                   event.preventDefault()
-                  dayInputRef.current?.focus()
+                  void handleSaveFromKeyboard()
                 }
               }}
             />
 
-            <label style={dateFieldStyle}>
-              <span style={dateLabelStyle}>dzień</span>
+            <label style={{ ...dateFieldStyle, order: 1 }}>
               <input
                 ref={dayInputRef}
                 style={styles.smallInput}
@@ -112494,7 +112671,7 @@ export default function TransactionCreatorModal(props: Props) {
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
                     event.preventDefault()
-                    void handleSaveFromKeyboard()
+                    descriptionInputRef.current?.focus()
                   }
                 }}
               />
@@ -112504,6 +112681,8 @@ export default function TransactionCreatorModal(props: Props) {
               ref={saveButtonRef}
               style={{
                 ...styles.primaryButton,
+                order: 4,
+                marginLeft: 'auto',
                 opacity: isSaving || !selectedLevel1Id || !effectiveCategoryId ? 0.6 : 1,
                 cursor:
                   isSaving || !selectedLevel1Id || !effectiveCategoryId ? 'not-allowed' : 'pointer',
@@ -112519,7 +112698,7 @@ export default function TransactionCreatorModal(props: Props) {
             {isSerialModeEnabled ? (
               <>
                 <button
-                  style={styles.secondaryButton}
+                  style={{ ...styles.secondaryButton, order: 5 }}
                   disabled={isSaving || !selectedLevel1Id || !effectiveCategoryId}
                   onClick={async () => {
                     await onSaveAndClose()
@@ -112528,12 +112707,12 @@ export default function TransactionCreatorModal(props: Props) {
                   {isSaving ? 'zapisywanie...' : 'zapisz i zakończ'}
                 </button>
 
-                <button style={styles.secondaryButton} onClick={onClose}>
+                <button style={{ ...styles.secondaryButton, order: 6 }} onClick={onClose}>
                   zakończ
                 </button>
               </>
             ) : (
-              <button style={styles.secondaryButton} onClick={onClose}>
+              <button style={{ ...styles.secondaryButton, order: 5 }} onClick={onClose}>
                 anuluj
               </button>
             )}
@@ -112558,11 +112737,6 @@ export default function TransactionCreatorModal(props: Props) {
               }}
               onKeyDown={handleTagsKeyDown}
             />
-
-            <div style={helperTextStyle}>
-              Wpisuj tagi po przecinku. Zostaną zapisane i będzie można po nich filtrować w
-              wyszukiwarce.
-            </div>
 
             {selectedTagNames.length > 0 && (
               <div style={tagBadgesWrapStyle}>
@@ -112595,10 +112769,6 @@ export default function TransactionCreatorModal(props: Props) {
                   styles={styles}
                 />
 
-                <div style={helperTextStyle}>
-                  To pole jest opcjonalne i zapisuje powiązanie wpisu z gotówką, kartą albo kontem.
-                  Jeśli dodasz kolejne źródło, zapisze się pełny split płatności.
-                </div>
               </>
             )}
 
@@ -113059,6 +113229,19 @@ export default function UserProfileMenu({
   const avatarLetter = (userEmail.trim()[0] || 'P').toUpperCase()
 
   useEffect(() => {
+    const handleCloseFloatingUi = () => {
+      setIsOpen(false)
+      setIsBackupMenuOpen(false)
+    }
+
+    window.addEventListener('budget-close-floating-ui', handleCloseFloatingUi)
+
+    return () => {
+      window.removeEventListener('budget-close-floating-ui', handleCloseFloatingUi)
+    }
+  }, [])
+
+  useEffect(() => {
     if (!isOpen) {
       return
     }
@@ -113114,8 +113297,11 @@ export default function UserProfileMenu({
         style={avatarButtonStyle}
         aria-label="Menu profilu"
         onClick={() => {
+          if (!isOpen) {
+            window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
+          }
           setStatusText('')
-          setIsOpen((previousValue) => !previousValue)
+          setIsOpen(!isOpen)
         }}
       >
         {avatarLetter}

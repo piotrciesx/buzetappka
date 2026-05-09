@@ -21,7 +21,10 @@ export default function FinancialGoalForm({
   onSubmit,
 }: FinancialGoalFormProps) {
   return (
-    <div style={{ ...styles.formRow, alignItems: 'flex-start', marginTop: 14 }}>
+    <div
+      style={{ ...styles.formRow, alignItems: 'flex-start', marginTop: 14 }}
+      data-financial-goal-form="true"
+    >
       <input
         style={styles.input}
         placeholder="Nazwa celu"
