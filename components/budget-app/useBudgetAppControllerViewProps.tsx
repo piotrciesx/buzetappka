@@ -4,6 +4,7 @@ import { useCallback, useMemo } from 'react'
 import type { SaveBudgetLimitInput } from '../../lib/useBudgetLimits'
 import { getCategoryPathLabel } from '../../lib/budgetPageHelpers'
 import { getPendingRecurringTransactions } from '../../lib/recurringTransactions'
+import { buildFinancialGoalsPlan } from '../../lib/financialGoals'
 import type { BudgetLimitView } from '../BudgetLimitIndicator'
 import { useBudgetOverlayProps } from './useBudgetOverlayProps'
 import { useBudgetPageMainPanelsProps } from './useBudgetPageMainPanelsProps'
@@ -312,6 +313,74 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     visibleModules: ctx.visibleModules,
   }
 
+  const rightRailFinancialGoals = useMemo(() => {
+    if (!effectiveVisibleModules.financialGoals) {
+      return []
+    }
+
+    const plan = buildFinancialGoalsPlan({
+      goals: ctx.financialGoals,
+      priorities: ctx.financialGoalPriorities,
+      monthConfigs: ctx.financialGoalMonthConfigs,
+      transactions: ctx.scopedTransactions,
+      selectedMonth,
+      lockedMonthsSet: ctx.lockedMonthsSet,
+      getSignedAmountForTransaction,
+    })
+
+    return plan.orderedGoals
+      .map((goal: any) => {
+        const progress = plan.progressByGoalId[goal.id]
+
+        if (!progress || progress.isArchived) {
+          return null
+        }
+
+        return {
+          id: goal.id,
+          name: goal.name,
+          collectedAmount: progress.collectedAmount,
+          remainingAmount: progress.remainingAmount,
+          percentage: progress.percentage,
+        }
+      })
+      .filter(
+        (
+          goal
+        ): goal is {
+          id: string
+          name: string
+          collectedAmount: number
+          remainingAmount: number
+          percentage: number
+        } => Boolean(goal)
+      )
+  }, [
+    ctx.financialGoalMonthConfigs,
+    ctx.financialGoalPriorities,
+    ctx.financialGoals,
+    ctx.lockedMonthsSet,
+    ctx.scopedTransactions,
+    effectiveVisibleModules.financialGoals,
+    getSignedAmountForTransaction,
+    selectedMonth,
+  ])
+
+  const rightRailBudgetAlerts = useMemo(
+    () =>
+      (effectiveVisibleModules.budgetLimits ? activeBudgetLimitAlerts : []).map((alert: any) => ({
+        id: alert.limit.id,
+        categoryLabel: alert.limit.category_id
+          ? categoriesById[alert.limit.category_id]?.name || 'Kategoria'
+          : 'Wydatki',
+        usageAmount: alert.usageAmount,
+        limitAmount: alert.limit.amount,
+        usagePercent: alert.usagePercent,
+        text: alert.alertState.text,
+      })),
+    [activeBudgetLimitAlerts, categoriesById, effectiveVisibleModules.budgetLimits]
+  )
+
   const rightRailProps = {
     selectedMonth,
     isSelectedMonthLocked: ctx.isSelectedMonthLocked,
@@ -335,8 +404,10 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
           ctx.recurringExecutions,
           selectedMonth,
           ctx.recurringReminderMonthStatuses
-        )
+      )
       : [],
+    budgetAlerts: rightRailBudgetAlerts,
+    financialGoals: rightRailFinancialGoals,
     showRecurring: effectiveVisibleModules.recurringTransactions,
     onOpenSearch: (query?: string) => {
       ctx.setIsDashboardPanelOpen(false)

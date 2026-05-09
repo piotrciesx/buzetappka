@@ -1,6 +1,6 @@
 'use client'
 
-import { CSSProperties, useState } from 'react'
+import { CSSProperties, useEffect, useRef, useState } from 'react'
 
 type HeatmapMode = 'normal' | 'balance'
 type CalendarHeatmapVariant = 'balance' | 'income' | 'expense'
@@ -111,13 +111,48 @@ export default function BudgetHeaderPanel(props: Props) {
     styles,
   } = props
   const [isMonthMenuOpen, setIsMonthMenuOpen] = useState(false)
+  const monthPanelRef = useRef<HTMLDivElement | null>(null)
   const displayedSelectedMonth = selectedMonth || '---- --'
   const displayedCurrentMonth = currentMonth || '---- --'
   const budgetStartMaxDate = currentMonth ? getLastDateOfMonth(currentMonth) : undefined
   const isCurrentMonthSelected = selectedMonth === currentMonth
 
+  useEffect(() => {
+    if (!isMonthMenuOpen) {
+      return
+    }
+
+    const closeMonthMenu = () => setIsMonthMenuOpen(false)
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null
+
+      if (target && monthPanelRef.current?.contains(target)) {
+        return
+      }
+
+      closeMonthMenu()
+    }
+
+    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeMonthMenu()
+      }
+    }
+
+    window.addEventListener('pointerdown', handlePointerDown)
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('budget-close-floating-ui', closeMonthMenu)
+
+    return () => {
+      window.removeEventListener('pointerdown', handlePointerDown)
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('budget-close-floating-ui', closeMonthMenu)
+    }
+  }, [isMonthMenuOpen])
+
   return (
-    <div style={styles.topPanel} data-budget-topbar-month="true">
+    <div style={styles.topPanel} data-budget-topbar-month="true" ref={monthPanelRef}>
       <button
         onClick={onPrevMonth}
         style={styles.secondaryButton}
@@ -131,7 +166,13 @@ export default function BudgetHeaderPanel(props: Props) {
       <button
         type="button"
         style={styles.monthLabel}
-        onClick={() => setIsMonthMenuOpen((value) => !value)}
+        onClick={() => {
+          if (!isMonthMenuOpen) {
+            window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
+          }
+
+          setIsMonthMenuOpen((value) => !value)
+        }}
         aria-expanded={isMonthMenuOpen}
       >
         {displayedSelectedMonth}

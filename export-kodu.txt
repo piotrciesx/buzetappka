@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 459
-Data: 2026-05-09T06:40:58.255Z
+Data: 2026-05-09T07:06:17.630Z
 
 
 ==================================================
@@ -75083,6 +75083,257 @@ PLIK: app\styles\layout-depth.css
   }
 }
 
+/* Targeted stabilization: month menu, calendar heatmap menu, category depth and bank-like rows. */
+@media (min-width: 821px) {
+  [data-budget-month-menu="true"] {
+    position: fixed !important;
+    top: 76px !important;
+    left: 190px !important;
+    right: 356px !important;
+    width: auto !important;
+    max-width: none !important;
+    transform: none !important;
+    z-index: 1800 !important;
+  }
+}
+
+[data-budget-month-menu="true"] > details:nth-of-type(1),
+[data-budget-month-menu="true"] > details:nth-of-type(2) {
+  display: none !important;
+}
+
+[data-settings-field="true"] {
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 6px !important;
+  color: #334155 !important;
+  font-size: 12px !important;
+  font-weight: 720 !important;
+}
+
+[data-settings-field="true"] input,
+[data-month-calendar-heatmap-field="true"] select {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+[data-month-calendar-panel="true"] {
+  position: relative !important;
+}
+
+[data-month-calendar-settings-menu="true"] {
+  position: absolute !important;
+  top: 12px !important;
+  right: 12px !important;
+  z-index: 30 !important;
+}
+
+[data-month-calendar-settings-menu="true"] > summary {
+  width: 34px !important;
+  height: 34px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(203, 213, 225, 0.78) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.86) !important;
+  color: #475569 !important;
+  list-style: none !important;
+  cursor: pointer !important;
+}
+
+[data-month-calendar-settings-menu="true"] > summary::-webkit-details-marker {
+  display: none !important;
+}
+
+[data-month-calendar-settings-panel="true"] {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+  width: min(260px, calc(100vw - 34px)) !important;
+  display: grid !important;
+  gap: 9px !important;
+  padding: 10px !important;
+  border: 1px solid rgba(203, 213, 225, 0.86) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.15) !important;
+  backdrop-filter: blur(18px) saturate(1.08) !important;
+}
+
+[data-month-calendar-heatmap-field="true"] {
+  display: grid !important;
+  gap: 5px !important;
+  color: #475569 !important;
+  font-size: 11px !important;
+  font-weight: 760 !important;
+}
+
+[data-month-calendar-settings-panel="true"] button {
+  min-height: 32px !important;
+  border: 1px solid rgba(203, 213, 225, 0.78) !important;
+  border-radius: 10px !important;
+  background: rgba(248, 250, 252, 0.9) !important;
+  color: #334155 !important;
+  font-size: 12px !important;
+  font-weight: 720 !important;
+}
+
+[data-level1-expanded-content="true"][data-level1-kind="income"] [data-category-drag-row="true"][data-category-level="2"] {
+  border-color: rgba(134, 239, 172, 0.46) !important;
+  background:
+    linear-gradient(180deg, rgba(252, 255, 253, 0.98), rgba(240, 253, 244, 0.74)),
+    rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-level1-expanded-content="true"][data-level1-kind="income"] [data-category-drag-row="true"][data-category-level="3"] {
+  border-color: rgba(187, 247, 208, 0.52) !important;
+  border-left-color: rgba(74, 222, 128, 0.42) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(246, 254, 249, 0.78)) !important;
+}
+
+[data-level1-expanded-content="true"][data-level1-kind="expense"] [data-category-drag-row="true"][data-category-level="2"] {
+  border-color: rgba(254, 205, 211, 0.58) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 252, 252, 0.98), rgba(255, 241, 242, 0.72)),
+    rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-level1-expanded-content="true"][data-level1-kind="expense"] [data-category-drag-row="true"][data-category-level="3"] {
+  border-color: rgba(254, 226, 226, 0.68) !important;
+  border-left-color: rgba(251, 113, 133, 0.4) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 247, 247, 0.78)) !important;
+}
+
+[data-category-drag-row="true"][data-category-level="2"] {
+  min-height: 70px !important;
+  padding-block: 14px !important;
+}
+
+[data-category-drag-row="true"][data-category-level="3"] {
+  min-height: 64px !important;
+  padding-block: 12px !important;
+}
+
+[data-category-drag-row="true"][data-category-level="2"] [data-category-row-name="true"],
+[data-category-drag-row="true"][data-category-level="3"] [data-category-row-name="true"] {
+  align-items: center !important;
+}
+
+[data-transaction-day-entry="true"] {
+  width: calc(100% - 14px) !important;
+  margin-inline: 10px 4px !important;
+}
+
+[data-transaction-row="true"] {
+  min-height: 42px !important;
+  grid-template-columns: minmax(0, 1fr) 30px !important;
+  gap: 6px !important;
+  padding: 6px 7px !important;
+  border-color: rgba(226, 232, 240, 0.58) !important;
+  border-radius: 10px !important;
+  background: rgba(255, 255, 255, 0.62) !important;
+  box-shadow: none !important;
+}
+
+[data-transaction-row="true"]:hover {
+  border-color: rgba(203, 213, 225, 0.72) !important;
+  background: rgba(255, 255, 255, 0.76) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+[data-transaction-row-main="true"] {
+  grid-template-columns: 18px 24px minmax(0, 1fr) !important;
+  gap: 8px !important;
+}
+
+[data-transaction-payment-symbol="true"] {
+  width: 22px !important;
+  height: 22px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(203, 213, 225, 0.72) !important;
+  border-radius: 999px !important;
+  background: rgba(248, 250, 252, 0.86) !important;
+  color: #64748b !important;
+  font-size: 10px !important;
+  font-weight: 760 !important;
+  line-height: 1 !important;
+}
+
+[data-transaction-display-grid="true"] {
+  grid-template-columns: minmax(0, 1fr) max-content !important;
+  gap: 2px 10px !important;
+}
+
+[data-transaction-amount="true"] {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  justify-self: end !important;
+  max-width: 112px !important;
+  font-size: 13px !important;
+  font-weight: 760 !important;
+  text-align: right !important;
+}
+
+[data-transaction-description="true"] {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  font-size: 12.5px !important;
+  font-weight: 620 !important;
+}
+
+[data-transaction-date="true"] {
+  display: none !important;
+}
+
+[data-transaction-payment-source="true"],
+[data-transaction-tags="true"] {
+  grid-column: 1 / -1 !important;
+  max-width: 100% !important;
+  font-size: 10.5px !important;
+}
+
+@media (max-width: 820px) {
+  [data-level1-mobile-flow="true"] [data-level1-card="true"] {
+    touch-action: none !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+  }
+
+  [data-category-drag-row="true"][data-category-level="2"] {
+    min-height: 66px !important;
+  }
+
+  [data-category-drag-row="true"][data-category-level="3"] {
+    min-height: 60px !important;
+  }
+
+  [data-settings-date-row="true"] {
+    grid-template-columns: 1fr auto !important;
+  }
+
+  [data-settings-date-row="true"] [data-settings-field="true"] {
+    grid-column: 1 / -1 !important;
+  }
+
+  [data-transaction-day-entry="true"] {
+    width: calc(100% - 8px) !important;
+    margin-inline: 6px 2px !important;
+  }
+
+  [data-transaction-display-grid="true"] {
+    grid-template-columns: minmax(0, 1fr) max-content !important;
+  }
+
+  [data-transaction-amount="true"] {
+    max-width: 92px !important;
+    font-size: 12.5px !important;
+  }
+}
+
 
 
 ==================================================
@@ -80121,6 +80372,16 @@ type AppSettingsPanelProps = {
   onSimpleModeChange: (value: boolean) => void
   autoExcludePartialMonths: boolean
   onAutoExcludePartialMonthsChange: (value: boolean) => void
+  budgetStartDate: string
+  currentMonth: string
+  minAllowedMonth: string | null
+  maxAllowedMonth: string | null
+  monthNavigationFutureLocked: boolean
+  isSavingMonthNavigationSettings: boolean
+  monthNavigationErrorText: string
+  onBudgetStartDateChange: (value: string) => void
+  onMonthNavigationFutureLockedChange: (value: boolean) => void
+  onSaveMonthNavigationSettings: () => void
   draftVisibleModules: AppModuleVisibility
   saveStatusText: string
   onChangeModuleVisibility: (moduleKey: AppModuleKey, isVisible: boolean) => void
@@ -80182,11 +80443,32 @@ const SettingsSwitch = ({ checked, disabled = false, onChange }: SwitchProps) =>
   </button>
 )
 
+const getLastDateOfMonth = (monthText: string) => {
+  const [year, month] = monthText.split('-').map(Number)
+
+  if (!year || !month) {
+    return undefined
+  }
+
+  const lastDay = new Date(year, month, 0).getDate()
+  return `${monthText}-${String(lastDay).padStart(2, '0')}`
+}
+
 export default function AppSettingsPanel({
   simpleMode,
   onSimpleModeChange,
   autoExcludePartialMonths,
   onAutoExcludePartialMonthsChange,
+  budgetStartDate,
+  currentMonth,
+  minAllowedMonth,
+  maxAllowedMonth,
+  monthNavigationFutureLocked,
+  isSavingMonthNavigationSettings,
+  monthNavigationErrorText,
+  onBudgetStartDateChange,
+  onMonthNavigationFutureLockedChange,
+  onSaveMonthNavigationSettings,
   draftVisibleModules,
   saveStatusText,
   onChangeModuleVisibility,
@@ -80203,6 +80485,7 @@ export default function AppSettingsPanel({
   void ignoredDefaultOpen
 
   const effectiveAutoExcludePartialMonths = autoExcludePartialMonths !== false
+  const budgetStartMaxDate = currentMonth ? getLastDateOfMonth(currentMonth) : undefined
   const isDraftDefault = moduleItems.every(
     (item) => draftVisibleModules[item.key] === DEFAULT_APP_MODULE_VISIBILITY[item.key]
   )
@@ -80226,6 +80509,51 @@ export default function AppSettingsPanel({
           <span>Aktualny użytkownik</span>
           <strong>{userEmail || 'brak danych'}</strong>
         </div>
+      </section>
+
+      <section data-settings-section="date-range">
+        <div data-settings-section-heading="true">
+          <h3>Ustawienia daty i zakresu</h3>
+          <p>Zakres historii budżetu i dostępność przyszłych miesięcy.</p>
+        </div>
+        <div data-settings-row="true" data-settings-date-row="true">
+          <label data-settings-field="true">
+            <span>Data startowa budżetu</span>
+            <input
+              type="date"
+              value={budgetStartDate}
+              max={budgetStartMaxDate}
+              onChange={(event) => onBudgetStartDateChange(event.target.value)}
+            />
+          </label>
+          <div>
+            <strong>Blokuj miesiące przyszłe</strong>
+            <p>Po włączeniu nawigacja nie przejdzie poza bieżący miesiąc.</p>
+          </div>
+          <SettingsSwitch
+            checked={monthNavigationFutureLocked}
+            onChange={onMonthNavigationFutureLockedChange}
+          />
+        </div>
+        <div data-settings-actions="true">
+          <button
+            type="button"
+            data-settings-primary-action="true"
+            onClick={onSaveMonthNavigationSettings}
+            disabled={isSavingMonthNavigationSettings}
+          >
+            {isSavingMonthNavigationSettings ? 'Zapisywanie...' : 'Zapisz zakres'}
+          </button>
+        </div>
+        <div data-settings-status="true">
+          Zakres: <b>{minAllowedMonth || 'bez dolnego limitu'}</b> -{' '}
+          <b>{maxAllowedMonth || 'bez górnego limitu'}</b>
+        </div>
+        {monthNavigationErrorText && (
+          <div data-settings-status="true">
+            <b>Błąd blokad miesięcy:</b> {monthNavigationErrorText}
+          </div>
+        )}
       </section>
 
       <section data-settings-section="basic">
@@ -80698,6 +81026,23 @@ export default function BudgetPageStatusPanelsContainer({
           onSimpleModeChange: setSimpleMode,
           autoExcludePartialMonths,
           onAutoExcludePartialMonthsChange: setAutoExcludePartialMonths,
+          budgetStartDate,
+          currentMonth,
+          minAllowedMonth,
+          maxAllowedMonth,
+          monthNavigationFutureLocked: isFutureMonthNavigationLocked,
+          isSavingMonthNavigationSettings,
+          monthNavigationErrorText,
+          onBudgetStartDateChange: (value: string) => {
+            setBudgetStartDate(value)
+            setMonthNavigationStartMonth(value ? value.slice(0, 7) : '')
+            setMonthNavigationErrorText('')
+          },
+          onMonthNavigationFutureLockedChange: (value: boolean) => {
+            setIsFutureMonthNavigationLocked(value)
+            setMonthNavigationErrorText('')
+          },
+          onSaveMonthNavigationSettings: handleSaveMonthNavigationSettingsWithStartDateWarning,
           draftVisibleModules,
           saveStatusText: moduleVisibilitySaveStatusText,
           userEmail,
@@ -81768,6 +82113,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     handleReorderLevel3,
     handleRestoreCategory,
     handleRestoreTransaction,
+    handleResetHeatmapSettings,
     handleToggleSelectedMonthExcludedWithConfirm,
     handleUndoLastAction,
     handleUndoScheduledHide,
@@ -81850,6 +82196,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     setBudgetLimitEditorCategoryId,
     setBulkActionErrorText,
     setBulkMoveTargetCategoryId,
+    setCalendarHeatmapVariant,
     setDefaultPaymentSource,
     setGoalModeForMonth,
     setHeatmapInverted,
@@ -82158,7 +82505,9 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
           heatmapInverted,
           onHeatmapInvertedChange: setHeatmapInverted,
           heatmapVariant: calendarHeatmapVariant,
-          showHeatmapControls: false,
+          onHeatmapVariantChange: setCalendarHeatmapVariant,
+          onResetHeatmapSettings: handleResetHeatmapSettings,
+          showHeatmapControls: true,
           descriptionSuggestions,
           getPaymentSourceOptionsForCategoryId: isPaymentSourcesModuleEnabled
             ? getPaymentSourceOptionsForCategoryId
@@ -90352,6 +90701,8 @@ export default function Level3TransactionRow({
 
   const amount = getAmountNumber(transaction.amount)
   const transactionKind = amount >= 0 ? 'income' : 'expense'
+  const paymentSourceSymbol =
+    paymentSourceLabels[0]?.trim().slice(0, 1).toLocaleUpperCase('pl-PL') || '–'
 
   return (
     <div
@@ -90537,6 +90888,18 @@ export default function Level3TransactionRow({
             </select>
           </div>
         ) : (
+          <>
+          <span
+            data-transaction-payment-symbol="true"
+            aria-label={
+              paymentSourceLabels.length > 0
+                ? `Źródło płatności: ${paymentSourceLabels.join(', ')}`
+                : 'Brak źródła płatności'
+            }
+            title={paymentSourceLabels.join(' · ') || 'Brak źródła płatności'}
+          >
+            {paymentSourceSymbol}
+          </span>
           <div data-transaction-display-grid="true">
             <b data-transaction-amount="true">{amount.toLocaleString('pl-PL')} zł</b>
             <span data-transaction-description="true">{transaction.description || 'Bez opisu'}</span>
@@ -90563,6 +90926,7 @@ export default function Level3TransactionRow({
               </div>
             )}
           </div>
+          </>
         )}
       </div>
 
@@ -104880,7 +105244,7 @@ PLIK: components\Level1Cards.tsx
 
 'use client'
 
-import { CSSProperties, HTMLAttributes, ReactNode } from 'react'
+import { CSSProperties, HTMLAttributes, ReactNode, useEffect, useRef } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useIsMobileViewport } from '../lib/useIsMobileViewport'
@@ -105050,6 +105414,21 @@ export function SortableLevel1Card(props: SortableProps) {
     disabled: !isSortable,
   })
   const isMobileViewport = useIsMobileViewport()
+  const suppressNextToggleRef = useRef(false)
+
+  useEffect(() => {
+    if (!isDragging) {
+      return
+    }
+
+    suppressNextToggleRef.current = true
+
+    const timer = window.setTimeout(() => {
+      suppressNextToggleRef.current = false
+    }, 260)
+
+    return () => window.clearTimeout(timer)
+  }, [isDragging])
 
   const wrapStyle: CSSProperties = {
     ...styles.l1Card,
@@ -105076,6 +105455,11 @@ export function SortableLevel1Card(props: SortableProps) {
         level1Category={level1Category}
         isOpen={isOpen}
         onToggle={() => {
+          if (suppressNextToggleRef.current) {
+            suppressNextToggleRef.current = false
+            return
+          }
+
           if (!isDragging) onToggle()
         }}
         styles={styles}
@@ -107804,7 +108188,7 @@ PLIK: components\month-calendar\MonthCalendarToolbar.tsx
 ==================================================
 
 import type { CSSProperties } from 'react'
-import type { HeatmapMode } from './monthCalendarTypes'
+import type { HeatmapMode, HeatmapVariant } from './monthCalendarTypes'
 import MonthCalendarHeader from './MonthCalendarHeader'
 import MonthCalendarHeatmapControls from './MonthCalendarHeatmapControls'
 
@@ -107813,10 +108197,13 @@ type MonthCalendarToolbarProps = {
   subtitle: string
   styles: Record<string, CSSProperties>
   heatmapMode: HeatmapMode
+  heatmapVariant: HeatmapVariant
   heatmapInverted: boolean
   showHeatmapControls: boolean
   onHeatmapModeChange: (value: HeatmapMode) => void
+  onHeatmapVariantChange?: (value: HeatmapVariant) => void
   onHeatmapInvertedChange: (value: boolean) => void
+  onResetHeatmapSettings?: () => void
 }
 
 export default function MonthCalendarToolbar({
@@ -107824,21 +108211,57 @@ export default function MonthCalendarToolbar({
   subtitle,
   styles,
   heatmapMode,
+  heatmapVariant,
   heatmapInverted,
   showHeatmapControls,
   onHeatmapModeChange,
+  onHeatmapVariantChange,
   onHeatmapInvertedChange,
+  onResetHeatmapSettings,
 }: MonthCalendarToolbarProps) {
   return (
     <>
       <MonthCalendarHeader title={title} subtitle={subtitle} styles={styles} />
-      <MonthCalendarHeatmapControls
-        heatmapMode={heatmapMode}
-        heatmapInverted={heatmapInverted}
-        showHeatmapControls={showHeatmapControls}
-        onHeatmapModeChange={onHeatmapModeChange}
-        onHeatmapInvertedChange={onHeatmapInvertedChange}
-      />
+      {showHeatmapControls && (
+        <details data-month-calendar-settings-menu="true">
+          <summary aria-label="Ustawienia heatmapy" title="Ustawienia heatmapy">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <circle cx="5" cy="12" r="1.8" fill="currentColor" />
+              <circle cx="12" cy="12" r="1.8" fill="currentColor" />
+              <circle cx="19" cy="12" r="1.8" fill="currentColor" />
+            </svg>
+          </summary>
+          <div data-month-calendar-settings-panel="true">
+            <MonthCalendarHeatmapControls
+              heatmapMode={heatmapMode}
+              heatmapInverted={heatmapInverted}
+              showHeatmapControls={showHeatmapControls}
+              onHeatmapModeChange={onHeatmapModeChange}
+              onHeatmapInvertedChange={onHeatmapInvertedChange}
+            />
+            {onHeatmapVariantChange && (
+              <label data-month-calendar-heatmap-field="true">
+                <span>Tryb</span>
+                <select
+                  value={heatmapVariant}
+                  onChange={(event) =>
+                    onHeatmapVariantChange(event.target.value as HeatmapVariant)
+                  }
+                >
+                  <option value="balance">bilans</option>
+                  <option value="income">przychody</option>
+                  <option value="expense">wydatki</option>
+                </select>
+              </label>
+            )}
+            {onResetHeatmapSettings && (
+              <button type="button" onClick={onResetHeatmapSettings}>
+                Reset
+              </button>
+            )}
+          </div>
+        </details>
+      )}
     </>
   )
 }
@@ -107941,10 +108364,12 @@ export type MonthCalendarPanelProps = {
   calendarTitle?: string
   calendarSubtitle?: string
   heatmapVariant?: HeatmapVariant
+  onHeatmapVariantChange?: (value: HeatmapVariant) => void
   heatmapMode?: HeatmapMode
   onHeatmapModeChange?: (value: HeatmapMode) => void
   heatmapInverted?: boolean
   onHeatmapInvertedChange?: (value: boolean) => void
+  onResetHeatmapSettings?: () => void
   defaultHeatmapMode?: HeatmapMode
   defaultHeatmapInverted?: boolean
   heatmapStorageKey?: string
@@ -108072,10 +108497,12 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
     calendarTitle = 'Kalendarz miesiąca',
     calendarSubtitle = '',
     heatmapVariant = 'balance',
+    onHeatmapVariantChange,
     heatmapMode: controlledHeatmapMode,
     onHeatmapModeChange,
     heatmapInverted: controlledHeatmapInverted,
     onHeatmapInvertedChange,
+    onResetHeatmapSettings,
     defaultHeatmapMode = 'balance',
     defaultHeatmapInverted = false,
     heatmapStorageKey,
@@ -108997,10 +109424,13 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
           subtitle={calendarSubtitle}
           styles={styles}
           heatmapMode={heatmapMode}
+          heatmapVariant={heatmapVariant}
           heatmapInverted={heatmapInverted}
           showHeatmapControls={showHeatmapControls}
           onHeatmapModeChange={handleHeatmapModeChange}
+          onHeatmapVariantChange={onHeatmapVariantChange}
           onHeatmapInvertedChange={handleHeatmapInvertedChange}
+          onResetHeatmapSettings={onResetHeatmapSettings}
         />
       }
       notices={

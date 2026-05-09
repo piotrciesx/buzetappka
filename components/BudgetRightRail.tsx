@@ -1,10 +1,37 @@
 'use client'
 
-import { KeyboardEvent, useEffect, useRef, useState } from 'react'
+import { KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 import type { RecurringTransaction } from '../lib/budgetPageTypes'
 import { getMonthCycleDate } from '../lib/recurringTransactions'
 
-type LiveView = 'overview' | 'payments' | 'alerts'
+type LiveWidgetCard = {
+  id: string
+  kind: 'payment' | 'alert' | 'goal' | 'dashboard'
+  eyebrow: string
+  title: string
+  value?: string
+  description: string
+  meta?: string
+  tone?: 'income' | 'expense' | 'warning' | 'neutral'
+  progressPercent?: number
+}
+
+type BudgetAlertPreview = {
+  id: string
+  categoryLabel: string
+  usageAmount: number
+  limitAmount: number
+  usagePercent: number
+  text: string
+}
+
+type FinancialGoalPreview = {
+  id: string
+  name: string
+  collectedAmount: number
+  remainingAmount: number
+  percentage: number
+}
 
 type Props = {
   selectedMonth: string
@@ -17,6 +44,8 @@ type Props = {
   draftCount: number
   recurringCount: number
   recurringAlerts: RecurringTransaction[]
+  budgetAlerts: BudgetAlertPreview[]
+  financialGoals: FinancialGoalPreview[]
   showRecurring: boolean
   onOpenSearch: (query?: string) => void
   onOpenNotifications: () => void
@@ -30,6 +59,13 @@ const emitCloseFloatingUi = () => {
   window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
 }
 
+const formatMoney = (value: number) =>
+  new Intl.NumberFormat('pl-PL', {
+    style: 'currency',
+    currency: 'PLN',
+    maximumFractionDigits: 2,
+  }).format(value)
+
 export default function BudgetRightRail({
   selectedMonth,
   isSelectedMonthLocked,
@@ -41,6 +77,8 @@ export default function BudgetRightRail({
   draftCount,
   recurringCount,
   recurringAlerts,
+  budgetAlerts,
+  financialGoals,
   showRecurring,
   onOpenSearch,
   onOpenNotifications,
@@ -52,17 +90,163 @@ export default function BudgetRightRail({
   const [isNotificationsPreviewOpen, setIsNotificationsPreviewOpen] = useState(false)
   const [isQuickSearchOpen, setIsQuickSearchOpen] = useState(false)
   const [quickSearchText, setQuickSearchText] = useState('')
-  const [liveView, setLiveView] = useState<LiveView>('overview')
+  const [liveCardIndex, setLiveCardIndex] = useState(0)
   const quickSearchRef = useRef<HTMLDivElement | null>(null)
   const notificationsRef = useRef<HTMLDivElement | null>(null)
   const quickSearchInputRef = useRef<HTMLInputElement | null>(null)
 
   const balanceState = balance > 0 ? 'positive' : balance < 0 ? 'negative' : 'neutral'
   const hasOverviewData = incomeTotal > 0 || expenseTotal > 0
-  const totalFlow = incomeTotal + expenseTotal
-  const incomeShare = totalFlow > 0 ? Math.round((incomeTotal / totalFlow) * 100) : 0
-  const expenseShare = totalFlow > 0 ? 100 - incomeShare : 0
   const hasRecurringAlerts = showRecurring && recurringCount > 0
+
+  const liveCards = useMemo<LiveWidgetCard[]>(() => {
+    const cards: LiveWidgetCard[] = []
+
+    if (showRecurring && recurringAlerts.length > 0) {
+      recurringAlerts.slice(0, 3).forEach((reminder) => {
+        const reminderDate = getMonthCycleDate(reminder, selectedMonth)
+        cards.push({
+          id: `payment-${reminder.id}`,
+          kind: 'payment',
+          eyebrow: 'Płatność',
+          title: reminder.name,
+          value: reminder.amount !== null ? formatMoney(reminder.amount) : undefined,
+          description: `Termin: ${reminderDate.slice(8, 10)}.${reminderDate.slice(5, 7)}`,
+          meta: reminderDate,
+          tone: 'neutral',
+        })
+      })
+    } else {
+      cards.push({
+        id: 'payment-empty',
+        kind: 'payment',
+        eyebrow: 'Płatności',
+        title: 'Brak zaplanowanych płatności',
+        description: 'W tym miesiącu nie ma aktywnych przypomnień do obsługi.',
+        tone: 'neutral',
+      })
+    }
+
+    if (budgetAlerts.length > 0) {
+      budgetAlerts.slice(0, 3).forEach((alert) => {
+        cards.push({
+          id: `alert-${alert.id}`,
+          kind: 'alert',
+          eyebrow: 'Alert budżetowy',
+          title: alert.categoryLabel,
+          value: `${Math.round(alert.usagePercent)}%`,
+          description:
+            alert.text ||
+            `${formatMoney(alert.usageAmount)} z limitu ${formatMoney(alert.limitAmount)}`,
+          meta: `${formatMoney(alert.usageAmount)} / ${formatMoney(alert.limitAmount)}`,
+          tone: 'warning',
+          progressPercent: Math.min(Math.max(alert.usagePercent, 0), 100),
+        })
+      })
+    } else {
+      cards.push({
+        id: 'alert-empty',
+        kind: 'alert',
+        eyebrow: 'Alerty',
+        title: 'Brak alertów budżetowych',
+        description: 'Limity nie wymagają teraz reakcji.',
+        tone: 'neutral',
+      })
+    }
+
+    if (financialGoals.length > 0) {
+      financialGoals.slice(0, 3).forEach((goal) => {
+        cards.push({
+          id: `goal-${goal.id}`,
+          kind: 'goal',
+          eyebrow: 'Cel finansowy',
+          title: goal.name,
+          value: `${Math.round(goal.percentage)}%`,
+          description: `Zebrano ${formatMoney(goal.collectedAmount)}, brakuje ${formatMoney(
+            goal.remainingAmount
+          )}.`,
+          tone: 'income',
+          progressPercent: Math.min(Math.max(goal.percentage, 0), 100),
+        })
+      })
+    } else {
+      cards.push({
+        id: 'goal-empty',
+        kind: 'goal',
+        eyebrow: 'Cele',
+        title: 'Brak aktywnych celów',
+        description: 'Nie ma teraz celu finansowego w toku.',
+        tone: 'neutral',
+      })
+    }
+
+    cards.push(
+      {
+        id: 'dashboard-balance',
+        kind: 'dashboard',
+        eyebrow: 'Bilans miesiąca',
+        title: selectedMonth,
+        value: formatMoney(balance),
+        description: hasOverviewData
+          ? `Wpływy ${formatMoney(incomeTotal)}, wydatki ${formatMoney(expenseTotal)}.`
+          : 'Dodaj wpisy, aby zobaczyć rytm miesiąca.',
+        meta: `${transactionCount} wpisów`,
+        tone:
+          balanceState === 'positive'
+            ? 'income'
+            : balanceState === 'negative'
+              ? 'expense'
+              : 'neutral',
+      },
+      {
+        id: 'dashboard-entries',
+        kind: 'dashboard',
+        eyebrow: 'Rytm miesiąca',
+        title: `${transactionCount} wpisów`,
+        value: `${categoryCount} kat.`,
+        description: isSelectedMonthLocked ? 'Miesiąc jest zamknięty.' : 'Miesiąc jest otwarty.',
+        meta: `${draftCount} szkice`,
+        tone: 'neutral',
+      }
+    )
+
+    return cards
+  }, [
+    balance,
+    balanceState,
+    budgetAlerts,
+    categoryCount,
+    draftCount,
+    expenseTotal,
+    financialGoals,
+    hasOverviewData,
+    incomeTotal,
+    isSelectedMonthLocked,
+    recurringAlerts,
+    selectedMonth,
+    showRecurring,
+    transactionCount,
+  ])
+
+  useEffect(() => {
+    if (liveCardIndex < liveCards.length) {
+      return
+    }
+
+    setLiveCardIndex(0)
+  }, [liveCardIndex, liveCards.length])
+
+  useEffect(() => {
+    if (liveCards.length <= 1) {
+      return
+    }
+
+    const timer = window.setInterval(() => {
+      setLiveCardIndex((currentIndex) => (currentIndex + 1) % liveCards.length)
+    }, 30000)
+
+    return () => window.clearInterval(timer)
+  }, [liveCards.length])
 
   useEffect(() => {
     const handleCloseFloatingUi = () => {
@@ -133,14 +317,8 @@ export default function BudgetRightRail({
     setIsQuickSearchOpen(false)
   }
 
-  const formatReminderAmount = (amount: number | null) =>
-    amount === null
-      ? ''
-      : new Intl.NumberFormat('pl-PL', {
-          style: 'currency',
-          currency: 'PLN',
-          maximumFractionDigits: 2,
-        }).format(amount)
+  const formatReminderAmount = (amount: number | null) => (amount === null ? '' : formatMoney(amount))
+  const activeLiveCard = liveCards[liveCardIndex] || liveCards[0]
 
   return (
     <aside data-budget-context-rail="true" aria-label="Kontekst workspace">
@@ -310,93 +488,24 @@ export default function BudgetRightRail({
       </section>
 
       <section data-context-card="live">
-        <div data-context-card-header="true">
-          <span>Live widget</span>
-          <small>{selectedMonth}</small>
-        </div>
-
-        <div data-live-widget-tabs="true">
-          <button
-            type="button"
-            data-active={liveView === 'overview' ? 'true' : 'false'}
-            onClick={() => setLiveView('overview')}
-          >
-            Dashboard
-          </button>
-          <button
-            type="button"
-            data-active={liveView === 'payments' ? 'true' : 'false'}
-            onClick={() => setLiveView('payments')}
-          >
-            Płatności
-          </button>
-          <button
-            type="button"
-            data-active={liveView === 'alerts' ? 'true' : 'false'}
-            onClick={() => setLiveView('alerts')}
-          >
-            Alerty
-          </button>
-        </div>
-
-        <div data-live-widget-card="true">
-          {liveView === 'overview' && (
-            <>
-              {hasOverviewData ? (
-                <>
-                  <div data-live-widget-totals="true">
-                    <div>
-                      <span>Wpływy</span>
-                      <strong>{incomeTotal.toLocaleString('pl-PL')} zł</strong>
-                    </div>
-                    <div>
-                      <span>Wydatki</span>
-                      <strong>{expenseTotal.toLocaleString('pl-PL')} zł</strong>
-                    </div>
-                    <div data-balance-state={balanceState}>
-                      <span>Bilans</span>
-                      <strong>{balance.toLocaleString('pl-PL')} zł</strong>
-                    </div>
-                  </div>
-                  <div data-live-widget-flow="true" aria-label="Wpływy kontra wydatki">
-                    <i style={{ width: `${incomeShare}%` }} data-flow-kind="income" />
-                    <i style={{ width: `${expenseShare}%` }} data-flow-kind="expense" />
-                  </div>
-                  <div data-live-widget-meta="true">
-                    <span>{transactionCount} wpisy</span>
-                    <span>{isSelectedMonthLocked ? 'zamknięty' : 'otwarty'}</span>
-                  </div>
-                </>
-              ) : (
-                <div data-live-widget-empty="true">
-                  <strong>Brak danych do podglądu</strong>
-                  <p>Dodaj wpisy, aby zobaczyć przegląd miesiąca.</p>
-                </div>
-              )}
-            </>
-          )}
-
-          {liveView === 'payments' && (
-            <div data-live-widget-empty="true">
-              <strong>Nadchodzące płatności</strong>
-              <p>
-                {showRecurring && recurringCount > 0
-                  ? `Masz ${recurringCount} aktywnych pozycji do sprawdzenia.`
-                  : 'Brak aktywnych płatności w podglądzie.'}
-              </p>
+        <div
+          key={activeLiveCard.id}
+          data-live-widget-card="true"
+          data-live-card-kind={activeLiveCard.kind}
+          data-live-card-tone={activeLiveCard.tone || 'neutral'}
+        >
+          <span data-live-widget-eyebrow="true">{activeLiveCard.eyebrow}</span>
+          <div data-live-widget-main="true">
+            <strong>{activeLiveCard.title}</strong>
+            {activeLiveCard.value && <b>{activeLiveCard.value}</b>}
+          </div>
+          <p>{activeLiveCard.description}</p>
+          {typeof activeLiveCard.progressPercent === 'number' && (
+            <div data-live-widget-progress="true">
+              <i style={{ width: `${activeLiveCard.progressPercent}%` }} />
             </div>
           )}
-
-          {liveView === 'alerts' && (
-            <div data-live-widget-empty="true">
-              <strong>Alerty miesiąca</strong>
-              <p>
-                {hasRecurringAlerts
-                  ? 'Masz aktywne przypomnienia lub raty do obsłużenia.'
-                  : 'Brak alertów wymagających reakcji.'}
-              </p>
-            </div>
-          )}
+          {activeLiveCard.meta && <small>{activeLiveCard.meta}</small>}
         </div>
       </section>
 
