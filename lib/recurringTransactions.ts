@@ -168,7 +168,7 @@ export const getRecurringStatusLabel = (status: RecurringTransaction['status']) 
 }
 
 export const getRecurringKindLabel = (kind: RecurringTransaction['kind']) => {
-  return kind === 'installment' ? 'ratalne' : 'ciągłe'
+  return kind === 'installment' ? 'Plan ratalny' : 'Przypomnienie stałe'
 }
 
 export const isRecurringOpenEnded = (recurring: RecurringTransaction) => {
@@ -282,7 +282,8 @@ export const getInstallmentSummary = (
     totalInstallments !== null && referenceMonth
       ? Math.min(getElapsedRecurringCycles(recurring, referenceMonth), totalInstallments)
       : null
-  const effectiveCompletedCount = completedCount
+  const effectiveCompletedCount =
+    elapsedCycles === null ? completedCount : Math.max(completedCount, elapsedCycles)
   const effectiveStatus =
     recurring.status === 'paused' || recurring.status === 'completed'
       ? recurring.status
@@ -466,7 +467,7 @@ export const buildRecurringCompletionCandidates = ({
 }
 
 export const getRecurringExecutionStatusLabel = (status: RecurringExecutionStatus) => {
-  return status === 'skipped' ? 'Przypomnienie przeczytane' : 'Powiązane z wpisem'
+  return status === 'skipped' ? 'Przypomnienie zamknięte' : 'Powiązane z wpisem'
 }
 
 export const getDaysDifference = (fromDateText: string, toDateText: string) => {

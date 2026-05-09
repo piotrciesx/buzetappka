@@ -158,6 +158,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     recentTransactionPreviews,
     recurring,
     recurringExecutions,
+    recurringReminderMonthStatuses,
     recurringTransactions,
     reorderingLevel1Id,
     reorderingLevel2Id,
@@ -168,6 +169,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     saveDraft,
     savePaymentSource,
     saveRecurringExecution,
+    saveRecurringReminderMonthStatus,
     saveRecurringTransaction,
     scopedTransactions,
     searchPanelRef,
@@ -424,16 +426,20 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
           isSelectedMonthLocked,
           recurringTransactions: isRecurringTransactionsModuleEnabled ? recurringTransactions : [],
           recurringExecutions: isRecurringTransactionsModuleEnabled ? recurringExecutions : [],
+          recurringReminderMonthStatuses: isRecurringTransactionsModuleEnabled
+            ? recurringReminderMonthStatuses
+            : [],
+          transactions: scopedTransactions,
           categoriesById,
           paymentSources: isPaymentSourcesModuleEnabled ? paymentSources : [],
           transactionsById: activeTransactionsById,
           categoryOptions: finalCategoryOptions,
           onSaveRecurringTransaction: saveRecurringTransaction,
-          onSkipRecurringInMonth: async (recurring: any, generatedForDate: string) => {
-            await saveRecurringExecution({
-              recurringTransactionId: recurring.id,
-              generatedForDate,
-              status: 'skipped',
+          onMarkRecurringRead: async (recurring: any) => {
+            await saveRecurringReminderMonthStatus({
+              reminderId: recurring.id,
+              month: selectedMonth,
+              status: 'read',
             })
           },
           onOpenCreateFromRecurring: openReminderTransactionCreator,

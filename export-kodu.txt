@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 458
-Data: 2026-05-09T00:38:44.060Z
+Data: 2026-05-09T00:48:02.706Z
 
 
 ==================================================
@@ -76523,6 +76523,16 @@ PLIK: app\styles\side-panels.css
   backdrop-filter: blur(14px);
 }
 
+[data-budget-utility-header="true"] {
+  min-height: 38px !important;
+  align-items: center !important;
+  color: #172033 !important;
+  font-family: var(--font-app-sans), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 680 !important;
+  letter-spacing: 0 !important;
+}
+
 [data-app-view="settings"] [data-floating-dropdown],
 [data-app-view="profile"] [data-floating-dropdown],
 [data-budget-utility-panel="true"] [data-floating-dropdown],
@@ -84534,7 +84544,7 @@ export default function BudgetPageMainPanels({
       : activeUtilityPanel === 'importExport'
         ? 'Dane / backup'
         : activeUtilityPanel === 'paymentSources'
-          ? 'Płatności'
+          ? 'Źródła płatności'
           : activeUtilityPanel === 'financialGoals'
             ? 'Cele finansowe'
             : activeUtilityPanel === 'recurringTransactions'
@@ -84542,7 +84552,7 @@ export default function BudgetPageMainPanels({
               : activeUtilityPanel === 'search'
                 ? 'Wyszukiwarka'
                 : activeUtilityPanel === 'monthCalendar'
-                  ? 'Kalendarz'
+                  ? 'Kalendarz miesiąca'
                   : activeUtilityPanel === 'hiddenCategories'
                     ? 'Ukryte kategorie'
                     : activeUtilityPanel === 'trash'
@@ -100164,21 +100174,13 @@ const draftsHeaderStyle = {
   gap: 12,
   flexWrap: 'wrap' as const,
   alignItems: 'center',
-  minHeight: 42,
-  padding: '2px 2px 10px',
+  minHeight: 34,
+  padding: '0 2px 10px',
   borderBottom: '1px solid rgba(226, 232, 240, 0.86)',
 } as const
 
-const draftsTitleStyle = {
-  margin: 0,
-  color: '#172033',
-  fontSize: 16,
-  fontWeight: 760,
-  lineHeight: 1.2,
-} as const
-
 const draftsDescriptionStyle = {
-  margin: '3px 0 0',
+  margin: 0,
   color: '#64748b',
   fontSize: 12,
   lineHeight: 1.35,
@@ -100327,7 +100329,6 @@ export default function DraftsPanel(props: Props) {
     <section style={draftsPanelStyle} aria-label="Szkice wpisów">
       <div style={draftsHeaderStyle}>
         <div>
-          <h2 style={draftsTitleStyle}>Szkice</h2>
           <p style={draftsDescriptionStyle}>Niedokończone wpisy zapisują się automatycznie.</p>
         </div>
         <button
@@ -100846,20 +100847,24 @@ PLIK: components\financial-goals\FinancialGoalsHeader.tsx
 
 import type { CSSProperties } from 'react'
 
+const descriptionStyle: CSSProperties = {
+  margin: 0,
+  color: '#64748b',
+  fontSize: 12,
+  lineHeight: 1.4,
+}
+
 type FinancialGoalsHeaderProps = {
   styles: Record<string, CSSProperties>
 }
 
-export default function FinancialGoalsHeader({ styles }: FinancialGoalsHeaderProps) {
+export default function FinancialGoalsHeader(_props: FinancialGoalsHeaderProps) {
   return (
-    <>
-      <div style={styles.sectionTitle}>Cele finansowe</div>
-      <div style={styles.pageSubtitle}>
+    <div style={descriptionStyle}>
         Start celu ustawiamy na miesiąc utworzenia. Nadwyżka dodatnia jest rozdzielana według
         aktywnego trybu z konfiguracją dziedziczoną od wybranego miesiąca do przodu, bez zmiany
         historii wcześniejszych miesięcy.
-      </div>
-    </>
+    </div>
   )
 }
 
@@ -102192,13 +102197,6 @@ const headerStyle: CSSProperties = {
   borderBottom: '1px solid rgba(226, 232, 240, 0.86)',
 }
 
-const titleStyle: CSSProperties = {
-  margin: 0,
-  color: '#172033',
-  fontSize: 16,
-  fontWeight: 760,
-}
-
 const descriptionStyle: CSSProperties = {
   margin: 0,
   color: '#64748b',
@@ -102464,7 +102462,6 @@ export default function ImportExportPanel({
   return (
     <section style={panelStyle}>
       <div style={headerStyle}>
-        <h2 style={titleStyle}>Import / eksport danych</h2>
         <p style={descriptionStyle}>Eksportuj kopię danych albo wczytaj wpisy z pliku CSV.</p>
       </div>
 
@@ -104908,14 +104905,12 @@ type MonthCalendarHeaderProps = {
 }
 
 export default function MonthCalendarHeader({
-  title,
   subtitle,
   styles,
 }: MonthCalendarHeaderProps) {
   return (
     <>
-      <div style={styles.sectionTitle}>{title}</div>
-      <div style={{ ...styles.pageSubtitle, marginBottom: 0 }}>{subtitle}</div>
+      {subtitle && <div style={{ ...styles.pageSubtitle, marginBottom: 0 }}>{subtitle}</div>}
     </>
   )
 }
@@ -107078,6 +107073,8 @@ const panelStyle = {
   marginBottom: 20,
   display: 'grid',
   gap: 14,
+  maxWidth: '100%',
+  overflowX: 'hidden' as const,
   background: 'transparent',
   border: 0,
   borderRadius: 0,
@@ -107094,8 +107091,9 @@ const cardStyle = {
 
 const settingsGridStyle = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
   gap: 10,
+  minWidth: 0,
 } as const
 
 const badgeStyle = {
@@ -107106,18 +107104,6 @@ const badgeStyle = {
   borderRadius: 999,
   fontSize: 11,
   fontWeight: 620,
-} as const
-
-const headerStyle = {
-  display: 'grid',
-  gap: 4,
-} as const
-
-const titleStyle = {
-  color: '#172033',
-  fontSize: 15,
-  fontWeight: 680,
-  letterSpacing: 0,
 } as const
 
 const subtitleStyle = {
@@ -107131,6 +107117,7 @@ const settingsCardStyle = {
   display: 'grid',
   gap: 10,
   alignContent: 'start',
+  minWidth: 0,
   minHeight: 174,
   padding: 12,
   border: '1px solid rgba(226, 232, 240, 0.92)',
@@ -107181,6 +107168,7 @@ const lightButtonStyle = {
   fontSize: 12,
   fontWeight: 580,
   boxShadow: 'none',
+  whiteSpace: 'normal' as const,
 } as const
 
 const lightDangerButtonStyle = {
@@ -107200,9 +107188,11 @@ const primaryActionStyle = {
 
 const sourceFormStyle = {
   display: 'grid',
-  gridTemplateColumns: 'minmax(180px, 1.4fr) minmax(130px, 0.8fr) 76px 64px minmax(96px, auto) minmax(96px, auto) auto auto',
+  gridTemplateColumns: 'minmax(0, 1.5fr) minmax(0, 1fr) minmax(72px, 0.6fr) minmax(64px, 0.5fr)',
   alignItems: 'end',
   gap: 9,
+  maxWidth: '100%',
+  minWidth: 0,
   padding: 12,
   border: '1px solid rgba(226, 232, 240, 0.92)',
   borderRadius: 12,
@@ -107255,6 +107245,20 @@ const responsivePaymentSourcesStyle = `
     [data-payment-source-form="true"] {
       grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     }
+  }
+
+  [data-payment-source-form="true"] > label,
+  [data-payment-source-form="true"] > button {
+    align-self: end;
+  }
+
+  [data-payment-source-form="true"] > button {
+    justify-self: start;
+  }
+
+  [data-payment-source-form="true"] input,
+  [data-payment-source-form="true"] select {
+    min-width: 0 !important;
   }
 
   @media (max-width: 560px) {
@@ -107354,12 +107358,9 @@ export default function PaymentSourcesPanel(props: Props) {
   return (
     <section style={panelStyle}>
       <style>{responsivePaymentSourcesStyle}</style>
-      <div style={headerStyle}>
-        <div style={titleStyle}>Źródła płatności i konta</div>
-        <div style={subtitleStyle}>
-          Osobno konfigurujesz listy dla przychodów i wydatków oraz decydujesz, czy pole ma być
-          widoczne w kreatorze.
-        </div>
+      <div style={subtitleStyle}>
+        Osobno konfigurujesz listy dla przychodów i wydatków oraz decydujesz, czy pole ma być
+        widoczne w kreatorze.
       </div>
 
       <div style={settingsGridStyle}>
@@ -109117,7 +109118,6 @@ export default function RecurringTransactionsPanel(props: Props) {
 
   return (
     <section style={panelStyle}>
-      <div style={styles.sectionTitle}>Przypomnienia, stałe zlecenia i raty</div>
       <div style={styles.pageSubtitle}>
         Aktywne przypomnienia, raty oraz historia cykli dla całego miesiąca.
       </div>
@@ -110675,11 +110675,13 @@ const panelStyle = {
   padding: 0,
   marginBottom: 0,
   background: 'transparent',
+  fontFamily:
+    'var(--font-app-sans), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
 } as const
 
 const filtersGridStyle = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(6, minmax(0, 1fr))',
+  gridTemplateColumns: 'repeat(5, minmax(0, 1fr))',
   gap: 10,
   marginBottom: 14,
 } as const
@@ -110705,22 +110707,21 @@ const compactFilterFieldStyle = {
   gridColumn: 'span 1',
 } as const
 
+const actionFilterFieldStyle = {
+  ...filterFieldStyle,
+  gridColumn: 'span 3',
+  alignSelf: 'end',
+  justifyItems: 'end',
+} as const
+
 const searchInputStyle: CSSProperties = {
   width: '100%',
   minWidth: 0,
 }
 
-const actionsRowStyle = {
-  display: 'flex',
-  justifyContent: 'flex-end',
-  gap: 10,
-  flexWrap: 'wrap' as const,
-  marginBottom: 14,
-} as const
-
 const resetButtonStyle = {
-  minHeight: 30,
-  padding: '0 10px',
+  minHeight: 34,
+  padding: '0 12px',
   borderRadius: 999,
   border: '1px solid rgba(203, 213, 225, 0.82)',
   background: 'rgba(255, 255, 255, 0.68)',
@@ -110836,6 +110837,10 @@ const responsiveSearchStyle = `
       grid-column: span 1 !important;
     }
 
+    [data-search-filter-field="actions"] {
+      grid-column: span 2 !important;
+    }
+
     [data-bank-search-stats="true"] {
       grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     }
@@ -110847,6 +110852,11 @@ const responsiveSearchStyle = `
     [data-bank-search-history-header="true"],
     [data-bank-search-history-row="true"] {
       grid-template-columns: 1fr !important;
+    }
+
+    [data-search-filter-field="actions"] {
+      grid-column: span 1 !important;
+      justify-items: stretch !important;
     }
   }
 `
@@ -111045,6 +111055,12 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                 <option value="amount-asc">najmniejsza kwota</option>
               </select>
             </div>
+
+            <div data-search-filter-field="actions" style={actionFilterFieldStyle}>
+              <button type="button" onClick={onReset} style={resetButtonStyle}>
+                Wyczyść filtry
+              </button>
+            </div>
           </div>
 
           {tagOptions.length > 0 && (
@@ -111075,12 +111091,6 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
               </div>
             </div>
           )}
-
-          <div style={actionsRowStyle}>
-            <button type="button" onClick={onReset} style={resetButtonStyle}>
-              Wyczyść filtry
-            </button>
-          </div>
 
           <div data-bank-search-stats="true" style={statsGridStyle}>
             <div style={incomeStatCardStyle}>
@@ -112329,19 +112339,12 @@ const panelStyle: CSSProperties = {
 
 const headerStyle: CSSProperties = {
   display: 'flex',
-  justifyContent: 'space-between',
+  justifyContent: 'flex-end',
   gap: 12,
   flexWrap: 'wrap',
   alignItems: 'center',
-  padding: '2px 2px 10px',
+  padding: '0 2px 10px',
   borderBottom: '1px solid rgba(226, 232, 240, 0.86)',
-}
-
-const titleStyle: CSSProperties = {
-  margin: 0,
-  color: '#172033',
-  fontSize: 16,
-  fontWeight: 760,
 }
 
 const hintStyle: CSSProperties = {
@@ -112469,8 +112472,6 @@ export default function TrashPanel(props: Props) {
   return (
     <section style={panelStyle} aria-label="Kosz">
       <div style={headerStyle}>
-        <h2 style={titleStyle}>Kosz</h2>
-
         {transactions.length > 0 && (
           <button
             type="button"

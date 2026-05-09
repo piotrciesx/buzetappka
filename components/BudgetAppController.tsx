@@ -757,13 +757,25 @@ export default function BudgetAppController({
       setNewAmount(
         reminder.use_amount_when_creating && reminder.amount !== null ? String(reminder.amount) : ''
       )
+      setSelectedPaymentSourceId(reminder.payment_source_id || '')
       setSelectedRecurringTransactionId(reminder.id)
-      setNewTransactionDate(getMonthCycleDate(reminder, currentMonth))
+      setNewTransactionDate(getMonthCycleDate(reminder, selectedMonth))
       setTransactionCreatorSuggestionId(reminder.category_id)
       setIsSerialTransactionCreatorEnabled(false)
       setIsTransactionCreatorOpen(true)
     },
-    [applyTransactionCategorySelection, currentMonth]
+    [
+      applyTransactionCategorySelection,
+      selectedMonth,
+      setSelectedPaymentSourceId,
+      setSelectedRecurringTransactionId,
+      setNewTransactionDate,
+      setTransactionCreatorSuggestionId,
+      setIsSerialTransactionCreatorEnabled,
+      setIsTransactionCreatorOpen,
+      setNewDescription,
+      setNewAmount,
+    ]
   )
 
   const {

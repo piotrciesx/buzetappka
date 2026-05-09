@@ -41,10 +41,10 @@ export default function RecurringExecutionConfirmModal(props: Props) {
   return (
     <div style={overlayStyle} onClick={onClose}>
       <div style={modalStyle} onClick={(event) => event.stopPropagation()}>
-        <div style={styles.sectionTitle}>Czy oznaczyć przypomnienie jako wykonane?</div>
+        <div style={styles.sectionTitle}>Czy powiązać wpis z przypomnieniem?</div>
         <div style={styles.pageSubtitle}>
-          Nic nie zostanie zamknięte automatycznie. Wybierz ręcznie przypomnienie do oznaczenia
-          albo zostaw wpis bez potwierdzenia.
+          Wybierz przypomnienie, z którym ten wpis ma być powiązany, albo zostaw wpis bez
+          powiązania.
         </div>
 
         <div style={{ display: 'grid', gap: 10 }}>
@@ -69,7 +69,7 @@ export default function RecurringExecutionConfirmModal(props: Props) {
                   style={styles.primaryButton}
                   onClick={() => onConfirm(candidate)}
                 >
-                  Tak, oznacz
+                  Powiąż wpis
                 </button>
               </div>
             </div>

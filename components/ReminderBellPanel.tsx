@@ -64,9 +64,9 @@ const countStyle: CSSProperties = {
 }
 
 const popoverStyle: CSSProperties = {
-  position: 'absolute',
-  right: 0,
-  top: 'calc(100% + 8px)',
+  position: 'fixed',
+  right: 18,
+  top: 82,
   width: 400,
   maxWidth: 'calc(100vw - 32px)',
   padding: 12,
@@ -74,7 +74,7 @@ const popoverStyle: CSSProperties = {
   borderRadius: 8,
   background: '#ffffff',
   boxShadow: '0 16px 36px rgba(15, 23, 42, 0.16)',
-  zIndex: 40,
+  zIndex: 3200,
 }
 
 const panelStyle: CSSProperties = {
@@ -578,13 +578,13 @@ export default function ReminderBellPanel({
               value={form.kind}
               onChange={(event) => updateForm('kind', event.target.value as RecurringTransaction['kind'])}
             >
-              <option value="open">ciągłe</option>
-              <option value="installment">ratalne</option>
+              <option value="open">Przypomnienie stałe</option>
+              <option value="installment">Plan ratalny</option>
             </select>
           </label>
 
           <label style={fieldLabelStyle}>
-            Interwał
+            Częstotliwość
             <select
               style={styles.input}
               value={form.frequency}
@@ -733,7 +733,7 @@ export default function ReminderBellPanel({
                   )}
                   <div style={styles.emptyText}>Dzień przypomnienia: {getRecurringReminderDay(reminder)}</div>
                   <div style={styles.emptyText}>
-                    Interwał: {getRecurringFrequencyLabel(reminder)}
+                    Częstotliwość: {getRecurringFrequencyLabel(reminder)}
                   </div>
                   {installment && (
                     <div style={styles.emptyText}>
@@ -827,7 +827,7 @@ export default function ReminderBellPanel({
                       <b>Następna rata:</b> {selectedDetailsSchedule.nextInstallmentDate || 'brak'}
                     </div>
                     <div style={styles.infoBox}>
-                      <b>Raty wykonane według harmonogramu:</b>{' '}
+                      <b>Raty w harmonogramie:</b>{' '}
                       {selectedDetailsCompletedInstallments}
                     </div>
                     <div style={styles.infoBox}>
@@ -842,7 +842,7 @@ export default function ReminderBellPanel({
                       {getRecurringReminderDay(selectedDetailsReminder)}
                     </div>
                     <div style={styles.infoBox}>
-                      <b>Interwał:</b> {getRecurringFrequencyLabel(selectedDetailsReminder)}
+                      <b>Częstotliwość:</b> {getRecurringFrequencyLabel(selectedDetailsReminder)}
                     </div>
                     {selectedDetailsReminder.start_date && (
                       <div style={styles.infoBox}>
