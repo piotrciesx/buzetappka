@@ -1,0 +1,37 @@
+@media (min-width: 821px) {
+  [data-budget-app="true"] {
+    padding: 64px 14px 16px 166px !important;
+  }
+
+  [data-budget-header-row="true"] {
+    inset: 0 348px auto 166px !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  [data-budget-workspace="true"] {
+    grid-template-columns: minmax(0, 1fr) 332px !important;
+    gap: 14px !important;
+  }
+
+  [data-budget-context-rail="true"] {
+    top: 14px !important;
+    max-width: 332px !important;
+    min-height: calc(100dvh - 30px) !important;
+    border-width: 0 0 0 1px !important;
+    border-color: rgba(203, 213, 225, 0.74) !important;
+    border-radius: 0 !important;
+  }
+}
+
+@media (max-width: 820px) {
+  [data-budget-context-rail="true"] {
+    max-width: none !important;
+  }
+
+  [data-rail-notification-popover="true"] {
+    top: 64px;
+    right: 12px;
+    left: auto;
+    width: min(300px, calc(100vw - 24px));
+  }
+}
