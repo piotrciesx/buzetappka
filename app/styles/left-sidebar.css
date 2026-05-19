@@ -1,9 +1,5 @@
 /* Extracted from app/globals.css. Keep import order in app/globals.css for cascade. */
 @media (min-width: 821px) {
-  [data-budget-app="true"] {
-    padding: calc(var(--shell-top) + 8px) var(--shell-gap) var(--shell-gap) calc(var(--shell-left) + var(--shell-gap)) !important;
-  }
-
   [data-budget-sidebar="true"] {
     inset: 0 auto 0 0 !important;
     width: var(--shell-left) !important;
@@ -14,7 +10,6 @@
     position: fixed !important;
     inset: 0 0 auto var(--shell-left) !important;
     min-height: var(--shell-top) !important;
-    grid-template-columns: minmax(190px, 280px) minmax(420px, 1fr) minmax(280px, auto) !important;
     padding: 10px var(--shell-gap) !important;
     border-width: 0 0 1px 0 !important;
     border-color: rgba(195, 214, 238, 0.62) !important;
@@ -26,23 +21,13 @@
       0 12px 28px rgba(30, 64, 175, 0.035) !important;
     backdrop-filter: blur(14px);
   }
-
-  [data-budget-workspace="true"] {
-    grid-template-columns: minmax(0, 1fr) 286px !important;
-    gap: var(--shell-gap) !important;
-    max-width: none !important;
-  }
-
-  [data-budget-app="true"] [style*="position: fixed"][style*="bottom"] {
-    display: none !important;
-  }
 }
 
 
 
 [data-budget-sidebar="true"] {
-  width: 240px;
-  padding: 16px 14px;
+  width: 272px;
+  padding: 16px 18px;
   border-right: 1px solid rgba(195, 214, 238, 0.72) !important;
   background:
     radial-gradient(circle at 18% 0%, rgba(219, 234, 254, 0.72), transparent 34%),
@@ -56,8 +41,8 @@
 
 
 [data-budget-sidebar-avatar="true"] {
-  width: 48px;
-  height: 48px;
+  width: 46px;
+  height: 46px;
   border: 1px solid rgba(191, 219, 254, 0.9);
   border-radius: 16px;
   display: grid;
@@ -67,7 +52,7 @@
     radial-gradient(circle at 32% 18%, rgba(255, 255, 255, 0.94), transparent 28%),
     linear-gradient(145deg, #eff6ff, #dbeafe);
   color: #0b2a63;
-  font-weight: 850;
+  font-weight: 760;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.94),
     0 12px 24px rgba(37, 99, 235, 0.10);
@@ -77,7 +62,7 @@
 
 [data-budget-sidebar-nav="true"] {
   display: grid;
-  gap: 5px;
+  gap: 4px;
   width: 100%;
   padding-top: 14px;
   border-top: 1px solid rgba(195, 214, 238, 0.68);
@@ -85,20 +70,9 @@
 
 
 
-[data-budget-sidebar-nav="true"]::before,
-[data-budget-sidebar-nav="true"]::after {
-  content: "";
-  display: block;
-  height: 1px;
-  margin: 4px 7px;
-  background: linear-gradient(90deg, transparent, rgba(195, 214, 238, 0.82), transparent);
-}
-
-
-
 [data-sidebar-section] {
   display: grid !important;
-  gap: 5px !important;
+  gap: 4px !important;
 }
 
 
@@ -112,10 +86,10 @@
 
 
 [data-sidebar-section-label="true"] {
-  padding: 0 9px 4px !important;
+  padding: 0 10px 5px !important;
   color: #7c8fae !important;
   font-size: 10px !important;
-  font-weight: 720 !important;
+  font-weight: 680 !important;
   letter-spacing: 0 !important;
   text-transform: uppercase !important;
 }
@@ -127,15 +101,15 @@
   position: relative;
   width: 100%;
   min-width: 0;
-  height: 37px;
+  height: 36px;
   border: 1px solid transparent;
   border-radius: 13px;
   display: grid;
-  grid-template-columns: 24px minmax(0, 1fr);
+  grid-template-columns: 22px minmax(0, 1fr);
   align-items: center;
   justify-items: start;
   gap: 10px;
-  padding: 0 11px;
+  padding: 0 12px;
   color: #425773;
   background: transparent;
   cursor: pointer;
@@ -144,20 +118,21 @@
 
 
 [data-budget-sidebar-nav="true"] svg {
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
 }
 
 
 
 [data-sidebar-label="true"] {
-  max-width: 168px;
+  width: 100%;
+  max-width: none;
   min-width: 0;
   overflow: hidden;
   color: currentColor;
-  font-size: 12px;
-  font-weight: 560;
-  line-height: 1.1;
+  font-size: 11.5px;
+  font-weight: 460;
+  line-height: 1.15;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -167,7 +142,7 @@
 [data-budget-sidebar-nav="true"] button::before {
   content: "";
   position: absolute;
-  left: -9px;
+  left: -10px;
   width: 3px;
   height: 20px;
   border-radius: 999px;
@@ -179,13 +154,13 @@
 [data-budget-sidebar-nav="true"] button:hover,
 [data-budget-sidebar-nav="true"] button[data-active="true"],
 [data-budget-topbar-actions="true"] > button:hover {
-  border-color: rgba(37, 99, 235, 0.22);
+  border-color: rgba(37, 99, 235, 0.2);
   background:
-    linear-gradient(145deg, rgba(239, 246, 255, 0.98), rgba(219, 234, 254, 0.74));
+    linear-gradient(145deg, rgba(239, 246, 255, 0.96), rgba(219, 234, 254, 0.68));
   color: #1d4ed8;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.94),
-    0 8px 18px rgba(37, 99, 235, 0.08);
+    0 8px 18px rgba(37, 99, 235, 0.07);
 }
 
 
