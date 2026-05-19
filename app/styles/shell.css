@@ -5,7 +5,7 @@
 
 /* BudżAppka — premium banking shell pass. */
 [data-budget-app="true"] {
-  --shell-left: 188px;
+  --shell-left: 214px;
   --shell-top: 72px;
   --shell-gap: 14px;
   --shell-radius: 22px;
@@ -66,7 +66,7 @@
   width: 100%;
   max-width: none;
   display: grid;
-  grid-template-columns: minmax(760px, 1fr) 286px;
+  grid-template-columns: minmax(0, 1fr) 286px;
   align-items: start !important;
   gap: var(--shell-gap);
   margin: 0 auto;
@@ -83,7 +83,7 @@
 [data-budget-workspace-main="true"] > div:last-child {
   position: relative;
   min-width: 0;
-  padding: 16px !important;
+  padding: 10px 14px 14px !important;
   border: 1px solid rgba(195, 214, 238, 0.78) !important;
   border-radius: 28px !important;
   background:
