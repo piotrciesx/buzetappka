@@ -19,18 +19,18 @@ export default function BudgetDashboardDrawer({
       <button
         type="button"
         data-dashboard-backdrop="true"
-        aria-label="Zamknij dashboard"
+        aria-label="Zamknij statystyki"
         tabIndex={isOpen ? 0 : -1}
         onClick={onClose}
       />
       <aside
         data-dashboard-drawer="true"
         data-dashboard-open={isOpen ? 'true' : 'false'}
-        aria-label="Dashboard analityczny"
+        aria-label="Statystyki analityczne"
         aria-hidden={!isOpen}
       >
         <div data-dashboard-drawer-header="true">
-          <button type="button" aria-label="Zamknij dashboard" onClick={onClose}>
+          <button type="button" aria-label="Zamknij statystyki" onClick={onClose}>
             ×
           </button>
         </div>

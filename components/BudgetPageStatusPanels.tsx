@@ -239,7 +239,7 @@ export default function BudgetPageStatusPanels({
     },
     {
       id: 'dashboard',
-      label: 'Dashboard',
+      label: 'Statystyki',
       icon: 'dashboard',
       active: isDashboardOpen,
       onClick: () => {
@@ -301,7 +301,7 @@ export default function BudgetPageStatusPanels({
     },
     {
       id: 'recurring',
-      label: 'Przypomnienia / raty',
+      label: 'Stałe płatności',
       icon: 'bell',
       active: activeUtilityPanel === 'recurringTransactions',
       onClick: () => openPanel('recurringTransactions'),

@@ -77,7 +77,7 @@ export default function BudgetPageMainPanels({
           : activeUtilityPanel === 'financialGoals'
             ? 'Cele finansowe'
             : activeUtilityPanel === 'recurringTransactions'
-              ? 'Przypomnienia / raty'
+              ? 'Stałe płatności'
               : activeUtilityPanel === 'search'
                 ? 'Wyszukiwarka'
                 : activeUtilityPanel === 'monthCalendar'

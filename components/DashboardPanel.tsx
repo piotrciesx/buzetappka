@@ -140,7 +140,7 @@ export default function DashboardPanel({
     <section data-dashboard-panel="true" style={panelStyle}>
       <div style={headerStyle}>
         <div>
-          <div style={styles.sectionTitle}>Dashboard</div>
+          <div style={styles.sectionTitle}>Statystyki</div>
           <div style={{ ...styles.pageSubtitle, marginBottom: 0 }}>
             Kontenery finansowe liczą tylko wpisy od daty startu budżetu.
           </div>

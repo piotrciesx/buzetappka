@@ -49,7 +49,7 @@ const moduleItems: Array<{ key: AppModuleKey; label: string; description: string
   },
   {
     key: 'recurringTransactions',
-    label: 'Przypomnienia / raty',
+    label: 'Stałe płatności',
     description: 'Cykliczne wpisy, raty i przypomnienia.',
   },
   {

@@ -435,7 +435,7 @@ export default function DashboardGrid(props: Props) {
     return (
       <div ref={gridRef} style={gridOuterStyle} suppressHydrationWarning>
         <div style={styles.emptyStateCard}>
-          Dashboard jest pusty. Dodaj pierwszy kafel, a potem wybierz statystykę na samym kaflu.
+          Statystyki są puste. Dodaj pierwszy kafel, a potem wybierz statystykę na samym kaflu.
         </div>
       </div>
     )
