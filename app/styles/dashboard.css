@@ -260,13 +260,17 @@
     box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.76);
   }
 
-  [data-budget-sidebar-avatar="true"] {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+  [data-budget-sidebar-logo="true"] {
+    width: 100%;
+    max-width: 112px;
+    height: 32px;
     align-self: flex-start;
-    margin-left: 6px;
-    box-shadow: none;
+    margin-left: 4px;
+    justify-content: flex-start;
+  }
+
+  [data-budget-sidebar-logo-image="true"] {
+    max-height: 26px;
   }
 
   [data-budget-sidebar-nav="true"] {

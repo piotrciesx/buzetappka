@@ -318,11 +318,13 @@ export default function BudgetPageStatusPanels({
   return (
     <>
       <aside data-budget-sidebar="true" aria-label="Moduły aplikacji">
-        <div data-budget-sidebar-avatar="true">
-          <UserAvatar
-            avatarKey={profilePanelProps.avatarKey}
-            label={profilePanelProps.displayName || profilePanelProps.userEmail || 'Profil'}
-            size="md"
+        <div data-budget-sidebar-logo="true">
+          <img
+            src="/brand/budzappka-logo-light.png"
+            alt="BudżAppka"
+            width={1199}
+            height={359}
+            data-budget-sidebar-logo-image="true"
           />
         </div>
         <nav data-budget-sidebar-nav="true" data-sidebar-desktop-nav="true">
