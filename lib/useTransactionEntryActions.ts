@@ -1,87 +1,12 @@
-import { RefObject, useCallback, useRef } from 'react'
-import { SupabaseClient } from '@supabase/supabase-js'
+import { useCallback, useRef } from 'react'
 import { normalizeAmountInput } from './budgetPageHelpers'
-import { Category, Tag, Transaction, UndoAction } from './budgetPageTypes'
 import { buildDateFromDayInput, getDayInputFromDate } from './dateUtils'
 import { buildPaymentSplitPayload, PaymentSplitInput } from './paymentSplitUtils'
-import {
-  executeDeleteTransaction,
-  executeMoveTransaction,
-  executeRestoreTransaction,
-  moveTransactionsToCategory as moveTransactionsToCategoryHelper,
-  permanentlyDeleteTransactions,
-} from './transactionActions'
-import { setTransactionTags } from './tagUtils'
 
-type DraftType = 'income' | 'expense' | null
-
-type UseTransactionEntryActionsParams = {
-  supabase: SupabaseClient
-  profileId: string
-  selectedMonth: string
-  visibleCategories: Category[]
-  categoriesById: Record<string, Category>
-  activeTransactionsById: Record<string, Transaction>
-  trashedTransactionsById: Record<string, Transaction>
-  transactionDraftType: DraftType
-  selectedTransactionTypeId: string | null
-  selectedLevel2Id: string | null
-  selectedTransactionCategoryId: string | null
-  newAmount: string
-  newDescription: string
-  newTransactionDate: string
-  selectedRecurringTransactionId: string
-  isSerialTransactionCreatorEnabled: boolean
-  isQuickDayModeEnabled?: boolean
-  quickDayDate?: string
-  isPaymentSourcesEnabled: boolean
-  isRecurringTransactionsEnabled: boolean
-  isAllowedMoveTarget: (transaction: Transaction, targetCategoryId: string) => boolean
-  getRootLevel1IdForCategory: (categoryId: string) => string | null
-  deleteDraft: (draftType: 'income' | 'expense') => Promise<void>
-  guardMonthUnlocked: (monthText: string, actionLabel: string) => boolean
-  guardTransactionsUnlocked: (items: Transaction[], actionLabel: string) => boolean
-  clearTransactionOperationUi: () => void
-  loadData: () => Promise<void>
-  resetTransactionCreator: () => void
-  setLastUndoAction: React.Dispatch<React.SetStateAction<UndoAction | null>>
-  setTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>
-  setIsSaving: React.Dispatch<React.SetStateAction<boolean>>
-  setTransactionCreatorSuggestionId: React.Dispatch<React.SetStateAction<string | null>>
-  setNewTransactionDate: React.Dispatch<React.SetStateAction<string>>
-  setNewAmount: React.Dispatch<React.SetStateAction<string>>
-  setNewDescription: React.Dispatch<React.SetStateAction<string>>
-  setSelectedTagNames: React.Dispatch<React.SetStateAction<string[]>>
-  setSelectedPaymentSourceId: React.Dispatch<React.SetStateAction<string>>
-  setSelectedPaymentSplitItems: React.Dispatch<React.SetStateAction<PaymentSplitInput[]>>
-  defaultPaymentSourceId: string | null
-  onTransactionSaved?: (transaction: Transaction) => Promise<void> | void
-  amountInputRef: RefObject<HTMLInputElement | null>
-  selectedTagNames: string[]
-  selectedPaymentSourceId: string
-  selectedPaymentSplitItems: Array<{
-    paymentSourceId: string
-    amount: string
-  }>
-  transactionTagsMap: Record<string, Tag[]>
-}
-
-const normalizeDuplicateDescription = (value: string | null | undefined) =>
-  (value || '')
-    .trim()
-    .toLocaleLowerCase('pl-PL')
-    .replace(/\s+/g, ' ')
-
-const getDayDistance = (leftDate: string, rightDate: string) => {
-  const leftTime = new Date(`${leftDate}T00:00:00`).getTime()
-  const rightTime = new Date(`${rightDate}T00:00:00`).getTime()
-
-  if (!Number.isFinite(leftTime) || !Number.isFinite(rightTime)) {
-    return Number.POSITIVE_INFINITY
-  }
-
-  return Math.abs(leftTime - rightTime) / 86_400_000
-}
+import type { UseTransactionEntryActionsParams } from './transaction-entry-actions/transactionEntryActionTypes'
+import { confirmPotentialDuplicateTransaction } from './transaction-entry-actions/transactionEntryValidation'
+import { syncTransactionPaymentSplits as syncTransactionPaymentSplitsHelper, syncTransactionTags as syncTransactionTagsHelper } from './transaction-entry-actions/transactionEntryPersistence'
+import { useTransactionTrashActions } from './transaction-entry-actions/useTransactionTrashActions'
 
 export function useTransactionEntryActions({
   supabase,
@@ -173,8 +98,13 @@ export function useTransactionEntryActions({
 
   const syncTransactionTags = useCallback(
     async (transactionId: string, rawTagNames: string[]) => {
-      const currentTags = transactionTagsMap[transactionId] || []
-      await setTransactionTags(supabase, profileId, transactionId, rawTagNames, currentTags)
+      await syncTransactionTagsHelper(
+        supabase,
+        profileId,
+        transactionId,
+        rawTagNames,
+        transactionTagsMap[transactionId] || []
+      )
     },
     [profileId, supabase, transactionTagsMap]
   )
@@ -186,40 +116,13 @@ export function useTransactionEntryActions({
       paymentSourceIdValue: string,
       paymentSplitItemsValue: PaymentSplitInput[]
     ) => {
-      const normalizedPaymentSplit = buildPaymentSplitPayload({
-        totalAmountText: amountText,
-        selectedPaymentSourceId: paymentSourceIdValue,
-        splitItems: paymentSplitItemsValue,
-      })
-
-      if (normalizedPaymentSplit.errors.length > 0) {
-        throw new Error('invalid-payment-split-total')
-      }
-
-      const { error: deleteError } = await supabase
-        .from('transaction_payment_splits')
-        .delete()
-        .eq('transaction_id', transactionId)
-
-      if (deleteError) {
-        throw deleteError
-      }
-
-      if (normalizedPaymentSplit.splitRows.length === 0) {
-        return
-      }
-
-      const { error: insertError } = await supabase.from('transaction_payment_splits').insert(
-        normalizedPaymentSplit.splitRows.map((item) => ({
-          transaction_id: transactionId,
-          payment_source_id: item.payment_source_id,
-          amount: item.amount,
-        }))
+      await syncTransactionPaymentSplitsHelper(
+        supabase,
+        transactionId,
+        amountText,
+        paymentSourceIdValue,
+        paymentSplitItemsValue
       )
-
-      if (insertError) {
-        throw insertError
-      }
     },
     [supabase]
   )
@@ -242,65 +145,15 @@ export function useTransactionEntryActions({
       descriptionText: string,
       dateText: string,
       dayIsNull = false
-    ) => {
-      const value = Number(normalizeAmountInput(amountText))
-
-      if (!value || value <= 0) {
-        return true
-      }
-
-      const normalizedDescription = normalizeDuplicateDescription(descriptionText)
-
-      if (normalizedDescription.length < 3) {
-        return true
-      }
-
-      const duplicateCandidate = Object.values(activeTransactionsById).find((transaction) => {
-        if (transaction.category_id !== categoryId || transaction.is_deleted) {
-          return false
-        }
-
-        const existingAmount = Number(transaction.amount)
-        if (!Number.isFinite(existingAmount) || Math.abs(existingAmount - value) > 0.01) {
-          return false
-        }
-
-        if (Boolean(transaction.day_is_null) !== dayIsNull) {
-          return false
-        }
-
-        if (!dayIsNull && getDayDistance(transaction.date, dateText) > 1) {
-          return false
-        }
-
-        const existingDescription = normalizeDuplicateDescription(transaction.description)
-        const hasSimilarDescription =
-          existingDescription === normalizedDescription ||
-          (existingDescription.length >= 6 &&
-            normalizedDescription.length >= 6 &&
-            (existingDescription.includes(normalizedDescription) ||
-              normalizedDescription.includes(existingDescription)))
-
-        if (!hasSimilarDescription) {
-          return false
-        }
-
-        if (!transaction.created_at) {
-          return transaction.date === dateText
-        }
-
-        const createdAtTime = new Date(transaction.created_at).getTime()
-        const minutesSinceCreated = (Date.now() - createdAtTime) / 60_000
-
-        return transaction.date === dateText || minutesSinceCreated <= 30
-      })
-
-      if (!duplicateCandidate) {
-        return true
-      }
-
-      return confirm('Podobny wpis istnieje już w tym dniu. Dodać mimo to?')
-    },
+    ) =>
+      confirmPotentialDuplicateTransaction(
+        activeTransactionsById,
+        categoryId,
+        Number(normalizeAmountInput(amountText)),
+        descriptionText,
+        dateText,
+        dayIsNull
+      ),
     [activeTransactionsById]
   )
 
@@ -757,161 +610,23 @@ export function useTransactionEntryActions({
     ]
   )
 
-  const moveTransactionsToCategory = useCallback(
-    async (transactionIds: string[], targetCategoryId: string) => {
-      const transactionsToMove = transactionIds
-        .map((transactionId) => activeTransactionsById[transactionId])
-        .filter((item): item is Transaction => !!item)
-
-      if (!guardTransactionsUnlocked(transactionsToMove, 'przenoszenie wpisów')) {
-        throw new Error('locked-month')
-      }
-
-      await moveTransactionsToCategoryHelper(supabase, transactionIds, targetCategoryId)
-    },
-    [activeTransactionsById, guardTransactionsUnlocked, supabase]
-  )
-
-  const handleRestoreTransaction = useCallback(
-    async (transactionId: string) => {
-      await executeRestoreTransaction({
-        transactionId,
-        trashedTransactionsById,
-        supabase,
-        setLastUndoAction,
-        clearTransactionOperationUi,
-        loadData,
-      })
-    },
-    [
-      clearTransactionOperationUi,
-      loadData,
-      setLastUndoAction,
-      supabase,
-      trashedTransactionsById,
-    ]
-  )
-
-  const handleMoveTransaction = useCallback(
-    async (transactionId: string, targetCategoryId: string) => {
-      const transaction = activeTransactionsById[transactionId]
-
-      if (!transaction) {
-        alert('Nie znaleziono wpisu')
-        return
-      }
-
-      if (!guardTransactionsUnlocked([transaction], 'przenoszenie wpisu')) {
-        return
-      }
-
-      await executeMoveTransaction({
-        transactionId,
-        targetCategoryId,
-        activeTransactionsById,
-        isAllowedMoveTarget,
-        supabase,
-        setLastUndoAction,
-        clearTransactionOperationUi,
-        loadData,
-      })
-    },
-    [
-      activeTransactionsById,
-      clearTransactionOperationUi,
-      guardTransactionsUnlocked,
-      isAllowedMoveTarget,
-      loadData,
-      setLastUndoAction,
-      supabase,
-    ]
-  )
-
-  const handleDeleteTransaction = useCallback(
-    async (transactionId: string) => {
-      const transaction = activeTransactionsById[transactionId]
-
-      if (!transaction) {
-        alert('Nie znaleziono wpisu')
-        return
-      }
-
-      if (!guardTransactionsUnlocked([transaction], 'usuwanie wpisu')) {
-        return
-      }
-
-      await executeDeleteTransaction({
-        transactionId,
-        activeTransactionsById,
-        supabase,
-        setLastUndoAction,
-        clearTransactionOperationUi,
-        loadData,
-      })
-    },
-    [
-      activeTransactionsById,
-      clearTransactionOperationUi,
-      guardTransactionsUnlocked,
-      loadData,
-      setLastUndoAction,
-      supabase,
-    ]
-  )
-
-  const handlePermanentDeleteTransaction = useCallback(
-    async (transactionId: string) => {
-      const transaction = trashedTransactionsById[transactionId]
-
-      if (!transaction) {
-        alert('Nie znaleziono wpisu w koszu')
-        return
-      }
-
-      const confirmed = confirm('Czy na pewno chcesz trwale usunąć ten wpis z kosza?')
-
-      if (!confirmed) {
-        return
-      }
-
-      try {
-        await permanentlyDeleteTransactions(supabase, [transactionId])
-        clearTransactionOperationUi()
-        await loadData()
-      } catch (error) {
-        if (error instanceof Error) {
-          alert(`Błąd trwałego usuwania: ${error.message}`)
-        }
-      }
-    },
-    [clearTransactionOperationUi, loadData, supabase, trashedTransactionsById]
-  )
-
-  const handleEmptyTrash = useCallback(async () => {
-    const trashedTransactionIds = Object.keys(trashedTransactionsById)
-
-    if (trashedTransactionIds.length === 0) {
-      return
-    }
-
-    const confirmed = confirm(
-      `Czy na pewno chcesz opróżnić kosz i trwale usunąć ${trashedTransactionIds.length} wpisów?`
-    )
-
-    if (!confirmed) {
-      return
-    }
-
-    try {
-      await permanentlyDeleteTransactions(supabase, trashedTransactionIds)
-      clearTransactionOperationUi()
-      await loadData()
-    } catch (error) {
-      if (error instanceof Error) {
-        alert(`Błąd opróżniania kosza: ${error.message}`)
-      }
-    }
-  }, [clearTransactionOperationUi, loadData, supabase, trashedTransactionsById])
+  const {
+    moveTransactionsToCategory,
+    handleRestoreTransaction,
+    handleMoveTransaction,
+    handleDeleteTransaction,
+    handlePermanentDeleteTransaction,
+    handleEmptyTrash,
+  } = useTransactionTrashActions({
+    supabase,
+    activeTransactionsById,
+    trashedTransactionsById,
+    isAllowedMoveTarget,
+    guardTransactionsUnlocked,
+    clearTransactionOperationUi,
+    loadData,
+    setLastUndoAction,
+  })
 
   return {
     handleSaveTransaction,

@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  AuthLoadingScreen,
   AuthScreen,
   InvitationAcceptScreen,
   MissingProfileScreen,
@@ -19,7 +18,9 @@ export default function Home() {
     authErrorText,
     loginEmail,
     setLoginEmail,
-    sendMagicLink,
+    signInWithPassword,
+    signUpWithPassword,
+    resetPassword,
     signInWithGoogle,
     signOut,
     createFirstProfile,
@@ -45,9 +46,6 @@ export default function Home() {
     setActiveProfileId,
   })
 
-  if (isAuthLoading && (!user || !profileId)) {
-    return <AuthLoadingScreen />
-  }
 
   if (!user) {
     return (
@@ -56,7 +54,9 @@ export default function Home() {
         isAuthLoading={isAuthLoading}
         loginEmail={loginEmail}
         setLoginEmail={setLoginEmail}
-        sendMagicLink={sendMagicLink}
+        signInWithPassword={signInWithPassword}
+        signUpWithPassword={signUpWithPassword}
+        resetPassword={resetPassword}
         signInWithGoogle={signInWithGoogle}
       />
     )

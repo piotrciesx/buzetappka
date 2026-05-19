@@ -1,21 +1,9 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import {
-  closestCenter,
-  DndContext,
-  DragEndEvent,
-} from '@dnd-kit/core'
-import {
-  arrayMove,
-  SortableContext,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable'
-import {
-  FinancialGoal,
-  FinancialGoalAllocationMode,
-  FinancialGoalMonthPriority,
-} from '../lib/budgetPageTypes'
+import { DragEndEvent } from '@dnd-kit/core'
+import { arrayMove } from '@dnd-kit/sortable'
+import { FinancialGoal, FinancialGoalAllocationMode, FinancialGoalMonthPriority } from '../lib/budgetPageTypes'
 import {
   buildFinancialGoalsPlan,
   getEffectiveMonthPriorityRowsForMonth,
@@ -25,234 +13,23 @@ import {
 } from '../lib/financialGoals'
 import FinancialGoalEditModal from './financial-goals/FinancialGoalEditModal'
 import FinancialGoalForm from './financial-goals/FinancialGoalForm'
+import FinancialGoalsList from './financial-goals/FinancialGoalsList'
 import FinancialGoalsHeader from './financial-goals/FinancialGoalsHeader'
 import FinancialGoalsModeControls from './financial-goals/FinancialGoalsModeControls'
-import { SortableGoalCard, StaticGoalCard } from './financial-goals/FinancialGoalCard'
+import FinancialGoalsSummary from './financial-goals/FinancialGoalsSummary'
 import type { FinancialGoalsPanelProps, FormState } from './financial-goals/financialGoalsPanelTypes'
 import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
 
-const panelStyle = {
-  marginBottom: 20,
-  background: '#ffffff',
-  border: '1px solid #e5e7eb',
-  borderRadius: 14,
-  padding: 16,
-  boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
-} as const
-
-const cardsWrapStyle = {
-  display: 'grid',
-  gap: 12,
-  marginTop: 12,
-} as const
-
-const getInitialFormState = (selectedMonth: string): FormState => ({
-  name: '',
-  targetAmount: '',
-  deadlineMonth: '',
-  startMonth: selectedMonth,
-  allocationPercent: null,
-})
-
-const clampPercent = (value: number) => Math.max(0, Math.min(100, Math.round(value)))
-
-const areAllocationMapsEqual = (
-  left: Record<string, number>,
-  right: Record<string, number>
-) => {
-  const leftKeys = Object.keys(left).sort()
-  const rightKeys = Object.keys(right).sort()
-
-  if (leftKeys.length !== rightKeys.length) {
-    return false
-  }
-
-  return leftKeys.every((key, index) => {
-    return key === rightKeys[index] && left[key] === right[key]
-  })
-}
-
-const areSetsEqual = (left: Set<string>, right: Set<string>) => {
-  if (left.size !== right.size) {
-    return false
-  }
-
-  for (const value of left) {
-    if (!right.has(value)) {
-      return false
-    }
-  }
-
-  return true
-}
-
-const sortGoalsByAllocation = (
-  goals: FinancialGoal[],
-  allocationsByGoalId: Record<string, number>
-) => {
-  return goals.slice().sort((left, right) => {
-    const allocationDiff =
-      (allocationsByGoalId[right.id] || 0) - (allocationsByGoalId[left.id] || 0)
-
-    if (allocationDiff !== 0) {
-      return allocationDiff
-    }
-
-    return left.name.localeCompare(right.name, 'pl', { sensitivity: 'base' })
-  })
-}
-
-const orderGoalsByIds = (goals: FinancialGoal[], orderedIds: string[]) => {
-  if (orderedIds.length === 0) {
-    return goals
-  }
-
-  const orderIndexById = new Map(orderedIds.map((goalId, index) => [goalId, index]))
-
-  return goals.slice().sort((left, right) => {
-    const leftIndex = orderIndexById.get(left.id) ?? Number.MAX_SAFE_INTEGER
-    const rightIndex = orderIndexById.get(right.id) ?? Number.MAX_SAFE_INTEGER
-
-    return leftIndex - rightIndex
-  })
-}
-
-const normalizeAllocationMap = (
-  goalIds: string[],
-  allocationsByGoalId: Record<string, number>
-) => {
-  if (goalIds.length === 0) {
-    return {}
-  }
-
-  if (goalIds.length === 1) {
-    return { [goalIds[0]]: 100 }
-  }
-
-  const next = Object.fromEntries(
-    goalIds.map((goalId) => [goalId, clampPercent(allocationsByGoalId[goalId] || 0)])
-  )
-
-  let total = Object.values(next).reduce((sum, value) => sum + value, 0)
-  let diff = 100 - total
-  let index = goalIds.length - 1
-  let safetyCounter = 0
-
-  while (diff !== 0 && goalIds.length > 0 && safetyCounter < 300) {
-    const goalId = goalIds[index]
-    const currentValue = next[goalId] || 0
-
-    if (diff > 0 && currentValue < 100) {
-      next[goalId] = currentValue + 1
-      diff -= 1
-    }
-
-    if (diff < 0 && currentValue > 0) {
-      next[goalId] = currentValue - 1
-      diff += 1
-    }
-
-    index -= 1
-    safetyCounter += 1
-
-    if (index < 0) {
-      index = goalIds.length - 1
-    }
-
-    total = Object.values(next).reduce((sum, value) => sum + value, 0)
-
-    if (total === 100) {
-      break
-    }
-  }
-
-  return next
-}
-
-const rebalanceAllocations = (
-  goalIds: string[],
-  currentAllocations: Record<string, number>,
-  changedGoalId: string,
-  nextValue: number,
-  lockedGoalIds: Set<string>
-) => {
-  if (goalIds.length === 0) {
-    return {}
-  }
-
-  if (goalIds.length === 1) {
-    return { [goalIds[0]]: 100 }
-  }
-
-  const lockedTotal = goalIds
-    .filter((goalId) => goalId !== changedGoalId && lockedGoalIds.has(goalId))
-    .reduce((sum, goalId) => sum + clampPercent(currentAllocations[goalId] || 0), 0)
-
-  const maxChangedValue = Math.max(0, 100 - lockedTotal)
-  const clampedValue = Math.min(clampPercent(nextValue), maxChangedValue)
-
-  const flexibleOtherGoalIds = goalIds.filter(
-    (goalId) => goalId !== changedGoalId && !lockedGoalIds.has(goalId)
-  )
-
-  const nextAllocations: Record<string, number> = {}
-
-  goalIds.forEach((goalId) => {
-    if (lockedGoalIds.has(goalId) && goalId !== changedGoalId) {
-      nextAllocations[goalId] = clampPercent(currentAllocations[goalId] || 0)
-    }
-  })
-
-  nextAllocations[changedGoalId] = clampedValue
-
-  const remaining = 100 - lockedTotal - clampedValue
-
-  if (flexibleOtherGoalIds.length === 0) {
-    nextAllocations[changedGoalId] = Math.max(0, 100 - lockedTotal)
-    return normalizeAllocationMap(goalIds, nextAllocations)
-  }
-
-  const currentOtherValues = flexibleOtherGoalIds.map((goalId) =>
-    Math.max(currentAllocations[goalId] || 0, 0)
-  )
-  const currentOtherTotal = currentOtherValues.reduce((sum, value) => sum + value, 0)
-
-  const rawValues =
-    currentOtherTotal > 0
-      ? currentOtherValues.map((value) => (remaining * value) / currentOtherTotal)
-      : flexibleOtherGoalIds.map(() => remaining / flexibleOtherGoalIds.length)
-
-  const floorValues = rawValues.map((value) => Math.floor(value))
-  let remainder = remaining - floorValues.reduce((sum, value) => sum + value, 0)
-
-  const ranking = rawValues
-    .map((value, index) => ({
-      index,
-      fraction: value - floorValues[index],
-    }))
-    .sort((left, right) => {
-      if (right.fraction !== left.fraction) {
-        return right.fraction - left.fraction
-      }
-
-      return left.index - right.index
-    })
-
-  let rankingIndex = 0
-
-  while (remainder > 0 && ranking.length > 0) {
-    floorValues[ranking[rankingIndex % ranking.length].index] += 1
-    remainder -= 1
-    rankingIndex += 1
-  }
-
-  flexibleOtherGoalIds.forEach((goalId, index) => {
-    nextAllocations[goalId] = floorValues[index]
-  })
-
-  return normalizeAllocationMap(goalIds, nextAllocations)
-}
-
+import {
+  areAllocationMapsEqual,
+  areSetsEqual,
+  getInitialFormState,
+  normalizeAllocationMap,
+  orderGoalsByIds,
+  panelStyle,
+  rebalanceAllocations,
+  sortGoalsByAllocation,
+} from './financial-goals/financialGoalsPanelUtils'
 export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
   const {
     selectedMonth,
@@ -270,8 +47,7 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
     styles,
   } = props
 
-  const saveTimeoutRef = useRef<number | null>(null)
-  const selectedMonthRef = useRef(selectedMonth)
+  const saveTimeoutRef = useRef<number | null>(null); const selectedMonthRef = useRef(selectedMonth)
 
   const [createFormState, setCreateFormState] = useState<FormState>(() => getInitialFormState(selectedMonth))
   const [editFormState, setEditFormState] = useState<FormState | null>(null)
@@ -295,7 +71,7 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
   )
 
   const effectiveMode = localModeByMonth[selectedMonth] || storedMode
-  const localPriorityOrder = localPriorityOrderByMonth[selectedMonth] || []
+  const localPriorityOrder = useMemo(() => localPriorityOrderByMonth[selectedMonth] || [], [localPriorityOrderByMonth, selectedMonth])
 
   useEffect(() => {
     selectedMonthRef.current = selectedMonth
@@ -733,17 +509,13 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         onModeChange={handleModeChange}
       />
 
-      <div style={styles.infoRow} data-financial-goals-summary="true">
-        <div style={styles.infoBox}>
-          <b>Bilans miesiąca:</b> {monthBalance.toFixed(2)} zł
-        </div>
-        <div style={styles.infoBox}>
-          <b>Nadwyżka do alokacji:</b> {monthSurplus.toFixed(2)} zł
-        </div>
-        <div style={styles.infoBox}>
-          <b>Miesiąc:</b> {selectedMonth} {lockedMonthsSet.has(selectedMonth) ? '• zamknięty' : '• otwarty'}
-        </div>
-      </div>
+      <FinancialGoalsSummary
+        selectedMonth={selectedMonth}
+        monthBalance={monthBalance}
+        monthSurplus={monthSurplus}
+        lockedMonthsSet={lockedMonthsSet}
+        styles={styles}
+      />
 
       <FinancialGoalForm
         formState={createFormState}
@@ -781,127 +553,24 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         </div>
       )}
 
-      <div style={{ marginTop: 18 }} data-financial-goals-current-list="true">
-        <div style={styles.l2Name}>Cele aktualne</div>
-
-        {activeGoals.length === 0 ? (
-          <div style={{ ...styles.emptyStateCard, marginTop: 12 }}>Brak aktywnych celów.</div>
-        ) : effectiveMode === 'priority' ? (
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext
-              items={activeGoals.map((goal) => goal.id)}
-              strategy={verticalListSortingStrategy}
-            >
-              <div style={cardsWrapStyle}>
-                {activeGoals.map((goal) => {
-                  const progress = plan.progressByGoalId[goal.id]
-
-                  return (
-                    <SortableGoalCard
-                      key={goal.id}
-                      goal={goal}
-                      collectedAmount={progress?.collectedAmount || 0}
-                      remainingAmount={progress?.remainingAmount || goal.target_amount}
-                      percentage={progress?.percentage || 0}
-                      statusLabel={progress?.statusLabel || 'w trakcie'}
-                      completionMonth={progress?.completionMonth || null}
-                      deadlineMonth={progress?.deadlineMonth || goal.deadline_month || null}
-                      waitingForLockedMonth={
-                        Boolean(progress?.completionMonth) &&
-                        progress?.statusLabel === 'w trakcie' &&
-                        !lockedMonthsSet.has(progress.completionMonth as string)
-                      }
-                      allocationPercent={pendingAllocationByGoalId[goal.id] ?? null}
-                      isAllocationMode={false}
-                      onEdit={openEditModal}
-                      onDelete={(goalId) => {
-                        void onDeleteGoal(goalId)
-                      }}
-                      styles={styles}
-                    />
-                  )
-                })}
-              </div>
-            </SortableContext>
-          </DndContext>
-        ) : (
-          <div style={cardsWrapStyle}>
-            {activeGoals.map((goal) => {
-              const progress = plan.progressByGoalId[goal.id]
-
-              return (
-                <StaticGoalCard
-                  key={goal.id}
-                  goal={goal}
-                  collectedAmount={progress?.collectedAmount || 0}
-                  remainingAmount={progress?.remainingAmount || goal.target_amount}
-                  percentage={progress?.percentage || 0}
-                  statusLabel={progress?.statusLabel || 'w trakcie'}
-                  completionMonth={progress?.completionMonth || null}
-                  deadlineMonth={progress?.deadlineMonth || goal.deadline_month || null}
-                  waitingForLockedMonth={
-                    Boolean(progress?.completionMonth) &&
-                    progress?.statusLabel === 'w trakcie' &&
-                    !lockedMonthsSet.has(progress.completionMonth as string)
-                  }
-                  allocationPercent={pendingAllocationByGoalId[goal.id] ?? null}
-                  isAllocationMode
-                  isAllocationLocked={lockedAllocationGoalIds.has(goal.id)}
-                  sliderValue={pendingAllocationByGoalId[goal.id] ?? 0}
-                  onAllocationChange={handleAllocationChange}
-                  onAllocationDragStart={handleAllocationDragStart}
-                  onAllocationCommit={handleAllocationCommit}
-                  onToggleAllocationLock={handleToggleAllocationLock}
-                  onEdit={openEditModal}
-                  onDelete={(goalId) => {
-                    void onDeleteGoal(goalId)
-                  }}
-                  styles={styles}
-                />
-              )
-            })}
-          </div>
-        )}
-      </div>
-
-      <div style={{ marginTop: 22 }} data-financial-goals-archived-list="true">
-        <div style={styles.l2Name}>Cele archiwalne</div>
-
-        {archivedGoals.length === 0 ? (
-          <div style={{ ...styles.emptyStateCard, marginTop: 12 }}>Brak celów archiwalnych.</div>
-        ) : (
-          <div style={cardsWrapStyle}>
-            {archivedGoals.map((goal) => {
-              const progress = plan.progressByGoalId[goal.id]
-
-              return (
-                <StaticGoalCard
-                  key={goal.id}
-                  goal={goal}
-                  collectedAmount={progress?.collectedAmount || 0}
-                  remainingAmount={progress?.remainingAmount || goal.target_amount}
-                  percentage={progress?.percentage || 0}
-                  statusLabel={progress?.statusLabel || 'w trakcie'}
-                  completionMonth={progress?.completionMonth || null}
-                  deadlineMonth={progress?.deadlineMonth || goal.deadline_month || null}
-                  waitingForLockedMonth={false}
-                  allocationPercent={pendingAllocationByGoalId[goal.id] ?? null}
-                  isAllocationMode={false}
-                  onEdit={openEditModal}
-                  onDelete={(goalId) => {
-                    void onDeleteGoal(goalId)
-                  }}
-                  styles={styles}
-                />
-              )
-            })}
-          </div>
-        )}
-      </div>
+      <FinancialGoalsList
+        activeGoals={activeGoals}
+        archivedGoals={archivedGoals}
+        effectiveMode={effectiveMode}
+        progressByGoalId={plan.progressByGoalId}
+        pendingAllocationByGoalId={pendingAllocationByGoalId}
+        lockedAllocationGoalIds={lockedAllocationGoalIds}
+        lockedMonthsSet={lockedMonthsSet}
+        sensors={sensors}
+        styles={styles}
+        handleDragEnd={handleDragEnd}
+        handleAllocationChange={handleAllocationChange}
+        handleAllocationDragStart={handleAllocationDragStart}
+        handleAllocationCommit={handleAllocationCommit}
+        handleToggleAllocationLock={handleToggleAllocationLock}
+        openEditModal={openEditModal}
+        onDeleteGoal={onDeleteGoal}
+      />
 
       {editFormState && (
         <FinancialGoalEditModal

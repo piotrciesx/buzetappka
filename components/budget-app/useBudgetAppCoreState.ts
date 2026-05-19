@@ -1,0 +1,100 @@
+'use client'
+
+import { useRef, useState } from 'react'
+import type { BudgetUtilityPanel } from '../BudgetPageMainPanels'
+import { budgetPageStyles } from '../../lib/budgetPageStyles'
+import type {
+  Category,
+  HideMode,
+  Tag,
+  Transaction,
+  TransactionPaymentSplit,
+} from '../../lib/budgetPageTypes'
+
+export type MigrationPromptState = {
+  categoryId: string
+  mode: HideMode
+  hideMonth: string
+  transactionIds: string[]
+  targetCategoryId: string
+  errorText: string
+}
+
+export type SidebarPrimaryPanel = 'profile' | 'settings' | null
+
+export function useBudgetAppCoreState() {
+  const [categories, setCategories] = useState<Category[]>([])
+  const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [trashedTransactions, setTrashedTransactions] = useState<Transaction[]>([])
+  const [tags, setTags] = useState<Tag[]>([])
+  const [transactionTagsMap, setTransactionTagsMap] = useState<Record<string, Tag[]>>({})
+  const [status, setStatus] = useState('Ładowanie...')
+  const [errorText, setErrorText] = useState('')
+  const [migrationPromptState, setMigrationPromptState] = useState<MigrationPromptState | null>(
+    null
+  )
+  const [budgetLimitEditorCategoryId, setBudgetLimitEditorCategoryId] = useState<
+    string | null | undefined
+  >(undefined)
+
+  const [openAddSubcategoryFor, setOpenAddSubcategoryFor] = useState<string | null>(null)
+  const [newSubcategoryName, setNewSubcategoryName] = useState('')
+  const [newSubcategoryIconKey, setNewSubcategoryIconKey] = useState<string | null>(null)
+
+  const [isSaving, setIsSaving] = useState(false)
+  const [showHiddenCategories, setShowHiddenCategories] = useState(false)
+  const [transactionPaymentSplitsMap, setTransactionPaymentSplitsMap] = useState<
+    Record<string, TransactionPaymentSplit[]>
+  >({})
+  const amountInputRef = useRef<HTMLInputElement | null>(null)
+  const descriptionInputRef = useRef<HTMLInputElement | null>(null)
+  const searchPanelRef = useRef<HTMLDivElement | null>(null)
+
+  const [activeSidebarPrimaryPanel, setActiveSidebarPrimaryPanel] =
+    useState<SidebarPrimaryPanel>(null)
+  const [activeUtilityPanel, setActiveUtilityPanel] = useState<BudgetUtilityPanel>(null)
+  const [isDashboardPanelOpen, setIsDashboardPanelOpen] = useState(false)
+
+  return {
+    activeSidebarPrimaryPanel,
+    activeUtilityPanel,
+    amountInputRef,
+    budgetLimitEditorCategoryId,
+    categories,
+    descriptionInputRef,
+    errorText,
+    isDashboardPanelOpen,
+    isSaving,
+    migrationPromptState,
+    newSubcategoryIconKey,
+    newSubcategoryName,
+    openAddSubcategoryFor,
+    searchPanelRef,
+    setActiveSidebarPrimaryPanel,
+    setActiveUtilityPanel,
+    setBudgetLimitEditorCategoryId,
+    setCategories,
+    setErrorText,
+    setIsDashboardPanelOpen,
+    setIsSaving,
+    setMigrationPromptState,
+    setNewSubcategoryIconKey,
+    setNewSubcategoryName,
+    setOpenAddSubcategoryFor,
+    setShowHiddenCategories,
+    setStatus,
+    setTags,
+    setTransactionPaymentSplitsMap,
+    setTransactionTagsMap,
+    setTransactions,
+    setTrashedTransactions,
+    showHiddenCategories,
+    status,
+    styles: budgetPageStyles,
+    tags,
+    transactionPaymentSplitsMap,
+    transactionTagsMap,
+    transactions,
+    trashedTransactions,
+  }
+}

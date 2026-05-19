@@ -5,5 +5,6 @@ type FinancialGoalsHeaderProps = {
 }
 
 export default function FinancialGoalsHeader(_props: FinancialGoalsHeaderProps) {
+  void _props
   return null
 }

@@ -1,0 +1,88 @@
+import { CSSProperties } from 'react'
+import { Category, RecurringTransaction } from '../../lib/budgetPageTypes'
+import { getInstallmentNumberForMonth, getRecurringReminderDay } from '../../lib/recurringTransactions'
+import { itemStyle, popoverStyle } from './reminderBellStyles'
+
+type Props = {
+  selectedMonth: string
+  pendingReminders: RecurringTransaction[]
+  categoriesById: Record<string, Category>
+  styles: Record<string, CSSProperties>
+  onAddFromReminder: (reminder: RecurringTransaction) => void
+  onMarkRead: (reminder: RecurringTransaction) => Promise<void>
+  hasLinkedTransactionInSelectedMonth: (reminderId: string) => boolean
+  hideLocally: (reminderId: string) => void
+  setIsOpen: (value: boolean) => void
+}
+
+export default function ReminderBellPopup({
+  selectedMonth,
+  pendingReminders,
+  categoriesById,
+  styles,
+  onAddFromReminder,
+  onMarkRead,
+  hasLinkedTransactionInSelectedMonth,
+  hideLocally,
+  setIsOpen,
+}: Props) {
+  return (
+    <div style={popoverStyle}>
+      <div style={styles.l2Name}>Przypomnienia wymagające decyzji</div>
+
+      {pendingReminders.length === 0 ? (
+        <div style={styles.emptyText}>Brak przypomnień do decyzji w tym miesiącu.</div>
+      ) : (
+        pendingReminders.map((reminder) => {
+          const installment = getInstallmentNumberForMonth(reminder, selectedMonth)
+          const category = categoriesById[reminder.category_id]
+          const hasDuplicate = hasLinkedTransactionInSelectedMonth(reminder.id)
+
+          return (
+            <div key={reminder.id} style={itemStyle}>
+              <div style={{ fontWeight: 600 }}>{reminder.name}</div>
+              <div style={styles.emptyText}>
+                {category?.name || 'Kategoria usunięta'} · dzień {getRecurringReminderDay(reminder)}
+                {installment ? ` · ${installment.current} / ${installment.total || '?'}` : ''}
+              </div>
+              {hasDuplicate && (
+                <div
+                  style={{
+                    ...styles.infoBox,
+                    marginTop: 8,
+                    background: '#fff7ed',
+                    border: '1px solid #fed7aa',
+                  }}
+                >
+                  W tym miesiącu istnieje już wpis powiązany z tym przypomnieniem.
+                </div>
+              )}
+              <div style={{ ...styles.actions, marginTop: 8 }}>
+                <button
+                  type="button"
+                  style={styles.primaryButton}
+                  onClick={() => {
+                    onAddFromReminder(reminder)
+                    setIsOpen(false)
+                  }}
+                >
+                  Dodaj wpis
+                </button>
+                <button
+                  type="button"
+                  style={styles.secondaryButton}
+                  onClick={async () => {
+                    hideLocally(reminder.id)
+                    await onMarkRead(reminder)
+                  }}
+                >
+                  Oznacz jako przeczytane
+                </button>
+              </div>
+            </div>
+          )
+        })
+      )}
+    </div>
+  )
+}
