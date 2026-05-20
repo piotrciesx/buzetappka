@@ -1,20 +1,23 @@
-/* Clean topbar shell — BudżAppka premium layout */
+/* BudżAppka — clean visible premium topbar */
 [data-budget-header-row="true"] {
+  position: fixed !important;
+  inset: 0 0 auto var(--shell-left) !important;
+  z-index: 80 !important;
   display: grid !important;
-  grid-template-columns: minmax(160px, 240px) minmax(300px, 1fr) minmax(220px, auto) !important;
+  grid-template-columns: minmax(210px, 300px) minmax(340px, 1fr) minmax(260px, auto) !important;
   align-items: center !important;
-  gap: 12px !important;
+  gap: 14px !important;
   min-width: 0 !important;
   min-height: var(--shell-top) !important;
-  padding: 9px 14px !important;
+  padding: 10px 18px !important;
   border: 0 !important;
-  border-bottom: 1px solid rgba(186, 213, 246, 0.72) !important;
+  border-bottom: 1px solid rgba(186, 213, 246, 0.74) !important;
   border-radius: 0 !important;
   background:
-    linear-gradient(180deg, rgba(248, 252, 255, 0.96), rgba(235, 245, 255, 0.88)) !important;
+    linear-gradient(180deg, rgba(250, 253, 255, 0.98), rgba(236, 246, 255, 0.94)) !important;
   box-shadow:
-    inset 0 -1px 0 rgba(255, 255, 255, 0.78),
-    0 10px 24px rgba(37, 99, 235, 0.035) !important;
+    inset 0 -1px 0 rgba(255, 255, 255, 0.86),
+    0 12px 30px rgba(37, 99, 235, 0.055) !important;
   backdrop-filter: blur(14px);
 }
 
@@ -25,7 +28,8 @@
   display: flex !important;
   align-items: center !important;
   justify-self: start !important;
-  gap: 8px !important;
+  gap: 9px !important;
+  opacity: 1 !important;
 }
 
 
@@ -33,10 +37,12 @@
 [data-budget-brand="true"] [style] {
   overflow: hidden !important;
   color: #0b2a63 !important;
-  font-size: 16px !important;
-  font-weight: 660 !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
+  opacity: 1 !important;
 }
 
 
@@ -48,11 +54,12 @@
   padding: 0 8px !important;
   border: 1px solid rgba(147, 197, 253, 0.42) !important;
   border-radius: 999px !important;
-  background: rgba(239, 246, 255, 0.82) !important;
+  background: rgba(239, 246, 255, 0.84) !important;
   color: #1e40af !important;
   font-size: 10.5px !important;
   font-weight: 620 !important;
   white-space: nowrap !important;
+  opacity: 1 !important;
 }
 
 
@@ -74,7 +81,7 @@
   padding: 6px 8px !important;
   border: 1px solid rgba(213, 222, 232, 0.82) !important;
   border-radius: 10px !important;
-  background: rgba(255, 255, 255, 0.68) !important;
+  background: rgba(255, 255, 255, 0.72) !important;
   box-shadow: none !important;
 }
 

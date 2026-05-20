@@ -5,7 +5,7 @@
 
 [data-budget-app="true"] {
   --shell-left: 252px;
-  --shell-top: 70px;
+  --shell-top: 64px;
   --shell-gap: 12px;
   --shell-radius: 22px;
   --shell-blue: #2563eb;
@@ -30,10 +30,11 @@
   content: "";
   position: fixed;
   inset: 0;
+  z-index: 0;
   pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.28), transparent 30%, transparent 72%, rgba(255, 255, 255, 0.2));
-  opacity: 0.74;
+    linear-gradient(90deg, rgba(255, 255, 255, 0.2), transparent 30%, transparent 72%, rgba(255, 255, 255, 0.14));
+  opacity: 0.62;
 }
 
 
@@ -83,7 +84,7 @@
   border: 1px solid rgba(195, 214, 238, 0.74) !important;
   border-radius: 24px !important;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 251, 255, 0.84)) !important;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.88)) !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.96),
     0 18px 48px rgba(30, 64, 175, 0.06) !important;
@@ -356,7 +357,7 @@
 [data-app-view="settings"] {
   left: 268px;
   right: auto;
-  top: 70px;
+  top: 64px;
   bottom: 18px;
   width: min(860px, calc(100vw - 296px));
   border-radius: var(--shell-radius);
