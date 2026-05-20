@@ -72,6 +72,7 @@ type IconName =
   | 'calendar'
   | 'search'
   | 'plus'
+  | 'star'
   | 'more'
 
 type SidebarItem = {
@@ -179,6 +180,9 @@ const Icon = ({ name }: { name: IconName }) => {
         </>
       )}
       {name === 'plus' && <path d="M12 5v14M5 12h14" {...common} />}
+      {name === 'star' && (
+        <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z" {...common} />
+      )}
       {name === 'more' && (
         <>
           <circle cx="5" cy="12" r="1.2" {...common} />
@@ -220,13 +224,27 @@ export default function BudgetPageStatusPanels({
 }: Props) {
   const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false)
   const [openedTopbarPanel, setOpenedTopbarPanel] = useState<
-    'alert' | 'add' | 'note' | 'search' | null
+    'alert' | 'add' | 'note' | 'pinned' | 'search' | null
   >(null)
   const [topbarSearchText, setTopbarSearchText] = useState('')
   const topbarActionsRef = useRef<HTMLDivElement | null>(null)
   const topbarSearchInputRef = useRef<HTMLInputElement | null>(null)
-  const visiblePinnedCategories = pinnedCategories.slice(0, 4)
-  const hiddenPinnedCount = Math.max(pinnedCategories.length - visiblePinnedCategories.length, 0)
+  const pinnedCategoryParts = pinnedCategories.map((category) => ({
+    id: category.id,
+    parts: category.label
+      .split(/\s*(?:›|>|\/)\s*/)
+      .map((part) => part.trim())
+      .filter(Boolean),
+  }))
+  const pinnedLeafCounts = pinnedCategoryParts.reduce<Record<string, number>>((counts, category) => {
+    const leaf = category.parts.at(-1) || ''
+
+    if (leaf) {
+      counts[leaf] = (counts[leaf] || 0) + 1
+    }
+
+    return counts
+  }, {})
 
   useEffect(() => {
     if (!activeSidebarPrimaryPanel) {
@@ -296,9 +314,19 @@ export default function BudgetPageStatusPanels({
     action()
   }
 
-  const toggleTopbarPanel = (panel: 'alert' | 'add' | 'note' | 'search') => {
+  const toggleTopbarPanel = (panel: 'alert' | 'add' | 'note' | 'pinned' | 'search') => {
     window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
     setOpenedTopbarPanel((currentPanel) => (currentPanel === panel ? null : panel))
+  }
+
+  const getPinnedCategoryDisplay = (category: TopbarPinnedCategory) => {
+    const parts =
+      pinnedCategoryParts.find((pinnedCategory) => pinnedCategory.id === category.id)?.parts || []
+    const leaf = parts.at(-1) || category.label
+    const path = parts.length > 1 ? parts.join(' › ') : ''
+    const title = path && pinnedLeafCounts[leaf] > 1 ? parts.join(' ') : leaf
+
+    return { title, path }
   }
 
   const submitTopbarSearch = () => {
@@ -422,15 +450,6 @@ export default function BudgetPageStatusPanels({
   return (
     <>
       <aside data-budget-sidebar="true" aria-label="Moduły aplikacji">
-        <div data-budget-sidebar-logo="true">
-          <img
-            src="/brand/budzappka-logo-light.png"
-            alt="BudżAppka"
-            width={1199}
-            height={359}
-            data-budget-sidebar-logo-image="true"
-          />
-        </div>
         <nav data-budget-sidebar-nav="true" data-sidebar-desktop-nav="true">
           <div data-sidebar-section="primary">
             <span data-sidebar-section-label="true">Podstawowe</span>
@@ -533,36 +552,79 @@ export default function BudgetPageStatusPanels({
       <div data-budget-shell-content="true">
         <div data-budget-header-row="true">
           <div data-budget-brand="true">
-            <div style={styles.pageTitle}>Budżet testowy</div>
-            <span>wersja robocza</span>
+            <img
+              src="/brand/budzappka-logo-light.png"
+              alt="BudżAppka"
+              width={1199}
+              height={359}
+              data-budget-topbar-logo-image="true"
+            />
           </div>
 
-          <BudgetHeaderPanel {...budgetHeaderPanelProps} />
+          <div data-budget-topbar-month-group="true">
+            <BudgetHeaderPanel {...budgetHeaderPanelProps} />
+            <button
+              type="button"
+              data-topbar-action="calendar"
+              aria-label="Kalendarz"
+              title="Kalendarz"
+              data-active={activeUtilityPanel === 'monthCalendar' ? 'true' : 'false'}
+              onClick={() => openPanel('monthCalendar')}
+            >
+              <Icon name="calendar" />
+            </button>
+          </div>
 
           <div
             data-budget-topbar-quick-actions="true"
             aria-label="Szybkie akcje"
             ref={topbarActionsRef}
           >
-            {visiblePinnedCategories.length > 0 && (
-              <div data-topbar-pinned-categories="true" aria-label="Przypięte kategorie">
-                {visiblePinnedCategories.map((category) => (
-                  <button
-                    key={category.id}
-                    type="button"
-                    data-topbar-pinned-category="true"
-                    data-pinned-category-kind={category.kind}
-                    title={category.label}
-                    onClick={() => runTopbarAction(() => onOpenPinnedCategory(category.id))}
-                  >
-                    <span>{category.label}</span>
-                  </button>
-                ))}
-                {hiddenPinnedCount > 0 && (
-                  <span data-topbar-pinned-more="true">+{hiddenPinnedCount}</span>
-                )}
-              </div>
-            )}
+            <div data-topbar-floating-action="true">
+              <button
+                type="button"
+                data-topbar-action="pinned"
+                aria-expanded={openedTopbarPanel === 'pinned'}
+                onClick={() => toggleTopbarPanel('pinned')}
+              >
+                <Icon name="star" />
+                <span>Przypięte kategorie</span>
+                <span data-topbar-chevron="true" aria-hidden="true" />
+              </button>
+              {openedTopbarPanel === 'pinned' && (
+                <div data-topbar-dropdown="pinned">
+                  {pinnedCategories.length > 0 ? (
+                    <div data-topbar-pinned-list="true">
+                      {pinnedCategories.map((category) => {
+                        const display = getPinnedCategoryDisplay(category)
+
+                        return (
+                          <button
+                            key={category.id}
+                            type="button"
+                            data-topbar-pinned-item="true"
+                            data-pinned-category-kind={category.kind}
+                            title={category.label}
+                            onClick={() => {
+                              runTopbarAction(() => onOpenPinnedCategory(category.id))
+                              setOpenedTopbarPanel(null)
+                            }}
+                          >
+                            <span data-topbar-pinned-dot="true" />
+                            <span data-topbar-pinned-copy="true">
+                              <strong>{display.title}</strong>
+                              {display.path && <small>{display.path}</small>}
+                            </span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  ) : (
+                    <p>Brak przypiętych kategorii.</p>
+                  )}
+                </div>
+              )}
+            </div>
 
             <div data-topbar-floating-action="true">
               <button
@@ -571,21 +633,11 @@ export default function BudgetPageStatusPanels({
                 aria-expanded={openedTopbarPanel === 'add'}
                 onClick={() => toggleTopbarPanel('add')}
               >
-                <Icon name="plus" />
                 <span>Dodaj wpis</span>
-                <span data-topbar-chevron="true" aria-hidden="true">⌄</span>
+                <span data-topbar-chevron="true" aria-hidden="true" />
               </button>
               {openedTopbarPanel === 'add' && (
                 <div data-topbar-dropdown="add">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      runTopbarAction(onQuickAddExpense || onQuickAdd)
-                      setOpenedTopbarPanel(null)
-                    }}
-                  >
-                    Wydatek
-                  </button>
                   <button
                     type="button"
                     onClick={() => {
@@ -594,6 +646,15 @@ export default function BudgetPageStatusPanels({
                     }}
                   >
                     Przychód
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      runTopbarAction(onQuickAddExpense || onQuickAdd)
+                      setOpenedTopbarPanel(null)
+                    }}
+                  >
+                    Wydatek
                   </button>
                 </div>
               )}
@@ -696,17 +757,6 @@ export default function BudgetPageStatusPanels({
                 </div>
               )}
             </div>
-
-            <button
-              type="button"
-              data-topbar-action="calendar"
-              aria-label="Kalendarz"
-              title="Kalendarz"
-              data-active={activeUtilityPanel === 'monthCalendar' ? 'true' : 'false'}
-              onClick={() => openPanel('monthCalendar')}
-            >
-              <Icon name="calendar" />
-            </button>
 
             <button
               type="button"
