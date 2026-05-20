@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 309
-Data: 2026-05-19T21:52:42.816Z
+Data: 2026-05-20T21:58:35.660Z
 
 
 ==================================================
@@ -2309,20 +2309,21 @@ PLIK: app\styles\category-tree\workspace.css
 /* Workspace drzewa kategorii — stabilny pełnoszeroki układ pod redesign. */
 
 [data-budget-tree-workspace="true"] {
+  position: relative !important;
   width: 100% !important;
   min-width: 0 !important;
   display: grid !important;
-  grid-template-rows: auto auto auto !important;
-  gap: 16px !important;
+  grid-template-rows: auto auto auto auto !important;
+  gap: 10px !important;
   min-height: auto !important;
-  padding: clamp(18px, 2vw, 26px) !important;
+  padding: clamp(12px, 1.45vw, 18px) !important;
   border: 1px solid rgba(203, 213, 225, 0.74) !important;
-  border-radius: 22px !important;
+  border-radius: 20px !important;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(244, 248, 251, 0.78)) !important;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(244, 249, 255, 0.84)) !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    0 24px 70px rgba(15, 23, 42, 0.09) !important;
+    0 18px 48px rgba(30, 64, 175, 0.075) !important;
 }
 
 [data-budget-workspace-main="true"] > [data-budget-tree-workspace="true"] {
@@ -2332,13 +2333,18 @@ PLIK: app\styles\category-tree\workspace.css
 }
 
 [data-budget-tree-toolbar="true"] {
+  position: absolute !important;
+  top: 12px !important;
+  right: 14px !important;
+  z-index: 4 !important;
   width: 100% !important;
   min-width: 0 !important;
   display: flex !important;
-  justify-content: center !important;
+  justify-content: flex-end !important;
   margin: 0 !important;
-  padding: 0 0 2px !important;
+  padding: 0 !important;
   border: 0 !important;
+  pointer-events: none !important;
 }
 
 [data-tree-toolbar-actions="true"] {
@@ -2347,6 +2353,7 @@ PLIK: app\styles\category-tree\workspace.css
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
+  pointer-events: auto !important;
 }
 
 [data-budget-tree-control-deck="true"] {
@@ -2355,7 +2362,13 @@ PLIK: app\styles\category-tree\workspace.css
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) auto !important;
   align-items: center !important;
-  gap: 10px !important;
+  gap: 8px !important;
+  margin: 2px 0 0 !important;
+  padding: 8px !important;
+  border: 1px solid rgba(186, 213, 246, 0.48) !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+  box-shadow: none !important;
 }
 
 [data-budget-tree-control-deck="true"] [data-budget-status-grid="true"] {
@@ -2662,6 +2675,7 @@ PLIK: app\styles\category-tree\workspace.css
   min-width: 0 !important;
   display: block !important;
   align-self: stretch !important;
+  margin-top: 0 !important;
 }
 
 [data-tree-category-grid="true"] > div,
@@ -2751,23 +2765,19 @@ PLIK: app\styles\dashboard.css
 /* Premium main layout pass: scoped to the current dashboard shell. */
 @media (min-width: 821px) {
   [data-budget-app="true"] {
-    padding: 0 332px 0 166px !important;
+    padding: calc(var(--shell-top) + var(--shell-gap)) var(--shell-gap) 16px calc(var(--shell-left) + var(--shell-gap)) !important;
     background:
       linear-gradient(135deg, #f7f9fc 0%, #edf2f7 44%, #f8fafc 100%) !important;
   }
 
   [data-budget-header-row="true"] {
-    inset: 0 332px auto 166px !important;
-    min-height: 56px !important;
-    border-color: rgba(196, 207, 219, 0.72) !important;
-    background: rgba(248, 251, 253, 0.84) !important;
-    backdrop-filter: blur(18px);
+    inset: 0 var(--shell-rail) auto var(--shell-left) !important;
   }
 
   [data-budget-workspace="true"] {
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 0 !important;
-    padding: 72px 22px 24px !important;
+    grid-template-columns: minmax(0, 1fr) var(--shell-rail) !important;
+    gap: 14px !important;
+    padding: 0 !important;
   }
 }
 
@@ -2987,7 +2997,7 @@ PLIK: app\styles\dashboard.css
 @media (min-width: 821px) {
   [data-budget-app="true"] {
     min-height: 100dvh !important;
-    padding: 58px 12px 16px 166px !important;
+    padding: calc(var(--shell-top) + var(--shell-gap)) var(--shell-gap) 16px calc(var(--shell-left) + var(--shell-gap)) !important;
     background:
       linear-gradient(180deg, #f6f8fb 0%, #edf3f8 100%) !important;
   }
@@ -3009,13 +3019,17 @@ PLIK: app\styles\dashboard.css
     box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.76);
   }
 
-  [data-budget-sidebar-avatar="true"] {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+  [data-budget-sidebar-logo="true"] {
+    width: 100%;
+    max-width: 112px;
+    height: 32px;
     align-self: flex-start;
-    margin-left: 6px;
-    box-shadow: none;
+    margin-left: 4px;
+    justify-content: flex-start;
+  }
+
+  [data-budget-sidebar-logo-image="true"] {
+    max-height: 26px;
   }
 
   [data-budget-sidebar-nav="true"] {
@@ -3043,17 +3057,21 @@ PLIK: app\styles\dashboard.css
 
   [data-budget-header-row="true"] {
     position: fixed;
-    inset: 0 0 auto 166px;
-    min-height: 58px;
+    inset: 0 var(--shell-rail) auto var(--shell-left);
+    z-index: 5000;
+    min-height: var(--shell-top);
     margin: 0;
-    padding: 8px 14px;
-    grid-template-columns: minmax(250px, 360px) minmax(360px, 1fr) minmax(230px, auto);
-    border-width: 0 0 1px 0;
-    border-color: rgba(203, 213, 225, 0.78);
+    padding: 10px 18px;
+    grid-template-columns: minmax(330px, auto) minmax(420px, 1fr) auto;
+    border-width: 0 0 1px;
+    border-color: rgba(177, 204, 237, 0.8);
     border-radius: 0;
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(246, 249, 252, 0.82));
-    box-shadow: none;
+      linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(239, 247, 255, 0.96));
+    box-shadow:
+      inset 0 -1px 0 rgba(255, 255, 255, 0.92),
+      0 14px 34px rgba(30, 64, 175, 0.08);
+    pointer-events: auto;
   }
 
   [data-budget-brand="true"] span {
@@ -3061,10 +3079,7 @@ PLIK: app\styles\dashboard.css
   }
 
   [data-budget-topbar-month="true"] {
-    margin: 0 auto;
-    border: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
+    margin: 0 !important;
   }
 
   [data-budget-topbar-actions="true"] > button {
@@ -3075,8 +3090,8 @@ PLIK: app\styles\dashboard.css
   [data-budget-workspace="true"] {
     max-width: none;
     min-height: calc(100dvh - 74px);
-    grid-template-columns: minmax(0, 1fr) 306px;
-    gap: 12px;
+    grid-template-columns: minmax(0, 1fr) var(--shell-rail);
+    gap: 14px;
     align-items: stretch;
   }
 
@@ -4877,106 +4892,34 @@ PLIK: app\styles\left-sidebar.css
 /* Extracted from app/globals.css. Keep import order in app/globals.css for cascade. */
 @media (min-width: 821px) {
   [data-budget-app="true"] {
-    padding: 58px 14px 16px 166px !important;
+    padding: calc(var(--shell-top) + 8px) var(--shell-gap) var(--shell-gap) calc(var(--shell-left) + var(--shell-gap)) !important;
   }
 
   [data-budget-sidebar="true"] {
     inset: 0 auto 0 0 !important;
-    width: 166px !important;
+    width: var(--shell-left) !important;
     border-radius: 0 !important;
   }
 
-  [data-budget-header-row="true"] {
+  [data-budget-app="true"] [data-budget-header-row="true"] {
     position: fixed !important;
-    inset: 0 0 auto 166px !important;
-    min-height: 58px !important;
-    grid-template-columns: minmax(220px, 340px) minmax(300px, 1fr) auto !important;
-    padding: 8px 14px !important;
+    inset: 0 0 auto var(--shell-left) !important;
+    min-height: var(--shell-top) !important;
+    grid-template-columns: minmax(190px, 280px) minmax(420px, 1fr) minmax(280px, auto) !important;
+    padding: 10px var(--shell-gap) !important;
     border-width: 0 0 1px 0 !important;
+    border-color: rgba(191, 216, 246, 0.72) !important;
     border-radius: 0 !important;
-    box-shadow: none !important;
+    background:
+      linear-gradient(180deg, rgba(247, 251, 255, 0.96), rgba(235, 245, 255, 0.88)) !important;
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.78) !important;
+    backdrop-filter: blur(14px);
   }
 
   [data-budget-workspace="true"] {
-    grid-template-columns: minmax(0, 1fr) 292px !important;
-    gap: 12px !important;
+    grid-template-columns: minmax(0, 1fr) 286px !important;
+    gap: var(--shell-gap) !important;
     max-width: none !important;
-  }
-}
-
-
-
-/* Etap 25 final IA wins over older visual passes. */
-[data-sidebar-section] {
-  display: grid !important;
-  gap: 4px !important;
-}
-
-
-
-[data-sidebar-section="optional"] {
-  margin-top: 10px !important;
-  padding-top: 10px !important;
-  border-top: 1px solid rgba(203, 213, 225, 0.62) !important;
-}
-
-
-
-[data-sidebar-section-label="true"] {
-  padding: 0 8px 3px !important;
-  color: #7c8798 !important;
-  font-size: 10px !important;
-  font-weight: 760 !important;
-  letter-spacing: 0 !important;
-  text-transform: uppercase !important;
-}
-
-
-
-/* Etap 25 IA overrides: sidebar sections, live rail, and central recent feed. */
-[data-sidebar-section] {
-  display: grid;
-  gap: 4px;
-}
-
-
-
-[data-sidebar-section="optional"] {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(203, 213, 225, 0.62);
-}
-
-
-
-[data-sidebar-section-label="true"] {
-  padding: 0 8px 3px;
-  color: #7c8798;
-  font-size: 10px;
-  font-weight: 760;
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
-
-
-@media (min-width: 821px) {
-  [data-budget-shell-content="true"] {
-    border-left: 1px solid rgba(203, 213, 225, 0.62);
-  }
-
-  [data-budget-sidebar="true"] {
-    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.72) !important;
-  }
-
-  [data-budget-header-row="true"] {
-    inset: 0 0 auto 166px !important;
-    border-left: 0 !important;
-  }
-
-  [data-budget-workspace="true"] {
-    grid-template-columns: minmax(680px, 1fr) 276px !important;
-    gap: 14px !important;
   }
 
   [data-budget-app="true"] [style*="position: fixed"][style*="bottom"] {
@@ -4986,40 +4929,42 @@ PLIK: app\styles\left-sidebar.css
 
 
 
-@media (min-width: 821px) {
-  [data-budget-app="true"] {
-    padding: calc(var(--shell-top) + var(--shell-gap)) var(--shell-gap) var(--shell-gap) var(--shell-left) !important;
-  }
-
-  [data-budget-sidebar="true"] {
-    width: var(--shell-left) !important;
-  }
-
-  [data-budget-header-row="true"] {
-    inset: 0 0 auto var(--shell-left) !important;
-    grid-template-columns: minmax(220px, 340px) minmax(300px, 1fr) minmax(220px, auto) !important;
-    padding-inline: var(--shell-gap) !important;
-  }
-
-  [data-budget-workspace="true"] {
-    grid-template-columns: minmax(720px, 1fr) 270px !important;
-    gap: var(--shell-gap) !important;
-  }
+[data-budget-sidebar="true"] {
+  width: 252px;
+  padding: 16px 14px;
+  overflow: hidden !important;
+  border-right: 1px solid rgba(186, 213, 246, 0.78) !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(219, 234, 254, 0.88), transparent 34%),
+    radial-gradient(circle at 0% 92%, rgba(191, 219, 254, 0.36), transparent 30%),
+    linear-gradient(180deg, rgba(248, 252, 255, 0.98), rgba(234, 244, 255, 0.94) 52%, rgba(225, 238, 253, 0.96)) !important;
+  box-shadow:
+    inset -1px 0 0 rgba(255, 255, 255, 0.86),
+    10px 0 28px rgba(37, 99, 235, 0.045) !important;
+  backdrop-filter: blur(14px);
 }
 
 
 
-[data-budget-sidebar-avatar="true"] {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(145deg, #111827, #334155);
-  color: #fff;
-  font-weight: 850;
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.18), inset 0 1px 0 rgba(255,255,255,0.18);
+[data-budget-sidebar-logo="true"] {
+  width: 100%;
+  max-width: 118px;
+  height: 38px;
+  display: flex;
+  align-items: center;
   align-self: center;
+  justify-content: center;
+  padding: 2px 4px;
+}
+
+
+
+[data-budget-sidebar-logo-image="true"] {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 30px;
+  object-fit: contain;
 }
 
 
@@ -5028,38 +4973,82 @@ PLIK: app\styles\left-sidebar.css
   display: grid;
   gap: 4px;
   width: 100%;
-  padding-top: 12px;
-  border-top: 1px solid rgba(203, 213, 225, 0.72);
+  padding-top: 14px;
+  border-top: 1px solid rgba(186, 213, 246, 0.72);
 }
 
 
 
-[data-budget-sidebar-nav="true"] button,
-[data-budget-topbar-actions="true"] > button {
+[data-sidebar-section] {
+  display: grid !important;
+  gap: 4px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+
+
+[data-sidebar-section="optional"] {
+  margin-top: 12px !important;
+  padding-top: 12px !important;
+  border-top: 1px solid rgba(186, 213, 246, 0.66) !important;
+}
+
+
+
+[data-sidebar-section-label="true"] {
+  padding: 0 10px 5px !important;
+  color: #6f84a6 !important;
+  font-size: 10px !important;
+  font-weight: 660 !important;
+  letter-spacing: 0 !important;
+  text-transform: uppercase !important;
+}
+
+
+
+[data-budget-sidebar-nav="true"] button {
   position: relative;
   width: 100%;
-  height: 36px;
+  max-width: 100%;
+  min-width: 0;
+  height: 35px;
   border: 1px solid transparent;
-  border-radius: 13px;
+  border-radius: 12px;
   display: grid;
-  grid-template-columns: 24px minmax(0, 1fr);
+  grid-template-columns: 22px minmax(0, 1fr);
   align-items: center;
-  justify-items: start;
-  gap: 7px;
-  padding: 0 8px;
-  color: #475569;
+  justify-items: stretch;
+  gap: 10px;
+  padding: 0 10px;
+  color: #344a68;
   background: transparent;
   cursor: pointer;
+  overflow: hidden !important;
+  text-align: left !important;
+}
+
+
+
+[data-budget-sidebar-nav="true"] svg {
+  width: 16px;
+  height: 16px;
+  justify-self: center;
 }
 
 
 
 [data-sidebar-label="true"] {
-  max-width: 76px;
-  overflow: hidden;
+  width: 100%;
+  max-width: none !important;
+  min-width: 0;
+  justify-self: stretch;
+  overflow: hidden !important;
   color: currentColor;
   font-size: 11px;
-  font-weight: 760;
+  font-weight: 430;
+  line-height: 1.15;
+  text-align: left !important;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -5069,9 +5058,9 @@ PLIK: app\styles\left-sidebar.css
 [data-budget-sidebar-nav="true"] button::before {
   content: "";
   position: absolute;
-  left: -9px;
+  left: -8px;
   width: 3px;
-  height: 20px;
+  height: 19px;
   border-radius: 999px;
   background: transparent;
 }
@@ -5079,12 +5068,14 @@ PLIK: app\styles\left-sidebar.css
 
 
 [data-budget-sidebar-nav="true"] button:hover,
-[data-budget-sidebar-nav="true"] button[data-active="true"],
-[data-budget-topbar-actions="true"] > button:hover {
-  border-color: rgba(59, 130, 246, 0.22);
-  background: linear-gradient(145deg, rgba(239,246,255,0.96), rgba(219,234,254,0.72));
+[data-budget-sidebar-nav="true"] button[data-active="true"] {
+  border-color: rgba(37, 99, 235, 0.22);
+  background:
+    linear-gradient(145deg, rgba(239, 246, 255, 0.98), rgba(219, 234, 254, 0.78));
   color: #1d4ed8;
-  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.10), inset 0 1px 0 rgba(255,255,255,0.94);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.94),
+    0 8px 18px rgba(37, 99, 235, 0.07);
 }
 
 
@@ -5099,86 +5090,17 @@ PLIK: app\styles\left-sidebar.css
   position: absolute;
   top: 1px;
   right: 3px;
-  min-width: 16px;
-  height: 16px;
+  min-width: 15px;
+  height: 15px;
   padding: 0 4px;
   border-radius: 999px;
   display: grid;
   place-items: center;
-  background: linear-gradient(145deg, #e11d48, #be123c);
+  background: linear-gradient(145deg, #2563eb, #1d4ed8);
   color: #fff;
-  font-size: 9.5px;
-  font-weight: 800;
-  line-height: 1;
-}
-
-
-
-[data-budget-sidebar="true"] {
-  width: 158px;
-  padding: 11px 9px;
-}
-
-
-
-[data-budget-sidebar-nav="true"]::before,
-[data-budget-sidebar-nav="true"]::after {
-  content: "";
-  display: block;
-  height: 1px;
-  margin: 4px 7px;
-  background: linear-gradient(90deg, transparent, rgba(203,213,225,0.78), transparent);
-}
-
-
-
-[data-budget-sidebar-nav="true"] button {
-  height: 32px;
-  border-radius: 11px;
-}
-
-
-
-[data-budget-sidebar-nav="true"] svg {
-  width: 18px;
-  height: 18px;
-}
-
-
-
-[data-sidebar-label="true"] {
-  max-width: 98px;
-  font-size: 10.5px;
-  font-weight: 470;
-}
-
-
-
-[data-sidebar-badge="true"] {
-  min-width: 15px;
-  height: 15px;
   font-size: 9px;
   font-weight: 680;
-}
-
-
-
-[data-budget-sidebar="true"] {
-  width: 166px;
-}
-
-
-
-[data-budget-sidebar-nav="true"] button {
-  grid-template-columns: 22px minmax(0, 1fr);
-  gap: 8px;
-  padding-inline: 9px;
-}
-
-
-
-[data-sidebar-label="true"] {
-  max-width: 108px;
+  line-height: 1;
 }
 
 
@@ -5546,7 +5468,7 @@ PLIK: app\styles\mobile\mobile-base.css
     box-shadow: 0 -10px 30px rgba(15, 23, 42, 0.08);
   }
 
-  [data-budget-sidebar-avatar="true"] {
+  [data-budget-sidebar-logo="true"] {
     display: none;
   }
 
@@ -5760,6 +5682,14 @@ PLIK: app\styles\mobile\mobile-panel-overrides.css
     min-width: 0 !important;
     grid-template-columns: 34px minmax(0, 1fr) 34px !important;
     gap: 8px !important;
+  }
+
+  [data-budget-topbar-quick-actions="true"] {
+    display: none !important;
+  }
+
+  [data-month-state="true"] {
+    display: none !important;
   }
 
   [data-budget-topbar-month="true"] > button {
@@ -6277,93 +6207,6 @@ PLIK: app\styles\modals.css
 
 
 
-/* Final premium correction: keep after legacy visual passes. */
-@media (min-width: 821px) {
-  [data-budget-app="true"] {
-    padding: 0 332px 0 166px !important;
-    background: linear-gradient(135deg, #f7f9fc 0%, #edf2f7 46%, #f8fafc 100%) !important;
-  }
-
-  [data-budget-header-row="true"] {
-    inset: 0 332px auto 166px !important;
-    grid-template-columns: minmax(160px, 260px) minmax(260px, 1fr) minmax(160px, 260px) !important;
-    min-height: 72px !important;
-    padding: 10px 22px !important;
-    border-color: rgba(196, 207, 219, 0.72) !important;
-    background: rgba(248, 251, 253, 0.88) !important;
-    backdrop-filter: blur(18px);
-  }
-
-  [data-budget-workspace="true"] {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 0 !important;
-    padding: 92px 24px 24px !important;
-    max-width: none !important;
-  }
-
-  [data-budget-context-rail="true"] {
-    position: fixed !important;
-    inset: 0 0 0 auto !important;
-    width: 332px !important;
-    max-width: 332px !important;
-  }
-}
-
-
-
-/* Premium layout correction: fixes the accepted mockup mismatches after older overrides. */
-@media (min-width: 821px) {
-  [data-budget-app="true"] {
-    padding: 0 332px 0 166px !important;
-    background: linear-gradient(135deg, #f7f9fc 0%, #edf2f7 46%, #f8fafc 100%) !important;
-  }
-
-  [data-budget-header-row="true"] {
-    inset: 0 332px auto 166px !important;
-    grid-template-columns: minmax(160px, 260px) minmax(260px, 1fr) minmax(160px, 260px) !important;
-    min-height: 72px !important;
-    padding: 10px 22px !important;
-    border-color: rgba(196, 207, 219, 0.72) !important;
-    background: rgba(248, 251, 253, 0.88) !important;
-    backdrop-filter: blur(18px);
-  }
-
-  [data-budget-workspace="true"] {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 0 !important;
-    padding: 92px 24px 24px !important;
-    max-width: none !important;
-  }
-
-  [data-budget-context-rail="true"] {
-    position: fixed !important;
-    inset: 0 0 0 auto !important;
-    width: 332px !important;
-    max-width: 332px !important;
-  }
-}
-
-
-
-[data-budget-header-row="true"] {
-  pointer-events: none;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-}
-
-
-
-[data-budget-header-row="true"] {
-  background: rgba(250, 252, 255, 0.92) !important;
-  backdrop-filter: blur(18px) saturate(1.08);
-}
-
-
-
 [data-context-card] {
   display: grid;
   gap: 8px;
@@ -6395,23 +6238,6 @@ PLIK: app\styles\modals.css
     radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.08), transparent 36%);
   backdrop-filter: blur(24px) saturate(1.18);
   box-shadow: 12px 0 34px rgba(15, 23, 42, 0.07), inset 0 1px 0 rgba(255,255,255,0.84);
-}
-
-
-
-[data-budget-header-row="true"] {
-  position: sticky;
-  top: 0;
-  z-index: 650;
-  min-width: 0;
-  min-height: 52px;
-  display: grid;
-  grid-template-columns: minmax(220px, 320px) minmax(340px, 1fr) minmax(180px, auto);
-  align-items: center;
-  gap: 10px;
-  padding: 5px 0 7px;
-  background: linear-gradient(180deg, rgba(247, 249, 252, 0.92), rgba(247, 249, 252, 0.76));
-  backdrop-filter: blur(18px) saturate(1.08);
 }
 
 
@@ -6656,37 +6482,14 @@ PLIK: app\styles\modals.css
 
 /* Right sidebar repair: keep this block scoped to the right rail only. */
 @media (min-width: 821px) {
-  [data-budget-app="true"] {
-    padding: 0 332px 0 166px !important;
-    background: linear-gradient(135deg, #f7f9fc 0%, #edf2f7 46%, #f8fafc 100%) !important;
-  }
-
-  [data-budget-header-row="true"] {
-    inset: 0 332px auto 166px !important;
-    grid-template-columns: minmax(160px, 260px) minmax(260px, 1fr) minmax(160px, 260px) !important;
-    min-height: 72px !important;
-    padding: 10px 22px !important;
-    border-color: rgba(196, 207, 219, 0.72) !important;
-    background: rgba(248, 251, 253, 0.88) !important;
-    backdrop-filter: blur(18px);
-  }
-
-  [data-budget-workspace="true"] {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 0 !important;
-    padding: 92px 24px 24px !important;
-    max-width: none !important;
-  }
-
   [data-budget-context-rail="true"] {
-    position: fixed !important;
-    inset: 0 0 0 auto !important;
+    position: sticky !important;
+    inset: auto !important;
     z-index: 42 !important;
     width: 332px !important;
     max-width: 332px !important;
-    min-height: 100dvh !important;
-    height: 100dvh !important;
+    min-height: 0 !important;
+    height: auto !important;
     overflow-y: auto !important;
     display: flex !important;
     flex-direction: column !important;
@@ -6707,37 +6510,10 @@ PLIK: app\styles\modals.css
 
 
 @media (min-width: 821px) {
-  [data-budget-app="true"] {
-    padding: 0 332px 0 166px !important;
-    background: linear-gradient(135deg, #f7f9fc 0%, #edf2f7 46%, #f8fafc 100%) !important;
-  }
-
   [data-budget-sidebar="true"] {
     inset: 0 auto 0 0 !important;
-    width: 166px !important;
+    width: var(--shell-left) !important;
     border-radius: 0 !important;
-  }
-
-  [data-budget-header-row="true"] {
-    position: fixed !important;
-    inset: 0 332px auto 166px !important;
-    min-height: 72px !important;
-    grid-template-columns: minmax(160px, 260px) minmax(260px, 1fr) minmax(160px, 260px) !important;
-    padding: 10px 22px !important;
-    border-width: 0 0 1px 0 !important;
-    border-radius: 0 !important;
-    border-color: rgba(196, 207, 219, 0.72) !important;
-    background: rgba(248, 251, 253, 0.88) !important;
-    box-shadow: none !important;
-    backdrop-filter: blur(18px);
-  }
-
-  [data-budget-workspace="true"] {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 0 !important;
-    padding: 92px 24px 24px !important;
-    max-width: none !important;
   }
 }
 
@@ -7229,23 +7005,23 @@ PLIK: app\styles\right-rail\right-rail-responsive.css
 
 @media (min-width: 821px) {
   [data-budget-app="true"] {
-    padding: 64px 14px 16px 166px !important;
+    padding: calc(var(--shell-top) + var(--shell-gap)) var(--shell-gap) 16px calc(var(--shell-left) + var(--shell-gap)) !important;
   }
 
   [data-budget-header-row="true"] {
-    inset: 0 348px auto 166px !important;
-    grid-template-columns: 1fr !important;
+    inset: 0 0 auto var(--shell-left) !important;
   }
 
   [data-budget-workspace="true"] {
-    grid-template-columns: minmax(0, 1fr) 332px !important;
+    grid-template-columns: minmax(0, 1fr) var(--shell-rail) !important;
     gap: 14px !important;
   }
 
   [data-budget-context-rail="true"] {
-    top: 14px !important;
+    position: sticky !important;
+    top: calc(var(--shell-top) + var(--shell-gap)) !important;
     max-width: 332px !important;
-    min-height: calc(100dvh - 30px) !important;
+    min-height: 0 !important;
     border-width: 0 0 0 1px !important;
     border-color: rgba(203, 213, 225, 0.74) !important;
     border-radius: 0 !important;
@@ -7275,7 +7051,7 @@ PLIK: app\styles\right-rail\right-rail-shell.css
 
 [data-budget-context-rail="true"] {
   position: sticky;
-  top: 66px;
+  top: calc(var(--shell-top) + var(--shell-gap));
   z-index: 1200;
   display: grid;
   align-content: start;
@@ -7583,15 +7359,71 @@ PLIK: app\styles\shell.css
   box-sizing: border-box;
 }
 
-/* Etap 25: main site repair pass. Keep this block last so it neutralizes older visual passes. */
 [data-budget-app="true"] {
-  background: #f4f7fb !important;
+  --shell-left: 166px;
+  --shell-rail: 332px;
+  --shell-top: 72px;
+  --shell-gap: 10px;
+  --shell-radius: 22px;
+  --shell-blue: #2563eb;
+  --shell-navy: #071f4a;
+  --shell-border: rgba(190, 210, 235, 0.78);
+  --shell-soft-border: rgba(210, 224, 242, 0.72);
+  --shell-muted: #6b7b94;
+  --shell-text: #081a3a;
+  position: relative;
+  min-height: 100dvh;
+  letter-spacing: 0;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(219, 234, 254, 0.72), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(191, 219, 254, 0.36), transparent 32%),
+    linear-gradient(180deg, #f8fbff 0%, #eef5fd 52%, #e8f1fb 100%) !important;
+  color: var(--shell-text);
+}
+
+
+
+[data-budget-app="true"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.2), transparent 30%, transparent 72%, rgba(255, 255, 255, 0.14));
+  opacity: 0.62;
+}
+
+
+
+[data-budget-app="true"] strong,
+[data-budget-app="true"] b {
+  font-weight: 660;
 }
 
 
 
 [data-budget-shell-content="true"] {
+  position: relative;
+  z-index: 1;
+  width: 100%;
   max-width: none;
+  margin: 0 auto;
+  border-left: 0 !important;
+}
+
+
+
+[data-budget-workspace="true"] {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 286px;
+  align-items: start !important;
+  gap: var(--shell-gap);
+  margin: 0 auto;
 }
 
 
@@ -7603,46 +7435,65 @@ PLIK: app\styles\shell.css
 
 
 [data-budget-workspace-main="true"] > div:last-child {
-  padding: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
+  position: relative;
+  min-width: 0;
+  padding: 10px 14px 14px !important;
+  border: 1px solid rgba(195, 214, 238, 0.74) !important;
+  border-radius: 24px !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.88)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.96),
+    0 18px 48px rgba(30, 64, 175, 0.06) !important;
+  overflow: visible;
 }
 
 
 
-[data-workspace-action="income"] {
-  color: #15803d !important;
+[data-budget-workspace-main="true"] > div:last-child::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  pointer-events: none;
+  border: 1px solid rgba(219, 234, 254, 0.44);
+  border-radius: 18px;
 }
 
 
 
-[data-workspace-action="expense"] {
-  color: #be123c !important;
+[data-budget-workspace-main="true"] > div:last-child > div {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
 }
 
 
 
-[data-workspace-panel-header="true"] {
-  margin-bottom: 10px !important;
+[data-budget-workspace-main="true"] > div:last-child > [style*="font-size"] {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 0 10px !important;
+  color: #071f4a !important;
+  font-size: 16px !important;
+  font-weight: 680 !important;
 }
 
 
 
-[data-workspace-action="income"] {
-  color: #15803d !important;
+[data-budget-workspace-main="true"] > div:last-child > [style*="font-size"]::after {
+  content: "Centrum kategorii, wpisów i szybkiego dodawania";
+  color: #6b7b94;
+  font-size: 11px;
+  font-weight: 440;
 }
 
 
 
-[data-workspace-action="expense"] {
-  color: #be123c !important;
-}
-
-
-
-[data-workspace-panel-header="true"] {
-  margin-bottom: 10px !important;
+[data-budget-workspace-main="true"] [style*="margin-bottom: 8px"] {
+  margin-bottom: 6px !important;
 }
 
 
@@ -7652,7 +7503,7 @@ PLIK: app\styles\shell.css
   align-items: start;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 14px;
+  margin-bottom: 14px !important;
 }
 
 
@@ -7665,17 +7516,17 @@ PLIK: app\styles\shell.css
 
 
 [data-workspace-panel-header="true"] span {
-  color: #172033;
+  color: #071f4a;
   font-size: 15px;
-  font-weight: 780;
+  font-weight: 740;
 }
 
 
 
 [data-workspace-panel-header="true"] strong {
-  color: #64748b;
+  color: #6b7b94;
   font-size: 12px;
-  font-weight: 560;
+  font-weight: 520;
 }
 
 
@@ -7684,159 +7535,61 @@ PLIK: app\styles\shell.css
   min-height: 160px;
   display: grid;
   place-items: center;
-  border: 1px dashed rgba(203, 213, 225, 0.88);
-  border-radius: 14px;
-  color: #94a3b8;
+  border: 1px dashed rgba(167, 192, 224, 0.88);
+  border-radius: 16px;
+  color: #8aa0bd;
   font-size: 13px;
+  background: rgba(255, 255, 255, 0.42);
 }
 
 
 
 [data-workspace-action] {
-  width: 34px !important;
-  min-width: 34px !important;
-  height: 34px !important;
-  min-height: 34px !important;
+  min-width: 36px;
+  height: 36px;
+  min-height: 36px;
   display: inline-grid !important;
   place-items: center !important;
-  padding: 0 !important;
-  font-size: 18px !important;
-  line-height: 1 !important;
-}
-
-
-
-[data-inline-entry-form="true"] {
-  display: grid !important;
-  grid-template-columns: 76px minmax(180px, 1fr) 116px auto auto !important;
-  align-items: start !important;
-  gap: 8px !important;
-  padding: 10px !important;
-  border-radius: 12px !important;
-  background: rgba(248, 250, 252, 0.72) !important;
-}
-
-
-
-[data-inline-entry-form="true"] > div:nth-of-type(n + 2) {
-  grid-column: 1 / -1;
-}
-
-
-
-[data-workspace-action] {
-  width: 34px !important;
-  min-width: 34px !important;
-  height: 34px !important;
-  min-height: 34px !important;
-  display: inline-grid;
-  place-items: center;
-  padding: 0 !important;
-  font-size: 18px !important;
-  line-height: 1 !important;
-}
-
-
-
-[data-workspace-action="income"] {
-  color: #15803d !important;
-}
-
-
-
-[data-workspace-action="expense"] {
-  color: #be123c !important;
-}
-
-
-
-/* Etap 26: main site structure pass. */
-[data-budget-mobile-nav="true"],
-[data-budget-mobile-more-menu="true"] {
-  display: none;
-}
-
-
-
-[data-budget-app="true"] {
-  background:
-    linear-gradient(180deg, #f6f8fb 0%, #eef3f8 100%) !important;
-}
-
-
-
-[data-budget-workspace="true"] {
-  align-items: start !important;
-}
-
-
-
-[data-workspace-action] {
-  min-height: 32px;
-  border: 1px solid rgba(203, 213, 225, 0.88);
-  border-radius: 9px;
+  border: 1px solid rgba(195, 214, 238, 0.88);
+  border-radius: 13px;
   padding: 0 11px;
-  background: rgba(255, 255, 255, 0.82);
-  color: #334155;
-  font-size: 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(237, 246, 255, 0.78));
+  color: #254467;
+  font-size: 13px;
   font-weight: 650;
-  cursor: pointer;
-}
-
-
-
-[data-workspace-action="income"] {
-  border-color: rgba(34, 197, 94, 0.34);
-  background: linear-gradient(145deg, rgba(236, 253, 245, 0.95), rgba(255, 255, 255, 0.82));
-  color: #166534;
-}
-
-
-
-[data-workspace-action="expense"] {
-  border-color: rgba(244, 63, 94, 0.28);
-  background: linear-gradient(145deg, rgba(255, 241, 242, 0.95), rgba(255, 255, 255, 0.82));
-  color: #9f1239;
-}
-
-
-
-/* Main site core workspace pass: final geometry and production-stable overrides. */
-[data-budget-app="true"] {
-  --shell-left: 172px;
-  --shell-top: 64px;
-  --shell-gap: 16px;
-  --shell-radius: 16px;
-  background:
-    linear-gradient(180deg, #f7f9fc 0%, #eef3f7 100%) !important;
-}
-
-
-
-[data-budget-shell-content="true"] {
-  border-left: 0 !important;
-}
-
-
-
-[data-workspace-action] {
-  min-width: 34px;
-  height: 34px;
-  min-height: 34px;
-  border-radius: 10px;
-  padding: 0 10px;
+  line-height: 1 !important;
   white-space: nowrap !important;
   overflow-wrap: normal !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 9px 20px rgba(37, 99, 235, 0.06);
+  cursor: pointer;
 }
 
 
 
 [data-workspace-action="income"],
 [data-workspace-action="expense"] {
-  width: 36px;
+  width: 38px;
   padding: 0 !important;
   font-size: 20px;
   font-weight: 760;
+}
+
+
+
+[data-workspace-action="income"] {
+  border-color: rgba(34, 197, 94, 0.28);
+  background: linear-gradient(145deg, rgba(236, 253, 245, 0.96), rgba(255, 255, 255, 0.82));
+  color: #15803d !important;
+}
+
+
+
+[data-workspace-action="expense"] {
+  border-color: rgba(244, 63, 94, 0.24);
+  background: linear-gradient(145deg, rgba(255, 241, 242, 0.96), rgba(255, 255, 255, 0.82));
+  color: #be123c !important;
 }
 
 
@@ -7847,7 +7600,7 @@ PLIK: app\styles\shell.css
   gap: 5px;
   justify-self: center;
   padding: 4px;
-  border: 1px solid rgba(203, 213, 225, 0.82);
+  border: 1px solid rgba(195, 214, 238, 0.82);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.72);
 }
@@ -7870,7 +7623,7 @@ PLIK: app\styles\shell.css
 
 [data-workspace-month-switch="true"] span {
   min-width: 76px;
-  color: #172033;
+  color: #071f4a;
   font-size: 12px;
   font-weight: 760;
   text-align: center;
@@ -7878,38 +7631,28 @@ PLIK: app\styles\shell.css
 
 
 
-[data-budget-app="true"] {
-  position: relative;
+[data-inline-entry-form="true"] {
+  display: grid !important;
+  grid-template-columns: 76px minmax(180px, 1fr) 116px auto auto !important;
+  align-items: start !important;
+  gap: 8px !important;
+  padding: 10px !important;
+  border: 1px solid rgba(210, 224, 242, 0.74) !important;
+  border-radius: 14px !important;
+  background: rgba(248, 251, 255, 0.76) !important;
 }
 
 
 
-[data-budget-shell-content="true"],
-[data-budget-workspace="true"] {
-  width: 100%;
-  max-width: 1880px;
-  margin: 0 auto;
+[data-inline-entry-form="true"] > div:nth-of-type(n + 2) {
+  grid-column: 1 / -1;
 }
 
 
 
-[data-budget-shell-content="true"] {
-  display: block;
-}
-
-
-
-[data-budget-workspace="true"] {
-  display: grid;
-  grid-template-columns: minmax(960px, 1fr) minmax(260px, 320px);
-  align-items: start;
-  gap: 12px;
-}
-
-
-
-[data-budget-workspace-main="true"] {
-  min-width: 0;
+[data-budget-mobile-nav="true"],
+[data-budget-mobile-more-menu="true"] {
+  display: none;
 }
 
 
@@ -7936,24 +7679,52 @@ PLIK: app\styles\shell.css
   display: grid;
   gap: 2px;
   padding: 8px;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
+  border: 1px solid rgba(210, 224, 242, 0.78);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.62);
 }
 
 
 
 [data-notifications-title="true"] {
   padding: 4px 6px 8px;
-  color: #334155;
+  color: #254467;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 760;
+}
+
+
+
+[data-floating-action-panel="true"],
+[data-budget-app="true"] [style*="position: fixed"][style*="bottom"] {
+  filter: saturate(0.9);
+  opacity: 0.94;
+}
+
+
+
+[data-budget-app="true"] [style*="position: fixed"][style*="bottom"] button {
+  border: 1px solid rgba(195, 214, 238, 0.78) !important;
+  background: linear-gradient(145deg, rgba(255,255,255,0.92), rgba(237,246,255,0.76)) !important;
+  color: #254467 !important;
+}
+
+
+
+[data-app-view="settings"] {
+  left: 268px;
+  right: auto;
+  top: 64px;
+  bottom: 18px;
+  width: min(860px, calc(100vw - 296px));
+  border-radius: var(--shell-radius);
 }
 
 
 
 [data-app-view="settings"] > section,
 [data-app-view="settings"] [style*="background"] {
-  border-radius: 16px !important;
+  border-radius: 18px !important;
 }
 
 
@@ -7969,6 +7740,13 @@ PLIK: app\styles\shell.css
   padding: 7px 9px;
   border-radius: 12px;
   background: rgba(255,255,255,0.58);
+  color: #254467 !important;
+}
+
+
+
+[data-app-view="settings"] [style*="border"] {
+  border-color: rgba(210, 224, 242, 0.88) !important;
 }
 
 
@@ -7983,7 +7761,7 @@ PLIK: app\styles\shell.css
   gap: 12px;
   padding: 12px 0 14px;
   margin-bottom: 10px;
-  background: rgba(248,250,252,0.92);
+  background: rgba(248, 251, 255, 0.92);
 }
 
 
@@ -7997,7 +7775,7 @@ PLIK: app\styles\shell.css
 
 [data-app-view-header="true"] span {
   display: block;
-  color: #64748b;
+  color: #6b7b94;
   font-size: 13px;
   font-weight: 600;
 }
@@ -8006,109 +7784,28 @@ PLIK: app\styles\shell.css
 
 [data-app-view-header="true"] button {
   min-height: 38px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid rgba(195, 214, 238, 0.86);
   border-radius: 999px;
   padding: 0 14px;
-  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  background: linear-gradient(145deg, #ffffff, #edf6ff);
   cursor: pointer;
 }
 
+@media (min-width: 821px) {
+  [data-budget-app="true"] {
+    padding: calc(var(--shell-top) + 4px) var(--shell-gap) var(--shell-gap) calc(var(--shell-left) + var(--shell-gap)) !important;
+  }
 
-
-[data-budget-workspace-main="true"] > div:last-child {
-  min-width: 0;
+  [data-budget-workspace="true"] {
+    grid-template-columns: minmax(0, 1fr) 286px !important;
+    gap: var(--shell-gap) !important;
+  }
 }
 
-
-
-[data-budget-workspace-main="true"] > div:last-child > div {
-  min-width: 0;
-}
-
-
-
-[data-budget-workspace-main="true"] [style*="margin-bottom: 8px"] {
-  margin-bottom: 6px !important;
-}
-
-
-
-[data-app-view="settings"] label {
-  color: #334155 !important;
-}
-
-
-
-[data-app-view="settings"] [style*="border"] {
-  border-color: rgba(226,232,240,0.88) !important;
-}
-
-
-
-[data-budget-app="true"] {
-  letter-spacing: 0;
-}
-
-
-
-[data-budget-app="true"] strong,
-[data-budget-app="true"] b {
-  font-weight: 660;
-}
-
-
-
-[data-budget-workspace="true"] {
-  grid-template-columns: minmax(1060px, 1fr) minmax(240px, 280px);
-  gap: 9px;
-}
-
-
-
-[data-floating-action-panel="true"],
-[data-budget-app="true"] [style*="position: fixed"][style*="bottom"] {
-  filter: saturate(0.9);
-  opacity: 0.94;
-}
-
-
-
-[data-app-view="settings"] {
-  left: 184px;
-  right: auto;
-  top: 58px;
-  bottom: 18px;
-  width: min(860px, calc(100vw - 212px));
-  border-radius: var(--workspace-radius-lg);
-}
-
-
-
-[data-budget-app="true"] [style*="position: fixed"][style*="bottom"] button {
-  background: linear-gradient(145deg, rgba(255,255,255,0.92), rgba(241,245,249,0.76)) !important;
-  border: 1px solid rgba(203,213,225,0.78) !important;
-  color: #334155 !important;
-}
-
-
-
-[data-budget-workspace-main="true"] > div:last-child > [style*="font-size"] {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 10px;
-  margin: 0 0 2px !important;
-  color: #0f172a !important;
-  font-size: 16px !important;
-  font-weight: 620 !important;
-}
-
-
-
-[data-budget-workspace-main="true"] > div:last-child > [style*="font-size"]::after {
-  content: "Workspace kategorii, wpisów i szybkiego dodawania";
-  color: #64748b;
-  font-size: 11px;
-  font-weight: 420;
+@media (max-width: 1100px) {
+  [data-budget-workspace="true"] {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
 }
 
 
@@ -8788,511 +8485,367 @@ PLIK: app\styles\topbar.css
 PLIK: app\styles\topbar\topbar-controls.css
 ==================================================
 
-[data-tree-view-menu="true"] summary {
-  border: 1px solid rgba(203, 213, 225, 0.72) !important;
-  background: rgba(255, 255, 255, 0.68) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
-  color: #334155 !important;
+/* BudżAppka - kontrolki głównego topbara. */
+[data-budget-topbar-month="true"] {
+  justify-self: start !important;
+  width: auto !important;
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: 34px minmax(132px, auto) 34px !important;
+  grid-template-rows: auto auto !important;
+  align-items: center !important;
+  justify-content: start !important;
+  column-gap: 8px !important;
+  row-gap: 1px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
+[data-budget-topbar-month="true"] > button {
+  width: 30px !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(186, 213, 246, 0.58) !important;
+  border-radius: 11px !important;
+  padding: 0 !important;
+  background: linear-gradient(145deg, #ffffff, rgba(235, 245, 255, 0.86)) !important;
+  color: #344a68 !important;
+  font-size: 19px !important;
+  font-weight: 520 !important;
+  line-height: 1 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
+  cursor: pointer !important;
+}
 
+[data-budget-topbar-month="true"] > button:hover {
+  border-color: rgba(37, 99, 235, 0.32) !important;
+  background: rgba(239, 246, 255, 0.98) !important;
+  color: #1d4ed8 !important;
+}
 
-/* Main layout repair: no horizontal header, rebuilt right rail, stable bottom utility. */
-[data-budget-brand="true"],
-[data-budget-topbar-actions="true"] {
+[data-budget-topbar-month="true"] > button:disabled {
+  opacity: 0.44 !important;
+  cursor: default !important;
+}
+
+[data-budget-topbar-month="true"] > button:nth-child(2) {
+  width: auto !important;
+  min-width: 128px !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #0b2a63 !important;
+  font-size: 19px !important;
+  font-weight: 660 !important;
+  box-shadow: none !important;
+}
+
+[data-budget-topbar-month="true"] > button:nth-child(n + 4) {
   display: none !important;
 }
 
-
-
-[data-budget-topbar-month="true"] {
-  pointer-events: auto;
+[data-month-state="true"] {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  display: inline-flex !important;
+  align-items: center !important;
   justify-self: center !important;
-  margin-inline: auto !important;
-  padding: 5px !important;
-  border: 1px solid rgba(203, 213, 225, 0.56) !important;
-  border-radius: 14px !important;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(238, 244, 250, 0.68)) !important;
-  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.065), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  gap: 5px !important;
+  min-height: 16px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #15803d !important;
+  font-size: 10px !important;
+  font-weight: 620 !important;
+  white-space: nowrap !important;
 }
 
-
-
-[data-budget-topbar-month="true"] > button {
-  min-height: 36px !important;
-  border-radius: 10px !important;
+[data-month-state="true"]::before {
+  content: "" !important;
+  width: 6px !important;
+  height: 6px !important;
+  display: block !important;
+  border-radius: 999px !important;
+  background: currentColor !important;
 }
 
+[data-month-state="true"][data-month-state-status="locked"] {
+  color: #dc2626 !important;
+}
 
+[data-tree-month-switch="true"] {
+  display: none !important;
+}
 
-[data-budget-topbar-month="true"] > button:nth-child(2) {
-  min-width: 150px !important;
-  font-size: 16px !important;
+[data-budget-topbar-quick-actions="true"] {
+  min-width: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+}
+
+[data-topbar-floating-action="true"] {
+  position: relative !important;
+  flex: 0 0 auto !important;
+}
+
+[data-budget-topbar-quick-actions="true"] button {
+  min-height: 38px !important;
+  border: 1px solid rgba(186, 213, 246, 0.78) !important;
+  border-radius: 13px !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(235, 245, 255, 0.8)) !important;
+  color: #254467 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 8px 18px rgba(37, 99, 235, 0.045) !important;
+  cursor: pointer !important;
+}
+
+[data-budget-topbar-quick-actions="true"] button:hover {
+  border-color: rgba(37, 99, 235, 0.3) !important;
+  background: linear-gradient(145deg, rgba(239, 246, 255, 0.98), rgba(219, 234, 254, 0.82)) !important;
+  color: #1d4ed8 !important;
+}
+
+[data-topbar-action="month-alert"],
+[data-topbar-action="month-note"],
+[data-topbar-action="search"],
+[data-topbar-action="calendar"],
+[data-topbar-action="profile"] {
+  position: relative !important;
+  width: 38px !important;
+  min-width: 38px !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 0 !important;
+}
+
+[data-topbar-action="month-alert"] svg,
+[data-topbar-action="month-note"] svg,
+[data-topbar-action="search"] svg,
+[data-topbar-action="calendar"] svg,
+[data-topbar-action="profile"] svg,
+[data-topbar-action="primary-add"] svg {
+  width: 17px !important;
+  height: 17px !important;
+}
+
+[data-topbar-action="search"],
+[data-topbar-action="month-note"],
+[data-topbar-action="calendar"],
+[data-topbar-action="profile"] {
+  flex: 0 0 auto !important;
+}
+
+[data-topbar-action-badge="true"] {
+  position: absolute !important;
+  top: -5px !important;
+  right: -5px !important;
+  width: 17px !important;
+  height: 17px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 2px solid #ffffff !important;
+  border-radius: 999px !important;
+  background: #dc2626 !important;
+  color: #ffffff !important;
+  font-size: 10px !important;
   font-weight: 760 !important;
 }
 
-
-
-[data-budget-brand="true"] [style] {
-  font-size: 18px !important;
-  font-weight: 700 !important;
+[data-topbar-pinned-categories="true"] {
+  min-width: 0 !important;
+  max-width: min(42vw, 540px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 6px !important;
+  overflow: hidden !important;
 }
 
-
-
-[data-budget-brand="true"] span,
-[data-month-state="true"] {
-  background: #edf2f7 !important;
-  color: #334155 !important;
-  border: 1px solid rgba(203, 213, 225, 0.72);
+[data-topbar-pinned-category="true"] {
+  width: 128px !important;
+  min-width: 0 !important;
+  max-width: 128px !important;
+  min-height: 34px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 9px !important;
+  font-size: 11px !important;
+  font-weight: 650 !important;
+  white-space: nowrap !important;
 }
 
-
-
-[data-budget-status-grid="true"] {
-  padding: 10px !important;
-  margin-bottom: 10px !important;
-  border: 1px solid rgba(213, 222, 232, 0.88);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.68);
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.045);
+[data-topbar-pinned-category="true"][data-pinned-category-kind="income"] {
+  border-color: rgba(34, 197, 94, 0.25) !important;
+  color: #15803d !important;
 }
 
-
-
-[data-budget-compact-notice] {
-  border-color: rgba(213, 222, 232, 0.86) !important;
-  background: rgba(255, 255, 255, 0.72) !important;
+[data-topbar-pinned-category="true"][data-pinned-category-kind="expense"] {
+  border-color: rgba(244, 63, 94, 0.22) !important;
+  color: #be123c !important;
 }
 
-
-
-[data-budget-compact-notice="alert"] {
-  background: rgba(255, 251, 235, 0.82) !important;
+[data-topbar-pinned-category="true"] span {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
 }
 
+[data-topbar-pinned-more="true"] {
+  min-height: 28px !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  padding: 0 8px !important;
+  border: 1px solid rgba(186, 213, 246, 0.62) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.76) !important;
+  color: #64748b !important;
+  font-size: 11px !important;
+  font-weight: 660 !important;
+}
 
+[data-topbar-action="primary-add"] {
+  min-width: 126px !important;
+  display: inline-grid !important;
+  grid-template-columns: auto auto auto !important;
+  place-items: center !important;
+  gap: 7px !important;
+  padding: 0 15px !important;
+  border-color: rgba(37, 99, 235, 0.34) !important;
+  background: linear-gradient(145deg, #2f7df4, #1d4ed8) !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 680 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    0 12px 22px rgba(37, 99, 235, 0.18) !important;
+}
 
-/* Core tree workspace rebuild: central panel owns controls, category sections and footer. */
+[data-topbar-chevron="true"] {
+  font-size: 13px !important;
+  font-weight: 760 !important;
+  line-height: 1 !important;
+  transform: translateY(-1px) !important;
+}
+
+[data-topbar-action="primary-add"]:hover {
+  border-color: rgba(29, 78, 216, 0.48) !important;
+  background: linear-gradient(145deg, #3b82f6, #1e40af) !important;
+  color: #ffffff !important;
+}
+
+[data-topbar-dropdown] {
+  position: absolute !important;
+  top: calc(100% + 9px) !important;
+  right: 0 !important;
+  z-index: 9000 !important;
+  min-width: 172px !important;
+  display: grid !important;
+  gap: 7px !important;
+  padding: 9px !important;
+  border: 1px solid rgba(186, 213, 246, 0.84) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  color: #254467 !important;
+  box-shadow: 0 22px 54px rgba(15, 23, 42, 0.16) !important;
+  backdrop-filter: blur(18px) saturate(1.08) !important;
+}
+
+[data-topbar-dropdown="alert"] {
+  min-width: min(360px, calc(100vw - 32px)) !important;
+}
+
+[data-topbar-dropdown="note"] {
+  min-width: min(360px, calc(100vw - 32px)) !important;
+}
+
+[data-topbar-dropdown="search"] {
+  min-width: min(280px, calc(100vw - 32px)) !important;
+  padding: 7px !important;
+}
+
+[data-topbar-dropdown="search"] input {
+  width: 100% !important;
+  height: 34px !important;
+  min-width: 0 !important;
+  border: 1px solid rgba(186, 213, 246, 0.72) !important;
+  border-radius: 10px !important;
+  padding: 0 10px !important;
+  background: rgba(248, 251, 255, 0.94) !important;
+  color: #0b2a63 !important;
+  font-size: 12px !important;
+  outline: none !important;
+}
+
+[data-topbar-dropdown] p {
+  margin: 0 !important;
+  color: #475569 !important;
+  font-size: 12px !important;
+  line-height: 1.42 !important;
+}
+
+[data-topbar-dropdown] button {
+  width: 100% !important;
+  min-height: 34px !important;
+  justify-content: start !important;
+  padding: 0 11px !important;
+  font-size: 12px !important;
+  font-weight: 650 !important;
+  text-align: left !important;
+}
+
+[data-topbar-dropdown-actions="true"] {
+  display: flex !important;
+  gap: 7px !important;
+}
+
+[data-topbar-dropdown-actions="true"] button {
+  justify-content: center !important;
+  text-align: center !important;
+}
+
 [data-budget-workspace-main="true"] > [data-budget-status-grid="true"],
 [data-budget-workspace-main="true"] > [data-core-workspace-footer="true"] {
   display: none !important;
 }
 
-
-
-[data-budget-tree-control-deck="true"] [data-budget-status-grid="true"] {
-  margin: 0 !important;
-  padding: 8px !important;
-  border-radius: 14px !important;
-  box-shadow: none !important;
-}
-
-
-
-[data-budget-tree-control-deck="true"] [data-budget-compact-notice] {
-  min-height: 32px !important;
-  border-radius: 10px !important;
-}
-
-
-
-[data-budget-header-row="true"] {
-  min-height: var(--shell-top) !important;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(247, 250, 252, 0.88)) !important;
-  border-color: rgba(203, 213, 225, 0.8) !important;
-}
-
-
-
-[data-budget-topbar-month="true"] {
-  justify-self: center !important;
-  width: auto !important;
-  min-width: 280px !important;
-  justify-content: center !important;
-  border: 1px solid rgba(203, 213, 225, 0.72) !important;
-  border-radius: 12px !important;
-  background: rgba(255, 255, 255, 0.62) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82) !important;
-}
-
-
-
-[data-budget-topbar-month="true"] > button:nth-child(2) {
-  min-width: 128px !important;
-  border: 0 !important;
-  background: transparent !important;
-  color: #0f172a !important;
-  font-size: 15px !important;
-  font-weight: 760 !important;
-}
-
-
-
-[data-month-state="true"] {
-  min-height: 24px;
-  display: inline-grid;
-  place-items: center;
-  padding: 0 8px;
-  border-radius: 999px !important;
-  background: #eef6ff !important;
-  color: #1e40af !important;
-  font-size: 10.5px;
-  font-weight: 760;
-}
-
-
-
-[data-budget-status-grid="true"] {
-  align-items: center !important;
-  min-height: 50px;
-  margin-bottom: var(--shell-gap) !important;
-  padding: 8px 10px !important;
-  border-radius: var(--shell-radius) !important;
+[data-tree-view-menu="true"] summary,
+[data-workspace-action],
+[data-workspace-calendar-nav="true"] button,
+[data-workspace-trash-chip="true"],
+[data-pinned-category-menu="true"] summary {
+  border: 1px solid rgba(186, 213, 246, 0.72) !important;
   background: rgba(255, 255, 255, 0.74) !important;
+  color: #344a68 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.84) !important;
+  cursor: pointer !important;
 }
 
-
-
-[data-budget-compact-notice] {
-  display: inline-grid;
-  align-items: center;
-  min-height: 34px !important;
-  padding: 6px 10px !important;
+@media (max-width: 1420px) {
+  [data-topbar-pinned-category="true"] {
+    width: 108px !important;
+    max-width: 108px !important;
+  }
 }
 
-
-
-[data-budget-compact-notice] summary,
-[data-workspace-card-title="true"] {
-  color: #334155 !important;
-  font-size: 11px !important;
-  font-weight: 720 !important;
-  letter-spacing: 0.02em !important;
-}
-
-
-
-[data-budget-status-grid="true"] {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(180px, 320px));
-  gap: 8px;
-  width: fit-content;
-  max-width: 100%;
-  margin-bottom: 8px;
-}
-
-
-
-[data-budget-shell-content="true"] > [data-budget-compact-notice="true"] {
-  width: min(340px, 100%);
-  margin-bottom: 8px;
-}
-
-
-
-[data-budget-topbar-actions="true"] > button {
-  width: 34px;
-  height: 34px;
-  grid-template-columns: 1fr;
-  place-items: center;
-  padding: 0;
-}
-
-
-
-[data-budget-brand="true"] {
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
-
-
-
-[data-budget-brand="true"] span {
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: linear-gradient(145deg, #eef2ff, #e0e7ff);
-  color: #3730a3;
-  font-size: 11px;
-  font-weight: 760;
-  white-space: nowrap;
-}
-
-
-
-[data-budget-topbar-month="true"] {
-  position: relative;
-  width: min(350px, 100%);
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-}
-
-
-
-[data-budget-topbar-month="true"] button {
-  min-height: 31px;
-}
-
-
-
-[data-budget-topbar-month="true"] > button:not(:nth-child(2)) {
-  width: 31px;
-  min-width: 31px;
-  padding: 0 !important;
-  border-radius: 999px !important;
-  font-size: 20px;
-  line-height: 1;
-}
-
-
-
-[data-month-state="true"] {
-  display: none;
-}
-
-
-
-[data-budget-topbar-actions="true"] {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-
-
-[data-budget-compact-notice="true"] {
-  margin-bottom: 0;
-  padding: 7px 9px;
-  border: 1px solid rgba(253, 186, 116, 0.46);
-  border-radius: 12px;
-  background: linear-gradient(145deg, rgba(255,247,237,0.86), rgba(255,255,255,0.76));
-  box-shadow: 0 8px 22px rgba(154, 52, 18, 0.05);
-}
-
-
-
-[data-budget-compact-notice="true"] summary {
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 760;
-  color: #9a3412;
-}
-
-
-
-[data-budget-compact-notice="true"] > div {
-  margin-top: 5px;
-  font-size: 12px;
-  color: #7c2d12;
-}
-
-
-
-[data-budget-brand="true"] [style] {
-  font-weight: 640 !important;
-}
-
-
-
-[data-budget-header-row="true"] {
-  min-height: 48px;
-  padding: 4px 0 6px;
-}
-
-
-
-[data-budget-brand="true"] span {
-  font-weight: 560;
-}
-
-
-
-[data-budget-topbar-month="true"] {
-  width: min(330px, 100%);
-}
-
-
-
-[data-budget-topbar-actions="true"] > button,
-[data-budget-topbar-month="true"] > button:not(:nth-child(2)) {
-  width: 30px;
-  min-width: 30px;
-  height: 30px;
-  min-height: 30px;
-}
-
-
-
-[data-budget-topbar-month="true"] [style*="min-width"] {
-  min-width: 104px !important;
-  font-size: 13px !important;
-  font-weight: 620 !important;
-}
-
-
-
-[data-budget-compact-notice="true"] {
-  padding: 5px 7px;
-}
-
-
-
-[data-budget-compact-notice="true"] summary {
-  font-size: 11px;
-  font-weight: 560;
-}
-
-
-
-[data-budget-compact-notice="true"] {
-  border-radius: var(--workspace-radius-md);
-  background: rgba(255,255,255,0.64);
-  border-color: rgba(226,232,240,0.82);
-  box-shadow: none;
-}
-
-
-
-[data-budget-compact-notice="true"] summary {
-  color: #475569;
-}
-
-
-
-[data-budget-header-row="true"] {
-  margin-bottom: 6px;
-  padding: 6px 10px;
-  border: 1px solid rgba(226,232,240,0.72);
-  border-radius: 16px;
-  background:
-    linear-gradient(145deg, rgba(255,255,255,0.78), rgba(248,250,252,0.62));
-  box-shadow: 0 12px 32px rgba(15,23,42,0.055), inset 0 1px 0 rgba(255,255,255,0.76);
-}
-
-
-
-[data-budget-topbar-month="true"] {
-  width: min(520px, 100%);
-  justify-content: center;
-}
-
-
-
-[data-budget-topbar-month="true"] [style*="min-width"] {
-  min-width: 132px !important;
-}
-
-
-
-[data-budget-topbar-actions="true"] {
-  justify-self: end;
-}
-
-
-
-[data-budget-brand="true"] {
-  justify-self: start;
-}
-
-
-
-[data-budget-header-row="true"] {
-  display: grid !important;
-  align-items: center !important;
-  gap: 12px !important;
-}
-
-
-
-[data-budget-topbar-actions="true"] {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  gap: 6px !important;
-}
-
-
-
-[data-budget-status-grid="true"] {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 6px !important;
-}
-
-
-
-[data-budget-compact-notice] {
-  min-height: 0 !important;
-  width: auto !important;
-  max-width: 360px !important;
-  margin: 0 !important;
-  padding: 6px 8px !important;
-  border-radius: 8px !important;
-  box-shadow: none !important;
-}
-
-
-
-[data-budget-topbar-month="true"] {
-  justify-self: center !important;
-  display: grid !important;
-  grid-template-columns: 38px auto 38px !important;
-  align-items: center !important;
-  gap: 14px !important;
-  padding: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-
-
-[data-budget-topbar-month="true"] > button {
-  width: 38px !important;
-  min-width: 38px !important;
-  height: 38px !important;
-  min-height: 38px !important;
-  display: grid !important;
-  place-items: center !important;
-  border: 1px solid rgba(196, 207, 219, 0.82) !important;
-  border-radius: 999px !important;
-  padding: 0 !important;
-  background: rgba(255, 255, 255, 0.78) !important;
-  color: #334155 !important;
-  font-size: 22px !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 8px 18px rgba(15, 23, 42, 0.045) !important;
-}
-
-
-
-[data-budget-topbar-month="true"] > button:nth-child(2) {
-  width: auto !important;
-  min-width: 116px !important;
-  height: auto !important;
-  min-height: 0 !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  color: #111827 !important;
-  font-size: 24px !important;
-  font-weight: 790 !important;
-  box-shadow: none !important;
-}
-
-
-
-[data-budget-topbar-month="true"] > button:nth-child(n + 4),
-[data-budget-topbar-month="true"] [data-month-state="true"],
-[data-tree-month-switch="true"] {
-  display: none !important;
+@media (max-width: 1240px) {
+  [data-topbar-pinned-categories="true"] {
+    display: none !important;
+  }
 }
 
 
@@ -9301,286 +8854,99 @@ PLIK: app\styles\topbar\topbar-controls.css
 PLIK: app\styles\topbar\topbar-shell.css
 ==================================================
 
-/* Extracted from app/globals.css. Keep import order in app/globals.css for cascade. */
+/* BudżAppka - jasny, czytelny topbar akcji. */
 [data-budget-header-row="true"] {
-  display: grid;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
+  position: fixed !important;
+  inset: 0 0 auto var(--shell-left) !important;
+  z-index: 5000 !important;
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 14px !important;
+  min-width: 0 !important;
+  max-width: calc(100vw - var(--shell-left)) !important;
+  min-height: var(--shell-top) !important;
+  padding: 10px 18px !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(177, 204, 237, 0.8) !important;
+  border-radius: 0 !important;
+  background:
+    radial-gradient(circle at 0% 50%, rgba(219, 234, 254, 0.78), transparent 20%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(239, 247, 255, 0.96)) !important;
+  box-shadow:
+    inset 0 -1px 0 rgba(255, 255, 255, 0.92),
+    0 14px 34px rgba(30, 64, 175, 0.08) !important;
+  backdrop-filter: blur(12px);
+  pointer-events: auto !important;
 }
 
-
+[data-budget-header-row="true"]::before {
+  content: "" !important;
+  position: absolute !important;
+  left: -28px !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 56px !important;
+  pointer-events: none !important;
+  background: linear-gradient(90deg, rgba(226, 241, 255, 0), rgba(239, 247, 255, 0.86)) !important;
+}
 
 [data-budget-brand="true"] {
-  min-width: 0;
-  gap: 8px;
+  display: none !important;
 }
-
-
-
-[data-budget-brand="true"] [style] {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-
-
-[data-budget-topbar-month="true"] {
-  display: inline-flex !important;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-  padding: 4px !important;
-}
-
-
-
-[data-budget-topbar-month="true"] > button,
-[data-budget-topbar-actions="true"] > button {
-  border-radius: 8px !important;
-}
-
-
-
-[data-budget-topbar-month="true"] > button:nth-child(2) {
-  min-width: 112px !important;
-  background: rgba(255, 255, 255, 0.72) !important;
-  border-color: rgba(203, 213, 225, 0.76) !important;
-  color: #172033 !important;
-  box-shadow: none !important;
-}
-
-
-
-[data-budget-topbar-actions="true"] {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
-  min-width: 0;
-}
-
-
 
 [data-budget-status-grid="true"] {
   display: flex !important;
-  flex-wrap: wrap;
-  gap: 6px;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 6px !important;
 }
-
-
 
 [data-budget-compact-notice] {
   min-height: 0 !important;
   width: auto !important;
-  max-width: 360px;
+  max-width: 360px !important;
   margin: 0 !important;
   padding: 6px 8px !important;
-  border-radius: 8px !important;
+  border: 1px solid rgba(213, 222, 232, 0.82) !important;
+  border-radius: 10px !important;
+  background: rgba(255, 255, 255, 0.72) !important;
   box-shadow: none !important;
 }
-
-
 
 [data-budget-compact-notice] summary {
-  list-style: none;
-  cursor: pointer;
+  list-style: none !important;
+  color: #475569 !important;
+  cursor: pointer !important;
   font-size: 11px !important;
-  line-height: 1.2;
+  font-weight: 560 !important;
+  line-height: 1.2 !important;
 }
-
-
 
 [data-budget-compact-notice] summary::-webkit-details-marker {
-  display: none;
+  display: none !important;
 }
-
-
 
 [data-budget-compact-notice] > div {
-  margin-top: 6px;
+  margin-top: 5px !important;
+  color: #64748b !important;
+  font-size: 11px !important;
 }
 
-
-
-[data-budget-topbar-month="true"] {
-  justify-self: center !important;
-  display: grid !important;
-  grid-template-columns: 38px auto 38px !important;
-  align-items: center !important;
-  gap: 14px !important;
-  padding: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
+@media (max-width: 1180px) {
+  [data-budget-header-row="true"] {
+    grid-template-columns: auto minmax(0, 1fr) !important;
+    gap: 10px !important;
+    padding-inline: 12px !important;
+  }
 }
 
-
-
-[data-budget-topbar-month="true"] > button {
-  width: 38px !important;
-  min-width: 38px !important;
-  height: 38px !important;
-  min-height: 38px !important;
-  display: grid !important;
-  place-items: center !important;
-  border: 1px solid rgba(196, 207, 219, 0.82) !important;
-  border-radius: 999px !important;
-  padding: 0 !important;
-  background: rgba(255, 255, 255, 0.78) !important;
-  color: #334155 !important;
-  font-size: 22px !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 8px 18px rgba(15, 23, 42, 0.045) !important;
+@media (max-width: 820px) {
+  [data-budget-header-row="true"] {
+    inset: 0 0 auto 0 !important;
+    max-width: none !important;
+  }
 }
-
-
-
-[data-budget-topbar-month="true"] > button:nth-child(2) {
-  width: auto !important;
-  min-width: 116px !important;
-  height: auto !important;
-  min-height: 0 !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  color: #111827 !important;
-  font-size: 24px !important;
-  font-weight: 790 !important;
-  box-shadow: none !important;
-}
-
-
-
-[data-budget-topbar-month="true"] > button:nth-child(n + 4),
-[data-budget-topbar-month="true"] [data-month-state="true"],
-[data-tree-month-switch="true"] {
-  display: none !important;
-}
-
-
-
-[data-budget-topbar-month="true"] {
-  justify-self: center !important;
-  display: grid !important;
-  grid-template-columns: 38px auto 38px !important;
-  align-items: center !important;
-  gap: 14px !important;
-  padding: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-
-
-[data-budget-topbar-month="true"] > button {
-  width: 38px !important;
-  min-width: 38px !important;
-  height: 38px !important;
-  min-height: 38px !important;
-  display: grid !important;
-  place-items: center !important;
-  border: 1px solid rgba(196, 207, 219, 0.82) !important;
-  border-radius: 999px !important;
-  padding: 0 !important;
-  background: rgba(255, 255, 255, 0.78) !important;
-  color: #334155 !important;
-  font-size: 22px !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 8px 18px rgba(15, 23, 42, 0.045) !important;
-}
-
-
-
-[data-budget-topbar-month="true"] > button:nth-child(2) {
-  width: auto !important;
-  min-width: 116px !important;
-  height: auto !important;
-  min-height: 0 !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  color: #111827 !important;
-  font-size: 24px !important;
-  font-weight: 790 !important;
-  box-shadow: none !important;
-}
-
-
-
-[data-budget-topbar-month="true"] > button:nth-child(n + 4),
-[data-budget-topbar-month="true"] [data-month-state="true"],
-[data-tree-month-switch="true"] {
-  display: none !important;
-}
-
-
-
-[data-tree-month-switch="true"] {
-  justify-self: center;
-  display: inline-grid;
-  grid-template-columns: 38px minmax(132px, auto) 38px;
-  align-items: center;
-  gap: 8px;
-  padding: 5px;
-  border: 1px solid rgba(197, 208, 220, 0.82);
-  border-radius: 999px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(237, 243, 248, 0.74));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.94), 0 10px 24px rgba(15, 23, 42, 0.06);
-}
-
-
-
-[data-tree-month-switch="true"] button,
-[data-workspace-calendar-nav="true"] button,
-[data-workspace-trash-chip="true"],
-[data-pinned-category-menu="true"] summary {
-  border: 1px solid rgba(198, 209, 221, 0.82);
-  background: rgba(255, 255, 255, 0.74);
-  color: #334155;
-  cursor: pointer;
-}
-
-
-
-[data-tree-month-switch="true"] button {
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
-  font-size: 20px;
-  line-height: 1;
-}
-
-
-
-[data-tree-month-switch="true"] strong {
-  color: #111827;
-  font-size: 20px;
-  font-weight: 780;
-  text-align: center;
-}
-
-
-
-/* Main workspace stabilization: single tree rhythm, full-width expansion, calm bottom deck. */
-[data-budget-header-row="true"] {
-  min-height: 50px !important;
-  padding-block: 6px !important;
-}
-
-
-
-[data-budget-topbar-month="true"] {
-  justify-self: center !important;
-  width: auto !important;
-  padding: 2px !important;
-}
-
-
-
-[data-budget-topbar-actions="true"] > button,
-[data-workspace-action],
 
 
 
@@ -10272,7 +9638,7 @@ const moduleItems: Array<{ key: AppModuleKey; label: string; description: string
   },
   {
     key: 'recurringTransactions',
-    label: 'Przypomnienia / raty',
+    label: 'Stałe płatności',
     description: 'Cykliczne wpisy, raty i przypomnienia.',
   },
   {
@@ -10628,18 +9994,18 @@ export default function BudgetDashboardDrawer({
       <button
         type="button"
         data-dashboard-backdrop="true"
-        aria-label="Zamknij dashboard"
+        aria-label="Zamknij statystyki"
         tabIndex={isOpen ? 0 : -1}
         onClick={onClose}
       />
       <aside
         data-dashboard-drawer="true"
         data-dashboard-open={isOpen ? 'true' : 'false'}
-        aria-label="Dashboard analityczny"
+        aria-label="Statystyki analityczne"
         aria-hidden={!isOpen}
       >
         <div data-dashboard-drawer-header="true">
-          <button type="button" aria-label="Zamknij dashboard" onClick={onClose}>
+          <button type="button" aria-label="Zamknij statystyki" onClick={onClose}>
             ×
           </button>
         </div>
@@ -10682,9 +10048,11 @@ export default function BudgetPageStatusPanelsContainer({
     draftVisibleModules,
     effectiveVisibleModules,
     errorText,
+    expenseLevel1Id,
     goToNextMonth,
     goToPrevMonth,
     handleLockAllPastMonths,
+    handleLockMonth,
     handleLockSelectedMonth,
     handleResetAllHistory,
     handleResetHeatmapSettings,
@@ -10696,6 +10064,7 @@ export default function BudgetPageStatusPanelsContainer({
     heatmapInverted,
     heatmapMode,
     hiddenCategoriesInSelectedMonth,
+    incomeLevel1Id,
     invitationErrorText,
     invitationStatusText,
     inviteEmail,
@@ -10717,6 +10086,9 @@ export default function BudgetPageStatusPanelsContainer({
     monthNavigationErrorText,
     onCurrentUserLeftProfile,
     openBlankFloatingTransactionCreator,
+    openTransactionCreator,
+    pinnedWorkspaceCategories = [],
+    previousMonthCloseReminder,
     profileId,
     recentTransactionPreviews,
     resetDraftVisibleModules,
@@ -10734,6 +10106,7 @@ export default function BudgetPageStatusPanelsContainer({
     setInviteEmail,
     setIsDashboardPanelOpen,
     setIsFutureMonthNavigationLocked,
+    setIsPreviousMonthCloseReminderHidden,
     setIsSettingsPanelVisible,
     setMonthNavigationErrorText,
     setMonthNavigationStartMonth,
@@ -10975,6 +10348,20 @@ export default function BudgetPageStatusPanelsContainer({
         activeUtilityPanel={activeUtilityPanel}
         onOpenUtilityPanel={handleOpenUtilityPanel}
         onQuickAdd={() => openBlankFloatingTransactionCreator(null)}
+        onQuickAddIncome={
+          incomeLevel1Id ? () => openBlankFloatingTransactionCreator(incomeLevel1Id) : undefined
+        }
+        onQuickAddExpense={
+          expenseLevel1Id ? () => openBlankFloatingTransactionCreator(expenseLevel1Id) : undefined
+        }
+        profileId={profileId}
+        userId={userId}
+        selectedMonth={selectedMonth}
+        previousMonthCloseReminder={previousMonthCloseReminder}
+        pinnedCategories={pinnedWorkspaceCategories}
+        onLockPreviousMonth={handleLockMonth}
+        onHidePreviousMonthCloseReminder={() => setIsPreviousMonthCloseReminderHidden(true)}
+        onOpenPinnedCategory={openTransactionCreator}
       />
   )
 }
@@ -11605,6 +10992,7 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     goToNextMonth: ctx.goToNextMonth,
     goToPrevMonth: ctx.goToPrevMonth,
     handleLockAllPastMonths: ctx.handleLockAllPastMonths,
+    handleLockMonth: ctx.handleLockMonth,
     handleLockSelectedMonth: ctx.handleLockSelectedMonth,
     handleResetAllHistory: ctx.handleResetAllHistory,
     handleResetHeatmapSettings: ctx.handleResetHeatmapSettings,
@@ -11638,6 +11026,9 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     monthNavigationErrorText: ctx.monthNavigationErrorText,
     onCurrentUserLeftProfile: ctx.onCurrentUserLeftProfile,
     openBlankFloatingTransactionCreator: ctx.openBlankFloatingTransactionCreator,
+    openTransactionCreator: ctx.openTransactionCreator,
+    pinnedWorkspaceCategories: budgetWorkspaceSummary.pinnedWorkspaceCategories,
+    previousMonthCloseReminder: ctx.previousMonthCloseReminder,
     profileId: ctx.profileId,
     recentTransactionPreviews: budgetWorkspaceSummary.recentTransactionPreviews,
     resetDraftVisibleModules: ctx.resetDraftVisibleModules,
@@ -11655,6 +11046,7 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     setInviteEmail: ctx.setInviteEmail,
     setIsDashboardPanelOpen: ctx.setIsDashboardPanelOpen,
     setIsFutureMonthNavigationLocked: ctx.setIsFutureMonthNavigationLocked,
+    setIsPreviousMonthCloseReminderHidden: ctx.setIsPreviousMonthCloseReminderHidden,
     setIsSettingsPanelVisible: ctx.setIsSettingsPanelVisible,
     setMonthNavigationErrorText: ctx.setMonthNavigationErrorText,
     setMonthNavigationStartMonth: ctx.setMonthNavigationStartMonth,
@@ -13152,15 +12544,12 @@ PLIK: components\budget-app\useBudgetPageMainPanelsProps.tsx
 import type { ComponentProps } from 'react'
 import BudgetPageMainPanels from '../BudgetPageMainPanels'
 import MainWorkspaceBottomDeck from '../MainWorkspaceBottomDeck'
-import BudgetWorkspaceTopNotices from './BudgetWorkspaceTopNotices'
 import { getHiddenCategoryLabel } from '../../lib/categoryUtils'
 
 export type BudgetPageMainPanelsPropsContext = Record<string, any>
 
 export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsContext): ComponentProps<typeof BudgetPageMainPanels> {
   const {
-    activeBudgetLimitAlerts,
-    activeBudgetLimits,
     activeTransactionsById,
     activeUtilityPanel,
     addableTransactionCategoryIds,
@@ -13239,7 +12628,6 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     handleInlineSaveTransaction,
     handleLevel1DragStart,
     handleLevel3DragStart,
-    handleLockMonth,
     handleMoveTransaction,
     handleOpenCategoryCalendarAddForDay,
     handleOpenGlobalCalendarAddForDay,
@@ -13305,9 +12693,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     paymentSourceSettings,
     paymentSourceStats,
     paymentSources,
-    pinnedWorkspaceCategories,
     prev,
-    previousMonthCloseReminder,
     profileId,
     recentTransactionPreviews,
     recurring,
@@ -13346,7 +12732,6 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     setIsBankSearchOpen,
     setIsDashboardPanelOpen,
     setIsSettingsPanelVisible,
-    setIsPreviousMonthCloseReminderHidden,
     setLevel2SortDirection,
     setLevel2SortMode,
     setLevel3SortDirection,
@@ -13751,24 +13136,6 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
             : undefined,
           onOpenSearch: () => openUtilityPanel('search'),
           onOpenCalendar: () => openUtilityPanel('monthCalendar'),
-          workspaceTopContent: (
-            <BudgetWorkspaceTopNotices
-              previousMonthCloseReminder={previousMonthCloseReminder}
-              profileId={profileId}
-              userId={userId}
-              selectedMonth={selectedMonth}
-              isBudgetLimitsVisible={effectiveVisibleModules.budgetLimits}
-              activeBudgetLimitsCount={activeBudgetLimits.length}
-              activeBudgetLimitAlerts={activeBudgetLimitAlerts}
-              categoriesById={categoriesById}
-              pinnedWorkspaceCategories={pinnedWorkspaceCategories}
-              styles={styles}
-              onLockMonth={handleLockMonth}
-              onHidePreviousMonthCloseReminder={() => setIsPreviousMonthCloseReminderHidden(true)}
-              onOpenBudgetLimit={setBudgetLimitEditorCategoryId}
-              onOpenPinnedCategory={openTransactionCreator}
-            />
-          ),
           workspaceBottomContent: (
             <MainWorkspaceBottomDeck
               selectedMonth={selectedMonth}
@@ -16851,7 +16218,12 @@ export default function BudgetHeaderPanel(props: Props) {
         </button>
       )}
 
-      <span data-month-state="true">{isSelectedMonthLocked ? 'zamknięty' : 'otwarty'}</span>
+      <span
+        data-month-state="true"
+        data-month-state-status={isSelectedMonthLocked ? 'locked' : 'open'}
+      >
+        {isSelectedMonthLocked ? 'Miesiąc zamknięty' : 'Miesiąc otwarty'}
+      </span>
 
       {isMonthMenuOpen && (
         <div data-budget-month-menu="true">
@@ -17754,7 +17126,7 @@ export default function BudgetPageMainPanels({
           : activeUtilityPanel === 'financialGoals'
             ? 'Cele finansowe'
             : activeUtilityPanel === 'recurringTransactions'
-              ? 'Przypomnienia / raty'
+              ? 'Stałe płatności'
               : activeUtilityPanel === 'search'
                 ? 'Wyszukiwarka'
                 : activeUtilityPanel === 'monthCalendar'
@@ -18069,9 +17441,10 @@ PLIK: components\BudgetPageStatusPanels.tsx
 
 'use client'
 
-import { ComponentProps, CSSProperties, useEffect, useState } from 'react'
+import { ComponentProps, CSSProperties, useEffect, useRef, useState } from 'react'
 import AppSettingsPanel from './AppSettingsPanel'
 import BudgetHeaderPanel from './BudgetHeaderPanel'
+import ProfileMonthNotePanel from './ProfileMonthNotePanel'
 import UserProfileMenu from './UserProfileMenu'
 import UserAvatar from './UserAvatar'
 import type { BudgetUtilityPanel } from './BudgetPageMainPanels'
@@ -18088,6 +17461,12 @@ type ProfilePanelProps = {
   categoriesCount: number
   totalBalance: number
   topCategories: Array<{ id: string; name: string; count: number }>
+}
+
+type TopbarPinnedCategory = {
+  id: string
+  label: string
+  kind: 'income' | 'expense' | 'neutral'
 }
 
 type Props = {
@@ -18107,12 +17486,23 @@ type Props = {
   activeUtilityPanel: BudgetUtilityPanel
   onOpenUtilityPanel: (panel: BudgetUtilityPanel) => void
   onQuickAdd: () => void
+  onQuickAddIncome?: () => void
+  onQuickAddExpense?: () => void
+  profileId: string
+  userId: string
+  selectedMonth: string
+  previousMonthCloseReminder: string | null
+  pinnedCategories: TopbarPinnedCategory[]
+  onLockPreviousMonth: (month: string) => Promise<void>
+  onHidePreviousMonthCloseReminder: () => void
+  onOpenPinnedCategory: (categoryId: string) => void
 }
 
 type IconName =
   | 'user'
   | 'settings'
   | 'dashboard'
+  | 'alert'
   | 'bell'
   | 'drafts'
   | 'payments'
@@ -18165,6 +17555,12 @@ const Icon = ({ name }: { name: IconName }) => {
           <path d="M4 13a8 8 0 1 1 16 0" {...common} />
           <path d="M12 13l4-4" {...common} />
           <path d="M6 17h12" {...common} />
+        </>
+      )}
+      {name === 'alert' && (
+        <>
+          <path d="M12 3 3 19h18L12 3Z" {...common} />
+          <path d="M12 9v4M12 17h.01" {...common} />
         </>
       )}
       {name === 'bell' && (
@@ -18252,8 +17648,26 @@ export default function BudgetPageStatusPanels({
   activeUtilityPanel,
   onOpenUtilityPanel,
   onQuickAdd,
+  onQuickAddIncome,
+  onQuickAddExpense,
+  profileId,
+  userId,
+  selectedMonth,
+  previousMonthCloseReminder,
+  pinnedCategories,
+  onLockPreviousMonth,
+  onHidePreviousMonthCloseReminder,
+  onOpenPinnedCategory,
 }: Props) {
   const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false)
+  const [openedTopbarPanel, setOpenedTopbarPanel] = useState<
+    'alert' | 'add' | 'note' | 'search' | null
+  >(null)
+  const [topbarSearchText, setTopbarSearchText] = useState('')
+  const topbarActionsRef = useRef<HTMLDivElement | null>(null)
+  const topbarSearchInputRef = useRef<HTMLInputElement | null>(null)
+  const visiblePinnedCategories = pinnedCategories.slice(0, 4)
+  const hiddenPinnedCount = Math.max(pinnedCategories.length - visiblePinnedCategories.length, 0)
 
   useEffect(() => {
     if (!activeSidebarPrimaryPanel) {
@@ -18273,9 +17687,71 @@ export default function BudgetPageStatusPanels({
     }
   }, [activeSidebarPrimaryPanel, onClosePrimaryPanel])
 
+  useEffect(() => {
+    if (!openedTopbarPanel) {
+      return
+    }
+
+    const closeTopbarPanel = () => setOpenedTopbarPanel(null)
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null
+
+      if (target && topbarActionsRef.current?.contains(target)) {
+        return
+      }
+
+      closeTopbarPanel()
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeTopbarPanel()
+      }
+    }
+
+    window.addEventListener('pointerdown', handlePointerDown)
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('budget-close-floating-ui', closeTopbarPanel)
+
+    return () => {
+      window.removeEventListener('pointerdown', handlePointerDown)
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('budget-close-floating-ui', closeTopbarPanel)
+    }
+  }, [openedTopbarPanel])
+
+  useEffect(() => {
+    if (openedTopbarPanel === 'search') {
+      topbarSearchInputRef.current?.focus()
+    }
+  }, [openedTopbarPanel])
+
   const openPanel = (panel: BudgetUtilityPanel) => {
     window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
     onOpenUtilityPanel(activeUtilityPanel === panel ? null : panel)
+  }
+
+  const runTopbarAction = (action: () => void) => {
+    window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
+    action()
+  }
+
+  const toggleTopbarPanel = (panel: 'alert' | 'add' | 'note' | 'search') => {
+    window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
+    setOpenedTopbarPanel((currentPanel) => (currentPanel === panel ? null : panel))
+  }
+
+  const submitTopbarSearch = () => {
+    const query = topbarSearchText.trim()
+
+    if (!query) {
+      return
+    }
+
+    setTopbarSearchText('')
+    setOpenedTopbarPanel(null)
+    openPanel('search')
   }
 
   const formatCurrency = (value: number) =>
@@ -18308,7 +17784,7 @@ export default function BudgetPageStatusPanels({
     },
     {
       id: 'dashboard',
-      label: 'Dashboard',
+      label: 'Statystyki',
       icon: 'dashboard',
       active: isDashboardOpen,
       onClick: () => {
@@ -18370,7 +17846,7 @@ export default function BudgetPageStatusPanels({
     },
     {
       id: 'recurring',
-      label: 'Przypomnienia / raty',
+      label: 'Stałe płatności',
       icon: 'bell',
       active: activeUtilityPanel === 'recurringTransactions',
       onClick: () => openPanel('recurringTransactions'),
@@ -18387,11 +17863,13 @@ export default function BudgetPageStatusPanels({
   return (
     <>
       <aside data-budget-sidebar="true" aria-label="Moduły aplikacji">
-        <div data-budget-sidebar-avatar="true">
-          <UserAvatar
-            avatarKey={profilePanelProps.avatarKey}
-            label={profilePanelProps.displayName || profilePanelProps.userEmail || 'Profil'}
-            size="md"
+        <div data-budget-sidebar-logo="true">
+          <img
+            src="/brand/budzappka-logo-light.png"
+            alt="BudżAppka"
+            width={1199}
+            height={359}
+            data-budget-sidebar-logo-image="true"
           />
         </div>
         <nav data-budget-sidebar-nav="true" data-sidebar-desktop-nav="true">
@@ -18501,6 +17979,187 @@ export default function BudgetPageStatusPanels({
           </div>
 
           <BudgetHeaderPanel {...budgetHeaderPanelProps} />
+
+          <div
+            data-budget-topbar-quick-actions="true"
+            aria-label="Szybkie akcje"
+            ref={topbarActionsRef}
+          >
+            {visiblePinnedCategories.length > 0 && (
+              <div data-topbar-pinned-categories="true" aria-label="Przypięte kategorie">
+                {visiblePinnedCategories.map((category) => (
+                  <button
+                    key={category.id}
+                    type="button"
+                    data-topbar-pinned-category="true"
+                    data-pinned-category-kind={category.kind}
+                    title={category.label}
+                    onClick={() => runTopbarAction(() => onOpenPinnedCategory(category.id))}
+                  >
+                    <span>{category.label}</span>
+                  </button>
+                ))}
+                {hiddenPinnedCount > 0 && (
+                  <span data-topbar-pinned-more="true">+{hiddenPinnedCount}</span>
+                )}
+              </div>
+            )}
+
+            <div data-topbar-floating-action="true">
+              <button
+                type="button"
+                data-topbar-action="primary-add"
+                aria-expanded={openedTopbarPanel === 'add'}
+                onClick={() => toggleTopbarPanel('add')}
+              >
+                <Icon name="plus" />
+                <span>Dodaj wpis</span>
+                <span data-topbar-chevron="true" aria-hidden="true">⌄</span>
+              </button>
+              {openedTopbarPanel === 'add' && (
+                <div data-topbar-dropdown="add">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      runTopbarAction(onQuickAddExpense || onQuickAdd)
+                      setOpenedTopbarPanel(null)
+                    }}
+                  >
+                    Wydatek
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      runTopbarAction(onQuickAddIncome || onQuickAdd)
+                      setOpenedTopbarPanel(null)
+                    }}
+                  >
+                    Przychód
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div data-topbar-floating-action="true">
+              <button
+                type="button"
+                data-topbar-action="search"
+                aria-label="Wyszukiwarka"
+                title="Wyszukiwarka"
+                aria-expanded={openedTopbarPanel === 'search'}
+                data-active={openedTopbarPanel === 'search' ? 'true' : 'false'}
+                onClick={() => toggleTopbarPanel('search')}
+              >
+                <Icon name="search" />
+              </button>
+              {openedTopbarPanel === 'search' && (
+                <div data-topbar-dropdown="search">
+                  <input
+                    ref={topbarSearchInputRef}
+                    value={topbarSearchText}
+                    onChange={(event) => setTopbarSearchText(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter') {
+                        submitTopbarSearch()
+                      }
+                    }}
+                    placeholder="Szukaj wpisu..."
+                    aria-label="Szukaj wpisu"
+                  />
+                </div>
+              )}
+            </div>
+
+            <div data-topbar-floating-action="true">
+              <button
+                type="button"
+                data-topbar-action="month-alert"
+                aria-label="Alerty miesiąca"
+                title="Alerty miesiąca"
+                aria-expanded={openedTopbarPanel === 'alert'}
+                onClick={() => toggleTopbarPanel('alert')}
+              >
+                <Icon name="alert" />
+                {previousMonthCloseReminder && <span data-topbar-action-badge="true">1</span>}
+              </button>
+              {openedTopbarPanel === 'alert' && (
+                <div data-topbar-dropdown="alert">
+                  {previousMonthCloseReminder ? (
+                    <>
+                      <p>Poprzedni miesiąc {previousMonthCloseReminder} nie jest jeszcze zamknięty.</p>
+                      <div data-topbar-dropdown-actions="true">
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            await onLockPreviousMonth(previousMonthCloseReminder)
+                            setOpenedTopbarPanel(null)
+                          }}
+                        >
+                          Zamknij
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onHidePreviousMonthCloseReminder()
+                            setOpenedTopbarPanel(null)
+                          }}
+                        >
+                          Później
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <p>Brak alertów miesiąca.</p>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div data-topbar-floating-action="true">
+              <button
+                type="button"
+                data-topbar-action="month-note"
+                aria-label="Notatka miesiąca"
+                title="Notatka miesiąca"
+                aria-expanded={openedTopbarPanel === 'note'}
+                onClick={() => toggleTopbarPanel('note')}
+              >
+                <Icon name="drafts" />
+              </button>
+              {openedTopbarPanel === 'note' && (
+                <div data-topbar-dropdown="note">
+                  <ProfileMonthNotePanel
+                    profileId={profileId}
+                    userId={userId}
+                    selectedMonth={selectedMonth}
+                    styles={styles}
+                  />
+                </div>
+              )}
+            </div>
+
+            <button
+              type="button"
+              data-topbar-action="calendar"
+              aria-label="Kalendarz"
+              title="Kalendarz"
+              data-active={activeUtilityPanel === 'monthCalendar' ? 'true' : 'false'}
+              onClick={() => openPanel('monthCalendar')}
+            >
+              <Icon name="calendar" />
+            </button>
+
+            <button
+              type="button"
+              data-topbar-action="profile"
+              aria-label="Profil"
+              title="Profil"
+              data-active={activeSidebarPrimaryPanel === 'profile' ? 'true' : 'false'}
+              onClick={() => runTopbarAction(onOpenProfilePanel)}
+            >
+              <Icon name="user" />
+            </button>
+          </div>
         </div>
 
         {activeSidebarPrimaryPanel && (
@@ -18887,137 +18546,6 @@ export default function BudgetRightRail({
 
   return (
     <aside data-budget-context-rail="true" aria-label="Kontekst workspace">
-      <section data-context-card="rail-actions" aria-label="Akcje">
-        <div data-rail-search-wrap="true" ref={quickSearchRef}>
-          <button
-            type="button"
-            aria-label="Szukaj"
-            title="Szukaj"
-            onClick={() => {
-              const nextIsOpen = !isQuickSearchOpen
-              if (nextIsOpen) {
-                emitCloseFloatingUi()
-              }
-              setIsQuickSearchOpen(nextIsOpen)
-            }}
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="11" cy="11" r="6" />
-              <path d="m16 16 4 4" />
-            </svg>
-          </button>
-
-          {isQuickSearchOpen && (
-            <div data-rail-quick-search="true">
-              <input
-                ref={quickSearchInputRef}
-                value={quickSearchText}
-                onChange={(event) => setQuickSearchText(event.target.value)}
-                onKeyDown={handleQuickSearchKeyDown}
-                placeholder="Szukaj wpisu..."
-              />
-            </div>
-          )}
-        </div>
-
-        <div data-rail-notification-wrap="true" ref={notificationsRef}>
-          <button
-            type="button"
-            aria-label="Powiadomienia"
-            title="Powiadomienia"
-            data-has-alerts={hasRecurringAlerts ? 'true' : 'false'}
-            onClick={() => {
-              const nextIsOpen = !isNotificationsPreviewOpen
-              if (nextIsOpen) {
-                emitCloseFloatingUi()
-              }
-              setIsNotificationsPreviewOpen(nextIsOpen)
-            }}
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M6.5 10a5.5 5.5 0 0 1 11 0c0 5 1.7 5.8 2.2 7H4.3c.5-1.2 2.2-2 2.2-7Z" />
-              <path d="M10 20h4" />
-            </svg>
-          </button>
-
-          {isNotificationsPreviewOpen && (
-            <div data-rail-notification-popover="true">
-              <strong>Powiadomienia</strong>
-              {hasRecurringAlerts ? (
-                <div data-rail-reminder-list="true">
-                  {recurringAlerts.slice(0, 5).map((reminder) => (
-                    <div key={reminder.id} data-rail-reminder-item="true">
-                      <div data-rail-reminder-main="true">
-                        <span>{reminder.name}</span>
-                        <small>
-                          Termin {getMonthCycleDate(reminder, selectedMonth).slice(8, 10)}
-                          {reminder.amount !== null
-                            ? ` · ${formatReminderAmount(reminder.amount)}`
-                            : ''}
-                        </small>
-                      </div>
-                      <div data-rail-reminder-actions="true">
-                        <button
-                          type="button"
-                          aria-label={`Dodaj wpis z przypomnienia ${reminder.name}`}
-                          title="Dodaj wpis"
-                          onClick={() => {
-                            setIsNotificationsPreviewOpen(false)
-                            onAddFromReminder(reminder)
-                          }}
-                        >
-                          +
-                        </button>
-                        <button
-                          type="button"
-                          aria-label={`Przypomnij za tydzień: ${reminder.name}`}
-                          title="Przypomnij za tydzień"
-                          onClick={() => {
-                            onSnoozeRecurring(reminder)
-                            setIsNotificationsPreviewOpen(false)
-                          }}
-                        >
-                          ✓
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p>Brak aktywnych przypomnień.</p>
-              )}
-            </div>
-          )}
-        </div>
-
-        <button
-          type="button"
-          aria-label="Dodaj wpis"
-          title="Dodaj wpis"
-          onClick={() => {
-            emitCloseFloatingUi()
-            onQuickAdd()
-          }}
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 5v14M5 12h14" />
-          </svg>
-        </button>
-
-        <button
-          type="button"
-          aria-label="Profil"
-          title="Profil"
-          data-rail-profile-action="true"
-          onClick={() => {
-            emitCloseFloatingUi()
-            onToggleProfile()
-          }}
-        >
-          <UserAvatar avatarKey={userAvatarKey} label={userDisplayName || 'Profil'} size="sm" />
-        </button>
-      </section>
-
       <section data-context-card="summary">
         <div>
           <span>Miesiąc</span>
@@ -19423,95 +18951,6 @@ export default function BudgetTreeSection({
 
   return (
     <div data-budget-tree-workspace="true">
-      <div data-budget-tree-toolbar="true">
-        <div data-tree-toolbar-actions="true">
-          {onAddIncome && (
-            <button
-              type="button"
-              data-workspace-action="income"
-              onClick={onAddIncome}
-              aria-label="Dodaj przychód"
-              title="Dodaj przychód"
-            >
-              +
-            </button>
-          )}
-          {onAddExpense && (
-            <button
-              type="button"
-              data-workspace-action="expense"
-              onClick={onAddExpense}
-              aria-label="Dodaj wydatek"
-              title="Dodaj wydatek"
-            >
-              -
-            </button>
-          )}
-          {onOpenSearch && (
-            <button
-              type="button"
-              data-workspace-action="neutral"
-              onClick={onOpenSearch}
-              aria-label="Szukaj"
-              title="Szukaj"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
-                <circle
-                  cx="11"
-                  cy="11"
-                  r="6.5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.9"
-                />
-                <path
-                  d="m16 16 4 4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeWidth="1.9"
-                />
-              </svg>
-            </button>
-          )}
-          {onOpenCalendar && (
-            <button
-              type="button"
-              data-workspace-action="neutral"
-              onClick={onOpenCalendar}
-              aria-label="Kalendarz"
-              title="Kalendarz"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
-                <rect
-                  x="4"
-                  y="5"
-                  width="16"
-                  height="15"
-                  rx="2"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                />
-                <path
-                  d="M8 3v4M16 3v4M4 10h16"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.8"
-                />
-              </svg>
-            </button>
-          )}
-
-        </div>
-      </div>
-
-      <div data-budget-tree-control-deck="true">
-        {workspaceTopNode}
-      </div>
-
       {sortedLevel1.length === 0 && (
         <div style={styles.emptyStateCard}>Brak widocznych kategorii w wybranym miesiącu</div>
       )}
@@ -19598,6 +19037,12 @@ export default function BudgetTreeSection({
         />
         </div>
       </div>
+
+      {workspaceTopNode && (
+        <div data-budget-tree-control-deck="true">
+          {workspaceTopNode}
+        </div>
+      )}
 
       {workspaceBottomContent && (
         <div data-budget-tree-bottom-deck="true">{workspaceBottomContent}</div>
@@ -33334,7 +32779,7 @@ export default function DashboardGrid(props: Props) {
     return (
       <div ref={gridRef} style={gridOuterStyle} suppressHydrationWarning>
         <div style={styles.emptyStateCard}>
-          Dashboard jest pusty. Dodaj pierwszy kafel, a potem wybierz statystykę na samym kaflu.
+          Statystyki są puste. Dodaj pierwszy kafel, a potem wybierz statystykę na samym kaflu.
         </div>
       </div>
     )
@@ -33557,7 +33002,7 @@ export default function DashboardPanel({
     <section data-dashboard-panel="true" style={panelStyle}>
       <div style={headerStyle}>
         <div>
-          <div style={styles.sectionTitle}>Dashboard</div>
+          <div style={styles.sectionTitle}>Statystyki</div>
           <div style={{ ...styles.pageSubtitle, marginBottom: 0 }}>
             Kontenery finansowe liczą tylko wpisy od daty startu budżetu.
           </div>
