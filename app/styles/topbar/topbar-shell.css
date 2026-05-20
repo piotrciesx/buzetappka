@@ -1,23 +1,25 @@
-/* BudżAppka - jasny, czytelny topbar akcji. */
+/* BudżAppka - finalny topbar aplikacji. */
 [data-budget-header-row="true"] {
   position: fixed !important;
   inset: 0 0 auto var(--shell-left) !important;
-  z-index: 50000 !important;
-  display: grid !important;
-  grid-template-columns: auto minmax(0, 1fr) !important;
-  align-items: center !important;
-  gap: 14px !important;
+  z-index: 90000 !important;
   min-width: 0 !important;
+  width: calc(100vw - var(--shell-left)) !important;
   max-width: calc(100vw - var(--shell-left)) !important;
   min-height: var(--shell-top) !important;
-  padding: 10px 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 18px !important;
+  padding: 10px 22px 10px 18px !important;
   overflow: visible !important;
   isolation: isolate !important;
   border: 0 !important;
-  border-bottom: 1px solid rgba(177, 204, 237, 0.8) !important;
+  border-bottom: 1px solid rgba(177, 204, 237, 0.78) !important;
   border-radius: 0 !important;
   background:
-    radial-gradient(circle at 0% 50%, rgba(219, 234, 254, 0.78), transparent 20%),
+    radial-gradient(circle at 0% 50%, rgba(219, 234, 254, 0.82), transparent 22%),
+    radial-gradient(circle at 100% 0%, rgba(191, 219, 254, 0.34), transparent 28%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(239, 247, 255, 0.96)) !important;
   box-shadow:
     inset 0 -1px 0 rgba(255, 255, 255, 0.92),
@@ -29,12 +31,12 @@
 [data-budget-header-row="true"]::before {
   content: "" !important;
   position: absolute !important;
-  left: -34px !important;
+  left: -36px !important;
   top: 0 !important;
   bottom: 0 !important;
-  width: 70px !important;
+  width: 76px !important;
   pointer-events: none !important;
-  background: linear-gradient(90deg, rgba(226, 241, 255, 0), rgba(239, 247, 255, 0.92)) !important;
+  background: linear-gradient(90deg, rgba(226, 241, 255, 0), rgba(239, 247, 255, 0.94)) !important;
 }
 
 [data-budget-brand="true"] {
@@ -81,8 +83,7 @@
 
 @media (max-width: 1180px) {
   [data-budget-header-row="true"] {
-    grid-template-columns: auto minmax(0, 1fr) !important;
-    gap: 10px !important;
+    gap: 12px !important;
     padding-inline: 12px !important;
   }
 }
@@ -90,6 +91,7 @@
 @media (max-width: 820px) {
   [data-budget-header-row="true"] {
     inset: 0 0 auto 0 !important;
+    width: 100vw !important;
     max-width: none !important;
   }
 }
