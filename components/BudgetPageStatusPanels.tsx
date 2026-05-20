@@ -3,6 +3,7 @@
 import { ComponentProps, CSSProperties, useEffect, useRef, useState } from 'react'
 import AppSettingsPanel from './AppSettingsPanel'
 import BudgetHeaderPanel from './BudgetHeaderPanel'
+import ProfileMonthNotePanel from './ProfileMonthNotePanel'
 import UserProfileMenu from './UserProfileMenu'
 import UserAvatar from './UserAvatar'
 import type { BudgetUtilityPanel } from './BudgetPageMainPanels'
@@ -218,8 +219,12 @@ export default function BudgetPageStatusPanels({
   onOpenPinnedCategory,
 }: Props) {
   const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false)
-  const [openedTopbarPanel, setOpenedTopbarPanel] = useState<'alert' | 'add' | null>(null)
+  const [openedTopbarPanel, setOpenedTopbarPanel] = useState<
+    'alert' | 'add' | 'note' | 'search' | null
+  >(null)
+  const [topbarSearchText, setTopbarSearchText] = useState('')
   const topbarActionsRef = useRef<HTMLDivElement | null>(null)
+  const topbarSearchInputRef = useRef<HTMLInputElement | null>(null)
   const visiblePinnedCategories = pinnedCategories.slice(0, 4)
   const hiddenPinnedCount = Math.max(pinnedCategories.length - visiblePinnedCategories.length, 0)
 
@@ -275,6 +280,12 @@ export default function BudgetPageStatusPanels({
     }
   }, [openedTopbarPanel])
 
+  useEffect(() => {
+    if (openedTopbarPanel === 'search') {
+      topbarSearchInputRef.current?.focus()
+    }
+  }, [openedTopbarPanel])
+
   const openPanel = (panel: BudgetUtilityPanel) => {
     window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
     onOpenUtilityPanel(activeUtilityPanel === panel ? null : panel)
@@ -285,9 +296,21 @@ export default function BudgetPageStatusPanels({
     action()
   }
 
-  const toggleTopbarPanel = (panel: 'alert' | 'add') => {
+  const toggleTopbarPanel = (panel: 'alert' | 'add' | 'note' | 'search') => {
     window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
     setOpenedTopbarPanel((currentPanel) => (currentPanel === panel ? null : panel))
+  }
+
+  const submitTopbarSearch = () => {
+    const query = topbarSearchText.trim()
+
+    if (!query) {
+      return
+    }
+
+    setTopbarSearchText('')
+    setOpenedTopbarPanel(null)
+    openPanel('search')
   }
 
   const formatCurrency = (value: number) =>
@@ -575,16 +598,35 @@ export default function BudgetPageStatusPanels({
               )}
             </div>
 
-            <button
-              type="button"
-              data-topbar-action="search"
-              aria-label="Wyszukiwarka"
-              title="Wyszukiwarka"
-              data-active={activeUtilityPanel === 'search' ? 'true' : 'false'}
-              onClick={() => openPanel('search')}
-            >
-              <Icon name="search" />
-            </button>
+            <div data-topbar-floating-action="true">
+              <button
+                type="button"
+                data-topbar-action="search"
+                aria-label="Wyszukiwarka"
+                title="Wyszukiwarka"
+                aria-expanded={openedTopbarPanel === 'search'}
+                data-active={openedTopbarPanel === 'search' ? 'true' : 'false'}
+                onClick={() => toggleTopbarPanel('search')}
+              >
+                <Icon name="search" />
+              </button>
+              {openedTopbarPanel === 'search' && (
+                <div data-topbar-dropdown="search">
+                  <input
+                    ref={topbarSearchInputRef}
+                    value={topbarSearchText}
+                    onChange={(event) => setTopbarSearchText(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter') {
+                        submitTopbarSearch()
+                      }
+                    }}
+                    placeholder="Szukaj wpisu..."
+                    aria-label="Szukaj wpisu"
+                  />
+                </div>
+              )}
+            </div>
 
             <div data-topbar-floating-action="true">
               <button
@@ -627,6 +669,29 @@ export default function BudgetPageStatusPanels({
                   ) : (
                     <p>Brak alertów miesiąca.</p>
                   )}
+                </div>
+              )}
+            </div>
+
+            <div data-topbar-floating-action="true">
+              <button
+                type="button"
+                data-topbar-action="month-note"
+                aria-label="Notatka miesiąca"
+                title="Notatka miesiąca"
+                aria-expanded={openedTopbarPanel === 'note'}
+                onClick={() => toggleTopbarPanel('note')}
+              >
+                <Icon name="drafts" />
+              </button>
+              {openedTopbarPanel === 'note' && (
+                <div data-topbar-dropdown="note">
+                  <ProfileMonthNotePanel
+                    profileId={profileId}
+                    userId={userId}
+                    selectedMonth={selectedMonth}
+                    styles={styles}
+                  />
                 </div>
               )}
             </div>

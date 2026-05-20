@@ -19,23 +19,21 @@
 }
 
 [data-budget-topbar-month="true"] > button {
-  width: 34px !important;
-  min-width: 34px !important;
-  height: 34px !important;
-  min-height: 34px !important;
+  width: 30px !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  min-height: 30px !important;
   display: grid !important;
   place-items: center !important;
-  border: 1px solid rgba(186, 213, 246, 0.82) !important;
-  border-radius: 12px !important;
+  border: 1px solid rgba(186, 213, 246, 0.58) !important;
+  border-radius: 11px !important;
   padding: 0 !important;
   background: linear-gradient(145deg, #ffffff, rgba(235, 245, 255, 0.86)) !important;
   color: #344a68 !important;
   font-size: 19px !important;
   font-weight: 520 !important;
   line-height: 1 !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.92),
-    0 7px 16px rgba(37, 99, 235, 0.045) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
   cursor: pointer !important;
 }
 
@@ -72,7 +70,7 @@
   grid-row: 2 !important;
   display: inline-flex !important;
   align-items: center !important;
-  justify-self: start !important;
+  justify-self: center !important;
   gap: 5px !important;
   min-height: 16px !important;
   padding: 0 !important;
@@ -134,6 +132,7 @@
 }
 
 [data-topbar-action="month-alert"],
+[data-topbar-action="month-note"],
 [data-topbar-action="search"],
 [data-topbar-action="profile"] {
   position: relative !important;
@@ -145,6 +144,7 @@
 }
 
 [data-topbar-action="month-alert"] svg,
+[data-topbar-action="month-note"] svg,
 [data-topbar-action="search"] svg,
 [data-topbar-action="profile"] svg,
 [data-topbar-action="primary-add"] svg {
@@ -153,6 +153,7 @@
 }
 
 [data-topbar-action="search"],
+[data-topbar-action="month-note"],
 [data-topbar-action="profile"] {
   flex: 0 0 auto !important;
 }
@@ -271,6 +272,28 @@
   min-width: min(360px, calc(100vw - 32px)) !important;
 }
 
+[data-topbar-dropdown="note"] {
+  min-width: min(360px, calc(100vw - 32px)) !important;
+}
+
+[data-topbar-dropdown="search"] {
+  min-width: min(280px, calc(100vw - 32px)) !important;
+  padding: 7px !important;
+}
+
+[data-topbar-dropdown="search"] input {
+  width: 100% !important;
+  height: 34px !important;
+  min-width: 0 !important;
+  border: 1px solid rgba(186, 213, 246, 0.72) !important;
+  border-radius: 10px !important;
+  padding: 0 10px !important;
+  background: rgba(248, 251, 255, 0.94) !important;
+  color: #0b2a63 !important;
+  font-size: 12px !important;
+  outline: none !important;
+}
+
 [data-topbar-dropdown] p {
   margin: 0 !important;
   color: #475569 !important;
@@ -300,6 +323,11 @@
 
 [data-budget-workspace-main="true"] > [data-budget-status-grid="true"],
 [data-budget-workspace-main="true"] > [data-core-workspace-footer="true"] {
+  display: none !important;
+}
+
+[data-budget-tree-toolbar="true"],
+[data-context-card="rail-actions"] {
   display: none !important;
 }
 
