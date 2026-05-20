@@ -134,6 +134,7 @@
 [data-topbar-action="month-alert"],
 [data-topbar-action="month-note"],
 [data-topbar-action="search"],
+[data-topbar-action="calendar"],
 [data-topbar-action="profile"] {
   position: relative !important;
   width: 38px !important;
@@ -146,6 +147,7 @@
 [data-topbar-action="month-alert"] svg,
 [data-topbar-action="month-note"] svg,
 [data-topbar-action="search"] svg,
+[data-topbar-action="calendar"] svg,
 [data-topbar-action="profile"] svg,
 [data-topbar-action="primary-add"] svg {
   width: 17px !important;
@@ -154,6 +156,7 @@
 
 [data-topbar-action="search"],
 [data-topbar-action="month-note"],
+[data-topbar-action="calendar"],
 [data-topbar-action="profile"] {
   flex: 0 0 auto !important;
 }
@@ -231,7 +234,7 @@
 [data-topbar-action="primary-add"] {
   min-width: 126px !important;
   display: inline-grid !important;
-  grid-template-columns: auto auto !important;
+  grid-template-columns: auto auto auto !important;
   place-items: center !important;
   gap: 7px !important;
   padding: 0 15px !important;
@@ -243,6 +246,13 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.24),
     0 12px 22px rgba(37, 99, 235, 0.18) !important;
+}
+
+[data-topbar-chevron="true"] {
+  font-size: 13px !important;
+  font-weight: 760 !important;
+  line-height: 1 !important;
+  transform: translateY(-1px) !important;
 }
 
 [data-topbar-action="primary-add"]:hover {
@@ -323,11 +333,6 @@
 
 [data-budget-workspace-main="true"] > [data-budget-status-grid="true"],
 [data-budget-workspace-main="true"] > [data-core-workspace-footer="true"] {
-  display: none !important;
-}
-
-[data-budget-tree-toolbar="true"],
-[data-context-card="rail-actions"] {
   display: none !important;
 }
 

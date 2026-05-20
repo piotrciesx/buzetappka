@@ -573,6 +573,7 @@ export default function BudgetPageStatusPanels({
               >
                 <Icon name="plus" />
                 <span>Dodaj wpis</span>
+                <span data-topbar-chevron="true" aria-hidden="true">⌄</span>
               </button>
               {openedTopbarPanel === 'add' && (
                 <div data-topbar-dropdown="add">
@@ -695,6 +696,17 @@ export default function BudgetPageStatusPanels({
                 </div>
               )}
             </div>
+
+            <button
+              type="button"
+              data-topbar-action="calendar"
+              aria-label="Kalendarz"
+              title="Kalendarz"
+              data-active={activeUtilityPanel === 'monthCalendar' ? 'true' : 'false'}
+              onClick={() => openPanel('monthCalendar')}
+            >
+              <Icon name="calendar" />
+            </button>
 
             <button
               type="button"
