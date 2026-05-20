@@ -3,7 +3,6 @@
 import { ComponentProps, CSSProperties, useEffect, useRef, useState } from 'react'
 import AppSettingsPanel from './AppSettingsPanel'
 import BudgetHeaderPanel from './BudgetHeaderPanel'
-import ProfileMonthNotePanel from './ProfileMonthNotePanel'
 import UserProfileMenu from './UserProfileMenu'
 import UserAvatar from './UserAvatar'
 import type { BudgetUtilityPanel } from './BudgetPageMainPanels'
@@ -219,7 +218,7 @@ export default function BudgetPageStatusPanels({
   onOpenPinnedCategory,
 }: Props) {
   const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false)
-  const [openedTopbarPanel, setOpenedTopbarPanel] = useState<'alert' | 'note' | 'add' | null>(null)
+  const [openedTopbarPanel, setOpenedTopbarPanel] = useState<'alert' | 'add' | null>(null)
   const topbarActionsRef = useRef<HTMLDivElement | null>(null)
   const visiblePinnedCategories = pinnedCategories.slice(0, 4)
   const hiddenPinnedCount = Math.max(pinnedCategories.length - visiblePinnedCategories.length, 0)
@@ -286,7 +285,7 @@ export default function BudgetPageStatusPanels({
     action()
   }
 
-  const toggleTopbarPanel = (panel: 'alert' | 'note' | 'add') => {
+  const toggleTopbarPanel = (panel: 'alert' | 'add') => {
     window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
     setOpenedTopbarPanel((currentPanel) => (currentPanel === panel ? null : panel))
   }
@@ -522,74 +521,6 @@ export default function BudgetPageStatusPanels({
             aria-label="Szybkie akcje"
             ref={topbarActionsRef}
           >
-            <div data-topbar-floating-action="true">
-              <button
-                type="button"
-                data-topbar-action="month-alert"
-                aria-label="Alerty miesiąca"
-                title="Alerty miesiąca"
-                aria-expanded={openedTopbarPanel === 'alert'}
-                onClick={() => toggleTopbarPanel('alert')}
-              >
-                <Icon name="alert" />
-                {previousMonthCloseReminder && <span data-topbar-action-badge="true">1</span>}
-              </button>
-              {openedTopbarPanel === 'alert' && (
-                <div data-topbar-dropdown="alert">
-                  {previousMonthCloseReminder ? (
-                    <>
-                      <p>Poprzedni miesiąc {previousMonthCloseReminder} nie jest jeszcze zamknięty.</p>
-                      <div data-topbar-dropdown-actions="true">
-                        <button
-                          type="button"
-                          onClick={async () => {
-                            await onLockPreviousMonth(previousMonthCloseReminder)
-                            setOpenedTopbarPanel(null)
-                          }}
-                        >
-                          Zamknij
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            onHidePreviousMonthCloseReminder()
-                            setOpenedTopbarPanel(null)
-                          }}
-                        >
-                          Później
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <p>Brak alertów miesiąca.</p>
-                  )}
-                </div>
-              )}
-            </div>
-
-            <div data-topbar-floating-action="true">
-              <button
-                type="button"
-                data-topbar-action="month-note"
-                aria-label="Notatka miesiąca"
-                title="Notatka miesiąca"
-                aria-expanded={openedTopbarPanel === 'note'}
-                onClick={() => toggleTopbarPanel('note')}
-              >
-                <Icon name="drafts" />
-              </button>
-              {openedTopbarPanel === 'note' && (
-                <div data-topbar-dropdown="note">
-                  <ProfileMonthNotePanel
-                    profileId={profileId}
-                    userId={userId}
-                    selectedMonth={selectedMonth}
-                    styles={styles}
-                  />
-                </div>
-              )}
-            </div>
-
             {visiblePinnedCategories.length > 0 && (
               <div data-topbar-pinned-categories="true" aria-label="Przypięte kategorie">
                 {visiblePinnedCategories.map((category) => (
@@ -643,6 +574,73 @@ export default function BudgetPageStatusPanels({
                 </div>
               )}
             </div>
+
+            <button
+              type="button"
+              data-topbar-action="search"
+              aria-label="Wyszukiwarka"
+              title="Wyszukiwarka"
+              data-active={activeUtilityPanel === 'search' ? 'true' : 'false'}
+              onClick={() => openPanel('search')}
+            >
+              <Icon name="search" />
+            </button>
+
+            <div data-topbar-floating-action="true">
+              <button
+                type="button"
+                data-topbar-action="month-alert"
+                aria-label="Alerty miesiąca"
+                title="Alerty miesiąca"
+                aria-expanded={openedTopbarPanel === 'alert'}
+                onClick={() => toggleTopbarPanel('alert')}
+              >
+                <Icon name="alert" />
+                {previousMonthCloseReminder && <span data-topbar-action-badge="true">1</span>}
+              </button>
+              {openedTopbarPanel === 'alert' && (
+                <div data-topbar-dropdown="alert">
+                  {previousMonthCloseReminder ? (
+                    <>
+                      <p>Poprzedni miesiąc {previousMonthCloseReminder} nie jest jeszcze zamknięty.</p>
+                      <div data-topbar-dropdown-actions="true">
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            await onLockPreviousMonth(previousMonthCloseReminder)
+                            setOpenedTopbarPanel(null)
+                          }}
+                        >
+                          Zamknij
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onHidePreviousMonthCloseReminder()
+                            setOpenedTopbarPanel(null)
+                          }}
+                        >
+                          Później
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <p>Brak alertów miesiąca.</p>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <button
+              type="button"
+              data-topbar-action="profile"
+              aria-label="Profil"
+              title="Profil"
+              data-active={activeSidebarPrimaryPanel === 'profile' ? 'true' : 'false'}
+              onClick={() => runTopbarAction(onOpenProfilePanel)}
+            >
+              <Icon name="user" />
+            </button>
           </div>
         </div>
 

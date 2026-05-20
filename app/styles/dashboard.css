@@ -2,7 +2,7 @@
 /* Premium main layout pass: scoped to the current dashboard shell. */
 @media (min-width: 821px) {
   [data-budget-app="true"] {
-    padding: 0 var(--shell-rail) 0 var(--shell-left) !important;
+    padding: calc(var(--shell-top) + var(--shell-gap)) var(--shell-gap) 16px calc(var(--shell-left) + var(--shell-gap)) !important;
     background:
       linear-gradient(135deg, #f7f9fc 0%, #edf2f7 44%, #f8fafc 100%) !important;
   }
@@ -12,9 +12,9 @@
   }
 
   [data-budget-workspace="true"] {
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 0 !important;
-    padding: 72px 22px 24px !important;
+    grid-template-columns: minmax(0, 1fr) var(--shell-rail) !important;
+    gap: 14px !important;
+    padding: 0 !important;
   }
 }
 
@@ -234,7 +234,7 @@
 @media (min-width: 821px) {
   [data-budget-app="true"] {
     min-height: 100dvh !important;
-    padding: var(--shell-top) 12px 16px var(--shell-left) !important;
+    padding: calc(var(--shell-top) + var(--shell-gap)) var(--shell-gap) 16px calc(var(--shell-left) + var(--shell-gap)) !important;
     background:
       linear-gradient(180deg, #f6f8fb 0%, #edf3f8 100%) !important;
   }
@@ -327,8 +327,8 @@
   [data-budget-workspace="true"] {
     max-width: none;
     min-height: calc(100dvh - 74px);
-    grid-template-columns: minmax(0, 1fr) 306px;
-    gap: 12px;
+    grid-template-columns: minmax(0, 1fr) var(--shell-rail);
+    gap: 14px;
     align-items: stretch;
   }
 

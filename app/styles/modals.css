@@ -283,13 +283,13 @@
 /* Right sidebar repair: keep this block scoped to the right rail only. */
 @media (min-width: 821px) {
   [data-budget-context-rail="true"] {
-    position: fixed !important;
-    inset: var(--shell-top) 0 0 auto !important;
+    position: sticky !important;
+    inset: auto !important;
     z-index: 42 !important;
     width: 332px !important;
     max-width: 332px !important;
-    min-height: calc(100dvh - var(--shell-top)) !important;
-    height: calc(100dvh - var(--shell-top)) !important;
+    min-height: 0 !important;
+    height: auto !important;
     overflow-y: auto !important;
     display: flex !important;
     flex-direction: column !important;

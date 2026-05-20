@@ -1,6 +1,6 @@
 @media (min-width: 821px) {
   [data-budget-app="true"] {
-    padding: calc(var(--shell-top) + var(--shell-gap)) var(--shell-rail) 16px calc(var(--shell-left) + var(--shell-gap)) !important;
+    padding: calc(var(--shell-top) + var(--shell-gap)) var(--shell-gap) 16px calc(var(--shell-left) + var(--shell-gap)) !important;
   }
 
   [data-budget-header-row="true"] {
@@ -8,14 +8,15 @@
   }
 
   [data-budget-workspace="true"] {
-    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-columns: minmax(0, 1fr) var(--shell-rail) !important;
     gap: 14px !important;
   }
 
   [data-budget-context-rail="true"] {
-    top: var(--shell-top) !important;
+    position: sticky !important;
+    top: calc(var(--shell-top) + var(--shell-gap)) !important;
     max-width: 332px !important;
-    min-height: calc(100dvh - var(--shell-top)) !important;
+    min-height: 0 !important;
     border-width: 0 0 0 1px !important;
     border-color: rgba(203, 213, 225, 0.74) !important;
     border-radius: 0 !important;
