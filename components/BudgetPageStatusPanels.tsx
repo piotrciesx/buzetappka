@@ -218,6 +218,18 @@ export default function BudgetPageStatusPanels({
     action()
   }
 
+  const focusPinnedCategories = () => {
+    window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
+    const pinnedCategories = document.querySelector('[data-budget-pinned-categories="true"]')
+
+    if (pinnedCategories instanceof HTMLElement) {
+      pinnedCategories.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      return
+    }
+
+    onQuickAdd()
+  }
+
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat('pl-PL', {
       style: 'currency',
@@ -462,7 +474,7 @@ export default function BudgetPageStatusPanels({
             <button
               type="button"
               data-topbar-action="pinned"
-              onClick={() => runTopbarAction(onQuickAdd)}
+              onClick={focusPinnedCategories}
             >
               Przypięte kategorie
             </button>

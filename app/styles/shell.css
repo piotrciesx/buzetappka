@@ -4,8 +4,9 @@
 }
 
 [data-budget-app="true"] {
-  --shell-left: 252px;
-  --shell-top: 66px;
+  --shell-left: 166px;
+  --shell-rail: 332px;
+  --shell-top: 72px;
   --shell-gap: 10px;
   --shell-radius: 22px;
   --shell-blue: #2563eb;

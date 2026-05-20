@@ -4,8 +4,7 @@
   }
 
   [data-budget-header-row="true"] {
-    inset: 0 348px auto 166px !important;
-    grid-template-columns: 1fr !important;
+    inset: 0 var(--shell-rail) auto var(--shell-left) !important;
   }
 
   [data-budget-workspace="true"] {

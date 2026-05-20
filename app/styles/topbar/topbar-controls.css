@@ -204,6 +204,19 @@
   cursor: pointer !important;
 }
 
+@media (max-width: 1500px) {
+  [data-budget-topbar-quick-actions="true"] > [data-topbar-action="pinned"] {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1380px) {
+  [data-budget-topbar-quick-actions="true"] > [data-topbar-action="quick-expense"],
+  [data-budget-topbar-quick-actions="true"] > [data-topbar-action="quick-income"] {
+    display: none !important;
+  }
+}
+
 @media (max-width: 1180px) {
   [data-budget-topbar-quick-actions="true"] > button:not([data-topbar-action="primary-add"]) {
     display: none !important;

@@ -1,13 +1,14 @@
 /* BudżAppka - jasny, czytelny topbar akcji. */
 [data-budget-header-row="true"] {
   position: fixed !important;
-  inset: 0 0 auto var(--shell-left) !important;
-  z-index: 80 !important;
+  inset: 0 var(--shell-rail) auto var(--shell-left) !important;
+  z-index: 5000 !important;
   display: grid !important;
   grid-template-columns: minmax(330px, auto) minmax(420px, 1fr) auto !important;
   align-items: center !important;
   gap: 14px !important;
   min-width: 0 !important;
+  max-width: calc(100vw - var(--shell-left) - var(--shell-rail)) !important;
   min-height: var(--shell-top) !important;
   padding: 10px 18px !important;
   border: 0 !important;
@@ -19,6 +20,7 @@
     inset 0 -1px 0 rgba(255, 255, 255, 0.92),
     0 14px 34px rgba(30, 64, 175, 0.08) !important;
   backdrop-filter: blur(12px);
+  pointer-events: auto !important;
 }
 
 [data-budget-brand="true"] {
@@ -68,5 +70,12 @@
     grid-template-columns: minmax(300px, auto) minmax(0, 1fr) auto !important;
     gap: 10px !important;
     padding-inline: 12px !important;
+  }
+}
+
+@media (max-width: 820px) {
+  [data-budget-header-row="true"] {
+    inset: 0 0 auto 0 !important;
+    max-width: none !important;
   }
 }
