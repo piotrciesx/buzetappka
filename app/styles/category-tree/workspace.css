@@ -1,20 +1,21 @@
 /* Workspace drzewa kategorii — stabilny pełnoszeroki układ pod redesign. */
 
 [data-budget-tree-workspace="true"] {
+  position: relative !important;
   width: 100% !important;
   min-width: 0 !important;
   display: grid !important;
-  grid-template-rows: auto auto auto !important;
-  gap: 16px !important;
+  grid-template-rows: auto auto auto auto !important;
+  gap: 10px !important;
   min-height: auto !important;
-  padding: clamp(18px, 2vw, 26px) !important;
+  padding: clamp(12px, 1.45vw, 18px) !important;
   border: 1px solid rgba(203, 213, 225, 0.74) !important;
-  border-radius: 22px !important;
+  border-radius: 20px !important;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(244, 248, 251, 0.78)) !important;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(244, 249, 255, 0.84)) !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    0 24px 70px rgba(15, 23, 42, 0.09) !important;
+    0 18px 48px rgba(30, 64, 175, 0.075) !important;
 }
 
 [data-budget-workspace-main="true"] > [data-budget-tree-workspace="true"] {
@@ -24,13 +25,18 @@
 }
 
 [data-budget-tree-toolbar="true"] {
+  position: absolute !important;
+  top: 12px !important;
+  right: 14px !important;
+  z-index: 4 !important;
   width: 100% !important;
   min-width: 0 !important;
   display: flex !important;
-  justify-content: center !important;
+  justify-content: flex-end !important;
   margin: 0 !important;
-  padding: 0 0 2px !important;
+  padding: 0 !important;
   border: 0 !important;
+  pointer-events: none !important;
 }
 
 [data-tree-toolbar-actions="true"] {
@@ -39,6 +45,7 @@
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
+  pointer-events: auto !important;
 }
 
 [data-budget-tree-control-deck="true"] {
@@ -47,7 +54,13 @@
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) auto !important;
   align-items: center !important;
-  gap: 10px !important;
+  gap: 8px !important;
+  margin: 2px 0 0 !important;
+  padding: 8px !important;
+  border: 1px solid rgba(186, 213, 246, 0.48) !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+  box-shadow: none !important;
 }
 
 [data-budget-tree-control-deck="true"] [data-budget-status-grid="true"] {
@@ -354,6 +367,7 @@
   min-width: 0 !important;
   display: block !important;
   align-self: stretch !important;
+  margin-top: 0 !important;
 }
 
 [data-tree-category-grid="true"] > div,

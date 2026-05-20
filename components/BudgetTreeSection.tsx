@@ -389,10 +389,6 @@ export default function BudgetTreeSection({
         </div>
       </div>
 
-      <div data-budget-tree-control-deck="true">
-        {workspaceTopNode}
-      </div>
-
       {sortedLevel1.length === 0 && (
         <div style={styles.emptyStateCard}>Brak widocznych kategorii w wybranym miesiącu</div>
       )}
@@ -478,6 +474,10 @@ export default function BudgetTreeSection({
           onEditBudgetLimit={onEditBudgetLimit}
         />
         </div>
+      </div>
+
+      <div data-budget-tree-control-deck="true">
+        {workspaceTopNode}
       </div>
 
       {workspaceBottomContent && (

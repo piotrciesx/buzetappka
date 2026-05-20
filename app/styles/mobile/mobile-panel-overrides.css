@@ -84,6 +84,26 @@
     gap: 8px !important;
   }
 
+  [data-budget-topbar-quick-actions="true"] {
+    display: none !important;
+  }
+
+  [data-budget-topbar-icon-actions="true"] {
+    grid-column: 2 !important;
+    gap: 4px !important;
+  }
+
+  [data-budget-topbar-icon-actions="true"] > button {
+    width: 34px !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+  }
+
+  [data-month-state="true"] {
+    display: none !important;
+  }
+
   [data-budget-topbar-month="true"] > button {
     width: 34px !important;
     min-width: 34px !important;

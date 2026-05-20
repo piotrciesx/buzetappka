@@ -25,6 +25,7 @@ export default function BudgetPageStatusPanelsContainer({
     draftVisibleModules,
     effectiveVisibleModules,
     errorText,
+    expenseLevel1Id,
     goToNextMonth,
     goToPrevMonth,
     handleLockAllPastMonths,
@@ -39,6 +40,7 @@ export default function BudgetPageStatusPanelsContainer({
     heatmapInverted,
     heatmapMode,
     hiddenCategoriesInSelectedMonth,
+    incomeLevel1Id,
     invitationErrorText,
     invitationStatusText,
     inviteEmail,
@@ -318,6 +320,12 @@ export default function BudgetPageStatusPanelsContainer({
         activeUtilityPanel={activeUtilityPanel}
         onOpenUtilityPanel={handleOpenUtilityPanel}
         onQuickAdd={() => openBlankFloatingTransactionCreator(null)}
+        onQuickAddIncome={
+          incomeLevel1Id ? () => openBlankFloatingTransactionCreator(incomeLevel1Id) : undefined
+        }
+        onQuickAddExpense={
+          expenseLevel1Id ? () => openBlankFloatingTransactionCreator(expenseLevel1Id) : undefined
+        }
       />
   )
 }

@@ -38,6 +38,8 @@ type Props = {
   activeUtilityPanel: BudgetUtilityPanel
   onOpenUtilityPanel: (panel: BudgetUtilityPanel) => void
   onQuickAdd: () => void
+  onQuickAddIncome?: () => void
+  onQuickAddExpense?: () => void
 }
 
 type IconName =
@@ -183,6 +185,8 @@ export default function BudgetPageStatusPanels({
   activeUtilityPanel,
   onOpenUtilityPanel,
   onQuickAdd,
+  onQuickAddIncome,
+  onQuickAddExpense,
 }: Props) {
   const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false)
 
@@ -207,6 +211,11 @@ export default function BudgetPageStatusPanels({
   const openPanel = (panel: BudgetUtilityPanel) => {
     window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
     onOpenUtilityPanel(activeUtilityPanel === panel ? null : panel)
+  }
+
+  const runTopbarAction = (action: () => void) => {
+    window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
+    action()
   }
 
   const formatCurrency = (value: number) =>
@@ -434,6 +443,76 @@ export default function BudgetPageStatusPanels({
           </div>
 
           <BudgetHeaderPanel {...budgetHeaderPanelProps} />
+
+          <div data-budget-topbar-quick-actions="true" aria-label="Szybkie akcje">
+            <button
+              type="button"
+              data-topbar-action="quick-expense"
+              onClick={() => runTopbarAction(onQuickAddExpense || onQuickAdd)}
+            >
+              Szybki wydatek
+            </button>
+            <button
+              type="button"
+              data-topbar-action="quick-income"
+              onClick={() => runTopbarAction(onQuickAddIncome || onQuickAdd)}
+            >
+              Szybki przychód
+            </button>
+            <button
+              type="button"
+              data-topbar-action="pinned"
+              onClick={() => runTopbarAction(onQuickAdd)}
+            >
+              Przypięte kategorie
+            </button>
+            <button
+              type="button"
+              data-topbar-action="primary-add"
+              onClick={() => runTopbarAction(onQuickAdd)}
+            >
+              <Icon name="plus" />
+              <span>Dodaj wpis</span>
+            </button>
+          </div>
+
+          <div data-budget-topbar-icon-actions="true" aria-label="Narzędzia">
+            <button
+              type="button"
+              aria-label="Szukaj"
+              title="Szukaj"
+              data-active={activeUtilityPanel === 'search' ? 'true' : 'false'}
+              onClick={() => openPanel('search')}
+            >
+              <Icon name="search" />
+            </button>
+            <button
+              type="button"
+              aria-label="Powiadomienia"
+              title="Powiadomienia"
+              data-active={activeUtilityPanel === 'recurringTransactions' ? 'true' : 'false'}
+              onClick={() => openPanel('recurringTransactions')}
+            >
+              <Icon name="bell" />
+            </button>
+            <button
+              type="button"
+              aria-label="Dodaj"
+              title="Dodaj"
+              onClick={() => runTopbarAction(onQuickAdd)}
+            >
+              <Icon name="plus" />
+            </button>
+            <button
+              type="button"
+              aria-label="Profil"
+              title="Profil"
+              data-active={activeSidebarPrimaryPanel === 'profile' ? 'true' : 'false'}
+              onClick={() => runTopbarAction(onOpenProfilePanel)}
+            >
+              <Icon name="user" />
+            </button>
+          </div>
         </div>
 
         {activeSidebarPrimaryPanel && (

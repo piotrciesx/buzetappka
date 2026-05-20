@@ -5,8 +5,8 @@
 
 [data-budget-app="true"] {
   --shell-left: 252px;
-  --shell-top: 64px;
-  --shell-gap: 12px;
+  --shell-top: 66px;
+  --shell-gap: 10px;
   --shell-radius: 22px;
   --shell-blue: #2563eb;
   --shell-navy: #071f4a;
@@ -436,7 +436,7 @@
 
 @media (min-width: 821px) {
   [data-budget-app="true"] {
-    padding: calc(var(--shell-top) + 8px) var(--shell-gap) var(--shell-gap) calc(var(--shell-left) + var(--shell-gap)) !important;
+    padding: calc(var(--shell-top) + 4px) var(--shell-gap) var(--shell-gap) calc(var(--shell-left) + var(--shell-gap)) !important;
   }
 
   [data-budget-workspace="true"] {

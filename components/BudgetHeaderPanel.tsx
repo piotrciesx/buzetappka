@@ -194,7 +194,9 @@ export default function BudgetHeaderPanel(props: Props) {
         </button>
       )}
 
-      <span data-month-state="true">{isSelectedMonthLocked ? 'zamknięty' : 'otwarty'}</span>
+      <span data-month-state="true">
+        {isSelectedMonthLocked ? 'Miesiąc zamknięty' : 'Miesiąc otwarty'}
+      </span>
 
       {isMonthMenuOpen && (
         <div data-budget-month-menu="true">
