@@ -2,7 +2,7 @@
 
 [data-budget-context-rail="true"] {
   position: sticky;
-  top: 66px;
+  top: calc(var(--shell-top) + var(--shell-gap));
   z-index: 1200;
   display: grid;
   align-content: start;

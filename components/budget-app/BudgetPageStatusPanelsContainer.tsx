@@ -29,6 +29,7 @@ export default function BudgetPageStatusPanelsContainer({
     goToNextMonth,
     goToPrevMonth,
     handleLockAllPastMonths,
+    handleLockMonth,
     handleLockSelectedMonth,
     handleResetAllHistory,
     handleResetHeatmapSettings,
@@ -62,6 +63,9 @@ export default function BudgetPageStatusPanelsContainer({
     monthNavigationErrorText,
     onCurrentUserLeftProfile,
     openBlankFloatingTransactionCreator,
+    openTransactionCreator,
+    pinnedWorkspaceCategories = [],
+    previousMonthCloseReminder,
     profileId,
     recentTransactionPreviews,
     resetDraftVisibleModules,
@@ -79,6 +83,7 @@ export default function BudgetPageStatusPanelsContainer({
     setInviteEmail,
     setIsDashboardPanelOpen,
     setIsFutureMonthNavigationLocked,
+    setIsPreviousMonthCloseReminderHidden,
     setIsSettingsPanelVisible,
     setMonthNavigationErrorText,
     setMonthNavigationStartMonth,
@@ -326,6 +331,14 @@ export default function BudgetPageStatusPanelsContainer({
         onQuickAddExpense={
           expenseLevel1Id ? () => openBlankFloatingTransactionCreator(expenseLevel1Id) : undefined
         }
+        profileId={profileId}
+        userId={userId}
+        selectedMonth={selectedMonth}
+        previousMonthCloseReminder={previousMonthCloseReminder}
+        pinnedCategories={pinnedWorkspaceCategories}
+        onLockPreviousMonth={handleLockMonth}
+        onHidePreviousMonthCloseReminder={() => setIsPreviousMonthCloseReminderHidden(true)}
+        onOpenPinnedCategory={openTransactionCreator}
       />
   )
 }

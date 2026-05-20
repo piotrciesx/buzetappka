@@ -476,9 +476,11 @@ export default function BudgetTreeSection({
         </div>
       </div>
 
-      <div data-budget-tree-control-deck="true">
-        {workspaceTopNode}
-      </div>
+      {workspaceTopNode && (
+        <div data-budget-tree-control-deck="true">
+          {workspaceTopNode}
+        </div>
+      )}
 
       {workspaceBottomContent && (
         <div data-budget-tree-bottom-deck="true">{workspaceBottomContent}</div>

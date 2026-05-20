@@ -3,15 +3,12 @@
 import type { ComponentProps } from 'react'
 import BudgetPageMainPanels from '../BudgetPageMainPanels'
 import MainWorkspaceBottomDeck from '../MainWorkspaceBottomDeck'
-import BudgetWorkspaceTopNotices from './BudgetWorkspaceTopNotices'
 import { getHiddenCategoryLabel } from '../../lib/categoryUtils'
 
 export type BudgetPageMainPanelsPropsContext = Record<string, any>
 
 export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsContext): ComponentProps<typeof BudgetPageMainPanels> {
   const {
-    activeBudgetLimitAlerts,
-    activeBudgetLimits,
     activeTransactionsById,
     activeUtilityPanel,
     addableTransactionCategoryIds,
@@ -90,7 +87,6 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     handleInlineSaveTransaction,
     handleLevel1DragStart,
     handleLevel3DragStart,
-    handleLockMonth,
     handleMoveTransaction,
     handleOpenCategoryCalendarAddForDay,
     handleOpenGlobalCalendarAddForDay,
@@ -156,9 +152,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     paymentSourceSettings,
     paymentSourceStats,
     paymentSources,
-    pinnedWorkspaceCategories,
     prev,
-    previousMonthCloseReminder,
     profileId,
     recentTransactionPreviews,
     recurring,
@@ -197,7 +191,6 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     setIsBankSearchOpen,
     setIsDashboardPanelOpen,
     setIsSettingsPanelVisible,
-    setIsPreviousMonthCloseReminderHidden,
     setLevel2SortDirection,
     setLevel2SortMode,
     setLevel3SortDirection,
@@ -602,24 +595,6 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
             : undefined,
           onOpenSearch: () => openUtilityPanel('search'),
           onOpenCalendar: () => openUtilityPanel('monthCalendar'),
-          workspaceTopContent: (
-            <BudgetWorkspaceTopNotices
-              previousMonthCloseReminder={previousMonthCloseReminder}
-              profileId={profileId}
-              userId={userId}
-              selectedMonth={selectedMonth}
-              isBudgetLimitsVisible={effectiveVisibleModules.budgetLimits}
-              activeBudgetLimitsCount={activeBudgetLimits.length}
-              activeBudgetLimitAlerts={activeBudgetLimitAlerts}
-              categoriesById={categoriesById}
-              pinnedWorkspaceCategories={pinnedWorkspaceCategories}
-              styles={styles}
-              onLockMonth={handleLockMonth}
-              onHidePreviousMonthCloseReminder={() => setIsPreviousMonthCloseReminderHidden(true)}
-              onOpenBudgetLimit={setBudgetLimitEditorCategoryId}
-              onOpenPinnedCategory={openTransactionCreator}
-            />
-          ),
           workspaceBottomContent: (
             <MainWorkspaceBottomDeck
               selectedMonth={selectedMonth}

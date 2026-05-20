@@ -284,12 +284,12 @@
 @media (min-width: 821px) {
   [data-budget-context-rail="true"] {
     position: fixed !important;
-    inset: 0 0 0 auto !important;
+    inset: var(--shell-top) 0 0 auto !important;
     z-index: 42 !important;
     width: 332px !important;
     max-width: 332px !important;
-    min-height: 100dvh !important;
-    height: 100dvh !important;
+    min-height: calc(100dvh - var(--shell-top)) !important;
+    height: calc(100dvh - var(--shell-top)) !important;
     overflow-y: auto !important;
     display: flex !important;
     flex-direction: column !important;
