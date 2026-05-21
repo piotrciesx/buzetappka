@@ -50,8 +50,8 @@
   }
 
   [data-budget-sidebar="true"] {
-    inset: calc(var(--shell-top) + 16px) auto 0 0 !important;
-    height: calc(100dvh - var(--shell-top) - 16px) !important;
+    inset: calc(var(--shell-top) + 18px) auto 14px 10px !important;
+    height: auto !important;
   }
 }
 

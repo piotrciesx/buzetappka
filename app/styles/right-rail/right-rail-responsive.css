@@ -1,6 +1,6 @@
 @media (min-width: 821px) {
   [data-budget-app="true"] {
-    padding: calc(var(--shell-top) + 18px) var(--shell-gap) 16px calc(var(--shell-left) + var(--shell-gap)) !important;
+    padding: calc(var(--shell-top) + 18px) var(--shell-gap) 16px calc(var(--shell-left) + 16px) !important;
   }
 
   [data-budget-header-row="true"] {

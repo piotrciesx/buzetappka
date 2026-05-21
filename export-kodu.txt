@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 309
-Data: 2026-05-21T19:42:56.025Z
+Data: 2026-05-21T20:04:45.732Z
 
 
 ==================================================
@@ -3352,14 +3352,14 @@ PLIK: app\styles\layout-depth\base-depth.css
   }
 
   [data-budget-sidebar="true"] {
-    z-index: 1900 !important;
+    z-index: 1800 !important;
     box-shadow:
       inset -1px 0 0 rgba(255, 255, 255, 0.74),
       12px 0 30px rgba(15, 23, 42, 0.055) !important;
   }
 
   [data-budget-context-rail="true"] {
-    z-index: 1850 !important;
+    z-index: 1700 !important;
     box-shadow:
       inset 1px 0 0 rgba(255, 255, 255, 0.78),
       -12px 0 32px rgba(15, 23, 42, 0.06) !important;
@@ -3369,6 +3369,16 @@ PLIK: app\styles\layout-depth\base-depth.css
   [data-rail-notification-wrap="true"],
   [data-rail-search-wrap="true"] {
     z-index: 3600 !important;
+  }
+
+  [data-budget-header-row="true"] {
+    inset: 8px 10px auto 10px !important;
+    z-index: var(--shell-topbar-z, 90000) !important;
+  }
+
+  [data-budget-sidebar="true"] {
+    inset: calc(var(--shell-top) + 16px) auto 0 0 !important;
+    height: calc(100dvh - var(--shell-top) - 16px) !important;
   }
 }
 
@@ -3411,7 +3421,7 @@ PLIK: app\styles\layout-depth\base-depth.css
   [data-tree-sort-inline="true"],
   [data-budget-month-menu="true"] {
     max-width: calc(100vw - 20px) !important;
-    z-index: 20010 !important;
+    z-index: var(--shell-topbar-overlay-z, 120000) !important;
   }
 }
 
@@ -3926,13 +3936,13 @@ PLIK: app\styles\layout-depth\targeted-overrides.css
 @media (min-width: 821px) {
   [data-budget-month-menu="true"] {
     position: fixed !important;
-    top: 76px !important;
+    top: 92px !important;
     left: 190px !important;
     right: 356px !important;
     width: auto !important;
     max-width: none !important;
     transform: none !important;
-    z-index: 1800 !important;
+    z-index: var(--shell-topbar-overlay-z, 120000) !important;
   }
 }
 
@@ -4892,28 +4902,31 @@ PLIK: app\styles\left-sidebar.css
 /* Extracted from app/globals.css. Keep import order in app/globals.css for cascade. */
 @media (min-width: 821px) {
   [data-budget-app="true"] {
-    padding: calc(var(--shell-top) + 8px) var(--shell-gap) var(--shell-gap) calc(var(--shell-left) + var(--shell-gap)) !important;
+    padding: calc(var(--shell-top) + 18px) var(--shell-gap) var(--shell-gap) calc(var(--shell-left) + var(--shell-gap)) !important;
   }
 
   [data-budget-sidebar="true"] {
-    inset: var(--shell-top) auto 0 0 !important;
+    inset: calc(var(--shell-top) + 16px) auto 0 0 !important;
     width: var(--shell-left) !important;
-    height: calc(100dvh - var(--shell-top)) !important;
-    border-radius: 0 !important;
+    height: calc(100dvh - var(--shell-top) - 16px) !important;
+    border-radius: 0 16px 0 0 !important;
   }
 
   [data-budget-app="true"] [data-budget-header-row="true"] {
     position: fixed !important;
-    inset: 0 0 auto 0 !important;
+    inset: 8px 10px auto 10px !important;
     min-height: var(--shell-top) !important;
     grid-template-columns: none !important;
-    padding: 10px var(--shell-gap) !important;
-    border-width: 0 0 1px 0 !important;
+    padding: 10px max(46px, calc(env(safe-area-inset-right) + 34px)) 10px 28px !important;
+    border-width: 1px !important;
     border-color: rgba(191, 216, 246, 0.72) !important;
-    border-radius: 0 !important;
+    border-radius: 24px !important;
     background:
       linear-gradient(180deg, rgba(247, 251, 255, 0.96), rgba(235, 245, 255, 0.88)) !important;
-    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.78) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.96),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.78),
+      0 18px 42px rgba(30, 64, 175, 0.12) !important;
     backdrop-filter: blur(14px);
   }
 
@@ -7006,11 +7019,11 @@ PLIK: app\styles\right-rail\right-rail-responsive.css
 
 @media (min-width: 821px) {
   [data-budget-app="true"] {
-    padding: calc(var(--shell-top) + var(--shell-gap)) var(--shell-gap) 16px calc(var(--shell-left) + var(--shell-gap)) !important;
+    padding: calc(var(--shell-top) + 18px) var(--shell-gap) 16px calc(var(--shell-left) + var(--shell-gap)) !important;
   }
 
   [data-budget-header-row="true"] {
-    inset: 0 0 auto var(--shell-left) !important;
+    inset: 8px 10px auto 10px !important;
   }
 
   [data-budget-workspace="true"] {
@@ -7366,6 +7379,8 @@ PLIK: app\styles\shell.css
   --shell-top: 72px;
   --shell-gap: 10px;
   --shell-radius: 22px;
+  --shell-topbar-z: 90000;
+  --shell-topbar-overlay-z: 120000;
   --shell-blue: #2563eb;
   --shell-navy: #071f4a;
   --shell-border: rgba(190, 210, 235, 0.78);
@@ -7794,7 +7809,7 @@ PLIK: app\styles\shell.css
 
 @media (min-width: 821px) {
   [data-budget-app="true"] {
-    padding: calc(var(--shell-top) + 4px) var(--shell-gap) var(--shell-gap) calc(var(--shell-left) + var(--shell-gap)) !important;
+    padding: calc(var(--shell-top) + 18px) var(--shell-gap) var(--shell-gap) calc(var(--shell-left) + var(--shell-gap)) !important;
   }
 
   [data-budget-workspace="true"] {
@@ -8500,9 +8515,9 @@ PLIK: app\styles\topbar\topbar-controls.css
 
 [data-budget-topbar-month="true"] {
   flex: 0 0 auto !important;
-  min-width: 168px !important;
+  min-width: 218px !important;
   display: grid !important;
-  grid-template-columns: 34px minmax(94px, auto) 34px !important;
+  grid-template-columns: 34px 34px 38px minmax(94px, auto) !important;
   grid-template-rows: auto auto !important;
   align-items: center !important;
   justify-content: start !important;
@@ -8536,6 +8551,11 @@ PLIK: app\styles\topbar\topbar-controls.css
   cursor: pointer !important;
 }
 
+[data-budget-topbar-month="true"] > button:first-child {
+  grid-column: 1 !important;
+  grid-row: 1 / span 2 !important;
+}
+
 [data-budget-topbar-month="true"] > button:hover {
   background: rgba(219, 234, 254, 0.72) !important;
   color: #1d4ed8 !important;
@@ -8547,7 +8567,7 @@ PLIK: app\styles\topbar\topbar-controls.css
 }
 
 [data-budget-topbar-month="true"] > button:nth-child(2) {
-  grid-column: 2 !important;
+  grid-column: 4 !important;
   grid-row: 1 !important;
   width: auto !important;
   min-width: 94px !important;
@@ -8569,12 +8589,17 @@ PLIK: app\styles\topbar\topbar-controls.css
   color: #0b2a63 !important;
 }
 
+[data-budget-topbar-month="true"] > button:nth-child(3) {
+  grid-column: 2 !important;
+  grid-row: 1 / span 2 !important;
+}
+
 [data-budget-topbar-month="true"] > button:nth-child(n + 4) {
   display: none !important;
 }
 
 [data-month-state="true"] {
-  grid-column: 2 !important;
+  grid-column: 4 !important;
   grid-row: 2 !important;
   display: inline-flex !important;
   align-items: center !important;
@@ -8616,9 +8641,9 @@ PLIK: app\styles\topbar\topbar-controls.css
   display: flex !important;
   align-items: center !important;
   justify-content: flex-end !important;
-  gap: 9px !important;
+  gap: 8px !important;
   margin-left: auto !important;
-  margin-right: 0 !important;
+  margin-right: 4px !important;
   padding-left: 12px !important;
   padding-right: 0 !important;
   overflow: visible !important;
@@ -8640,7 +8665,7 @@ PLIK: app\styles\topbar\topbar-controls.css
   border: 1px solid rgba(186, 213, 246, 0.78) !important;
   border-radius: 12px !important;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(235, 245, 255, 0.8)) !important;
-  color: #254467 !important;
+  color: #0f4fb8 !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
     0 8px 18px rgba(37, 99, 235, 0.045) !important;
@@ -8674,6 +8699,8 @@ PLIK: app\styles\topbar\topbar-controls.css
 [data-topbar-action="primary-add"] svg {
   width: 16px !important;
   height: 16px !important;
+  color: #0f4fb8 !important;
+  stroke: currentColor !important;
 }
 
 [data-topbar-action="search"],
@@ -8861,7 +8888,7 @@ PLIK: app\styles\topbar\topbar-controls.css
   position: absolute !important;
   top: calc(100% + 10px) !important;
   right: 0 !important;
-  z-index: 999999 !important;
+  z-index: var(--shell-topbar-overlay-z, 120000) !important;
   min-width: 180px !important;
   display: grid !important;
   gap: 8px !important;
@@ -8875,7 +8902,7 @@ PLIK: app\styles\topbar\topbar-controls.css
     0 4px 18px rgba(59,130,246,0.08) !important;
   backdrop-filter: blur(18px) saturate(1.08) !important;
   isolation: isolate !important;
-  overflow: hidden !important;
+  overflow: visible !important;
 }
 
 [data-topbar-dropdown="alert"] {
@@ -8973,29 +9000,31 @@ PLIK: app\styles\topbar\topbar-shell.css
 /* BudżAppka - finalny topbar aplikacji. */
 [data-budget-header-row="true"] {
   position: fixed !important;
-  inset: 0 0 auto 0 !important;
+  inset: 8px 10px auto 10px !important;
   z-index: 90000 !important;
   min-width: 0 !important;
-  width: 100vw !important;
-  max-width: 100vw !important;
+  width: auto !important;
+  max-width: calc(100vw - 20px) !important;
   min-height: var(--shell-top) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
   gap: 20px !important;
-  padding: 10px 36px 10px 28px !important;
+  padding: 10px max(46px, calc(env(safe-area-inset-right) + 34px)) 10px 28px !important;
   overflow: visible !important;
   isolation: isolate !important;
   border: 0 !important;
-  border-bottom: 1px solid rgba(177, 204, 237, 0.78) !important;
-  border-radius: 0 0 22px 22px !important;
+  border: 1px solid rgba(177, 204, 237, 0.78) !important;
+  border-radius: 24px !important;
   background:
     radial-gradient(circle at 0% 50%, rgba(219, 234, 254, 0.82), transparent 22%),
     radial-gradient(circle at 100% 0%, rgba(191, 219, 254, 0.34), transparent 28%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(239, 247, 255, 0.96)) !important;
   box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.96),
     inset 0 -1px 0 rgba(255, 255, 255, 0.92),
-    0 14px 34px rgba(30, 64, 175, 0.08) !important;
+    0 18px 42px rgba(30, 64, 175, 0.12),
+    0 4px 14px rgba(37, 99, 235, 0.05) !important;
   backdrop-filter: blur(12px);
   pointer-events: auto !important;
 }
@@ -9075,7 +9104,7 @@ PLIK: app\styles\topbar\topbar-shell.css
 @media (max-width: 1180px) {
   [data-budget-header-row="true"] {
     gap: 12px !important;
-    padding-inline: 18px 30px !important;
+    padding-inline: 18px max(40px, calc(env(safe-area-inset-right) + 28px)) !important;
   }
 
   [data-budget-brand="true"] {
@@ -9087,10 +9116,10 @@ PLIK: app\styles\topbar\topbar-shell.css
 
 @media (max-width: 820px) {
   [data-budget-header-row="true"] {
-    inset: 0 0 auto 0 !important;
-    width: 100vw !important;
+    inset: 6px 8px auto 8px !important;
+    width: auto !important;
     max-width: none !important;
-    border-radius: 0 !important;
+    border-radius: 18px !important;
   }
 
   [data-budget-brand="true"] {
@@ -65788,7 +65817,7 @@ PLIK: next-env.d.ts
 
 /// <reference types="next" />
 /// <reference types="next/image-types/global" />
-import "./.next/dev/types/routes.d.ts";
+import "./.next/types/routes.d.ts";
 
 // NOTE: This file should not be edited
 // see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
