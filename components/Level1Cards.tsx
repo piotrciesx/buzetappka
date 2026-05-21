@@ -76,33 +76,37 @@ function Level1CardBase(props: BaseProps) {
         {...headerDragProps}
       >
         <div data-level1-card-content="true">
-          <div data-level1-card-left="true">
-            {dragHandle}
+          <div data-level1-card-wave="true" />
 
-            <div data-level1-title-block="true">
-              <div>{level1Category.name}</div>
+          <div data-level1-card-main="true">
+            <div data-level1-card-left="true">
+              {dragHandle}
 
-              {summary && (
-                <div data-level1-summary="true">
-                  <strong>{moneyFormatter.format(summary.amount)} zł</strong>
-                </div>
-              )}
+              <div data-level1-title-block="true">
+                <div>{level1Category.name}</div>
 
-              {limitIndicator}
+                {summary && (
+                  <div data-level1-summary="true">
+                    <strong>{moneyFormatter.format(summary.amount)} zł</strong>
+                  </div>
+                )}
+
+                {limitIndicator}
+              </div>
             </div>
-          </div>
 
-          <div data-level1-trend-icon="true" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="22" height="22">
-              <path
-                d={getTrendPath(kind)}
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-              />
-            </svg>
+            <div data-level1-trend-icon="true" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path
+                  d={getTrendPath(kind)}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2.15"
+                />
+              </svg>
+            </div>
           </div>
         </div>
 
