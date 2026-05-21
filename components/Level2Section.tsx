@@ -222,6 +222,7 @@ export default function Level2Section(props: Props) {
         iconKey={l2.icon_key}
         categorySum={getSumForLevel2(l2.id)}
         isOpen={isOpen}
+        hasChildren={hasChildren}
         isDragging={isDragging}
         isClosingAfterSelectedMonth={isClosingAfterSelectedMonth}
         isCalendarOpen={isCalendarOpen}

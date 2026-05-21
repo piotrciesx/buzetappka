@@ -8,6 +8,7 @@ type Level2SectionHeaderProps = {
   iconKey?: string | null
   categorySum: number
   isOpen: boolean
+  hasChildren: boolean
   isDragging: boolean
   isClosingAfterSelectedMonth: boolean
   isCalendarOpen: boolean
@@ -97,6 +98,7 @@ export default function Level2SectionHeader({
   iconKey,
   categorySum,
   isOpen,
+  hasChildren,
   isDragging,
   isClosingAfterSelectedMonth,
   isCalendarOpen,
@@ -142,7 +144,8 @@ export default function Level2SectionHeader({
       <div style={styles.l2Left} data-category-row-main="true">
         {dragHandle}
 
-        <button
+        {hasChildren && (
+          <button
           type="button"
           style={styles.arrow}
           data-category-toggle-icon="true"
@@ -164,7 +167,8 @@ export default function Level2SectionHeader({
               strokeWidth="2"
             />
           </svg>
-        </button>
+          </button>
+        )}
 
         <div data-category-row-copy="true">
           <div style={styles.l2Name} data-category-row-name="true">
