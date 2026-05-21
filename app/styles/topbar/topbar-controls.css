@@ -555,14 +555,15 @@
 [data-budget-topbar-month="true"] > button:first-child::before,
 [data-budget-topbar-month="true"] > button:nth-child(3)::before {
   content: "" !important;
-  width: 10px !important;
-  height: 10px !important;
-  border-top: 2.5px solid #1558d6 !important;
-  border-right: 2.5px solid #1558d6 !important;
+  width: 11px !important;
+  height: 11px !important;
+  border-top: 3px solid #0f4fb8 !important;
+  border-right: 3px solid #0f4fb8 !important;
   position: absolute !important;
   top: 50% !important;
   left: 50% !important;
   transform-origin: center !important;
+  filter: drop-shadow(0 0 0.15px rgba(15, 79, 184, 0.35)) !important;
 }
 
 [data-budget-topbar-month="true"] > button:first-child::before {
