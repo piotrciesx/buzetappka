@@ -94,6 +94,8 @@ type Level2ChildrenProps = {
   getSumForCategory: (id: string) => number
   getTransactionsForCategoryAndMonth: (id: string) => Transaction[]
   isChildClosingAfterSelectedMonth: (category: Category) => boolean
+  renderTransactionsInline?: boolean
+  onOpenEntries?: (categoryId: string) => void
   styles: Record<string, CSSProperties>
 }
 
@@ -150,6 +152,8 @@ export default function Level2Children({
   getSumForCategory,
   getTransactionsForCategoryAndMonth,
   isChildClosingAfterSelectedMonth,
+  renderTransactionsInline = true,
+  onOpenEntries,
   styles,
 }: Level2ChildrenProps) {
   return (
@@ -221,6 +225,8 @@ export default function Level2Children({
             isSortable={sortedLevel3Children.length > 1}
             isDragDisabled={isLevel3DndBlocked}
             getAmountNumber={getAmountNumber}
+            renderTransactionsInline={renderTransactionsInline}
+            onOpenEntries={onOpenEntries}
             styles={styles}
           />
         ))}

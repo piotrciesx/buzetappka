@@ -16,7 +16,7 @@ type Props = {
   dndSensors: Parameters<typeof DndContext>[0]['sensors']
   expenseLevel1Id: string | null
   styles: Record<string, CSSProperties>
-  toggleLevel1: (id: string) => void
+  onOpenLevel1Entries: (id: string) => void
   handleLevel1DragStart: () => void
   handleReorderLevel1: (activeId: string, overId: string) => Promise<void>
   getLevel1Kind: (level1Category: Category) => 'income' | 'expense'
@@ -41,7 +41,7 @@ export default function BudgetCategoryTreeLevel1Shell({
   dndSensors,
   expenseLevel1Id,
   styles,
-  toggleLevel1,
+  onOpenLevel1Entries,
   handleLevel1DragStart,
   handleReorderLevel1,
   getLevel1Kind,
@@ -92,7 +92,7 @@ export default function BudgetCategoryTreeLevel1Shell({
                   key={level1Category.id}
                   level1Category={level1Category}
                   isOpen={isLevel1Open}
-                  onToggle={() => toggleLevel1(level1Category.id)}
+                  onToggle={() => onOpenLevel1Entries(level1Category.id)}
                   isSortable={isLevel1Sortable}
                   styles={styles}
                   kind={getLevel1Kind(level1Category)}
@@ -123,7 +123,7 @@ export default function BudgetCategoryTreeLevel1Shell({
                 key={level1Category.id}
                 level1Category={level1Category}
                 isOpen={isLevel1Open}
-                onToggle={() => toggleLevel1(level1Category.id)}
+                onToggle={() => onOpenLevel1Entries(level1Category.id)}
                 styles={styles}
                 kind={getLevel1Kind(level1Category)}
                 summary={getLevel1Summary(level1Category)}
@@ -161,7 +161,7 @@ export default function BudgetCategoryTreeLevel1Shell({
                   key={level1Category.id}
                   level1Category={level1Category}
                   isOpen={isLevel1Open}
-                  onToggle={() => toggleLevel1(level1Category.id)}
+                  onToggle={() => onOpenLevel1Entries(level1Category.id)}
                   isSortable={isLevel1Sortable}
                   styles={styles}
                   kind={getLevel1Kind(level1Category)}

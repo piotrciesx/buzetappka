@@ -111,6 +111,8 @@ export type Level2SectionProps = {
   handleReorderLevel3: (level2Id: string, activeId: string, overId: string) => Promise<void>
   isReorderingLevel2: boolean
   isReorderingLevel3: boolean
+  renderTransactionsInline?: boolean
+  onOpenEntries?: (type: 'level2' | 'level3', categoryId: string) => void
   getAmountNumber: (value: unknown) => number
   styles: Record<string, CSSProperties>
 }

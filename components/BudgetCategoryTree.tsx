@@ -9,12 +9,16 @@ import MonthCalendarPanel from './MonthCalendarPanel'
 import BudgetCategoryTreeAddSubcategoryForm from './category-tree/BudgetCategoryTreeAddSubcategoryForm'
 import BudgetCategoryTreeLevel1Actions from './category-tree/BudgetCategoryTreeLevel1Actions'
 import BudgetCategoryTreeLevel1Shell from './category-tree/BudgetCategoryTreeLevel1Shell'
+import CategoryEntriesPopup from './category-tree/CategoryEntriesPopup'
 import { Category } from '../lib/budgetPageTypes'
 import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
 import { useIsMobileViewport } from '../lib/useIsMobileViewport'
 import { getNearestDndSwapTargetId } from '../lib/getNearestDndSwapTargetId'
 
 type Props = import('./category-tree/budgetCategoryTreeTypes').BudgetCategoryTreeProps
+type SelectedCategoryEntriesPanel =
+  | { type: 'level1' | 'level2' | 'level3'; categoryId: string }
+  | null
 
 export default function BudgetCategoryTree(props: Props) {
   const {
@@ -96,6 +100,8 @@ export default function BudgetCategoryTree(props: Props) {
   const dndSensors = usePressHoldDndSensors()
   const isMobileViewport = useIsMobileViewport()
   const [level1InlineAddTokens] = useState<Record<string, number>>({})
+  const [selectedCategoryEntriesPanel, setSelectedCategoryEntriesPanel] =
+    useState<SelectedCategoryEntriesPanel>(null)
 
   useEffect(() => {
     const closeOpenMenu = (event: PointerEvent) => {
@@ -124,6 +130,22 @@ export default function BudgetCategoryTree(props: Props) {
       document.removeEventListener('pointerdown', closeOpenMenu)
     }
   }, [])
+
+  useEffect(() => {
+    if (!selectedCategoryEntriesPanel) {
+      return
+    }
+
+    const closeOnEscape = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setSelectedCategoryEntriesPanel(null)
+      }
+    }
+
+    window.addEventListener('keydown', closeOnEscape)
+
+    return () => window.removeEventListener('keydown', closeOnEscape)
+  }, [selectedCategoryEntriesPanel])
 
   const renderLevel2Section = (
     level1Category: Category,
@@ -157,7 +179,7 @@ export default function BudgetCategoryTree(props: Props) {
         toggleLevel2={toggleLevel2}
         openLevel3Ids={openLevel3Ids}
         toggleLevel3={toggleLevel3}
-        getSumForLevel2={getSumForLevel2ForSelectedMonth}
+        getSumForLevel2={getLevel2TreeSum}
         getSumForCategory={getSumForCategoryForSelectedMonth}
         getTransactionsForCategoryAndMonth={getTransactionsForCategoryAndMonthForSelectedMonth}
         openAddSubcategoryFor={openAddSubcategoryFor}
@@ -209,99 +231,18 @@ export default function BudgetCategoryTree(props: Props) {
         isReorderingLevel2={reorderingLevel1Id === level1Category.id}
         isReorderingLevel3={reorderingLevel2Id === level2Category.id}
         getAmountNumber={getAmountNumber}
+        renderTransactionsInline={false}
+        onOpenEntries={(type, categoryId) => setSelectedCategoryEntriesPanel({ type, categoryId })}
         styles={styles}
       />
     )
-  }
-
-  const renderLevel1LeafSection = (level1Category: Category) => {
-    const calendarHeatmapVariant = getCalendarHeatmapVariantForLevel1Id(level1Category.id)
-    const directLevel1Transactions = getTransactionsForCategoryAndMonthForSelectedMonth(
-      level1Category.id
-    )
-
-    return (
-      <Level3Section
-        key={level1Category.id}
-        l3={level1Category}
-        hideHeader
-        startInlineAddToken={level1InlineAddTokens[level1Category.id] || 0}
-        showCategoryActions={false}
-        selectedMonth={selectedMonth}
-        budgetStartDate={budgetStartDate}
-        isClosingAfterSelectedMonth={isCategoryClosingAfterSelectedMonth(
-          level1Category,
-          selectedMonth
-        )}
-        categorySum={getSumForCategoryForSelectedMonth(level1Category.id)}
-        transactions={directLevel1Transactions}
-        canAddHere={true}
-        isSelectedMonthLocked={isSelectedMonthLocked}
-        canUseMonthCalendar={canUseMonthCalendar}
-        isOpen={true}
-        toggleLevel3={toggleLevel3}
-        handleLevel3DragStart={handleLevel3DragStart}
-        openTransactionCreator={openTransactionCreator}
-        handleInlineSaveTransaction={handleInlineSaveTransaction}
-        saveDraft={saveDraft}
-        deleteDraft={deleteDraft}
-        inlineDraftType={level1Category.id === expenseLevel1Id ? 'expense' : 'income'}
-        inlineDraftLevel1Id={level1Category.id}
-        inlineDraftLevel2Id={null}
-        handleHideCategory={handleHideCategory}
-        handleRenameCategory={handleRenameCategory}
-        handleUpdateCategoryIcon={handleUpdateCategoryIcon}
-        handleDeleteCategory={handleDeleteCategory}
-        handleUndoScheduledHide={handleUndoScheduledHide}
-        handleDeleteTransaction={handleDeleteTransaction}
-        handleUpdateTransaction={handleUpdateTransaction}
-        handleMoveTransaction={handleMoveTransaction}
-        handleDuplicateTransaction={handleDuplicateTransaction}
-        handleOpenCalendarAddForDay={(_, dayText) =>
-          handleOpenLevel1CalendarAddForDay(level1Category.id, dayText)
-        }
-        selectedTransactionIds={selectedTransactionIds}
-        onToggleTransactionSelection={toggleTransactionSelection}
-        getMoveTargetsForTransaction={getMoveTargetsForTransaction}
-        getSignedAmountForTransaction={getSignedAmountForTransaction}
-        calendarHeatmapVariant={calendarHeatmapVariant}
-        heatmapMode={heatmapMode}
-        heatmapInverted={heatmapInverted}
-        onHeatmapModeChange={onHeatmapModeChange}
-        onHeatmapInvertedChange={onHeatmapInvertedChange}
-        heatmapStorageKey={`budget-app-tree-calendar-${level1Category.id}`}
-        descriptionSuggestions={descriptionSuggestions}
-        getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
-        getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}
-        getDefaultPaymentSourceIdForCategoryId={getDefaultPaymentSourceIdForCategoryId}
-        transactionTagsMap={transactionTagsMap}
-        transactionPaymentSplitsMap={transactionPaymentSplitsMap}
-        onTagClick={onTagClick}
-        onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
-        getAmountNumber={getAmountNumber}
-        styles={styles}
-      />
-    )
-  }
-
-  const renderLevel1DirectTransactionsSection = (level1Category: Category) => {
-    const directLevel1Transactions = getTransactionsForCategoryAndMonthForSelectedMonth(
-      level1Category.id
-    )
-    const hasInlineDraftStart = (level1InlineAddTokens[level1Category.id] || 0) > 0
-
-    if (directLevel1Transactions.length === 0 && !hasInlineDraftStart) {
-      return null
-    }
-
-    return renderLevel1LeafSection(level1Category)
   }
 
   const renderLevel2List = (level1Category: Category) => {
     const childrenLevel2 = getSortedLevel2Children(level1Category.id)
 
     if (childrenLevel2.length === 0) {
-      return renderLevel1LeafSection(level1Category)
+      return <div style={styles.emptyText}>Brak kategorii poziomu 2</div>
     }
 
     const isLevel2DndBlocked =
@@ -311,7 +252,6 @@ export default function BudgetCategoryTree(props: Props) {
     if (isLevel2DndBlocked) {
       return (
         <div>
-          {renderLevel1DirectTransactionsSection(level1Category)}
           {childrenLevel2.map((level2Category) => {
             const sortedLevel3Children = getSortedLevel3Children(level2Category.id)
 
@@ -350,7 +290,6 @@ export default function BudgetCategoryTree(props: Props) {
           )
         }}
       >
-        {renderLevel1DirectTransactionsSection(level1Category)}
         <SortableContext
           items={childrenLevel2.map((category) => category.id)}
           strategy={verticalListSortingStrategy}
@@ -480,20 +419,31 @@ export default function BudgetCategoryTree(props: Props) {
   }
 
   const getLevel1Summary = (level1Category: Category) => ({
-    amount: getSumForCategoryForSelectedMonth(level1Category.id),
+    amount: getLevel1TreeSum(level1Category.id),
     transactionCount: getTransactionsForLevel1AndMonth(level1Category.id).length,
     childCount: getSortedLevel2Children(level1Category.id).length,
   })
   const getLevel1Kind = (level1Category: Category) =>
     level1Category.id === expenseLevel1Id ? 'expense' : 'income'
 
-  const renderLevel1Content = (level1Category: Category) => {
-    const isLevel1Open = openLevel1Ids.includes(level1Category.id)
-    const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
+  const getLevel1TreeSum = (level1Id: string) =>
+    getTransactionsForLevel1AndMonth(level1Id).reduce(
+      (total, transaction) => total + getSignedAmountForTransaction(transaction),
+      0
+    )
 
-    if (!isLevel1Open && !(canUseMonthCalendar && isLevel1CalendarOpen)) {
-      return null
-    }
+  const getLevel2TreeSum = (level2Id: string) => {
+    const directLevel2Sum = getSumForCategoryForSelectedMonth(level2Id)
+    const level3Sum = getSortedLevel3Children(level2Id).reduce(
+      (total, level3Category) => total + getSumForCategoryForSelectedMonth(level3Category.id),
+      0
+    )
+
+    return directLevel2Sum + level3Sum
+  }
+
+  const renderLevel1Content = (level1Category: Category) => {
+    const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
 
     return (
       <section
@@ -503,27 +453,282 @@ export default function BudgetCategoryTree(props: Props) {
       >
         {canUseMonthCalendar && isLevel1CalendarOpen && renderLevel1CalendarPanel(level1Category)}
         {renderAddSubcategoryForm(level1Category.id, 'Nazwa kategorii')}
-        {isLevel1Open ? renderLevel2List(level1Category) : null}
+        {renderLevel2List(level1Category)}
       </section>
     )
   }
 
-  const isLevel1DndBlocked =
-    isReorderingLevel1 || sortedLevel1.some((category) => openLevel1Ids.includes(category.id))
+  const isLevel1DndBlocked = isReorderingLevel1
   const isLevel1Sortable = sortedLevel1.length > 1
 
+  const findLevel1ById = (categoryId: string) =>
+    sortedLevel1.find((category) => category.id === categoryId) || null
+
+  const findLevel2ById = (categoryId: string) => {
+    for (const level1Category of sortedLevel1) {
+      const level2Category = getSortedLevel2Children(level1Category.id).find(
+        (category) => category.id === categoryId
+      )
+
+      if (level2Category) {
+        return { level1Category, level2Category }
+      }
+    }
+
+    return null
+  }
+
+  const findLevel3ById = (categoryId: string) => {
+    for (const level1Category of sortedLevel1) {
+      for (const level2Category of getSortedLevel2Children(level1Category.id)) {
+        const level3Category = getSortedLevel3Children(level2Category.id).find(
+          (category) => category.id === categoryId
+        )
+
+        if (level3Category) {
+          return { level1Category, level2Category, level3Category }
+        }
+      }
+    }
+
+    return null
+  }
+
+  const renderPopupTransactionSection = (
+    category: Category,
+    level1Category: Category,
+    inlineDraftLevel2Id: string | null,
+    transactions = getTransactionsForCategoryAndMonthForSelectedMonth(category.id),
+    headerName = category.name
+  ) => {
+    const calendarHeatmapVariant = getCalendarHeatmapVariantForLevel1Id(level1Category.id)
+
+    return (
+      <Level3Section
+        key={`entries-${category.id}-${headerName}`}
+        l3={category}
+        headerName={headerName}
+        showCategoryActions={false}
+        selectedMonth={selectedMonth}
+        budgetStartDate={budgetStartDate}
+        isClosingAfterSelectedMonth={isCategoryClosingAfterSelectedMonth(category, selectedMonth)}
+        categorySum={getSumForCategoryForSelectedMonth(category.id)}
+        transactions={transactions}
+        canAddHere={true}
+        isSelectedMonthLocked={isSelectedMonthLocked}
+        canUseMonthCalendar={canUseMonthCalendar}
+        isOpen={true}
+        toggleLevel3={() => {}}
+        handleLevel3DragStart={handleLevel3DragStart}
+        openTransactionCreator={openTransactionCreator}
+        handleInlineSaveTransaction={handleInlineSaveTransaction}
+        saveDraft={saveDraft}
+        deleteDraft={deleteDraft}
+        inlineDraftType={level1Category.id === expenseLevel1Id ? 'expense' : 'income'}
+        inlineDraftLevel1Id={level1Category.id}
+        inlineDraftLevel2Id={inlineDraftLevel2Id}
+        handleHideCategory={handleHideCategory}
+        handleRenameCategory={handleRenameCategory}
+        handleUpdateCategoryIcon={handleUpdateCategoryIcon}
+        handleDeleteCategory={handleDeleteCategory}
+        handleUndoScheduledHide={handleUndoScheduledHide}
+        handleDeleteTransaction={handleDeleteTransaction}
+        handleUpdateTransaction={handleUpdateTransaction}
+        handleMoveTransaction={handleMoveTransaction}
+        handleDuplicateTransaction={handleDuplicateTransaction}
+        handleOpenCalendarAddForDay={(categoryId, dayText) => {
+          if (category.level === 1) {
+            handleOpenLevel1CalendarAddForDay(level1Category.id, dayText)
+            return
+          }
+
+          handleOpenCategoryCalendarAddForDay(categoryId, dayText)
+        }}
+        selectedTransactionIds={selectedTransactionIds}
+        onToggleTransactionSelection={toggleTransactionSelection}
+        getMoveTargetsForTransaction={getMoveTargetsForTransaction}
+        getSignedAmountForTransaction={getSignedAmountForTransaction}
+        calendarHeatmapVariant={calendarHeatmapVariant}
+        heatmapMode={heatmapMode}
+        heatmapInverted={heatmapInverted}
+        onHeatmapModeChange={onHeatmapModeChange}
+        onHeatmapInvertedChange={onHeatmapInvertedChange}
+        heatmapStorageKey={`budget-app-tree-popup-calendar-${category.id}`}
+        descriptionSuggestions={descriptionSuggestions}
+        getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
+        getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}
+        getDefaultPaymentSourceIdForCategoryId={getDefaultPaymentSourceIdForCategoryId}
+        transactionTagsMap={transactionTagsMap}
+        transactionPaymentSplitsMap={transactionPaymentSplitsMap}
+        onTagClick={onTagClick}
+        onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
+        getAmountNumber={getAmountNumber}
+        styles={styles}
+      />
+    )
+  }
+
+  const renderSelectedEntriesPopup = () => {
+    if (!selectedCategoryEntriesPanel) {
+      return null
+    }
+
+    const sections: ReactNode[] = []
+    let title = 'Wpisy kategorii'
+    let subtitle = selectedMonth
+
+    if (selectedCategoryEntriesPanel.type === 'level1') {
+      const level1Category = findLevel1ById(selectedCategoryEntriesPanel.categoryId)
+
+      if (!level1Category) {
+        return null
+      }
+
+      title = level1Category.name
+      subtitle = `Całe drzewo • ${selectedMonth}`
+
+      const directLevel1Transactions =
+        getTransactionsForCategoryAndMonthForSelectedMonth(level1Category.id)
+
+      if (directLevel1Transactions.length > 0) {
+        sections.push(
+          renderPopupTransactionSection(
+            level1Category,
+            level1Category,
+            null,
+            directLevel1Transactions,
+            'Wpisy bezpośrednie'
+          )
+        )
+      }
+
+      getSortedLevel2Children(level1Category.id).forEach((level2Category) => {
+        const directLevel2Transactions =
+          getTransactionsForCategoryAndMonthForSelectedMonth(level2Category.id)
+
+        if (directLevel2Transactions.length > 0) {
+          sections.push(
+            renderPopupTransactionSection(
+              level2Category,
+              level1Category,
+              level2Category.id,
+              directLevel2Transactions,
+              `${level2Category.name} • bezpośrednie`
+            )
+          )
+        }
+
+        getSortedLevel3Children(level2Category.id).forEach((level3Category) => {
+          const level3Transactions = getTransactionsForCategoryAndMonthForSelectedMonth(
+            level3Category.id
+          )
+
+          if (level3Transactions.length > 0) {
+            sections.push(
+              renderPopupTransactionSection(
+                level3Category,
+                level1Category,
+                level2Category.id,
+                level3Transactions,
+                `${level2Category.name} • ${level3Category.name}`
+              )
+            )
+          }
+        })
+      })
+    }
+
+    if (selectedCategoryEntriesPanel.type === 'level2') {
+      const result = findLevel2ById(selectedCategoryEntriesPanel.categoryId)
+
+      if (!result) {
+        return null
+      }
+
+      const { level1Category, level2Category } = result
+      title = level2Category.name
+      subtitle = `${level1Category.name} • ${selectedMonth}`
+
+      sections.push(
+        renderPopupTransactionSection(
+          level2Category,
+          level1Category,
+          level2Category.id,
+          getTransactionsForCategoryAndMonthForSelectedMonth(level2Category.id),
+          'Wpisy bezpośrednie'
+        )
+      )
+
+      getSortedLevel3Children(level2Category.id).forEach((level3Category) => {
+        sections.push(
+          renderPopupTransactionSection(
+            level3Category,
+            level1Category,
+            level2Category.id,
+            getTransactionsForCategoryAndMonthForSelectedMonth(level3Category.id),
+            level3Category.name
+          )
+        )
+      })
+    }
+
+    if (selectedCategoryEntriesPanel.type === 'level3') {
+      const result = findLevel3ById(selectedCategoryEntriesPanel.categoryId)
+
+      if (!result) {
+        return null
+      }
+
+      const { level1Category, level2Category, level3Category } = result
+      title = level3Category.name
+      subtitle = `${level1Category.name} • ${level2Category.name} • ${selectedMonth}`
+      sections.push(
+        renderPopupTransactionSection(
+          level3Category,
+          level1Category,
+          level2Category.id,
+          getTransactionsForCategoryAndMonthForSelectedMonth(level3Category.id),
+          level3Category.name
+        )
+      )
+    }
+
+    return (
+      <CategoryEntriesPopup
+        title={title}
+        subtitle={subtitle}
+        onClose={() => setSelectedCategoryEntriesPanel(null)}
+      >
+        {sections.length > 0 ? sections : <div style={styles.emptyText}>Brak wpisów w tym miesiącu</div>}
+      </CategoryEntriesPopup>
+    )
+  }
+
   return (
-    <BudgetCategoryTreeLevel1Shell
-      sortedLevel1={sortedLevel1}
-      openLevel1Ids={openLevel1Ids}
-      openLevel1CalendarIds={openLevel1CalendarIds}
-      isMobileViewport={isMobileViewport} isLevel1DndBlocked={isLevel1DndBlocked} isLevel1Sortable={isLevel1Sortable}
-      dndSensors={dndSensors}
-      expenseLevel1Id={expenseLevel1Id} styles={styles} toggleLevel1={toggleLevel1}
-      handleLevel1DragStart={handleLevel1DragStart} handleReorderLevel1={handleReorderLevel1}
-      getLevel1Kind={getLevel1Kind} getLevel1Summary={getLevel1Summary} getBudgetLimitView={getBudgetLimitView}
-      renderBlockedLevel1DragHandle={renderBlockedLevel1DragHandle} renderLevel1Actions={renderLevel1Actions}
-      renderLevel1Content={renderLevel1Content}
-    />
+    <>
+      <BudgetCategoryTreeLevel1Shell
+        sortedLevel1={sortedLevel1}
+        openLevel1Ids={openLevel1Ids}
+        openLevel1CalendarIds={openLevel1CalendarIds}
+        isMobileViewport={isMobileViewport}
+        isLevel1DndBlocked={isLevel1DndBlocked}
+        isLevel1Sortable={isLevel1Sortable}
+        dndSensors={dndSensors}
+        expenseLevel1Id={expenseLevel1Id}
+        styles={styles}
+        onOpenLevel1Entries={(categoryId) =>
+          setSelectedCategoryEntriesPanel({ type: 'level1', categoryId })
+        }
+        handleLevel1DragStart={handleLevel1DragStart}
+        handleReorderLevel1={handleReorderLevel1}
+        getLevel1Kind={getLevel1Kind}
+        getLevel1Summary={getLevel1Summary}
+        getBudgetLimitView={getBudgetLimitView}
+        renderBlockedLevel1DragHandle={renderBlockedLevel1DragHandle}
+        renderLevel1Actions={renderLevel1Actions}
+        renderLevel1Content={renderLevel1Content}
+      />
+      {renderSelectedEntriesPopup()}
+    </>
   )
 }

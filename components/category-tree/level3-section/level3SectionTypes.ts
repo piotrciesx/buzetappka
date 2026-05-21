@@ -14,6 +14,8 @@ export type Level3SectionProps = {
   startInlineAddToken?: number
   showHeaderSum?: boolean
   showCategoryActions?: boolean
+  renderTransactionsInline?: boolean
+  onOpenEntries?: (categoryId: string) => void
   selectedMonth: string
   budgetStartDate: string
   isClosingAfterSelectedMonth: boolean

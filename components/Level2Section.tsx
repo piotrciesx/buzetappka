@@ -88,6 +88,8 @@ export default function Level2Section(props: Props) {
     handleReorderLevel3,
     isReorderingLevel2,
     isReorderingLevel3,
+    renderTransactionsInline = true,
+    onOpenEntries,
     getAmountNumber,
     styles,
   } = props
@@ -191,6 +193,11 @@ export default function Level2Section(props: Props) {
     : getTransactionsForCategoryAndMonth(l2.id)
 
   const openLevel2InlineAdd = () => {
+    if (!renderTransactionsInline) {
+      openTransactionCreator(l2.id)
+      return
+    }
+
     if (!isOpen) {
       toggleLevel2(l2.id)
     }
@@ -225,6 +232,7 @@ export default function Level2Section(props: Props) {
         budgetLimitView={budgetLimitView}
         styles={styles}
         onToggle={() => toggleLevel2(l2.id)}
+        onOpenEntries={() => onOpenEntries?.('level2', l2.id)}
         onToggleCalendar={() => setIsCalendarOpen((prev) => !prev)}
         onEditBudgetLimit={onEditBudgetLimit ? () => onEditBudgetLimit(l2.id) : undefined}
         onInlineAdd={openLevel2InlineAdd}
@@ -321,7 +329,7 @@ export default function Level2Section(props: Props) {
         />
       )}
 
-      {isOpen && !hasChildren && (
+      {renderTransactionsInline && isOpen && !hasChildren && (
         <Level2TransactionsList
           l2={l2}
           inlineAddToken={inlineAddToken}
@@ -427,6 +435,8 @@ export default function Level2Section(props: Props) {
           getSumForCategory={getSumForCategory}
           getTransactionsForCategoryAndMonth={getTransactionsForCategoryAndMonth}
           isChildClosingAfterSelectedMonth={isChildClosingAfterSelectedMonth}
+          renderTransactionsInline={renderTransactionsInline}
+          onOpenEntries={(categoryId) => onOpenEntries?.('level3', categoryId)}
           styles={styles}
         />
       )}

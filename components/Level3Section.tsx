@@ -33,6 +33,8 @@ export default function Level3Section(props: Props) {
     startInlineAddToken = 0,
     showHeaderSum = true,
     showCategoryActions = true,
+    renderTransactionsInline = true,
+    onOpenEntries,
     selectedMonth,
     budgetStartDate,
     isClosingAfterSelectedMonth,
@@ -44,6 +46,7 @@ export default function Level3Section(props: Props) {
     isOpen,
     toggleLevel3,
     handleLevel3DragStart,
+    openTransactionCreator,
     handleInlineSaveTransaction,
     saveDraft,
     deleteDraft,
@@ -363,6 +366,11 @@ export default function Level3Section(props: Props) {
   }
 
   const openInlineAdd = useCallback(() => {
+    if (!renderTransactionsInline) {
+      openTransactionCreator(l3.id)
+      return
+    }
+
     setIsInlineAdding(true)
     const storageKey = `budget-inline-draft-${l3.id}-${selectedMonth}`
     const storedDraft = typeof window === 'undefined' ? null : window.localStorage.getItem(storageKey)
@@ -400,6 +408,8 @@ export default function Level3Section(props: Props) {
     getDefaultPaymentSourceIdForCategoryId,
     isOpen,
     l3.id,
+    openTransactionCreator,
+    renderTransactionsInline,
     selectedMonth,
     toggleLevel3,
   ])
@@ -559,6 +569,7 @@ export default function Level3Section(props: Props) {
         isSelectedMonthLocked={isSelectedMonthLocked}
         styles={styles}
         onToggle={() => toggleLevel3(l3.id)}
+        onOpenEntries={onOpenEntries ? () => onOpenEntries(l3.id) : undefined}
         onToggleCalendar={() => setIsCalendarOpen((prev) => !prev)}
         onInlineAdd={openInlineAdd}
         onHideNow={() => handleHideCategory(l3.id, 'now')}
@@ -649,7 +660,7 @@ export default function Level3Section(props: Props) {
         onCancel={closeInlineDeletePrompt}
       />
 
-      {isOpen && (
+      {renderTransactionsInline && isOpen && (
         <div style={styles.transactionsBox}>
           {isInlineAdding && !isSelectedMonthLocked && (
             <Level3InlineAddForm

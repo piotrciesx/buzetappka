@@ -44,8 +44,8 @@ const moneyFormatter = new Intl.NumberFormat('pl-PL', {
 })
 
 function getTrendPath(kind: 'income' | 'expense' | 'neutral') {
-  if (kind === 'expense') return 'M7 7h10v10M17 7 7 17'
-  if (kind === 'income') return 'M7 17h10V7M17 17 7 7'
+  if (kind === 'expense') return 'M7 7l10 10M17 17V7M17 17H7'
+  if (kind === 'income') return 'M7 17 17 7M17 7v10M17 7H7'
   return 'M12 5v14M5 12h14'
 }
 

@@ -20,6 +20,7 @@ type Level2SectionHeaderProps = {
   headerDragProps?: HTMLAttributes<HTMLDivElement>
   styles: Record<string, CSSProperties>
   onToggle: () => void
+  onOpenEntries: () => void
   onToggleCalendar: () => void
   onEditBudgetLimit?: () => void
   onInlineAdd: () => void
@@ -108,6 +109,7 @@ export default function Level2SectionHeader({
   headerDragProps,
   styles,
   onToggle,
+  onOpenEntries,
   onToggleCalendar,
   onEditBudgetLimit,
   onInlineAdd,
@@ -132,7 +134,7 @@ export default function Level2SectionHeader({
       }}
       onClick={() => {
         if (!isDragging) {
-          onToggle()
+          onOpenEntries()
         }
       }}
       {...headerDragProps}
@@ -140,7 +142,18 @@ export default function Level2SectionHeader({
       <div style={styles.l2Left} data-category-row-main="true">
         {dragHandle}
 
-        <div style={styles.arrow} data-category-toggle-icon="true" aria-hidden="true">
+        <button
+          type="button"
+          style={styles.arrow}
+          data-category-toggle-icon="true"
+          aria-label={isOpen ? `Zwiń ${name}` : `Rozwiń ${name}`}
+          onMouseDown={(event) => event.stopPropagation()}
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={(event) => {
+            event.stopPropagation()
+            onToggle()
+          }}
+        >
           <svg viewBox="0 0 24 24" width="17" height="17">
             <path
               d={isOpen ? 'm7 10 5 5 5-5' : 'm10 7 5 5-5 5'}
@@ -151,7 +164,7 @@ export default function Level2SectionHeader({
               strokeWidth="2"
             />
           </svg>
-        </div>
+        </button>
 
         <div data-category-row-copy="true">
           <div style={styles.l2Name} data-category-row-name="true">

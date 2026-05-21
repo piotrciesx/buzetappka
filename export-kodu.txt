@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 309
-Data: 2026-05-21T20:41:20.274Z
+Data: 2026-05-21T22:03:52.590Z
 
 
 ==================================================
@@ -3328,67 +3328,122 @@ PLIK: app\styles\layout-depth\base-depth.css
 /* Layout-only depth and popup guardrails. Imported last on purpose. */
 
 @media (min-width: 821px) {
-  [data-budget-shell-content="true"],
-  [data-budget-workspace="true"] {
+  [data-budget-app="true"] {
+    padding-left: calc(var(--shell-left) + 32px) !important;
+  }
+
+  [data-budget-shell-content="true"] {
     position: relative !important;
     overflow: visible !important;
+    background: transparent !important;
+    isolation: auto !important;
+    z-index: auto !important;
   }
 
   [data-budget-workspace="true"] {
-    z-index: 1 !important;
+    position: relative !important;
+    overflow: visible !important;
     isolation: auto !important;
+    z-index: auto !important;
     background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
     box-shadow: none !important;
+    backdrop-filter: none !important;
   }
 
   [data-budget-workspace-main="true"] {
     position: relative !important;
-    z-index: 1 !important;
     overflow: visible !important;
+    isolation: auto !important;
+    z-index: auto !important;
     background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
-  }
-
-  [data-budget-workspace-main="true"] > div:last-child {
     border: 0 !important;
     border-radius: 0 !important;
-    background: transparent !important;
     box-shadow: none !important;
+    backdrop-filter: none !important;
   }
 
-  [data-budget-workspace-main="true"] > div:last-child::before {
+  /* usuwa efekt wielkiej planszy środka */
+  [data-budget-workspace-main="true"]::before,
+  [data-budget-workspace-main="true"]::after,
+  [data-budget-workspace="true"]::before,
+  [data-budget-workspace="true"]::after {
     content: none !important;
+    display: none !important;
   }
 
+  /* usuwa wrapper-kartę pod contentem */
+  [data-budget-workspace-main="true"] > div:last-child {
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  [data-budget-workspace-main="true"] > div:last-child::before,
+  [data-budget-workspace-main="true"] > div:last-child::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  /* topbar ma zawsze być najwyżej */
+  [data-budget-header-row="true"] {
+    position: fixed !important;
+    inset: 8px 10px auto 10px !important;
+    z-index: 90000 !important;
+  }
+
+  /* sidebar pod topbarem */
   [data-budget-sidebar="true"] {
+    position: fixed !important;
+    inset: calc(var(--shell-top) + 18px) auto 16px 18px !important;
+    width: var(--shell-left) !important;
+    height: auto !important;
     z-index: 1800 !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(177, 204, 237, 0.72) !important;
+    border-radius: 28px !important;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(226, 241, 255, 0.92), transparent 34%),
+      radial-gradient(circle at 0% 96%, rgba(207, 226, 255, 0.42), transparent 32%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(242, 248, 255, 0.95) 52%, rgba(232, 242, 254, 0.97)) !important;
     box-shadow:
-      inset -1px 0 0 rgba(255, 255, 255, 0.74),
-      12px 0 30px rgba(15, 23, 42, 0.055) !important;
+      inset 0 1px 0 rgba(255, 255, 255, 0.96),
+      inset -1px 0 0 rgba(255, 255, 255, 0.7),
+      0 20px 48px rgba(30, 64, 175, 0.095),
+      0 5px 16px rgba(37, 99, 235, 0.045) !important;
   }
 
+  /* prawy rail pod topbarem */
   [data-budget-context-rail="true"] {
     z-index: 1700 !important;
-    box-shadow:
-      inset 1px 0 0 rgba(255, 255, 255, 0.78),
-      -12px 0 32px rgba(15, 23, 42, 0.06) !important;
   }
 
-  [data-context-card="rail-actions"],
-  [data-rail-notification-wrap="true"],
-  [data-rail-search-wrap="true"] {
-    z-index: 3600 !important;
+  /* dropdowny nad workspace */
+  [data-floating-dropdown="true"],
+  [data-mobile-category-menu="true"],
+  [data-transaction-menu="true"],
+  [data-budget-month-menu="true"],
+  [data-profile-menu-dropdown="true"] {
+    z-index: 120000 !important;
   }
 
-  [data-budget-header-row="true"] {
-    inset: 8px 10px auto 10px !important;
-    z-index: var(--shell-topbar-z, 90000) !important;
+  [data-floating-dropdown="true"][open],
+  [data-mobile-category-menu="true"][open],
+  [data-transaction-menu="true"][open] {
+    z-index: 120001 !important;
   }
 
-  [data-budget-sidebar="true"] {
-    inset: calc(var(--shell-top) + 18px) auto 14px 10px !important;
-    height: auto !important;
+  /* środek strony nie może zachowywać się jak osobna warstwa */
+  [data-budget-workspace="true"],
+  [data-budget-workspace-main="true"],
+  [data-main-workspace-deck="true"] {
+    transform: none !important;
+    filter: none !important;
+    contain: none !important;
+    will-change: auto !important;
   }
 }
 
@@ -3414,16 +3469,6 @@ PLIK: app\styles\layout-depth\base-depth.css
     min-width: 0 !important;
   }
 
-  [data-level1-mobile-flow="true"],
-  [data-level1-mobile-block="true"] {
-    display: grid !important;
-    gap: 10px !important;
-  }
-
-  [data-level1-mobile-block="true"] [data-level1-expanded-content="true"] {
-    margin: 0 !important;
-  }
-
   [data-floating-dropdown="true"][open],
   [data-mobile-category-menu="true"][open],
   [data-transaction-menu="true"][open],
@@ -3431,7 +3476,7 @@ PLIK: app\styles\layout-depth\base-depth.css
   [data-tree-sort-inline="true"],
   [data-budget-month-menu="true"] {
     max-width: calc(100vw - 20px) !important;
-    z-index: var(--shell-topbar-overlay-z, 120000) !important;
+    z-index: 120000 !important;
   }
 }
 
@@ -4912,32 +4957,15 @@ PLIK: app\styles\left-sidebar.css
 /* Extracted from app/globals.css. Keep import order in app/globals.css for cascade. */
 @media (min-width: 821px) {
   [data-budget-app="true"] {
-    padding: calc(var(--shell-top) + 18px) var(--shell-gap) var(--shell-gap) calc(var(--shell-left) + 16px) !important;
+    padding: calc(var(--shell-top) + 18px) var(--shell-gap) var(--shell-gap) calc(var(--shell-left) + 22px) !important;
   }
 
   [data-budget-sidebar="true"] {
-    inset: calc(var(--shell-top) + 18px) auto 14px 10px !important;
+    position: fixed !important;
+    inset: calc(var(--shell-top) + 18px) auto 16px 18px !important;
     width: var(--shell-left) !important;
     height: auto !important;
-    border-radius: 22px !important;
-  }
-
-  [data-budget-app="true"] [data-budget-header-row="true"] {
-    position: fixed !important;
-    inset: 8px 10px auto 10px !important;
-    min-height: var(--shell-top) !important;
-    grid-template-columns: none !important;
-    padding: 10px max(46px, calc(env(safe-area-inset-right) + 34px)) 10px 28px !important;
-    border-width: 1px !important;
-    border-color: rgba(191, 216, 246, 0.72) !important;
-    border-radius: 24px !important;
-    background:
-      linear-gradient(180deg, rgba(247, 251, 255, 0.96), rgba(235, 245, 255, 0.88)) !important;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.96),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.78),
-      0 18px 42px rgba(30, 64, 175, 0.12) !important;
-    backdrop-filter: blur(14px);
+    border-radius: 28px !important;
   }
 
   [data-budget-workspace="true"] {
@@ -4951,26 +4979,23 @@ PLIK: app\styles\left-sidebar.css
   }
 }
 
-
-
 [data-budget-sidebar="true"] {
   width: 252px;
-  padding: 16px 12px 14px;
+  padding: 18px 12px 16px !important;
   overflow: hidden !important;
-  border: 1px solid rgba(177, 204, 237, 0.74) !important;
+  border: 1px solid rgba(177, 204, 237, 0.72) !important;
+  border-radius: 28px !important;
   background:
     radial-gradient(circle at 18% 0%, rgba(226, 241, 255, 0.92), transparent 34%),
-    radial-gradient(circle at 0% 96%, rgba(207, 226, 255, 0.38), transparent 32%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(241, 248, 255, 0.94) 54%, rgba(232, 242, 254, 0.96)) !important;
+    radial-gradient(circle at 0% 96%, rgba(207, 226, 255, 0.42), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(242, 248, 255, 0.95) 52%, rgba(232, 242, 254, 0.97)) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96),
     inset -1px 0 0 rgba(255, 255, 255, 0.7),
-    0 18px 42px rgba(30, 64, 175, 0.09),
+    0 20px 48px rgba(30, 64, 175, 0.095),
     0 5px 16px rgba(37, 99, 235, 0.045) !important;
   backdrop-filter: blur(14px);
 }
-
-
 
 [data-budget-sidebar-logo="true"] {
   width: 100%;
@@ -4983,8 +5008,6 @@ PLIK: app\styles\left-sidebar.css
   padding: 2px 4px;
 }
 
-
-
 [data-budget-sidebar-logo-image="true"] {
   display: block;
   width: 100%;
@@ -4993,17 +5016,12 @@ PLIK: app\styles\left-sidebar.css
   object-fit: contain;
 }
 
-
-
 [data-budget-sidebar-nav="true"] {
   display: grid;
   gap: 4px;
   width: 100%;
-  padding-top: 14px;
-  border-top: 1px solid rgba(186, 213, 246, 0.62);
+  padding-top: 10px !important;
 }
-
-
 
 [data-sidebar-section] {
   display: grid !important;
@@ -5012,59 +5030,65 @@ PLIK: app\styles\left-sidebar.css
   min-width: 0 !important;
 }
 
-
-
 [data-sidebar-section="optional"] {
-  margin-top: 12px !important;
-  padding-top: 12px !important;
-  border-top: 1px solid rgba(186, 213, 246, 0.58) !important;
+  position: relative !important;
+  margin-top: 14px !important;
+  padding-top: 16px !important;
+  border-top: none !important;
 }
 
-
+[data-sidebar-section="optional"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 28px;
+  right: 28px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(186, 213, 246, 0),
+    rgba(186, 213, 246, 0.42),
+    rgba(186, 213, 246, 0)
+  );
+}
 
 [data-sidebar-section-label="true"] {
-  padding: 0 10px 5px !important;
-  color: #2f6fb8 !important;
+  padding: 0 10px 6px !important;
+  color: #1f63b4 !important;
   font-size: 10px !important;
-  font-weight: 660 !important;
+  font-weight: 720 !important;
   letter-spacing: 0 !important;
   text-transform: uppercase !important;
 }
-
-
 
 [data-budget-sidebar-nav="true"] button {
   position: relative;
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  height: 35px;
+  height: 36px !important;
   border: 1px solid transparent;
-  border-radius: 12px;
+  border-radius: 13px !important;
   display: grid;
   grid-template-columns: 22px minmax(0, 1fr);
   align-items: center;
   justify-items: stretch;
   gap: 10px;
   padding: 0 10px;
-  color: #2b4f78;
-  background: transparent;
+  color: #254467 !important;
+  background: transparent !important;
   cursor: pointer;
   overflow: hidden !important;
   text-align: left !important;
 }
 
-
-
 [data-budget-sidebar-nav="true"] svg {
-  width: 16px;
-  height: 16px;
+  width: 16px !important;
+  height: 16px !important;
   justify-self: center;
-  color: #1f6fbd;
-  stroke: currentColor;
+  color: #1267c8 !important;
+  stroke: currentColor !important;
 }
-
-
 
 [data-sidebar-label="true"] {
   width: 100%;
@@ -5074,14 +5098,12 @@ PLIK: app\styles\left-sidebar.css
   overflow: hidden !important;
   color: currentColor;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 540;
   line-height: 1.15;
   text-align: left !important;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-
 
 [data-budget-sidebar-nav="true"] button::before {
   content: "";
@@ -5093,26 +5115,25 @@ PLIK: app\styles\left-sidebar.css
   background: transparent;
 }
 
-
-
 [data-budget-sidebar-nav="true"] button:hover,
 [data-budget-sidebar-nav="true"] button[data-active="true"] {
   border-color: rgba(37, 99, 235, 0.24);
   background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(224, 239, 255, 0.78));
-  color: #1457b2;
+    linear-gradient(145deg, rgba(255, 255, 255, 0.97), rgba(224, 239, 255, 0.78));
+  color: #0f56b3;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.94),
-    0 8px 18px rgba(37, 99, 235, 0.06);
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    0 8px 18px rgba(37, 99, 235, 0.055);
 }
 
-
+[data-budget-sidebar-nav="true"] button:hover svg,
+[data-budget-sidebar-nav="true"] button[data-active="true"] svg {
+  color: #0f56b3;
+}
 
 [data-budget-sidebar-nav="true"] button[data-active="true"]::before {
   background: #2563eb;
 }
-
-
 
 [data-sidebar-badge="true"] {
   position: absolute;
@@ -6539,9 +6560,9 @@ PLIK: app\styles\modals.css
 
 @media (min-width: 821px) {
   [data-budget-sidebar="true"] {
-    inset: 0 auto 0 0 !important;
+    inset: calc(var(--shell-top) + 18px) auto 16px 18px !important;
     width: var(--shell-left) !important;
-    border-radius: 0 !important;
+    border-radius: 28px !important;
   }
 }
 
@@ -8528,13 +8549,13 @@ PLIK: app\styles\topbar\topbar-controls.css
 
 [data-budget-topbar-month="true"] {
   flex: 0 0 auto !important;
-  min-width: 194px !important;
+  min-width: 206px !important;
   display: grid !important;
-  grid-template-columns: 36px 36px minmax(92px, auto) !important;
-  grid-template-rows: auto auto !important;
+  grid-template-columns: 40px 40px minmax(100px, auto) !important;
+  grid-template-rows: 24px 16px !important;
   align-items: center !important;
   justify-content: start !important;
-  column-gap: 4px !important;
+  column-gap: 5px !important;
   row-gap: 0 !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -8545,74 +8566,104 @@ PLIK: app\styles\topbar\topbar-controls.css
   overflow: visible !important;
 }
 
-[data-budget-topbar-month="true"] > button {
-  width: 36px !important;
-  min-width: 36px !important;
-  height: 34px !important;
-  min-height: 34px !important;
+[data-budget-topbar-month="true"]>button {
+  width: 38px !important;
+  min-width: 38px !important;
+  height: 36px !important;
+  min-height: 36px !important;
   display: grid !important;
   place-items: center !important;
-  border: 1px solid rgba(117, 174, 237, 0.84) !important;
-  border-radius: 10px !important;
+  align-self: center !important;
+  border: 1px solid rgba(147, 197, 253, 0.84) !important;
+  border-radius: 11px !important;
   padding: 0 !important;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(220, 235, 255, 0.9)) !important;
-  color: #0b4ca8 !important;
-  font-size: 27px !important;
-  font-weight: 650 !important;
-  line-height: 1 !important;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(226, 239, 255, 0.92)) !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.94),
-    0 8px 18px rgba(37, 99, 235, 0.055) !important;
+    0 8px 18px rgba(37, 99, 235, 0.06) !important;
   cursor: pointer !important;
 }
 
-[data-budget-topbar-month="true"] > button:first-child {
-  grid-column: 1 !important;
-  grid-row: 1 !important;
-  align-self: center !important;
+[data-budget-topbar-month="true"]>button::before {
+  display: grid !important;
+  place-items: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  color: #0b55c8 !important;
+  font-size: 25px !important;
+  font-weight: 760 !important;
+  line-height: 1 !important;
+  transform: translateY(-1px) !important;
 }
 
-[data-budget-topbar-month="true"] > button:hover {
-  border-color: rgba(37, 99, 235, 0.34) !important;
-  background: linear-gradient(145deg, rgba(239, 246, 255, 0.98), rgba(207, 226, 255, 0.84)) !important;
+[data-budget-topbar-month="true"]>button:first-child {
+  grid-column: 1 !important;
+  grid-row: 1 / 3 !important;
+}
+
+[data-budget-topbar-month="true"]>button:first-child::before {
+  content: "‹" !important;
+}
+
+[data-budget-topbar-month="true"]>button:nth-child(3) {
+  grid-column: 2 !important;
+  grid-row: 1 / 3 !important;
+}
+
+[data-budget-topbar-month="true"]>button:nth-child(3)::before {
+  content: "›" !important;
+}
+
+[data-budget-topbar-month="true"]>button:hover {
+  border-color: rgba(37, 99, 235, 0.42) !important;
+  background:
+    linear-gradient(145deg, rgba(239, 246, 255, 0.98), rgba(207, 226, 255, 0.88)) !important;
+}
+
+[data-budget-topbar-month="true"]>button:hover::before {
   color: #1d4ed8 !important;
 }
 
-[data-budget-topbar-month="true"] > button:disabled {
+[data-budget-topbar-month="true"]>button:disabled {
   opacity: 0.44 !important;
   cursor: default !important;
 }
 
-[data-budget-topbar-month="true"] > button:nth-child(2) {
+[data-budget-topbar-month="true"]>button:nth-child(2) {
   grid-column: 3 !important;
   grid-row: 1 !important;
   width: auto !important;
-  min-width: 92px !important;
-  height: 23px !important;
-  min-height: 23px !important;
+  min-width: 100px !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
-  color: #0b2a63 !important;
-  font-size: 20px !important;
-  font-weight: 690 !important;
+  color: #06245f !important;
+  font-size: 22px !important;
+  font-weight: 740 !important;
   line-height: 1 !important;
-  letter-spacing: -0.02em !important;
+  letter-spacing: -0.03em !important;
   box-shadow: none !important;
 }
 
-[data-budget-topbar-month="true"] > button:nth-child(2):hover {
+[data-budget-topbar-month="true"]>button:nth-child(2)::before {
+  content: none !important;
+}
+
+[data-budget-topbar-month="true"]>button:nth-child(2):hover {
   background: transparent !important;
-  color: #0b2a63 !important;
+  color: #06245f !important;
 }
 
-[data-budget-topbar-month="true"] > button:nth-child(3) {
-  grid-column: 2 !important;
-  grid-row: 1 !important;
-  align-self: center !important;
-}
-
-[data-budget-topbar-month="true"] > button:nth-child(n + 4) {
+[data-budget-topbar-month="true"]>button:nth-child(n + 4) {
   display: none !important;
 }
 
@@ -8621,7 +8672,7 @@ PLIK: app\styles\topbar\topbar-controls.css
   grid-row: 2 !important;
   display: inline-flex !important;
   align-items: center !important;
-  justify-self: center !important;
+  justify-self: start !important;
   gap: 5px !important;
   min-height: 16px !important;
   padding: 0 !important;
@@ -8913,11 +8964,11 @@ PLIK: app\styles\topbar\topbar-controls.css
   padding: 10px !important;
   border: 1px solid rgba(191, 219, 254, 0.95) !important;
   border-radius: 16px !important;
-  background: rgba(255,255,255,0.99) !important;
+  background: rgba(255, 255, 255, 0.99) !important;
   color: #254467 !important;
   box-shadow:
-    0 26px 70px rgba(15,23,42,0.2),
-    0 4px 18px rgba(59,130,246,0.08) !important;
+    0 26px 70px rgba(15, 23, 42, 0.2),
+    0 4px 18px rgba(59, 130, 246, 0.08) !important;
   backdrop-filter: blur(18px) saturate(1.08) !important;
   isolation: isolate !important;
   overflow: visible !important;
@@ -8976,8 +9027,8 @@ PLIK: app\styles\topbar\topbar-controls.css
   text-align: center !important;
 }
 
-[data-budget-workspace-main="true"] > [data-budget-status-grid="true"],
-[data-budget-workspace-main="true"] > [data-core-workspace-footer="true"] {
+[data-budget-workspace-main="true"]>[data-budget-status-grid="true"],
+[data-budget-workspace-main="true"]>[data-core-workspace-footer="true"] {
   display: none !important;
 }
 
@@ -9000,6 +9051,7 @@ PLIK: app\styles\topbar\topbar-controls.css
 }
 
 @media (max-width: 1240px) {
+
   [data-topbar-action="pinned"] span:not([data-topbar-chevron="true"]),
   [data-topbar-action="primary-add"] span:not([data-topbar-chevron="true"]) {
     max-width: 108px !important;
@@ -9009,6 +9061,68 @@ PLIK: app\styles\topbar\topbar-controls.css
   }
 }
 
+/* Finalny, realny selektor dla przycisków zmiany miesiąca w topbarze. */
+[data-budget-topbar-month="true"] {
+  min-width: 196px !important;
+  grid-template-columns: 34px 34px minmax(96px, auto) !important;
+  column-gap: 12px !important;
+}
+
+[data-budget-topbar-month="true"] > button:first-child,
+[data-budget-topbar-month="true"] > button:nth-child(3) {
+  position: relative !important;
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  display: grid !important;
+  place-items: center !important;
+  align-self: center !important;
+  border: 1px solid rgba(147, 197, 253, 0.86) !important;
+  border-radius: 10px !important;
+  padding: 0 !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 1), rgba(231, 242, 255, 0.96)) !important;
+  color: transparent !important;
+  opacity: 1 !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.96),
+    0 8px 18px rgba(37, 99, 235, 0.055) !important;
+}
+
+[data-budget-topbar-month="true"] > button:first-child::before,
+[data-budget-topbar-month="true"] > button:nth-child(3)::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 11px !important;
+  height: 11px !important;
+border-top: 3px solid #0b55c8 !important;
+border-right: 3px solid #0b55c8 !important;
+  transform-origin: center !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+[data-budget-topbar-month="true"] > button:first-child::before {
+  transform: translate(-35%, -50%) rotate(-135deg) !important;
+}
+
+[data-budget-topbar-month="true"] > button:nth-child(3)::before {
+  transform: translate(-65%, -50%) rotate(45deg) !important;
+}
+
+[data-budget-topbar-month="true"] > button:first-child:hover::before,
+[data-budget-topbar-month="true"] > button:nth-child(3):hover::before {
+  border-top-color: #082f75 !important;
+  border-right-color: #082f75 !important;
+}
+
+[data-budget-topbar-month="true"] > button:nth-child(2) {
+  min-width: 96px !important;
+}
 
 
 ==================================================
