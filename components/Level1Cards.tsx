@@ -103,23 +103,22 @@ function Level1CardBase(props: BaseProps) {
                 stroke="currentColor"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth="2.15"
+                strokeWidth="2.05"
               />
             </svg>
           </div>
-        </div>
 
-        {extraActions && (
-          <div
-            data-category-actions="true"
-            data-level1-actions="true"
-            data-level1-actions-hidden="true"
-            style={styles.actions}
-            onClick={(event) => event.stopPropagation()}
-          >
-            {extraActions}
-          </div>
-        )}
+          {extraActions && (
+            <div
+              data-category-actions="true"
+              data-level1-actions="true"
+              style={styles.actions}
+              onClick={(event) => event.stopPropagation()}
+            >
+              {extraActions}
+            </div>
+          )}
+        </div>
       </div>
 
       {children}
