@@ -8,20 +8,30 @@
   }
 
   [data-budget-workspace="true"] {
-    isolation: isolate;
-    background:
-      linear-gradient(135deg, rgba(244, 247, 250, 0.92) 0%, rgba(255, 253, 249, 0.86) 100%) !important;
+    z-index: 1 !important;
+    isolation: auto !important;
+    background: transparent !important;
+    box-shadow: none !important;
   }
 
   [data-budget-workspace-main="true"] {
     position: relative !important;
     z-index: 1 !important;
     overflow: visible !important;
-    background:
-      linear-gradient(145deg, rgba(245, 248, 251, 0.9) 0%, rgba(255, 253, 249, 0.74) 100%) !important;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.84),
-      inset 0 0 0 1px rgba(226, 232, 240, 0.42) !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  [data-budget-workspace-main="true"] > div:last-child {
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  [data-budget-workspace-main="true"] > div:last-child::before {
+    content: none !important;
   }
 
   [data-budget-sidebar="true"] {

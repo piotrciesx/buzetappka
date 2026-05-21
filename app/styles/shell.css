@@ -70,12 +70,19 @@
   align-items: start !important;
   gap: var(--shell-gap);
   margin: 0 auto;
+  background: transparent !important;
+  box-shadow: none !important;
+  isolation: auto !important;
 }
 
 
 
 [data-budget-workspace-main="true"] {
   min-width: 0;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
 }
 
 
@@ -83,33 +90,25 @@
 [data-budget-workspace-main="true"] > div:last-child {
   position: relative;
   min-width: 0;
-  padding: 10px 14px 14px !important;
-  border: 1px solid rgba(195, 214, 238, 0.74) !important;
-  border-radius: 24px !important;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.88)) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.96),
-    0 18px 48px rgba(30, 64, 175, 0.06) !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
   overflow: visible;
 }
 
 
 
 [data-budget-workspace-main="true"] > div:last-child::before {
-  content: "";
-  position: absolute;
-  inset: 8px;
-  pointer-events: none;
-  border: 1px solid rgba(219, 234, 254, 0.44);
-  border-radius: 18px;
+  content: none !important;
 }
 
 
 
 [data-budget-workspace-main="true"] > div:last-child > div {
   position: relative;
-  z-index: 1;
+  z-index: auto;
   min-width: 0;
 }
 
@@ -117,7 +116,7 @@
 
 [data-budget-workspace-main="true"] > div:last-child > [style*="font-size"] {
   position: relative;
-  z-index: 1;
+  z-index: auto;
   display: inline-flex;
   align-items: baseline;
   gap: 10px;
