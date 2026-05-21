@@ -75,15 +75,15 @@ function Level1CardBase(props: BaseProps) {
         onClick={onToggle}
         {...headerDragProps}
       >
+        <div data-level1-card-overlay="true" aria-hidden="true" />
+        <div data-level1-card-wave="true" aria-hidden="true" />
+
         <div data-level1-card-content="true">
-          <div data-level1-card-wave="true" />
-
           <div data-level1-card-main="true">
-            <div data-level1-card-left="true">
-              {dragHandle}
-
+            <div data-level1-card-meta="true">
+              <div data-level1-card-drag="true">{dragHandle}</div>
               <div data-level1-title-block="true">
-                <div>{level1Category.name}</div>
+                <div data-level1-card-title="true">{level1Category.name}</div>
 
                 {summary && (
                   <div data-level1-summary="true">
@@ -91,22 +91,22 @@ function Level1CardBase(props: BaseProps) {
                   </div>
                 )}
 
-                {limitIndicator}
+                {limitIndicator && <div data-level1-limit="true">{limitIndicator}</div>}
               </div>
             </div>
+          </div>
 
-            <div data-level1-trend-icon="true" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="24" height="24">
-                <path
-                  d={getTrendPath(kind)}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2.15"
-                />
-              </svg>
-            </div>
+          <div data-level1-trend-icon="true" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24">
+              <path
+                d={getTrendPath(kind)}
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2.15"
+              />
+            </svg>
           </div>
         </div>
 
@@ -114,6 +114,7 @@ function Level1CardBase(props: BaseProps) {
           <div
             data-category-actions="true"
             data-level1-actions="true"
+            data-level1-actions-hidden="true"
             style={styles.actions}
             onClick={(event) => event.stopPropagation()}
           >
