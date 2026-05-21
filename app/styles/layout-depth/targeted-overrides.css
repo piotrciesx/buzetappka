@@ -2,13 +2,13 @@
 @media (min-width: 821px) {
   [data-budget-month-menu="true"] {
     position: fixed !important;
-    top: 76px !important;
+    top: 92px !important;
     left: 190px !important;
     right: 356px !important;
     width: auto !important;
     max-width: none !important;
     transform: none !important;
-    z-index: 1800 !important;
+    z-index: var(--shell-topbar-overlay-z, 120000) !important;
   }
 }
 

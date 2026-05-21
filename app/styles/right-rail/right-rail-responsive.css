@@ -1,10 +1,10 @@
 @media (min-width: 821px) {
   [data-budget-app="true"] {
-    padding: calc(var(--shell-top) + var(--shell-gap)) var(--shell-gap) 16px calc(var(--shell-left) + var(--shell-gap)) !important;
+    padding: calc(var(--shell-top) + 18px) var(--shell-gap) 16px calc(var(--shell-left) + var(--shell-gap)) !important;
   }
 
   [data-budget-header-row="true"] {
-    inset: 0 0 auto var(--shell-left) !important;
+    inset: 8px 10px auto 10px !important;
   }
 
   [data-budget-workspace="true"] {

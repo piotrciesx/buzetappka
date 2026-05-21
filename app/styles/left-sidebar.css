@@ -1,28 +1,31 @@
 /* Extracted from app/globals.css. Keep import order in app/globals.css for cascade. */
 @media (min-width: 821px) {
   [data-budget-app="true"] {
-    padding: calc(var(--shell-top) + 8px) var(--shell-gap) var(--shell-gap) calc(var(--shell-left) + var(--shell-gap)) !important;
+    padding: calc(var(--shell-top) + 18px) var(--shell-gap) var(--shell-gap) calc(var(--shell-left) + var(--shell-gap)) !important;
   }
 
   [data-budget-sidebar="true"] {
-    inset: var(--shell-top) auto 0 0 !important;
+    inset: calc(var(--shell-top) + 16px) auto 0 0 !important;
     width: var(--shell-left) !important;
-    height: calc(100dvh - var(--shell-top)) !important;
-    border-radius: 0 !important;
+    height: calc(100dvh - var(--shell-top) - 16px) !important;
+    border-radius: 0 16px 0 0 !important;
   }
 
   [data-budget-app="true"] [data-budget-header-row="true"] {
     position: fixed !important;
-    inset: 0 0 auto 0 !important;
+    inset: 8px 10px auto 10px !important;
     min-height: var(--shell-top) !important;
     grid-template-columns: none !important;
-    padding: 10px var(--shell-gap) !important;
-    border-width: 0 0 1px 0 !important;
+    padding: 10px max(46px, calc(env(safe-area-inset-right) + 34px)) 10px 28px !important;
+    border-width: 1px !important;
     border-color: rgba(191, 216, 246, 0.72) !important;
-    border-radius: 0 !important;
+    border-radius: 24px !important;
     background:
       linear-gradient(180deg, rgba(247, 251, 255, 0.96), rgba(235, 245, 255, 0.88)) !important;
-    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.78) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.96),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.78),
+      0 18px 42px rgba(30, 64, 175, 0.12) !important;
     backdrop-filter: blur(14px);
   }
 

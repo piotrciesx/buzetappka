@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 309
-Data: 2026-05-20T22:27:28.032Z
+Data: 2026-05-21T19:42:56.025Z
 
 
 ==================================================
@@ -2771,7 +2771,7 @@ PLIK: app\styles\dashboard.css
   }
 
   [data-budget-header-row="true"] {
-    inset: 0 var(--shell-rail) auto var(--shell-left) !important;
+    inset: 0 0 auto 0 !important;
   }
 
   [data-budget-workspace="true"] {
@@ -3057,8 +3057,8 @@ PLIK: app\styles\dashboard.css
 
   [data-budget-header-row="true"] {
     position: fixed;
-    inset: 0 var(--shell-rail) auto var(--shell-left);
-    z-index: 5000;
+    inset: 0 0 auto 0;
+    z-index: 90000;
     min-height: var(--shell-top);
     margin: 0;
     padding: 10px 18px;
@@ -4896,16 +4896,17 @@ PLIK: app\styles\left-sidebar.css
   }
 
   [data-budget-sidebar="true"] {
-    inset: 0 auto 0 0 !important;
+    inset: var(--shell-top) auto 0 0 !important;
     width: var(--shell-left) !important;
+    height: calc(100dvh - var(--shell-top)) !important;
     border-radius: 0 !important;
   }
 
   [data-budget-app="true"] [data-budget-header-row="true"] {
     position: fixed !important;
-    inset: 0 0 auto var(--shell-left) !important;
+    inset: 0 0 auto 0 !important;
     min-height: var(--shell-top) !important;
-    grid-template-columns: minmax(190px, 280px) minmax(420px, 1fr) minmax(280px, auto) !important;
+    grid-template-columns: none !important;
     padding: 10px var(--shell-gap) !important;
     border-width: 0 0 1px 0 !important;
     border-color: rgba(191, 216, 246, 0.72) !important;
@@ -8485,67 +8486,87 @@ PLIK: app\styles\topbar.css
 PLIK: app\styles\topbar\topbar-controls.css
 ==================================================
 
-/* BudżAppka - kontrolki głównego topbara. */
-[data-budget-topbar-month="true"] {
-  justify-self: start !important;
-  width: auto !important;
+/* BudżAppka - finalne kontrolki topbara. */
+[data-budget-topbar-month-group="true"] {
+  position: relative !important;
+  z-index: 1 !important;
+  flex: 0 0 auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 14px !important;
   min-width: 0 !important;
+  overflow: visible !important;
+}
+
+[data-budget-topbar-month="true"] {
+  flex: 0 0 auto !important;
+  min-width: 168px !important;
   display: grid !important;
-  grid-template-columns: 34px minmax(132px, auto) 34px !important;
+  grid-template-columns: 34px minmax(94px, auto) 34px !important;
   grid-template-rows: auto auto !important;
   align-items: center !important;
   justify-content: start !important;
-  column-gap: 8px !important;
-  row-gap: 1px !important;
+  column-gap: 6px !important;
+  row-gap: 0 !important;
   margin: 0 !important;
   padding: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
+  overflow: visible !important;
 }
 
 [data-budget-topbar-month="true"] > button {
-  width: 30px !important;
-  min-width: 30px !important;
-  height: 30px !important;
-  min-height: 30px !important;
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
   display: grid !important;
   place-items: center !important;
-  border: 1px solid rgba(186, 213, 246, 0.58) !important;
-  border-radius: 11px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
   padding: 0 !important;
-  background: linear-gradient(145deg, #ffffff, rgba(235, 245, 255, 0.86)) !important;
-  color: #344a68 !important;
-  font-size: 19px !important;
-  font-weight: 520 !important;
+  background: rgba(255, 255, 255, 0.62) !important;
+  color: #1e3a5f !important;
+  font-size: 28px !important;
+  font-weight: 360 !important;
   line-height: 1 !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
+  box-shadow: none !important;
   cursor: pointer !important;
 }
 
 [data-budget-topbar-month="true"] > button:hover {
-  border-color: rgba(37, 99, 235, 0.32) !important;
-  background: rgba(239, 246, 255, 0.98) !important;
+  background: rgba(219, 234, 254, 0.72) !important;
   color: #1d4ed8 !important;
 }
 
 [data-budget-topbar-month="true"] > button:disabled {
-  opacity: 0.44 !important;
+  opacity: 0.32 !important;
   cursor: default !important;
 }
 
 [data-budget-topbar-month="true"] > button:nth-child(2) {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
   width: auto !important;
-  min-width: 128px !important;
-  height: 24px !important;
-  min-height: 24px !important;
+  min-width: 94px !important;
+  height: 23px !important;
+  min-height: 23px !important;
   border: 0 !important;
+  border-radius: 0 !important;
   background: transparent !important;
   color: #0b2a63 !important;
-  font-size: 19px !important;
-  font-weight: 660 !important;
+  font-size: 20px !important;
+  font-weight: 690 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.02em !important;
   box-shadow: none !important;
+}
+
+[data-budget-topbar-month="true"] > button:nth-child(2):hover {
+  background: transparent !important;
+  color: #0b2a63 !important;
 }
 
 [data-budget-topbar-month="true"] > button:nth-child(n + 4) {
@@ -8566,7 +8587,8 @@ PLIK: app\styles\topbar\topbar-controls.css
   background: transparent !important;
   color: #15803d !important;
   font-size: 10px !important;
-  font-weight: 620 !important;
+  font-weight: 640 !important;
+  line-height: 1 !important;
   white-space: nowrap !important;
 }
 
@@ -8588,29 +8610,35 @@ PLIK: app\styles\topbar\topbar-controls.css
 }
 
 [data-budget-topbar-quick-actions="true"] {
+  flex: 1 1 auto !important;
   min-width: 0 !important;
+  max-width: none !important;
   display: flex !important;
   align-items: center !important;
   justify-content: flex-end !important;
-  justify-self: end !important;
-  gap: 10px !important;
+  gap: 9px !important;
   margin-left: auto !important;
-  margin-right: 4px !important;
-  padding-left: 24px !important;
+  margin-right: 0 !important;
+  padding-left: 12px !important;
+  padding-right: 0 !important;
   overflow: visible !important;
   position: relative !important;
-  z-index: 50020 !important;
+  z-index: 90020 !important;
 }
 
 [data-topbar-floating-action="true"] {
   position: relative !important;
   flex: 0 0 auto !important;
+  display: inline-flex !important;
+  overflow: visible !important;
+  z-index: 90030 !important;
 }
 
 [data-budget-topbar-quick-actions="true"] button {
-  min-height: 38px !important;
+  height: 36px !important;
+  min-height: 36px !important;
   border: 1px solid rgba(186, 213, 246, 0.78) !important;
-  border-radius: 13px !important;
+  border-radius: 12px !important;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(235, 245, 255, 0.8)) !important;
   color: #254467 !important;
   box-shadow:
@@ -8631,8 +8659,8 @@ PLIK: app\styles\topbar\topbar-controls.css
 [data-topbar-action="calendar"],
 [data-topbar-action="profile"] {
   position: relative !important;
-  width: 38px !important;
-  min-width: 38px !important;
+  width: 42px !important;
+  min-width: 42px !important;
   display: grid !important;
   place-items: center !important;
   padding: 0 !important;
@@ -8644,8 +8672,8 @@ PLIK: app\styles\topbar\topbar-controls.css
 [data-topbar-action="calendar"] svg,
 [data-topbar-action="profile"] svg,
 [data-topbar-action="primary-add"] svg {
-  width: 17px !important;
-  height: 17px !important;
+  width: 16px !important;
+  height: 16px !important;
 }
 
 [data-topbar-action="search"],
@@ -8655,129 +8683,195 @@ PLIK: app\styles\topbar\topbar-controls.css
   flex: 0 0 auto !important;
 }
 
+[data-budget-topbar-month-group="true"] [data-topbar-action="calendar"] {
+  width: 42px !important;
+  min-width: 42px !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(186, 213, 246, 0.78) !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(235, 245, 255, 0.8)) !important;
+  color: #0f4fb8 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 8px 18px rgba(37, 99, 235, 0.045) !important;
+  cursor: pointer !important;
+}
+
+[data-budget-topbar-month-group="true"] [data-topbar-action="calendar"]:hover {
+  border-color: rgba(37, 99, 235, 0.3) !important;
+  background: linear-gradient(145deg, rgba(239, 246, 255, 0.98), rgba(219, 234, 254, 0.82)) !important;
+  color: #1d4ed8 !important;
+}
+
 [data-topbar-action-badge="true"] {
   position: absolute !important;
   top: -5px !important;
   right: -5px !important;
-  width: 17px !important;
-  height: 17px !important;
+  width: 16px !important;
+  height: 16px !important;
   display: grid !important;
   place-items: center !important;
   border: 2px solid #ffffff !important;
   border-radius: 999px !important;
   background: #dc2626 !important;
   color: #ffffff !important;
-  font-size: 10px !important;
+  font-size: 9px !important;
   font-weight: 760 !important;
 }
 
-[data-topbar-pinned-categories="true"] {
-  min-width: 0 !important;
-  max-width: min(42vw, 540px) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  gap: 6px !important;
-  overflow: hidden !important;
-}
-
-[data-topbar-pinned-category="true"] {
-  width: 128px !important;
-  min-width: 0 !important;
-  max-width: 128px !important;
-  min-height: 34px !important;
+[data-topbar-action="pinned"] {
+  min-width: 178px !important;
+  height: 36px !important;
+  min-height: 36px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  padding: 0 9px !important;
-  font-size: 11px !important;
-  font-weight: 650 !important;
-  white-space: nowrap !important;
+  gap: 8px !important;
+  padding: 0 14px !important;
+  color: #0f4fb8 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
 }
 
-[data-topbar-pinned-category="true"][data-pinned-category-kind="income"] {
-  border-color: rgba(34, 197, 94, 0.25) !important;
-  color: #15803d !important;
+[data-topbar-action="pinned"] svg {
+  width: 16px !important;
+  height: 16px !important;
+  flex: 0 0 auto !important;
 }
 
-[data-topbar-pinned-category="true"][data-pinned-category-kind="expense"] {
-  border-color: rgba(244, 63, 94, 0.22) !important;
-  color: #be123c !important;
+[data-topbar-dropdown="pinned"] {
+  min-width: min(360px, calc(100vw - 32px)) !important;
+  padding: 10px !important;
 }
 
-[data-topbar-pinned-category="true"] span {
+[data-topbar-pinned-list="true"] {
+  display: grid !important;
+  gap: 6px !important;
+}
+
+[data-topbar-pinned-item="true"] {
+  min-height: 56px !important;
+  display: grid !important;
+  grid-template-columns: 8px minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 11px !important;
+  padding: 8px 10px !important;
+  text-align: left !important;
+}
+
+[data-topbar-pinned-item="true"]:hover {
+  transform: none !important;
+}
+
+[data-topbar-pinned-dot="true"] {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 999px !important;
+  background: #94a3b8 !important;
+}
+
+[data-topbar-pinned-item="true"][data-pinned-category-kind="income"] [data-topbar-pinned-dot="true"] {
+  background: #16a34a !important;
+}
+
+[data-topbar-pinned-item="true"][data-pinned-category-kind="expense"] [data-topbar-pinned-dot="true"] {
+  background: #e11d48 !important;
+}
+
+[data-topbar-pinned-copy="true"] {
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 3px !important;
+}
+
+[data-topbar-pinned-copy="true"] strong,
+[data-topbar-pinned-copy="true"] small {
   min-width: 0 !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
 }
 
-[data-topbar-pinned-more="true"] {
-  min-height: 28px !important;
-  display: inline-grid !important;
-  place-items: center !important;
-  padding: 0 8px !important;
-  border: 1px solid rgba(186, 213, 246, 0.62) !important;
-  border-radius: 999px !important;
-  background: rgba(255, 255, 255, 0.76) !important;
+[data-topbar-pinned-copy="true"] strong {
+  color: #0f2747 !important;
+  font-size: 12px !important;
+  font-weight: 720 !important;
+}
+
+[data-topbar-pinned-copy="true"] small {
   color: #64748b !important;
   font-size: 11px !important;
-  font-weight: 660 !important;
+  font-weight: 520 !important;
 }
 
 [data-topbar-action="primary-add"] {
-  min-width: 146px !important;
-  height: 46px !important;
+  min-width: 142px !important;
+  height: 36px !important;
+  min-height: 36px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 10px !important;
-  padding: 0 18px !important;
-  border: 1px solid rgba(37, 99, 235, 0.3) !important;
-  border-radius: 16px !important;
-  background: linear-gradient(145deg, #2f7df4, #2563eb) !important;
-  color: #ffffff !important;
-  font-size: 14px !important;
+  gap: 8px !important;
+  padding: 0 14px !important;
+  border: 1px solid rgba(186, 213, 246, 0.78) !important;
+  border-radius: 12px !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(235, 245, 255, 0.8)) !important;
+  color: #0f4fb8 !important;
+  font-size: 12px !important;
   font-weight: 700 !important;
   letter-spacing: -0.01em !important;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.22),
-    0 12px 26px rgba(37, 99, 235, 0.22) !important;
-  transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease,
-    filter 0.18s ease !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 8px 18px rgba(37, 99, 235, 0.045) !important;
+}
+
+[data-topbar-action="primary-add"] span {
+  flex: 0 0 auto !important;
 }
 
 [data-topbar-action="primary-add"]:hover {
-  transform: translateY(-1px) !important;
-  filter: brightness(1.02) !important;
+  transform: translateY(-0.5px) !important;
+  border-color: rgba(37, 99, 235, 0.3) !important;
+  background: linear-gradient(145deg, rgba(239, 246, 255, 0.98), rgba(219, 234, 254, 0.82)) !important;
+  color: #1d4ed8 !important;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.28),
-    0 18px 34px rgba(37, 99, 235, 0.28) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    0 10px 20px rgba(37, 99, 235, 0.08) !important;
 }
 
 [data-topbar-chevron="true"] {
-  font-size: 13px !important;
-  font-weight: 760 !important;
-  line-height: 1 !important;
-  transform: translateY(-1px) !important;
+  width: 0 !important;
+  height: 0 !important;
+  display: inline-block !important;
+  margin-left: 1px !important;
+  border-left: 4px solid transparent !important;
+  border-right: 4px solid transparent !important;
+  border-top: 5px solid currentColor !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  transform: translateY(1px) !important;
 }
 
 [data-topbar-dropdown] {
   position: absolute !important;
-  top: calc(100% + 12px) !important;
+  top: calc(100% + 10px) !important;
   right: 0 !important;
   z-index: 999999 !important;
-  min-width: 190px !important;
+  min-width: 180px !important;
   display: grid !important;
   gap: 8px !important;
   padding: 10px !important;
   border: 1px solid rgba(191, 219, 254, 0.95) !important;
-  border-radius: 18px !important;
-  background: rgba(255,255,255,0.98) !important;
+  border-radius: 16px !important;
+  background: rgba(255,255,255,0.99) !important;
+  color: #254467 !important;
   box-shadow:
-    0 24px 64px rgba(15,23,42,0.18),
+    0 26px 70px rgba(15,23,42,0.2),
     0 4px 18px rgba(59,130,246,0.08) !important;
   backdrop-filter: blur(18px) saturate(1.08) !important;
   isolation: isolate !important;
@@ -8855,43 +8949,49 @@ PLIK: app\styles\topbar\topbar-controls.css
 }
 
 @media (max-width: 1420px) {
-  [data-topbar-pinned-category="true"] {
-    width: 108px !important;
-    max-width: 108px !important;
+  [data-topbar-action="pinned"] {
+    min-width: 154px !important;
   }
 }
 
 @media (max-width: 1240px) {
-  [data-topbar-pinned-categories="true"] {
-    display: none !important;
+  [data-topbar-action="pinned"] span:not([data-topbar-chevron="true"]),
+  [data-topbar-action="primary-add"] span:not([data-topbar-chevron="true"]) {
+    max-width: 108px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
   }
 }
+
 
 
 ==================================================
 PLIK: app\styles\topbar\topbar-shell.css
 ==================================================
 
-/* BudżAppka - jasny, czytelny topbar akcji. */
+/* BudżAppka - finalny topbar aplikacji. */
 [data-budget-header-row="true"] {
   position: fixed !important;
-  inset: 0 0 auto var(--shell-left) !important;
-  z-index: 50000 !important;
-  display: grid !important;
-  grid-template-columns: auto minmax(0, 1fr) !important;
-  align-items: center !important;
-  gap: 14px !important;
+  inset: 0 0 auto 0 !important;
+  z-index: 90000 !important;
   min-width: 0 !important;
-  max-width: calc(100vw - var(--shell-left)) !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
   min-height: var(--shell-top) !important;
-  padding: 10px 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 20px !important;
+  padding: 10px 36px 10px 28px !important;
   overflow: visible !important;
   isolation: isolate !important;
   border: 0 !important;
-  border-bottom: 1px solid rgba(177, 204, 237, 0.8) !important;
-  border-radius: 0 !important;
+  border-bottom: 1px solid rgba(177, 204, 237, 0.78) !important;
+  border-radius: 0 0 22px 22px !important;
   background:
-    radial-gradient(circle at 0% 50%, rgba(219, 234, 254, 0.78), transparent 20%),
+    radial-gradient(circle at 0% 50%, rgba(219, 234, 254, 0.82), transparent 22%),
+    radial-gradient(circle at 100% 0%, rgba(191, 219, 254, 0.34), transparent 28%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(239, 247, 255, 0.96)) !important;
   box-shadow:
     inset 0 -1px 0 rgba(255, 255, 255, 0.92),
@@ -8903,16 +9003,35 @@ PLIK: app\styles\topbar\topbar-shell.css
 [data-budget-header-row="true"]::before {
   content: "" !important;
   position: absolute !important;
-  left: -34px !important;
+  left: 0 !important;
   top: 0 !important;
   bottom: 0 !important;
-  width: 70px !important;
+  width: 220px !important;
   pointer-events: none !important;
-  background: linear-gradient(90deg, rgba(226, 241, 255, 0), rgba(239, 247, 255, 0.92)) !important;
+  background: linear-gradient(90deg, rgba(226, 241, 255, 0.84), rgba(239, 247, 255, 0)) !important;
 }
 
 [data-budget-brand="true"] {
-  display: none !important;
+  position: relative !important;
+  z-index: 1 !important;
+  flex: 0 0 var(--shell-left) !important;
+  width: var(--shell-left) !important;
+  min-width: var(--shell-left) !important;
+  height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding: 0 8px 0 0 !important;
+  overflow: visible !important;
+}
+
+[data-budget-topbar-logo-image="true"] {
+  display: block !important;
+  width: 120px !important;
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: 34px !important;
+  object-fit: contain !important;
 }
 
 [data-budget-status-grid="true"] {
@@ -8955,18 +9074,30 @@ PLIK: app\styles\topbar\topbar-shell.css
 
 @media (max-width: 1180px) {
   [data-budget-header-row="true"] {
-    grid-template-columns: auto minmax(0, 1fr) !important;
-    gap: 10px !important;
-    padding-inline: 12px !important;
+    gap: 12px !important;
+    padding-inline: 18px 30px !important;
+  }
+
+  [data-budget-brand="true"] {
+    flex-basis: 142px !important;
+    width: 142px !important;
+    min-width: 142px !important;
   }
 }
 
 @media (max-width: 820px) {
   [data-budget-header-row="true"] {
     inset: 0 0 auto 0 !important;
+    width: 100vw !important;
     max-width: none !important;
+    border-radius: 0 !important;
+  }
+
+  [data-budget-brand="true"] {
+    display: none !important;
   }
 }
+
 
 
 ==================================================
@@ -17532,6 +17663,7 @@ type IconName =
   | 'calendar'
   | 'search'
   | 'plus'
+  | 'star'
   | 'more'
 
 type SidebarItem = {
@@ -17639,6 +17771,9 @@ const Icon = ({ name }: { name: IconName }) => {
         </>
       )}
       {name === 'plus' && <path d="M12 5v14M5 12h14" {...common} />}
+      {name === 'star' && (
+        <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z" {...common} />
+      )}
       {name === 'more' && (
         <>
           <circle cx="5" cy="12" r="1.2" {...common} />
@@ -17680,13 +17815,27 @@ export default function BudgetPageStatusPanels({
 }: Props) {
   const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false)
   const [openedTopbarPanel, setOpenedTopbarPanel] = useState<
-    'alert' | 'add' | 'note' | 'search' | null
+    'alert' | 'add' | 'note' | 'pinned' | 'search' | null
   >(null)
   const [topbarSearchText, setTopbarSearchText] = useState('')
   const topbarActionsRef = useRef<HTMLDivElement | null>(null)
   const topbarSearchInputRef = useRef<HTMLInputElement | null>(null)
-  const visiblePinnedCategories = pinnedCategories.slice(0, 4)
-  const hiddenPinnedCount = Math.max(pinnedCategories.length - visiblePinnedCategories.length, 0)
+  const pinnedCategoryParts = pinnedCategories.map((category) => ({
+    id: category.id,
+    parts: category.label
+      .split(/\s*(?:›|>|\/)\s*/)
+      .map((part) => part.trim())
+      .filter(Boolean),
+  }))
+  const pinnedLeafCounts = pinnedCategoryParts.reduce<Record<string, number>>((counts, category) => {
+    const leaf = category.parts.at(-1) || ''
+
+    if (leaf) {
+      counts[leaf] = (counts[leaf] || 0) + 1
+    }
+
+    return counts
+  }, {})
 
   useEffect(() => {
     if (!activeSidebarPrimaryPanel) {
@@ -17756,9 +17905,19 @@ export default function BudgetPageStatusPanels({
     action()
   }
 
-  const toggleTopbarPanel = (panel: 'alert' | 'add' | 'note' | 'search') => {
+  const toggleTopbarPanel = (panel: 'alert' | 'add' | 'note' | 'pinned' | 'search') => {
     window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
     setOpenedTopbarPanel((currentPanel) => (currentPanel === panel ? null : panel))
+  }
+
+  const getPinnedCategoryDisplay = (category: TopbarPinnedCategory) => {
+    const parts =
+      pinnedCategoryParts.find((pinnedCategory) => pinnedCategory.id === category.id)?.parts || []
+    const leaf = parts.at(-1) || category.label
+    const path = parts.length > 1 ? parts.join(' › ') : ''
+    const title = path && pinnedLeafCounts[leaf] > 1 ? parts.join(' ') : leaf
+
+    return { title, path }
   }
 
   const submitTopbarSearch = () => {
@@ -17882,15 +18041,6 @@ export default function BudgetPageStatusPanels({
   return (
     <>
       <aside data-budget-sidebar="true" aria-label="Moduły aplikacji">
-        <div data-budget-sidebar-logo="true">
-          <img
-            src="/brand/budzappka-logo-light.png"
-            alt="BudżAppka"
-            width={1199}
-            height={359}
-            data-budget-sidebar-logo-image="true"
-          />
-        </div>
         <nav data-budget-sidebar-nav="true" data-sidebar-desktop-nav="true">
           <div data-sidebar-section="primary">
             <span data-sidebar-section-label="true">Podstawowe</span>
@@ -17993,36 +18143,79 @@ export default function BudgetPageStatusPanels({
       <div data-budget-shell-content="true">
         <div data-budget-header-row="true">
           <div data-budget-brand="true">
-            <div style={styles.pageTitle}>Budżet testowy</div>
-            <span>wersja robocza</span>
+            <img
+              src="/brand/budzappka-logo-light.png"
+              alt="BudżAppka"
+              width={1199}
+              height={359}
+              data-budget-topbar-logo-image="true"
+            />
           </div>
 
-          <BudgetHeaderPanel {...budgetHeaderPanelProps} />
+          <div data-budget-topbar-month-group="true">
+            <BudgetHeaderPanel {...budgetHeaderPanelProps} />
+            <button
+              type="button"
+              data-topbar-action="calendar"
+              aria-label="Kalendarz"
+              title="Kalendarz"
+              data-active={activeUtilityPanel === 'monthCalendar' ? 'true' : 'false'}
+              onClick={() => openPanel('monthCalendar')}
+            >
+              <Icon name="calendar" />
+            </button>
+          </div>
 
           <div
             data-budget-topbar-quick-actions="true"
             aria-label="Szybkie akcje"
             ref={topbarActionsRef}
           >
-            {visiblePinnedCategories.length > 0 && (
-              <div data-topbar-pinned-categories="true" aria-label="Przypięte kategorie">
-                {visiblePinnedCategories.map((category) => (
-                  <button
-                    key={category.id}
-                    type="button"
-                    data-topbar-pinned-category="true"
-                    data-pinned-category-kind={category.kind}
-                    title={category.label}
-                    onClick={() => runTopbarAction(() => onOpenPinnedCategory(category.id))}
-                  >
-                    <span>{category.label}</span>
-                  </button>
-                ))}
-                {hiddenPinnedCount > 0 && (
-                  <span data-topbar-pinned-more="true">+{hiddenPinnedCount}</span>
-                )}
-              </div>
-            )}
+            <div data-topbar-floating-action="true">
+              <button
+                type="button"
+                data-topbar-action="pinned"
+                aria-expanded={openedTopbarPanel === 'pinned'}
+                onClick={() => toggleTopbarPanel('pinned')}
+              >
+                <Icon name="star" />
+                <span>Przypięte kategorie</span>
+                <span data-topbar-chevron="true" aria-hidden="true" />
+              </button>
+              {openedTopbarPanel === 'pinned' && (
+                <div data-topbar-dropdown="pinned">
+                  {pinnedCategories.length > 0 ? (
+                    <div data-topbar-pinned-list="true">
+                      {pinnedCategories.map((category) => {
+                        const display = getPinnedCategoryDisplay(category)
+
+                        return (
+                          <button
+                            key={category.id}
+                            type="button"
+                            data-topbar-pinned-item="true"
+                            data-pinned-category-kind={category.kind}
+                            title={category.label}
+                            onClick={() => {
+                              runTopbarAction(() => onOpenPinnedCategory(category.id))
+                              setOpenedTopbarPanel(null)
+                            }}
+                          >
+                            <span data-topbar-pinned-dot="true" />
+                            <span data-topbar-pinned-copy="true">
+                              <strong>{display.title}</strong>
+                              {display.path && <small>{display.path}</small>}
+                            </span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  ) : (
+                    <p>Brak przypiętych kategorii.</p>
+                  )}
+                </div>
+              )}
+            </div>
 
             <div data-topbar-floating-action="true">
               <button
@@ -18031,21 +18224,11 @@ export default function BudgetPageStatusPanels({
                 aria-expanded={openedTopbarPanel === 'add'}
                 onClick={() => toggleTopbarPanel('add')}
               >
-                <Icon name="plus" />
                 <span>Dodaj wpis</span>
-                <span data-topbar-chevron="true" aria-hidden="true">⌄</span>
+                <span data-topbar-chevron="true" aria-hidden="true" />
               </button>
               {openedTopbarPanel === 'add' && (
                 <div data-topbar-dropdown="add">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      runTopbarAction(onQuickAddExpense || onQuickAdd)
-                      setOpenedTopbarPanel(null)
-                    }}
-                  >
-                    Wydatek
-                  </button>
                   <button
                     type="button"
                     onClick={() => {
@@ -18054,6 +18237,15 @@ export default function BudgetPageStatusPanels({
                     }}
                   >
                     Przychód
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      runTopbarAction(onQuickAddExpense || onQuickAdd)
+                      setOpenedTopbarPanel(null)
+                    }}
+                  >
+                    Wydatek
                   </button>
                 </div>
               )}
@@ -18156,17 +18348,6 @@ export default function BudgetPageStatusPanels({
                 </div>
               )}
             </div>
-
-            <button
-              type="button"
-              data-topbar-action="calendar"
-              aria-label="Kalendarz"
-              title="Kalendarz"
-              data-active={activeUtilityPanel === 'monthCalendar' ? 'true' : 'false'}
-              onClick={() => openPanel('monthCalendar')}
-            >
-              <Icon name="calendar" />
-            </button>
 
             <button
               type="button"
@@ -65607,7 +65788,7 @@ PLIK: next-env.d.ts
 
 /// <reference types="next" />
 /// <reference types="next/image-types/global" />
-import "./.next/types/routes.d.ts";
+import "./.next/dev/types/routes.d.ts";
 
 // NOTE: This file should not be edited
 // see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
