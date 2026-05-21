@@ -29,18 +29,18 @@
 
 [data-level1-header-grid="true"] [data-level1-card="true"] {
   position: relative !important;
-  min-height: 188px !important;
+  min-height: 142px !important;
   height: 100% !important;
   display: block !important;
   overflow: hidden !important;
-  padding: 28px 30px !important;
-  border: 1px solid rgba(214, 223, 233, 0.72) !important;
-  border-radius: 17px !important;
+  padding: 22px 24px !important;
+  border: 1px solid rgba(214, 223, 233, 0.66) !important;
+  border-radius: 18px !important;
   cursor: pointer;
   backdrop-filter: none;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.92),
-    0 16px 38px rgba(15, 23, 42, 0.048) !important;
+    0 10px 26px rgba(15, 23, 42, 0.04) !important;
 }
 
 [data-level1-header-grid="true"] [data-level1-card="true"]::before {
@@ -49,16 +49,16 @@
 }
 
 [data-level1-header-grid="true"] [data-level1-card="true"][data-level1-kind="income"] {
-  border-color: rgba(134, 239, 172, 0.36) !important;
+  border-color: rgba(134, 239, 172, 0.3) !important;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(248, 252, 250, 0.95)) !important;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.995), rgba(250, 253, 251, 0.94)) !important;
   color: #15803d !important;
 }
 
 [data-level1-header-grid="true"] [data-level1-card="true"][data-level1-kind="expense"] {
-  border-color: rgba(254, 205, 211, 0.48) !important;
+  border-color: rgba(254, 205, 211, 0.36) !important;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(253, 249, 250, 0.95)) !important;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.995), rgba(253, 251, 251, 0.94)) !important;
   color: #e11d48 !important;
 }
 
@@ -75,14 +75,14 @@
 
 [data-level1-card="true"][data-level1-kind="income"] [data-level1-card-overlay="true"] {
   background:
-    linear-gradient(115deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.72) 48%, rgba(240, 253, 244, 0.48) 100%),
-    radial-gradient(circle at 90% 18%, rgba(187, 247, 208, 0.3), transparent 28%);
+    linear-gradient(115deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.82) 52%, rgba(240, 253, 244, 0.24) 100%),
+    radial-gradient(circle at 90% 18%, rgba(187, 247, 208, 0.16), transparent 28%);
 }
 
 [data-level1-card="true"][data-level1-kind="expense"] [data-level1-card-overlay="true"] {
   background:
-    linear-gradient(115deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.72) 48%, rgba(255, 241, 242, 0.5) 100%),
-    radial-gradient(circle at 90% 18%, rgba(254, 205, 211, 0.32), transparent 28%);
+    linear-gradient(115deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.82) 52%, rgba(255, 241, 242, 0.26) 100%),
+    radial-gradient(circle at 90% 18%, rgba(254, 205, 211, 0.16), transparent 28%);
 }
 
 [data-level1-card-content="true"] {
@@ -98,19 +98,19 @@
   position: relative;
   z-index: 2;
   width: 100%;
-  min-height: 132px;
+  min-height: 96px;
   display: grid !important;
   align-content: start !important;
-  gap: 14px !important;
-  padding-right: 64px !important;
+  gap: 8px !important;
+  padding-right: 58px !important;
 }
 
 [data-level1-card-wave="true"] {
   position: absolute;
-  left: 28px;
-  right: -24px;
-  bottom: 16px;
-  height: 82px;
+  left: 24px;
+  right: -18px;
+  bottom: 12px;
+  height: 54px;
   pointer-events: none;
   z-index: 1;
   opacity: 1;
@@ -122,20 +122,20 @@
   position: absolute;
   left: 0;
   right: 0;
-  height: 82px;
+  height: 54px;
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% 100%;
 }
 
 [data-level1-card-wave="true"]::before {
-  bottom: 7px;
-  opacity: 0.18;
+  bottom: 5px;
+  opacity: 0.16;
 }
 
 [data-level1-card-wave="true"]::after {
   bottom: 0;
-  opacity: 0.09;
+  opacity: 0.075;
 }
 
 [data-level1-card="true"][data-level1-kind="income"] [data-level1-card-wave="true"]::before {
@@ -157,14 +157,14 @@
 [data-level1-card-drag="true"] {
   width: max-content;
   min-width: 0;
-  min-height: 36px;
+  min-height: 28px;
 }
 
 [data-level1-title-block="true"] {
   min-width: 0 !important;
   display: grid !important;
   align-content: start !important;
-  gap: 10px !important;
+  gap: 7px !important;
   padding-top: 0 !important;
 }
 
@@ -178,8 +178,8 @@
   max-width: 100% !important;
   overflow: visible !important;
   color: #0f172a !important;
-  font-size: 17px !important;
-  font-weight: 690 !important;
+  font-size: 16px !important;
+  font-weight: 680 !important;
   line-height: 1.08 !important;
   white-space: nowrap !important;
   text-overflow: clip !important;
@@ -200,8 +200,8 @@
   border-radius: 0 !important;
   background: transparent !important;
   color: #0f172a !important;
-  font-size: 30px !important;
-  font-weight: 730 !important;
+  font-size: 29px !important;
+  font-weight: 720 !important;
   line-height: 1 !important;
   white-space: nowrap !important;
   text-overflow: ellipsis !important;
@@ -248,32 +248,32 @@
 
 [data-level1-trend-icon="true"] {
   position: absolute !important;
-  top: 24px !important;
-  right: 28px !important;
+  top: 22px !important;
+  right: 24px !important;
   z-index: 3 !important;
-  width: 42px !important;
-  min-width: 42px !important;
-  height: 42px !important;
-  min-height: 42px !important;
-  border-radius: 13px !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  border-radius: 14px !important;
   margin-top: 0 !important;
 }
 
 [data-level1-card="true"][data-level1-kind="income"] [data-level1-trend-icon="true"] {
-  border-color: rgba(187, 247, 208, 0.64) !important;
-  background: rgba(220, 252, 231, 0.58) !important;
+  border-color: rgba(187, 247, 208, 0.58) !important;
+  background: rgba(220, 252, 231, 0.5) !important;
   color: #15803d !important;
 }
 
 [data-level1-card="true"][data-level1-kind="expense"] [data-level1-trend-icon="true"] {
-  border-color: rgba(254, 205, 211, 0.68) !important;
-  background: rgba(255, 228, 230, 0.58) !important;
+  border-color: rgba(254, 205, 211, 0.58) !important;
+  background: rgba(255, 228, 230, 0.5) !important;
   color: #dc2626 !important;
 }
 
 [data-level1-trend-icon="true"] svg {
-  width: 18px !important;
-  height: 18px !important;
+  width: 17px !important;
+  height: 17px !important;
 }
 
 [data-level1-header-grid="true"] [data-category-drag-handle="true"] svg {
@@ -343,7 +343,7 @@
   }
 
   [data-level1-header-grid="true"] [data-level1-card="true"] {
-    min-height: 180px !important;
+    min-height: 142px !important;
   }
 }
 
@@ -353,26 +353,26 @@
   }
 
   [data-level1-header-grid="true"] [data-level1-card="true"] {
-    min-height: 166px !important;
-    padding: 22px 18px !important;
+    min-height: 136px !important;
+    padding: 20px 18px !important;
     border-radius: 18px !important;
   }
 
   [data-level1-title-block="true"] > div:first-child {
-    font-size: 18px !important;
+    font-size: 16px !important;
   }
 
   [data-level1-summary="true"] strong {
-    font-size: 26px !important;
+    font-size: 27px !important;
   }
 
   [data-level1-trend-icon="true"] {
-    top: 20px !important;
+    top: 18px !important;
     right: 18px !important;
-    width: 38px !important;
-    min-width: 38px !important;
-    height: 38px !important;
-    min-height: 38px !important;
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+    min-height: 40px !important;
   }
 
   [data-level1-header-grid="true"] [data-category-drag-handle="true"] {
