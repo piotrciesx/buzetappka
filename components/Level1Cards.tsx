@@ -44,8 +44,8 @@ const moneyFormatter = new Intl.NumberFormat('pl-PL', {
 })
 
 function getTrendPath(kind: 'income' | 'expense' | 'neutral') {
-  if (kind === 'expense') return 'M7 7l10 10M17 17V7M17 17H7'
-  if (kind === 'income') return 'M7 17 17 7M17 7v10M17 7H7'
+  if (kind === 'expense') return 'M7 7l10 10M17 17V8M17 17H8'
+  if (kind === 'income') return 'M7 17 17 7M17 7v9M17 7H8'
   return 'M12 5v14M5 12h14'
 }
 
@@ -76,60 +76,40 @@ function Level1CardBase(props: BaseProps) {
         {...headerDragProps}
       >
         <div data-level1-card-content="true">
-          <div data-level1-card-top="true">
+          <div data-level1-card-left="true">
             {dragHandle}
 
-            <button
-              type="button"
-              data-level1-toggle-icon="true"
-              aria-label={isOpen ? `Zwiń ${level1Category.name}` : `Rozwiń ${level1Category.name}`}
-              onClick={(event) => {
-                event.stopPropagation()
-                onToggle()
-              }}
-            >
-              <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true">
-                <path
-                  d={isOpen ? 'm7 10 5 5 5-5' : 'm10 7 5 5-5 5'}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                />
-              </svg>
-            </button>
+            <div data-level1-title-block="true">
+              <div>{level1Category.name}</div>
 
-            <div data-level1-trend-icon="true" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="18" height="18">
-                <path
-                  d={getTrendPath(kind)}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                />
-              </svg>
+              {summary && (
+                <div data-level1-summary="true">
+                  <strong>{moneyFormatter.format(summary.amount)} zł</strong>
+                </div>
+              )}
+
+              {limitIndicator}
             </div>
           </div>
 
-          <div data-level1-title-block="true">
-            <div>{level1Category.name}</div>
-
-            {summary && (
-              <div data-level1-summary="true">
-                <strong>{moneyFormatter.format(summary.amount)} zł</strong>
-              </div>
-            )}
-
-            {limitIndicator}
+          <div data-level1-trend-icon="true" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22">
+              <path
+                d={getTrendPath(kind)}
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+              />
+            </svg>
           </div>
         </div>
 
         {extraActions && (
           <div
             data-category-actions="true"
+            data-level1-actions="true"
             style={styles.actions}
             onClick={(event) => event.stopPropagation()}
           >

@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
-Liczba plików: 309
-Data: 2026-05-21T22:03:52.590Z
+Liczba plików: 310
+Data: 2026-05-21T22:47:34.787Z
 
 
 ==================================================
@@ -736,15 +736,15 @@ PLIK: app\styles\category-tree\category-row.css
 [data-budget-tree-workspace="true"] [data-category-drag-row="true"] {
   width: 100% !important;
   max-width: 100% !important;
-  min-height: 54px !important;
+  min-height: 50px !important;
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) auto !important;
   align-items: center !important;
-  gap: 12px !important;
-  padding: 10px 12px !important;
+  gap: 10px !important;
+  padding: 8px 10px !important;
   border: 1px solid rgba(213, 222, 232, 0.9) !important;
-  border-radius: 13px !important;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.9)) !important;
+  border-radius: 10px !important;
+  background: #ffffff !important;
   box-shadow: none !important;
   font-weight: 480 !important;
   overflow: visible !important;
@@ -759,32 +759,35 @@ PLIK: app\styles\category-tree\category-row.css
 [data-budget-tree-workspace="true"] [data-category-drag-row="true"]:hover {
   border-color: rgba(148, 163, 184, 0.72) !important;
   background: #ffffff !important;
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.045) !important;
+  box-shadow: 0 5px 14px rgba(15, 23, 42, 0.035) !important;
 }
 
 [data-budget-workspace-main="true"] [data-category-drag-row="true"] + div,
 [data-budget-tree-workspace="true"] [data-category-drag-row="true"] + div,
 [data-budget-tree-workspace="true"] [data-category-drag-row="true"] + [data-category-drag-row="true"] {
-  margin-top: 7px !important;
+  margin-top: 6px !important;
 }
 
 [data-category-drag-row="true"][data-category-level="2"] {
-  min-height: 66px !important;
-  padding: 12px 14px !important;
-  border-radius: 14px !important;
+  min-height: 58px !important;
+  padding: 9px 11px !important;
+  border-radius: 11px !important;
+  border-color: rgba(205, 218, 235, 0.74) !important;
+  background: #ffffff !important;
 }
 
 [data-category-drag-row="true"][data-category-level="3"] {
-  min-height: 60px !important;
-  margin-left: 22px !important;
-  width: calc(100% - 22px) !important;
-  border-left: 3px solid rgba(203, 213, 225, 0.9) !important;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.72)) !important;
+  min-height: 46px !important;
+  margin-left: 14px !important;
+  width: calc(100% - 14px) !important;
+  border-left: 2px solid rgba(147, 197, 253, 0.45) !important;
+  border-radius: 9px !important;
+  background: rgba(255, 255, 255, 0.78) !important;
 }
 
 [data-category-drag-row="true"][data-category-open="true"] {
   border-color: rgba(147, 197, 253, 0.46) !important;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(245, 249, 253, 0.94)) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
 }
 
 [data-category-row-main="true"],
@@ -793,7 +796,7 @@ PLIK: app\styles\category-tree\category-row.css
   min-width: 0 !important;
   display: flex !important;
   align-items: center !important;
-  gap: 10px !important;
+  gap: 8px !important;
   flex-wrap: nowrap !important;
 }
 
@@ -802,7 +805,7 @@ PLIK: app\styles\category-tree\category-row.css
 [data-budget-tree-workspace="true"] [data-category-drag-row="true"] > :first-child > div:last-child {
   min-width: 0 !important;
   display: grid !important;
-  gap: 5px !important;
+  gap: 3px !important;
 }
 
 [data-category-row-name="true"],
@@ -839,7 +842,7 @@ PLIK: app\styles\category-tree\category-row.css
   display: flex !important;
   align-items: baseline !important;
   gap: 10px !important;
-  font-size: 16px !important;
+  font-size: 14.5px !important;
   font-weight: 760 !important;
 }
 
@@ -852,7 +855,7 @@ PLIK: app\styles\category-tree\category-row.css
 }
 
 [data-category-drag-row="true"][data-category-level="2"] [data-category-row-name="true"] {
-  font-size: 17px !important;
+  font-size: 15px !important;
 }
 
 [data-category-drag-row="true"][data-category-level="2"] [data-category-row-name="true"]::first-letter,
@@ -866,7 +869,7 @@ PLIK: app\styles\category-tree\category-row.css
   max-width: 160px !important;
   overflow: hidden !important;
   color: #0f172a !important;
-  font-size: 15px !important;
+  font-size: 13.5px !important;
   font-weight: 780 !important;
   font-variant-numeric: tabular-nums !important;
   line-height: 1.1 !important;
@@ -875,7 +878,7 @@ PLIK: app\styles\category-tree\category-row.css
 }
 
 [data-category-drag-row="true"][data-category-level="2"] [data-category-row-amount="true"] {
-  font-size: 16px !important;
+  font-size: 14.5px !important;
 }
 
 [data-category-drag-row="true"][data-category-level="2"] [data-category-row-meta="true"],
@@ -885,23 +888,23 @@ PLIK: app\styles\category-tree\category-row.css
 
 [data-level1-toggle-icon="true"],
 [data-category-toggle-icon="true"] {
-  width: 28px !important;
-  min-width: 28px !important;
-  height: 28px !important;
-  min-height: 28px !important;
+  width: 24px !important;
+  min-width: 24px !important;
+  height: 24px !important;
+  min-height: 24px !important;
   display: grid !important;
   place-items: center !important;
   border-radius: 999px !important;
-  color: #64748b !important;
-  background: rgba(241, 245, 249, 0.82) !important;
+  color: #1d4ed8 !important;
+  background: rgba(239, 246, 255, 0.72) !important;
 }
 
 [data-budget-tree-workspace="true"] [data-category-drag-handle="true"],
 [data-budget-workspace-main="true"] [data-category-drag-handle="true"] {
-  width: 28px !important;
-  min-width: 28px !important;
-  height: 28px !important;
-  min-height: 28px !important;
+  width: 24px !important;
+  min-width: 24px !important;
+  height: 24px !important;
+  min-height: 24px !important;
   display: grid !important;
   place-items: center !important;
   border-radius: 8px !important;
@@ -923,20 +926,20 @@ PLIK: app\styles\category-tree\category-row.css
 
 [data-category-actions="true"] button,
 [data-category-actions="true"] summary {
-  width: 36px !important;
-  min-width: 36px !important;
-  height: 36px !important;
-  min-height: 36px !important;
+  width: 30px !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  min-height: 30px !important;
   display: grid !important;
   place-items: center !important;
   padding: 0 !important;
-  border-radius: 10px !important;
+  border-radius: 8px !important;
   font-size: 0 !important;
 }
 
 [data-category-actions="true"] svg {
-  width: 16px !important;
-  height: 16px !important;
+  width: 14px !important;
+  height: 14px !important;
 }
 
 [data-category-actions="true"] summary {
@@ -1395,7 +1398,7 @@ PLIK: app\styles\category-tree\level1.css
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   align-items: stretch !important;
-  gap: 20px !important;
+  gap: 14px !important;
   width: 100% !important;
 }
 
@@ -1408,21 +1411,21 @@ PLIK: app\styles\category-tree\level1.css
 
 [data-level1-header-grid="true"] [data-level1-card="true"] {
   position: relative !important;
-  min-height: 248px !important;
+  min-height: 166px !important;
   height: 100% !important;
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) auto !important;
   align-items: stretch !important;
-  gap: 24px !important;
+  gap: 16px !important;
   overflow: hidden !important;
-  padding: 34px 32px !important;
-  border: 1px solid rgba(214, 223, 233, 0.88) !important;
-  border-radius: 30px !important;
+  padding: 22px 24px !important;
+  border: 1px solid rgba(214, 223, 233, 0.78) !important;
+  border-radius: 18px !important;
   cursor: pointer;
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(6px);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.92),
-    0 24px 58px rgba(15, 23, 42, 0.07) !important;
+    0 12px 30px rgba(15, 23, 42, 0.045) !important;
 }
 
 [data-level1-header-grid="true"] [data-level1-card="true"]::before {
@@ -1435,7 +1438,7 @@ PLIK: app\styles\category-tree\level1.css
     linear-gradient(112deg, rgba(255, 255, 255, 0.52), transparent 42%),
     radial-gradient(circle at 88% 14%, rgba(255, 255, 255, 0.78), transparent 24%),
     radial-gradient(circle at 18% 92%, rgba(255, 255, 255, 0.48), transparent 28%);
-  opacity: 0.86;
+  opacity: 0.52;
 }
 
 [data-level1-header-grid="true"] [data-level1-card="true"]::after {
@@ -1443,10 +1446,10 @@ PLIK: app\styles\category-tree\level1.css
   position: absolute;
   left: -10%;
   right: -10%;
-  bottom: -16px;
-  height: 118px;
+  bottom: -22px;
+  height: 86px;
   pointer-events: none;
-  opacity: 0.2 !important;
+  opacity: 0.13 !important;
   background-repeat: no-repeat !important;
   background-position: center bottom !important;
   background-size: 100% 100% !important;
@@ -1456,18 +1459,18 @@ PLIK: app\styles\category-tree\level1.css
 }
 
 [data-level1-header-grid="true"] [data-level1-card="true"][data-level1-kind="income"] {
-  border-color: rgba(134, 239, 172, 0.46) !important;
+  border-color: rgba(134, 239, 172, 0.34) !important;
   background:
-    radial-gradient(circle at top right, rgba(34, 197, 94, 0.1), transparent 32%),
-    linear-gradient(180deg, rgba(250, 255, 252, 0.97), rgba(241, 250, 245, 0.92)) !important;
+    radial-gradient(circle at top right, rgba(34, 197, 94, 0.055), transparent 30%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(249, 252, 250, 0.94)) !important;
   color: #166534 !important;
 }
 
 [data-level1-header-grid="true"] [data-level1-card="true"][data-level1-kind="expense"] {
-  border-color: rgba(254, 205, 211, 0.58) !important;
+  border-color: rgba(254, 205, 211, 0.42) !important;
   background:
-    radial-gradient(circle at top right, rgba(244, 63, 94, 0.085), transparent 32%),
-    linear-gradient(180deg, rgba(255, 251, 251, 0.97), rgba(253, 244, 246, 0.92)) !important;
+    radial-gradient(circle at top right, rgba(244, 63, 94, 0.05), transparent 30%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(253, 250, 250, 0.94)) !important;
   color: #e11d48 !important;
 }
 
@@ -1486,7 +1489,7 @@ PLIK: app\styles\category-tree\level1.css
   height: 100%;
   display: grid !important;
   align-content: center !important;
-  gap: 26px !important;
+  gap: 16px !important;
 }
 
 [data-level1-card-top="true"] {
@@ -1509,20 +1512,20 @@ PLIK: app\styles\category-tree\level1.css
 [data-level1-toggle-icon="true"],
 [data-level1-trend-icon="true"],
 [data-level1-header-grid="true"] [data-category-drag-handle="true"] {
-  width: 42px !important;
-  min-width: 42px !important;
-  height: 42px !important;
-  min-height: 42px !important;
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
   display: grid !important;
   place-items: center !important;
   padding: 0 !important;
   border: 1px solid rgba(214, 223, 233, 0.74) !important;
-  border-radius: 15px !important;
-  background: rgba(255, 255, 255, 0.72) !important;
+  border-radius: 11px !important;
+  background: rgba(255, 255, 255, 0.82) !important;
   color: currentColor !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.92),
-    0 4px 12px rgba(15, 23, 42, 0.04) !important;
+    0 3px 8px rgba(15, 23, 42, 0.035) !important;
 }
 
 [data-level1-toggle-icon="true"] {
@@ -1530,12 +1533,12 @@ PLIK: app\styles\category-tree\level1.css
 }
 
 [data-level1-trend-icon="true"] {
-  width: 56px !important;
-  min-width: 56px !important;
-  height: 56px !important;
-  min-height: 56px !important;
-  border-radius: 20px !important;
-  background: rgba(255, 255, 255, 0.76) !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.88) !important;
 }
 
 [data-level1-card="true"][data-level1-kind="income"] [data-level1-trend-icon="true"] {
@@ -1549,21 +1552,21 @@ PLIK: app\styles\category-tree\level1.css
 [data-level1-header-grid="true"] [data-category-quick-add="true"],
 [data-level1-header-grid="true"] [data-level1-action-menu-trigger="true"],
 [data-level1-header-grid="true"] [data-mobile-category-menu="true"] > summary {
-  width: 40px !important;
-  min-width: 40px !important;
-  height: 40px !important;
-  min-height: 40px !important;
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
   display: grid !important;
   place-items: center !important;
   padding: 0 !important;
   border: 1px solid rgba(214, 223, 233, 0.85) !important;
-  border-radius: 13px !important;
-  background: rgba(255, 255, 255, 0.74) !important;
+  border-radius: 10px !important;
+  background: rgba(255, 255, 255, 0.82) !important;
   color: #334155 !important;
   font-size: 0 !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.92),
-    0 4px 12px rgba(15, 23, 42, 0.035) !important;
+    0 3px 8px rgba(15, 23, 42, 0.03) !important;
 }
 
 [data-level1-header-grid="true"] [data-category-quick-add="true"] svg,
@@ -1572,8 +1575,8 @@ PLIK: app\styles\category-tree\level1.css
 [data-level1-toggle-icon="true"] svg,
 [data-level1-trend-icon="true"] svg,
 [data-level1-header-grid="true"] [data-category-drag-handle="true"] svg {
-  width: 18px !important;
-  height: 18px !important;
+  width: 16px !important;
+  height: 16px !important;
 }
 
 [data-level1-title-block="true"] {
@@ -1581,7 +1584,7 @@ PLIK: app\styles\category-tree\level1.css
   display: flex !important;
   flex-direction: column !important;
   justify-content: center !important;
-  gap: 12px !important;
+  gap: 8px !important;
 }
 
 [data-level1-title-block="true"]::before {
@@ -1593,7 +1596,7 @@ PLIK: app\styles\category-tree\level1.css
   max-width: 100% !important;
   overflow: visible !important;
   color: #0f172a !important;
-  font-size: 21px !important;
+  font-size: 18px !important;
   font-weight: 660 !important;
   line-height: 1.1 !important;
   white-space: nowrap !important;
@@ -1615,7 +1618,7 @@ PLIK: app\styles\category-tree\level1.css
   border-radius: 0 !important;
   background: transparent !important;
   color: #0f172a !important;
-  font-size: 26px !important;
+  font-size: 24px !important;
   font-weight: 690 !important;
   line-height: 1 !important;
   white-space: nowrap !important;
@@ -1631,35 +1634,51 @@ PLIK: app\styles\category-tree\level1.css
 [data-level1-content-stack="true"] {
   width: 100% !important;
   display: grid !important;
-  gap: 12px !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  gap: 14px !important;
 }
 
 [data-level1-expanded-content="true"] {
   width: 100% !important;
   min-width: 0 !important;
-  padding: 12px !important;
-  border: 1px solid rgba(213, 222, 232, 0.82) !important;
-  border-radius: 16px !important;
-  background: rgba(255, 255, 255, 0.58) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88) !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 7px !important;
+  padding: 11px !important;
+  border: 1px solid rgba(205, 218, 235, 0.62) !important;
+  border-radius: 15px !important;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(226, 241, 255, 0.32), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(250, 252, 255, 0.9)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 8px 20px rgba(30, 64, 175, 0.035) !important;
 }
 
 [data-level1-expanded-content="true"][data-level1-kind="income"] {
-  border-left: 3px solid rgba(34, 197, 94, 0.34) !important;
-  background: linear-gradient(180deg, rgba(240, 253, 244, 0.5), rgba(255, 255, 255, 0.66)) !important;
+  border-color: rgba(134, 239, 172, 0.34) !important;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(220, 252, 231, 0.3), transparent 30%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(250, 253, 251, 0.9)) !important;
 }
 
 [data-level1-expanded-content="true"][data-level1-kind="expense"] {
-  border-left: 3px solid rgba(244, 63, 94, 0.32) !important;
-  background: linear-gradient(180deg, rgba(255, 241, 242, 0.5), rgba(255, 255, 255, 0.66)) !important;
+  border-color: rgba(254, 205, 211, 0.4) !important;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(255, 228, 230, 0.28), transparent 30%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(253, 251, 251, 0.9)) !important;
 }
 
 [data-level1-expanded-content="true"] [data-category-drag-row="true"] {
-  min-height: 46px !important;
-  border-width: 0 0 1px 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
+  min-height: 56px !important;
+  border-width: 1px !important;
+  border-radius: 11px !important;
+  background: #ffffff !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.88),
+    0 3px 10px rgba(30, 64, 175, 0.025) !important;
 }
 
 @media (max-width: 1099px) {
@@ -1667,8 +1686,12 @@ PLIK: app\styles\category-tree\level1.css
     grid-template-columns: 1fr !important;
   }
 
+  [data-level1-content-stack="true"] {
+    grid-template-columns: 1fr !important;
+  }
+
   [data-level1-header-grid="true"] [data-level1-card="true"] {
-    min-height: 216px !important;
+    min-height: 150px !important;
   }
 }
 
@@ -1872,6 +1895,84 @@ PLIK: app\styles\category-tree\menus.css
 [data-category-actions="true"] summary,
 [data-transaction-menu="true"] summary {
   font-size: 0 !important;
+}
+[data-category-entries-popup-backdrop="true"] {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 120000 !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 96px 24px 24px !important;
+  background: rgba(15, 23, 42, 0.18) !important;
+  backdrop-filter: blur(10px) saturate(1.04) !important;
+}
+
+[data-category-entries-popup="true"] {
+  width: min(980px, calc(100vw - 48px)) !important;
+  max-height: min(760px, calc(100dvh - 132px)) !important;
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(191, 219, 254, 0.94) !important;
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(219, 234, 254, 0.72), transparent 30%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 249, 255, 0.94)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.96),
+    0 28px 80px rgba(15, 23, 42, 0.22) !important;
+}
+
+[data-category-entries-popup-header="true"] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 14px !important;
+  padding: 18px 20px !important;
+  border-bottom: 1px solid rgba(203, 213, 225, 0.72) !important;
+}
+
+[data-category-entries-popup-header="true"] div {
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 4px !important;
+}
+
+[data-category-entries-popup-header="true"] strong {
+  color: #0f172a !important;
+  font-size: 20px !important;
+  font-weight: 760 !important;
+}
+
+[data-category-entries-popup-header="true"] span {
+  color: #64748b !important;
+  font-size: 12px !important;
+  font-weight: 620 !important;
+}
+
+[data-category-entries-popup-header="true"] button {
+  min-height: 36px !important;
+  border: 1px solid rgba(147, 197, 253, 0.72) !important;
+  border-radius: 12px !important;
+  padding: 0 14px !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(229, 241, 255, 0.88)) !important;
+  color: #0b55c8 !important;
+  font-size: 12px !important;
+  font-weight: 720 !important;
+  cursor: pointer !important;
+}
+
+[data-category-entries-popup-body="true"] {
+  min-height: 0 !important;
+  display: grid !important;
+  align-content: start !important;
+  gap: 12px !important;
+  padding: 16px 18px 20px !important;
+  overflow: auto !important;
+}
+
+[data-category-entries-popup-body="true"] [data-category-drag-row="true"] {
+  cursor: default !important;
 }
 
 
@@ -2314,16 +2415,13 @@ PLIK: app\styles\category-tree\workspace.css
   min-width: 0 !important;
   display: grid !important;
   grid-template-rows: auto auto auto auto !important;
-  gap: 10px !important;
+  gap: 14px !important;
   min-height: auto !important;
-  padding: clamp(12px, 1.45vw, 18px) !important;
-  border: 1px solid rgba(203, 213, 225, 0.74) !important;
-  border-radius: 20px !important;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(244, 249, 255, 0.84)) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    0 18px 48px rgba(30, 64, 175, 0.075) !important;
+  padding: clamp(12px, 1.2vw, 16px) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 [data-budget-workspace-main="true"] > [data-budget-tree-workspace="true"] {
@@ -2675,7 +2773,7 @@ PLIK: app\styles\category-tree\workspace.css
   min-width: 0 !important;
   display: block !important;
   align-self: stretch !important;
-  margin-top: 0 !important;
+  margin-top: 2px !important;
 }
 
 [data-tree-category-grid="true"] > div,
@@ -4085,39 +4183,39 @@ PLIK: app\styles\layout-depth\targeted-overrides.css
 }
 
 [data-level1-expanded-content="true"][data-level1-kind="income"] [data-category-drag-row="true"][data-category-level="2"] {
-  border-color: rgba(134, 239, 172, 0.46) !important;
+  border-color: rgba(134, 239, 172, 0.34) !important;
   background:
-    linear-gradient(180deg, rgba(252, 255, 253, 0.98), rgba(240, 253, 244, 0.74)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(250, 253, 251, 0.92)),
     rgba(255, 255, 255, 0.9) !important;
 }
 
 [data-level1-expanded-content="true"][data-level1-kind="income"] [data-category-drag-row="true"][data-category-level="3"] {
-  border-color: rgba(187, 247, 208, 0.52) !important;
-  border-left-color: rgba(74, 222, 128, 0.42) !important;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(246, 254, 249, 0.78)) !important;
+  border-color: rgba(187, 247, 208, 0.36) !important;
+  border-left-color: rgba(74, 222, 128, 0.34) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(250, 253, 251, 0.82)) !important;
 }
 
 [data-level1-expanded-content="true"][data-level1-kind="expense"] [data-category-drag-row="true"][data-category-level="2"] {
-  border-color: rgba(254, 205, 211, 0.58) !important;
+  border-color: rgba(254, 205, 211, 0.4) !important;
   background:
-    linear-gradient(180deg, rgba(255, 252, 252, 0.98), rgba(255, 241, 242, 0.72)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(253, 251, 251, 0.92)),
     rgba(255, 255, 255, 0.9) !important;
 }
 
 [data-level1-expanded-content="true"][data-level1-kind="expense"] [data-category-drag-row="true"][data-category-level="3"] {
-  border-color: rgba(254, 226, 226, 0.68) !important;
-  border-left-color: rgba(251, 113, 133, 0.4) !important;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 247, 247, 0.78)) !important;
+  border-color: rgba(254, 226, 226, 0.46) !important;
+  border-left-color: rgba(251, 113, 133, 0.32) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(253, 251, 251, 0.82)) !important;
 }
 
 [data-category-drag-row="true"][data-category-level="2"] {
-  min-height: 70px !important;
-  padding-block: 14px !important;
+  min-height: 58px !important;
+  padding-block: 9px !important;
 }
 
 [data-category-drag-row="true"][data-category-level="3"] {
-  min-height: 64px !important;
-  padding-block: 12px !important;
+  min-height: 46px !important;
+  padding-block: 7px !important;
 }
 
 [data-category-drag-row="true"][data-category-level="2"] [data-category-row-name="true"],
@@ -4126,34 +4224,34 @@ PLIK: app\styles\layout-depth\targeted-overrides.css
 }
 
 [data-category-icon="true"] {
-  width: 26px !important;
-  height: 26px !important;
+  width: 24px !important;
+  height: 24px !important;
   display: inline-grid !important;
   place-items: center !important;
   flex: 0 0 auto !important;
   border: 1px solid rgba(203, 213, 225, 0.74) !important;
-  border-radius: 10px !important;
-  background: rgba(255, 255, 255, 0.58) !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.7) !important;
   color: #475569 !important;
   line-height: 1 !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82) !important;
 }
 
 [data-category-icon="true"] svg {
-  width: 15px !important;
-  height: 15px !important;
+  width: 14px !important;
+  height: 14px !important;
   display: block !important;
 }
 
 [data-category-icon-level="3"] {
-  width: 22px !important;
-  height: 22px !important;
-  border-radius: 8px !important;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 7px !important;
 }
 
 [data-category-icon-level="3"] svg {
-  width: 13px !important;
-  height: 13px !important;
+  width: 12px !important;
+  height: 12px !important;
 }
 
 [data-category-icon-picker-menu="true"] {
@@ -15800,12 +15898,16 @@ import MonthCalendarPanel from './MonthCalendarPanel'
 import BudgetCategoryTreeAddSubcategoryForm from './category-tree/BudgetCategoryTreeAddSubcategoryForm'
 import BudgetCategoryTreeLevel1Actions from './category-tree/BudgetCategoryTreeLevel1Actions'
 import BudgetCategoryTreeLevel1Shell from './category-tree/BudgetCategoryTreeLevel1Shell'
+import CategoryEntriesPopup from './category-tree/CategoryEntriesPopup'
 import { Category } from '../lib/budgetPageTypes'
 import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
 import { useIsMobileViewport } from '../lib/useIsMobileViewport'
 import { getNearestDndSwapTargetId } from '../lib/getNearestDndSwapTargetId'
 
 type Props = import('./category-tree/budgetCategoryTreeTypes').BudgetCategoryTreeProps
+type SelectedCategoryEntriesPanel =
+  | { type: 'level1' | 'level2' | 'level3'; categoryId: string }
+  | null
 
 export default function BudgetCategoryTree(props: Props) {
   const {
@@ -15887,6 +15989,8 @@ export default function BudgetCategoryTree(props: Props) {
   const dndSensors = usePressHoldDndSensors()
   const isMobileViewport = useIsMobileViewport()
   const [level1InlineAddTokens] = useState<Record<string, number>>({})
+  const [selectedCategoryEntriesPanel, setSelectedCategoryEntriesPanel] =
+    useState<SelectedCategoryEntriesPanel>(null)
 
   useEffect(() => {
     const closeOpenMenu = (event: PointerEvent) => {
@@ -15915,6 +16019,22 @@ export default function BudgetCategoryTree(props: Props) {
       document.removeEventListener('pointerdown', closeOpenMenu)
     }
   }, [])
+
+  useEffect(() => {
+    if (!selectedCategoryEntriesPanel) {
+      return
+    }
+
+    const closeOnEscape = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setSelectedCategoryEntriesPanel(null)
+      }
+    }
+
+    window.addEventListener('keydown', closeOnEscape)
+
+    return () => window.removeEventListener('keydown', closeOnEscape)
+  }, [selectedCategoryEntriesPanel])
 
   const renderLevel2Section = (
     level1Category: Category,
@@ -15948,7 +16068,7 @@ export default function BudgetCategoryTree(props: Props) {
         toggleLevel2={toggleLevel2}
         openLevel3Ids={openLevel3Ids}
         toggleLevel3={toggleLevel3}
-        getSumForLevel2={getSumForLevel2ForSelectedMonth}
+        getSumForLevel2={getLevel2TreeSum}
         getSumForCategory={getSumForCategoryForSelectedMonth}
         getTransactionsForCategoryAndMonth={getTransactionsForCategoryAndMonthForSelectedMonth}
         openAddSubcategoryFor={openAddSubcategoryFor}
@@ -16000,99 +16120,18 @@ export default function BudgetCategoryTree(props: Props) {
         isReorderingLevel2={reorderingLevel1Id === level1Category.id}
         isReorderingLevel3={reorderingLevel2Id === level2Category.id}
         getAmountNumber={getAmountNumber}
+        renderTransactionsInline={false}
+        onOpenEntries={(type, categoryId) => setSelectedCategoryEntriesPanel({ type, categoryId })}
         styles={styles}
       />
     )
-  }
-
-  const renderLevel1LeafSection = (level1Category: Category) => {
-    const calendarHeatmapVariant = getCalendarHeatmapVariantForLevel1Id(level1Category.id)
-    const directLevel1Transactions = getTransactionsForCategoryAndMonthForSelectedMonth(
-      level1Category.id
-    )
-
-    return (
-      <Level3Section
-        key={level1Category.id}
-        l3={level1Category}
-        hideHeader
-        startInlineAddToken={level1InlineAddTokens[level1Category.id] || 0}
-        showCategoryActions={false}
-        selectedMonth={selectedMonth}
-        budgetStartDate={budgetStartDate}
-        isClosingAfterSelectedMonth={isCategoryClosingAfterSelectedMonth(
-          level1Category,
-          selectedMonth
-        )}
-        categorySum={getSumForCategoryForSelectedMonth(level1Category.id)}
-        transactions={directLevel1Transactions}
-        canAddHere={true}
-        isSelectedMonthLocked={isSelectedMonthLocked}
-        canUseMonthCalendar={canUseMonthCalendar}
-        isOpen={true}
-        toggleLevel3={toggleLevel3}
-        handleLevel3DragStart={handleLevel3DragStart}
-        openTransactionCreator={openTransactionCreator}
-        handleInlineSaveTransaction={handleInlineSaveTransaction}
-        saveDraft={saveDraft}
-        deleteDraft={deleteDraft}
-        inlineDraftType={level1Category.id === expenseLevel1Id ? 'expense' : 'income'}
-        inlineDraftLevel1Id={level1Category.id}
-        inlineDraftLevel2Id={null}
-        handleHideCategory={handleHideCategory}
-        handleRenameCategory={handleRenameCategory}
-        handleUpdateCategoryIcon={handleUpdateCategoryIcon}
-        handleDeleteCategory={handleDeleteCategory}
-        handleUndoScheduledHide={handleUndoScheduledHide}
-        handleDeleteTransaction={handleDeleteTransaction}
-        handleUpdateTransaction={handleUpdateTransaction}
-        handleMoveTransaction={handleMoveTransaction}
-        handleDuplicateTransaction={handleDuplicateTransaction}
-        handleOpenCalendarAddForDay={(_, dayText) =>
-          handleOpenLevel1CalendarAddForDay(level1Category.id, dayText)
-        }
-        selectedTransactionIds={selectedTransactionIds}
-        onToggleTransactionSelection={toggleTransactionSelection}
-        getMoveTargetsForTransaction={getMoveTargetsForTransaction}
-        getSignedAmountForTransaction={getSignedAmountForTransaction}
-        calendarHeatmapVariant={calendarHeatmapVariant}
-        heatmapMode={heatmapMode}
-        heatmapInverted={heatmapInverted}
-        onHeatmapModeChange={onHeatmapModeChange}
-        onHeatmapInvertedChange={onHeatmapInvertedChange}
-        heatmapStorageKey={`budget-app-tree-calendar-${level1Category.id}`}
-        descriptionSuggestions={descriptionSuggestions}
-        getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
-        getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}
-        getDefaultPaymentSourceIdForCategoryId={getDefaultPaymentSourceIdForCategoryId}
-        transactionTagsMap={transactionTagsMap}
-        transactionPaymentSplitsMap={transactionPaymentSplitsMap}
-        onTagClick={onTagClick}
-        onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
-        getAmountNumber={getAmountNumber}
-        styles={styles}
-      />
-    )
-  }
-
-  const renderLevel1DirectTransactionsSection = (level1Category: Category) => {
-    const directLevel1Transactions = getTransactionsForCategoryAndMonthForSelectedMonth(
-      level1Category.id
-    )
-    const hasInlineDraftStart = (level1InlineAddTokens[level1Category.id] || 0) > 0
-
-    if (directLevel1Transactions.length === 0 && !hasInlineDraftStart) {
-      return null
-    }
-
-    return renderLevel1LeafSection(level1Category)
   }
 
   const renderLevel2List = (level1Category: Category) => {
     const childrenLevel2 = getSortedLevel2Children(level1Category.id)
 
     if (childrenLevel2.length === 0) {
-      return renderLevel1LeafSection(level1Category)
+      return <div style={styles.emptyText}>Brak kategorii poziomu 2</div>
     }
 
     const isLevel2DndBlocked =
@@ -16102,7 +16141,6 @@ export default function BudgetCategoryTree(props: Props) {
     if (isLevel2DndBlocked) {
       return (
         <div>
-          {renderLevel1DirectTransactionsSection(level1Category)}
           {childrenLevel2.map((level2Category) => {
             const sortedLevel3Children = getSortedLevel3Children(level2Category.id)
 
@@ -16141,7 +16179,6 @@ export default function BudgetCategoryTree(props: Props) {
           )
         }}
       >
-        {renderLevel1DirectTransactionsSection(level1Category)}
         <SortableContext
           items={childrenLevel2.map((category) => category.id)}
           strategy={verticalListSortingStrategy}
@@ -16271,20 +16308,31 @@ export default function BudgetCategoryTree(props: Props) {
   }
 
   const getLevel1Summary = (level1Category: Category) => ({
-    amount: getSumForCategoryForSelectedMonth(level1Category.id),
+    amount: getLevel1TreeSum(level1Category.id),
     transactionCount: getTransactionsForLevel1AndMonth(level1Category.id).length,
     childCount: getSortedLevel2Children(level1Category.id).length,
   })
   const getLevel1Kind = (level1Category: Category) =>
     level1Category.id === expenseLevel1Id ? 'expense' : 'income'
 
-  const renderLevel1Content = (level1Category: Category) => {
-    const isLevel1Open = openLevel1Ids.includes(level1Category.id)
-    const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
+  const getLevel1TreeSum = (level1Id: string) =>
+    getTransactionsForLevel1AndMonth(level1Id).reduce(
+      (total, transaction) => total + getSignedAmountForTransaction(transaction),
+      0
+    )
 
-    if (!isLevel1Open && !(canUseMonthCalendar && isLevel1CalendarOpen)) {
-      return null
-    }
+  const getLevel2TreeSum = (level2Id: string) => {
+    const directLevel2Sum = getSumForCategoryForSelectedMonth(level2Id)
+    const level3Sum = getSortedLevel3Children(level2Id).reduce(
+      (total, level3Category) => total + getSumForCategoryForSelectedMonth(level3Category.id),
+      0
+    )
+
+    return directLevel2Sum + level3Sum
+  }
+
+  const renderLevel1Content = (level1Category: Category) => {
+    const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
 
     return (
       <section
@@ -16294,28 +16342,283 @@ export default function BudgetCategoryTree(props: Props) {
       >
         {canUseMonthCalendar && isLevel1CalendarOpen && renderLevel1CalendarPanel(level1Category)}
         {renderAddSubcategoryForm(level1Category.id, 'Nazwa kategorii')}
-        {isLevel1Open ? renderLevel2List(level1Category) : null}
+        {renderLevel2List(level1Category)}
       </section>
     )
   }
 
-  const isLevel1DndBlocked =
-    isReorderingLevel1 || sortedLevel1.some((category) => openLevel1Ids.includes(category.id))
+  const isLevel1DndBlocked = isReorderingLevel1
   const isLevel1Sortable = sortedLevel1.length > 1
 
+  const findLevel1ById = (categoryId: string) =>
+    sortedLevel1.find((category) => category.id === categoryId) || null
+
+  const findLevel2ById = (categoryId: string) => {
+    for (const level1Category of sortedLevel1) {
+      const level2Category = getSortedLevel2Children(level1Category.id).find(
+        (category) => category.id === categoryId
+      )
+
+      if (level2Category) {
+        return { level1Category, level2Category }
+      }
+    }
+
+    return null
+  }
+
+  const findLevel3ById = (categoryId: string) => {
+    for (const level1Category of sortedLevel1) {
+      for (const level2Category of getSortedLevel2Children(level1Category.id)) {
+        const level3Category = getSortedLevel3Children(level2Category.id).find(
+          (category) => category.id === categoryId
+        )
+
+        if (level3Category) {
+          return { level1Category, level2Category, level3Category }
+        }
+      }
+    }
+
+    return null
+  }
+
+  const renderPopupTransactionSection = (
+    category: Category,
+    level1Category: Category,
+    inlineDraftLevel2Id: string | null,
+    transactions = getTransactionsForCategoryAndMonthForSelectedMonth(category.id),
+    headerName = category.name
+  ) => {
+    const calendarHeatmapVariant = getCalendarHeatmapVariantForLevel1Id(level1Category.id)
+
+    return (
+      <Level3Section
+        key={`entries-${category.id}-${headerName}`}
+        l3={category}
+        headerName={headerName}
+        showCategoryActions={false}
+        selectedMonth={selectedMonth}
+        budgetStartDate={budgetStartDate}
+        isClosingAfterSelectedMonth={isCategoryClosingAfterSelectedMonth(category, selectedMonth)}
+        categorySum={getSumForCategoryForSelectedMonth(category.id)}
+        transactions={transactions}
+        canAddHere={true}
+        isSelectedMonthLocked={isSelectedMonthLocked}
+        canUseMonthCalendar={canUseMonthCalendar}
+        isOpen={true}
+        toggleLevel3={() => {}}
+        handleLevel3DragStart={handleLevel3DragStart}
+        openTransactionCreator={openTransactionCreator}
+        handleInlineSaveTransaction={handleInlineSaveTransaction}
+        saveDraft={saveDraft}
+        deleteDraft={deleteDraft}
+        inlineDraftType={level1Category.id === expenseLevel1Id ? 'expense' : 'income'}
+        inlineDraftLevel1Id={level1Category.id}
+        inlineDraftLevel2Id={inlineDraftLevel2Id}
+        handleHideCategory={handleHideCategory}
+        handleRenameCategory={handleRenameCategory}
+        handleUpdateCategoryIcon={handleUpdateCategoryIcon}
+        handleDeleteCategory={handleDeleteCategory}
+        handleUndoScheduledHide={handleUndoScheduledHide}
+        handleDeleteTransaction={handleDeleteTransaction}
+        handleUpdateTransaction={handleUpdateTransaction}
+        handleMoveTransaction={handleMoveTransaction}
+        handleDuplicateTransaction={handleDuplicateTransaction}
+        handleOpenCalendarAddForDay={(categoryId, dayText) => {
+          if (category.level === 1) {
+            handleOpenLevel1CalendarAddForDay(level1Category.id, dayText)
+            return
+          }
+
+          handleOpenCategoryCalendarAddForDay(categoryId, dayText)
+        }}
+        selectedTransactionIds={selectedTransactionIds}
+        onToggleTransactionSelection={toggleTransactionSelection}
+        getMoveTargetsForTransaction={getMoveTargetsForTransaction}
+        getSignedAmountForTransaction={getSignedAmountForTransaction}
+        calendarHeatmapVariant={calendarHeatmapVariant}
+        heatmapMode={heatmapMode}
+        heatmapInverted={heatmapInverted}
+        onHeatmapModeChange={onHeatmapModeChange}
+        onHeatmapInvertedChange={onHeatmapInvertedChange}
+        heatmapStorageKey={`budget-app-tree-popup-calendar-${category.id}`}
+        descriptionSuggestions={descriptionSuggestions}
+        getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
+        getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}
+        getDefaultPaymentSourceIdForCategoryId={getDefaultPaymentSourceIdForCategoryId}
+        transactionTagsMap={transactionTagsMap}
+        transactionPaymentSplitsMap={transactionPaymentSplitsMap}
+        onTagClick={onTagClick}
+        onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
+        getAmountNumber={getAmountNumber}
+        styles={styles}
+      />
+    )
+  }
+
+  const renderSelectedEntriesPopup = () => {
+    if (!selectedCategoryEntriesPanel) {
+      return null
+    }
+
+    const sections: ReactNode[] = []
+    let title = 'Wpisy kategorii'
+    let subtitle = selectedMonth
+
+    if (selectedCategoryEntriesPanel.type === 'level1') {
+      const level1Category = findLevel1ById(selectedCategoryEntriesPanel.categoryId)
+
+      if (!level1Category) {
+        return null
+      }
+
+      title = level1Category.name
+      subtitle = `Całe drzewo • ${selectedMonth}`
+
+      const directLevel1Transactions =
+        getTransactionsForCategoryAndMonthForSelectedMonth(level1Category.id)
+
+      if (directLevel1Transactions.length > 0) {
+        sections.push(
+          renderPopupTransactionSection(
+            level1Category,
+            level1Category,
+            null,
+            directLevel1Transactions,
+            'Wpisy bezpośrednie'
+          )
+        )
+      }
+
+      getSortedLevel2Children(level1Category.id).forEach((level2Category) => {
+        const directLevel2Transactions =
+          getTransactionsForCategoryAndMonthForSelectedMonth(level2Category.id)
+
+        if (directLevel2Transactions.length > 0) {
+          sections.push(
+            renderPopupTransactionSection(
+              level2Category,
+              level1Category,
+              level2Category.id,
+              directLevel2Transactions,
+              `${level2Category.name} • bezpośrednie`
+            )
+          )
+        }
+
+        getSortedLevel3Children(level2Category.id).forEach((level3Category) => {
+          const level3Transactions = getTransactionsForCategoryAndMonthForSelectedMonth(
+            level3Category.id
+          )
+
+          if (level3Transactions.length > 0) {
+            sections.push(
+              renderPopupTransactionSection(
+                level3Category,
+                level1Category,
+                level2Category.id,
+                level3Transactions,
+                `${level2Category.name} • ${level3Category.name}`
+              )
+            )
+          }
+        })
+      })
+    }
+
+    if (selectedCategoryEntriesPanel.type === 'level2') {
+      const result = findLevel2ById(selectedCategoryEntriesPanel.categoryId)
+
+      if (!result) {
+        return null
+      }
+
+      const { level1Category, level2Category } = result
+      title = level2Category.name
+      subtitle = `${level1Category.name} • ${selectedMonth}`
+
+      sections.push(
+        renderPopupTransactionSection(
+          level2Category,
+          level1Category,
+          level2Category.id,
+          getTransactionsForCategoryAndMonthForSelectedMonth(level2Category.id),
+          'Wpisy bezpośrednie'
+        )
+      )
+
+      getSortedLevel3Children(level2Category.id).forEach((level3Category) => {
+        sections.push(
+          renderPopupTransactionSection(
+            level3Category,
+            level1Category,
+            level2Category.id,
+            getTransactionsForCategoryAndMonthForSelectedMonth(level3Category.id),
+            level3Category.name
+          )
+        )
+      })
+    }
+
+    if (selectedCategoryEntriesPanel.type === 'level3') {
+      const result = findLevel3ById(selectedCategoryEntriesPanel.categoryId)
+
+      if (!result) {
+        return null
+      }
+
+      const { level1Category, level2Category, level3Category } = result
+      title = level3Category.name
+      subtitle = `${level1Category.name} • ${level2Category.name} • ${selectedMonth}`
+      sections.push(
+        renderPopupTransactionSection(
+          level3Category,
+          level1Category,
+          level2Category.id,
+          getTransactionsForCategoryAndMonthForSelectedMonth(level3Category.id),
+          level3Category.name
+        )
+      )
+    }
+
+    return (
+      <CategoryEntriesPopup
+        title={title}
+        subtitle={subtitle}
+        onClose={() => setSelectedCategoryEntriesPanel(null)}
+      >
+        {sections.length > 0 ? sections : <div style={styles.emptyText}>Brak wpisów w tym miesiącu</div>}
+      </CategoryEntriesPopup>
+    )
+  }
+
   return (
-    <BudgetCategoryTreeLevel1Shell
-      sortedLevel1={sortedLevel1}
-      openLevel1Ids={openLevel1Ids}
-      openLevel1CalendarIds={openLevel1CalendarIds}
-      isMobileViewport={isMobileViewport} isLevel1DndBlocked={isLevel1DndBlocked} isLevel1Sortable={isLevel1Sortable}
-      dndSensors={dndSensors}
-      expenseLevel1Id={expenseLevel1Id} styles={styles} toggleLevel1={toggleLevel1}
-      handleLevel1DragStart={handleLevel1DragStart} handleReorderLevel1={handleReorderLevel1}
-      getLevel1Kind={getLevel1Kind} getLevel1Summary={getLevel1Summary} getBudgetLimitView={getBudgetLimitView}
-      renderBlockedLevel1DragHandle={renderBlockedLevel1DragHandle} renderLevel1Actions={renderLevel1Actions}
-      renderLevel1Content={renderLevel1Content}
-    />
+    <>
+      <BudgetCategoryTreeLevel1Shell
+        sortedLevel1={sortedLevel1}
+        openLevel1Ids={openLevel1Ids}
+        openLevel1CalendarIds={openLevel1CalendarIds}
+        isMobileViewport={isMobileViewport}
+        isLevel1DndBlocked={isLevel1DndBlocked}
+        isLevel1Sortable={isLevel1Sortable}
+        dndSensors={dndSensors}
+        expenseLevel1Id={expenseLevel1Id}
+        styles={styles}
+        onOpenLevel1Entries={(categoryId) =>
+          setSelectedCategoryEntriesPanel({ type: 'level1', categoryId })
+        }
+        handleLevel1DragStart={handleLevel1DragStart}
+        handleReorderLevel1={handleReorderLevel1}
+        getLevel1Kind={getLevel1Kind}
+        getLevel1Summary={getLevel1Summary}
+        getBudgetLimitView={getBudgetLimitView}
+        renderBlockedLevel1DragHandle={renderBlockedLevel1DragHandle}
+        renderLevel1Actions={renderLevel1Actions}
+        renderLevel1Content={renderLevel1Content}
+      />
+      {renderSelectedEntriesPopup()}
+    </>
   )
 }
 
@@ -19708,7 +20011,7 @@ type Props = {
   dndSensors: Parameters<typeof DndContext>[0]['sensors']
   expenseLevel1Id: string | null
   styles: Record<string, CSSProperties>
-  toggleLevel1: (id: string) => void
+  onOpenLevel1Entries: (id: string) => void
   handleLevel1DragStart: () => void
   handleReorderLevel1: (activeId: string, overId: string) => Promise<void>
   getLevel1Kind: (level1Category: Category) => 'income' | 'expense'
@@ -19733,7 +20036,7 @@ export default function BudgetCategoryTreeLevel1Shell({
   dndSensors,
   expenseLevel1Id,
   styles,
-  toggleLevel1,
+  onOpenLevel1Entries,
   handleLevel1DragStart,
   handleReorderLevel1,
   getLevel1Kind,
@@ -19784,7 +20087,7 @@ export default function BudgetCategoryTreeLevel1Shell({
                   key={level1Category.id}
                   level1Category={level1Category}
                   isOpen={isLevel1Open}
-                  onToggle={() => toggleLevel1(level1Category.id)}
+                  onToggle={() => onOpenLevel1Entries(level1Category.id)}
                   isSortable={isLevel1Sortable}
                   styles={styles}
                   kind={getLevel1Kind(level1Category)}
@@ -19815,7 +20118,7 @@ export default function BudgetCategoryTreeLevel1Shell({
                 key={level1Category.id}
                 level1Category={level1Category}
                 isOpen={isLevel1Open}
-                onToggle={() => toggleLevel1(level1Category.id)}
+                onToggle={() => onOpenLevel1Entries(level1Category.id)}
                 styles={styles}
                 kind={getLevel1Kind(level1Category)}
                 summary={getLevel1Summary(level1Category)}
@@ -19853,7 +20156,7 @@ export default function BudgetCategoryTreeLevel1Shell({
                   key={level1Category.id}
                   level1Category={level1Category}
                   isOpen={isLevel1Open}
-                  onToggle={() => toggleLevel1(level1Category.id)}
+                  onToggle={() => onOpenLevel1Entries(level1Category.id)}
                   isSortable={isLevel1Sortable}
                   styles={styles}
                   kind={getLevel1Kind(level1Category)}
@@ -20012,6 +20315,53 @@ export type BudgetCategoryTreeProps = {
 
 
 ==================================================
+PLIK: components\category-tree\CategoryEntriesPopup.tsx
+==================================================
+
+'use client'
+
+import type { ReactNode } from 'react'
+
+type CategoryEntriesPopupProps = {
+  title: string
+  subtitle?: string
+  children: ReactNode
+  onClose: () => void
+}
+
+export default function CategoryEntriesPopup({
+  title,
+  subtitle,
+  children,
+  onClose,
+}: CategoryEntriesPopupProps) {
+  return (
+    <div data-category-entries-popup-backdrop="true" onClick={onClose}>
+      <section
+        data-category-entries-popup="true"
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <header data-category-entries-popup-header="true">
+          <div>
+            <strong>{title}</strong>
+            {subtitle && <span>{subtitle}</span>}
+          </div>
+          <button type="button" onClick={onClose} aria-label="Zamknij listę wpisów">
+            Zamknij
+          </button>
+        </header>
+        <div data-category-entries-popup-body="true">{children}</div>
+      </section>
+    </div>
+  )
+}
+
+
+
+==================================================
 PLIK: components\category-tree\Level2Children.tsx
 ==================================================
 
@@ -20111,6 +20461,8 @@ type Level2ChildrenProps = {
   getSumForCategory: (id: string) => number
   getTransactionsForCategoryAndMonth: (id: string) => Transaction[]
   isChildClosingAfterSelectedMonth: (category: Category) => boolean
+  renderTransactionsInline?: boolean
+  onOpenEntries?: (categoryId: string) => void
   styles: Record<string, CSSProperties>
 }
 
@@ -20167,6 +20519,8 @@ export default function Level2Children({
   getSumForCategory,
   getTransactionsForCategoryAndMonth,
   isChildClosingAfterSelectedMonth,
+  renderTransactionsInline = true,
+  onOpenEntries,
   styles,
 }: Level2ChildrenProps) {
   return (
@@ -20238,6 +20592,8 @@ export default function Level2Children({
             isSortable={sortedLevel3Children.length > 1}
             isDragDisabled={isLevel3DndBlocked}
             getAmountNumber={getAmountNumber}
+            renderTransactionsInline={renderTransactionsInline}
+            onOpenEntries={onOpenEntries}
             styles={styles}
           />
         ))}
@@ -20336,6 +20692,7 @@ type Level2SectionHeaderProps = {
   iconKey?: string | null
   categorySum: number
   isOpen: boolean
+  hasChildren: boolean
   isDragging: boolean
   isClosingAfterSelectedMonth: boolean
   isCalendarOpen: boolean
@@ -20348,6 +20705,7 @@ type Level2SectionHeaderProps = {
   headerDragProps?: HTMLAttributes<HTMLDivElement>
   styles: Record<string, CSSProperties>
   onToggle: () => void
+  onOpenEntries: () => void
   onToggleCalendar: () => void
   onEditBudgetLimit?: () => void
   onInlineAdd: () => void
@@ -20424,6 +20782,7 @@ export default function Level2SectionHeader({
   iconKey,
   categorySum,
   isOpen,
+  hasChildren,
   isDragging,
   isClosingAfterSelectedMonth,
   isCalendarOpen,
@@ -20436,6 +20795,7 @@ export default function Level2SectionHeader({
   headerDragProps,
   styles,
   onToggle,
+  onOpenEntries,
   onToggleCalendar,
   onEditBudgetLimit,
   onInlineAdd,
@@ -20460,7 +20820,7 @@ export default function Level2SectionHeader({
       }}
       onClick={() => {
         if (!isDragging) {
-          onToggle()
+          onOpenEntries()
         }
       }}
       {...headerDragProps}
@@ -20468,7 +20828,19 @@ export default function Level2SectionHeader({
       <div style={styles.l2Left} data-category-row-main="true">
         {dragHandle}
 
-        <div style={styles.arrow} data-category-toggle-icon="true" aria-hidden="true">
+        {hasChildren && (
+          <button
+          type="button"
+          style={styles.arrow}
+          data-category-toggle-icon="true"
+          aria-label={isOpen ? `Zwiń ${name}` : `Rozwiń ${name}`}
+          onMouseDown={(event) => event.stopPropagation()}
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={(event) => {
+            event.stopPropagation()
+            onToggle()
+          }}
+        >
           <svg viewBox="0 0 24 24" width="17" height="17">
             <path
               d={isOpen ? 'm7 10 5 5 5-5' : 'm10 7 5 5-5 5'}
@@ -20479,7 +20851,8 @@ export default function Level2SectionHeader({
               strokeWidth="2"
             />
           </svg>
-        </div>
+          </button>
+        )}
 
         <div data-category-row-copy="true">
           <div style={styles.l2Name} data-category-row-name="true">
@@ -20740,6 +21113,8 @@ export type Level2SectionProps = {
   handleReorderLevel3: (level2Id: string, activeId: string, overId: string) => Promise<void>
   isReorderingLevel2: boolean
   isReorderingLevel3: boolean
+  renderTransactionsInline?: boolean
+  onOpenEntries?: (type: 'level2' | 'level3', categoryId: string) => void
   getAmountNumber: (value: unknown) => number
   styles: Record<string, CSSProperties>
 }
@@ -21035,6 +21410,8 @@ export type Level3SectionProps = {
   startInlineAddToken?: number
   showHeaderSum?: boolean
   showCategoryActions?: boolean
+  renderTransactionsInline?: boolean
+  onOpenEntries?: (categoryId: string) => void
   selectedMonth: string
   budgetStartDate: string
   isClosingAfterSelectedMonth: boolean
@@ -21766,6 +22143,7 @@ type Level3SectionHeaderProps = {
   headerDragProps?: HTMLAttributes<HTMLDivElement>
   styles: Record<string, CSSProperties>
   onToggle: () => void
+  onOpenEntries?: () => void
   onToggleCalendar: () => void
   onInlineAdd: () => void
   onHideNow: () => Promise<void>
@@ -21855,6 +22233,7 @@ export default function Level3SectionHeader({
   headerDragProps,
   styles,
   onToggle,
+  onOpenEntries,
   onToggleCalendar,
   onInlineAdd,
   onHideNow,
@@ -21880,6 +22259,11 @@ export default function Level3SectionHeader({
       }}
       onClick={() => {
         if (!isDragging) {
+          if (onOpenEntries) {
+            onOpenEntries()
+            return
+          }
+
           onToggle()
         }
       }}
@@ -21888,7 +22272,18 @@ export default function Level3SectionHeader({
       <div style={styles.l2Left} data-category-row-main="true">
         {dragHandle}
 
-        <div style={styles.arrow} data-category-toggle-icon="true" aria-hidden="true">
+        <button
+          type="button"
+          style={styles.arrow}
+          data-category-toggle-icon="true"
+          aria-label={isOpen ? `Zwiń ${name}` : `Rozwiń ${name}`}
+          onMouseDown={(event) => event.stopPropagation()}
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={(event) => {
+            event.stopPropagation()
+            onToggle()
+          }}
+        >
           <svg viewBox="0 0 24 24" width="17" height="17">
             <path
               d={isOpen ? 'm7 10 5 5 5-5' : 'm10 7 5 5-5 5'}
@@ -21899,7 +22294,7 @@ export default function Level3SectionHeader({
               strokeWidth="2"
             />
           </svg>
-        </div>
+        </button>
 
         <div data-category-row-copy="true">
           <div style={styles.l3Name} data-category-row-name="true">
@@ -36632,8 +37027,8 @@ const moneyFormatter = new Intl.NumberFormat('pl-PL', {
 })
 
 function getTrendPath(kind: 'income' | 'expense' | 'neutral') {
-  if (kind === 'expense') return 'M7 7h10v10M17 7 7 17'
-  if (kind === 'income') return 'M7 17h10V7M17 17 7 7'
+  if (kind === 'expense') return 'M7 7l10 10M17 17V7M17 17H7'
+  if (kind === 'income') return 'M7 17 17 7M17 7v10M17 7H7'
   return 'M12 5v14M5 12h14'
 }
 
@@ -36948,6 +37343,8 @@ export default function Level2Section(props: Props) {
     handleReorderLevel3,
     isReorderingLevel2,
     isReorderingLevel3,
+    renderTransactionsInline = true,
+    onOpenEntries,
     getAmountNumber,
     styles,
   } = props
@@ -37051,6 +37448,11 @@ export default function Level2Section(props: Props) {
     : getTransactionsForCategoryAndMonth(l2.id)
 
   const openLevel2InlineAdd = () => {
+    if (!renderTransactionsInline) {
+      openTransactionCreator(l2.id)
+      return
+    }
+
     if (!isOpen) {
       toggleLevel2(l2.id)
     }
@@ -37075,6 +37477,7 @@ export default function Level2Section(props: Props) {
         iconKey={l2.icon_key}
         categorySum={getSumForLevel2(l2.id)}
         isOpen={isOpen}
+        hasChildren={hasChildren}
         isDragging={isDragging}
         isClosingAfterSelectedMonth={isClosingAfterSelectedMonth}
         isCalendarOpen={isCalendarOpen}
@@ -37085,6 +37488,7 @@ export default function Level2Section(props: Props) {
         budgetLimitView={budgetLimitView}
         styles={styles}
         onToggle={() => toggleLevel2(l2.id)}
+        onOpenEntries={() => onOpenEntries?.('level2', l2.id)}
         onToggleCalendar={() => setIsCalendarOpen((prev) => !prev)}
         onEditBudgetLimit={onEditBudgetLimit ? () => onEditBudgetLimit(l2.id) : undefined}
         onInlineAdd={openLevel2InlineAdd}
@@ -37181,7 +37585,7 @@ export default function Level2Section(props: Props) {
         />
       )}
 
-      {isOpen && !hasChildren && (
+      {renderTransactionsInline && isOpen && !hasChildren && (
         <Level2TransactionsList
           l2={l2}
           inlineAddToken={inlineAddToken}
@@ -37287,6 +37691,8 @@ export default function Level2Section(props: Props) {
           getSumForCategory={getSumForCategory}
           getTransactionsForCategoryAndMonth={getTransactionsForCategoryAndMonth}
           isChildClosingAfterSelectedMonth={isChildClosingAfterSelectedMonth}
+          renderTransactionsInline={renderTransactionsInline}
+          onOpenEntries={(categoryId) => onOpenEntries?.('level3', categoryId)}
           styles={styles}
         />
       )}
@@ -37335,6 +37741,8 @@ export default function Level3Section(props: Props) {
     startInlineAddToken = 0,
     showHeaderSum = true,
     showCategoryActions = true,
+    renderTransactionsInline = true,
+    onOpenEntries,
     selectedMonth,
     budgetStartDate,
     isClosingAfterSelectedMonth,
@@ -37346,6 +37754,7 @@ export default function Level3Section(props: Props) {
     isOpen,
     toggleLevel3,
     handleLevel3DragStart,
+    openTransactionCreator,
     handleInlineSaveTransaction,
     saveDraft,
     deleteDraft,
@@ -37665,6 +38074,11 @@ export default function Level3Section(props: Props) {
   }
 
   const openInlineAdd = useCallback(() => {
+    if (!renderTransactionsInline) {
+      openTransactionCreator(l3.id)
+      return
+    }
+
     setIsInlineAdding(true)
     const storageKey = `budget-inline-draft-${l3.id}-${selectedMonth}`
     const storedDraft = typeof window === 'undefined' ? null : window.localStorage.getItem(storageKey)
@@ -37702,6 +38116,8 @@ export default function Level3Section(props: Props) {
     getDefaultPaymentSourceIdForCategoryId,
     isOpen,
     l3.id,
+    openTransactionCreator,
+    renderTransactionsInline,
     selectedMonth,
     toggleLevel3,
   ])
@@ -37861,6 +38277,7 @@ export default function Level3Section(props: Props) {
         isSelectedMonthLocked={isSelectedMonthLocked}
         styles={styles}
         onToggle={() => toggleLevel3(l3.id)}
+        onOpenEntries={onOpenEntries ? () => onOpenEntries(l3.id) : undefined}
         onToggleCalendar={() => setIsCalendarOpen((prev) => !prev)}
         onInlineAdd={openInlineAdd}
         onHideNow={() => handleHideCategory(l3.id, 'now')}
@@ -37951,7 +38368,7 @@ export default function Level3Section(props: Props) {
         onCancel={closeInlineDeletePrompt}
       />
 
-      {isOpen && (
+      {renderTransactionsInline && isOpen && (
         <div style={styles.transactionsBox}>
           {isInlineAdding && !isSelectedMonthLocked && (
             <Level3InlineAddForm
