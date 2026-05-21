@@ -1,7 +1,7 @@
 EXPORT KODU PROJEKTU
 Folder główny: C:\Users\piotr\budzet-app-new
 Liczba plików: 309
-Data: 2026-05-21T20:16:07.240Z
+Data: 2026-05-21T20:41:20.274Z
 
 
 ==================================================
@@ -3335,20 +3335,30 @@ PLIK: app\styles\layout-depth\base-depth.css
   }
 
   [data-budget-workspace="true"] {
-    isolation: isolate;
-    background:
-      linear-gradient(135deg, rgba(244, 247, 250, 0.92) 0%, rgba(255, 253, 249, 0.86) 100%) !important;
+    z-index: 1 !important;
+    isolation: auto !important;
+    background: transparent !important;
+    box-shadow: none !important;
   }
 
   [data-budget-workspace-main="true"] {
     position: relative !important;
     z-index: 1 !important;
     overflow: visible !important;
-    background:
-      linear-gradient(145deg, rgba(245, 248, 251, 0.9) 0%, rgba(255, 253, 249, 0.74) 100%) !important;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.84),
-      inset 0 0 0 1px rgba(226, 232, 240, 0.42) !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  [data-budget-workspace-main="true"] > div:last-child {
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  [data-budget-workspace-main="true"] > div:last-child::before {
+    content: none !important;
   }
 
   [data-budget-sidebar="true"] {
@@ -7444,12 +7454,19 @@ PLIK: app\styles\shell.css
   align-items: start !important;
   gap: var(--shell-gap);
   margin: 0 auto;
+  background: transparent !important;
+  box-shadow: none !important;
+  isolation: auto !important;
 }
 
 
 
 [data-budget-workspace-main="true"] {
   min-width: 0;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
 }
 
 
@@ -7457,33 +7474,25 @@ PLIK: app\styles\shell.css
 [data-budget-workspace-main="true"] > div:last-child {
   position: relative;
   min-width: 0;
-  padding: 10px 14px 14px !important;
-  border: 1px solid rgba(195, 214, 238, 0.74) !important;
-  border-radius: 24px !important;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.88)) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.96),
-    0 18px 48px rgba(30, 64, 175, 0.06) !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
   overflow: visible;
 }
 
 
 
 [data-budget-workspace-main="true"] > div:last-child::before {
-  content: "";
-  position: absolute;
-  inset: 8px;
-  pointer-events: none;
-  border: 1px solid rgba(219, 234, 254, 0.44);
-  border-radius: 18px;
+  content: none !important;
 }
 
 
 
 [data-budget-workspace-main="true"] > div:last-child > div {
   position: relative;
-  z-index: 1;
+  z-index: auto;
   min-width: 0;
 }
 
@@ -7491,7 +7500,7 @@ PLIK: app\styles\shell.css
 
 [data-budget-workspace-main="true"] > div:last-child > [style*="font-size"] {
   position: relative;
-  z-index: 1;
+  z-index: auto;
   display: inline-flex;
   align-items: baseline;
   gap: 10px;
@@ -8519,13 +8528,13 @@ PLIK: app\styles\topbar\topbar-controls.css
 
 [data-budget-topbar-month="true"] {
   flex: 0 0 auto !important;
-  min-width: 190px !important;
+  min-width: 194px !important;
   display: grid !important;
-  grid-template-columns: 32px 32px minmax(92px, auto) !important;
+  grid-template-columns: 36px 36px minmax(92px, auto) !important;
   grid-template-rows: auto auto !important;
   align-items: center !important;
   justify-content: start !important;
-  column-gap: 5px !important;
+  column-gap: 4px !important;
   row-gap: 0 !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -8537,19 +8546,19 @@ PLIK: app\styles\topbar\topbar-controls.css
 }
 
 [data-budget-topbar-month="true"] > button {
-  width: 32px !important;
-  min-width: 32px !important;
-  height: 32px !important;
-  min-height: 32px !important;
+  width: 36px !important;
+  min-width: 36px !important;
+  height: 34px !important;
+  min-height: 34px !important;
   display: grid !important;
   place-items: center !important;
-  border: 1px solid rgba(156, 197, 244, 0.78) !important;
-  border-radius: 11px !important;
+  border: 1px solid rgba(117, 174, 237, 0.84) !important;
+  border-radius: 10px !important;
   padding: 0 !important;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.97), rgba(229, 241, 255, 0.84)) !important;
-  color: #0f4fb8 !important;
-  font-size: 25px !important;
-  font-weight: 520 !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(220, 235, 255, 0.9)) !important;
+  color: #0b4ca8 !important;
+  font-size: 27px !important;
+  font-weight: 650 !important;
   line-height: 1 !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.94),
@@ -8559,7 +8568,8 @@ PLIK: app\styles\topbar\topbar-controls.css
 
 [data-budget-topbar-month="true"] > button:first-child {
   grid-column: 1 !important;
-  grid-row: 1 / span 2 !important;
+  grid-row: 1 !important;
+  align-self: center !important;
 }
 
 [data-budget-topbar-month="true"] > button:hover {
@@ -8598,7 +8608,8 @@ PLIK: app\styles\topbar\topbar-controls.css
 
 [data-budget-topbar-month="true"] > button:nth-child(3) {
   grid-column: 2 !important;
-  grid-row: 1 / span 2 !important;
+  grid-row: 1 !important;
+  align-self: center !important;
 }
 
 [data-budget-topbar-month="true"] > button:nth-child(n + 4) {
@@ -9020,7 +9031,6 @@ PLIK: app\styles\topbar\topbar-shell.css
   padding: 10px max(46px, calc(env(safe-area-inset-right) + 34px)) 10px 28px !important;
   overflow: visible !important;
   isolation: isolate !important;
-  border: 0 !important;
   border: 1px solid rgba(177, 204, 237, 0.78) !important;
   border-radius: 24px !important;
   background:
@@ -9037,14 +9047,7 @@ PLIK: app\styles\topbar\topbar-shell.css
 }
 
 [data-budget-header-row="true"]::before {
-  content: "" !important;
-  position: absolute !important;
-  left: 0 !important;
-  top: 0 !important;
-  bottom: 0 !important;
-  width: 220px !important;
-  pointer-events: none !important;
-  background: linear-gradient(90deg, rgba(226, 241, 255, 0.84), rgba(239, 247, 255, 0)) !important;
+  content: none !important;
 }
 
 [data-budget-brand="true"] {

@@ -1,67 +1,105 @@
 /* Layout-only depth and popup guardrails. Imported last on purpose. */
 
 @media (min-width: 821px) {
-  [data-budget-shell-content="true"],
-  [data-budget-workspace="true"] {
+  [data-budget-shell-content="true"] {
     position: relative !important;
     overflow: visible !important;
+    background: transparent !important;
+    isolation: auto !important;
+    z-index: auto !important;
   }
 
   [data-budget-workspace="true"] {
-    z-index: 1 !important;
+    position: relative !important;
+    overflow: visible !important;
     isolation: auto !important;
+    z-index: auto !important;
     background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
     box-shadow: none !important;
+    backdrop-filter: none !important;
   }
 
   [data-budget-workspace-main="true"] {
     position: relative !important;
-    z-index: 1 !important;
     overflow: visible !important;
+    isolation: auto !important;
+    z-index: auto !important;
     background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
-  }
-
-  [data-budget-workspace-main="true"] > div:last-child {
     border: 0 !important;
     border-radius: 0 !important;
-    background: transparent !important;
     box-shadow: none !important;
+    backdrop-filter: none !important;
   }
 
-  [data-budget-workspace-main="true"] > div:last-child::before {
+  /* usuwa efekt wielkiej planszy środka */
+  [data-budget-workspace-main="true"]::before,
+  [data-budget-workspace-main="true"]::after,
+  [data-budget-workspace="true"]::before,
+  [data-budget-workspace="true"]::after {
     content: none !important;
+    display: none !important;
   }
 
+  /* usuwa wrapper-kartę pod contentem */
+  [data-budget-workspace-main="true"] > div:last-child {
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  [data-budget-workspace-main="true"] > div:last-child::before,
+  [data-budget-workspace-main="true"] > div:last-child::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  /* topbar ma zawsze być najwyżej */
+  [data-budget-header-row="true"] {
+    position: fixed !important;
+    inset: 8px 10px auto 10px !important;
+    z-index: 90000 !important;
+  }
+
+  /* sidebar pod topbarem */
   [data-budget-sidebar="true"] {
+    position: fixed !important;
+    inset: calc(var(--shell-top) + 18px) auto 14px 10px !important;
     z-index: 1800 !important;
-    box-shadow:
-      inset -1px 0 0 rgba(255, 255, 255, 0.74),
-      12px 0 30px rgba(15, 23, 42, 0.055) !important;
+    overflow: hidden !important;
   }
 
+  /* prawy rail pod topbarem */
   [data-budget-context-rail="true"] {
     z-index: 1700 !important;
-    box-shadow:
-      inset 1px 0 0 rgba(255, 255, 255, 0.78),
-      -12px 0 32px rgba(15, 23, 42, 0.06) !important;
   }
 
-  [data-context-card="rail-actions"],
-  [data-rail-notification-wrap="true"],
-  [data-rail-search-wrap="true"] {
-    z-index: 3600 !important;
+  /* dropdowny nad workspace */
+  [data-floating-dropdown="true"],
+  [data-mobile-category-menu="true"],
+  [data-transaction-menu="true"],
+  [data-budget-month-menu="true"],
+  [data-profile-menu-dropdown="true"] {
+    z-index: 120000 !important;
   }
 
-  [data-budget-header-row="true"] {
-    inset: 8px 10px auto 10px !important;
-    z-index: var(--shell-topbar-z, 90000) !important;
+  [data-floating-dropdown="true"][open],
+  [data-mobile-category-menu="true"][open],
+  [data-transaction-menu="true"][open] {
+    z-index: 120001 !important;
   }
 
-  [data-budget-sidebar="true"] {
-    inset: calc(var(--shell-top) + 18px) auto 14px 10px !important;
-    height: auto !important;
+  /* środek strony nie może zachowywać się jak osobna warstwa */
+  [data-budget-workspace="true"],
+  [data-budget-workspace-main="true"],
+  [data-main-workspace-deck="true"] {
+    transform: none !important;
+    filter: none !important;
+    contain: none !important;
+    will-change: auto !important;
   }
 }
 
@@ -87,16 +125,6 @@
     min-width: 0 !important;
   }
 
-  [data-level1-mobile-flow="true"],
-  [data-level1-mobile-block="true"] {
-    display: grid !important;
-    gap: 10px !important;
-  }
-
-  [data-level1-mobile-block="true"] [data-level1-expanded-content="true"] {
-    margin: 0 !important;
-  }
-
   [data-floating-dropdown="true"][open],
   [data-mobile-category-menu="true"][open],
   [data-transaction-menu="true"][open],
@@ -104,6 +132,6 @@
   [data-tree-sort-inline="true"],
   [data-budget-month-menu="true"] {
     max-width: calc(100vw - 20px) !important;
-    z-index: var(--shell-topbar-overlay-z, 120000) !important;
+    z-index: 120000 !important;
   }
 }
