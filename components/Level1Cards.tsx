@@ -80,19 +80,18 @@ function Level1CardBase(props: BaseProps) {
 
         <div data-level1-card-content="true">
           <div data-level1-card-main="true">
-            <div data-level1-card-meta="true">
-              <div data-level1-card-drag="true">{dragHandle}</div>
-              <div data-level1-title-block="true">
-                <div data-level1-card-title="true">{level1Category.name}</div>
+            <div data-level1-card-drag="true">{dragHandle}</div>
 
-                {summary && (
-                  <div data-level1-summary="true">
-                    <strong>{moneyFormatter.format(summary.amount)} zł</strong>
-                  </div>
-                )}
+            <div data-level1-title-block="true">
+              <div data-level1-card-title="true">{level1Category.name}</div>
 
-                {limitIndicator && <div data-level1-limit="true">{limitIndicator}</div>}
-              </div>
+              {summary && (
+                <div data-level1-summary="true">
+                  <strong>{moneyFormatter.format(summary.amount)} zł</strong>
+                </div>
+              )}
+
+              {limitIndicator && <div data-level1-limit="true">{limitIndicator}</div>}
             </div>
           </div>
 
