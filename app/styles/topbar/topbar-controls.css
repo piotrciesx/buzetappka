@@ -525,9 +525,9 @@
 
 /* Finalny, realny selektor dla przycisków zmiany miesiąca w topbarze. */
 [data-budget-topbar-month="true"] {
-  min-width: 184px !important;
+  min-width: 196px !important;
   grid-template-columns: 34px 34px minmax(96px, auto) !important;
-  column-gap: 6px !important;
+  column-gap: 12px !important;
 }
 
 [data-budget-topbar-month="true"] > button:first-child,
@@ -555,10 +555,10 @@
 [data-budget-topbar-month="true"] > button:first-child::before,
 [data-budget-topbar-month="true"] > button:nth-child(3)::before {
   content: "" !important;
-  width: 9px !important;
-  height: 9px !important;
-  border-top: 2px solid #2563eb !important;
-  border-right: 2px solid #2563eb !important;
+  width: 10px !important;
+  height: 10px !important;
+  border-top: 2.5px solid #1558d6 !important;
+  border-right: 2.5px solid #1558d6 !important;
   position: absolute !important;
   top: 50% !important;
   left: 50% !important;
