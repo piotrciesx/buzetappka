@@ -47,7 +47,7 @@
   overflow: hidden;
   color: #0b2443;
   font-size: 0.94rem;
-  font-weight: 830;
+  font-weight: 680;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -137,7 +137,7 @@
   overflow: hidden;
   color: #17365f;
   font-size: 0.8rem;
-  font-weight: 790;
+  font-weight: 650;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -207,7 +207,7 @@
   color: #173b64;
   font: inherit;
   font-size: 0.78rem;
-  font-weight: 720;
+  font-weight: 620;
   text-align: left;
   cursor: pointer;
 }
@@ -282,7 +282,7 @@
   color: #173b64;
   font: inherit;
   font-size: 0.76rem;
-  font-weight: 780;
+  font-weight: 650;
   cursor: pointer;
 }
 
@@ -431,7 +431,7 @@
   overflow: hidden;
   color: #0a1f3d;
   font-size: 0.84rem;
-  font-weight: 790;
+  font-weight: 630;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -440,7 +440,7 @@
   overflow: hidden;
   color: rgba(28, 57, 93, 0.72);
   font-size: 0.7rem;
-  font-weight: 680;
+  font-weight: 550;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -448,7 +448,7 @@
 [data-entries-tree-view="true"] [data-entries-transaction-row="true"] > strong {
   color: #071d38;
   font-size: 0.84rem;
-  font-weight: 900;
+  font-weight: 690;
   white-space: nowrap;
 }
 
@@ -501,7 +501,7 @@
   [data-entries-subgroup-header="true"] span {
   color: #0b2443;
   font-size: 0.9rem;
-  font-weight: 820;
+  font-weight: 680;
 }
 
 [data-entries-tree-view="true"][data-entries-final-level="true"] [data-entries-inline-composer="true"] {
