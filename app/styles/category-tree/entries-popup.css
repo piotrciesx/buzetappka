@@ -4,7 +4,7 @@
   --entries-branch-node: rgba(59, 130, 246, 0.34);
   display: grid;
   gap: 10px;
-  color: #102a4c;
+  color: #0b2443;
 }
 
 [data-entries-tree-view="true"] [data-entries-group="true"] {
@@ -45,9 +45,9 @@
 [data-entries-tree-view="true"] [data-entries-group-header="true"] span {
   display: block;
   overflow: hidden;
-  color: #102a4c;
-  font-size: 0.92rem;
-  font-weight: 800;
+  color: #0b2443;
+  font-size: 0.94rem;
+  font-weight: 830;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -135,9 +135,9 @@
 
 [data-entries-tree-view="true"] [data-entries-subgroup-header="true"] span {
   overflow: hidden;
-  color: rgba(16, 42, 76, 0.78);
-  font-size: 0.78rem;
-  font-weight: 760;
+  color: #17365f;
+  font-size: 0.8rem;
+  font-weight: 790;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -259,7 +259,7 @@
   border: 1px solid rgba(147, 197, 253, 0.42);
   border-radius: 9px;
   background: rgba(255, 255, 255, 0.78);
-  color: #102a4c;
+  color: #0b2443;
   font: inherit;
   font-size: 0.78rem;
   outline: none;
@@ -429,35 +429,93 @@
 
 [data-entries-tree-view="true"] [data-entries-transaction-copy="true"] span {
   overflow: hidden;
-  color: #102a4c;
-  font-size: 0.82rem;
-  font-weight: 730;
+  color: #0a1f3d;
+  font-size: 0.84rem;
+  font-weight: 790;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 [data-entries-tree-view="true"] [data-entries-transaction-copy="true"] small {
   overflow: hidden;
-  color: rgba(37, 65, 101, 0.58);
-  font-size: 0.68rem;
-  font-weight: 650;
+  color: rgba(28, 57, 93, 0.72);
+  font-size: 0.7rem;
+  font-weight: 680;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 [data-entries-tree-view="true"] [data-entries-transaction-row="true"] > strong {
-  color: #102a4c;
-  font-size: 0.82rem;
-  font-weight: 850;
+  color: #071d38;
+  font-size: 0.84rem;
+  font-weight: 900;
   white-space: nowrap;
 }
 
 [data-entries-tree-view="true"] [data-entries-transaction-kind="expense"] > strong {
-  color: #9f1239;
+  color: #8f1236;
 }
 
 [data-entries-tree-view="true"] [data-entries-transaction-kind="income"] > strong {
-  color: #166534;
+  color: #11613a;
+}
+
+[data-entries-tree-view="true"][data-entries-final-level="true"] {
+  gap: 7px;
+}
+
+[data-entries-tree-view="true"][data-entries-final-level="true"] [data-entries-subgroup="true"],
+[data-entries-tree-view="true"][data-entries-final-level="true"]
+  [data-entries-subgroup-tone="subgroup"][data-entries-subgroup="true"],
+[data-entries-tree-view="true"][data-entries-final-level="true"]
+  [data-entries-subgroup-tone="direct"][data-entries-subgroup="true"] {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+[data-entries-tree-view="true"][data-entries-final-level="true"]
+  [data-entries-subgroup="true"]::before,
+[data-entries-tree-view="true"][data-entries-final-level="true"]
+  [data-entries-subgroup-header="true"]::before,
+[data-entries-tree-view="true"][data-entries-final-level="true"]
+  [data-entries-subgroup-header="true"]::after,
+[data-entries-tree-view="true"][data-entries-final-level="true"]
+  [data-entries-feed="true"]::before,
+[data-entries-tree-view="true"][data-entries-final-level="true"]
+  [data-entries-inline-composer="true"]::before,
+[data-entries-tree-view="true"][data-entries-final-level="true"]
+  [data-entries-transaction-row="true"]::before,
+[data-entries-tree-view="true"][data-entries-final-level="true"]
+  [data-entries-transaction-row="true"]::after {
+  display: none;
+}
+
+[data-entries-tree-view="true"][data-entries-final-level="true"]
+  [data-entries-subgroup-header="true"] {
+  min-height: 28px;
+  padding: 0 2px 3px;
+  border-bottom: 1px solid rgba(191, 219, 254, 0.34);
+}
+
+[data-entries-tree-view="true"][data-entries-final-level="true"]
+  [data-entries-subgroup-header="true"] span {
+  color: #0b2443;
+  font-size: 0.9rem;
+  font-weight: 820;
+}
+
+[data-entries-tree-view="true"][data-entries-final-level="true"] [data-entries-inline-composer="true"] {
+  margin: 2px 0 5px;
+}
+
+[data-entries-tree-view="true"][data-entries-final-level="true"]
+  [data-entries-subgroup-tone="subgroup"][data-entries-subgroup="true"]
+  > [data-entries-feed="true"],
+[data-entries-tree-view="true"][data-entries-final-level="true"]
+  [data-entries-subgroup-tone="direct"][data-entries-subgroup="true"]
+  > [data-entries-feed="true"] {
+  margin-left: 0;
+  padding-left: 0;
 }
 
 [data-entries-tree-view="true"]
@@ -522,5 +580,15 @@
 
   [data-entries-tree-view="true"] [data-entries-transaction-row="true"] > strong {
     font-size: 0.76rem;
+  }
+
+  [data-entries-tree-view="true"][data-entries-final-level="true"]
+    [data-entries-subgroup-tone="subgroup"][data-entries-subgroup="true"]
+    > [data-entries-feed="true"],
+  [data-entries-tree-view="true"][data-entries-final-level="true"]
+    [data-entries-subgroup-tone="direct"][data-entries-subgroup="true"]
+    > [data-entries-feed="true"] {
+    margin-left: 0;
+    padding-left: 0;
   }
 }

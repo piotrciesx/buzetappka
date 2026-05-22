@@ -524,7 +524,10 @@ export default function CategoryEntriesTreeView({
   const shouldShowEmptyState = !hasAnyEntries && !viewModel.canInlineAdd
 
   return (
-    <div data-entries-tree-view="true">
+    <div
+      data-entries-tree-view="true"
+      data-entries-final-level={viewModel.canInlineAdd ? 'true' : 'false'}
+    >
       {shouldRenderDirectSection &&
         renderSubgroup(
           viewModel.clickedCategory,
