@@ -197,55 +197,57 @@
 }
 
 [data-level1-header-grid="true"] [data-category-drag-handle="true"] {
-  width: 32px !important;
-  min-width: 32px !important;
-  height: 32px !important;
-  min-height: 32px !important;
-  border-radius: 10px !important;
-  border: 1px solid rgba(30, 64, 175, 0.18) !important;
-  color: #3152a4 !important;
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  border-radius: 11px !important;
+  border: 1px solid rgba(30, 64, 175, 0.24) !important;
+  color: #1f3f92 !important;
+  box-shadow: none !important;
 }
 
 [data-level1-header-grid="true"] [data-category-drag-handle="true"] svg {
-  width: 13px !important;
-  height: 13px !important;
-  opacity: 0.88 !important;
+  width: 15px !important;
+  height: 15px !important;
+  opacity: 1 !important;
 }
 
 [data-level1-trend-icon="true"] {
   position: absolute !important;
-  top: 16px !important;
-  right: 70px !important;
+  top: 13px !important;
+  right: 64px !important;
   z-index: 4 !important;
-  width: 50px !important;
-  min-width: 50px !important;
-  height: 50px !important;
-  min-height: 50px !important;
-  border-radius: 15px !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  border-radius: 13px !important;
+  box-shadow: none !important;
 }
 
 [data-level1-card="true"][data-level1-kind="income"] [data-level1-trend-icon="true"] {
-  border: 1px solid rgba(34, 197, 94, 0.24) !important;
-  background: #dcfce7 !important;
-  color: #15803d !important;
+  border: 1px solid rgba(34, 197, 94, 0.28) !important;
+  background: rgba(220, 252, 231, 0.72) !important;
+  color: #12843a !important;
 }
 
 [data-level1-card="true"][data-level1-kind="expense"] [data-level1-trend-icon="true"] {
-  border: 1px solid rgba(251, 113, 133, 0.24) !important;
-  background: #ffe4e6 !important;
-  color: #dc2626 !important;
+  border: 1px solid rgba(251, 113, 133, 0.28) !important;
+  background: rgba(255, 228, 230, 0.72) !important;
+  color: #d91f2f !important;
 }
 
 [data-level1-trend-icon="true"] svg {
-  width: 21px !important;
-  height: 21px !important;
-  stroke-width: 2.6 !important;
+  width: 19px !important;
+  height: 19px !important;
+  stroke-width: 2.7 !important;
 }
 
 [data-level1-header-grid="true"] [data-category-actions="true"][data-level1-actions="true"] {
   position: absolute !important;
-  right: 18px !important;
-  top: 18px !important;
+  right: 13px !important;
+  top: 13px !important;
   z-index: 10 !important;
   display: flex !important;
   align-items: center !important;
@@ -268,13 +270,11 @@
   display: grid !important;
   place-items: center !important;
   padding: 0 !important;
-  border: 1px solid rgba(30, 64, 175, 0.2) !important;
+  border: 1px solid rgba(30, 64, 175, 0.22) !important;
   border-radius: 11px !important;
   background: rgba(255, 255, 255, 0.96) !important;
-  color: #2747a6 !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.96),
-    0 5px 12px rgba(15, 23, 42, 0.04) !important;
+  color: #21439a !important;
+  box-shadow: none !important;
   font-size: 0 !important;
   line-height: 1 !important;
 }
@@ -283,10 +283,10 @@
   content: "•••";
   color: currentColor;
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
+  font-weight: 760;
+  letter-spacing: 0.45px;
   line-height: 1;
-  transform: translateY(-2px);
+  transform: translateY(0);
 }
 
 [data-level1-header-grid="true"] [data-mobile-category-menu-panel="true"] {
