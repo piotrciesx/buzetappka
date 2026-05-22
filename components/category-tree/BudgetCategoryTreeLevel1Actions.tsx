@@ -24,9 +24,6 @@ export default function BudgetCategoryTreeLevel1Actions({
   budgetLimitView,
   styles,
   toggleLevel1Calendar,
-  setOpenAddSubcategoryFor,
-  setNewSubcategoryName,
-  setNewSubcategoryIconKey,
   onEditBudgetLimit,
 }: Props) {
   return (
@@ -36,19 +33,6 @@ export default function BudgetCategoryTreeLevel1Actions({
       <details data-mobile-category-menu="true">
         <summary style={styles.secondaryButton}>akcje</summary>
         <div data-mobile-category-menu-panel="true">
-          <button
-            type="button"
-            style={styles.secondaryButton}
-            onClick={(event) => {
-              event.stopPropagation()
-              setOpenAddSubcategoryFor(level1Category.id)
-              setNewSubcategoryName('')
-              setNewSubcategoryIconKey(null)
-            }}
-          >
-            dodaj kategorię
-          </button>
-
           {canUseMonthCalendar && (
             <button
               type="button"
@@ -58,7 +42,7 @@ export default function BudgetCategoryTreeLevel1Actions({
                 toggleLevel1Calendar(level1Category.id)
               }}
             >
-              {isLevel1CalendarOpen ? 'zamknij kalendarz' : 'kalendarz'}
+              {isLevel1CalendarOpen ? 'Zamknij kalendarz' : 'Kalendarz'}
             </button>
           )}
 
