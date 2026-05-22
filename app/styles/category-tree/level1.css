@@ -140,10 +140,10 @@
   top: 12px !important;
   left: 14px !important;
   z-index: 12 !important;
-  width: 36px !important;
-  min-width: 36px !important;
-  height: 36px !important;
-  min-height: 36px !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
   display: grid !important;
   place-items: center !important;
   padding: 0 !important;
@@ -222,7 +222,7 @@
 
 [data-level1-trend-icon="true"] {
   position: absolute !important;
-  top: 17px !important;
+  top: 12px !important;
   right: 64px !important;
   z-index: 4 !important;
   width: 44px !important;
