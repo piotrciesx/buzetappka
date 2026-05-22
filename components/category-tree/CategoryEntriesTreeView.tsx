@@ -158,20 +158,21 @@ export default function CategoryEntriesTreeView({
     return null
   }
 
-  const formatAmount = (categoryId: string) =>
-    `${getSumForCategoryForSelectedMonth(categoryId).toLocaleString('pl-PL')} zł`
-
-  const getEntryCountLabel = (count: number) => {
-    if (count === 1) {
-      return '1 wpis'
-    }
-
-    if (count > 1 && count < 5) {
-      return `${count} wpisy`
-    }
-
-    return `${count} wpisów`
+  const popupLevel3Styles = {
+    ...styles,
+    emptyText: {
+      ...styles.emptyText,
+      display: 'none',
+    },
   }
+
+  const hasAnyEntries =
+    viewModel.directEntries.length > 0 ||
+    viewModel.groupedChildren.some(
+      (group) =>
+        group.directEntries.length > 0 ||
+        group.children.some((child) => child.directEntries.length > 0)
+    )
 
   const renderTransactionSection = (
     category: Category,
@@ -187,6 +188,8 @@ export default function CategoryEntriesTreeView({
         key={`entries-${category.id}-${headerName}`}
         l3={category}
         headerName={headerName}
+        hideHeader
+        startInlineAddToken={canAddHere ? 1 : 0}
         showCategoryActions={false}
         selectedMonth={selectedMonth}
         budgetStartDate={budgetStartDate}
@@ -245,49 +248,49 @@ export default function CategoryEntriesTreeView({
         onTagClick={onTagClick}
         onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
         getAmountNumber={getAmountNumber}
-        styles={styles}
+        styles={popupLevel3Styles}
       />
     )
   }
 
   const renderSubgroupHeader = (
-    category: Category,
     title: string,
-    transactions: Transaction[],
     tone: 'direct' | 'subgroup' = 'subgroup'
   ) => (
     <div data-entries-subgroup-header="true" data-entries-subgroup-tone={tone}>
       <div>
         <span>{title}</span>
-        <small>{getEntryCountLabel(transactions.length)}</small>
       </div>
-      <strong>{formatAmount(category.id)}</strong>
     </div>
   )
 
   const renderPopupSection = (
     category: Category,
     transactions: Transaction[],
-    headerName: string,
+    headerName: string | null,
     parentLevel2: Category | null,
     tone: 'direct' | 'subgroup' = 'subgroup'
   ) => {
     const canAddHere =
       viewModel.canInlineAdd && viewModel.inlineAddTargetCategoryId === category.id
 
+    if (transactions.length === 0 && !canAddHere) {
+      return null
+    }
+
     return (
       <section
-        key={`entries-section-${category.id}-${headerName}`}
+        key={`entries-section-${category.id}-${headerName || 'feed'}`}
         data-entries-subgroup="true"
         data-entries-level={category.level}
         data-entries-subgroup-tone={tone}
       >
-        {renderSubgroupHeader(category, headerName, transactions, tone)}
+        {headerName && renderSubgroupHeader(headerName, tone)}
         <div
           data-entries-feed="true"
           data-entries-inline-composer={canAddHere ? 'true' : 'false'}
         >
-          {renderTransactionSection(category, transactions, headerName, parentLevel2)}
+          {renderTransactionSection(category, transactions, headerName || category.name, parentLevel2)}
         </div>
       </section>
     )
@@ -295,6 +298,10 @@ export default function CategoryEntriesTreeView({
 
   const renderGroup = (group: CategoryEntriesPopupChildGroup) => {
     if (group.categoryLevel === 3) {
+      if (group.directEntries.length === 0) {
+        return null
+      }
+
       return renderPopupSection(
         group.category,
         group.directEntries,
@@ -304,29 +311,24 @@ export default function CategoryEntriesTreeView({
       )
     }
 
+    const childrenWithEntries = group.children.filter((child) => child.directEntries.length > 0)
+    const hasDirectEntries = group.directEntries.length > 0
+
+    if (!hasDirectEntries && childrenWithEntries.length === 0) {
+      return null
+    }
+
     return (
       <section key={`group-${group.category.id}`} data-entries-group="true">
         <div data-entries-group-header="true">
           <div>
             <span>{group.category.name}</span>
-            <small>
-              {getEntryCountLabel(
-                group.directEntries.length +
-                  group.children.reduce((sum, child) => sum + child.directEntries.length, 0)
-              )}
-            </small>
           </div>
-          <strong>{formatAmount(group.category.id)}</strong>
         </div>
 
-        {renderPopupSection(
-          group.category,
-          group.directEntries,
-          'Wpisy bezpośrednie',
-          group.category,
-          'direct'
-        )}
-        {group.children.map((child) =>
+        {hasDirectEntries &&
+          renderPopupSection(group.category, group.directEntries, null, group.category, 'direct')}
+        {childrenWithEntries.map((child) =>
           renderPopupSection(
             child.category,
             child.directEntries,
@@ -340,7 +342,9 @@ export default function CategoryEntriesTreeView({
   }
 
   const shouldRenderDirectSection =
-    viewModel.canInlineAdd || viewModel.directEntries.length > 0 || viewModel.children.length === 0
+    viewModel.canInlineAdd || viewModel.directEntries.length > 0
+
+  const shouldShowEmptyState = !hasAnyEntries && !viewModel.canInlineAdd
 
   return (
     <div data-entries-tree-view="true">
@@ -348,14 +352,14 @@ export default function CategoryEntriesTreeView({
         renderPopupSection(
           viewModel.clickedCategory,
           viewModel.directEntries,
-          viewModel.hasChildren ? 'Wpisy bezpośrednie' : viewModel.clickedCategory.name,
+          viewModel.hasChildren ? 'Bezpośrednie' : viewModel.clickedCategory.name,
           viewModel.parentLevel2,
           viewModel.hasChildren ? 'direct' : 'subgroup'
         )}
 
       {viewModel.groupedChildren.map(renderGroup)}
 
-      {!shouldRenderDirectSection && viewModel.groupedChildren.length === 0 && (
+      {shouldShowEmptyState && (
         <div data-entries-empty="true" style={styles.emptyText}>
           Brak wpisów w tym miesiącu
         </div>
