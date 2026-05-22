@@ -1,16 +1,28 @@
+import { useState, type FormEvent } from 'react'
 import type { CSSProperties } from 'react'
-import Level3Section from '../Level3Section'
 import type { BudgetLimitView } from '../BudgetLimitIndicator'
 import type { HeatmapMode } from '../month-calendar/monthCalendarTypes'
 import type { Tag, TransactionPaymentSplit } from '../../lib/budgetPageTypes'
 import type { PaymentSplitInput } from '../../lib/paymentSplitUtils'
 import type { DescriptionSuggestion } from '../../lib/suggestionUtils'
 import type { TransactionDraft } from '../../lib/draftUtils'
+import {
+  buildDateFromDayInput,
+  getDayInputFromDate,
+  normalizeDayInput,
+} from '../../lib/dateUtils'
 import type {
   CategoryEntriesPopupChildGroup,
   CategoryEntriesPopupViewModel,
 } from '../../lib/buildCategoryEntriesPopupViewModel'
-import type { Category, HideMode, MoveTarget, Transaction } from './Level3SectionUtils'
+import {
+  getOrderedLevel3Transactions,
+  getTransactionDateLabel,
+  type Category,
+  type HideMode,
+  type MoveTarget,
+  type Transaction,
+} from './Level3SectionUtils'
 
 type CategoryEntriesTreeViewProps = {
   viewModel: CategoryEntriesPopupViewModel
@@ -98,73 +110,47 @@ type CategoryEntriesTreeViewProps = {
   styles: Record<string, CSSProperties>
 }
 
+const formatMoney = (value: number) =>
+  `${value.toLocaleString('pl-PL', {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: Number.isInteger(value) ? 0 : 2,
+  })} zł`
+
 export default function CategoryEntriesTreeView({
   viewModel,
   selectedMonth,
-  budgetStartDate,
   isSelectedMonthLocked,
-  canUseMonthCalendar,
-  expenseLevel1Id,
-  isCategoryClosingAfterSelectedMonth,
-  getSumForCategoryForSelectedMonth,
   getAmountNumber,
   getMoveTargetsForTransaction,
   getSignedAmountForTransaction,
-  getCalendarHeatmapVariantForLevel1Id,
-  heatmapMode,
-  heatmapInverted,
-  onHeatmapModeChange,
-  onHeatmapInvertedChange,
-  openTransactionCreator,
   handleInlineSaveTransaction,
-  saveDraft,
-  deleteDraft,
   handleHideCategory,
   handleRenameCategory,
-  handleUpdateCategoryIcon,
   handleDeleteCategory,
   handleUndoScheduledHide,
   handleDeleteTransaction,
   handleUpdateTransaction,
   handleMoveTransaction,
   handleDuplicateTransaction,
-  handleOpenCategoryCalendarAddForDay,
-  handleOpenLevel1CalendarAddForDay,
-  handleLevel3DragStart,
   selectedTransactionIds,
   onToggleTransactionSelection,
-  descriptionSuggestions,
-  getPaymentSourceOptionsForCategoryId,
-  getRecurringOptionsForCategoryId,
-  getDefaultPaymentSourceIdForCategoryId,
   transactionTagsMap,
-  transactionPaymentSplitsMap,
-  onTagClick,
-  onDeleteDescriptionSuggestion,
   styles,
 }: CategoryEntriesTreeViewProps) {
-  const inlineDraftType = viewModel.parentLevel1.id === expenseLevel1Id ? 'expense' : 'income'
-  const calendarHeatmapVariant = getCalendarHeatmapVariantForLevel1Id(viewModel.parentLevel1.id)
+  const [inlineDay, setInlineDay] = useState('')
+  const [inlineDescription, setInlineDescription] = useState('')
+  const [inlineAmount, setInlineAmount] = useState('')
+  const [isInlineSaving, setIsInlineSaving] = useState(false)
 
-  const getInlineDraftLevel2Id = (category: Category, parentLevel2: Category | null) => {
-    if (category.level === 2) {
-      return category.id
-    }
+  const [editingTransactionId, setEditingTransactionId] = useState<string | null>(null)
+  const [editDay, setEditDay] = useState('')
+  const [editDescription, setEditDescription] = useState('')
+  const [editAmount, setEditAmount] = useState('')
+  const [isUpdating, setIsUpdating] = useState(false)
 
-    if (category.level === 3) {
-      return parentLevel2?.id || category.parent_id || null
-    }
-
-    return null
-  }
-
-  const popupLevel3Styles = {
-    ...styles,
-    emptyText: {
-      ...styles.emptyText,
-      display: 'none',
-    },
-  }
+  const [movingTransactionId, setMovingTransactionId] = useState<string | null>(null)
+  const [moveTargetCategoryId, setMoveTargetCategoryId] = useState('')
+  const [isMoving, setIsMoving] = useState(false)
 
   const hasAnyEntries =
     viewModel.directEntries.length > 0 ||
@@ -174,101 +160,315 @@ export default function CategoryEntriesTreeView({
         group.children.some((child) => child.directEntries.length > 0)
     )
 
-  const renderTransactionSection = (
-    category: Category,
-    transactions: Transaction[],
-    headerName: string,
-    parentLevel2: Category | null
-  ) => {
-    const canAddHere =
-      viewModel.canInlineAdd && viewModel.inlineAddTargetCategoryId === category.id
-
-    return (
-      <Level3Section
-        key={`entries-${category.id}-${headerName}`}
-        l3={category}
-        headerName={headerName}
-        hideHeader
-        startInlineAddToken={canAddHere ? 1 : 0}
-        showCategoryActions={false}
-        selectedMonth={selectedMonth}
-        budgetStartDate={budgetStartDate}
-        isClosingAfterSelectedMonth={isCategoryClosingAfterSelectedMonth(
-          category,
-          selectedMonth
-        )}
-        categorySum={getSumForCategoryForSelectedMonth(category.id)}
-        transactions={transactions}
-        canAddHere={canAddHere}
-        isSelectedMonthLocked={isSelectedMonthLocked}
-        canUseMonthCalendar={canUseMonthCalendar}
-        isOpen={true}
-        toggleLevel3={() => {}}
-        handleLevel3DragStart={handleLevel3DragStart}
-        openTransactionCreator={openTransactionCreator}
-        handleInlineSaveTransaction={handleInlineSaveTransaction}
-        saveDraft={saveDraft}
-        deleteDraft={deleteDraft}
-        inlineDraftType={inlineDraftType}
-        inlineDraftLevel1Id={viewModel.parentLevel1.id}
-        inlineDraftLevel2Id={getInlineDraftLevel2Id(category, parentLevel2)}
-        handleHideCategory={handleHideCategory}
-        handleRenameCategory={handleRenameCategory}
-        handleUpdateCategoryIcon={handleUpdateCategoryIcon}
-        handleDeleteCategory={handleDeleteCategory}
-        handleUndoScheduledHide={handleUndoScheduledHide}
-        handleDeleteTransaction={handleDeleteTransaction}
-        handleUpdateTransaction={handleUpdateTransaction}
-        handleMoveTransaction={handleMoveTransaction}
-        handleDuplicateTransaction={handleDuplicateTransaction}
-        handleOpenCalendarAddForDay={(categoryId, dayText) => {
-          if (category.level === 1) {
-            handleOpenLevel1CalendarAddForDay(viewModel.parentLevel1.id, dayText)
-            return
-          }
-
-          handleOpenCategoryCalendarAddForDay(categoryId, dayText)
-        }}
-        selectedTransactionIds={selectedTransactionIds}
-        onToggleTransactionSelection={onToggleTransactionSelection}
-        getMoveTargetsForTransaction={getMoveTargetsForTransaction}
-        getSignedAmountForTransaction={getSignedAmountForTransaction}
-        calendarHeatmapVariant={calendarHeatmapVariant}
-        heatmapMode={heatmapMode}
-        heatmapInverted={heatmapInverted}
-        onHeatmapModeChange={onHeatmapModeChange}
-        onHeatmapInvertedChange={onHeatmapInvertedChange}
-        heatmapStorageKey={`budget-app-tree-popup-calendar-${category.id}`}
-        descriptionSuggestions={descriptionSuggestions}
-        getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
-        getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}
-        getDefaultPaymentSourceIdForCategoryId={getDefaultPaymentSourceIdForCategoryId}
-        transactionTagsMap={transactionTagsMap}
-        transactionPaymentSplitsMap={transactionPaymentSplitsMap}
-        onTagClick={onTagClick}
-        onDeleteDescriptionSuggestion={onDeleteDescriptionSuggestion}
-        getAmountNumber={getAmountNumber}
-        styles={popupLevel3Styles}
-      />
-    )
+  const startEditingTransaction = (transaction: Transaction) => {
+    setMovingTransactionId(null)
+    setMoveTargetCategoryId('')
+    setEditingTransactionId(transaction.id)
+    setEditDay(getDayInputFromDate(transaction.date, selectedMonth))
+    setEditDescription(transaction.description || '')
+    setEditAmount(String(Math.abs(getAmountNumber(transaction.amount))))
   }
 
-  const renderSubgroupHeader = (
-    title: string,
-    tone: 'direct' | 'subgroup' = 'subgroup'
-  ) => (
-    <div data-entries-subgroup-header="true" data-entries-subgroup-tone={tone}>
-      <div>
-        <span>{title}</span>
+  const cancelEditingTransaction = () => {
+    setEditingTransactionId(null)
+    setEditDay('')
+    setEditDescription('')
+    setEditAmount('')
+    setIsUpdating(false)
+  }
+
+  const saveEditingTransaction = async (transaction: Transaction) => {
+    if (isUpdating) {
+      return
+    }
+
+    setIsUpdating(true)
+
+    try {
+      await handleUpdateTransaction(
+        transaction.id,
+        editAmount,
+        editDescription,
+        buildDateFromDayInput(selectedMonth, editDay),
+        (transactionTagsMap[transaction.id] || []).map((tag) => tag.name)
+      )
+      cancelEditingTransaction()
+    } catch {
+      setIsUpdating(false)
+    }
+  }
+
+  const startMovingTransaction = (transaction: Transaction) => {
+    setEditingTransactionId(null)
+    setMovingTransactionId(transaction.id)
+    setMoveTargetCategoryId('')
+  }
+
+  const cancelMovingTransaction = () => {
+    setMovingTransactionId(null)
+    setMoveTargetCategoryId('')
+    setIsMoving(false)
+  }
+
+  const saveMovingTransaction = async (transaction: Transaction) => {
+    if (isMoving || !moveTargetCategoryId) {
+      return
+    }
+
+    setIsMoving(true)
+
+    try {
+      await handleMoveTransaction(transaction.id, moveTargetCategoryId)
+      cancelMovingTransaction()
+    } catch {
+      setIsMoving(false)
+    }
+  }
+
+  const saveInlineEntry = async (event: FormEvent<HTMLFormElement>, categoryId: string) => {
+    event.preventDefault()
+
+    if (isInlineSaving || isSelectedMonthLocked) {
+      return
+    }
+
+    setIsInlineSaving(true)
+
+    try {
+      await handleInlineSaveTransaction(categoryId, inlineAmount, inlineDescription, inlineDay)
+      setInlineDay('')
+      setInlineDescription('')
+      setInlineAmount('')
+    } finally {
+      setIsInlineSaving(false)
+    }
+  }
+
+  const renderCategoryActions = (category: Category) => (
+    <details data-entries-category-menu="true">
+      <summary aria-label={`Menu kategorii ${category.name}`} title="Menu">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <circle cx="5" cy="12" r="1.7" fill="currentColor" />
+          <circle cx="12" cy="12" r="1.7" fill="currentColor" />
+          <circle cx="19" cy="12" r="1.7" fill="currentColor" />
+        </svg>
+      </summary>
+      <div data-entries-menu-panel="true">
+        {category.active_to ? (
+          <button type="button" onClick={() => void handleUndoScheduledHide(category.id)}>
+            Cofnij zamknięcie
+          </button>
+        ) : (
+          <>
+            <button type="button" onClick={() => void handleRenameCategory(category.id)}>
+              Zmień nazwę
+            </button>
+            <button type="button" onClick={() => void handleHideCategory(category.id, 'now')}>
+              Ukryj teraz
+            </button>
+            <button type="button" onClick={() => void handleHideCategory(category.id, 'next')}>
+              Ukryj od następnego
+            </button>
+            <button type="button" data-danger="true" onClick={() => void handleDeleteCategory(category.id)}>
+              Usuń
+            </button>
+          </>
+        )}
       </div>
+    </details>
+  )
+
+  const renderGroupHeader = (category: Category) => (
+    <div data-entries-group-header="true">
+      <div>
+        <span>{category.name}</span>
+      </div>
+      {renderCategoryActions(category)}
     </div>
   )
 
-  const renderPopupSection = (
+  const renderInlineComposer = (category: Category) => (
+    <form
+      data-entries-inline-composer="true"
+      onSubmit={(event) => void saveInlineEntry(event, category.id)}
+    >
+      <input
+        value={inlineDay}
+        placeholder="dzień"
+        inputMode="numeric"
+        disabled={isSelectedMonthLocked || isInlineSaving}
+        onChange={(event) => setInlineDay(normalizeDayInput(event.target.value, selectedMonth))}
+      />
+      <input
+        value={inlineDescription}
+        placeholder="Opis"
+        disabled={isSelectedMonthLocked || isInlineSaving}
+        onChange={(event) => setInlineDescription(event.target.value)}
+      />
+      <input
+        value={inlineAmount}
+        placeholder="Kwota"
+        inputMode="decimal"
+        disabled={isSelectedMonthLocked || isInlineSaving}
+        onChange={(event) => setInlineAmount(event.target.value)}
+      />
+      <button type="submit" disabled={isSelectedMonthLocked || isInlineSaving}>
+        Zapisz
+      </button>
+    </form>
+  )
+
+  const renderTransactionActions = (transaction: Transaction) => (
+    <details data-entries-transaction-menu="true">
+      <summary aria-label="Menu wpisu" title="Menu wpisu">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <circle cx="5" cy="12" r="1.7" fill="currentColor" />
+          <circle cx="12" cy="12" r="1.7" fill="currentColor" />
+          <circle cx="19" cy="12" r="1.7" fill="currentColor" />
+        </svg>
+      </summary>
+      <div data-entries-menu-panel="true">
+        <button
+          type="button"
+          disabled={isSelectedMonthLocked}
+          onClick={() => startEditingTransaction(transaction)}
+        >
+          Edytuj
+        </button>
+        <button
+          type="button"
+          disabled={isSelectedMonthLocked}
+          onClick={() => startMovingTransaction(transaction)}
+        >
+          Przenieś
+        </button>
+        {handleDuplicateTransaction && (
+          <button type="button" onClick={() => handleDuplicateTransaction(transaction)}>
+            Powiel
+          </button>
+        )}
+        <button
+          type="button"
+          data-danger="true"
+          disabled={isSelectedMonthLocked}
+          onClick={() => void handleDeleteTransaction(transaction.id)}
+        >
+          Usuń
+        </button>
+      </div>
+    </details>
+  )
+
+  const renderTransactionRow = (transaction: Transaction) => {
+    const signedAmount = getSignedAmountForTransaction(transaction)
+    const transactionKind = signedAmount >= 0 ? 'income' : 'expense'
+    const isSelected = selectedTransactionIds.includes(transaction.id)
+    const isEditing = editingTransactionId === transaction.id
+    const isMovingCurrent = movingTransactionId === transaction.id
+    const moveTargets = getMoveTargetsForTransaction(transaction)
+
+    if (isEditing) {
+      return (
+        <form
+          key={transaction.id}
+          data-entries-transaction-row="true"
+          data-entries-transaction-editing="true"
+          onSubmit={(event) => {
+            event.preventDefault()
+            void saveEditingTransaction(transaction)
+          }}
+        >
+          <input
+            value={editDay}
+            placeholder="dzień"
+            inputMode="numeric"
+            disabled={isUpdating}
+            onChange={(event) => setEditDay(normalizeDayInput(event.target.value, selectedMonth))}
+          />
+          <input
+            value={editDescription}
+            placeholder="Opis"
+            disabled={isUpdating}
+            onChange={(event) => setEditDescription(event.target.value)}
+          />
+          <input
+            value={editAmount}
+            placeholder="Kwota"
+            inputMode="decimal"
+            disabled={isUpdating}
+            onChange={(event) => setEditAmount(event.target.value)}
+          />
+          <div data-entries-row-actions="true">
+            <button type="submit" disabled={isUpdating}>
+              Zapisz
+            </button>
+            <button type="button" onClick={cancelEditingTransaction}>
+              Anuluj
+            </button>
+          </div>
+        </form>
+      )
+    }
+
+    if (isMovingCurrent) {
+      return (
+        <div key={transaction.id} data-entries-transaction-row="true" data-entries-transaction-moving="true">
+          <select
+            value={moveTargetCategoryId}
+            disabled={isMoving}
+            onChange={(event) => setMoveTargetCategoryId(event.target.value)}
+          >
+            <option value="">Wybierz kategorię</option>
+            {moveTargets.map((target) => (
+              <option key={target.id} value={target.id}>
+                {target.label}
+              </option>
+            ))}
+          </select>
+          <div data-entries-row-actions="true">
+            <button type="button" disabled={isMoving || !moveTargetCategoryId} onClick={() => void saveMovingTransaction(transaction)}>
+              Przenieś
+            </button>
+            <button type="button" onClick={cancelMovingTransaction}>
+              Anuluj
+            </button>
+          </div>
+        </div>
+      )
+    }
+
+    return (
+      <div
+        key={transaction.id}
+        data-entries-transaction-row="true"
+        data-entries-transaction-kind={transactionKind}
+        data-entries-transaction-selected={isSelected ? 'true' : 'false'}
+      >
+        <label data-entries-transaction-select="true" title="Zaznacz wpis">
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={() => onToggleTransactionSelection(transaction.id)}
+          />
+        </label>
+        <div data-entries-transaction-copy="true">
+          <span>{transaction.description || 'Bez opisu'}</span>
+          <small>{getTransactionDateLabel(transaction)}</small>
+        </div>
+        <strong>{formatMoney(signedAmount)}</strong>
+        {renderTransactionActions(transaction)}
+      </div>
+    )
+  }
+
+  const renderTransactionFeed = (transactions: Transaction[]) => (
+    <div data-entries-feed="true">{getOrderedLevel3Transactions(transactions).map(renderTransactionRow)}</div>
+  )
+
+  const renderSubgroup = (
     category: Category,
     transactions: Transaction[],
-    headerName: string | null,
-    parentLevel2: Category | null,
+    title: string | null,
     tone: 'direct' | 'subgroup' = 'subgroup'
   ) => {
     const canAddHere =
@@ -280,35 +480,26 @@ export default function CategoryEntriesTreeView({
 
     return (
       <section
-        key={`entries-section-${category.id}-${headerName || 'feed'}`}
+        key={`entries-section-${category.id}-${title || 'feed'}`}
         data-entries-subgroup="true"
         data-entries-level={category.level}
         data-entries-subgroup-tone={tone}
       >
-        {headerName && renderSubgroupHeader(headerName, tone)}
-        <div
-          data-entries-feed="true"
-          data-entries-inline-composer={canAddHere ? 'true' : 'false'}
-        >
-          {renderTransactionSection(category, transactions, headerName || category.name, parentLevel2)}
-        </div>
+        {title && (
+          <div data-entries-subgroup-header="true" data-entries-subgroup-tone={tone}>
+            <span>{title}</span>
+            {renderCategoryActions(category)}
+          </div>
+        )}
+        {canAddHere && renderInlineComposer(category)}
+        {renderTransactionFeed(transactions)}
       </section>
     )
   }
 
   const renderGroup = (group: CategoryEntriesPopupChildGroup) => {
     if (group.categoryLevel === 3) {
-      if (group.directEntries.length === 0) {
-        return null
-      }
-
-      return renderPopupSection(
-        group.category,
-        group.directEntries,
-        group.category.name,
-        viewModel.clickedCategoryLevel === 2 ? viewModel.clickedCategory : viewModel.parentLevel2,
-        'subgroup'
-      )
+      return renderSubgroup(group.category, group.directEntries, group.category.name, 'subgroup')
     }
 
     const childrenWithEntries = group.children.filter((child) => child.directEntries.length > 0)
@@ -320,40 +511,25 @@ export default function CategoryEntriesTreeView({
 
     return (
       <section key={`group-${group.category.id}`} data-entries-group="true">
-        <div data-entries-group-header="true">
-          <div>
-            <span>{group.category.name}</span>
-          </div>
-        </div>
-
-        {hasDirectEntries &&
-          renderPopupSection(group.category, group.directEntries, null, group.category, 'direct')}
+        {renderGroupHeader(group.category)}
+        {hasDirectEntries && renderSubgroup(group.category, group.directEntries, null, 'direct')}
         {childrenWithEntries.map((child) =>
-          renderPopupSection(
-            child.category,
-            child.directEntries,
-            child.category.name,
-            group.category,
-            'subgroup'
-          )
+          renderSubgroup(child.category, child.directEntries, child.category.name, 'subgroup')
         )}
       </section>
     )
   }
 
-  const shouldRenderDirectSection =
-    viewModel.canInlineAdd || viewModel.directEntries.length > 0
-
+  const shouldRenderDirectSection = viewModel.canInlineAdd || viewModel.directEntries.length > 0
   const shouldShowEmptyState = !hasAnyEntries && !viewModel.canInlineAdd
 
   return (
     <div data-entries-tree-view="true">
       {shouldRenderDirectSection &&
-        renderPopupSection(
+        renderSubgroup(
           viewModel.clickedCategory,
           viewModel.directEntries,
-          viewModel.hasChildren ? 'Bezpośrednie' : viewModel.clickedCategory.name,
-          viewModel.parentLevel2,
+          viewModel.hasChildren ? null : viewModel.clickedCategory.name,
           viewModel.hasChildren ? 'direct' : 'subgroup'
         )}
 
