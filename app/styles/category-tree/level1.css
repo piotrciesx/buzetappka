@@ -37,7 +37,7 @@
   border: 1px solid rgba(214, 223, 233, 0.62) !important;
   border-radius: 18px !important;
   cursor: pointer;
-  backdrop-filter: none;
+  background: #ffffff !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.94),
     0 8px 22px rgba(15, 23, 42, 0.035) !important;
@@ -49,14 +49,12 @@
 }
 
 [data-level1-header-grid="true"] [data-level1-card="true"][data-level1-kind="income"] {
-  border-color: rgba(74, 222, 128, 0.42) !important;
-  background: #ffffff !important;
+  border-color: rgba(74, 222, 128, 0.46) !important;
   color: #15803d !important;
 }
 
 [data-level1-header-grid="true"] [data-level1-card="true"][data-level1-kind="expense"] {
-  border-color: rgba(251, 146, 60, 0.22) !important;
-  background: #ffffff !important;
+  border-color: rgba(251, 146, 60, 0.3) !important;
   color: #dc2626 !important;
 }
 
@@ -66,21 +64,12 @@
   z-index: 0;
   pointer-events: none;
   border-radius: inherit;
-}
-
-[data-level1-card="true"][data-level1-kind="income"] [data-level1-card-overlay="true"] {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 50%, rgba(220, 252, 231, 0.66) 51%, rgba(236, 253, 245, 0.9) 100%);
-}
-
-[data-level1-card="true"][data-level1-kind="expense"] [data-level1-card-overlay="true"] {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 228, 215, 0.62) 51%, rgba(255, 241, 235, 0.9) 100%);
+  background: #ffffff;
 }
 
 [data-level1-card-content="true"] {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   min-width: 0 !important;
   width: 100% !important;
   height: 100% !important;
@@ -89,62 +78,61 @@
 
 [data-level1-card-main="true"] {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   width: 100%;
   min-height: 96px;
   display: grid !important;
   align-content: start !important;
   gap: 6px !important;
-  padding-right: 122px !important;
+  padding-right: 108px !important;
 }
 
 [data-level1-card-wave="true"] {
   position: absolute;
-  left: 18px;
-  right: -12px;
-  top: 55px;
-  height: 38px;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 1;
-}
-
-[data-level1-card-wave="true"]::before,
-[data-level1-card-wave="true"]::after {
-  content: "";
-  position: absolute;
   left: 0;
   right: 0;
-  height: 38px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% 100%;
+  bottom: 0;
+  height: 78px;
+  pointer-events: none;
+  z-index: 1;
 }
 
 [data-level1-card-wave="true"]::before {
-  top: 0;
-  opacity: 0.32;
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: 100% 100%;
 }
 
 [data-level1-card-wave="true"]::after {
-  top: 9px;
-  opacity: 0.13;
+  content: "";
+  position: absolute;
+  left: 7%;
+  right: 5%;
+  top: 17px;
+  height: 28px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  opacity: 0.16;
 }
 
 [data-level1-card="true"][data-level1-kind="income"] [data-level1-card-wave="true"]::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 140'%3E%3Cpath d='M0 76 C 145 94 245 52 382 64 C 536 78 612 42 748 52 C 900 64 1010 92 1200 62' fill='none' stroke='%2322c55e' stroke-width='2.7' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 180' preserveAspectRatio='none'%3E%3Cpath d='M0 72 C 150 92 260 52 405 66 C 540 79 630 48 770 58 C 920 69 1035 96 1200 66 L1200 180 L0 180 Z' fill='%23dcfce7' fill-opacity='.72'/%3E%3Cpath d='M0 72 C 150 92 260 52 405 66 C 540 79 630 48 770 58 C 920 69 1035 96 1200 66' fill='none' stroke='%2322c55e' stroke-width='3' stroke-linecap='round' opacity='.58'/%3E%3C/svg%3E");
 }
 
 [data-level1-card="true"][data-level1-kind="income"] [data-level1-card-wave="true"]::after {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 140'%3E%3Cpath d='M0 90 C 155 104 276 68 420 78 C 572 88 690 62 836 70 C 988 78 1080 98 1200 84' fill='none' stroke='%2386efac' stroke-width='1.9' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 90' preserveAspectRatio='none'%3E%3Cpath d='M0 54 C 165 72 300 38 455 50 C 610 62 720 42 880 48 C 1035 54 1115 70 1200 58' fill='none' stroke='%2386efac' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 [data-level1-card="true"][data-level1-kind="expense"] [data-level1-card-wave="true"]::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 140'%3E%3Cpath d='M0 66 C 150 48 270 82 420 68 C 560 56 682 86 820 78 C 960 70 1060 50 1200 66' fill='none' stroke='%23fb7185' stroke-width='2.7' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 180' preserveAspectRatio='none'%3E%3Cpath d='M0 72 C 155 48 275 84 420 68 C 575 51 670 86 815 78 C 970 70 1060 48 1200 66 L1200 180 L0 180 Z' fill='%23ffe4d5' fill-opacity='.78'/%3E%3Cpath d='M0 72 C 155 48 275 84 420 68 C 575 51 670 86 815 78 C 970 70 1060 48 1200 66' fill='none' stroke='%23fb7185' stroke-width='3' stroke-linecap='round' opacity='.52'/%3E%3C/svg%3E");
 }
 
 [data-level1-card="true"][data-level1-kind="expense"] [data-level1-card-wave="true"]::after {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 140'%3E%3Cpath d='M0 82 C 160 66 292 96 440 84 C 600 72 710 94 856 86 C 1004 78 1094 62 1200 78' fill='none' stroke='%23fed7aa' stroke-width='1.9' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 90' preserveAspectRatio='none'%3E%3Cpath d='M0 54 C 165 40 310 66 455 54 C 615 41 720 62 875 56 C 1025 50 1110 38 1200 50' fill='none' stroke='%23fed7aa' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 [data-level1-card-drag="true"] {
@@ -176,7 +164,7 @@
   overflow: visible !important;
   color: #172033 !important;
   font-size: 15.5px !important;
-  font-weight: 640 !important;
+  font-weight: 650 !important;
   line-height: 1.08 !important;
   white-space: nowrap !important;
   text-overflow: clip !important;
@@ -196,8 +184,8 @@
   padding: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
-  font-size: 27px !important;
-  font-weight: 680 !important;
+  font-size: 28px !important;
+  font-weight: 690 !important;
   line-height: 1 !important;
   white-space: nowrap !important;
   text-overflow: ellipsis !important;
@@ -231,7 +219,7 @@
   place-items: center !important;
   padding: 0 !important;
   border: 1px solid rgba(214, 223, 233, 0.66) !important;
-  background: rgba(255, 255, 255, 0.76) !important;
+  background: rgba(255, 255, 255, 0.82) !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.94),
     0 4px 12px rgba(15, 23, 42, 0.036) !important;
@@ -260,14 +248,14 @@
 }
 
 [data-level1-card="true"][data-level1-kind="income"] [data-level1-trend-icon="true"] {
-  border-color: rgba(187, 247, 208, 0.56) !important;
-  background: rgba(240, 253, 244, 0.78) !important;
+  border-color: rgba(187, 247, 208, 0.62) !important;
+  background: rgba(240, 253, 244, 0.88) !important;
   color: #15803d !important;
 }
 
 [data-level1-card="true"][data-level1-kind="expense"] [data-level1-trend-icon="true"] {
-  border-color: rgba(254, 205, 211, 0.58) !important;
-  background: rgba(255, 241, 242, 0.78) !important;
+  border-color: rgba(254, 205, 211, 0.64) !important;
+  background: rgba(255, 241, 242, 0.88) !important;
   color: #dc2626 !important;
 }
 
@@ -284,12 +272,12 @@
 [data-level1-header-grid="true"] [data-category-actions="true"][data-level1-actions="true"] {
   position: absolute !important;
   right: 18px !important;
-  top: 62px !important;
-  z-index: 4 !important;
+  top: 61px !important;
+  z-index: 5 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: flex-end !important;
-  gap: 6px !important;
+  gap: 5px !important;
   width: auto !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -301,32 +289,48 @@
 
 [data-level1-header-grid="true"] [data-category-actions="true"][data-level1-actions="true"] button,
 [data-level1-header-grid="true"] [data-category-actions="true"][data-level1-actions="true"] summary {
-  width: 28px !important;
-  min-width: 28px !important;
-  height: 28px !important;
-  min-height: 28px !important;
+  width: 26px !important;
+  min-width: 26px !important;
+  height: 26px !important;
+  min-height: 26px !important;
   display: grid !important;
   place-items: center !important;
   padding: 0 !important;
-  border: 1px solid rgba(191, 203, 218, 0.72) !important;
-  border-radius: 9px !important;
+  border: 1px solid rgba(191, 203, 218, 0.7) !important;
+  border-radius: 999px !important;
   background: rgba(255, 255, 255, 0.76) !important;
   color: #31517a !important;
-  box-shadow: none !important;
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.025) !important;
   font-size: 0 !important;
   line-height: 1 !important;
+}
+
+[data-level1-header-grid="true"] [data-category-actions="true"][data-level1-actions="true"] summary::before {
+  content: "⋯";
+  color: currentColor;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+[data-level1-header-grid="true"] [data-category-actions="true"][data-level1-actions="true"] button:empty::before {
+  content: "•";
+  color: currentColor;
+  font-size: 14px;
+  line-height: 1;
 }
 
 [data-level1-header-grid="true"] [data-category-actions="true"][data-level1-actions="true"] button:hover,
 [data-level1-header-grid="true"] [data-category-actions="true"][data-level1-actions="true"] summary:hover {
   border-color: rgba(59, 130, 246, 0.36) !important;
-  background: rgba(255, 255, 255, 0.92) !important;
+  background: rgba(255, 255, 255, 0.94) !important;
   color: #0b55c8 !important;
 }
 
 [data-level1-header-grid="true"] [data-category-actions="true"][data-level1-actions="true"] svg {
-  width: 13px !important;
-  height: 13px !important;
+  width: 12px !important;
+  height: 12px !important;
 }
 
 [data-level1-content-stack="true"] {
