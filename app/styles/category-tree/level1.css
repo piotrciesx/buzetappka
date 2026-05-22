@@ -29,7 +29,7 @@
 
 [data-level1-header-grid="true"] [data-level1-card="true"] {
   position: relative !important;
-  min-height: 132px !important;
+  min-height: 136px !important;
   height: 100% !important;
   display: block !important;
   overflow: hidden !important;
@@ -49,13 +49,13 @@
 }
 
 [data-level1-header-grid="true"] [data-level1-card="true"][data-level1-kind="income"] {
-  border-color: rgba(134, 239, 172, 0.3) !important;
+  border-color: rgba(74, 222, 128, 0.42) !important;
   background: #ffffff !important;
   color: #15803d !important;
 }
 
 [data-level1-header-grid="true"] [data-level1-card="true"][data-level1-kind="expense"] {
-  border-color: rgba(254, 205, 211, 0.34) !important;
+  border-color: rgba(251, 146, 60, 0.22) !important;
   background: #ffffff !important;
   color: #dc2626 !important;
 }
@@ -70,12 +70,12 @@
 
 [data-level1-card="true"][data-level1-kind="income"] [data-level1-card-overlay="true"] {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.99) 0%, rgba(255, 255, 255, 0.99) 53%, rgba(240, 253, 244, 0.54) 54%, rgba(247, 253, 249, 0.84) 100%);
+    linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 50%, rgba(220, 252, 231, 0.66) 51%, rgba(236, 253, 245, 0.9) 100%);
 }
 
 [data-level1-card="true"][data-level1-kind="expense"] [data-level1-card-overlay="true"] {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.99) 0%, rgba(255, 255, 255, 0.99) 53%, rgba(255, 241, 242, 0.52) 54%, rgba(254, 249, 250, 0.84) 100%);
+    linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 228, 215, 0.62) 51%, rgba(255, 241, 235, 0.9) 100%);
 }
 
 [data-level1-card-content="true"] {
@@ -91,19 +91,19 @@
   position: relative;
   z-index: 2;
   width: 100%;
-  min-height: 92px;
+  min-height: 96px;
   display: grid !important;
   align-content: start !important;
   gap: 6px !important;
-  padding-right: 118px !important;
+  padding-right: 122px !important;
 }
 
 [data-level1-card-wave="true"] {
   position: absolute;
   left: 18px;
   right: -12px;
-  top: 58px;
-  height: 32px;
+  top: 55px;
+  height: 38px;
   pointer-events: none;
   z-index: 1;
   opacity: 1;
@@ -115,7 +115,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  height: 32px;
+  height: 38px;
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% 100%;
@@ -123,28 +123,28 @@
 
 [data-level1-card-wave="true"]::before {
   top: 0;
-  opacity: 0.18;
+  opacity: 0.32;
 }
 
 [data-level1-card-wave="true"]::after {
-  top: 8px;
-  opacity: 0.07;
+  top: 9px;
+  opacity: 0.13;
 }
 
 [data-level1-card="true"][data-level1-kind="income"] [data-level1-card-wave="true"]::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 140'%3E%3Cpath d='M0 76 C 145 94 245 52 382 64 C 536 78 612 42 748 52 C 900 64 1010 92 1200 62' fill='none' stroke='%2322c55e' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 140'%3E%3Cpath d='M0 76 C 145 94 245 52 382 64 C 536 78 612 42 748 52 C 900 64 1010 92 1200 62' fill='none' stroke='%2322c55e' stroke-width='2.7' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 [data-level1-card="true"][data-level1-kind="income"] [data-level1-card-wave="true"]::after {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 140'%3E%3Cpath d='M0 90 C 155 104 276 68 420 78 C 572 88 690 62 836 70 C 988 78 1080 98 1200 84' fill='none' stroke='%2386efac' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 140'%3E%3Cpath d='M0 90 C 155 104 276 68 420 78 C 572 88 690 62 836 70 C 988 78 1080 98 1200 84' fill='none' stroke='%2386efac' stroke-width='1.9' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 [data-level1-card="true"][data-level1-kind="expense"] [data-level1-card-wave="true"]::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 140'%3E%3Cpath d='M0 66 C 150 48 270 82 420 68 C 560 56 682 86 820 78 C 960 70 1060 50 1200 66' fill='none' stroke='%23fb7185' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 140'%3E%3Cpath d='M0 66 C 150 48 270 82 420 68 C 560 56 682 86 820 78 C 960 70 1060 50 1200 66' fill='none' stroke='%23fb7185' stroke-width='2.7' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 [data-level1-card="true"][data-level1-kind="expense"] [data-level1-card-wave="true"]::after {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 140'%3E%3Cpath d='M0 82 C 160 66 292 96 440 84 C 600 72 710 94 856 86 C 1004 78 1094 62 1200 78' fill='none' stroke='%23fecdd3' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 140'%3E%3Cpath d='M0 82 C 160 66 292 96 440 84 C 600 72 710 94 856 86 C 1004 78 1094 62 1200 78' fill='none' stroke='%23fed7aa' stroke-width='1.9' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 [data-level1-card-drag="true"] {
@@ -160,8 +160,8 @@
   min-width: 0 !important;
   display: grid !important;
   align-content: start !important;
-  gap: 6px !important;
-  padding-top: 1px !important;
+  gap: 7px !important;
+  padding-top: 0 !important;
   padding-left: 42px !important;
 }
 
@@ -175,12 +175,12 @@
   max-width: 100% !important;
   overflow: visible !important;
   color: #172033 !important;
-  font-size: 15px !important;
-  font-weight: 610 !important;
+  font-size: 15.5px !important;
+  font-weight: 640 !important;
   line-height: 1.08 !important;
   white-space: nowrap !important;
   text-overflow: clip !important;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.012em;
 }
 
 [data-level1-summary="true"] {
@@ -196,8 +196,8 @@
   padding: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
-  font-size: 25px !important;
-  font-weight: 620 !important;
+  font-size: 27px !important;
+  font-weight: 680 !important;
   line-height: 1 !important;
   white-space: nowrap !important;
   text-overflow: ellipsis !important;
@@ -206,11 +206,11 @@
 }
 
 [data-level1-card="true"][data-level1-kind="income"] [data-level1-summary="true"] strong {
-  color: #16803d !important;
+  color: #15803d !important;
 }
 
 [data-level1-card="true"][data-level1-kind="expense"] [data-level1-summary="true"] strong {
-  color: #d82434 !important;
+  color: #d81f2f !important;
 }
 
 [data-level1-summary="true"] span {
@@ -250,7 +250,7 @@
   position: absolute !important;
   top: 18px !important;
   right: 20px !important;
-  z-index: 3 !important;
+  z-index: 4 !important;
   width: 36px !important;
   min-width: 36px !important;
   height: 36px !important;
@@ -260,14 +260,14 @@
 }
 
 [data-level1-card="true"][data-level1-kind="income"] [data-level1-trend-icon="true"] {
-  border-color: rgba(187, 247, 208, 0.5) !important;
-  background: rgba(240, 253, 244, 0.72) !important;
+  border-color: rgba(187, 247, 208, 0.56) !important;
+  background: rgba(240, 253, 244, 0.78) !important;
   color: #15803d !important;
 }
 
 [data-level1-card="true"][data-level1-kind="expense"] [data-level1-trend-icon="true"] {
-  border-color: rgba(254, 205, 211, 0.52) !important;
-  background: rgba(255, 241, 242, 0.74) !important;
+  border-color: rgba(254, 205, 211, 0.58) !important;
+  background: rgba(255, 241, 242, 0.78) !important;
   color: #dc2626 !important;
 }
 
@@ -284,7 +284,7 @@
 [data-level1-header-grid="true"] [data-category-actions="true"][data-level1-actions="true"] {
   position: absolute !important;
   right: 18px !important;
-  bottom: 15px !important;
+  top: 62px !important;
   z-index: 4 !important;
   display: flex !important;
   align-items: center !important;
@@ -293,6 +293,10 @@
   width: auto !important;
   margin: 0 !important;
   padding: 0 !important;
+}
+
+[data-level1-header-grid="true"] [data-category-actions="true"][data-level1-actions="true"] [data-category-quick-add="true"] {
+  display: none !important;
 }
 
 [data-level1-header-grid="true"] [data-category-actions="true"][data-level1-actions="true"] button,
@@ -306,7 +310,7 @@
   padding: 0 !important;
   border: 1px solid rgba(191, 203, 218, 0.72) !important;
   border-radius: 9px !important;
-  background: rgba(255, 255, 255, 0.72) !important;
+  background: rgba(255, 255, 255, 0.76) !important;
   color: #31517a !important;
   box-shadow: none !important;
   font-size: 0 !important;
@@ -316,7 +320,7 @@
 [data-level1-header-grid="true"] [data-category-actions="true"][data-level1-actions="true"] button:hover,
 [data-level1-header-grid="true"] [data-category-actions="true"][data-level1-actions="true"] summary:hover {
   border-color: rgba(59, 130, 246, 0.36) !important;
-  background: rgba(255, 255, 255, 0.9) !important;
+  background: rgba(255, 255, 255, 0.92) !important;
   color: #0b55c8 !important;
 }
 
@@ -382,7 +386,7 @@
   }
 
   [data-level1-header-grid="true"] [data-level1-card="true"] {
-    min-height: 132px !important;
+    min-height: 136px !important;
   }
 }
 
@@ -392,7 +396,7 @@
   }
 
   [data-level1-header-grid="true"] [data-level1-card="true"] {
-    min-height: 126px !important;
+    min-height: 130px !important;
     padding: 18px 16px !important;
     border-radius: 18px !important;
   }
@@ -402,7 +406,7 @@
   }
 
   [data-level1-summary="true"] strong {
-    font-size: 24px !important;
+    font-size: 25px !important;
   }
 
   [data-level1-trend-icon="true"] {
@@ -423,6 +427,6 @@
 
   [data-level1-header-grid="true"] [data-category-actions="true"][data-level1-actions="true"] {
     right: 14px !important;
-    bottom: 13px !important;
+    top: 60px !important;
   }
 }
