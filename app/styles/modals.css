@@ -2,7 +2,7 @@
 [data-notifications-dropdown="true"],
 [data-budget-month-menu="true"],
 [data-mobile-category-menu-panel="true"] {
-  z-index: 1200;
+  z-index: 130000;
 }
 
 
@@ -46,16 +46,22 @@
   position: absolute;
   top: calc(100% + 10px);
   left: 50%;
-  z-index: 780;
+  z-index: 130000;
   width: min(760px, calc(100vw - 128px));
   max-height: calc(100dvh - 108px);
   overflow-y: auto;
   transform: translateX(-50%);
   padding: 11px;
-  border: 1px solid rgba(226, 232, 240, 0.92);
+  border: 1px solid rgba(191, 219, 254, 0.96);
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 26px 70px rgba(15, 23, 42, 0.16), inset 0 1px 0 rgba(255,255,255,0.82);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(239, 247, 255, 0.96)),
+    rgba(255, 255, 255, 0.92);
+  color: #123b68;
+  box-shadow:
+    0 26px 70px rgba(15, 39, 71, 0.16),
+    0 4px 18px rgba(59, 130, 246, 0.08),
+    inset 0 1px 0 rgba(255,255,255,0.82);
   backdrop-filter: blur(20px) saturate(1.12);
 }
 
@@ -64,7 +70,7 @@
 [data-budget-month-menu="true"] details {
   margin-top: 10px;
   padding-top: 10px;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid rgba(191, 219, 254, 0.72);
 }
 
 
@@ -72,7 +78,7 @@
 [data-budget-month-menu="true"] summary {
   cursor: pointer;
   font-weight: 800;
-  color: #334155;
+  color: #0b2a55;
 }
 
 
@@ -81,15 +87,19 @@
   position: absolute;
   top: calc(100% + 10px);
   right: 52px;
-  z-index: 820;
+  z-index: 130000;
   width: min(320px, calc(100vw - 32px));
   display: grid;
   gap: 6px;
   padding: 9px;
-  border: 1px solid rgba(226, 232, 240, 0.92);
+  border: 1px solid rgba(191, 219, 254, 0.96);
   border-radius: 14px;
-  background: rgba(255,255,255,0.94);
-  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.15), inset 0 1px 0 rgba(255,255,255,0.88);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(239, 247, 255, 0.96)),
+    rgba(255,255,255,0.94);
+  box-shadow:
+    0 18px 48px rgba(15, 39, 71, 0.15),
+    inset 0 1px 0 rgba(255,255,255,0.88);
   backdrop-filter: blur(18px);
 }
 
@@ -100,10 +110,15 @@
   border: 0;
   border-radius: 8px;
   padding: 0 10px;
-  background: rgba(248,250,252,0.86);
-  color: #111827;
+  background: transparent;
+  color: #123b68;
   text-align: left;
   cursor: pointer;
+}
+
+[data-notifications-dropdown="true"] button:hover {
+  background: rgba(239, 246, 255, 0.88);
+  color: #0f4fb8;
 }
 
 

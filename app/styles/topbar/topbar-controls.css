@@ -363,7 +363,7 @@
 }
 
 [data-topbar-pinned-copy="true"] small {
-  color: #64748b !important;
+  color: rgba(39, 79, 128, 0.76) !important;
   font-size: 11px !important;
   font-weight: 520 !important;
 }
@@ -427,7 +427,9 @@
   padding: 10px !important;
   border: 1px solid rgba(191, 219, 254, 0.95) !important;
   border-radius: 16px !important;
-  background: rgba(255, 255, 255, 0.99) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(239, 247, 255, 0.96)),
+    rgba(255, 255, 255, 0.92) !important;
   color: #123b68 !important;
   box-shadow:
     0 26px 70px rgba(15, 39, 71, 0.18),

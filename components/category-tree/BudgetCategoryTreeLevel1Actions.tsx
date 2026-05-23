@@ -30,7 +30,7 @@ export default function BudgetCategoryTreeLevel1Actions({
     <>
       {canUseBudgetLimit && budgetLimitView && <BudgetLimitIndicator view={budgetLimitView} />}
 
-      <details data-mobile-category-menu="true">
+      <details data-mobile-category-menu="true" data-floating-dropdown="true">
         <summary style={styles.secondaryButton}>akcje</summary>
         <div data-mobile-category-menu-panel="true">
           {canUseMonthCalendar && (

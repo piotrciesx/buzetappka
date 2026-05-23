@@ -190,6 +190,8 @@ export default function CategoryEntriesTreeView({
     key: string
     top: number
     right: number
+    maxHeight: number
+    placement: 'top' | 'bottom'
   } | null>(null)
 
   useEffect(() => {
@@ -211,11 +213,13 @@ export default function CategoryEntriesTreeView({
     const closeOnViewportChange = () => setOpenEntriesMenu(null)
 
     document.addEventListener('pointerdown', closeMenu, true)
+    window.addEventListener('budget-close-floating-ui', closeOnViewportChange)
     window.addEventListener('resize', closeOnViewportChange)
     window.addEventListener('scroll', closeOnViewportChange, true)
 
     return () => {
       document.removeEventListener('pointerdown', closeMenu, true)
+      window.removeEventListener('budget-close-floating-ui', closeOnViewportChange)
       window.removeEventListener('resize', closeOnViewportChange)
       window.removeEventListener('scroll', closeOnViewportChange, true)
     }
@@ -356,13 +360,23 @@ export default function CategoryEntriesTreeView({
 
   const toggleEntriesMenu = (
     event: ReactMouseEvent<HTMLButtonElement>,
-    key: string
+    key: string,
+    itemCount = 4
   ) => {
     const rect = event.currentTarget.getBoundingClientRect()
+    const viewportPadding = 12
+    const estimatedHeight = Math.min(itemCount * 34 + 12, window.innerHeight - viewportPadding * 2)
+    const spaceBelow = window.innerHeight - rect.bottom - viewportPadding
+    const spaceAbove = rect.top - viewportPadding
+    const shouldOpenUp = estimatedHeight > spaceBelow && spaceAbove > spaceBelow
     const nextMenu = {
       key,
-      top: rect.bottom + 6,
-      right: Math.max(12, window.innerWidth - rect.right),
+      top: shouldOpenUp
+        ? Math.max(viewportPadding, rect.top - estimatedHeight - 6)
+        : Math.min(rect.bottom + 6, window.innerHeight - estimatedHeight - viewportPadding),
+      right: Math.max(viewportPadding, window.innerWidth - rect.right),
+      maxHeight: window.innerHeight - viewportPadding * 2,
+      placement: (shouldOpenUp ? 'top' : 'bottom') as 'top' | 'bottom',
     }
 
     setOpenEntriesMenu((currentMenu) => (currentMenu?.key === key ? null : nextMenu))
@@ -381,7 +395,9 @@ export default function CategoryEntriesTreeView({
         aria-label={`Menu kategorii ${category.name}`}
         aria-expanded={openEntriesMenu?.key === `category-${category.id}`}
         title="Menu"
-        onClick={(event) => toggleEntriesMenu(event, `category-${category.id}`)}
+        onClick={(event) =>
+          toggleEntriesMenu(event, `category-${category.id}`, category.active_to ? 1 : 4)
+        }
       >
         <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
           <circle cx="5" cy="12" r="1.7" fill="currentColor" />
@@ -393,7 +409,12 @@ export default function CategoryEntriesTreeView({
         createPortal(
           <div
             data-entries-menu-panel="true"
-            style={{ top: openEntriesMenu.top, right: openEntriesMenu.right }}
+            data-dropdown-placement={openEntriesMenu.placement}
+            style={{
+              top: openEntriesMenu.top,
+              right: openEntriesMenu.right,
+              maxHeight: openEntriesMenu.maxHeight,
+            }}
           >
         {category.active_to ? (
           <button
@@ -542,7 +563,9 @@ export default function CategoryEntriesTreeView({
         aria-label="Menu wpisu"
         aria-expanded={openEntriesMenu?.key === `transaction-${transaction.id}`}
         title="Menu wpisu"
-        onClick={(event) => toggleEntriesMenu(event, `transaction-${transaction.id}`)}
+        onClick={(event) =>
+          toggleEntriesMenu(event, `transaction-${transaction.id}`, handleDuplicateTransaction ? 4 : 3)
+        }
       >
         <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
           <circle cx="5" cy="12" r="1.7" fill="currentColor" />
@@ -554,7 +577,12 @@ export default function CategoryEntriesTreeView({
         createPortal(
           <div
             data-entries-menu-panel="true"
-            style={{ top: openEntriesMenu.top, right: openEntriesMenu.right }}
+            data-dropdown-placement={openEntriesMenu.placement}
+            style={{
+              top: openEntriesMenu.top,
+              right: openEntriesMenu.right,
+              maxHeight: openEntriesMenu.maxHeight,
+            }}
           >
         <button
           type="button"
