@@ -116,6 +116,25 @@ const formatMoney = (value: number) =>
     minimumFractionDigits: Number.isInteger(value) ? 0 : 2,
   })} zł`
 
+const groupTransactionsByDate = (transactions: Transaction[]) => {
+  const grouped = new Map<string, Transaction[]>()
+
+  getOrderedLevel3Transactions(transactions).forEach((transaction) => {
+    const dateLabel = getTransactionDateLabel(transaction)
+
+    if (!grouped.has(dateLabel)) {
+      grouped.set(dateLabel, [])
+    }
+
+    grouped.get(dateLabel)?.push(transaction)
+  })
+
+  return Array.from(grouped.entries()).map(([dateLabel, items]) => ({
+    dateLabel,
+    items,
+  }))
+}
+
 export default function CategoryEntriesTreeView({
   viewModel,
   selectedMonth,
@@ -453,7 +472,6 @@ export default function CategoryEntriesTreeView({
         </label>
         <div data-entries-transaction-copy="true">
           <span>{transaction.description || 'Bez opisu'}</span>
-          <small>{getTransactionDateLabel(transaction)}</small>
         </div>
         <strong>{formatMoney(signedAmount)}</strong>
         {renderTransactionActions(transaction)}
@@ -461,9 +479,23 @@ export default function CategoryEntriesTreeView({
     )
   }
 
-  const renderTransactionFeed = (transactions: Transaction[]) => (
-    <div data-entries-feed="true">{getOrderedLevel3Transactions(transactions).map(renderTransactionRow)}</div>
-  )
+  const renderTransactionFeed = (transactions: Transaction[]) => {
+    const groupedTransactions = groupTransactionsByDate(transactions)
+
+    return (
+      <div data-entries-feed="true">
+        {groupedTransactions.map((group) => (
+          <section key={`entries-day-${group.dateLabel}`} data-entries-day-group="true">
+            <div data-entries-day-label="true">{group.dateLabel}</div>
+
+            <div data-entries-day-feed="true">
+              {group.items.map(renderTransactionRow)}
+            </div>
+          </section>
+        ))}
+      </div>
+    )
+  }
 
   const renderSubgroup = (
     category: Category,

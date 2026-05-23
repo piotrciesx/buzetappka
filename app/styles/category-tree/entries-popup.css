@@ -557,6 +557,26 @@
   text-align: center;
 }
 
+[data-entries-tree-view="true"] [data-entries-day-group="true"] {
+  display: grid;
+  gap: 2px;
+}
+
+[data-entries-tree-view="true"] [data-entries-day-label="true"] {
+  margin: 10px 0 3px;
+  padding-left: 2px;
+  color: rgba(45, 69, 102, 0.72);
+  font-size: 0.68rem;
+  font-weight: 620;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+
+[data-entries-tree-view="true"] [data-entries-day-feed="true"] {
+  display: grid;
+  gap: 1px;
+}
+
 @media (max-width: 720px) {
   [data-entries-tree-view="true"] [data-entries-group="true"] [data-entries-subgroup="true"] {
     margin-left: 12px;
