@@ -69,7 +69,13 @@ export function useFloatingDropdownDismissal() {
         return
       }
 
+      window.dispatchEvent(
+        new CustomEvent('budget-close-floating-ui', {
+          detail: { source: 'floating-dropdown' },
+        })
+      )
       closeOtherDropdowns(dropdown)
+      positionDropdown(dropdown)
       requestAnimationFrame(() => positionDropdown(dropdown))
     }
 
@@ -97,7 +103,14 @@ export function useFloatingDropdownDismissal() {
       })
     }
 
-    const closeAllDropdowns = () => {
+    const closeAllDropdowns = (event?: Event) => {
+      if (
+        event instanceof CustomEvent &&
+        event.detail?.source === 'floating-dropdown'
+      ) {
+        return
+      }
+
       document.querySelectorAll<HTMLDetailsElement>(selector).forEach((dropdown) => {
         dropdown.open = false
       })
