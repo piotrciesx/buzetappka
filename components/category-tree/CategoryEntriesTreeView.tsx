@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
 import type { CSSProperties } from 'react'
 import type { BudgetLimitView } from '../BudgetLimitIndicator'
 import type { HeatmapMode } from '../month-calendar/monthCalendarTypes'
@@ -151,6 +151,8 @@ export default function CategoryEntriesTreeView({
   handleUpdateTransaction,
   handleMoveTransaction,
   handleDuplicateTransaction,
+  getPaymentSourceOptionsForCategoryId,
+  getRecurringOptionsForCategoryId,
   selectedTransactionIds,
   onToggleTransactionSelection,
   transactionTagsMap,
@@ -159,7 +161,13 @@ export default function CategoryEntriesTreeView({
   const [inlineDay, setInlineDay] = useState('')
   const [inlineDescription, setInlineDescription] = useState('')
   const [inlineAmount, setInlineAmount] = useState('')
+  const [inlineTags, setInlineTags] = useState('')
+  const [inlinePaymentSourceId, setInlinePaymentSourceId] = useState('')
+  const [inlineRecurringTransactionId, setInlineRecurringTransactionId] = useState('')
   const [isInlineSaving, setIsInlineSaving] = useState(false)
+  const inlineDayInputRef = useRef<HTMLInputElement | null>(null)
+  const inlineDescriptionInputRef = useRef<HTMLInputElement | null>(null)
+  const inlineAmountInputRef = useRef<HTMLInputElement | null>(null)
 
   const [editingTransactionId, setEditingTransactionId] = useState<string | null>(null)
   const [editDay, setEditDay] = useState('')
@@ -254,12 +262,53 @@ export default function CategoryEntriesTreeView({
     setIsInlineSaving(true)
 
     try {
-      await handleInlineSaveTransaction(categoryId, inlineAmount, inlineDescription, inlineDay)
+      const tagNames = inlineTags
+        .split(',')
+        .map((tagName) => tagName.trim())
+        .filter(Boolean)
+
+      await handleInlineSaveTransaction(
+        categoryId,
+        inlineAmount,
+        inlineDescription,
+        inlineDay,
+        tagNames,
+        inlinePaymentSourceId || null,
+        undefined,
+        inlineRecurringTransactionId || null
+      )
       setInlineDay('')
       setInlineDescription('')
       setInlineAmount('')
+      setInlineTags('')
+      setInlinePaymentSourceId('')
+      setInlineRecurringTransactionId('')
     } finally {
       setIsInlineSaving(false)
+    }
+  }
+
+  const handleInlineDayKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Enter') {
+      return
+    }
+
+    event.preventDefault()
+    inlineDescriptionInputRef.current?.focus()
+  }
+
+  const handleInlineDescriptionKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Enter') {
+      return
+    }
+
+    event.preventDefault()
+    inlineAmountInputRef.current?.focus()
+  }
+
+  const preventInlineMetaSubmit = (event: KeyboardEvent<HTMLInputElement | HTMLSelectElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
     }
   }
 
@@ -306,36 +355,89 @@ export default function CategoryEntriesTreeView({
     </div>
   )
 
-  const renderInlineComposer = (category: Category) => (
-    <form
-      data-entries-inline-composer="true"
-      onSubmit={(event) => void saveInlineEntry(event, category.id)}
-    >
-      <input
-        value={inlineDay}
-        placeholder="dzień"
-        inputMode="numeric"
-        disabled={isSelectedMonthLocked || isInlineSaving}
-        onChange={(event) => setInlineDay(normalizeDayInput(event.target.value, selectedMonth))}
-      />
-      <input
-        value={inlineDescription}
-        placeholder="Opis"
-        disabled={isSelectedMonthLocked || isInlineSaving}
-        onChange={(event) => setInlineDescription(event.target.value)}
-      />
-      <input
-        value={inlineAmount}
-        placeholder="Kwota"
-        inputMode="decimal"
-        disabled={isSelectedMonthLocked || isInlineSaving}
-        onChange={(event) => setInlineAmount(event.target.value)}
-      />
-      <button type="submit" disabled={isSelectedMonthLocked || isInlineSaving}>
-        Zapisz
-      </button>
-    </form>
-  )
+  const renderInlineComposer = (category: Category) => {
+    const paymentSourceOptions = getPaymentSourceOptionsForCategoryId?.(category.id) || []
+    const recurringOptions = getRecurringOptionsForCategoryId?.(category.id) || []
+    const isDisabled = isSelectedMonthLocked || isInlineSaving
+
+    return (
+      <form
+        data-entries-inline-composer="true"
+        onSubmit={(event) => void saveInlineEntry(event, category.id)}
+      >
+        <div data-entries-inline-main-row="true">
+          <input
+            ref={inlineDayInputRef}
+            value={inlineDay}
+            placeholder="dzień"
+            inputMode="numeric"
+            disabled={isDisabled}
+            onChange={(event) => setInlineDay(normalizeDayInput(event.target.value, selectedMonth))}
+            onKeyDown={handleInlineDayKeyDown}
+          />
+          <input
+            ref={inlineDescriptionInputRef}
+            value={inlineDescription}
+            placeholder="Opis"
+            disabled={isDisabled}
+            onChange={(event) => setInlineDescription(event.target.value)}
+            onKeyDown={handleInlineDescriptionKeyDown}
+          />
+          <input
+            ref={inlineAmountInputRef}
+            value={inlineAmount}
+            placeholder="Kwota"
+            inputMode="decimal"
+            disabled={isDisabled}
+            onChange={(event) => setInlineAmount(event.target.value)}
+          />
+          <button type="submit" disabled={isDisabled}>
+            Zapisz
+          </button>
+        </div>
+
+        <div data-entries-inline-meta-row="true">
+          <input
+            value={inlineTags}
+            placeholder="Tagi"
+            disabled={isDisabled}
+            onChange={(event) => setInlineTags(event.target.value)}
+            onKeyDown={preventInlineMetaSubmit}
+          />
+          {paymentSourceOptions.length > 0 && (
+            <select
+              value={inlinePaymentSourceId}
+              disabled={isDisabled}
+              onChange={(event) => setInlinePaymentSourceId(event.target.value)}
+              onKeyDown={preventInlineMetaSubmit}
+            >
+              <option value="">Źródło</option>
+              {paymentSourceOptions.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.optionLabel || option.name}
+                </option>
+              ))}
+            </select>
+          )}
+          {recurringOptions.length > 0 && (
+            <select
+              value={inlineRecurringTransactionId}
+              disabled={isDisabled}
+              onChange={(event) => setInlineRecurringTransactionId(event.target.value)}
+              onKeyDown={preventInlineMetaSubmit}
+            >
+              <option value="">Cykliczna</option>
+              {recurringOptions.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+      </form>
+    )
+  }
 
   const renderTransactionActions = (transaction: Transaction) => (
     <details data-entries-transaction-menu="true">

@@ -233,8 +233,7 @@
 [data-entries-tree-view="true"] [data-entries-inline-composer="true"] {
   position: relative;
   display: grid;
-  grid-template-columns: 58px minmax(140px, 1fr) 86px max-content;
-  gap: 6px;
+  gap: 5px;
   align-items: center;
   min-width: 0;
   margin: 1px 0 4px;
@@ -242,6 +241,26 @@
   border: 1px solid rgba(147, 197, 253, 0.34);
   border-radius: 11px;
   background: rgba(248, 251, 255, 0.58);
+}
+
+[data-entries-tree-view="true"] [data-entries-inline-main-row="true"],
+[data-entries-tree-view="true"] [data-entries-inline-meta-row="true"] {
+  display: grid;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+}
+
+[data-entries-tree-view="true"] [data-entries-inline-main-row="true"] {
+  grid-template-columns: 58px minmax(140px, 1fr) 86px max-content;
+}
+
+[data-entries-tree-view="true"] [data-entries-inline-meta-row="true"] {
+  grid-template-columns: minmax(120px, 1fr) minmax(104px, 0.7fr) minmax(112px, 0.7fr);
+}
+
+[data-entries-tree-view="true"] [data-entries-inline-meta-row="true"] input:only-child {
+  grid-column: 1 / -1;
 }
 
 [data-entries-tree-view="true"] [data-entries-inline-composer="true"]::before {
@@ -255,6 +274,7 @@
 }
 
 [data-entries-tree-view="true"] [data-entries-inline-composer="true"] input,
+[data-entries-tree-view="true"] [data-entries-inline-composer="true"] select,
 [data-entries-tree-view="true"] [data-entries-transaction-row="true"] input,
 [data-entries-tree-view="true"] [data-entries-transaction-row="true"] select {
   min-width: 0;
@@ -270,6 +290,7 @@
 }
 
 [data-entries-tree-view="true"] [data-entries-inline-composer="true"] input:focus,
+[data-entries-tree-view="true"] [data-entries-inline-composer="true"] select:focus,
 [data-entries-tree-view="true"] [data-entries-transaction-row="true"] input:focus,
 [data-entries-tree-view="true"] [data-entries-transaction-row="true"] select:focus {
   border-color: rgba(59, 130, 246, 0.72);
@@ -594,6 +615,11 @@
   [data-entries-tree-view="true"]
     [data-entries-transaction-row="true"][data-entries-transaction-editing="true"] {
     grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  [data-entries-tree-view="true"] [data-entries-inline-main-row="true"],
+  [data-entries-tree-view="true"] [data-entries-inline-meta-row="true"] {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 
   [data-entries-tree-view="true"] [data-entries-inline-composer="true"] button,
