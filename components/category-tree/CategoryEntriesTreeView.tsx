@@ -1,4 +1,12 @@
-import { useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+  type KeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
+} from 'react'
+import { createPortal } from 'react-dom'
 import type { CSSProperties } from 'react'
 import type { BudgetLimitView } from '../BudgetLimitIndicator'
 import type { HeatmapMode } from '../month-calendar/monthCalendarTypes'
@@ -178,6 +186,40 @@ export default function CategoryEntriesTreeView({
   const [movingTransactionId, setMovingTransactionId] = useState<string | null>(null)
   const [moveTargetCategoryId, setMoveTargetCategoryId] = useState('')
   const [isMoving, setIsMoving] = useState(false)
+  const [openEntriesMenu, setOpenEntriesMenu] = useState<{
+    key: string
+    top: number
+    right: number
+  } | null>(null)
+
+  useEffect(() => {
+    if (!openEntriesMenu) {
+      return
+    }
+
+    const closeMenu = (event: PointerEvent) => {
+      if (
+        event.target instanceof Element &&
+        (event.target.closest('[data-entries-menu-panel="true"]') ||
+          event.target.closest('[data-entries-menu-trigger="true"]'))
+      ) {
+        return
+      }
+
+      setOpenEntriesMenu(null)
+    }
+    const closeOnViewportChange = () => setOpenEntriesMenu(null)
+
+    document.addEventListener('pointerdown', closeMenu, true)
+    window.addEventListener('resize', closeOnViewportChange)
+    window.addEventListener('scroll', closeOnViewportChange, true)
+
+    return () => {
+      document.removeEventListener('pointerdown', closeMenu, true)
+      window.removeEventListener('resize', closeOnViewportChange)
+      window.removeEventListener('scroll', closeOnViewportChange, true)
+    }
+  }, [openEntriesMenu])
 
   const hasAnyEntries =
     viewModel.directEntries.length > 0 ||
@@ -312,38 +354,91 @@ export default function CategoryEntriesTreeView({
     }
   }
 
+  const toggleEntriesMenu = (
+    event: ReactMouseEvent<HTMLButtonElement>,
+    key: string
+  ) => {
+    const rect = event.currentTarget.getBoundingClientRect()
+    const nextMenu = {
+      key,
+      top: rect.bottom + 6,
+      right: Math.max(12, window.innerWidth - rect.right),
+    }
+
+    setOpenEntriesMenu((currentMenu) => (currentMenu?.key === key ? null : nextMenu))
+  }
+
+  const closeEntriesMenuAndRun = (action: () => void) => {
+    setOpenEntriesMenu(null)
+    action()
+  }
+
   const renderCategoryActions = (category: Category) => (
-    <details data-entries-category-menu="true">
-      <summary aria-label={`Menu kategorii ${category.name}`} title="Menu">
+    <div data-entries-category-menu="true">
+      <button
+        type="button"
+        data-entries-menu-trigger="true"
+        aria-label={`Menu kategorii ${category.name}`}
+        aria-expanded={openEntriesMenu?.key === `category-${category.id}`}
+        title="Menu"
+        onClick={(event) => toggleEntriesMenu(event, `category-${category.id}`)}
+      >
         <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
           <circle cx="5" cy="12" r="1.7" fill="currentColor" />
           <circle cx="12" cy="12" r="1.7" fill="currentColor" />
           <circle cx="19" cy="12" r="1.7" fill="currentColor" />
         </svg>
-      </summary>
-      <div data-entries-menu-panel="true">
+      </button>
+      {openEntriesMenu?.key === `category-${category.id}` &&
+        createPortal(
+          <div
+            data-entries-menu-panel="true"
+            style={{ top: openEntriesMenu.top, right: openEntriesMenu.right }}
+          >
         {category.active_to ? (
-          <button type="button" onClick={() => void handleUndoScheduledHide(category.id)}>
+          <button
+            type="button"
+            onClick={() => closeEntriesMenuAndRun(() => void handleUndoScheduledHide(category.id))}
+          >
             Cofnij zamknięcie
           </button>
         ) : (
           <>
-            <button type="button" onClick={() => void handleRenameCategory(category.id)}>
+            <button
+              type="button"
+              onClick={() => closeEntriesMenuAndRun(() => void handleRenameCategory(category.id))}
+            >
               Zmień nazwę
             </button>
-            <button type="button" onClick={() => void handleHideCategory(category.id, 'now')}>
+            <button
+              type="button"
+              onClick={() =>
+                closeEntriesMenuAndRun(() => void handleHideCategory(category.id, 'now'))
+              }
+            >
               Ukryj teraz
             </button>
-            <button type="button" onClick={() => void handleHideCategory(category.id, 'next')}>
+            <button
+              type="button"
+              onClick={() =>
+                closeEntriesMenuAndRun(() => void handleHideCategory(category.id, 'next'))
+              }
+            >
               Ukryj od następnego
             </button>
-            <button type="button" data-danger="true" onClick={() => void handleDeleteCategory(category.id)}>
+            <button
+              type="button"
+              data-danger="true"
+              onClick={() => closeEntriesMenuAndRun(() => void handleDeleteCategory(category.id))}
+            >
               Usuń
             </button>
           </>
         )}
-      </div>
-    </details>
+          </div>,
+          document.body
+        )}
+    </div>
   )
 
   const renderGroupHeader = (category: Category) => (
@@ -440,31 +535,46 @@ export default function CategoryEntriesTreeView({
   }
 
   const renderTransactionActions = (transaction: Transaction) => (
-    <details data-entries-transaction-menu="true">
-      <summary aria-label="Menu wpisu" title="Menu wpisu">
+    <div data-entries-transaction-menu="true">
+      <button
+        type="button"
+        data-entries-menu-trigger="true"
+        aria-label="Menu wpisu"
+        aria-expanded={openEntriesMenu?.key === `transaction-${transaction.id}`}
+        title="Menu wpisu"
+        onClick={(event) => toggleEntriesMenu(event, `transaction-${transaction.id}`)}
+      >
         <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
           <circle cx="5" cy="12" r="1.7" fill="currentColor" />
           <circle cx="12" cy="12" r="1.7" fill="currentColor" />
           <circle cx="19" cy="12" r="1.7" fill="currentColor" />
         </svg>
-      </summary>
-      <div data-entries-menu-panel="true">
+      </button>
+      {openEntriesMenu?.key === `transaction-${transaction.id}` &&
+        createPortal(
+          <div
+            data-entries-menu-panel="true"
+            style={{ top: openEntriesMenu.top, right: openEntriesMenu.right }}
+          >
         <button
           type="button"
           disabled={isSelectedMonthLocked}
-          onClick={() => startEditingTransaction(transaction)}
+          onClick={() => closeEntriesMenuAndRun(() => startEditingTransaction(transaction))}
         >
           Edytuj
         </button>
         <button
           type="button"
           disabled={isSelectedMonthLocked}
-          onClick={() => startMovingTransaction(transaction)}
+          onClick={() => closeEntriesMenuAndRun(() => startMovingTransaction(transaction))}
         >
           Przenieś
         </button>
         {handleDuplicateTransaction && (
-          <button type="button" onClick={() => handleDuplicateTransaction(transaction)}>
+          <button
+            type="button"
+            onClick={() => closeEntriesMenuAndRun(() => handleDuplicateTransaction(transaction))}
+          >
             Powiel
           </button>
         )}
@@ -472,12 +582,14 @@ export default function CategoryEntriesTreeView({
           type="button"
           data-danger="true"
           disabled={isSelectedMonthLocked}
-          onClick={() => void handleDeleteTransaction(transaction.id)}
+          onClick={() => closeEntriesMenuAndRun(() => void handleDeleteTransaction(transaction.id))}
         >
           Usuń
         </button>
-      </div>
-    </details>
+          </div>,
+          document.body
+        )}
+    </div>
   )
 
   const renderTransactionRow = (transaction: Transaction) => {
