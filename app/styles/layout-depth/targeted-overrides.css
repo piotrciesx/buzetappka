@@ -144,7 +144,7 @@
   min-width: 0 !important;
   display: grid !important;
   gap: 6px !important;
-  color: #334155 !important;
+  color: rgba(39, 79, 128, 0.78) !important;
   font-size: 12px !important;
   font-weight: 720 !important;
 }
@@ -176,7 +176,7 @@
   border: 1px solid rgba(203, 213, 225, 0.78) !important;
   border-radius: 999px !important;
   background: rgba(255, 255, 255, 0.86) !important;
-  color: #475569 !important;
+  color: #0b2a55 !important;
   list-style: none !important;
   cursor: pointer !important;
 }
@@ -203,7 +203,7 @@
 [data-month-calendar-heatmap-field="true"] {
   display: grid !important;
   gap: 5px !important;
-  color: #475569 !important;
+  color: rgba(39, 79, 128, 0.78) !important;
   font-size: 11px !important;
   font-weight: 760 !important;
 }
@@ -213,7 +213,7 @@
   border: 1px solid rgba(203, 213, 225, 0.78) !important;
   border-radius: 10px !important;
   background: rgba(248, 250, 252, 0.9) !important;
-  color: #334155 !important;
+  color: #0b2a55 !important;
   font-size: 12px !important;
   font-weight: 720 !important;
 }
