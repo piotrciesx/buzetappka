@@ -830,3 +830,141 @@
 [data-transaction-menu="true"] button[data-danger="true"] {
   color: #9f1239 !important;
 }
+
+/* BudżAppka — FINAL: neutralny kolor jasnej skórki = NAVY */
+
+[data-budget-app="true"],
+[data-budget-app="true"] :where(
+  h1, h2, h3, h4, h5, h6,
+  p, span, small, strong, em, label,
+  button, summary, input, select, textarea,
+  [data-sidebar-label="true"],
+  [data-context-card],
+  [data-context-card] *,
+  [data-dashboard-panel="true"],
+  [data-dashboard-panel="true"] *,
+  [data-workspace-panel="true"],
+  [data-workspace-panel="true"] *,
+  [data-right-rail="true"],
+  [data-right-rail="true"] *,
+  [data-category-drag-row="true"],
+  [data-category-drag-row="true"] *,
+  [data-transaction-row="true"],
+  [data-transaction-row="true"] *,
+  [data-entries-tree-view="true"],
+  [data-entries-tree-view="true"] *,
+  [data-topbar-dropdown],
+  [data-topbar-dropdown] *,
+  [data-mobile-category-menu-panel="true"],
+  [data-mobile-category-menu-panel="true"] *,
+  [data-entries-menu-panel="true"],
+  [data-entries-menu-panel="true"] *,
+  [data-profile-menu-dropdown="true"],
+  [data-profile-menu-dropdown="true"] *
+) {
+  color: #0b2a55 !important;
+}
+
+/* meta teksty nadal granatowe, tylko przygaszone */
+[data-budget-app="true"] :where(
+  small,
+  [data-context-card] span,
+  [data-context-card] p,
+  [data-dashboard-panel="true"] small,
+  [data-dashboard-panel="true"] p,
+  [data-right-rail="true"] small,
+  [data-right-rail="true"] p,
+  [data-entries-day-label="true"],
+  [data-entries-transaction-copy="true"] small,
+  [data-topbar-pinned-copy="true"] small,
+  [data-category-entries-popup-header="true"] span
+) {
+  color: rgba(39, 79, 128, 0.78) !important;
+}
+
+/* zachowujemy celowe kolory finansowe i akcje niszczące */
+[data-budget-app="true"] :where(
+  [data-danger="true"],
+  [data-entries-menu-panel="true"] button[data-danger="true"],
+  [data-mobile-category-menu-panel="true"] button[data-danger="true"]
+) {
+  color: #9f1239 !important;
+}
+
+[data-budget-app="true"] :where(
+  [data-entries-transaction-kind="income"] > strong,
+  [data-income="true"],
+  [data-positive="true"]
+) {
+  color: #11613a !important;
+}
+
+[data-budget-app="true"] :where(
+  [data-entries-transaction-kind="expense"] > strong,
+  [data-expense="true"],
+  [data-negative="true"]
+) {
+  color: #8f1236 !important;
+}
+
+/* wszystkie neutralne obwoluty/przyciski/dropdowny w blue/navy */
+[data-budget-app="true"] :where(
+  button,
+  summary,
+  input,
+  select,
+  textarea,
+  [data-context-card],
+  [data-dashboard-panel="true"],
+  [data-workspace-panel="true"],
+  [data-right-rail="true"] > *,
+  [data-category-drag-row="true"],
+  [data-transaction-row="true"],
+  [data-topbar-dropdown],
+  [data-mobile-category-menu-panel="true"],
+  [data-entries-menu-panel="true"],
+  [data-profile-menu-dropdown="true"]
+) {
+  border-color: rgba(147, 197, 253, 0.58) !important;
+}
+
+/* dropdown itemy — jeden wygląd */
+[data-budget-app="true"] :where(
+  [data-topbar-dropdown] button,
+  [data-topbar-pinned-item="true"],
+  [data-mobile-category-menu-panel="true"] button,
+  [data-floating-dropdown="true"] > [data-mobile-category-menu-panel="true"] button,
+  [data-floating-dropdown="true"][data-transaction-menu="true"] > div button,
+  [data-entries-menu-panel="true"] button,
+  [data-profile-menu-dropdown="true"] button
+) {
+  border: 1px solid rgba(147, 197, 253, 0.64) !important;
+  background: linear-gradient(145deg, #ffffff, rgba(235, 245, 255, 0.9)) !important;
+  color: #0b2a55 !important;
+}
+
+[data-budget-app="true"] :where(
+  [data-topbar-dropdown] button:hover,
+  [data-topbar-pinned-item="true"]:hover,
+  [data-mobile-category-menu-panel="true"] button:hover,
+  [data-floating-dropdown="true"] > [data-mobile-category-menu-panel="true"] button:hover,
+  [data-floating-dropdown="true"][data-transaction-menu="true"] > div button:hover,
+  [data-entries-menu-panel="true"] button:hover,
+  [data-profile-menu-dropdown="true"] button:hover
+) {
+  border-color: rgba(37, 99, 235, 0.4) !important;
+  background: linear-gradient(145deg, rgba(239, 246, 255, 0.99), rgba(219, 234, 254, 0.9)) !important;
+  color: #0f4fb8 !important;
+}
+
+/* usuwa czarny focus ring z topbara */
+[data-budget-app="true"] button:focus,
+[data-budget-app="true"] summary:focus {
+  outline: none !important;
+}
+
+[data-budget-app="true"] button:focus-visible,
+[data-budget-app="true"] summary:focus-visible {
+  outline: 2px solid rgba(37, 99, 235, 0.32) !important;
+  outline-offset: 2px !important;
+}
