@@ -12,6 +12,21 @@ export function useFloatingDropdownDismissal() {
         (child) => child instanceof HTMLElement && child.tagName.toLowerCase() !== 'summary'
       ) as HTMLElement | undefined
 
+    const closeDropdown = (dropdown: HTMLDetailsElement) => {
+      dropdown.open = false
+
+      const panel = getDropdownPanel(dropdown)
+
+      if (panel) {
+        panel.style.removeProperty('top')
+        panel.style.removeProperty('left')
+        panel.style.removeProperty('right')
+        panel.style.removeProperty('bottom')
+        panel.style.removeProperty('visibility')
+        panel.dataset.dropdownPlacement = ''
+      }
+    }
+
     const positionDropdown = (dropdown: HTMLDetailsElement) => {
       if (!dropdown.open) {
         return
@@ -34,14 +49,16 @@ export function useFloatingDropdownDismissal() {
 
       const triggerRect = trigger.getBoundingClientRect()
       const panelRect = panel.getBoundingClientRect()
-      const panelWidth = Math.min(panelRect.width, window.innerWidth - viewportPadding * 2)
-      const panelHeight = Math.min(panelRect.height, window.innerHeight - viewportPadding * 2)
+      const panelWidth = Math.min(panelRect.width || 190, window.innerWidth - viewportPadding * 2)
+      const panelHeight = Math.min(panelRect.height || 160, window.innerHeight - viewportPadding * 2)
       const spaceBelow = window.innerHeight - triggerRect.bottom - viewportPadding
       const spaceAbove = triggerRect.top - viewportPadding
       const shouldOpenUp = panelHeight > spaceBelow && spaceAbove > spaceBelow
+
       const top = shouldOpenUp
         ? Math.max(viewportPadding, triggerRect.top - panelHeight - 6)
         : Math.min(triggerRect.bottom + 6, window.innerHeight - panelHeight - viewportPadding)
+
       const left = Math.min(
         Math.max(viewportPadding, triggerRect.right - panelWidth),
         window.innerWidth - panelWidth - viewportPadding
@@ -57,7 +74,7 @@ export function useFloatingDropdownDismissal() {
     const closeOtherDropdowns = (currentDropdown: HTMLDetailsElement) => {
       document.querySelectorAll<HTMLDetailsElement>(selector).forEach((dropdown) => {
         if (dropdown !== currentDropdown) {
-          dropdown.open = false
+          closeDropdown(dropdown)
         }
       })
     }
@@ -65,7 +82,18 @@ export function useFloatingDropdownDismissal() {
     const handleToggle = (event: Event) => {
       const dropdown = event.target instanceof HTMLDetailsElement ? event.target : null
 
-      if (!dropdown?.matches(selector) || !dropdown.open) {
+      if (!dropdown?.matches(selector)) {
+        return
+      }
+
+      if (!dropdown.open) {
+        const panel = getDropdownPanel(dropdown)
+
+        if (panel) {
+          panel.style.removeProperty('visibility')
+          panel.dataset.dropdownPlacement = ''
+        }
+
         return
       }
 
@@ -74,6 +102,7 @@ export function useFloatingDropdownDismissal() {
           detail: { source: 'floating-dropdown' },
         })
       )
+
       closeOtherDropdowns(dropdown)
       positionDropdown(dropdown)
       requestAnimationFrame(() => positionDropdown(dropdown))
@@ -86,10 +115,19 @@ export function useFloatingDropdownDismissal() {
         return
       }
 
-      document.querySelectorAll<HTMLDetailsElement>(selector).forEach((dropdown) => {
-        if (!dropdown.contains(target)) {
-          dropdown.open = false
+      document.querySelectorAll<HTMLDetailsElement>(`${selector}[open]`).forEach((dropdown) => {
+        const trigger = dropdown.querySelector('summary')
+        const panel = getDropdownPanel(dropdown)
+
+        if (panel?.contains(target)) {
+          return
         }
+
+        if (trigger?.contains(target)) {
+          return
+        }
+
+        closeDropdown(dropdown)
       })
     }
 
@@ -98,9 +136,7 @@ export function useFloatingDropdownDismissal() {
         return
       }
 
-      document.querySelectorAll<HTMLDetailsElement>(selector).forEach((dropdown) => {
-        dropdown.open = false
-      })
+      document.querySelectorAll<HTMLDetailsElement>(selector).forEach(closeDropdown)
     }
 
     const closeAllDropdowns = (event?: Event) => {
@@ -111,9 +147,7 @@ export function useFloatingDropdownDismissal() {
         return
       }
 
-      document.querySelectorAll<HTMLDetailsElement>(selector).forEach((dropdown) => {
-        dropdown.open = false
-      })
+      document.querySelectorAll<HTMLDetailsElement>(selector).forEach(closeDropdown)
     }
 
     const positionOpenDropdowns = () => {
@@ -121,7 +155,7 @@ export function useFloatingDropdownDismissal() {
     }
 
     document.addEventListener('toggle', handleToggle, true)
-    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener('pointerdown', handlePointerDown, true)
     document.addEventListener('keydown', handleKeyDown)
     window.addEventListener('budget-close-floating-ui', closeAllDropdowns)
     window.addEventListener('resize', positionOpenDropdowns)
@@ -129,7 +163,7 @@ export function useFloatingDropdownDismissal() {
 
     return () => {
       document.removeEventListener('toggle', handleToggle, true)
-      document.removeEventListener('pointerdown', handlePointerDown)
+      document.removeEventListener('pointerdown', handlePointerDown, true)
       document.removeEventListener('keydown', handleKeyDown)
       window.removeEventListener('budget-close-floating-ui', closeAllDropdowns)
       window.removeEventListener('resize', positionOpenDropdowns)

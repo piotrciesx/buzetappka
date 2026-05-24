@@ -363,6 +363,12 @@ export default function CategoryEntriesTreeView({
     key: string,
     itemCount = 4
   ) => {
+    window.dispatchEvent(
+      new CustomEvent('budget-close-floating-ui', {
+        detail: { source: 'entries-menu' },
+      })
+    )
+
     const rect = event.currentTarget.getBoundingClientRect()
     const viewportPadding = 12
     const estimatedHeight = Math.min(itemCount * 34 + 12, window.innerHeight - viewportPadding * 2)

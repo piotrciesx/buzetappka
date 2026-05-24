@@ -34,7 +34,7 @@ export default function MonthCalendarToolbar({
     <>
       <MonthCalendarHeader title={title} subtitle={subtitle} styles={styles} />
       {showHeatmapControls && (
-        <details data-month-calendar-settings-menu="true">
+        <details data-month-calendar-settings-menu="true" data-floating-dropdown="true">
           <summary aria-label="Ustawienia heatmapy" title="Ustawienia heatmapy">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
               <circle cx="5" cy="12" r="1.8" fill="currentColor" />

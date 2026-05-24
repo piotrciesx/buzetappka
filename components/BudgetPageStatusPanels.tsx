@@ -272,9 +272,19 @@ export default function BudgetPageStatusPanels({
     const closeTopbarPanel = () => setOpenedTopbarPanel(null)
 
     const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target as Node | null
+      const target = event.target instanceof Element ? event.target : null
 
-      if (target && topbarActionsRef.current?.contains(target)) {
+      if (!target) {
+        closeTopbarPanel()
+        return
+      }
+
+      const clickedDropdown = target.closest('[data-topbar-dropdown]')
+      const clickedCurrentTrigger = target.closest(
+        `[data-topbar-action="${openedTopbarPanel === 'add' ? 'primary-add' : openedTopbarPanel}"]`
+      )
+
+      if (clickedDropdown || clickedCurrentTrigger) {
         return
       }
 
