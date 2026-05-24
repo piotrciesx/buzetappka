@@ -325,8 +325,17 @@ export default function BudgetPageStatusPanels({
   }
 
   const toggleTopbarPanel = (panel: 'alert' | 'add' | 'note' | 'pinned' | 'search') => {
-    window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
-    setOpenedTopbarPanel((currentPanel) => (currentPanel === panel ? null : panel))
+    if (openedTopbarPanel === panel) {
+      setOpenedTopbarPanel(null)
+      return
+    }
+
+    window.dispatchEvent(
+      new CustomEvent('budget-close-floating-ui', {
+        detail: { source: 'topbar' },
+      })
+    )
+    setOpenedTopbarPanel(panel)
   }
 
   const getPinnedCategoryDisplay = (category: TopbarPinnedCategory) => {
