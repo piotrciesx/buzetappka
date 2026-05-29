@@ -95,7 +95,7 @@ const summaryLabelStyle: CSSProperties = {
 
 const summaryValueStyle: CSSProperties = {
   minWidth: 0,
-  color: '#111827',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 15,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -219,7 +219,7 @@ const weekMiniTitleStyle: CSSProperties = {
 
 const weekMiniValueStyle: CSSProperties = {
   minWidth: 0,
-  color: '#111827',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 11.5,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -253,7 +253,7 @@ function SummaryCard({
   return (
     <div style={summaryCardStyle}>
       <div style={summaryLabelStyle}>{label}</div>
-      <div style={{ ...summaryValueStyle, color: color || '#111827' }}>{value}</div>
+      <div style={{ ...summaryValueStyle, color: color || 'var(--ui-color-primary-text)' }}>{value}</div>
     </div>
   )
 }

@@ -165,7 +165,7 @@
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(239, 247, 255, 0.96)),
     rgba(255, 255, 255, 0.92) !important;
-  color: #123b68 !important;
+  color: var(--ui-color-primary-navy) !important;
   box-shadow:
     0 26px 70px rgba(15, 39, 71, 0.16),
     0 4px 18px rgba(59, 130, 246, 0.08) !important;
@@ -179,7 +179,7 @@
   border: 1px solid transparent !important;
   border-radius: 10px !important;
   background: transparent !important;
-  color: #123b68 !important;
+  color: var(--ui-color-primary-navy) !important;
   box-shadow: none !important;
 }
 
@@ -188,7 +188,7 @@
 [data-floating-dropdown="true"] [data-category-icon-picker-trigger="true"]:hover {
   border-color: rgba(147, 197, 253, 0.48) !important;
   background: rgba(239, 246, 255, 0.88) !important;
-  color: #0f4fb8 !important;
+  color: var(--ui-color-primary-blue) !important;
 }
 
 [data-floating-dropdown="true"][open] > summary,
@@ -196,7 +196,7 @@
 [data-transaction-menu="true"][open] > summary {
   border-color: rgba(147, 197, 253, 0.58) !important;
   background: rgba(239, 246, 255, 0.88) !important;
-  color: #0f4fb8 !important;
+  color: var(--ui-color-primary-blue) !important;
 }
 
 [data-category-quick-add="true"]::before {
@@ -250,7 +250,7 @@
 }
 
 [data-category-entries-popup-header="true"] strong {
-  color: #09284c !important;
+  color: var(--ui-color-primary-navy) !important;
   font-size: 20px !important;
   font-weight: 760 !important;
 }
@@ -267,7 +267,7 @@
   border-radius: 12px !important;
   padding: 0 14px !important;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(229, 241, 255, 0.88)) !important;
-  color: #0b55c8 !important;
+  color: var(--ui-color-primary-blue) !important;
   font-size: 12px !important;
   font-weight: 720 !important;
   cursor: pointer !important;

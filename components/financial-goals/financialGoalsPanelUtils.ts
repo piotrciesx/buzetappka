@@ -3,8 +3,8 @@ import type { FormState } from './financialGoalsPanelTypes'
 
 export const panelStyle = {
   marginBottom: 20,
-  background: '#ffffff',
-  border: '1px solid #e5e7eb',
+  background: 'var(--ui-color-card-background)',
+  border: '1px solid var(--ui-color-divider-border)',
   borderRadius: 14,
   padding: 16,
   boxShadow: '0 1px 2px rgba(0,0,0,0.04)',

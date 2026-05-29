@@ -416,7 +416,7 @@ export default function ProfileMembersPanel({
   }
 
   return (
-    <section style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid #e5e7eb' }}>
+    <section style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid var(--ui-color-divider-border)' }}>
       <SettingsSection data-user-public-profile-editor="true">
         <div data-user-public-profile-preview="true">
           <UserAvatar avatarKey={avatarKeyDraft} label={displayNameDraft || 'Użytkownik'} size="lg" />
@@ -474,7 +474,7 @@ export default function ProfileMembersPanel({
                 justifyContent: 'space-between',
                 gap: 12,
                 alignItems: 'center',
-                border: '1px solid #e5e7eb',
+                border: '1px solid var(--ui-color-divider-border)',
                 borderRadius: 8,
                 padding: '8px 10px',
                 flexWrap: 'wrap',
@@ -608,19 +608,19 @@ export default function ProfileMembersPanel({
         style={{
           marginTop: 22,
           paddingTop: 16,
-          borderTop: '1px solid #fecaca',
+          borderTop: '1px solid var(--ui-color-expense-soft)',
           display: 'grid',
           gap: 10,
         }}
       >
-        <div style={{ ...styles.l2Name, color: '#b91c1c' }}>Usuń konto</div>
+        <div style={{ ...styles.l2Name, color: 'var(--ui-color-expense)' }}>Usuń konto</div>
         <div style={styles.smallMutedText}>
           To jest trwała akcja dotycząca Twojego konta użytkownika. Wpisy we wspólnych
           budżetach pozostają jako historia profilu.
         </div>
         <button
           type="button"
-          style={{ ...styles.secondaryButton, borderColor: '#fecaca', color: '#b91c1c' }}
+          style={{ ...styles.secondaryButton, borderColor: 'var(--ui-color-expense-soft)', color: 'var(--ui-color-expense)' }}
           onClick={() => {
             setIsDeleteAccountPanelOpen((previousValue) => !previousValue)
             setDeleteAccountStatusText('')
@@ -632,10 +632,10 @@ export default function ProfileMembersPanel({
         {isDeleteAccountPanelOpen && (
           <div
             style={{
-              border: '1px solid #fecaca',
+              border: '1px solid var(--ui-color-expense-soft)',
               borderRadius: 8,
               padding: 12,
-              background: '#fff7f7',
+              background: 'var(--ui-color-expense-soft)',
               display: 'grid',
               gap: 10,
             }}
@@ -675,7 +675,7 @@ export default function ProfileMembersPanel({
             {!isOwnerWithOtherMembers && (
               <button
                 type="button"
-                style={{ ...styles.secondaryButton, borderColor: '#ef4444', color: '#b91c1c' }}
+                style={{ ...styles.secondaryButton, borderColor: 'var(--ui-color-expense)', color: 'var(--ui-color-expense)' }}
                 disabled={
                   isDeletingAccount ||
                   isMembershipActionWorking ||

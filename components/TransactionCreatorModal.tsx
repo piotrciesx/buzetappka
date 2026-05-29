@@ -545,7 +545,7 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
 
                 {selectedRecurringOption?.hasTransactionInMonth && (
                   <div
-                    style={{ ...styles.emptyText, color: '#92400e' }}
+                    style={{ ...styles.emptyText, color: 'var(--ui-color-warning)' }}
                     data-transaction-recurring-warning="true"
                   >
                     To przypomnienie ma już wpis w tym miesiącu. Możesz dodać kolejny, jeśli to celowe.

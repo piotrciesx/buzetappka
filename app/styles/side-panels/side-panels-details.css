@@ -6,7 +6,7 @@
 }
 
 [data-profile-stat-card="true"] strong {
-  color: #172033;
+  color: var(--ui-color-primary-text);
   font-size: 16px;
   font-weight: 760;
   overflow-wrap: anywhere;
@@ -19,7 +19,7 @@
 }
 
 [data-profile-panel-section-title="true"] {
-  color: #172033;
+  color: var(--ui-color-primary-text);
   font-size: 12px;
   font-weight: 760;
 }
@@ -41,7 +41,7 @@
   place-items: center;
   border-radius: 999px;
   background: rgba(34, 197, 94, 0.1);
-  color: #15803d;
+  color: var(--ui-color-income);
   font-size: 12px;
 }
 
@@ -49,7 +49,7 @@
   display: grid;
   gap: 14px;
   padding-bottom: 18px;
-  color: #334155;
+  color: var(--ui-color-secondary-text);
   font-family: inherit;
 }
 
@@ -65,7 +65,7 @@
 }
 
 [data-settings-section-heading="true"] span {
-  color: #64748b;
+  color: var(--ui-color-secondary-text);
   font-size: 10px;
   font-weight: 760;
   letter-spacing: 0.04em;
@@ -74,7 +74,7 @@
 
 [data-settings-section-heading="true"] h3 {
   margin: 0;
-  color: #0f172a;
+  color: var(--ui-color-primary-text);
   font-size: 15px;
   font-weight: 760;
 }
@@ -83,7 +83,7 @@
 [data-settings-row="true"] p,
 [data-settings-feature-card="true"] p {
   margin: 0;
-  color: #64748b;
+  color: var(--ui-color-secondary-text);
   font-size: 12px;
   line-height: 1.4;
 }
@@ -109,7 +109,7 @@
 }
 
 [data-settings-profile-card="true"] span {
-  color: #64748b;
+  color: var(--ui-color-secondary-text);
   font-size: 11px;
   font-weight: 650;
 }
@@ -117,7 +117,7 @@
 [data-settings-profile-card="true"] strong,
 [data-settings-row="true"] strong,
 [data-settings-feature-card="true"] strong {
-  color: #172033;
+  color: var(--ui-color-primary-text);
   font-size: 13px;
   font-weight: 740;
 }
@@ -138,7 +138,7 @@
   border: 1px solid rgba(59, 130, 246, 0.18);
   border-radius: 12px;
   background: rgba(239, 246, 255, 0.72);
-  color: #1d4ed8;
+  color: var(--ui-color-primary-blue);
   font-size: 12px;
 }
 
@@ -152,8 +152,8 @@
   border: 1px solid rgba(148, 163, 184, 0.42);
   border-radius: 999px;
   padding: 0 9px;
-  background: #e5e7eb;
-  color: #475569;
+  background: var(--ui-color-divider-border);
+  color: var(--ui-color-secondary-text);
   cursor: pointer;
   transition: background 160ms ease, border-color 160ms ease;
 }
@@ -161,8 +161,8 @@
 [data-settings-switch="true"][data-state="on"] {
   justify-content: flex-start;
   border-color: rgba(22, 163, 74, 0.36);
-  background: #16a34a;
-  color: #ffffff;
+  background: var(--ui-color-income);
+  color: var(--ui-color-card-background);
 }
 
 [data-settings-switch="true"][data-state="off"] {
@@ -188,7 +188,7 @@
   width: 24px;
   height: 24px;
   border-radius: 999px;
-  background: #ffffff;
+  background: var(--ui-color-card-background);
   box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2);
   transition: transform 160ms ease;
 }
@@ -212,7 +212,7 @@
   border-radius: 999px;
   padding: 0 12px;
   background: rgba(255, 255, 255, 0.78);
-  color: #334155;
+  color: var(--ui-color-secondary-text);
   font-size: 12px;
   font-weight: 680;
 }
@@ -221,7 +221,7 @@
 [data-settings-section="profile"] button:not(:disabled):first-of-type {
   border-color: rgba(37, 99, 235, 0.28) !important;
   background: rgba(239, 246, 255, 0.9) !important;
-  color: #1d4ed8 !important;
+  color: var(--ui-color-primary-blue) !important;
 }
 
 [data-settings-section="profile"] > section {
@@ -244,7 +244,7 @@
 
 [data-settings-section="profile"] section:last-child button {
   border-color: rgba(248, 113, 113, 0.42) !important;
-  color: #b91c1c !important;
+  color: var(--ui-color-expense) !important;
 }
 
 [data-settings-advanced-profile="true"] {
@@ -254,7 +254,7 @@
     linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(248, 250, 252, 0.58));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.82),
-    0 10px 24px rgba(15, 23, 42, 0.04);
+    0 10px 24px var(--ui-shadow-light-color);
   overflow: hidden;
 }
 
@@ -263,7 +263,7 @@
   display: flex;
   align-items: center;
   padding: 0 14px;
-  color: #172033;
+  color: var(--ui-color-primary-text);
   cursor: pointer;
   font-size: 13px;
   font-weight: 760;
@@ -277,7 +277,7 @@
 [data-settings-advanced-profile="true"] summary::after {
   content: "+";
   margin-left: auto;
-  color: #64748b;
+  color: var(--ui-color-secondary-text);
   font-size: 18px;
   font-weight: 520;
 }

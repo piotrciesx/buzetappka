@@ -178,7 +178,7 @@ export const getBalanceHeatmapVisual = (
 
     return {
       background: rgbToCss(neutralRgb),
-      textColor: '#111827',
+      textColor: 'var(--ui-color-primary-text)',
       borderColor: rgbToCss(hslToRgb(38, 64, 74)),
     }
   }
@@ -198,7 +198,7 @@ export const getBalanceHeatmapVisual = (
 
   return {
     background: rgbToCss(backgroundRgb),
-    textColor: luminance < 132 ? '#ffffff' : '#111827',
+    textColor: luminance < 132 ? 'var(--ui-color-card-background)' : 'var(--ui-color-primary-text)',
     borderColor: rgbToCss(borderRgb),
   }
 }
@@ -222,7 +222,7 @@ export const getDirectionalHeatmapVisual = (
 
   return {
     background: rgbToCss(backgroundRgb),
-    textColor: luminance < 132 ? '#ffffff' : '#111827',
+    textColor: luminance < 132 ? 'var(--ui-color-card-background)' : 'var(--ui-color-primary-text)',
     borderColor: rgbToCss(borderRgb),
   }
 }

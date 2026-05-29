@@ -82,7 +82,7 @@ export default function DashboardWidgetHeader({
             height: isMobileDashboard ? 28 : iconButtonStyle.height,
             minWidth: isMobileDashboard ? 28 : iconButtonStyle.minWidth,
             borderRadius: isMobileDashboard ? 10 : iconButtonStyle.borderRadius,
-            color: isRemoveHovered ? '#dc2626' : '#64748b',
+            color: isRemoveHovered ? 'var(--ui-color-expense)' : 'var(--ui-color-secondary-text)',
             borderColor: isRemoveHovered ? 'rgba(220,38,38,0.34)' : iconButtonStyle.borderColor,
             background: isRemoveHovered ? 'rgba(254,242,242,0.88)' : iconButtonStyle.background,
           }}

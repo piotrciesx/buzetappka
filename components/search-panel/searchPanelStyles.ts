@@ -56,7 +56,7 @@ export const resetButtonStyle = {
   borderRadius: 999,
   border: '1px solid rgba(203, 213, 225, 0.82)',
   background: 'rgba(255, 255, 255, 0.68)',
-  color: '#475569',
+  color: 'var(--ui-color-secondary-text)',
   cursor: 'pointer',
   fontSize: 12,
   fontWeight: 560,
@@ -78,20 +78,20 @@ export const statCardStyle = {
 
 export const incomeStatCardStyle = {
   ...statCardStyle,
-  background: '#f0fdf4',
-  border: '1px solid #bbf7d0',
+  background: 'var(--ui-color-income-soft)',
+  border: '1px solid var(--ui-color-income-soft)',
 } as const
 
 export const expenseStatCardStyle = {
   ...statCardStyle,
-  background: '#fef2f2',
-  border: '1px solid #fecaca',
+  background: 'var(--ui-color-expense-soft)',
+  border: '1px solid var(--ui-color-expense-soft)',
 } as const
 
 export const balanceStatCardStyle = {
   ...statCardStyle,
-  background: '#eff6ff',
-  border: '1px solid #bfdbfe',
+  background: 'var(--ui-color-soft-blue)',
+  border: '1px solid var(--ui-color-light-blue-border)',
 } as const
 
 export const statLabelStyle = {
@@ -115,8 +115,8 @@ export const tagsWrapStyle = {
 export const tagButtonBaseStyle = {
   padding: '8px 12px',
   borderRadius: 999,
-  border: '1px solid #d1d5db',
-  background: '#ffffff',
+  border: '1px solid var(--ui-color-soft-border)',
+  background: 'var(--ui-color-card-background)',
   cursor: 'pointer',
   fontSize: 13,
 } as const
@@ -134,7 +134,7 @@ export const historyHeaderStyle = {
   gap: 12,
   padding: '10px 12px',
   background: 'rgba(248, 250, 252, 0.88)',
-  color: '#475569',
+  color: 'var(--ui-color-secondary-text)',
   fontWeight: 680,
   fontSize: 12,
   borderBottom: '1px solid rgba(226, 232, 240, 0.92)',
@@ -212,9 +212,9 @@ export const transactionTagBadgeStyle = {
   fontSize: 12,
   padding: '4px 8px',
   borderRadius: 999,
-  background: '#eff6ff',
-  border: '1px solid #bfdbfe',
-  color: '#1d4ed8',
+  background: 'var(--ui-color-soft-blue)',
+  border: '1px solid var(--ui-color-light-blue-border)',
+  color: 'var(--ui-color-primary-blue)',
   cursor: 'pointer',
 } as const
 

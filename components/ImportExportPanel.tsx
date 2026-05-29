@@ -96,7 +96,7 @@ const compactInfoStyle: CSSProperties = {
   borderRadius: 12,
   padding: '9px 11px',
   background: 'rgba(248, 250, 252, 0.74)',
-  color: '#64748b',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 12,
   lineHeight: 1.4,
 }
@@ -533,10 +533,10 @@ export default function ImportExportPanel({
                     key={row.id}
                     tone={row.errors.length === 0 ? 'default' : 'danger'}
                     style={{
-                      border: '1px solid #d1d5db',
+                      border: '1px solid var(--ui-color-soft-border)',
                       borderRadius: 12,
                       padding: 12,
-                      background: row.errors.length === 0 ? '#f8fafc' : '#fef2f2',
+                      background: row.errors.length === 0 ? 'var(--ui-color-soft-section-background)' : 'var(--ui-color-expense-soft)',
                       display: 'grid',
                       gridTemplateColumns: 'minmax(0, 1fr)',
                     }}
@@ -565,9 +565,9 @@ export default function ImportExportPanel({
                       </label>
 
                       {row.errors.length === 0 ? (
-                        <span style={{ color: '#166534', fontWeight: 600 }}>OK</span>
+                        <span style={{ color: 'var(--ui-color-income)', fontWeight: 600 }}>OK</span>
                       ) : (
-                        <span style={{ color: '#b91c1c', fontWeight: 600 }}>
+                        <span style={{ color: 'var(--ui-color-expense)', fontWeight: 600 }}>
                           {row.errors.join(' | ')}
                         </span>
                       )}
@@ -685,8 +685,8 @@ export default function ImportExportPanel({
           tone={importStatusText.includes('Zaimportowano') ? 'success' : 'danger'}
           style={{
             ...styles.infoBox,
-            borderColor: importStatusText.includes('Zaimportowano') ? '#bbf7d0' : '#fecaca',
-            background: importStatusText.includes('Zaimportowano') ? '#f0fdf4' : '#fef2f2',
+            borderColor: importStatusText.includes('Zaimportowano') ? 'var(--ui-color-income-soft)' : 'var(--ui-color-expense-soft)',
+            background: importStatusText.includes('Zaimportowano') ? 'var(--ui-color-income-soft)' : 'var(--ui-color-expense-soft)',
           }}
         >
           {importStatusText}

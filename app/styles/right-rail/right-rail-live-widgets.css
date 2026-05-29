@@ -8,7 +8,7 @@
 [data-context-card="summary"] span {
   display: block;
   margin: 0 0 4px !important;
-  color: #64748b !important;
+  color: var(--ui-color-secondary-text) !important;
   font-size: 10px !important;
   font-weight: 760 !important;
   letter-spacing: 0 !important;
@@ -16,7 +16,7 @@
 }
 
 [data-context-card="summary"] strong {
-  color: #172033 !important;
+  color: var(--ui-color-primary-text) !important;
   font-size: 22px !important;
   font-weight: 780 !important;
   line-height: 1 !important;
@@ -31,7 +31,7 @@
   border: 1px solid rgba(148, 163, 184, 0.28) !important;
   border-radius: 999px !important;
   background: rgba(241, 245, 249, 0.9) !important;
-  color: #475569 !important;
+  color: var(--ui-color-secondary-text) !important;
   font-size: 11px !important;
   font-style: normal !important;
   font-weight: 760 !important;
@@ -62,7 +62,7 @@
 }
 
 [data-context-metric="true"] span {
-  color: #64748b !important;
+  color: var(--ui-color-secondary-text) !important;
   font-size: 10px !important;
   font-weight: 740 !important;
   letter-spacing: 0 !important;
@@ -72,7 +72,7 @@
 [data-context-metric="true"] strong {
   min-width: 0;
   overflow: hidden;
-  color: #172033 !important;
+  color: var(--ui-color-primary-text) !important;
   font-size: 17px !important;
   font-weight: 780 !important;
   line-height: 1.1 !important;
@@ -81,11 +81,11 @@
 }
 
 [data-context-metric="true"][data-balance-state="positive"] strong {
-  color: #16744b !important;
+  color: var(--ui-color-income) !important;
 }
 
 [data-context-metric="true"][data-balance-state="negative"] strong {
-  color: #b33a3a !important;
+  color: var(--ui-color-expense) !important;
 }
 
 [data-context-card="live"] {
@@ -107,7 +107,7 @@
 }
 
 [data-context-card-header="true"] span {
-  color: #172033 !important;
+  color: var(--ui-color-primary-text) !important;
   font-size: 12px !important;
   font-weight: 780 !important;
   text-transform: none !important;
@@ -117,7 +117,7 @@
   padding: 4px 8px !important;
   border-radius: 999px !important;
   background: rgba(226, 232, 240, 0.82) !important;
-  color: #64748b !important;
+  color: var(--ui-color-secondary-text) !important;
   font-size: 10px !important;
   font-weight: 760 !important;
 }
@@ -137,7 +137,7 @@
   border: 1px solid rgba(203, 213, 225, 0.74) !important;
   border-radius: 999px !important;
   background: rgba(255, 255, 255, 0.66) !important;
-  color: #64748b !important;
+  color: var(--ui-color-secondary-text) !important;
   font-size: 10px !important;
   font-weight: 760 !important;
   line-height: 1 !important;
@@ -147,7 +147,7 @@
 [data-live-widget-tabs="true"] button[data-active="true"] {
   border-color: rgba(37, 99, 235, 0.22) !important;
   background: rgba(239, 246, 255, 0.9) !important;
-  color: #1d4ed8 !important;
+  color: var(--ui-color-primary-blue) !important;
 }
 
 [data-live-widget-card="true"] {
@@ -172,29 +172,29 @@
   border: 1px solid rgba(203, 213, 225, 0.68) !important;
   border-radius: 12px !important;
   background: rgba(248, 250, 252, 0.82) !important;
-  color: #475569 !important;
+  color: var(--ui-color-secondary-text) !important;
   font-size: 15px !important;
   font-weight: 820 !important;
 }
 
 [data-live-widget-card="true"][data-live-card-kind="payment"]::before {
   content: "○";
-  color: #2563eb !important;
+  color: var(--ui-color-primary-blue) !important;
 }
 
 [data-live-widget-card="true"][data-live-card-kind="alert"]::before {
   content: "!";
-  color: #b45309 !important;
+  color: var(--ui-color-warning) !important;
 }
 
 [data-live-widget-card="true"][data-live-card-kind="goal"]::before {
   content: "✓";
-  color: #15803d !important;
+  color: var(--ui-color-income) !important;
 }
 
 [data-live-widget-card="true"][data-live-card-kind="dashboard"]::before {
   content: "∑";
-  color: #334155 !important;
+  color: var(--ui-color-secondary-text) !important;
 }
 
 [data-live-widget-eyebrow="true"] {
@@ -203,7 +203,7 @@
   padding: 3px 8px !important;
   border-radius: 999px !important;
   background: rgba(226, 232, 240, 0.72) !important;
-  color: #64748b !important;
+  color: var(--ui-color-secondary-text) !important;
   font-size: 10px !important;
   font-weight: 780 !important;
   line-height: 1.1 !important;
@@ -221,7 +221,7 @@
 [data-live-widget-main="true"] b {
   min-width: 0 !important;
   overflow: hidden !important;
-  color: #172033 !important;
+  color: var(--ui-color-primary-text) !important;
   font-size: 14px !important;
   font-weight: 790 !important;
   line-height: 1.2 !important;
@@ -231,19 +231,19 @@
 
 [data-live-widget-main="true"] b {
   justify-self: end !important;
-  color: #334155 !important;
+  color: var(--ui-color-secondary-text) !important;
   font-variant-numeric: tabular-nums !important;
 }
 
 [data-live-widget-card="true"] p {
   margin: 0 !important;
-  color: #64748b !important;
+  color: var(--ui-color-secondary-text) !important;
   font-size: 12px !important;
   line-height: 1.35 !important;
 }
 
 [data-live-widget-card="true"] small {
-  color: #94a3b8 !important;
+  color: var(--ui-color-muted-text) !important;
   font-size: 10.5px !important;
   font-weight: 720 !important;
 }
@@ -303,15 +303,15 @@
 }
 
 [data-live-widget-card="true"][data-live-card-tone="income"] [data-live-widget-main="true"] b {
-  color: #16744b !important;
+  color: var(--ui-color-income) !important;
 }
 
 [data-live-widget-card="true"][data-live-card-tone="expense"] [data-live-widget-main="true"] b {
-  color: #b33a3a !important;
+  color: var(--ui-color-expense) !important;
 }
 
 [data-live-widget-card="true"][data-live-card-tone="warning"] [data-live-widget-main="true"] b {
-  color: #b45309 !important;
+  color: var(--ui-color-warning) !important;
 }
 
 [data-live-widget-progress="true"] {
@@ -326,7 +326,7 @@
   display: block !important;
   height: 100% !important;
   border-radius: inherit !important;
-  background: linear-gradient(90deg, #86efac, #22c55e) !important;
+  background: linear-gradient(90deg, var(--ui-color-income-soft), var(--ui-color-income)) !important;
 }
 
 [data-live-widget-card="true"][data-live-card-kind="dashboard"] [data-live-widget-progress="true"] {
@@ -334,12 +334,12 @@
 }
 
 [data-live-widget-card="true"][data-live-card-kind="dashboard"] [data-live-widget-progress="true"] i {
-  background: linear-gradient(90deg, #86efac, #bbf7d0) !important;
-  box-shadow: 999px 0 0 #fecdd3 !important;
+  background: linear-gradient(90deg, var(--ui-color-income-soft), var(--ui-color-income-soft)) !important;
+  box-shadow: 999px 0 0 var(--ui-color-expense-soft) !important;
 }
 
 [data-live-widget-card="true"][data-live-card-tone="warning"] [data-live-widget-progress="true"] i {
-  background: linear-gradient(90deg, #fde68a, #f59e0b) !important;
+  background: linear-gradient(90deg, var(--ui-color-warning-soft), var(--ui-color-warning)) !important;
 }
 
 @keyframes liveWidgetSoftIn {
@@ -366,13 +366,13 @@
 }
 
 [data-live-widget-totals="true"] span {
-  color: #64748b;
+  color: var(--ui-color-secondary-text);
   font-size: 11px;
   font-weight: 720;
 }
 
 [data-live-widget-totals="true"] strong {
-  color: #172033;
+  color: var(--ui-color-primary-text);
   font-size: 14px;
   font-weight: 790;
   white-space: nowrap;
@@ -381,12 +381,12 @@
 
 [data-live-widget-totals="true"] div:first-child strong,
 [data-live-widget-totals="true"] [data-balance-state="positive"] strong {
-  color: #16744b;
+  color: var(--ui-color-income);
 }
 
 [data-live-widget-totals="true"] div:nth-child(2) strong,
 [data-live-widget-totals="true"] [data-balance-state="negative"] strong {
-  color: #b33a3a;
+  color: var(--ui-color-expense);
 }
 
 [data-live-widget-flow="true"] {
@@ -404,11 +404,11 @@
 }
 
 [data-live-widget-flow="true"] [data-flow-kind="income"] {
-  background: #86efac;
+  background: var(--ui-color-income-soft);
 }
 
 [data-live-widget-flow="true"] [data-flow-kind="expense"] {
-  background: #fecdd3;
+  background: var(--ui-color-expense-soft);
 }
 
 [data-live-widget-meta="true"] {
@@ -426,7 +426,7 @@
   border: 1px solid rgba(203, 213, 225, 0.72) !important;
   border-radius: 999px !important;
   background: rgba(248, 250, 252, 0.78) !important;
-  color: #475569 !important;
+  color: var(--ui-color-secondary-text) !important;
   font-size: 10px !important;
   font-weight: 740 !important;
   line-height: 1 !important;
@@ -440,13 +440,13 @@
 }
 
 [data-live-widget-empty="true"] strong {
-  color: #172033;
+  color: var(--ui-color-primary-text);
   font-size: 15px;
 }
 
 [data-live-widget-empty="true"] p {
   margin: 0;
-  color: #64748b;
+  color: var(--ui-color-secondary-text);
   font-size: 12px;
   line-height: 1.45;
 }
@@ -457,7 +457,7 @@
 
 [data-context-card="upcoming"] p {
   margin: 0;
-  color: #64748b;
+  color: var(--ui-color-secondary-text);
   font-size: 12px;
   line-height: 1.4;
 }

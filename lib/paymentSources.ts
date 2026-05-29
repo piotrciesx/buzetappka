@@ -20,10 +20,10 @@ export const DEFAULT_PAYMENT_SOURCE_EMOJI: Record<PaymentSource['type'], string>
 }
 
 export const DEFAULT_PAYMENT_SOURCE_COLOR: Record<PaymentSource['type'], string> = {
-  cash: '#16a34a',
-  card: '#2563eb',
-  account: '#7c3aed',
-  other: '#475569',
+  cash: 'var(--ui-color-income)',
+  card: 'var(--ui-color-primary-blue)',
+  account: 'var(--ui-color-primary-navy)',
+  other: 'var(--ui-color-secondary-text)',
 }
 
 export type PaymentSourceStats = {

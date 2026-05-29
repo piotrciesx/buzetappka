@@ -56,8 +56,8 @@ export default function ReminderBellPopup({
                   style={{
                     ...styles.infoBox,
                     marginTop: 8,
-                    background: '#fff7ed',
-                    border: '1px solid #fed7aa',
+                    background: 'var(--ui-color-warning-soft)',
+                    border: '1px solid var(--ui-color-warning-soft)',
                   }}
                 >
                   W tym miesiącu istnieje już wpis powiązany z tym przypomnieniem.

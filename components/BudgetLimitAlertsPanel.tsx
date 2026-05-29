@@ -53,16 +53,16 @@ const itemButtonStyle: CSSProperties = {
   display: 'block',
   padding: '10px 0',
   border: 'none',
-  borderTop: '1px solid #f1f5f9',
+  borderTop: '1px solid var(--ui-color-soft-section-background)',
   background: 'transparent',
-  color: '#111827',
+  color: 'var(--ui-color-primary-text)',
   textAlign: 'left',
   cursor: 'pointer',
 }
 
 const metaStyle: CSSProperties = {
   marginTop: 3,
-  color: '#64748b',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 13,
   lineHeight: 1.35,
 }

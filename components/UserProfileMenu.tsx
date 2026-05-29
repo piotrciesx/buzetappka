@@ -33,9 +33,9 @@ const avatarButtonStyle: CSSProperties = {
   width: 40,
   height: 40,
   borderRadius: uiControlPrimitives.iconButton.avatar.radius,
-  border: '1px solid #d1d5db',
-  background: '#111827',
-  color: '#ffffff',
+  border: '1px solid var(--ui-color-soft-border)',
+  background: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-color-card-background)',
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -171,7 +171,7 @@ export default function UserProfileMenu({
           >
             Ustawienia
           </button>
-          <button type="button" style={{ ...menuButtonStyle, color: '#9ca3af' }} onClick={showPlaceholder}>
+          <button type="button" style={{ ...menuButtonStyle, color: 'var(--ui-color-muted-text)' }} onClick={showPlaceholder}>
             Tryb nocny / Tryb dzienny
           </button>
           <button

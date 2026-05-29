@@ -131,7 +131,7 @@ export const suggestionButtonStyle = {
   textAlign: 'left' as const,
   background: 'var(--ui-surface-dropdown)',
   border: 'none',
-  borderBottom: '1px solid #f1f5f9',
+  borderBottom: '1px solid var(--ui-color-soft-section-background)',
   padding: 'var(--ui-space-5) var(--ui-space-6)',
   cursor: 'pointer',
   fontSize: 'var(--ui-font-size-body)',
@@ -160,7 +160,7 @@ export const finalCategoryInfoStyle = {
 export const finalCategoryInfoTitleStyle = {
   fontSize: 12,
   fontWeight: 600,
-  color: '#1d4ed8',
+  color: 'var(--ui-color-primary-blue)',
   letterSpacing: 0.3,
   textTransform: 'uppercase' as const,
   marginBottom: 4,
@@ -169,7 +169,7 @@ export const finalCategoryInfoTitleStyle = {
 export const finalCategoryInfoValueStyle = {
   fontSize: 14,
   fontWeight: 600,
-  color: '#111827',
+  color: 'var(--ui-color-primary-text)',
 } as const
 
 export const tagInputWrapStyle = {
@@ -191,9 +191,9 @@ export const tagBadgeStyle = {
   gap: 6,
   padding: uiControlPrimitives.tag.default.padding,
   borderRadius: uiControlPrimitives.tag.default.radius,
-  border: '1px solid #bfdbfe',
+  border: '1px solid var(--ui-color-light-blue-border)',
   background: 'rgba(239, 246, 255, 0.92)',
-  color: '#1d4ed8',
+  color: 'var(--ui-color-primary-blue)',
   fontSize: 'var(--ui-font-size-body-sm)',
   fontWeight: 600,
 } as const
@@ -201,7 +201,7 @@ export const tagBadgeStyle = {
 export const tagRemoveButtonStyle = {
   border: 'none',
   background: 'transparent',
-  color: '#1d4ed8',
+  color: 'var(--ui-color-primary-blue)',
   cursor: 'pointer',
   fontSize: 14,
   lineHeight: 1.2,

@@ -252,9 +252,9 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                       onClick={() => onToggleTagId(tag.id)}
                       style={{
                         ...tagButtonBaseStyle,
-                        background: isActive ? '#eff6ff' : '#ffffff',
-                        borderColor: isActive ? '#93c5fd' : '#d1d5db',
-                        color: isActive ? '#1d4ed8' : '#111827',
+                        background: isActive ? 'var(--ui-color-soft-blue)' : 'var(--ui-color-card-background)',
+                        borderColor: isActive ? 'var(--ui-color-light-blue-border)' : 'var(--ui-color-soft-border)',
+                        color: isActive ? 'var(--ui-color-primary-blue)' : 'var(--ui-color-primary-text)',
                         fontWeight: isActive ? 700 : 500,
                       }}
                     >
@@ -269,18 +269,18 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
           <div data-bank-search-stats="true" style={statsGridStyle}>
             <div style={incomeStatCardStyle}>
               <div style={statLabelStyle}>Przychody</div>
-              <div style={{ ...statValueStyle, color: '#15803d' }}>{formatMoney(summary.incomeTotal)}</div>
+              <div style={{ ...statValueStyle, color: 'var(--ui-color-income)' }}>{formatMoney(summary.incomeTotal)}</div>
             </div>
             <div style={expenseStatCardStyle}>
               <div style={statLabelStyle}>Wydatki</div>
-              <div style={{ ...statValueStyle, color: '#b91c1c' }}>{formatMoney(summary.expenseTotal)}</div>
+              <div style={{ ...statValueStyle, color: 'var(--ui-color-expense)' }}>{formatMoney(summary.expenseTotal)}</div>
             </div>
             <div style={balanceStatCardStyle}>
               <div style={statLabelStyle}>Bilans</div>
               <div
                 style={{
                   ...statValueStyle,
-                  color: summary.balance >= 0 ? '#1d4ed8' : '#b91c1c',
+                  color: summary.balance >= 0 ? 'var(--ui-color-primary-blue)' : 'var(--ui-color-expense)',
                 }}
               >
                 {formatSignedMoney(summary.balance)}
@@ -330,10 +330,10 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                         fontWeight: 600,
                         color:
                           effectiveSignedAmount > 0
-                            ? '#15803d'
+                            ? 'var(--ui-color-income)'
                             : effectiveSignedAmount < 0
-                              ? '#b91c1c'
-                              : '#111827',
+                              ? 'var(--ui-color-expense)'
+                              : 'var(--ui-color-primary-text)',
                       }}
                     >
                       {formatSignedMoney(effectiveSignedAmount)}

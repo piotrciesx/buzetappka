@@ -103,11 +103,11 @@ function MonthCalendarHeatmap({
                   width: cellSize,
                   height: cellSize,
                   borderRadius: compact ? 8 : 9,
-                  background: isInactive ? '#f1f5f9' : visual.background,
+                  background: isInactive ? 'var(--ui-color-soft-section-background)' : visual.background,
                   border: day.isBeforeBudgetStart
-                    ? '1px dashed #d1d5db'
+                    ? '1px dashed var(--ui-color-soft-border)'
                     : day.isFuture
-                      ? '1px solid #e2e8f0'
+                      ? '1px solid var(--ui-color-disabled-border)'
                       : `1px solid ${visual.borderColor}`,
                   display: 'grid',
                   placeItems: 'center',
@@ -175,7 +175,7 @@ function CashflowChart({ days }: { days: DayPoint[] }) {
         overflow: 'hidden',
       }}
     >
-      <div style={{ color: '#111827', fontSize: 14, fontWeight: 600 }}>
+      <div style={{ color: 'var(--ui-color-primary-text)', fontSize: 14, fontWeight: 600 }}>
         Trend
       </div>
 
@@ -252,7 +252,7 @@ function CashflowChart({ days }: { days: DayPoint[] }) {
               x2={width}
               y1={zeroY}
               y2={zeroY}
-              stroke="#94a3b8"
+              stroke="var(--ui-color-muted-text)"
               strokeWidth="1.2"
               strokeDasharray="5 5"
               vectorEffect="non-scaling-stroke"
@@ -340,7 +340,7 @@ export default function MonthRhythmWidget({
         }}
       >
         <div style={{ minWidth: 0 }}>
-          <div style={{ color: '#111827', fontSize: 13, fontWeight: 600, lineHeight: 1.2 }}>
+          <div style={{ color: 'var(--ui-color-primary-text)', fontSize: 13, fontWeight: 600, lineHeight: 1.2 }}>
             Rytm dni
           </div>
         </div>
@@ -376,7 +376,7 @@ export default function MonthRhythmWidget({
         }}
       >
         <div>
-          <div style={{ color: '#111827', fontSize: 13, fontWeight: 600, lineHeight: 1.2 }}>
+          <div style={{ color: 'var(--ui-color-primary-text)', fontSize: 13, fontWeight: 600, lineHeight: 1.2 }}>
             Rytm dni
           </div>
         </div>

@@ -8,7 +8,7 @@ import { clampPercent, formatMoney, formatPercent } from './dashboardWidgetTileU
 import type { BudgetControlWidgetProps } from './dashboardWidgetTypes'
 import { buildMetrics, formatSignedPercent, getComparisonNote, getPaceNote, type BudgetMetrics } from './BudgetControlWidgetData'
 
-const WARNING = '#ca8a04'
+const WARNING = 'var(--ui-color-warning)'
 
 const FONT =
   'var(--font-app-sans)'
@@ -65,7 +65,7 @@ const panelHeaderStyle: CSSProperties = {
 
 const titleStyle: CSSProperties = {
   minWidth: 0,
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 11,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -211,7 +211,7 @@ const progressHeaderStyle: CSSProperties = {
 
 const progressLabelStyle: CSSProperties = {
   minWidth: 0,
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 10.5,
   lineHeight: 1.2,
   fontWeight: 500,
@@ -306,7 +306,7 @@ const comparisonLabelStyle: CSSProperties = {
 
 const comparisonValueStyle: CSSProperties = {
   minWidth: 0,
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 13,
   lineHeight: 1.2,
   fontWeight: 600,

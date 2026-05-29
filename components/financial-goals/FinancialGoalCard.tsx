@@ -7,10 +7,10 @@ import { getGoalProgressBarColor } from '../../lib/financialGoals'
 import type { GoalCardBaseProps } from './financialGoalsPanelTypes'
 
 const cardStyle = {
-  border: '1px solid #e5e7eb',
+  border: '1px solid var(--ui-color-divider-border)',
   borderRadius: 12,
   padding: 14,
-  background: '#ffffff',
+  background: 'var(--ui-color-card-background)',
 } as const
 
 const sliderWrapStyle = {
@@ -153,7 +153,7 @@ function GoalCardContent(props: GoalCardBaseProps & { dragHandle?: ReactNode }) 
           marginTop: 12,
           height: 10,
           borderRadius: 999,
-          background: '#e5e7eb',
+          background: 'var(--ui-color-divider-border)',
           overflow: 'hidden',
         }}
       >
@@ -199,13 +199,13 @@ export function SortableGoalCard(props: GoalCardBaseProps) {
           <button
             type="button"
             style={{
-              border: '1px solid #d1d5db',
-              background: '#f8fafc',
+              border: '1px solid var(--ui-color-soft-border)',
+              background: 'var(--ui-color-soft-section-background)',
               borderRadius: 10,
               padding: '6px 10px',
               cursor: 'grab',
               fontWeight: 600,
-              color: '#475569',
+              color: 'var(--ui-color-secondary-text)',
             }}
             title="Przeciągnij, aby zmienić priorytet"
             {...attributes}

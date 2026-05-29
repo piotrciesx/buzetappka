@@ -104,7 +104,7 @@ const dateStyle: CSSProperties = {
 
 const descriptionStyle: CSSProperties = {
   minWidth: 0,
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 11,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -148,7 +148,7 @@ const chartPanelStyle: CSSProperties = {
 
 const chartTitleStyle: CSSProperties = {
   minWidth: 0,
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 12,
   lineHeight: 1.2,
   fontWeight: 600,

@@ -64,7 +64,7 @@ const panelHeaderStyle: CSSProperties = {
 
 const titleStyle: CSSProperties = {
   minWidth: 0,
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 11,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -205,7 +205,7 @@ const numberLabelStyle: CSSProperties = {
 
 const numberValueStyle: CSSProperties = {
   minWidth: 0,
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 13,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -260,7 +260,7 @@ const leakTextStyle: CSSProperties = {
 
 const leakNameStyle: CSSProperties = {
   minWidth: 0,
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 11,
   lineHeight: 1.2,
   fontWeight: 600,

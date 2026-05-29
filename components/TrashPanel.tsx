@@ -45,7 +45,7 @@ const hintStyle: CSSProperties = {
   borderRadius: 12,
   padding: '9px 11px',
   background: 'rgba(248, 250, 252, 0.74)',
-  color: '#64748b',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 12,
   lineHeight: 1.4,
 }
@@ -82,7 +82,7 @@ const topLineStyle: CSSProperties = {
 
 const amountStyle: CSSProperties = {
   flex: '0 0 auto',
-  color: '#be123c',
+  color: 'var(--ui-color-expense)',
   fontSize: 14,
   fontWeight: 780,
   fontVariantNumeric: 'tabular-nums',
@@ -91,7 +91,7 @@ const amountStyle: CSSProperties = {
 const descriptionStyle: CSSProperties = {
   minWidth: 0,
   overflow: 'hidden',
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 13,
   fontWeight: 680,
   textOverflow: 'ellipsis',
@@ -109,12 +109,12 @@ const fieldStyle: CSSProperties = {
   minWidth: 0,
   display: 'grid',
   gap: 2,
-  color: '#334155',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 12,
 }
 
 const labelStyle: CSSProperties = {
-  color: '#94a3b8',
+  color: 'var(--ui-color-muted-text)',
   fontSize: 10,
   fontWeight: 720,
   textTransform: 'uppercase',
@@ -148,7 +148,7 @@ const lightDangerButtonStyle: CSSProperties = {
   ...lightButtonStyle,
   borderColor: 'rgba(254, 205, 211, 0.9)',
   background: 'rgba(255, 241, 242, 0.7)',
-  color: '#be123c',
+  color: 'var(--ui-color-expense)',
 }
 
 export default function TrashPanel(props: Props) {

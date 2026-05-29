@@ -2,8 +2,8 @@ import { uiZIndex } from '../../lib/uiFoundation'
 
 export const calendarPanelStyle = {
   marginBottom: 16,
-  background: '#ffffff',
-  border: '1px solid #e5e7eb',
+  background: 'var(--ui-color-card-background)',
+  border: '1px solid var(--ui-color-divider-border)',
   borderRadius: 14,
   padding: 12,
   boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
@@ -21,7 +21,7 @@ export const calendarWeekdayStyle = {
   fontSize: 10,
   fontWeight: 600,
   textTransform: 'uppercase' as const,
-  color: '#6b7280',
+  color: 'var(--ui-color-secondary-text)',
 } as const
 
 export const calendarGridStyle = {
@@ -33,10 +33,10 @@ export const calendarGridStyle = {
 
 export const calendarDayCellStyle = {
   minHeight: 70,
-  border: '1px solid #e5e7eb',
+  border: '1px solid var(--ui-color-divider-border)',
   borderRadius: 10,
   padding: '7px 8px',
-  background: '#f8fafc',
+  background: 'var(--ui-color-soft-section-background)',
   display: 'flex',
   flexDirection: 'column' as const,
   gap: 4,
@@ -57,7 +57,7 @@ export const calendarExpandBadgeStyle = {
   justifyContent: 'center',
   fontSize: 10,
   fontWeight: 600,
-  color: '#475569',
+  color: 'var(--ui-color-secondary-text)',
   border: '1px solid rgba(203, 213, 225, 0.72)',
   borderRadius: 999,
   background: 'rgba(255, 255, 255, 0.76)',
@@ -67,21 +67,21 @@ export const calendarExpandBadgeStyle = {
 
 export const calendarEmptyCellStyle = {
   minHeight: 70,
-  border: '1px dashed #e5e7eb',
+  border: '1px dashed var(--ui-color-divider-border)',
   borderRadius: 10,
   padding: 8,
-  background: '#f9fafb',
+  background: 'var(--ui-color-soft-section-background)',
 } as const
 
 export const calendarDayNumberStyle = {
   fontSize: 13,
   fontWeight: 700,
-  color: '#111827',
+  color: 'var(--ui-color-primary-text)',
 } as const
 
 export const calendarDayMetaStyle = {
   fontSize: 11,
-  color: '#4b5563',
+  color: 'var(--ui-color-secondary-text)',
   lineHeight: 1.2,
   minWidth: 0,
   overflow: 'hidden' as const,
@@ -91,7 +91,7 @@ export const calendarDayMetaStyle = {
 
 export const calendarDayCountStyle = {
   fontSize: 10,
-  color: '#6b7280',
+  color: 'var(--ui-color-secondary-text)',
   lineHeight: 1.2,
   whiteSpace: 'nowrap' as const,
 } as const
@@ -111,9 +111,9 @@ export const modalStyle = {
   width: 'min(860px, 100%)',
   maxHeight: '85vh',
   overflowY: 'auto' as const,
-  background: '#ffffff',
+  background: 'var(--ui-color-card-background)',
   borderRadius: 16,
-  border: '1px solid #dbeafe',
+  border: '1px solid var(--ui-color-light-blue-border)',
   boxShadow: '0 20px 40px rgba(15, 23, 42, 0.18)',
   padding: 18,
 } as const
@@ -129,18 +129,18 @@ export const modalHeaderStyle = {
 export const modalTitleStyle = {
   fontSize: 18,
   fontWeight: 600,
-  color: '#111827',
+  color: 'var(--ui-color-primary-text)',
   marginBottom: 4,
 } as const
 
 export const modalSubtitleStyle = {
   fontSize: 13,
-  color: '#6b7280',
+  color: 'var(--ui-color-secondary-text)',
 } as const
 
 export const closeButtonStyle = {
-  border: '1px solid #d1d5db',
-  background: '#ffffff',
+  border: '1px solid var(--ui-color-soft-border)',
+  background: 'var(--ui-color-card-background)',
   borderRadius: 10,
   padding: '8px 10px',
   cursor: 'pointer',
@@ -149,10 +149,10 @@ export const closeButtonStyle = {
 } as const
 
 export const daySummaryCardStyle = {
-  border: '1px solid #e5e7eb',
+  border: '1px solid var(--ui-color-divider-border)',
   borderRadius: 12,
   padding: 12,
-  background: '#f8fafc',
+  background: 'var(--ui-color-soft-section-background)',
   marginBottom: 14,
 } as const
 
@@ -163,10 +163,10 @@ export const transactionsListStyle = {
 } as const
 
 export const transactionCardStyle = {
-  border: '1px solid #e5e7eb',
+  border: '1px solid var(--ui-color-divider-border)',
   borderRadius: 12,
   padding: 12,
-  background: '#ffffff',
+  background: 'var(--ui-color-card-background)',
 } as const
 
 export const transactionTopRowStyle = {
@@ -180,12 +180,12 @@ export const transactionTopRowStyle = {
 export const transactionAmountStyle = {
   fontSize: 15,
   fontWeight: 600,
-  color: '#111827',
+  color: 'var(--ui-color-primary-text)',
 } as const
 
 export const transactionDescriptionStyle = {
   fontSize: 14,
-  color: '#374151',
+  color: 'var(--ui-color-primary-text)',
 } as const
 
 export const transactionTagsStyle = {
@@ -199,18 +199,18 @@ export const transactionTagBadgeStyle = {
   fontSize: 12,
   padding: '4px 8px',
   borderRadius: 999,
-  background: '#eff6ff',
-  border: '1px solid #bfdbfe',
-  color: '#1d4ed8',
+  background: 'var(--ui-color-soft-blue)',
+  border: '1px solid var(--ui-color-light-blue-border)',
+  color: 'var(--ui-color-primary-blue)',
   cursor: 'pointer',
 } as const
 
 export const emptyDayStyle = {
-  border: '1px dashed #d1d5db',
+  border: '1px dashed var(--ui-color-soft-border)',
   borderRadius: 12,
   padding: 14,
-  background: '#f9fafb',
-  color: '#6b7280',
+  background: 'var(--ui-color-soft-section-background)',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 14,
 } as const
 
@@ -230,7 +230,7 @@ export const formRowStyle = {
 } as const
 
 export const inputStyle = {
-  border: '1px solid #d1d5db',
+  border: '1px solid var(--ui-color-soft-border)',
   borderRadius: 10,
   padding: '8px 10px',
   fontSize: 14,
@@ -263,8 +263,8 @@ export const suggestionsDropdownStyle = {
   left: 0,
   right: 0,
   zIndex: uiZIndex.widgetDropdown,
-  background: '#ffffff',
-  border: '1px solid #d1d5db',
+  background: 'var(--ui-color-card-background)',
+  border: '1px solid var(--ui-color-soft-border)',
   borderRadius: 10,
   boxShadow: '0 10px 24px rgba(15, 23, 42, 0.12)',
   overflow: 'hidden' as const,
@@ -274,11 +274,11 @@ export const suggestionButtonBaseStyle = {
   width: '100%',
   textAlign: 'left' as const,
   border: 'none',
-  background: '#ffffff',
+  background: 'var(--ui-color-card-background)',
   padding: '10px 12px',
   cursor: 'pointer',
   fontSize: 13,
-  color: '#111827',
+  color: 'var(--ui-color-primary-text)',
 } as const
 
 export const tagFieldWrapStyle = {
@@ -300,9 +300,9 @@ export const tagBadgeStyle = {
   gap: 6,
   padding: '4px 8px',
   borderRadius: 999,
-  background: '#eff6ff',
-  border: '1px solid #bfdbfe',
-  color: '#1d4ed8',
+  background: 'var(--ui-color-soft-blue)',
+  border: '1px solid var(--ui-color-light-blue-border)',
+  color: 'var(--ui-color-primary-blue)',
   fontSize: 12,
   fontWeight: 600,
 } as const
@@ -310,7 +310,7 @@ export const tagBadgeStyle = {
 export const tagRemoveButtonStyle = {
   border: 'none',
   background: 'transparent',
-  color: '#1d4ed8',
+  color: 'var(--ui-color-primary-blue)',
   cursor: 'pointer',
   fontSize: 14,
   lineHeight: 1.2,
@@ -367,7 +367,7 @@ export const heatmapLegendStyle = {
   gap: 8,
   marginBottom: 8,
   fontSize: 12,
-  color: '#4b5563',
+  color: 'var(--ui-color-secondary-text)',
 } as const
 
 export const heatmapLegendLabelsStyle = {
@@ -377,14 +377,14 @@ export const heatmapLegendLabelsStyle = {
   gap: 12,
   fontSize: 12,
   fontWeight: 600,
-  color: '#4b5563',
+  color: 'var(--ui-color-secondary-text)',
 } as const
 
 export const heatmapLegendBarStyle = {
   width: '100%',
   height: 10,
   borderRadius: 999,
-  border: '1px solid #d8dee8',
+  border: '1px solid var(--ui-color-soft-border)',
   background:
     'linear-gradient(90deg, rgb(248, 187, 176) 0%, rgb(252, 235, 174) 50%, rgb(170, 221, 188) 100%)',
   boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.65)',
@@ -397,12 +397,12 @@ export const heatmapSwitchRowStyle = {
   flexWrap: 'wrap' as const,
   marginBottom: 8,
   fontSize: 12,
-  color: '#4b5563',
+  color: 'var(--ui-color-secondary-text)',
 } as const
 
 export const noDaySectionStyle = {
   marginTop: 18,
-  borderTop: '1px solid #e5e7eb',
+  borderTop: '1px solid var(--ui-color-divider-border)',
   paddingTop: 16,
 } as const
 
@@ -410,14 +410,14 @@ export const noDaySummaryStyle = {
   marginTop: 8,
   marginBottom: 12,
   padding: 12,
-  border: '1px solid #e5e7eb',
+  border: '1px solid var(--ui-color-divider-border)',
   borderRadius: 12,
-  background: '#f8fafc',
+  background: 'var(--ui-color-soft-section-background)',
 } as const
 
 export const noDayHintStyle = {
   fontSize: 12,
-  color: '#6b7280',
+  color: 'var(--ui-color-secondary-text)',
   marginTop: 6,
   lineHeight: 1.4,
 } as const
@@ -426,9 +426,9 @@ export const badgeStyle = {
   display: 'inline-flex',
   alignItems: 'center',
   gap: 6,
-  border: '1px solid #cbd5e1',
-  background: '#f8fafc',
-  color: '#475569',
+  border: '1px solid var(--ui-color-soft-border)',
+  background: 'var(--ui-color-soft-section-background)',
+  color: 'var(--ui-color-secondary-text)',
   borderRadius: 999,
   padding: '4px 8px',
   fontSize: 12,

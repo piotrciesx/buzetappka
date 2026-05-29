@@ -18,22 +18,22 @@ const formatMoney = (value: number) => `${value.toFixed(2)} zł`
 
 const getLimitColor = (view: BudgetLimitView) => {
   if (view.alertState.level === 'exceeded') {
-    return '#dc2626'
+    return 'var(--ui-color-expense)'
   }
 
   if (view.alertState.level === 'strong') {
-    return '#ea580c'
+    return 'var(--ui-color-warning)'
   }
 
   if (view.alertState.level === 'warning') {
-    return '#f59e0b'
+    return 'var(--ui-color-warning)'
   }
 
   if (view.usagePercent >= 80) {
-    return '#f59e0b'
+    return 'var(--ui-color-warning)'
   }
 
-  return '#64748b'
+  return 'var(--ui-color-secondary-text)'
 }
 
 const wrapStyle: CSSProperties = {
@@ -42,7 +42,7 @@ const wrapStyle: CSSProperties = {
   alignItems: 'center',
   gap: 8,
   flexWrap: 'wrap',
-  color: '#64748b',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 12,
   lineHeight: 1.25,
 }
@@ -51,7 +51,7 @@ const barStyle: CSSProperties = {
   width: 76,
   height: 5,
   borderRadius: 999,
-  background: '#e5e7eb',
+  background: 'var(--ui-color-divider-border)',
   overflow: 'hidden',
 }
 

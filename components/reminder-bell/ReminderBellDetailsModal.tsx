@@ -230,7 +230,7 @@ export default function ReminderBellDetailsModal({
                     style={{
                       width: `${selectedDetailsProgress}%`,
                       height: '100%',
-                      background: '#2563eb',
+                      background: 'var(--ui-color-primary-blue)',
                     }}
                   />
                 </div>

@@ -10,9 +10,9 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     margin: 0,
     fontFamily:
       'var(--font-app-sans), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-    background: '#f3f6fb',
+    background: 'var(--ui-color-main-background)',
     minHeight: '100vh',
-    color: '#0f172a',
+    color: 'var(--ui-color-primary-text)',
     overflowX: 'hidden',
   } as const,
 
@@ -25,7 +25,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
 
   pageSubtitle: {
     fontSize: 12,
-    color: '#64748b',
+    color: 'var(--ui-color-secondary-text)',
     marginBottom: 12,
   } as const,
 
@@ -65,10 +65,10 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     fontWeight: 620,
     fontSize: 15,
     padding: '6px 12px',
-    background: 'linear-gradient(145deg, #ffffff, #eef5ff)',
+    background: 'linear-gradient(145deg, var(--ui-color-card-background), var(--ui-color-soft-blue))',
     border: '1px solid rgba(147, 197, 253, 0.52)',
     borderRadius: 999,
-    color: '#1e3a8a',
+    color: 'var(--ui-color-primary-navy)',
     boxShadow: '0 8px 18px rgba(37, 99, 235, 0.08), inset 0 1px 0 rgba(255,255,255,0.95)',
     boxSizing: 'border-box',
   } as const,
@@ -76,8 +76,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   monthNavigationSettingsCard: {
     marginBottom: 14,
     padding: 14,
-    background: '#f9fafb',
-    border: '1px solid #e5e7eb',
+    background: 'var(--ui-color-soft-section-background)',
+    border: '1px solid var(--ui-color-divider-border)',
     borderRadius: 12,
   } as const,
 
@@ -103,7 +103,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   monthNavigationFieldLabel: {
     fontSize: 13,
     fontWeight: 600,
-    color: '#374151',
+    color: 'var(--ui-color-primary-text)',
   } as const,
 
   monthNavigationCheckboxLabel: {
@@ -112,13 +112,13 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     gap: 8,
     fontSize: 14,
     fontWeight: 600,
-    color: '#111827',
+    color: 'var(--ui-color-primary-text)',
   } as const,
 
   monthNavigationHint: {
     marginTop: 10,
     fontSize: 13,
-    color: '#4b5563',
+    color: 'var(--ui-color-secondary-text)',
   } as const,
 
   infoRow: {
@@ -140,7 +140,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
 
   smallMutedText: {
     fontSize: 12,
-    color: '#64748b',
+    color: 'var(--ui-color-secondary-text)',
     lineHeight: 1.4,
     overflowWrap: 'anywhere' as const,
   } as const,
@@ -149,15 +149,15 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     fontSize: 17,
     fontWeight: 760,
     marginBottom: 6,
-    color: '#0f172a',
+    color: 'var(--ui-color-primary-text)',
   } as const,
 
   emptyStateCard: {
-    background: '#ffffff',
-    border: '1px solid #e5e7eb',
+    background: 'var(--ui-color-card-background)',
+    border: '1px solid var(--ui-color-divider-border)',
     borderRadius: 14,
     padding: 16,
-    color: '#6b7280',
+    color: 'var(--ui-color-secondary-text)',
     fontStyle: 'italic',
   } as const,
 
@@ -167,7 +167,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     border: '1px solid rgba(219, 234, 254, 0.92)',
     borderRadius: 11,
     padding: 5,
-    boxShadow: '0 8px 22px rgba(15,23,42,0.04)',
+    boxShadow: '0 8px 22px var(--ui-shadow-light-color)',
     maxWidth: '100%',
     boxSizing: 'border-box',
   } as const,
@@ -222,13 +222,13 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   l2Name: {
     fontWeight: 560,
     fontSize: 13,
-    color: '#0f172a',
+    color: 'var(--ui-color-primary-text)',
     overflowWrap: 'anywhere' as const,
   } as const,
 
   l2Meta: {
     fontSize: 10.5,
-    color: '#64748b',
+    color: 'var(--ui-color-secondary-text)',
     overflowWrap: 'anywhere' as const,
   } as const,
 
@@ -237,9 +237,9 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     marginTop: 6,
     padding: '4px 8px',
     borderRadius: 999,
-    background: '#fff7ed',
-    border: '1px solid #fdba74',
-    color: '#9a3412',
+    background: 'var(--ui-color-warning-soft)',
+    border: '1px solid var(--ui-color-warning-soft)',
+    color: 'var(--ui-color-warning)',
     fontSize: 12,
     fontWeight: 600,
   } as const,
@@ -266,7 +266,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   l3Name: {
     fontWeight: 540,
     fontSize: 12.5,
-    color: '#0f172a',
+    color: 'var(--ui-color-primary-text)',
     overflowWrap: 'anywhere' as const,
   } as const,
 
@@ -276,8 +276,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     height: 26,
     borderRadius: 9,
     border: '1px solid rgba(203,213,225,0.82)',
-    background: 'linear-gradient(145deg, #ffffff, #f1f5f9)',
-    color: '#64748b',
+    background: 'linear-gradient(145deg, var(--ui-color-card-background), var(--ui-color-soft-section-background))',
+    color: 'var(--ui-color-secondary-text)',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -348,8 +348,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     gap: 8,
     flexWrap: 'wrap' as const,
     padding: 12,
-    background: '#f9fafb',
-    border: '1px solid #e5e7eb',
+    background: 'var(--ui-color-soft-section-background)',
+    border: '1px solid var(--ui-color-divider-border)',
     borderRadius: 12,
     maxWidth: '100%',
     boxSizing: 'border-box',
@@ -360,7 +360,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     padding: '0 11px',
     borderRadius: 11,
     border: '1px solid rgba(203,213,225,0.92)',
-    background: '#ffffff',
+    background: 'var(--ui-color-card-background)',
     fontSize: 13,
     minWidth: 180,
     maxWidth: '100%',
@@ -373,7 +373,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     padding: '0 10px',
     borderRadius: 10,
     border: '1px solid rgba(203,213,225,0.92)',
-    background: '#ffffff',
+    background: 'var(--ui-color-card-background)',
     fontSize: 13,
     width: 120,
     maxWidth: '100%',
@@ -418,21 +418,21 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
 
   dateText: {
     fontSize: 11,
-    color: '#64748b',
+    color: 'var(--ui-color-secondary-text)',
   } as const,
 
   emptyText: {
     marginTop: 8,
     fontSize: 12,
-    color: '#64748b',
+    color: 'var(--ui-color-secondary-text)',
     fontStyle: 'italic',
   } as const,
 
   errorBox: {
     marginTop: 12,
-    color: '#991b1b',
-    background: '#fef2f2',
-    border: '1px solid #fecaca',
+    color: 'var(--ui-color-expense)',
+    background: 'var(--ui-color-expense-soft)',
+    border: '1px solid var(--ui-color-expense-soft)',
     padding: 12,
     borderRadius: 10,
   } as const,
@@ -456,7 +456,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   sortLabel: {
     fontSize: 14,
     fontWeight: 600,
-    color: '#374151',
+    color: 'var(--ui-color-primary-text)',
   } as const,
 
   floatingActionPanel: {

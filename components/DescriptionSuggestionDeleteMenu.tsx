@@ -30,7 +30,7 @@ const menuStyle = {
 const buttonBaseStyle = {
   width: '100%',
   border: 'none',
-  background: '#ffffff',
+  background: 'var(--ui-color-card-background)',
   padding: uiControlPrimitives.button.menuItem.padding,
   textAlign: 'left' as const,
   cursor: uiControlPrimitives.button.menuItem.cursor,
@@ -66,8 +66,8 @@ export default function DescriptionSuggestionDeleteMenu(props: Props) {
           type="button"
           style={{
             ...buttonBaseStyle,
-            color: '#b91c1c',
-            borderBottom: '1px solid #e5e7eb',
+            color: 'var(--ui-color-expense)',
+            borderBottom: '1px solid var(--ui-color-divider-border)',
           }}
           onMouseDown={(event) => event.stopPropagation()}
           onClick={(event) => {

@@ -147,7 +147,7 @@ const dateStyle: CSSProperties = {
 
 const descriptionStyle: CSSProperties = {
   minWidth: 0,
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 10.8,
   lineHeight: 1.2,
   fontWeight: 600,

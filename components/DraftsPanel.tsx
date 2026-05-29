@@ -63,14 +63,14 @@ const draftTopLineStyle = {
 } as const
 
 const draftTypeStyle = {
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 13,
   fontWeight: 760,
 } as const
 
 const draftCategoryStyle = {
   minWidth: 0,
-  color: '#475569',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 12,
   fontWeight: 650,
   overflow: 'hidden',
@@ -89,12 +89,12 @@ const draftFieldStyle = {
   minWidth: 0,
   display: 'grid',
   gap: 2,
-  color: '#334155',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 12,
 } as const
 
 const draftLabelStyle = {
-  color: '#94a3b8',
+  color: 'var(--ui-color-muted-text)',
   fontSize: 10,
   fontWeight: 720,
   textTransform: 'uppercase' as const,
@@ -129,7 +129,7 @@ const lightDangerButtonStyle = {
   ...lightButtonStyle,
   borderColor: 'rgba(254, 205, 211, 0.9)',
   background: 'rgba(255, 241, 242, 0.7)',
-  color: '#be123c',
+  color: 'var(--ui-color-expense)',
 } as const
 
 const compactStatusStyle = {
@@ -137,7 +137,7 @@ const compactStatusStyle = {
   borderRadius: 12,
   padding: '10px 12px',
   background: 'rgba(248, 250, 252, 0.72)',
-  color: '#64748b',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 12,
 } as const
 

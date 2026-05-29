@@ -186,7 +186,7 @@
     place-items: center;
     gap: 2px;
     background: transparent;
-    color: #475569;
+    color: var(--ui-color-secondary-text);
     font-size: 10px;
     font-weight: 650;
   }
@@ -200,7 +200,7 @@
   [data-budget-mobile-nav="true"] button:hover {
     border-color: rgba(148, 163, 184, 0.36);
     background: rgba(255, 255, 255, 0.78);
-    color: #0f172a;
+    color: var(--ui-color-primary-text);
   }
 
   [data-budget-mobile-more-menu="true"] {
@@ -227,8 +227,8 @@
     align-items: center;
     gap: 8px;
     padding: 0 10px;
-    background: #ffffff;
-    color: #334155;
+    background: var(--ui-color-card-background);
+    color: var(--ui-color-secondary-text);
     font-size: 12px;
     font-weight: 650;
   }
@@ -345,7 +345,7 @@
     justify-content: center;
     border-right: 0;
     border-top: 1px solid rgba(203, 213, 225, 0.74);
-    box-shadow: 0 -10px 30px rgba(15, 23, 42, 0.08);
+    box-shadow: 0 -10px 30px var(--ui-shadow-medium-color);
   }
 
   [data-budget-sidebar-logo="true"] {

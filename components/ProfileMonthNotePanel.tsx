@@ -275,13 +275,13 @@ export default function ProfileMonthNotePanel({
           width: '100%',
           minHeight: 78,
           resize: 'vertical',
-          border: '1px solid #d1d5db',
+          border: '1px solid var(--ui-color-soft-border)',
           borderRadius: 10,
           padding: 10,
           fontSize: 13,
           fontFamily: 'inherit',
           outline: 'none',
-          background: '#ffffff',
+          background: 'var(--ui-color-card-background)',
         }}
       />
 

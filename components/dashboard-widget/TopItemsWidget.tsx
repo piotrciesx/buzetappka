@@ -176,7 +176,7 @@ const indexStyle: CSSProperties = {
 
 const descriptionStyle: CSSProperties = {
   minWidth: 0,
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 10.8,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -285,7 +285,7 @@ const highlightDescriptionStyle: CSSProperties = {
   fontSize: 12,
   lineHeight: 1.2,
   fontWeight: 600,
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
 }
 
 const highlightCategoryStyle: CSSProperties = {

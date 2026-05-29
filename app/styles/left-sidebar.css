@@ -98,7 +98,7 @@
 
 [data-sidebar-section-label="true"] {
   padding: 0 10px 6px !important;
-  color: #1f63b4 !important;
+  color: var(--ui-color-primary-blue) !important;
   font-size: 10px !important;
   font-weight: 720 !important;
   letter-spacing: 0 !important;

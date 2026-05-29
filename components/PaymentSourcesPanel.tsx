@@ -67,7 +67,7 @@ const settingsCardStyle = {
 } as const
 
 const settingsTitleStyle = {
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 13,
   fontWeight: 680,
 } as const
@@ -76,7 +76,7 @@ const checkboxLabelStyle = {
   display: 'flex',
   alignItems: 'center',
   gap: 8,
-  color: '#475569',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 12,
   fontWeight: 560,
   lineHeight: 1.35,
@@ -85,7 +85,7 @@ const checkboxLabelStyle = {
 const checkboxStyle = {
   width: 15,
   height: 15,
-  accentColor: '#2563eb',
+  accentColor: 'var(--ui-color-primary-blue)',
 } as const
 
 const fieldStyle = {
@@ -105,7 +105,7 @@ const lightButtonStyle = {
   padding: '0 10px',
   border: '1px solid rgba(203, 213, 225, 0.82)',
   background: 'rgba(255, 255, 255, 0.68)',
-  color: '#475569',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 12,
   fontWeight: 580,
   boxShadow: 'none',
@@ -116,7 +116,7 @@ const lightDangerButtonStyle = {
   ...lightButtonStyle,
   borderColor: 'rgba(248, 113, 113, 0.34)',
   background: 'rgba(254, 242, 242, 0.66)',
-  color: '#b91c1c',
+  color: 'var(--ui-color-expense)',
 } as const
 
 const primaryActionStyle = {
@@ -154,14 +154,14 @@ const sourceHeaderStyle = {
 } as const
 
 const sourceNameStyle = {
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 14,
   fontWeight: 680,
 } as const
 
 const sourceMetaStyle = {
   marginTop: 3,
-  color: '#64748b',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 12,
 } as const
 
@@ -177,7 +177,7 @@ const sourceStatStyle = {
   border: '1px solid rgba(226, 232, 240, 0.9)',
   borderRadius: 10,
   background: 'rgba(248, 250, 252, 0.7)',
-  color: '#475569',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 12,
 } as const
 
@@ -288,9 +288,9 @@ export default function PaymentSourcesPanel(props: Props) {
       data-utility-badge="true"
       style={{
         ...badgeStyle,
-        background: isActive ? `${colorValue}18` : '#f3f4f6',
-        color: isActive ? colorValue : '#6b7280',
-        border: `1px solid ${isActive ? colorValue : '#d1d5db'}`,
+        background: isActive ? 'var(--ui-color-soft-blue)' : 'var(--ui-color-soft-section-background)',
+        color: isActive ? colorValue : 'var(--ui-color-secondary-text)',
+        border: `1px solid ${isActive ? colorValue : 'var(--ui-color-soft-border)'}`,
       }}
     >
       {label}
@@ -611,8 +611,8 @@ export default function PaymentSourcesPanel(props: Props) {
                 </div>
 
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
-                  {renderMembershipBadge('Przychody', source.is_income_source !== false, '#15803d')}
-                  {renderMembershipBadge('Wydatki', source.is_expense_source !== false, '#b91c1c')}
+                  {renderMembershipBadge('Przychody', source.is_income_source !== false, 'var(--ui-color-income)')}
+                  {renderMembershipBadge('Wydatki', source.is_expense_source !== false, 'var(--ui-color-expense)')}
                 </div>
 
                 <MetadataGrid data-payment-source-stats="true" style={sourceStatsGridStyle}>

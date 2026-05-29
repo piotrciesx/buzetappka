@@ -61,30 +61,30 @@ export const buildMonthCalendarDayCells = ({
     const isFuture = isFutureDate(dateText)
 
     let cellStyle: CSSProperties = calendarDayCellStyle
-    let dynamicTextColor = '#111827'
+    let dynamicTextColor = 'var(--ui-color-primary-text)'
 
     if (isFuture) {
       cellStyle = {
         ...calendarDayCellStyle,
-        background: '#f1f5f9',
-        border: '1px solid #e2e8f0',
+        background: 'var(--ui-color-soft-section-background)',
+        border: '1px solid var(--ui-color-disabled-border)',
         opacity: 0.62,
       }
-      dynamicTextColor = '#64748b'
+      dynamicTextColor = 'var(--ui-color-secondary-text)'
     } else if (isBeforeBudgetStart) {
       cellStyle = {
         ...calendarDayCellStyle,
-        background: '#f3f4f6',
-        border: '1px dashed #d1d5db',
+        background: 'var(--ui-color-soft-section-background)',
+        border: '1px dashed var(--ui-color-soft-border)',
         opacity: 0.58,
       }
-      dynamicTextColor = '#6b7280'
+      dynamicTextColor = 'var(--ui-color-secondary-text)'
     } else if (heatmapMode === 'normal') {
       cellStyle = isActive
         ? {
             ...calendarDayCellStyle,
-            background: '#eef6ff',
-            border: '1px solid #93c5fd',
+            background: 'var(--ui-color-extra-light-blue)',
+            border: '1px solid var(--ui-color-light-blue-border)',
           }
         : calendarDayCellStyle
     } else {
@@ -142,9 +142,9 @@ export const buildMonthCalendarDayCells = ({
             ...calendarExpandBadgeStyle,
             color: dynamicTextColor,
             background:
-              dynamicTextColor === '#ffffff' ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.78)',
+              dynamicTextColor === 'var(--ui-color-card-background)' ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.78)',
             border:
-              dynamicTextColor === '#ffffff'
+              dynamicTextColor === 'var(--ui-color-card-background)'
                 ? '1px solid rgba(255,255,255,0.28)'
                 : '1px solid rgba(203, 213, 225, 0.72)',
             fontSize: 0,

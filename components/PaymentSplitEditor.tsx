@@ -42,7 +42,7 @@ const splitRowStyle: CSSProperties = {
 
 const splitHelpStyle: CSSProperties = {
   fontSize: 12,
-  color: '#64748b',
+  color: 'var(--ui-color-secondary-text)',
   lineHeight: 1.45,
 }
 
@@ -200,7 +200,7 @@ export default function PaymentSplitEditor({
       </div>
 
       {splitState.errors.length > 0 && (
-        <div style={{ ...splitHelpStyle, color: '#b91c1c' }} data-payment-split-errors="true">
+        <div style={{ ...splitHelpStyle, color: 'var(--ui-color-expense)' }} data-payment-split-errors="true">
           {splitState.errors.join(' • ')}
         </div>
       )}

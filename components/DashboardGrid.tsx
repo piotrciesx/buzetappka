@@ -51,7 +51,7 @@ const gridCanvasStyle: CSSProperties = {
 const ghostStyle: CSSProperties = {
   position: 'absolute',
   borderRadius: 16,
-  border: '1px dashed #60a5fa',
+  border: '1px dashed var(--ui-color-primary-blue)',
   background: 'rgba(96, 165, 250, 0.12)',
   boxShadow: 'inset 0 0 0 1px rgba(96, 165, 250, 0.16)',
   transition: 'transform 180ms ease, width 180ms ease, height 180ms ease',

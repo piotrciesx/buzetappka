@@ -40,7 +40,7 @@ const modalStyle: CSSProperties = {
 
 const titleStyle: CSSProperties = {
   margin: 0,
-  color: '#111827',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 18,
   fontWeight: 600,
   lineHeight: 1.25,
@@ -48,7 +48,7 @@ const titleStyle: CSSProperties = {
 
 const subtitleStyle: CSSProperties = {
   marginTop: 6,
-  color: '#64748b',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 13,
   lineHeight: 1.35,
 }
@@ -62,7 +62,7 @@ const formStyle: CSSProperties = {
 const labelStyle: CSSProperties = {
   display: 'grid',
   gap: 6,
-  color: '#334155',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 13,
   fontWeight: 500,
 }
@@ -90,7 +90,7 @@ const selectStyle: CSSProperties = {
 }
 
 const helpTextStyle: CSSProperties = {
-  color: '#64748b',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 12,
   fontWeight: 400,
   lineHeight: 1.35,
@@ -101,7 +101,7 @@ const errorTextStyle: CSSProperties = {
   borderRadius: uiSurfacePrimitives.statusBox.danger.radius,
   border: uiSurfacePrimitives.statusBox.danger.border,
   background: uiSurfacePrimitives.statusBox.danger.background,
-  color: '#991b1b',
+  color: 'var(--ui-color-expense)',
   fontSize: 13,
   lineHeight: 1.35,
 }

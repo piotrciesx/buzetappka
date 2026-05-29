@@ -86,8 +86,8 @@ export default function DashboardTileConfigPanel({ widget, onChange }: Props) {
             border: '1px solid rgba(148, 163, 184, 0.32)',
             borderRadius: 999,
             padding: '7px 10px',
-            background: widget.mode === 'auto' ? '#0f172a' : '#ffffff',
-            color: widget.mode === 'auto' ? '#ffffff' : '#334155',
+            background: widget.mode === 'auto' ? 'var(--ui-color-primary-text)' : 'var(--ui-color-card-background)',
+            color: widget.mode === 'auto' ? 'var(--ui-color-card-background)' : 'var(--ui-color-secondary-text)',
             fontSize: 12,
             fontWeight: 600,
           }}
@@ -102,8 +102,8 @@ export default function DashboardTileConfigPanel({ widget, onChange }: Props) {
             border: '1px solid rgba(148, 163, 184, 0.32)',
             borderRadius: 999,
             padding: '7px 10px',
-            background: widget.mode === 'custom' ? '#0f172a' : '#ffffff',
-            color: widget.mode === 'custom' ? '#ffffff' : '#334155',
+            background: widget.mode === 'custom' ? 'var(--ui-color-primary-text)' : 'var(--ui-color-card-background)',
+            color: widget.mode === 'custom' ? 'var(--ui-color-card-background)' : 'var(--ui-color-secondary-text)',
             fontSize: 12,
             fontWeight: 600,
           }}

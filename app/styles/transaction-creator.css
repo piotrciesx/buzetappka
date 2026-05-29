@@ -46,7 +46,7 @@
   padding: 0 !important;
   border: 1px solid var(--ui-color-control-border) !important;
   border-radius: var(--ui-radius-pill) !important;
-  background: #ffffff !important;
+  background: var(--ui-color-card-background) !important;
   color: var(--ui-color-control-text) !important;
   font-size: 20px !important;
   line-height: 1 !important;
@@ -89,7 +89,7 @@
 [data-transaction-category-chip="true"][data-transaction-category-selected="true"] {
   border-color: var(--ui-color-control-primary) !important;
   background: var(--ui-color-control-primary) !important;
-  color: #ffffff !important;
+  color: var(--ui-color-card-background) !important;
 }
 
 [data-transaction-final-category="true"],
@@ -126,7 +126,7 @@
   border: 1px solid var(--ui-color-control-border) !important;
   border-radius: var(--ui-input-radius) !important;
   padding: var(--ui-input-padding-md) !important;
-  background: #ffffff !important;
+  background: var(--ui-color-card-background) !important;
   color: var(--ui-color-control-text) !important;
   font-size: var(--ui-font-size-body) !important;
   outline: none !important;
@@ -167,7 +167,7 @@
 [data-transaction-suggestion-item="true"]:hover,
 [data-transaction-suggestion-item="true"][data-transaction-suggestion-active="true"] {
   background: rgba(239, 246, 255, 0.92) !important;
-  color: #1d4ed8 !important;
+  color: var(--ui-color-primary-blue) !important;
 }
 
 [data-transaction-tag-list="true"] {
@@ -181,7 +181,7 @@
   border-radius: var(--ui-badge-radius) !important;
   border-color: var(--ui-surface-border-info) !important;
   background: rgba(239, 246, 255, 0.92) !important;
-  color: #1d4ed8 !important;
+  color: var(--ui-color-primary-blue) !important;
 }
 
 [data-transaction-tag-remove="true"] {

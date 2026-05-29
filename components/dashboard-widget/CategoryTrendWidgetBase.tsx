@@ -54,16 +54,16 @@ const FONT =
   'var(--font-app-sans)'
 
 const SERIES_COLORS = [
-  '#0f766e',
-  '#2563eb',
-  '#7c3aed',
-  '#ea580c',
-  '#db2777',
-  '#65a30d',
-  '#0891b2',
-  '#9333ea',
-  '#ca8a04',
-  '#dc2626',
+  'var(--ui-color-income)',
+  'var(--ui-color-primary-blue)',
+  'var(--ui-color-primary-navy)',
+  'var(--ui-color-warning)',
+  'var(--ui-color-expense)',
+  'var(--ui-color-income)',
+  'var(--ui-color-primary-blue)',
+  'var(--ui-color-primary-blue)',
+  'var(--ui-color-warning)',
+  'var(--ui-color-expense)',
 ]
 
 const rootStyle: CSSProperties = {
@@ -161,7 +161,7 @@ const dropdownButtonStyle: CSSProperties = {
   border: `1px solid ${SOFT_BORDER}`,
   borderRadius: 8,
   background: 'rgba(255,255,255,0.86)',
-  color: '#334155',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 10.5,
   fontWeight: 600,
   padding: '2px 8px',
@@ -204,7 +204,7 @@ const checkboxRowStyle: CSSProperties = {
   gridTemplateColumns: 'auto 8px minmax(0, 1fr)',
   alignItems: 'center',
   gap: 7,
-  color: '#334155',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 11,
   fontWeight: 600,
   cursor: 'pointer',

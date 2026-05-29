@@ -160,7 +160,7 @@ const chartPanelStyle = {
 }
 
 const chartTitleStyle = {
-  color: '#243041',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 12.5,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -207,7 +207,7 @@ function BarRow({
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 8,
-          color: '#334155',
+          color: 'var(--ui-color-secondary-text)',
           fontSize: 12,
           lineHeight: 1.2,
           fontWeight: 500,

@@ -36,7 +36,7 @@ type RankingItem = {
 const FONT =
   'var(--font-app-sans)'
 
-const DONUT_COLORS = ['#15803d', '#dc2626', '#2563eb', '#9333ea', '#ea580c']
+const DONUT_COLORS = ['var(--ui-color-income)', 'var(--ui-color-expense)', 'var(--ui-color-primary-blue)', 'var(--ui-color-primary-blue)', 'var(--ui-color-warning)']
 
 const rootStyle: CSSProperties = {
   width: '100%',
@@ -110,7 +110,7 @@ const middleStyle: CSSProperties = {
 
 const nameStyle: CSSProperties = {
   minWidth: 0,
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 10.9,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -163,7 +163,7 @@ const chartPanelStyle: CSSProperties = {
 
 const chartTitleStyle: CSSProperties = {
   minWidth: 0,
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 12,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -226,7 +226,7 @@ const dotStyle: CSSProperties = {
 
 const legendNameStyle: CSSProperties = {
   minWidth: 0,
-  color: '#334155',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 9.8,
   lineHeight: 1.2,
   fontWeight: 500,
@@ -488,7 +488,7 @@ export default function CategoryRankingsWidget({
                     x="60"
                     y="57"
                     textAnchor="middle"
-                    fill="#172033"
+                    fill="var(--ui-color-primary-text)"
                     fontSize="12"
                     fontWeight="700"
                   >

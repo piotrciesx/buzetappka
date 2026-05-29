@@ -20,7 +20,7 @@ export const introRowStyle: CSSProperties = {
 
 export const mutedTextStyle: CSSProperties = {
   margin: 0,
-  color: '#64748b',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 12,
   lineHeight: 1.45,
 }
@@ -54,7 +54,7 @@ export const fieldStyle: CSSProperties = {
   minWidth: 0,
   display: 'grid',
   gap: 5,
-  color: '#475569',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 12,
   fontWeight: 620,
 }
@@ -64,13 +64,13 @@ export const inlineCheckStyle: CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   gap: 8,
-  color: '#475569',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 12,
   fontWeight: 560,
 }
 
 export const sectionTitleStyle: CSSProperties = {
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 13,
   fontWeight: 720,
 }
@@ -98,7 +98,7 @@ export const cardHeaderStyle: CSSProperties = {
 }
 
 export const cardNameStyle: CSSProperties = {
-  color: '#172033',
+  color: 'var(--ui-color-primary-text)',
   fontSize: 13,
   fontWeight: 700,
 }
@@ -114,7 +114,7 @@ export const infoPillStyle: CSSProperties = {
   border: '1px solid rgba(226, 232, 240, 0.74)',
   borderRadius: 9,
   background: 'rgba(248, 250, 252, 0.54)',
-  color: '#475569',
+  color: 'var(--ui-color-secondary-text)',
   fontSize: 11,
   lineHeight: 1.35,
 }
@@ -129,7 +129,7 @@ export const progressOuterStyle: CSSProperties = {
 export const progressInnerStyle: CSSProperties = {
   height: '100%',
   borderRadius: 999,
-  background: 'linear-gradient(90deg, #2563eb, #16a34a)',
+  background: 'linear-gradient(90deg, var(--ui-color-primary-blue), var(--ui-color-income))',
 }
 
 export const warningStyle: CSSProperties = {
@@ -137,7 +137,7 @@ export const warningStyle: CSSProperties = {
   border: '1px solid rgba(251, 191, 36, 0.5)',
   borderRadius: 12,
   background: 'rgba(255, 251, 235, 0.78)',
-  color: '#92400e',
+  color: 'var(--ui-color-warning)',
   fontSize: 12,
 }
 

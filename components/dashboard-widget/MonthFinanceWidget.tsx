@@ -30,7 +30,7 @@ function IncomeExpenseDonut({
         background:
           total > 0
             ? `conic-gradient(${GREEN} 0 ${percent}%, ${RED} ${percent}% 100%)`
-            : 'conic-gradient(#e5e7eb, #f1f5f9)',
+            : 'conic-gradient(var(--ui-color-divider-border), var(--ui-color-soft-section-background))',
         display: 'grid',
         placeItems: 'center',
       }}
@@ -40,8 +40,8 @@ function IncomeExpenseDonut({
           width: holeSize,
           height: holeSize,
           borderRadius: '50%',
-          background: '#ffffff',
-          boxShadow: 'inset 0 1px 7px rgba(15, 23, 42, 0.08)',
+          background: 'var(--ui-color-card-background)',
+          boxShadow: 'inset 0 1px 7px var(--ui-shadow-medium-color)',
         }}
       />
     </div>
@@ -60,7 +60,7 @@ function BalanceBlock({
       <div
         style={{
           fontSize: compact ? 9.5 : 11.5,
-          color: '#64748b',
+          color: 'var(--ui-color-secondary-text)',
           fontWeight: 600,
           marginBottom: 2,
         }}
@@ -98,6 +98,19 @@ function MetricCard({
   color: string
   compact?: boolean
 }) {
+  const tint =
+    color === GREEN
+      ? 'var(--ui-color-income-soft)'
+      : color === RED
+        ? 'var(--ui-color-expense-soft)'
+        : 'var(--ui-color-soft-blue)'
+  const borderColor =
+    color === GREEN
+      ? 'var(--ui-color-income-soft)'
+      : color === RED
+        ? 'var(--ui-color-expense-soft)'
+        : 'var(--ui-color-light-blue-border)'
+
   if (compact) {
     return (
       <div
@@ -109,8 +122,8 @@ function MetricCard({
           gap: 8,
           padding: '8px 9px',
           borderRadius: 13,
-          background: `${color}10`,
-          border: `1px solid ${color}2b`,
+          background: tint,
+          border: `1px solid ${borderColor}`,
           boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.70)',
         }}
       >
@@ -121,7 +134,7 @@ function MetricCard({
             borderRadius: 9,
             display: 'grid',
             placeItems: 'center',
-            background: `${color}1f`,
+            background: tint,
             color,
             fontWeight: 600,
             fontSize: 12,
@@ -133,7 +146,7 @@ function MetricCard({
         <div style={{ minWidth: 0 }}>
           <div
             style={{
-              color: '#64748b',
+              color: 'var(--ui-color-secondary-text)',
               fontSize: 9.5,
               lineHeight: 1.2,
               fontWeight: 600,
@@ -173,8 +186,8 @@ function MetricCard({
         gap: 9,
         padding: '8px 11px',
         borderRadius: 15,
-        background: `${color}10`,
-        border: `1px solid ${color}2b`,
+        background: tint,
+        border: `1px solid ${borderColor}`,
         boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.70)',
       }}
     >
@@ -185,7 +198,7 @@ function MetricCard({
           borderRadius: 10,
           display: 'grid',
           placeItems: 'center',
-          background: `${color}1f`,
+          background: tint,
           color,
           fontWeight: 600,
           fontSize: 13,

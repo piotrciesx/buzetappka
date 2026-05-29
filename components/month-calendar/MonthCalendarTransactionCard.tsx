@@ -186,9 +186,9 @@ export default function MonthCalendarTransactionCard({
             ...transactionAmountStyle,
             color: showSignedAmount
               ? signedAmount > 0
-                ? '#15803d'
+                ? 'var(--ui-color-income)'
                 : signedAmount < 0
-                  ? '#b91c1c'
+                  ? 'var(--ui-color-expense)'
                   : transactionAmountStyle.color
               : transactionAmountStyle.color,
           }}
@@ -257,9 +257,9 @@ export default function MonthCalendarTransactionCard({
                       type="button"
                       style={{
                         ...suggestionButtonBaseStyle,
-                        background: isActive ? '#eff6ff' : '#ffffff',
-                        color: isActive ? '#1d4ed8' : '#111827',
-                        borderTop: index === 0 ? 'none' : '1px solid #e5e7eb',
+                        background: isActive ? 'var(--ui-color-soft-blue)' : 'var(--ui-color-card-background)',
+                        color: isActive ? 'var(--ui-color-primary-blue)' : 'var(--ui-color-primary-text)',
+                        borderTop: index === 0 ? 'none' : '1px solid var(--ui-color-divider-border)',
                       }}
                       onMouseDown={(event) => event.preventDefault()}
                       onClick={() => applySuggestion(suggestion.text)}

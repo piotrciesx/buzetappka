@@ -5,22 +5,22 @@ export type UserPublicProfile = {
 }
 
 export const USER_AVATARS = [
-  { key: 'dog', label: 'Pies', color: '#2563eb' },
-  { key: 'cat', label: 'Kot', color: '#7c3aed' },
-  { key: 'fox', label: 'Lis', color: '#ea580c' },
-  { key: 'owl', label: 'Sowa', color: '#0f766e' },
-  { key: 'rocket', label: 'Rakieta', color: '#dc2626' },
-  { key: 'robot', label: 'Robot', color: '#475569' },
-  { key: 'planet', label: 'Planeta', color: '#0891b2' },
-  { key: 'coffee', label: 'Kawa', color: '#92400e' },
-  { key: 'pixel', label: 'Pixel', color: '#16a34a' },
-  { key: 'spark', label: 'Iskra', color: '#d97706' },
-  { key: 'aura', label: 'Aura', color: '#2563eb' },
-  { key: 'mint', label: 'Mięta', color: '#059669' },
-  { key: 'rose', label: 'Róża', color: '#be123c' },
-  { key: 'sun', label: 'Słońce', color: '#d97706' },
-  { key: 'violet', label: 'Violet', color: '#7c3aed' },
-  { key: 'graphite', label: 'Grafit', color: '#334155' },
+  { key: 'dog', label: 'Pies', color: 'var(--ui-color-primary-blue)' },
+  { key: 'cat', label: 'Kot', color: 'var(--ui-color-primary-navy)' },
+  { key: 'fox', label: 'Lis', color: 'var(--ui-color-warning)' },
+  { key: 'owl', label: 'Sowa', color: 'var(--ui-color-income)' },
+  { key: 'rocket', label: 'Rakieta', color: 'var(--ui-color-expense)' },
+  { key: 'robot', label: 'Robot', color: 'var(--ui-color-secondary-text)' },
+  { key: 'planet', label: 'Planeta', color: 'var(--ui-color-primary-blue)' },
+  { key: 'coffee', label: 'Kawa', color: 'var(--ui-color-warning)' },
+  { key: 'pixel', label: 'Pixel', color: 'var(--ui-color-income)' },
+  { key: 'spark', label: 'Iskra', color: 'var(--ui-color-warning)' },
+  { key: 'aura', label: 'Aura', color: 'var(--ui-color-primary-blue)' },
+  { key: 'mint', label: 'Mięta', color: 'var(--ui-color-income)' },
+  { key: 'rose', label: 'Róża', color: 'var(--ui-color-expense)' },
+  { key: 'sun', label: 'Słońce', color: 'var(--ui-color-warning)' },
+  { key: 'violet', label: 'Violet', color: 'var(--ui-color-primary-navy)' },
+  { key: 'graphite', label: 'Grafit', color: 'var(--ui-color-secondary-text)' },
 ]
 
 export type CategoryIconKey =

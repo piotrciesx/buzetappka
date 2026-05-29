@@ -1,13 +1,13 @@
 import type { CSSProperties } from 'react'
 
-export const GREEN = '#15803d'
-export const RED = '#be123c'
-export const NEUTRAL = '#111827'
-export const MUTED = '#64748b'
-export const SOFT_TEXT = '#6b7280'
+export const GREEN = 'var(--ui-color-income)'
+export const RED = 'var(--ui-color-expense)'
+export const NEUTRAL = 'var(--ui-color-primary-text)'
+export const MUTED = 'var(--ui-color-secondary-text)'
+export const SOFT_TEXT = 'var(--ui-color-secondary-text)'
 export const SOFT_BORDER = 'rgba(148, 163, 184, 0.24)'
-export const BLUE = '#2563eb'
-export const SERIES_COLORS = [GREEN, RED, BLUE, '#6d28d9', '#0f766e', '#c2410c', '#7e22ce']
+export const BLUE = 'var(--ui-color-primary-blue)'
+export const SERIES_COLORS = [GREEN, RED, BLUE, 'var(--ui-color-primary-navy)', 'var(--ui-color-income)', 'var(--ui-color-warning)', 'var(--ui-color-primary-navy)']
 
 export const tileStyle: CSSProperties = {
   position: 'relative',
@@ -51,7 +51,7 @@ export const selectStyle: CSSProperties = {
   padding: '6px 8px',
   fontSize: 12,
   fontWeight: 720,
-  background: '#ffffff',
+  background: 'var(--ui-color-card-background)',
   color: 'var(--ui-color-control-text)',
 }
 
@@ -220,13 +220,13 @@ export const dragHandleStyle: CSSProperties = {
   borderColor: 'rgba(148,163,184,0.32)',
   background:
     'linear-gradient(145deg, rgba(255,255,255,0.86), rgba(241,245,249,0.66))',
-  color: '#374151',
+  color: 'var(--ui-color-primary-text)',
   cursor: 'grab',
   touchAction: 'none',
   fontWeight: 600,
   lineHeight: 1.2,
   boxShadow:
-    'inset 1px 1px 0 rgba(255,255,255,0.92), 0 6px 14px rgba(15,23,42,0.08)',
+    'inset 1px 1px 0 rgba(255,255,255,0.92), 0 6px 14px var(--ui-shadow-medium-color)',
 }
 
 export const iconButtonStyle: CSSProperties = {

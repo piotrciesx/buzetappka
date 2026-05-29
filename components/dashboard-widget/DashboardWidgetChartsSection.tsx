@@ -34,7 +34,7 @@ import {
 } from './dashboardWidgetPrimitives'
 
 const getHeatmapColor = (balance: number, maxAbsBalance: number) => {
-  if (balance === 0 || maxAbsBalance <= 0) return '#e5e7eb'
+  if (balance === 0 || maxAbsBalance <= 0) return 'var(--ui-color-divider-border)'
 
   const intensity = Math.max(0.18, Math.min(1, Math.abs(balance) / maxAbsBalance))
   const alpha = 0.2 + intensity * 0.65
@@ -86,7 +86,7 @@ export function MiniLineChart({
           x2={width}
           y1={zeroY}
           y2={zeroY}
-          stroke="#cbd5e1"
+          stroke="var(--ui-color-soft-border)"
           strokeWidth="1"
           strokeDasharray="4 4"
         />
@@ -241,7 +241,7 @@ export function Heatmap({ days, dense }: { days: DayMetric[]; dense: boolean }) 
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: Math.abs(day.balance) > maxAbsBalance * 0.6 ? '#ffffff' : '#374151',
+            color: Math.abs(day.balance) > maxAbsBalance * 0.6 ? 'var(--ui-color-card-background)' : 'var(--ui-color-primary-text)',
             fontSize: dense ? 0 : 9,
             fontWeight: 600,
           }}
@@ -351,7 +351,7 @@ export function MonthOverMonthTable({
               style={{
                 border: `1px solid ${SOFT_BORDER}`,
                 borderRadius: 10,
-                background: '#ffffff',
+                background: 'var(--ui-color-card-background)',
                 padding: 8,
                 display: 'grid',
                 gap: 5,

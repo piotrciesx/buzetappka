@@ -158,7 +158,7 @@ export default function DashboardPanel({
                 backdropFilter: 'blur(16px)',
               }}
             >
-              <label style={{ display: 'grid', gap: 6, fontSize: 12, color: '#475569' }}>
+              <label style={{ display: 'grid', gap: 6, fontSize: 12, color: 'var(--ui-color-secondary-text)' }}>
                 Typ kontenera
                 <select
                   value={containerTypeToAdd}
@@ -196,7 +196,7 @@ export default function DashboardPanel({
                 position: 'absolute',
                 right: 0,
                 top: isAddPanelOpen ? 180 : 42,
-                color: '#15803d',
+                color: 'var(--ui-color-income)',
                 fontSize: 12,
                 fontWeight: 600,
               }}

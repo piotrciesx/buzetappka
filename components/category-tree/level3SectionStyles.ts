@@ -12,8 +12,8 @@ export const suggestionsDropdownStyle = {
   left: 0,
   right: 0,
   zIndex: uiZIndex.categoryAutocomplete,
-  background: '#ffffff',
-  border: '1px solid #d1d5db',
+  background: 'var(--ui-color-card-background)',
+  border: '1px solid var(--ui-color-soft-border)',
   borderRadius: 12,
   boxShadow: '0 12px 24px rgba(15, 23, 42, 0.12)',
   overflow: 'hidden',
@@ -22,18 +22,18 @@ export const suggestionsDropdownStyle = {
 export const suggestionButtonStyle = {
   width: '100%',
   textAlign: 'left' as const,
-  background: '#ffffff',
+  background: 'var(--ui-color-card-background)',
   border: 'none',
-  borderBottom: '1px solid #f1f5f9',
+  borderBottom: '1px solid var(--ui-color-soft-section-background)',
   padding: '10px 12px',
   cursor: 'pointer',
   fontSize: 14,
-  color: '#111827',
+  color: 'var(--ui-color-primary-text)',
 } as const
 
 export const activeSuggestionButtonStyle = {
   ...suggestionButtonStyle,
-  background: '#eff6ff',
+  background: 'var(--ui-color-soft-blue)',
 } as const
 
 export const tagFieldWrapStyle = {
@@ -55,9 +55,9 @@ export const tagBadgeStyle = {
   gap: 6,
   padding: '4px 8px',
   borderRadius: 999,
-  background: '#eff6ff',
-  border: '1px solid #bfdbfe',
-  color: '#1d4ed8',
+  background: 'var(--ui-color-soft-blue)',
+  border: '1px solid var(--ui-color-light-blue-border)',
+  color: 'var(--ui-color-primary-blue)',
   fontSize: 12,
   fontWeight: 600,
 } as const
@@ -70,7 +70,7 @@ export const clickableTagBadgeStyle = {
 export const tagRemoveButtonStyle = {
   border: 'none',
   background: 'transparent',
-  color: '#1d4ed8',
+  color: 'var(--ui-color-primary-blue)',
   cursor: 'pointer',
   fontSize: 14,
   lineHeight: 1.2,

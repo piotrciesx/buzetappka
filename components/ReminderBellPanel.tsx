@@ -303,7 +303,7 @@ export default function ReminderBellPanel({
               ))}
             </select>
             {shouldHighlightCategory && (
-              <span style={{ color: '#dc2626', fontSize: 12, fontWeight: 600 }}>
+              <span style={{ color: 'var(--ui-color-expense)', fontSize: 12, fontWeight: 600 }}>
                 Wybierz kategorię końcową.
               </span>
             )}

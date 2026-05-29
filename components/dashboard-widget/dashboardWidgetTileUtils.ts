@@ -29,13 +29,13 @@ export const getPaceLabel = (status: 'calm' | 'watch' | 'fast') => {
 
 export const getPaceColor = (status: 'calm' | 'watch' | 'fast') => {
   if (status === 'fast') return RED
-  if (status === 'watch') return '#b45309'
+  if (status === 'watch') return 'var(--ui-color-warning)'
   return GREEN
 }
 
 export const getRiskColor = (level: 'none' | 'low' | 'medium' | 'high') => {
   if (level === 'high') return RED
-  if (level === 'medium') return '#b45309'
+  if (level === 'medium') return 'var(--ui-color-warning)'
   if (level === 'low') return GREEN
   return MUTED
 }
