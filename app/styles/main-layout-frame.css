@@ -153,12 +153,12 @@
     display: grid !important;
     align-content: start !important;
     gap: var(--ui-space-5) !important;
-    padding: var(--ui-space-6) !important;
+    padding: 0 !important;
     overflow: visible !important;
-    border: 1px solid var(--ui-color-soft-border) !important;
-    border-radius: var(--ui-shell-radius) !important;
-    background: var(--ui-color-card-background) !important;
-    box-shadow: 0 14px 34px var(--ui-shadow-medium-color) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
   }
 
   [data-budget-workspace-main="true"] > [data-budget-tree-workspace="true"],

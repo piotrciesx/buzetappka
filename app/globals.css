@@ -1,23 +1,4 @@
 @import "tailwindcss";
 
 @import "./styles/foundation.css";
-@import "./styles/base.css";
-@import "./styles/auth.css";
-@import "./styles/shell.css";
-@import "./styles/left-sidebar.css";
-@import "./styles/topbar.css";
-@import "./styles/right-rail.css";
-@import "./styles/category-tree.css";
-@import "./styles/workspace-panels.css";
-@import "./styles/dashboard.css";
-@import "./styles/dashboard-widgets.css";
-@import "./styles/modals.css";
-@import "./styles/transaction-creator.css";
-@import "./styles/mobile.css";
-@import "./styles/side-panels.css";
-@import "./styles/utility-panels.css";
-@import "./styles/reminder-calendar.css";
-@import "./styles/layout-depth.css";
-@import "./styles/mobile-stabilization-foundation.css";
-@import "./styles/button-system.css";
-@import "./styles/main-layout-frame.css";
+@import "./styles/dev-reset.css";
