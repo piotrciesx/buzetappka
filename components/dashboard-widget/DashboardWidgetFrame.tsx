@@ -1,5 +1,7 @@
 import { useState, type CSSProperties, type HTMLAttributes, type PointerEvent, type ReactNode } from 'react'
+import { uiZIndex } from '../../lib/uiFoundation'
 import { BLUE, tileStyle } from './dashboardWidgetTileStyles'
+import { DashboardWidgetShell } from './dashboardWidgetPrimitives'
 
 type ResizeEdge = 'left' | 'right'
 
@@ -20,7 +22,7 @@ const resizeEdgeStyle = (side: ResizeEdge): CSSProperties => ({
   bottom: 0,
   [side]: 0,
   width: 10,
-  zIndex: 4,
+  zIndex: uiZIndex.widgetControl,
   cursor: 'col-resize',
   touchAction: 'none',
   background: 'transparent',
@@ -49,7 +51,7 @@ export default function DashboardWidgetFrame({
         boxSizing: 'border-box',
       }}
     >
-      <div
+      <DashboardWidgetShell
         style={{
           ...tileStyle,
           width: '100%',
@@ -93,7 +95,7 @@ export default function DashboardWidgetFrame({
           </>
         )}
         {children}
-      </div>
+      </DashboardWidgetShell>
     </article>
   )
 }

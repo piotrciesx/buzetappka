@@ -6,6 +6,7 @@ import { getUniqueCategoryLabel } from '../../lib/categoryUtils'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
 import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
 import { getExistingDaysInMonth } from '../../lib/dateUtils'
+import { isActiveTransaction, isTransactionInMonth } from '../../lib/transactionDomain'
 import type { DashboardWidgetPixelRect } from './dashboardWidgetTileTypes'
 import { GREEN, MUTED, RED, SOFT_TEXT } from './dashboardWidgetTileStyles'
 import { formatMoney } from './dashboardWidgetTileUtils'
@@ -323,7 +324,7 @@ export default function RecentIncomeExpenseWidget({
 
   const allEntries: RecentEntry[] = transactions
     .filter((transaction) => {
-      if (transaction.is_deleted || !transaction.date.startsWith(selectedMonth)) {
+      if (!isActiveTransaction(transaction) || !isTransactionInMonth(transaction, selectedMonth)) {
         return false
       }
 

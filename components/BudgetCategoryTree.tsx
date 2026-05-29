@@ -18,6 +18,7 @@ import {
 import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
 import { useIsMobileViewport } from '../lib/useIsMobileViewport'
 import { getNearestDndSwapTargetId } from '../lib/getNearestDndSwapTargetId'
+import { getProfileStorageKey } from '../lib/profileStorage'
 
 type Props = import('./category-tree/budgetCategoryTreeTypes').BudgetCategoryTreeProps
 
@@ -29,6 +30,8 @@ export default function BudgetCategoryTree(props: Props) {
     openLevel2Ids,
     openLevel3Ids,
     selectedMonth,
+    profileId,
+    userId,
     budgetStartDate,
     isSelectedMonthLocked,
     canUseMonthCalendar = true,
@@ -98,11 +101,23 @@ export default function BudgetCategoryTree(props: Props) {
     onEditBudgetLimit,
   } = props
 
-  const dndSensors = usePressHoldDndSensors()
+  const dndSensors = usePressHoldDndSensors({
+    mouseDistance: 8,
+    touchDelay: 640,
+    touchTolerance: 10,
+  })
   const isMobileViewport = useIsMobileViewport()
   const [level1InlineAddTokens] = useState<Record<string, number>>({})
   const [selectedCategoryEntriesPanel, setSelectedCategoryEntriesPanel] =
     useState<SelectedCategoryEntriesPanel>(null)
+  const getCalendarStorageKey = (categoryId: string) =>
+    userId && profileId
+      ? getProfileStorageKey({
+          userId,
+          profileId,
+          featureKey: `tree-calendar:${categoryId}`,
+        })
+      : ''
 
   useEffect(() => {
     const closeOpenMenu = (event: PointerEvent) => {
@@ -169,6 +184,8 @@ export default function BudgetCategoryTree(props: Props) {
         onEditBudgetLimit={onEditBudgetLimit}
         getBudgetLimitView={getBudgetLimitView}
         selectedMonth={selectedMonth}
+        profileId={profileId}
+        userId={userId}
         budgetStartDate={budgetStartDate}
         isSelectedMonthLocked={isSelectedMonthLocked}
         canUseMonthCalendar={canUseMonthCalendar}
@@ -216,7 +233,9 @@ export default function BudgetCategoryTree(props: Props) {
         heatmapInverted={heatmapInverted}
         onHeatmapModeChange={onHeatmapModeChange}
         onHeatmapInvertedChange={onHeatmapInvertedChange}
-        heatmapStorageKey={`budget-app-tree-calendar-${level2Category.id}`}
+        heatmapStorageKey={getCalendarStorageKey(level2Category.id)}
+        legacyHeatmapStorageKeys={[`budget-app-tree-calendar-${level2Category.id}`]}
+        getCalendarStorageKey={getCalendarStorageKey}
         descriptionSuggestions={descriptionSuggestions}
         getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
         getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}
@@ -404,7 +423,8 @@ export default function BudgetCategoryTree(props: Props) {
         heatmapInverted={heatmapInverted}
         onHeatmapModeChange={onHeatmapModeChange}
         onHeatmapInvertedChange={onHeatmapInvertedChange}
-        heatmapStorageKey={`budget-app-tree-calendar-${level1Category.id}`}
+        heatmapStorageKey={getCalendarStorageKey(level1Category.id)}
+        legacyHeatmapStorageKeys={[`budget-app-tree-calendar-${level1Category.id}`]}
         descriptionSuggestions={descriptionSuggestions}
         getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
         transactionTagsMap={transactionTagsMap}

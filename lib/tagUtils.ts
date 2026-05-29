@@ -16,6 +16,8 @@ type TransactionTagRow = {
   created_at?: string
 }
 
+const TRANSACTION_TAG_LOOKUP_CHUNK_SIZE = 500
+
 const normalizeTagName = (value: string) => {
   return value.trim().replace(/\s+/g, ' ')
 }
@@ -212,25 +214,34 @@ export const fetchTransactionTagLinks = async (
     return []
   }
 
-  const { data, error } = await supabase
-    .from('transaction_tags')
-    .select('id, transaction_id, tag_id, created_at')
-    .in('transaction_id', transactionIds)
+  const rows: TransactionTag[] = []
 
-  if (error) {
-    throw new Error(error.message)
+  for (let index = 0; index < transactionIds.length; index += TRANSACTION_TAG_LOOKUP_CHUNK_SIZE) {
+    const chunk = transactionIds.slice(index, index + TRANSACTION_TAG_LOOKUP_CHUNK_SIZE)
+    const { data, error } = await supabase
+      .from('transaction_tags')
+      .select('id, transaction_id, tag_id, created_at')
+      .in('transaction_id', chunk)
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    rows.push(
+      ...(data || []).map((row) => {
+        const typedRow = row as TransactionTagRow
+
+        return {
+          id: typedRow.id,
+          transaction_id: typedRow.transaction_id,
+          tag_id: typedRow.tag_id,
+          created_at: typedRow.created_at,
+        }
+      })
+    )
   }
 
-  return (data || []).map((row) => {
-    const typedRow = row as TransactionTagRow
-
-    return {
-      id: typedRow.id,
-      transaction_id: typedRow.transaction_id,
-      tag_id: typedRow.tag_id,
-      created_at: typedRow.created_at,
-    }
-  })
+  return rows
 }
 
 export const fetchTagsByIds = async (
@@ -304,6 +315,21 @@ export const setTransactionTags = async (
   rawTagNames: string[],
   currentTags: Tag[] = []
 ): Promise<Tag[]> => {
+  const { data: scopedTransaction, error: scopedTransactionError } = await supabase
+    .from('transactions')
+    .select('id')
+    .eq('id', transactionId)
+    .eq('profile_id', profileId)
+    .maybeSingle()
+
+  if (scopedTransactionError) {
+    throw new Error(scopedTransactionError.message)
+  }
+
+  if (!scopedTransaction) {
+    throw new Error('Nie znaleziono wpisu w aktywnym profilu.')
+  }
+
   const nextTags = await getOrCreateTags(supabase, profileId, rawTagNames)
 
   const currentTagIds = new Set(currentTags.map((tag) => tag.id))

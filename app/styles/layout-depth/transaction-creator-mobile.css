@@ -221,7 +221,7 @@
     order: 20 !important;
     position: sticky !important;
     bottom: calc(42px + env(safe-area-inset-bottom)) !important;
-    z-index: 4 !important;
+    z-index: var(--ui-z-local-control) !important;
     box-shadow: 0 -8px 20px rgba(15, 23, 42, 0.08) !important;
   }
 
@@ -230,7 +230,7 @@
     order: 21 !important;
     position: sticky !important;
     bottom: env(safe-area-inset-bottom) !important;
-    z-index: 4 !important;
+    z-index: var(--ui-z-local-control) !important;
     background: rgba(255, 255, 255, 0.96) !important;
   }
 

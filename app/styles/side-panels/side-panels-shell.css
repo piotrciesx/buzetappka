@@ -1,7 +1,7 @@
 [data-dashboard-overlay="true"] {
   position: fixed !important;
   inset: 0 !important;
-  z-index: 2300 !important;
+  z-index: var(--ui-z-sidebar-panel) !important;
   visibility: hidden !important;
   opacity: 0 !important;
   pointer-events: none !important;
@@ -28,9 +28,9 @@
 }
 
 [data-dashboard-drawer="true"] {
-  --dashboard-drawer-left: 184px;
-  --dashboard-drawer-top: 58px;
-  --dashboard-drawer-width: min(980px, calc(100vw - 220px));
+  --dashboard-drawer-left: var(--ui-drawer-left);
+  --dashboard-drawer-top: var(--ui-drawer-top);
+  --dashboard-drawer-width: var(--ui-drawer-width);
   position: fixed !important;
   left: var(--dashboard-drawer-left) !important;
   right: auto !important;
@@ -43,9 +43,9 @@
   min-width: var(--dashboard-drawer-width) !important;
   max-inline-size: var(--dashboard-drawer-width) !important;
   max-width: var(--dashboard-drawer-width) !important;
-  height: calc(100dvh - var(--dashboard-drawer-top) - 18px) !important;
-  max-height: calc(100dvh - var(--dashboard-drawer-top) - 18px) !important;
-  padding: 12px !important;
+  height: calc(100dvh - var(--dashboard-drawer-top) - var(--ui-drawer-bottom-gap)) !important;
+  max-height: calc(100dvh - var(--dashboard-drawer-top) - var(--ui-drawer-bottom-gap)) !important;
+  padding: var(--ui-space-6) !important;
   border: 1px solid var(--workspace-border) !important;
   border-radius: var(--workspace-radius-lg) !important;
   background: linear-gradient(145deg, rgba(248, 250, 252, 0.96), rgba(226, 232, 240, 0.9)) !important;
@@ -90,7 +90,7 @@
 [data-dashboard-drawer-header="true"] {
   position: sticky !important;
   top: 0 !important;
-  z-index: 5 !important;
+  z-index: var(--ui-z-local-header) !important;
   box-sizing: border-box !important;
   width: 100% !important;
   max-width: 100% !important;
@@ -126,7 +126,7 @@
 [data-budget-utility-backdrop="true"] {
   position: fixed !important;
   inset: 0 !important;
-  z-index: 2600 !important;
+  z-index: var(--ui-z-side-panel-overlay) !important;
   width: 100% !important;
   height: 100% !important;
   border: 0 !important;
@@ -137,7 +137,7 @@
 [data-budget-utility-overlay="true"] {
   position: fixed !important;
   inset: 0 !important;
-  z-index: 2600 !important;
+  z-index: var(--ui-z-side-panel-overlay) !important;
   pointer-events: none !important;
   isolation: isolate !important;
 }
@@ -145,16 +145,16 @@
 [data-app-view="settings"],
 [data-app-view="profile"],
 [data-budget-utility-panel="true"] {
-  --side-panel-left: 166px;
-  --side-panel-top: 58px;
-  --side-panel-bottom-gap: 18px;
-  --side-panel-width: min(660px, calc(100vw - var(--side-panel-left) - 24px));
+  --side-panel-left: var(--ui-side-panel-left);
+  --side-panel-top: var(--ui-side-panel-top);
+  --side-panel-bottom-gap: var(--ui-side-panel-bottom-gap);
+  --side-panel-width: var(--ui-side-panel-width);
   position: fixed !important;
   left: var(--side-panel-left) !important;
   right: auto !important;
   top: var(--side-panel-top) !important;
   bottom: auto !important;
-  z-index: 2610 !important;
+  z-index: var(--ui-z-side-panel) !important;
   box-sizing: border-box !important;
   width: var(--side-panel-width) !important;
   min-width: var(--side-panel-width) !important;
@@ -162,10 +162,10 @@
   height: calc(100dvh - var(--side-panel-top) - var(--side-panel-bottom-gap)) !important;
   max-height: calc(100dvh - var(--side-panel-top) - var(--side-panel-bottom-gap)) !important;
   overflow: auto !important;
-  padding: 12px !important;
+  padding: var(--ui-space-6) !important;
   border: 1px solid rgba(31, 41, 55, 0.18) !important;
   border-left-color: rgba(31, 41, 55, 0.26) !important;
-  border-radius: 0 18px 18px 0 !important;
+  border-radius: var(--ui-side-panel-radius) !important;
   background:
     linear-gradient(145deg, rgba(248, 250, 252, 0.94), rgba(241, 245, 249, 0.86)),
     radial-gradient(circle at 15% 0%, rgba(59, 130, 246, 0.08), transparent 32%) !important;
@@ -181,7 +181,7 @@
 }
 
 [data-app-view="profile"] {
-  --side-panel-width: min(420px, calc(100vw - 372px));
+  --side-panel-width: var(--ui-side-panel-profile-width);
   left: auto !important;
   right: 344px !important;
   top: 76px !important;
@@ -192,24 +192,24 @@
 }
 
 [data-app-view="settings"] {
-  --side-panel-width: min(780px, calc(100vw - var(--side-panel-left) - 24px));
+  --side-panel-width: var(--ui-side-panel-settings-width);
 }
 
 [data-budget-utility-panel="true"][data-utility-panel-kind="monthCalendar"],
 [data-budget-utility-panel="true"][data-utility-panel-kind="search"],
 [data-budget-utility-panel="true"][data-utility-panel-kind="financialGoals"] {
-  --side-panel-width: min(820px, calc(100vw - var(--side-panel-left) - 24px));
+  --side-panel-width: var(--ui-side-panel-utility-width);
 }
 
 [data-budget-utility-panel="true"][data-utility-panel-kind="importExport"] {
-  --side-panel-width: min(720px, calc(100vw - var(--side-panel-left) - 24px));
+  --side-panel-width: var(--ui-side-panel-import-export-width);
 }
 
 [data-budget-utility-header="true"],
 [data-app-view-header="true"] {
   position: sticky !important;
   top: -12px !important;
-  z-index: 2 !important;
+  z-index: var(--ui-z-local-overlay) !important;
   background: rgba(248, 250, 252, 0.92) !important;
   backdrop-filter: blur(14px);
 }
@@ -230,7 +230,7 @@
 [data-app-view="settings"] [data-mobile-category-menu-panel],
 [data-app-view="profile"] [data-mobile-category-menu-panel],
 [data-budget-utility-panel="true"] [data-mobile-category-menu-panel] {
-  z-index: 2700 !important;
+  z-index: var(--ui-z-side-panel-dropdown) !important;
 }
 
 [data-profile-panel-body="true"] {

@@ -1,5 +1,6 @@
 import type { Category, Transaction } from '../../lib/budgetPageTypes'
 import { getUniqueCategoryLabel } from '../../lib/categoryUtils'
+import { isActiveTransaction, isTransactionInMonth } from '../../lib/transactionDomain'
 
 export type TopEntry = {
   id: string
@@ -62,7 +63,7 @@ export function buildTopEntries({
 }) {
   return transactions
     .filter((transaction) => {
-      if (transaction.is_deleted || !transaction.date.startsWith(selectedMonth)) {
+      if (!isActiveTransaction(transaction) || !isTransactionInMonth(transaction, selectedMonth)) {
         return false
       }
 

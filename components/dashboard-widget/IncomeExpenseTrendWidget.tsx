@@ -6,6 +6,9 @@ import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
 import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
 import { getExistingDaysInMonth } from '../../lib/dateUtils'
+import { getTransactionMonth, isActiveTransaction } from '../../lib/transactionDomain'
+import { isMonthBeforeBudgetStart } from '../../lib/transactionScope'
+import { uiZIndex } from '../../lib/uiFoundation'
 import type { DashboardWidgetPixelRect } from './dashboardWidgetTileTypes'
 import { GREEN, RED, SOFT_BORDER, SOFT_TEXT } from './dashboardWidgetTileStyles'
 
@@ -148,7 +151,7 @@ const dropdownPanelStyle: CSSProperties = {
   position: 'absolute',
   left: 0,
   bottom: 28,
-  zIndex: 20,
+  zIndex: uiZIndex.widgetDropdown,
   width: 170,
   border: `1px solid ${SOFT_BORDER}`,
   borderRadius: 10,
@@ -220,15 +223,6 @@ function getMonthList(selectedMonth: string, count: number) {
   }
 
   return result
-}
-
-function getBudgetStartMonth(budgetStartDate: string) {
-  return budgetStartDate.slice(0, 7)
-}
-
-function isMonthBeforeBudgetStart(month: string, budgetStartDate: string) {
-  const budgetStartMonth = getBudgetStartMonth(budgetStartDate)
-  return Boolean(budgetStartMonth) && month < budgetStartMonth
 }
 
 function formatMonthLabel(month: string) {
@@ -343,11 +337,11 @@ export default function IncomeExpenseTrendWidget({
     })
 
     transactions.forEach((transaction) => {
-      if (transaction.is_deleted) {
+      if (!isActiveTransaction(transaction)) {
         return
       }
 
-      const month = transaction.date.slice(0, 7)
+      const month = getTransactionMonth(transaction)
       const day = getDayFromDate(transaction.date)
       const monthPoint = map[month]
 

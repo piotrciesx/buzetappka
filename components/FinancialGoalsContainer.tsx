@@ -16,6 +16,8 @@ type Props = {
   goalPriorities?: FinancialGoalMonthPriority[]
   goalMonthConfigs?: FinancialGoalMonthConfig[]
   transactions?: Transaction[]
+  budgetStartDate?: string | null
+  excludedMonthsSet: Set<string>
   lockedMonthsSet: Set<string>
   getSignedAmountForTransaction: (transaction: Transaction) => number
   onSaveGoal: (input: Omit<FinancialGoal, 'id' | 'profile_id' | 'created_at'>) => Promise<void>
@@ -35,6 +37,8 @@ export default function FinancialGoalsContainer({
   goalPriorities = [],
   goalMonthConfigs = [],
   transactions = [],
+  budgetStartDate,
+  excludedMonthsSet,
   lockedMonthsSet,
   getSignedAmountForTransaction,
   onSaveGoal,
@@ -51,6 +55,8 @@ export default function FinancialGoalsContainer({
       goalPriorities={goalPriorities}
       goalMonthConfigs={goalMonthConfigs}
       transactions={transactions}
+      budgetStartDate={budgetStartDate}
+      excludedMonthsSet={excludedMonthsSet}
       lockedMonthsSet={lockedMonthsSet}
       getSignedAmountForTransaction={getSignedAmountForTransaction}
       onSaveGoal={onSaveGoal}

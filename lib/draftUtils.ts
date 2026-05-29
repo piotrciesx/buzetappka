@@ -164,6 +164,7 @@ export const buildDraftsErrorMessage = (
   return `Nie udało się wyczyścić starych szkiców. ${message}`
 }
 
+// TODO LEGACY CLEANUP: keep this only while old localStorage drafts may still need migration.
 export const readLegacyTransactionDrafts = () => {
   if (typeof window === 'undefined') {
     return [] as TransactionDraft[]

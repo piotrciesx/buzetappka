@@ -21,10 +21,10 @@ type AuthScreenProps = {
 
 type AuthMode = 'login' | 'register'
 
-const NAVY = '#071a3d'
-const BLUE = '#0f5fe8'
-const SOFT_TEXT = '#64748b'
-const BORDER = 'rgba(126, 153, 190, 0.28)'
+const NAVY = '#082C7A'
+const BLUE = '#215DFF'
+const SOFT_TEXT = '#5F6B85'
+const BORDER = '#D6E4FF'
 
 const authStyles: Styles = {
   page: {
@@ -188,25 +188,26 @@ const authStyles: Styles = {
     gridTemplateColumns: '1fr 1fr',
     gap: 6,
     marginBottom: 24,
-    padding: 5,
-    borderRadius: 18,
+    padding: 4,
+    borderRadius: 8,
     border: `1px solid ${BORDER}`,
-    background: 'rgba(226, 238, 255, 0.62)',
+    background: '#F7FAFF',
   },
   modeButton: {
-    minHeight: 42,
-    border: 0,
-    borderRadius: 14,
-    background: 'transparent',
-    color: SOFT_TEXT,
+    minHeight: 36,
+    border: `1px solid ${BORDER}`,
+    borderRadius: 8,
+    background: '#FFFFFF',
+    color: NAVY,
     fontSize: 14,
     fontWeight: 560,
     cursor: 'pointer',
   },
   modeButtonActive: {
-    background: '#ffffff',
-    color: NAVY,
-    boxShadow: '0 10px 26px rgba(7,26,61,.09)',
+    background: '#EAF1FF',
+    color: BLUE,
+    borderColor: BLUE,
+    boxShadow: 'none',
   },
   form: {
     display: 'grid',
@@ -233,16 +234,16 @@ const authStyles: Styles = {
     fontWeight: 360,
   },
   primaryButton: {
-    minHeight: 58,
+    minHeight: 44,
     marginTop: 8,
-    border: 0,
-    borderRadius: 18,
-    background: 'linear-gradient(135deg, #2563eb, #0f5fe8)',
-    color: '#ffffff',
-    fontSize: 17,
-    fontWeight: 560,
+    border: `2px solid ${BLUE}`,
+    borderRadius: 8,
+    background: '#FFFFFF',
+    color: BLUE,
+    fontSize: 15,
+    fontWeight: 700,
     cursor: 'pointer',
-    boxShadow: '0 18px 38px rgba(37,99,235,.28)',
+    boxShadow: 'none',
   },
   divider: {
     display: 'flex',
@@ -260,14 +261,14 @@ const authStyles: Styles = {
   },
   secondaryButton: {
     width: '100%',
-    minHeight: 54,
+    minHeight: 40,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 12,
-    borderRadius: 17,
+    borderRadius: 8,
     border: `1px solid ${BORDER}`,
-    background: 'rgba(255,255,255,.74)',
+    background: '#FFFFFF',
     color: NAVY,
     fontSize: 15,
     fontWeight: 520,
@@ -276,8 +277,11 @@ const authStyles: Styles = {
   textButton: {
     width: 'fit-content',
     margin: '2px auto 0',
-    border: 0,
-    background: 'transparent',
+    minHeight: 36,
+    border: `1px solid ${BORDER}`,
+    borderRadius: 8,
+    padding: '0 12px',
+    background: '#FFFFFF',
     color: BLUE,
     fontSize: 14,
     fontWeight: 560,

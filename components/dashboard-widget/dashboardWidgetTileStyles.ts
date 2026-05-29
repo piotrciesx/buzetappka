@@ -20,17 +20,15 @@ export const tileStyle: CSSProperties = {
   boxSizing: 'border-box',
   overflow: 'hidden',
   isolation: 'isolate',
-  background:
-    'linear-gradient(145deg, rgba(255,255,255,0.88), rgba(248,250,252,0.70))',
+  background: 'var(--ui-surface-widget)',
   borderWidth: 1,
   borderStyle: 'solid',
-  borderColor: 'rgba(203, 213, 225, 0.58)',
-  borderRadius: 16,
-  boxShadow:
-    'inset 0 1px 0 rgba(255,255,255,0.92), 0 10px 24px rgba(15,23,42,0.065)',
-  padding: 12,
+  borderColor: 'var(--ui-color-border)',
+  borderRadius: 'var(--ui-card-radius)',
+  boxShadow: 'var(--ui-shadow-card)',
+  padding: 'var(--ui-surface-card-padding)',
   transition: 'box-shadow 180ms ease, border-color 180ms ease, transform 180ms ease, background 180ms ease',
-  backdropFilter: 'blur(30px) saturate(1.28)',
+  backdropFilter: 'none',
 }
 
 export const tileHeaderStyle: CSSProperties = {
@@ -48,18 +46,18 @@ export const selectStyle: CSSProperties = {
   width: '100%',
   borderWidth: 1,
   borderStyle: 'solid',
-  borderColor: '#d1d5db',
-  borderRadius: 11,
+  borderColor: 'var(--ui-color-control-border)',
+  borderRadius: 'var(--ui-input-radius)',
   padding: '6px 8px',
   fontSize: 12,
   fontWeight: 720,
   background: '#ffffff',
-  color: NEUTRAL,
+  color: 'var(--ui-color-control-text)',
 }
 
 export const tileTitleStyle: CSSProperties = {
-  color: NEUTRAL,
-  fontSize: 13,
+  color: 'var(--ui-color-text)',
+  fontSize: 'var(--ui-font-size-body-sm)',
   fontWeight: 760,
   lineHeight: 1.2,
   letterSpacing: 0,
@@ -74,7 +72,7 @@ export const metaStyle: CSSProperties = {
   marginTop: 4,
   fontSize: 10,
   lineHeight: 1.25,
-  color: '#64748b',
+  color: 'var(--ui-color-text-muted)',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -83,9 +81,8 @@ export const metaStyle: CSSProperties = {
 export const contentStyle: CSSProperties = {
   width: '100%',
   height: '100%',
-  borderRadius: 14,
-  background:
-    'linear-gradient(145deg, rgba(255,255,255,0.20), rgba(255,255,255,0.04))',
+  borderRadius: 'var(--ui-radius-lg)',
+  background: 'transparent',
   padding: 0,
   color: NEUTRAL,
   overflow: 'hidden',
@@ -133,13 +130,11 @@ export const dashboardMetricCard: CSSProperties = {
   overflow: 'hidden',
   boxSizing: 'border-box',
   border: `1px solid rgba(255,255,255,0.62)`,
-  borderRadius: 14,
-  background:
-    'linear-gradient(145deg, rgba(255,255,255,0.70), rgba(255,255,255,0.34))',
-  padding: 7,
-  boxShadow:
-    'inset 0 1px 0 rgba(255,255,255,0.82), 0 6px 14px rgba(15,23,42,0.05)',
-  backdropFilter: 'blur(18px) saturate(1.18)',
+  borderRadius: 'var(--ui-radius-lg)',
+  background: 'rgba(255, 255, 255, 0.72)',
+  padding: 'var(--ui-space-4)',
+  boxShadow: 'none',
+  backdropFilter: 'none',
 }
 
 export const valueStyle: CSSProperties = {
@@ -189,16 +184,16 @@ export const metricGridStyle: CSSProperties = {
 
 export const metricBoxStyle: CSSProperties = {
   border: `1px solid ${SOFT_BORDER}`,
-  borderRadius: 12,
+  borderRadius: 'var(--ui-radius-md)',
   background: 'rgba(255, 255, 255, 0.72)',
-  padding: 7,
+  padding: 'var(--ui-space-4)',
   minWidth: 0,
 }
 
 export const progressTrackStyle: CSSProperties = {
   width: '100%',
   height: 6,
-  borderRadius: 999,
+  borderRadius: 'var(--ui-radius-pill)',
   background: 'rgba(203, 213, 225, 0.72)',
   marginTop: 5,
 }
@@ -219,7 +214,7 @@ export const controlsStyle: CSSProperties = {
 export const dragHandleStyle: CSSProperties = {
   width: 28,
   height: 28,
-  borderRadius: 11,
+  borderRadius: 'var(--ui-button-radius)',
   borderWidth: 1,
   borderStyle: 'solid',
   borderColor: 'rgba(148,163,184,0.32)',

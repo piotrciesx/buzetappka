@@ -12,7 +12,20 @@ import { getPaymentSourceOptionLabel } from './paymentSources'
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
-export type RecurringExecutionStatus = 'completed' | 'skipped'
+export type ReminderMonthLifecycleStatus =
+  | 'pending'
+  | 'snoozed'
+  | 'handled_without_transaction'
+  | 'handled_with_transaction'
+
+export type ReminderMonthState = {
+  reminderId: string
+  month: string
+  status: ReminderMonthLifecycleStatus
+  transactionId: string | null
+  snoozedUntil: string | null
+  source: 'month-status' | 'execution' | 'linked-transaction' | 'snooze-ui-delay' | 'pending'
+}
 
 export type RecurringStatusSummary = {
   completedCount: number
@@ -25,6 +38,15 @@ export type RecurringStatusSummary = {
   effectiveStatus: RecurringTransaction['status']
 }
 
+type LegacyReminderStateInput = {
+  recurringId: string
+  month: string
+  monthStatus?: RecurringReminderMonthStatus | null
+  execution?: RecurringTransactionExecution | null
+  linkedTransaction?: Transaction | null
+  snoozedUntil?: string | null
+}
+
 const toUtcDate = (dateText: string) => {
   return new Date(`${dateText}T00:00:00Z`)
 }
@@ -33,6 +55,12 @@ const diffInMonths = (fromDateText: string, toMonthText: string) => {
   const [fromYear, fromMonth] = fromDateText.slice(0, 7).split('-').map(Number)
   const [toYear, toMonth] = toMonthText.split('-').map(Number)
   return (toYear - fromYear) * 12 + (toMonth - fromMonth)
+}
+
+const shiftMonthText = (monthText: string, delta: number) => {
+  const [year, month] = monthText.split('-').map(Number)
+  const date = new Date(year, month - 1 + delta, 1)
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
 }
 
 const getIntervalInMonths = (recurring: RecurringTransaction) => {
@@ -109,13 +137,15 @@ export const mapRecurringReminderMonthStatusRow = (
   row: Record<string, unknown>
 ): RecurringReminderMonthStatus => {
   const rawStatus = typeof row.status === 'string' ? row.status : 'read'
+  const storedStatus =
+    rawStatus === 'linked' || rawStatus === 'handled_with_transaction' ? 'linked' : 'read'
 
   return {
     id: String(row.id || ''),
     profile_id: String(row.profile_id || ''),
     reminder_id: String(row.reminder_id || row.recurring_transaction_id || ''),
     month: String(row.month || '').slice(0, 7),
-    status: rawStatus === 'linked' ? 'linked' : 'read',
+    status: storedStatus,
     transaction_id: typeof row.transaction_id === 'string' ? row.transaction_id : null,
     created_at: typeof row.created_at === 'string' ? row.created_at : undefined,
     updated_at: typeof row.updated_at === 'string' ? row.updated_at : undefined,
@@ -221,6 +251,26 @@ export const isRecurringExpectedInMonth = (
   return true
 }
 
+export const getReminderScheduleForMonth = (
+  recurring: RecurringTransaction,
+  monthText: string
+) => {
+  if (!isRecurringExpectedInMonth(recurring, monthText)) {
+    return null
+  }
+
+  const installment = getInstallmentNumberForMonth(recurring, monthText)
+
+  return {
+    reminderId: recurring.id,
+    month: monthText,
+    dueDate: getMonthCycleDate(recurring, monthText),
+    kind: recurring.kind,
+    expectedAmount: recurring.amount,
+    installment,
+  }
+}
+
 export const findExecutionForMonth = (
   recurringTransactionId: string,
   executions: RecurringTransactionExecution[],
@@ -233,6 +283,136 @@ export const findExecutionForMonth = (
   )
 }
 
+export const mapLegacyReminderStateToLifecycle = ({
+  recurringId,
+  month,
+  monthStatus,
+  execution,
+  linkedTransaction,
+  snoozedUntil,
+}: LegacyReminderStateInput): ReminderMonthState => {
+  if (monthStatus) {
+    const transactionId = monthStatus.transaction_id || linkedTransaction?.id || null
+    return {
+      reminderId: recurringId,
+      month,
+      status:
+        monthStatus.status === 'linked' || transactionId
+          ? 'handled_with_transaction'
+          : 'handled_without_transaction',
+      transactionId,
+      snoozedUntil: null,
+      source: 'month-status',
+    }
+  }
+
+  if (linkedTransaction) {
+    return {
+      reminderId: recurringId,
+      month,
+      status: 'handled_with_transaction',
+      transactionId: linkedTransaction.id,
+      snoozedUntil: null,
+      source: 'linked-transaction',
+    }
+  }
+
+  if (execution) {
+    return {
+      reminderId: recurringId,
+      month,
+      status:
+        execution.status === 'completed' && execution.transaction_id
+          ? 'handled_with_transaction'
+          : 'handled_without_transaction',
+      transactionId: execution.transaction_id || null,
+      snoozedUntil: null,
+      source: 'execution',
+    }
+  }
+
+  if (snoozedUntil) {
+    return {
+      reminderId: recurringId,
+      month,
+      status: 'snoozed',
+      transactionId: null,
+      snoozedUntil,
+      source: 'snooze-ui-delay',
+    }
+  }
+
+  return {
+    reminderId: recurringId,
+    month,
+    status: 'pending',
+    transactionId: null,
+    snoozedUntil: null,
+    source: 'pending',
+  }
+}
+
+export const getReminderMonthStatus = ({
+  recurring,
+  monthText,
+  monthStatuses = [],
+  executions = [],
+  transactions = [],
+  snoozedUntil = null,
+}: {
+  recurring: RecurringTransaction
+  monthText: string
+  monthStatuses?: RecurringReminderMonthStatus[]
+  executions?: RecurringTransactionExecution[]
+  transactions?: Transaction[]
+  snoozedUntil?: string | null
+}): ReminderMonthState => {
+  const normalizedMonth = monthText.slice(0, 7)
+  const explicitStatus = monthStatuses.find(
+    (status) => status.reminder_id === recurring.id && status.month === normalizedMonth
+  )
+  const linkedTransaction = transactions.find(
+    (transaction) =>
+      transaction.is_deleted !== true &&
+      transaction.recurring_transaction_id === recurring.id &&
+      transaction.date.slice(0, 7) === normalizedMonth
+  )
+  const execution = findExecutionForMonth(recurring.id, executions, normalizedMonth)
+
+  return mapLegacyReminderStateToLifecycle({
+    recurringId: recurring.id,
+    month: normalizedMonth,
+    monthStatus: explicitStatus,
+    execution,
+    linkedTransaction,
+    snoozedUntil,
+  })
+}
+
+export const getRecurringReminderState = getReminderMonthStatus
+export const getReminderMonthLifecycle = getReminderMonthStatus
+
+export const isReminderMonthHandled = (state: ReminderMonthState) => {
+  return (
+    state.status === 'handled_with_transaction' ||
+    state.status === 'handled_without_transaction'
+  )
+}
+
+export const mapReminderLifecycleStatusToStoredStatus = (
+  status: ReminderMonthLifecycleStatus
+): RecurringReminderMonthStatus['status'] => {
+  if (status === 'handled_with_transaction') {
+    return 'linked'
+  }
+
+  if (status === 'handled_without_transaction') {
+    return 'read'
+  }
+
+  throw new Error(`Status ${status} is UI-only and cannot be stored as handled reminder state.`)
+}
+
 export const getRecurringExecutionHistory = (
   recurringTransactionId: string,
   executions: RecurringTransactionExecution[]
@@ -242,33 +422,23 @@ export const getRecurringExecutionHistory = (
     .sort((left, right) => right.generated_for_date.localeCompare(left.generated_for_date))
 }
 
-export const getLastCompletedExecution = (
-  recurringTransactionId: string,
-  executions: RecurringTransactionExecution[]
-) => {
-  return getRecurringExecutionHistory(recurringTransactionId, executions).find(
-    (execution) => execution.status === 'completed'
-  )
-}
-
-export const getInstallmentSummary = (
+const buildRecurringStatusSummary = (
   recurring: RecurringTransaction,
-  executions: RecurringTransactionExecution[],
-  referenceMonth?: string
+  referenceMonth: string | undefined,
+  handledWithTransactionCount: number,
+  handledWithoutTransactionCount: number
 ): RecurringStatusSummary => {
-  const history = getRecurringExecutionHistory(recurring.id, executions)
-  const completedCount = history.filter((execution) => execution.status === 'completed').length
-  const skippedCount = history.filter((execution) => execution.status === 'skipped').length
+  const effectiveCompletedCount = handledWithTransactionCount + handledWithoutTransactionCount
 
   if (recurring.kind !== 'installment') {
     return {
-      completedCount,
-      skippedCount,
+      completedCount: handledWithTransactionCount,
+      skippedCount: handledWithoutTransactionCount,
       remainingCount: null,
       totalInstallments: null,
       totalPlannedAmount: null,
       elapsedCyclesCount: null,
-      effectiveCompletedCount: completedCount,
+      effectiveCompletedCount,
       effectiveStatus: recurring.status,
     }
   }
@@ -282,8 +452,6 @@ export const getInstallmentSummary = (
     totalInstallments !== null && referenceMonth
       ? Math.min(getElapsedRecurringCycles(recurring, referenceMonth), totalInstallments)
       : null
-  const effectiveCompletedCount =
-    elapsedCycles === null ? completedCount : Math.max(completedCount, elapsedCycles)
   const effectiveStatus =
     recurring.status === 'paused' || recurring.status === 'completed'
       ? recurring.status
@@ -292,8 +460,8 @@ export const getInstallmentSummary = (
         : 'active'
 
   return {
-    completedCount,
-    skippedCount,
+    completedCount: handledWithTransactionCount,
+    skippedCount: handledWithoutTransactionCount,
     remainingCount:
       totalInstallments === null ? null : Math.max(totalInstallments - effectiveCompletedCount, 0),
     totalInstallments,
@@ -307,39 +475,170 @@ export const getInstallmentSummary = (
   }
 }
 
+export const getInstallmentSummary = (
+  recurring: RecurringTransaction,
+  executions: RecurringTransactionExecution[],
+  referenceMonth?: string
+): RecurringStatusSummary => {
+  const handledStates = getRecurringExecutionHistory(recurring.id, executions)
+    .map((execution) =>
+      getReminderMonthStatus({
+        recurring,
+        monthText: execution.generated_for_date.slice(0, 7),
+        executions,
+      })
+    )
+    .filter(isReminderMonthHandled)
+  const handledWithTransactionCount = handledStates.filter(
+    (state) => state.status === 'handled_with_transaction'
+  ).length
+
+  return buildRecurringStatusSummary(
+    recurring,
+    referenceMonth,
+    handledWithTransactionCount,
+    handledStates.length - handledWithTransactionCount
+  )
+}
+
+export const getInstallmentLifecycleSummary = ({
+  recurring,
+  executions,
+  monthStatuses = [],
+  transactions = [],
+  referenceMonth,
+}: {
+  recurring: RecurringTransaction
+  executions: RecurringTransactionExecution[]
+  monthStatuses?: RecurringReminderMonthStatus[]
+  transactions?: Transaction[]
+  referenceMonth?: string
+}): RecurringStatusSummary => {
+  const baseSummary = buildRecurringStatusSummary(recurring, referenceMonth, 0, 0)
+  const handledStates = new Map<string, ReminderMonthState>()
+  const months = new Set<string>()
+
+  executions
+    .filter((execution) => execution.recurring_transaction_id === recurring.id)
+    .forEach((execution) => months.add(execution.generated_for_date.slice(0, 7)))
+
+  monthStatuses
+    .filter((status) => status.reminder_id === recurring.id)
+    .forEach((status) => months.add(status.month))
+
+  transactions
+    .filter(
+      (transaction) =>
+        transaction.is_deleted !== true && transaction.recurring_transaction_id === recurring.id
+    )
+    .forEach((transaction) => months.add(transaction.date.slice(0, 7)))
+
+  ;[...months].forEach((month) => {
+    const state = getReminderMonthStatus({
+      recurring,
+      monthText: month,
+      monthStatuses,
+      executions,
+      transactions,
+    })
+
+    if (isReminderMonthHandled(state)) {
+      handledStates.set(month, state)
+    }
+  })
+
+  const handledWithTransactionCount = [...handledStates.values()].filter(
+    (state) => state.status === 'handled_with_transaction'
+  ).length
+  const handledWithoutTransactionCount = handledStates.size - handledWithTransactionCount
+  return {
+    ...buildRecurringStatusSummary(
+      recurring,
+      referenceMonth,
+      handledWithTransactionCount,
+      handledWithoutTransactionCount
+    ),
+    totalPlannedAmount: baseSummary.totalPlannedAmount,
+  }
+}
+
 export const getRecurringEffectiveStatus = (
   recurring: RecurringTransaction,
   executions: RecurringTransactionExecution[],
   referenceMonth: string
 ) => {
-  return getInstallmentSummary(recurring, executions, referenceMonth).effectiveStatus
+  return getInstallmentLifecycleSummary({
+    recurring,
+    executions,
+    referenceMonth,
+  }).effectiveStatus
 }
 
-export const getPastDueCycleDates = () => {
-  return []
+export const getRecurringLifecycleEffectiveStatus = ({
+  recurring,
+  executions,
+  monthStatuses = [],
+  transactions = [],
+  referenceMonth,
+}: {
+  recurring: RecurringTransaction
+  executions: RecurringTransactionExecution[]
+  monthStatuses?: RecurringReminderMonthStatus[]
+  transactions?: Transaction[]
+  referenceMonth: string
+}) => {
+  return getInstallmentLifecycleSummary({
+    recurring,
+    executions,
+    monthStatuses,
+    transactions,
+    referenceMonth,
+  }).effectiveStatus
 }
 
 export const getPendingRecurringTransactions = (
   recurringTransactions: RecurringTransaction[],
-  _executions: RecurringTransactionExecution[],
+  executions: RecurringTransactionExecution[],
   monthText: string,
-  monthStatuses: RecurringReminderMonthStatus[] = []
+  monthStatuses: RecurringReminderMonthStatus[] = [],
+  options: {
+    transactions?: Transaction[]
+    snoozedUntilByReminderId?: Record<string, string>
+    todayText?: string
+  } = {}
 ) => {
   const today = new Date()
-  const currentMonthText = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`
+  const todayText = options.todayText || today.toISOString().slice(0, 10)
+  const currentMonthText = todayText.slice(0, 7)
+  const todayDay = Number(todayText.slice(8, 10))
 
   return recurringTransactions.filter((recurring) => {
     if (!isRecurringExpectedInMonth(recurring, monthText)) {
       return false
     }
 
-    if (monthText === currentMonthText && today.getDate() < getRecurringReminderDay(recurring)) {
+    if (monthText === currentMonthText && todayDay < getRecurringReminderDay(recurring)) {
       return false
     }
 
-    return !monthStatuses.some(
-      (status) => status.reminder_id === recurring.id && status.month === monthText
-    )
+    const state = getReminderMonthStatus({
+      recurring,
+      monthText,
+      monthStatuses,
+      executions,
+      transactions: options.transactions || [],
+      snoozedUntil: options.snoozedUntilByReminderId?.[recurring.id] || null,
+    })
+
+    if (isReminderMonthHandled(state)) {
+      return false
+    }
+
+    if (state.status === 'snoozed' && state.snoozedUntil && state.snoozedUntil > todayText) {
+      return false
+    }
+
+    return true
   })
 }
 
@@ -388,6 +687,7 @@ export const buildRecurringSuggestions = ({
   recurringTransactions,
   executions,
   monthStatuses = [],
+  transactions = [],
   selectedMonth,
   categoryId,
   amountText,
@@ -396,6 +696,7 @@ export const buildRecurringSuggestions = ({
   recurringTransactions: RecurringTransaction[]
   executions: RecurringTransactionExecution[]
   monthStatuses?: RecurringReminderMonthStatus[]
+  transactions?: Transaction[]
   selectedMonth: string
   categoryId: string | null
   amountText: string
@@ -408,7 +709,9 @@ export const buildRecurringSuggestions = ({
     return []
   }
 
-  return getPendingRecurringTransactions(recurringTransactions, executions, selectedMonth, monthStatuses)
+  return getPendingRecurringTransactions(recurringTransactions, executions, selectedMonth, monthStatuses, {
+    transactions,
+  })
     .filter((recurring) => {
       if (recurring.category_id !== categoryId) {
         return false
@@ -466,8 +769,138 @@ export const buildRecurringCompletionCandidates = ({
   })
 }
 
-export const getRecurringExecutionStatusLabel = (status: RecurringExecutionStatus) => {
-  return status === 'skipped' ? 'Przypomnienie zamknięte' : 'Powiązane z wpisem'
+const normalizeMatchingText = (value: string | null | undefined) => {
+  return (value || '').trim().toLocaleLowerCase('pl')
+}
+
+const doesReminderDescriptionMatchTransaction = (
+  recurring: RecurringTransaction,
+  transaction: Transaction
+) => {
+  const transactionDescription = normalizeMatchingText(transaction.description)
+  const reminderName = normalizeMatchingText(recurring.name)
+  const reminderDescription = normalizeMatchingText(recurring.description)
+
+  if (transactionDescription.length < 3) {
+    return false
+  }
+
+  return (
+    reminderName.includes(transactionDescription) ||
+    transactionDescription.includes(reminderName) ||
+    (reminderDescription.length >= 3 &&
+      (reminderDescription.includes(transactionDescription) ||
+        transactionDescription.includes(reminderDescription)))
+  )
+}
+
+export const findMatchingTransactionsForReminderMonth = ({
+  recurring,
+  transactions,
+  monthText,
+}: {
+  recurring: RecurringTransaction
+  transactions: Transaction[]
+  monthText: string
+}) => {
+  return transactions.filter((transaction) => {
+    if (transaction.is_deleted) {
+      return false
+    }
+
+    if (transaction.date.slice(0, 7) !== monthText) {
+      return false
+    }
+
+    if (transaction.category_id !== recurring.category_id) {
+      return false
+    }
+
+    if (transaction.recurring_transaction_id === recurring.id) {
+      return true
+    }
+
+    const amountMatches =
+      recurring.amount !== null &&
+      Math.abs(Number(transaction.amount || 0) - Number(recurring.amount || 0)) < 0.01
+
+    return amountMatches || doesReminderDescriptionMatchTransaction(recurring, transaction)
+  })
+}
+
+export const findMatchingReminderForTransaction = ({
+  recurringTransactions,
+  executions,
+  monthStatuses = [],
+  transaction,
+  selectedRecurringTransactionId,
+  monthText = transaction.date.slice(0, 7),
+}: {
+  recurringTransactions: RecurringTransaction[]
+  executions: RecurringTransactionExecution[]
+  monthStatuses?: RecurringReminderMonthStatus[]
+  transaction: Transaction
+  selectedRecurringTransactionId?: string | null
+  monthText?: string
+}) => {
+  const candidates = selectedRecurringTransactionId
+    ? recurringTransactions.filter((recurring) => recurring.id === selectedRecurringTransactionId)
+    : recurringTransactions.filter(
+        (recurring) =>
+          recurring.category_id === transaction.category_id &&
+          isRecurringExpectedInMonth(recurring, monthText)
+      )
+
+  return candidates.find((recurring) => {
+    const state = getReminderMonthStatus({
+      recurring,
+      monthText,
+      monthStatuses,
+      executions,
+      transactions: [],
+    })
+
+    if (isReminderMonthHandled(state) && state.transactionId !== transaction.id) {
+      return false
+    }
+
+    if (selectedRecurringTransactionId || transaction.recurring_transaction_id === recurring.id) {
+      return true
+    }
+
+    const amountMatches =
+      recurring.amount !== null &&
+      Math.abs(Number(transaction.amount || 0) - Number(recurring.amount || 0)) < 0.01
+
+    return amountMatches || doesReminderDescriptionMatchTransaction(recurring, transaction)
+  }) || null
+}
+
+export const getReminderMonthForTransactionLink = ({
+  transaction,
+  selectedMonth,
+  hasExplicitReminderSelection,
+}: {
+  transaction: Transaction
+  selectedMonth: string
+  hasExplicitReminderSelection: boolean
+}) => {
+  return hasExplicitReminderSelection ? selectedMonth : transaction.date.slice(0, 7)
+}
+
+export const getNextExpectedRecurringMonth = (
+  recurring: RecurringTransaction,
+  fromMonth: string
+) => {
+  for (let offset = 1; offset <= 36; offset += 1) {
+    const candidateMonth = shiftMonthText(fromMonth, offset)
+
+    if (isRecurringExpectedInMonth(recurring, candidateMonth)) {
+      return candidateMonth
+    }
+  }
+
+  return null
 }
 
 export const getDaysDifference = (fromDateText: string, toDateText: string) => {

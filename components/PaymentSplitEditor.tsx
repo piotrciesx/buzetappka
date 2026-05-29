@@ -132,7 +132,12 @@ export default function PaymentSplitEditor({
           </select>
 
           <div style={splitRowStyle} data-payment-split-row="true">
-            <button type="button" style={styles.secondaryButton} onClick={handleAddPaymentSource}>
+            <button
+              type="button"
+              style={styles.secondaryButton}
+              data-payment-split-action="true"
+              onClick={handleAddPaymentSource}
+            >
               + dodaj źródło
             </button>
           </div>
@@ -143,6 +148,7 @@ export default function PaymentSplitEditor({
             <div key={`split-item-${index}`} style={splitRowStyle} data-payment-split-row="true">
               <select
                 data-payment-source-select="true"
+                data-payment-split-source="true"
                 style={{ ...styles.input, flex: '1 1 220px', minWidth: 220 }}
                 value={item.paymentSourceId}
                 onChange={(event) => handleSplitSourceChange(index, event.target.value)}
@@ -167,6 +173,7 @@ export default function PaymentSplitEditor({
               <button
                 type="button"
                 style={styles.secondaryButton}
+                data-payment-split-action="true"
                 onClick={() => handleRemoveSplitRow(index)}
               >
                 usuń
@@ -175,7 +182,12 @@ export default function PaymentSplitEditor({
           ))}
 
           <div style={splitRowStyle} data-payment-split-row="true">
-            <button type="button" style={styles.secondaryButton} onClick={handleAddPaymentSource}>
+            <button
+              type="button"
+              style={styles.secondaryButton}
+              data-payment-split-action="true"
+              onClick={handleAddPaymentSource}
+            >
               + dodaj źródło
             </button>
           </div>

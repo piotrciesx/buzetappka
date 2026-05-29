@@ -16,6 +16,10 @@ import { useTransactionCategorySelection } from './useTransactionCategorySelecti
 type Params = Record<string, any>
 
 export function useBudgetAppWorkspaceDataBridge(ctx: Params) {
+  const activeScopeTransactions = Array.isArray(ctx.activeScopeTransactions)
+    ? ctx.activeScopeTransactions
+    : ctx.scopedTransactions
+
   const selectedMonthTransactions = useSelectedMonthTransactions({
     transactions: ctx.scopedTransactions,
     selectedMonth: ctx.selectedMonth,
@@ -47,19 +51,22 @@ export function useBudgetAppWorkspaceDataBridge(ctx: Params) {
   const budgetLimits = useBudgetLimits({
     profileId: ctx.profileId,
     selectedMonth: ctx.selectedMonth,
+    isEnabled: ctx.isBudgetLimitsModuleEnabled,
     categoriesById: treeData.categoriesById,
     expenseLevel1Id: treeData.expenseLevel1Id,
     transactions: ctx.scopedTransactions,
-    excludedMonthsSet: ctx.excludedMonthsSet,
+    budgetStartDate: ctx.budgetStartDate,
     getSignedAmountForTransaction: heatmap.getSignedAmountForTransaction,
   })
 
   const bankSearch = useBankSearch({
     profileId: ctx.profileId,
-    transactions: ctx.scopedTransactions,
+    transactions: activeScopeTransactions,
     categories: ctx.categories,
     categoriesById: treeData.categoriesById,
+    budgetStartDate: ctx.budgetStartDate,
     getSignedAmountForTransaction: heatmap.getSignedAmountForTransaction,
+    isPaymentSourcesEnabled: ctx.isPaymentSourcesModuleEnabled,
     transactionPaymentSplitsMap: ctx.isPaymentSourcesModuleEnabled
       ? ctx.transactionPaymentSplitsMap
       : {},
@@ -97,6 +104,7 @@ export function useBudgetAppWorkspaceDataBridge(ctx: Params) {
   })
 
   const hiddenDescriptionSuggestions = useHiddenDescriptionSuggestions({
+    userId: ctx.userId,
     profileId: ctx.profileId,
     baseDescriptionSuggestions: shortcutData.descriptionSuggestions,
   })

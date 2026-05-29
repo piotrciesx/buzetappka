@@ -18,9 +18,10 @@ type SaveFinancialGoalInput = Omit<FinancialGoal, 'id' | 'profile_id' | 'created
 
 type UseFinancialGoalsParams = {
   profileId: string
+  isEnabled?: boolean
 }
 
-export function useFinancialGoals({ profileId }: UseFinancialGoalsParams) {
+export function useFinancialGoals({ profileId, isEnabled = true }: UseFinancialGoalsParams) {
   const [financialGoals, setFinancialGoals] = useState<FinancialGoal[]>([])
   const [financialGoalPriorities, setFinancialGoalPriorities] = useState<FinancialGoalMonthPriority[]>([])
   const [financialGoalMonthConfigs, setFinancialGoalMonthConfigs] = useState<FinancialGoalMonthConfig[]>([])
@@ -32,6 +33,13 @@ export function useFinancialGoals({ profileId }: UseFinancialGoalsParams) {
   }, [profileId])
 
   const loadFinancialGoals = useCallback(async () => {
+    if (!isEnabled) {
+      setFinancialGoals([])
+      setFinancialGoalPriorities([])
+      setFinancialGoalMonthConfigs([])
+      return
+    }
+
     const { data, error } = await supabase
       .from('financial_goals')
       .select('*')
@@ -74,10 +82,14 @@ export function useFinancialGoals({ profileId }: UseFinancialGoalsParams) {
     setFinancialGoalMonthConfigs(
       (configsData || []).map((row) => mapFinancialGoalMonthConfigRow(row as Record<string, unknown>))
     )
-  }, [profileId])
+  }, [isEnabled, profileId])
 
   const saveFinancialGoal = useCallback(
     async (input: SaveFinancialGoalInput & { id?: string }) => {
+      if (!isEnabled) {
+        return
+      }
+
       const payload = {
         profile_id: profileId,
         name: input.name.trim(),
@@ -104,11 +116,15 @@ export function useFinancialGoals({ profileId }: UseFinancialGoalsParams) {
 
       await loadFinancialGoals()
     },
-    [loadFinancialGoals, profileId]
+    [isEnabled, loadFinancialGoals, profileId]
   )
 
   const saveGoalPrioritiesForMonth = useCallback(
     async (month: string, orderedGoalIds: string[]) => {
+      if (!isEnabled) {
+        return
+      }
+
       const { error: deleteError } = await supabase
         .from('financial_goal_month_priorities')
         .delete()
@@ -148,7 +164,7 @@ export function useFinancialGoals({ profileId }: UseFinancialGoalsParams) {
         setFinancialGoalPriorities((prev) => prev.filter((priority) => priority.month !== month))
       }
     },
-    [profileId]
+    [isEnabled, profileId]
   )
 
   const saveGoalAllocationsForMonth = useCallback(
@@ -157,6 +173,10 @@ export function useFinancialGoals({ profileId }: UseFinancialGoalsParams) {
       allocationsByGoalId: Record<string, number>,
       lockedGoalIds: string[] = []
     ) => {
+      if (!isEnabled) {
+        return
+      }
+
       const lockedGoalIdsSet = new Set(lockedGoalIds)
       const orderedGoalIds = Object.entries(allocationsByGoalId)
         .sort((left, right) => {
@@ -241,11 +261,15 @@ export function useFinancialGoals({ profileId }: UseFinancialGoalsParams) {
         ...insertedPriorityRows,
       ])
     },
-    [profileId]
+    [isEnabled, profileId]
   )
 
   const setGoalModeForMonth = useCallback(
     async (month: string, mode: FinancialGoalAllocationMode) => {
+      if (!isEnabled) {
+        return
+      }
+
       const { error } = await supabase.from('financial_goal_month_configs').upsert(
         {
           profile_id: profileId,
@@ -261,11 +285,15 @@ export function useFinancialGoals({ profileId }: UseFinancialGoalsParams) {
         throw new Error(error.message)
       }
     },
-    [profileId]
+    [isEnabled, profileId]
   )
 
   const deleteFinancialGoal = useCallback(
     async (goalId: string) => {
+      if (!isEnabled) {
+        return
+      }
+
       const { error } = await supabase
         .from('financial_goals')
         .delete()
@@ -278,7 +306,7 @@ export function useFinancialGoals({ profileId }: UseFinancialGoalsParams) {
 
       await loadFinancialGoals()
     },
-    [loadFinancialGoals, profileId]
+    [isEnabled, loadFinancialGoals, profileId]
   )
 
   return {

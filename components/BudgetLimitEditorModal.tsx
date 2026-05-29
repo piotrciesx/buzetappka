@@ -3,6 +3,7 @@
 import type { CSSProperties } from 'react'
 import { useEffect, useState } from 'react'
 import type { BudgetLimit, BudgetLimitMode } from '../lib/budgetPageTypes'
+import { uiControlPrimitives, uiOverlayPrimitives, uiSurfacePrimitives } from '../lib/uiFoundation'
 import type { SaveBudgetLimitInput } from '../lib/useBudgetLimits'
 
 type Props = {
@@ -20,21 +21,21 @@ type Props = {
 const overlayStyle: CSSProperties = {
   position: 'fixed',
   inset: 0,
-  zIndex: 3000,
+  zIndex: uiOverlayPrimitives.modal.layer,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  padding: 16,
-  background: 'rgba(15, 23, 42, 0.32)',
+  padding: 'var(--ui-overlay-modal-padding-compact)',
+  background: 'var(--ui-overlay-backdrop-soft)',
 }
 
 const modalStyle: CSSProperties = {
   width: 'min(520px, 100%)',
-  borderRadius: 16,
-  border: '1px solid #e5e7eb',
-  background: '#ffffff',
-  boxShadow: '0 24px 60px rgba(15, 23, 42, 0.22)',
-  padding: 18,
+  borderRadius: uiSurfacePrimitives.modalSurfaceStrong.radius,
+  border: uiSurfacePrimitives.modalSurfaceStrong.border,
+  background: uiSurfacePrimitives.modalSurfaceStrong.background,
+  boxShadow: uiSurfacePrimitives.modalSurfaceStrong.shadow,
+  padding: uiSurfacePrimitives.modalSurfaceStrong.padding,
 }
 
 const titleStyle: CSSProperties = {
@@ -67,14 +68,25 @@ const labelStyle: CSSProperties = {
 }
 
 const inputStyle: CSSProperties = {
-  height: 40,
-  borderRadius: 10,
-  border: '1px solid #d1d5db',
-  background: '#ffffff',
-  color: '#111827',
-  fontSize: 14,
-  padding: '0 12px',
-  outline: 'none',
+  height: uiControlPrimitives.input.modal.height,
+  borderRadius: uiControlPrimitives.input.modal.radius,
+  border: uiControlPrimitives.input.modal.border,
+  background: uiControlPrimitives.input.modal.background,
+  color: uiControlPrimitives.input.modal.color,
+  fontSize: uiControlPrimitives.input.modal.fontSize,
+  padding: uiControlPrimitives.input.modal.padding,
+  outline: uiControlPrimitives.input.modal.outline,
+}
+
+const selectStyle: CSSProperties = {
+  height: uiControlPrimitives.select.modal.height,
+  borderRadius: uiControlPrimitives.select.modal.radius,
+  border: uiControlPrimitives.select.modal.border,
+  background: uiControlPrimitives.select.modal.background,
+  color: uiControlPrimitives.select.modal.color,
+  fontSize: uiControlPrimitives.select.modal.fontSize,
+  padding: uiControlPrimitives.select.modal.padding,
+  outline: uiControlPrimitives.select.modal.outline,
 }
 
 const helpTextStyle: CSSProperties = {
@@ -85,10 +97,10 @@ const helpTextStyle: CSSProperties = {
 }
 
 const errorTextStyle: CSSProperties = {
-  padding: '10px 12px',
-  borderRadius: 10,
-  border: '1px solid #fecaca',
-  background: '#fff1f2',
+  padding: uiSurfacePrimitives.statusBox.danger.padding,
+  borderRadius: uiSurfacePrimitives.statusBox.danger.radius,
+  border: uiSurfacePrimitives.statusBox.danger.border,
+  background: uiSurfacePrimitives.statusBox.danger.background,
   color: '#991b1b',
   fontSize: 13,
   lineHeight: 1.35,
@@ -109,33 +121,36 @@ const groupStyle: CSSProperties = {
 }
 
 const primaryButtonStyle: CSSProperties = {
-  padding: '9px 12px',
-  borderRadius: 10,
-  border: '1px solid #2563eb',
-  background: '#2563eb',
-  color: '#ffffff',
-  fontWeight: 600,
-  cursor: 'pointer',
+  minHeight: uiControlPrimitives.button.primary.minHeight,
+  padding: uiControlPrimitives.button.primary.padding,
+  borderRadius: uiControlPrimitives.button.primary.radius,
+  border: uiControlPrimitives.button.primary.border,
+  background: uiControlPrimitives.button.primary.background,
+  color: uiControlPrimitives.button.primary.color,
+  fontWeight: uiControlPrimitives.button.primary.fontWeight,
+  cursor: uiControlPrimitives.button.primary.cursor,
 }
 
 const secondaryButtonStyle: CSSProperties = {
-  padding: '9px 12px',
-  borderRadius: 10,
-  border: '1px solid #d1d5db',
-  background: '#ffffff',
-  color: '#111827',
-  fontWeight: 600,
-  cursor: 'pointer',
+  minHeight: uiControlPrimitives.button.secondary.minHeight,
+  padding: uiControlPrimitives.button.secondary.padding,
+  borderRadius: uiControlPrimitives.button.secondary.radius,
+  border: uiControlPrimitives.button.secondary.border,
+  background: uiControlPrimitives.button.secondary.background,
+  color: uiControlPrimitives.button.secondary.color,
+  fontWeight: uiControlPrimitives.button.secondary.fontWeight,
+  cursor: uiControlPrimitives.button.secondary.cursor,
 }
 
 const dangerButtonStyle: CSSProperties = {
-  padding: '9px 12px',
-  borderRadius: 10,
-  border: '1px solid #fca5a5',
-  background: '#fef2f2',
-  color: '#991b1b',
-  fontWeight: 600,
-  cursor: 'pointer',
+  minHeight: uiControlPrimitives.button.danger.minHeight,
+  padding: uiControlPrimitives.button.danger.padding,
+  borderRadius: uiControlPrimitives.button.danger.radius,
+  border: uiControlPrimitives.button.danger.border,
+  background: uiControlPrimitives.button.danger.background,
+  color: uiControlPrimitives.button.danger.color,
+  fontWeight: uiControlPrimitives.button.danger.fontWeight,
+  cursor: uiControlPrimitives.button.danger.cursor,
 }
 
 export default function BudgetLimitEditorModal({
@@ -282,7 +297,7 @@ export default function BudgetLimitEditorModal({
           <label style={labelStyle}>
             Tryb alertu
             <select
-              style={inputStyle}
+              style={selectStyle}
               value={mode}
               onChange={(event) => setMode(event.target.value as BudgetLimitMode)}
             >
@@ -296,7 +311,14 @@ export default function BudgetLimitEditorModal({
             </span>
           </label>
 
-          <label style={{ ...labelStyle, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <label
+            style={{
+              ...labelStyle,
+              display: 'flex',
+              alignItems: 'center',
+              gap: uiControlPrimitives.checkbox.default.gap,
+            }}
+          >
             <input
               type="checkbox"
               checked={isOnlySelectedMonth}
@@ -315,7 +337,14 @@ export default function BudgetLimitEditorModal({
             <div style={helpTextStyle}>Po zakończeniu tego miesiąca limit nie będzie kontynuowany.</div>
           )}
 
-          <label style={{ ...labelStyle, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <label
+            style={{
+              ...labelStyle,
+              display: 'flex',
+              alignItems: 'center',
+              gap: uiControlPrimitives.checkbox.default.gap,
+            }}
+          >
             <input
               type="checkbox"
               checked={hasCustomEndMonth}

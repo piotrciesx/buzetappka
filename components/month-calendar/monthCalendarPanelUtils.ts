@@ -1,4 +1,5 @@
 import type { HeatmapMode } from './monthCalendarTypes'
+import { readProfileStorageValue } from '../../lib/profileStorage'
 
 export const formatAmount = (value: number) => {
   return new Intl.NumberFormat('pl-PL', {
@@ -13,6 +14,7 @@ export const normalizeAmountInput = (value: string) => {
 
 export const getStoredHeatmapSettings = (
   storageKey: string | undefined,
+  legacyStorageKeys: string[],
   defaultMode: HeatmapMode,
   defaultInverted: boolean
 ) => {
@@ -24,7 +26,10 @@ export const getStoredHeatmapSettings = (
   }
 
   try {
-    const raw = window.localStorage.getItem(storageKey)
+    const raw = readProfileStorageValue({
+      storageKey,
+      legacyStorageKeys,
+    })
 
     if (!raw) {
       return {

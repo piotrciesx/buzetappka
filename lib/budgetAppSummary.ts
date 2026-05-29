@@ -1,5 +1,6 @@
 import { getCategoryPathLabel } from './budgetPageHelpers'
 import type { Category, Transaction } from './budgetPageTypes'
+import { isActiveTransaction } from './transactionDomain'
 import { getAmountNumber } from './transactionUtils'
 
 export type RecentTransactionPreview = {
@@ -128,7 +129,7 @@ export const buildRecentTransactionPreviews = ({
   const safeCategoriesById = categoriesById || {}
 
   return safeTransactions
-    .filter((transaction) => !transaction.is_deleted)
+    .filter(isActiveTransaction)
     .sort((left, right) => (right.created_at || '').localeCompare(left.created_at || ''))
     .slice(0, 8)
     .map((transaction) => ({
@@ -153,7 +154,7 @@ export const getTotalBudgetBalance = ({
   const safeTransactions = Array.isArray(transactions) ? transactions : []
 
   return safeTransactions
-    .filter((transaction) => !transaction.is_deleted)
+    .filter(isActiveTransaction)
     .reduce((sum, transaction) => sum + getSafeSignedAmount(transaction, getSignedAmountForTransaction), 0)
 }
 

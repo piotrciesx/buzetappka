@@ -1,15 +1,15 @@
 /* Extracted from app/globals.css. Keep import order in app/globals.css for cascade. */
 @media (min-width: 821px) {
   [data-budget-app="true"] {
-    padding: calc(var(--shell-top) + 18px) var(--shell-gap) var(--shell-gap) calc(var(--shell-left) + 22px) !important;
+    padding: calc(var(--ui-shell-top-height) + var(--ui-space-9)) var(--ui-shell-gap) var(--ui-shell-gap) calc(var(--ui-shell-left-width) + 22px) !important;
   }
 
   [data-budget-sidebar="true"] {
     position: fixed !important;
-    inset: calc(var(--shell-top) + 18px) auto 16px 18px !important;
-    width: var(--shell-left) !important;
+    inset: var(--ui-left-sidebar-desktop-inset) !important;
+    width: var(--ui-left-sidebar-width) !important;
     height: auto !important;
-    border-radius: 28px !important;
+    border-radius: var(--ui-left-sidebar-radius) !important;
   }
 
   [data-budget-workspace="true"] {
@@ -25,10 +25,10 @@
 
 [data-budget-sidebar="true"] {
   width: 252px;
-  padding: 18px 12px 16px !important;
+  padding: var(--ui-left-sidebar-padding) !important;
   overflow: hidden !important;
   border: 1px solid rgba(177, 204, 237, 0.72) !important;
-  border-radius: 28px !important;
+  border-radius: var(--ui-left-sidebar-radius) !important;
   background:
     radial-gradient(circle at 18% 0%, rgba(226, 241, 255, 0.92), transparent 34%),
     radial-gradient(circle at 0% 96%, rgba(207, 226, 255, 0.42), transparent 32%),

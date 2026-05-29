@@ -1,5 +1,6 @@
 import { useState, type ButtonHTMLAttributes } from 'react'
 import type { DashboardWidgetDefinition, DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
+import { uiZIndex } from '../../lib/uiFoundation'
 import {
   dragHandleStyle,
   iconButtonStyle,
@@ -7,6 +8,7 @@ import {
   tileHeaderStyle,
   tileTitleStyle,
 } from './dashboardWidgetTileStyles'
+import { WidgetControls, WidgetHeader } from './dashboardWidgetPrimitives'
 
 type DashboardWidgetHeaderProps = {
   widget: DashboardWidgetLayoutItem
@@ -30,11 +32,11 @@ export default function DashboardWidgetHeader({
   const sizeButtonLabel = isLarge ? 'Mały' : 'Duży'
 
   return (
-    <div
+    <WidgetHeader
       style={{
         ...tileHeaderStyle,
         position: 'relative',
-        zIndex: 5,
+        zIndex: uiZIndex.widgetHeader,
         minWidth: 0,
         minHeight: 0,
         overflow: 'hidden',
@@ -45,7 +47,7 @@ export default function DashboardWidgetHeader({
         {widget.width > 1 && <div style={metaStyle}>{safeDefinition.description}</div>}
       </div>
 
-      <div
+      <WidgetControls
         style={{ display: 'inline-flex', gap: isMobileDashboard ? 4 : 6, flexShrink: 0 }}
         onPointerDown={(event) => event.stopPropagation()}
         onMouseDown={(event) => event.stopPropagation()}
@@ -105,7 +107,7 @@ export default function DashboardWidgetHeader({
             ⋮⋮
           </button>
         )}
-      </div>
-    </div>
+      </WidgetControls>
+    </WidgetHeader>
   )
 }

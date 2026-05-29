@@ -33,6 +33,8 @@ type Props = {
   openLevel2Ids: string[]
   openLevel3Ids: string[]
   selectedMonth: string
+  profileId?: string
+  userId?: string
   budgetStartDate: string
   isSelectedMonthLocked: boolean
   canUseMonthCalendar?: boolean
@@ -148,6 +150,8 @@ export default function BudgetTreeSection({
   openLevel2Ids,
   openLevel3Ids,
   selectedMonth,
+  profileId,
+  userId,
   budgetStartDate,
   isSelectedMonthLocked,
   canUseMonthCalendar = true,
@@ -317,6 +321,8 @@ export default function BudgetTreeSection({
           openLevel2Ids={openLevel2Ids}
           openLevel3Ids={openLevel3Ids}
           selectedMonth={selectedMonth}
+          profileId={profileId}
+          userId={userId}
           budgetStartDate={budgetStartDate}
           isSelectedMonthLocked={isSelectedMonthLocked}
           canUseMonthCalendar={canUseMonthCalendar}

@@ -1,5 +1,6 @@
 import type { Category, Transaction } from '../../lib/budgetPageTypes'
 import { getDaysInMonth, isDateBeforeBudgetStart, isFutureDate } from '../../lib/dateUtils'
+import { getTransactionDay, getTransactionMonth } from '../../lib/transactionDomain'
 import { BLUE, GREEN, RED } from './dashboardWidgetTileStyles'
 
 export type DayPoint = {
@@ -142,13 +143,8 @@ export const getBalanceHeatmapVisual = (
   }
 }
 
-const getDayFromDate = (date: string) => {
-  const day = Number(date.slice(8, 10))
-  return Number.isFinite(day) && day > 0 ? day : 1
-}
-
 const isTransactionInMonth = (transaction: Transaction, month: string) => {
-  return transaction.date?.startsWith(month)
+  return getTransactionMonth(transaction) === month
 }
 
 export const getColorForRhythm = (value: number) => {
@@ -193,7 +189,10 @@ export const buildMonthRhythmDays = ({
     if (isFutureDate(transaction.date)) continue
     if (!categoriesById[transaction.category_id]) continue
 
-    const day = days[getDayFromDate(transaction.date) - 1]
+    const transactionDay = getTransactionDay(transaction)
+    if (transactionDay === null) continue
+
+    const day = days[transactionDay - 1]
     if (!day) continue
 
     const amount = getSignedAmountForTransaction(transaction)

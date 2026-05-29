@@ -2,6 +2,7 @@
 
 import { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import { ActionRow, StatusBox } from './utility-panels/utilityPanelPrimitives'
 
 type ProfileMonthNoteRow = {
   id: string
@@ -284,7 +285,7 @@ export default function ProfileMonthNotePanel({
         }}
       />
 
-      <div style={styles.actions}>
+      <ActionRow style={styles.actions}>
         <button
           type="button"
           style={styles.primaryButton}
@@ -306,7 +307,7 @@ export default function ProfileMonthNotePanel({
             Anuluj
           </button>
         )}
-      </div>
+      </ActionRow>
 
       {savedNotes.length > 0 && (
         <div data-month-note-list="true">
@@ -345,9 +346,9 @@ export default function ProfileMonthNotePanel({
         </div>
       )}
 
-      {isLoading && <div style={styles.smallMutedText}>Ładowanie notatek...</div>}
-      {statusText && <div style={styles.smallMutedText}>{statusText}</div>}
-      {errorText && <div style={styles.infoBox}>{errorText}</div>}
+      {isLoading && <StatusBox style={styles.smallMutedText}>Ładowanie notatek...</StatusBox>}
+      {statusText && <StatusBox tone="success" style={styles.smallMutedText}>{statusText}</StatusBox>}
+      {errorText && <StatusBox tone="danger" style={styles.infoBox}>{errorText}</StatusBox>}
     </section>
   )
 }

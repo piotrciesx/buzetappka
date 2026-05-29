@@ -1,4 +1,5 @@
 import { CSSProperties } from 'react'
+import { uiZIndex } from './uiFoundation'
 
 export const budgetPageStyles: Record<string, CSSProperties> = {
   page: {
@@ -300,12 +301,13 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   primaryButton: {
-    padding: '4px 8px',
-    borderRadius: 8,
-    border: '1px solid rgba(37, 99, 235, 0.82)',
-    background: 'linear-gradient(145deg, #3b82f6, #2563eb)',
-    color: '#ffffff',
-    fontWeight: 620,
+    minHeight: 'var(--ui-button-height-standard)',
+    padding: 'var(--ui-button-padding-standard)',
+    borderRadius: 'var(--ui-button-radius)',
+    border: '1px solid var(--ui-button-border-strong)',
+    background: 'var(--ui-button-bg)',
+    color: 'var(--ui-button-text-strong)',
+    fontWeight: 600,
     cursor: 'pointer',
     maxWidth: '100%',
     whiteSpace: 'normal' as const,
@@ -313,11 +315,12 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   secondaryButton: {
-    padding: '4px 8px',
-    borderRadius: 8,
-    border: '1px solid rgba(203, 213, 225, 0.82)',
-    background: 'linear-gradient(145deg, #ffffff, #f8fafc)',
-    color: '#334155',
+    minHeight: 'var(--ui-button-height-utility)',
+    padding: 'var(--ui-button-padding-utility)',
+    borderRadius: 'var(--ui-button-radius)',
+    border: '1px solid var(--ui-button-border)',
+    background: 'var(--ui-button-bg)',
+    color: 'var(--ui-button-text)',
     fontWeight: 560,
     cursor: 'pointer',
     maxWidth: '100%',
@@ -326,11 +329,12 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   dangerButton: {
-    padding: '4px 8px',
-    borderRadius: 8,
-    border: '1px solid #fca5a5',
-    background: '#fef2f2',
-    color: '#991b1b',
+    minHeight: 'var(--ui-button-height-utility)',
+    padding: 'var(--ui-button-padding-utility)',
+    borderRadius: 'var(--ui-button-radius)',
+    border: '1px solid var(--ui-button-border)',
+    background: 'var(--ui-button-bg)',
+    color: 'var(--ui-color-expense)',
     fontWeight: 560,
     cursor: 'pointer',
     maxWidth: '100%',
@@ -462,33 +466,35 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     display: 'flex',
     flexDirection: 'row' as const,
     gap: 8,
-    zIndex: 950,
+    zIndex: uiZIndex.floatingAction,
     maxWidth: 'calc(100vw - 24px)',
   } as const,
 
   floatingActionButton: {
-    width: 48,
-    minWidth: 48,
-    height: 48,
-    minHeight: 48,
-    borderRadius: 999,
-    border: 'none',
-    background: 'linear-gradient(145deg, #be123c, #9f1239)',
-    color: '#ffffff',
-    fontSize: 30,
+    width: 'var(--ui-button-height-icon)',
+    minWidth: 'var(--ui-button-height-icon)',
+    height: 'var(--ui-button-height-icon)',
+    minHeight: 'var(--ui-button-height-icon)',
+    borderRadius: 'var(--ui-button-radius)',
+    border: '1px solid var(--ui-button-border-strong)',
+    background: 'var(--ui-button-bg)',
+    color: 'var(--ui-button-text-strong)',
+    fontSize: 20,
     lineHeight: 1,
     fontWeight: 600,
     cursor: 'pointer',
-    boxShadow: '0 18px 34px rgba(15, 23, 42, 0.20), inset 0 1px 0 rgba(255,255,255,0.24)',
+    boxShadow: 'none',
     padding: 0,
     textAlign: 'center' as const,
   } as const,
 
   floatingIncomeButton: {
-    background: 'linear-gradient(145deg, #15803d, #166534)',
+    borderColor: 'var(--ui-button-border-strong)',
+    color: 'var(--ui-color-income)',
   } as const,
 
   floatingExpenseButton: {
-    background: 'linear-gradient(145deg, #be123c, #9f1239)',
+    borderColor: 'var(--ui-button-border-strong)',
+    color: 'var(--ui-color-expense)',
   } as const,
 }

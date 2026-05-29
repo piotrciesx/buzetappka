@@ -166,6 +166,7 @@ export const buildPaymentSplitPayload = ({
   selectedPaymentSourceId: string
   splitItems: PaymentSplitInput[]
 }) => {
+  // Legacy import/edit payloads stored only additional split rows; keep this as a read-time adapter.
   const shouldTreatAsLegacyAdditionalItems =
     splitItems.length > 0 &&
     !!selectedPaymentSourceId &&
@@ -232,12 +233,18 @@ export const getTransactionPaymentSourceDisplayLines = ({
   transaction,
   splitItems,
   paymentSourceOptions,
+  isPaymentSourcesEnabled = true,
 }: {
   transaction: Pick<Transaction, 'payment_source_id'>
   splitItems?: TransactionPaymentSplit[]
   paymentSourceOptions: PaymentSourceOption[]
+  isPaymentSourcesEnabled?: boolean
 }) => {
-  if (splitItems && splitItems.length > 1) {
+  if (!isPaymentSourcesEnabled) {
+    return []
+  }
+
+  if (splitItems && splitItems.length > 0) {
     return splitItems
       .map((split) => {
         const label = getPaymentSourceLabelById(split.payment_source_id, paymentSourceOptions)

@@ -1,7 +1,8 @@
 import type { Category, Transaction } from '../budgetPageTypes'
 import { getUniqueCategoryLabel } from '../categoryUtils'
 import { getExistingDaysInMonth, isMonthExcludedFromStats } from '../dateUtils'
-import { getCategoryDescendantIds, getIncludedMonthRange, getTransactionDay, getWeekdayIndex, isTransactionInExistingStatsDate, shiftMonth } from '../dashboardStatsHelpers'
+import { getIncludedMonthRange, getTransactionDay, getWeekdayIndex, isTransactionInExistingStatsDate, shiftMonth } from '../dashboardStatsHelpers'
+import { getTransactionMonth, isTransactionInMonth } from '../transactionDomain'
 import type { DashboardCategoryMovement, DashboardCategoryPatternStats, DashboardFixedVariableStats, DashboardMoneyLeak, DashboardStatsOptions } from './dashboardStatsTypes'
 
 export function getDashboardCategoryPatternStats(
@@ -26,24 +27,8 @@ export function getDashboardCategoryPatternStats(
     label,
     total: 0,
   }))
-  const level2Categories = Object.values(categoriesById).filter((category) => category.level === 2)
-  const fixedLevel2 = level2Categories.filter((category) => {
-    const normalizedName = category.name.toLowerCase()
-    return normalizedName.includes('stałe') || normalizedName.includes('stale')
-  })
-  const variableLevel2 = level2Categories.filter((category) =>
-    category.name.toLowerCase().includes('zmienne')
-  )
   const fixedIds = new Set<string>()
   const variableIds = new Set<string>()
-
-  for (const category of fixedLevel2) {
-    getCategoryDescendantIds(category.id, categoriesById).forEach((id) => fixedIds.add(id))
-  }
-
-  for (const category of variableLevel2) {
-    getCategoryDescendantIds(category.id, categoriesById).forEach((id) => variableIds.add(id))
-  }
 
   const currentCategoryTotals: Record<string, DashboardCategoryMovement> = {}
   const previousCategoryTotals: Record<string, number> = {}
@@ -74,7 +59,7 @@ export function getDashboardCategoryPatternStats(
   }
 
   for (const transaction of transactions) {
-    const month = transaction.date.slice(0, 7)
+    const month = getTransactionMonth(transaction)
     if (!isTransactionInExistingStatsDate(transaction)) continue
     if (month !== selectedMonth && !baselineMonths.includes(month)) continue
 
@@ -180,7 +165,7 @@ export function getDashboardCategoryPatternStats(
       const category = categoriesById[transaction.category_id]
       return (
         category &&
-        transaction.date.startsWith(month) &&
+        isTransactionInMonth(transaction, month) &&
         getSignedAmountForTransaction(transaction) < 0
       )
     })

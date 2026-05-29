@@ -2,6 +2,7 @@
 
 import { useCallback } from 'react'
 import { getAmountNumber } from '../../lib/transactionUtils'
+import { getDefaultPaymentSourceForTransaction } from '../../lib/paymentSources'
 import { usePaymentSources } from '../../lib/usePaymentSources'
 import { useTransactionPaymentSourceSelection } from '../../lib/useTransactionPaymentSourceSelection'
 
@@ -17,6 +18,8 @@ export function useBudgetAppPaymentSourcesBridge(ctx: Params) {
     expenseLevel1Id: ctx.expenseLevel1Id,
     getRootLevel1IdForCategory: ctx.getRootLevel1IdForCategory,
     getAmountNumber,
+    getSignedAmountForTransaction: ctx.getSignedAmountForTransaction,
+    isPaymentSourcesEnabled: ctx.isPaymentSourcesModuleEnabled,
     onDeletedSelectedPaymentSource: (paymentSourceId) => {
       if (ctx.selectedPaymentSourceId === paymentSourceId) {
         ctx.setSelectedPaymentSourceId('')
@@ -53,26 +56,13 @@ export function useBudgetAppPaymentSourcesBridge(ctx: Params) {
 
   const getDefaultPaymentSourceIdForCategoryId = useCallback(
     (categoryId: string) => {
-      if (!ctx.isPaymentSourcesModuleEnabled) {
-        return ''
-      }
-
-      const rootLevel1Id = ctx.getRootLevel1IdForCategory(categoryId)
-      const kind = selectionApi.getPaymentSourceKindForLevel1Id(rootLevel1Id)
-
-      if (kind === 'income') {
-        return paymentSourcesApi.paymentSourceSettings.showIncomePaymentSource
-          ? paymentSourcesApi.paymentSourceSettings.defaultIncomePaymentSourceId || ''
-          : ''
-      }
-
-      if (kind === 'expense') {
-        return paymentSourcesApi.paymentSourceSettings.showExpensePaymentSource
-          ? paymentSourcesApi.paymentSourceSettings.defaultExpensePaymentSourceId || ''
-          : ''
-      }
-
-      return ''
+      return getDefaultPaymentSourceForTransaction({
+        categoryId,
+        settings: paymentSourcesApi.paymentSourceSettings,
+        getRootLevel1IdForCategory: ctx.getRootLevel1IdForCategory,
+        getPaymentSourceKindForLevel1Id: selectionApi.getPaymentSourceKindForLevel1Id,
+        isPaymentSourcesEnabled: ctx.isPaymentSourcesModuleEnabled,
+      })
     },
     [
       ctx,

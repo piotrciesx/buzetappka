@@ -68,6 +68,7 @@ export const toggleTransactionSelectionIds = (
 
 export const softDeleteTransactions = async (
   supabase: any,
+  profileId: string,
   transactionIds: string[],
   shouldDelete: boolean,
   deletedAtValue: string | null
@@ -82,6 +83,7 @@ export const softDeleteTransactions = async (
       is_deleted: shouldDelete,
       deleted_at: deletedAtValue,
     })
+    .eq('profile_id', profileId)
     .in('id', transactionIds)
 
   if (error) {
@@ -91,6 +93,7 @@ export const softDeleteTransactions = async (
 
 export const moveTransactionsToCategory = async (
   supabase: any,
+  profileId: string,
   transactionIds: string[],
   targetCategoryId: string
 ) => {
@@ -103,6 +106,7 @@ export const moveTransactionsToCategory = async (
     .update({
       category_id: targetCategoryId,
     })
+    .eq('profile_id', profileId)
     .in('id', transactionIds)
 
   if (error) {
@@ -110,21 +114,73 @@ export const moveTransactionsToCategory = async (
   }
 }
 
-export const permanentlyDeleteTransactions = async (supabase: any, transactionIds: string[]) => {
+export const permanentlyDeleteTransactions = async (
+  supabase: any,
+  profileId: string,
+  transactionIds: string[]
+) => {
   if (transactionIds.length === 0) {
     return
+  }
+
+  const { data: profileTransactions, error: profileTransactionsError } = await supabase
+    .from('transactions')
+    .select('id')
+    .eq('profile_id', profileId)
+    .in('id', transactionIds)
+
+  if (profileTransactionsError) {
+    throw profileTransactionsError
+  }
+
+  const scopedTransactionIds = (profileTransactions || []).map((transaction: { id: string }) => transaction.id)
+
+  if (scopedTransactionIds.length === 0) {
+    return
+  }
+
+  const { error: recurringExecutionsError } = await supabase
+    .from('recurring_transaction_executions')
+    .update({ transaction_id: null })
+    .in('transaction_id', scopedTransactionIds)
+
+  if (recurringExecutionsError) {
+    throw recurringExecutionsError
+  }
+
+  const { error: reminderStatusesError } = await supabase
+    .from('recurring_reminder_month_statuses')
+    .update({ transaction_id: null })
+    .eq('profile_id', profileId)
+    .in('transaction_id', scopedTransactionIds)
+
+  if (reminderStatusesError) {
+    throw reminderStatusesError
   }
 
   const { error: tagLinksError } = await supabase
     .from('transaction_tags')
     .delete()
-    .in('transaction_id', transactionIds)
+    .in('transaction_id', scopedTransactionIds)
 
   if (tagLinksError) {
     throw tagLinksError
   }
 
-  const { error } = await supabase.from('transactions').delete().in('id', transactionIds)
+  const { error: paymentSplitsError } = await supabase
+    .from('transaction_payment_splits')
+    .delete()
+    .in('transaction_id', scopedTransactionIds)
+
+  if (paymentSplitsError) {
+    throw paymentSplitsError
+  }
+
+  const { error } = await supabase
+    .from('transactions')
+    .delete()
+    .eq('profile_id', profileId)
+    .in('id', scopedTransactionIds)
 
   if (error) {
     throw error
@@ -133,6 +189,7 @@ export const permanentlyDeleteTransactions = async (supabase: any, transactionId
 
 export const executeRestoreTransaction = async ({
   transactionId,
+  profileId,
   trashedTransactionsById,
   supabase,
   setLastUndoAction,
@@ -140,6 +197,7 @@ export const executeRestoreTransaction = async ({
   loadData,
 }: {
   transactionId: string
+  profileId: string
   trashedTransactionsById: Record<string, Transaction>
   supabase: any
   setLastUndoAction: (action: UndoAction | null) => void
@@ -154,7 +212,7 @@ export const executeRestoreTransaction = async ({
   }
 
   try {
-    await softDeleteTransactions(supabase, [transactionId], false, null)
+    await softDeleteTransactions(supabase, profileId, [transactionId], false, null)
     setLastUndoAction({
       type: 'restore',
       label: 'Przywrócono wpis z kosza.',
@@ -172,6 +230,7 @@ export const executeRestoreTransaction = async ({
 export const executeMoveTransaction = async ({
   transactionId,
   targetCategoryId,
+  profileId,
   activeTransactionsById,
   isAllowedMoveTarget,
   supabase,
@@ -181,6 +240,7 @@ export const executeMoveTransaction = async ({
 }: {
   transactionId: string
   targetCategoryId: string
+  profileId: string
   activeTransactionsById: Record<string, Transaction>
   isAllowedMoveTarget: (transaction: Transaction, targetCategoryId: string) => boolean
   supabase: any
@@ -206,7 +266,7 @@ export const executeMoveTransaction = async ({
   }
 
   try {
-    await moveTransactionsToCategory(supabase, [transactionId], targetCategoryId)
+    await moveTransactionsToCategory(supabase, profileId, [transactionId], targetCategoryId)
     setLastUndoAction({
       type: 'move',
       label: 'Przeniesiono wpis.',
@@ -231,6 +291,7 @@ export const executeMoveTransaction = async ({
 
 export const executeDeleteTransaction = async ({
   transactionId,
+  profileId,
   activeTransactionsById,
   supabase,
   setLastUndoAction,
@@ -238,6 +299,7 @@ export const executeDeleteTransaction = async ({
   loadData,
 }: {
   transactionId: string
+  profileId: string
   activeTransactionsById: Record<string, Transaction>
   supabase: any
   setLastUndoAction: (action: UndoAction | null) => void
@@ -260,7 +322,7 @@ export const executeDeleteTransaction = async ({
   const deletedAt = new Date().toISOString()
 
   try {
-    await softDeleteTransactions(supabase, [transactionId], true, deletedAt)
+    await softDeleteTransactions(supabase, profileId, [transactionId], true, deletedAt)
     setLastUndoAction({
       type: 'delete',
       label: 'Usunięto wpis.',
@@ -277,6 +339,7 @@ export const executeDeleteTransaction = async ({
 
 export const executeBulkDeleteSelected = async ({
   selectedTransactions,
+  profileId,
   supabase,
   setLastUndoAction,
   clearTransactionOperationUi,
@@ -284,6 +347,7 @@ export const executeBulkDeleteSelected = async ({
   setBulkActionErrorText,
 }: {
   selectedTransactions: Transaction[]
+  profileId: string
   supabase: any
   setLastUndoAction: (action: UndoAction | null) => void
   clearTransactionOperationUi: () => void
@@ -303,6 +367,7 @@ export const executeBulkDeleteSelected = async ({
   try {
     await softDeleteTransactions(
       supabase,
+      profileId,
       selectedTransactions.map((transaction) => transaction.id),
       true,
       new Date().toISOString()
@@ -324,6 +389,7 @@ export const executeBulkDeleteSelected = async ({
 export const executeBulkMoveSelected = async ({
   selectedTransactions,
   bulkMoveTargetCategoryId,
+  profileId,
   isAllowedMoveTarget,
   supabase,
   setLastUndoAction,
@@ -333,6 +399,7 @@ export const executeBulkMoveSelected = async ({
 }: {
   selectedTransactions: Transaction[]
   bulkMoveTargetCategoryId: string
+  profileId: string
   isAllowedMoveTarget: (transaction: Transaction, targetCategoryId: string) => boolean
   supabase: any
   setLastUndoAction: (action: UndoAction | null) => void
@@ -361,6 +428,7 @@ export const executeBulkMoveSelected = async ({
   try {
     await moveTransactionsToCategory(
       supabase,
+      profileId,
       selectedTransactions.map((transaction) => transaction.id),
       bulkMoveTargetCategoryId
     )
@@ -384,12 +452,14 @@ export const executeBulkMoveSelected = async ({
 
 export const executeUndoLastAction = async ({
   lastUndoAction,
+  profileId,
   supabase,
   setLastUndoAction,
   clearTransactionOperationUi,
   loadData,
 }: {
   lastUndoAction: UndoAction | null
+  profileId: string
   supabase: any
   setLastUndoAction: (action: UndoAction | null) => void
   clearTransactionOperationUi: () => void
@@ -403,6 +473,7 @@ export const executeUndoLastAction = async ({
     if (lastUndoAction.type === 'delete') {
       await softDeleteTransactions(
         supabase,
+        profileId,
         lastUndoAction.transactions.map((transaction) => transaction.id),
         false,
         null
@@ -412,6 +483,7 @@ export const executeUndoLastAction = async ({
     if (lastUndoAction.type === 'restore') {
       await softDeleteTransactions(
         supabase,
+        profileId,
         lastUndoAction.transactions.map((transaction) => transaction.id),
         true,
         new Date().toISOString()
@@ -420,7 +492,7 @@ export const executeUndoLastAction = async ({
 
     if (lastUndoAction.type === 'move') {
       for (const move of lastUndoAction.moves) {
-        await moveTransactionsToCategory(supabase, [move.id], move.fromCategoryId)
+        await moveTransactionsToCategory(supabase, profileId, [move.id], move.fromCategoryId)
       }
     }
 

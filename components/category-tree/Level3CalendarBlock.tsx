@@ -51,6 +51,7 @@ type Level3CalendarBlockProps = {
   onHeatmapModeChange: (value: HeatmapMode) => void
   onHeatmapInvertedChange: (value: boolean) => void
   heatmapStorageKey: string
+  legacyHeatmapStorageKeys?: string[]
   descriptionSuggestions: DescriptionSuggestionSet
   transactionTagsMap: Record<string, Tag[]>
   onTagClick?: (tagId: string) => void
@@ -90,6 +91,7 @@ export default function Level3CalendarBlock({
   onHeatmapModeChange,
   onHeatmapInvertedChange,
   heatmapStorageKey,
+  legacyHeatmapStorageKeys,
   descriptionSuggestions,
   transactionTagsMap,
   onTagClick,
@@ -122,6 +124,7 @@ export default function Level3CalendarBlock({
       onHeatmapModeChange={onHeatmapModeChange}
       onHeatmapInvertedChange={onHeatmapInvertedChange}
       heatmapStorageKey={heatmapStorageKey}
+      legacyHeatmapStorageKeys={legacyHeatmapStorageKeys}
       descriptionSuggestions={descriptionSuggestions}
       transactionTagsMap={transactionTagsMap}
       transactionPaymentSplitsMap={transactionPaymentSplitsMap}

@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react'
 import { DASHBOARD_MODULE_LABELS, getDashboardDefinition } from '../../lib/dashboardWidgetConfig'
+import { uiZIndex } from '../../lib/uiFoundation'
 import type {
   DashboardModuleId,
   DashboardTileMode,
@@ -10,7 +11,7 @@ const panelStyle: CSSProperties = {
   position: 'absolute',
   top: 48,
   right: 12,
-  zIndex: 12,
+  zIndex: uiZIndex.widgetConfig,
   width: 280,
   maxWidth: 'calc(100% - 24px)',
   border: '1px solid rgba(148, 163, 184, 0.28)',

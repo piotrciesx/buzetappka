@@ -1,5 +1,8 @@
+import type { Transaction } from '../budgetPageTypes'
+
 export type DashboardStatsOptions = {
   excludedMonthsSet?: Set<string>
+  latestLimit?: number
 }
 
 export type DashboardStats = {
@@ -21,6 +24,12 @@ export type TopCategory = {
   categoryId: string
   name: string
   total: number
+}
+
+export type DashboardOverview = {
+  dashboardStats: DashboardStats
+  topExpenseCategories: TopCategory[]
+  latestTransactions: Transaction[]
 }
 
 export type DashboardMonthlyTrendPoint = {

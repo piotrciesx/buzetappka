@@ -1,25 +1,26 @@
 import type { CSSProperties } from 'react'
+import { uiOverlayPrimitives, uiSurfacePrimitives } from '../../lib/uiFoundation'
 import type { FormState } from './financialGoalsPanelTypes'
 
 const overlayStyle = {
   position: 'fixed',
   inset: 0,
-  zIndex: 1000,
-  background: 'rgba(15, 23, 42, 0.45)',
+  zIndex: uiOverlayPrimitives.modalBase.layer,
+  background: 'var(--ui-overlay-backdrop-strong)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  padding: 20,
+  padding: uiOverlayPrimitives.modalBase.padding,
 } as const
 
 const modalStyle = {
   width: '100%',
   maxWidth: 720,
-  background: '#ffffff',
-  borderRadius: 16,
-  border: '1px solid #e5e7eb',
-  boxShadow: '0 20px 40px rgba(0,0,0,0.16)',
-  padding: 20,
+  background: uiSurfacePrimitives.modalSurfaceNeutral.background,
+  borderRadius: uiSurfacePrimitives.modalSurfaceNeutral.radius,
+  border: uiSurfacePrimitives.modalSurfaceNeutral.border,
+  boxShadow: uiSurfacePrimitives.modalSurfaceNeutral.shadow,
+  padding: uiSurfacePrimitives.modalSurfaceNeutral.padding,
 } as const
 
 type FinancialGoalEditModalProps = {

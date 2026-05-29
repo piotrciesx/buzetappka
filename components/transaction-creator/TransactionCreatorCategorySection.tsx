@@ -81,16 +81,18 @@ export default function TransactionCreatorCategorySection({
     }
 
     return (
-      <div style={sectionStyle}>
+      <div style={sectionStyle} data-transaction-shortcut-section="true">
         <div style={styles.l2Name}>{title}</div>
 
-        <div style={shortcutListStyle}>
+        <div style={shortcutListStyle} data-transaction-shortcut-list="true">
           {shortcuts.map((shortcut) => {
             const isSelected = effectiveCategoryId === shortcut.id
 
             return (
               <button
                 key={shortcut.id}
+                data-transaction-category-chip="true"
+                data-transaction-category-selected={isSelected ? 'true' : 'false'}
                 style={{
                   ...(isSelected ? styles.primaryButton : styles.secondaryButton),
                   ...shortcutButtonStyle,
@@ -115,10 +117,10 @@ export default function TransactionCreatorCategorySection({
       {renderShortcutList('Ostatnio używane', 'ostatnie', recentShortcutCategories)}
 
       {!lockedLevel1Id && (
-        <div style={sectionStyle}>
+        <div style={sectionStyle} data-transaction-type-section="true">
           <div style={styles.l2Name}>Typ</div>
 
-          <div style={{ ...styles.actions, marginTop: 10 }}>
+          <div style={{ ...styles.actions, marginTop: 10 }} data-transaction-category-list="true">
             {level1Categories.map((category) => {
               const isSelected = selectedLevel1Id === category.id
               const level2Children = level2ByParentId[category.id] || []
@@ -127,6 +129,8 @@ export default function TransactionCreatorCategorySection({
               return (
                 <button
                   key={category.id}
+                  data-transaction-category-chip="true"
+                  data-transaction-category-selected={isSelected ? 'true' : 'false'}
                   style={{
                     ...(isSelected ? styles.primaryButton : styles.secondaryButton),
                     ...compactCategoryButtonStyle,
@@ -152,7 +156,7 @@ export default function TransactionCreatorCategorySection({
         )}
 
         {selectedLevel1Id && availableLevel2Categories.length > 0 && (
-          <div style={treeLevel2WrapStyle}>
+          <div style={treeLevel2WrapStyle} data-transaction-category-list="true">
             {availableLevel2Categories.map((level2Category) => {
               const level3Children = level3ByParentId[level2Category.id] || []
               const isFinalHere = level3Children.length === 0
@@ -163,6 +167,8 @@ export default function TransactionCreatorCategorySection({
               return (
                 <button
                   key={level2Category.id}
+                  data-transaction-category-chip="true"
+                  data-transaction-category-selected={isSelected ? 'true' : 'false'}
                   style={{
                     ...(isSelected ? styles.primaryButton : styles.secondaryButton),
                     ...compactCategoryButtonStyle,
@@ -209,13 +215,15 @@ export default function TransactionCreatorCategorySection({
           <div style={treeLevel3WrapStyle} data-transaction-final-category-placeholder="true">
             <div style={styles.l2Name}>{categoriesById[selectedLevel2Id]?.name || ''}</div>
 
-            <div style={treeLevel3ButtonsStyle}>
+            <div style={treeLevel3ButtonsStyle} data-transaction-category-list="true">
               {availableLevel3Categories.map((level3Category) => {
                 const isSelected = effectiveCategoryId === level3Category.id
 
                 return (
                   <button
                     key={level3Category.id}
+                    data-transaction-category-chip="true"
+                    data-transaction-category-selected={isSelected ? 'true' : 'false'}
                     style={{
                       ...(isSelected ? styles.primaryButton : styles.secondaryButton),
                       ...compactCategoryButtonStyle,

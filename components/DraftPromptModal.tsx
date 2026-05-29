@@ -1,25 +1,26 @@
 import { CSSProperties } from 'react'
 import { DraftPromptState } from '../lib/draftUtils'
+import { uiOverlayPrimitives, uiSurfacePrimitives } from '../lib/uiFoundation'
 
 const draftPromptOverlayStyle = {
   position: 'fixed',
   inset: 0,
-  background: 'rgba(17, 24, 39, 0.45)',
+  background: uiOverlayPrimitives.modalPrompt.backdrop,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  padding: 20,
-  zIndex: 1100,
+  padding: uiOverlayPrimitives.modalPrompt.padding,
+  zIndex: uiOverlayPrimitives.modalPrompt.layer,
 } as const
 
 const draftPromptCardStyle = {
   width: '100%',
   maxWidth: 380,
-  background: '#ffffff',
-  border: '1px solid #e5e7eb',
-  borderRadius: 16,
-  padding: 20,
-  boxShadow: '0 20px 40px rgba(0,0,0,0.18)',
+  background: uiSurfacePrimitives.modalSurfacePrompt.background,
+  border: uiSurfacePrimitives.modalSurfacePrompt.border,
+  borderRadius: uiSurfacePrimitives.modalSurfacePrompt.radius,
+  padding: uiSurfacePrimitives.modalSurfacePrompt.padding,
+  boxShadow: uiSurfacePrimitives.modalSurfacePrompt.shadow,
 } as const
 
 type Props = {

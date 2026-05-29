@@ -1,6 +1,7 @@
 'use client'
 
 import { CSSProperties, useEffect, useRef, useState } from 'react'
+import { uiControlPrimitives, uiOverlayPrimitives, uiSurfacePrimitives } from '../lib/uiFoundation'
 import UserAvatar from './UserAvatar'
 
 type UserProfileMenuProps = {
@@ -19,19 +20,19 @@ const dropdownStyle: CSSProperties = {
   position: 'fixed',
   right: 0,
   top: 62,
-  zIndex: 4200,
+  zIndex: uiOverlayPrimitives.profileDropdown.layer,
   width: 240,
-  border: '1px solid #e5e7eb',
-  borderRadius: 8,
-  background: '#ffffff',
-  boxShadow: '0 16px 36px rgba(15, 23, 42, 0.16)',
-  padding: 8,
+  border: uiSurfacePrimitives.profileDropdownSurface.border,
+  borderRadius: uiSurfacePrimitives.profileDropdownSurface.radius,
+  background: uiSurfacePrimitives.profileDropdownSurface.background,
+  boxShadow: uiSurfacePrimitives.profileDropdownSurface.shadow,
+  padding: uiSurfacePrimitives.profileDropdownSurface.padding,
 }
 
 const avatarButtonStyle: CSSProperties = {
   width: 40,
   height: 40,
-  borderRadius: '50%',
+  borderRadius: uiControlPrimitives.iconButton.avatar.radius,
   border: '1px solid #d1d5db',
   background: '#111827',
   color: '#ffffff',
@@ -39,7 +40,7 @@ const avatarButtonStyle: CSSProperties = {
   alignItems: 'center',
   justifyContent: 'center',
   fontWeight: 700,
-  cursor: 'pointer',
+  cursor: uiControlPrimitives.iconButton.avatar.cursor,
 }
 
 const menuButtonStyle: CSSProperties = {
@@ -47,9 +48,9 @@ const menuButtonStyle: CSSProperties = {
   border: 0,
   background: 'transparent',
   textAlign: 'left',
-  padding: '9px 10px',
-  borderRadius: 6,
-  cursor: 'pointer',
+  padding: uiControlPrimitives.button.profileMenuItem.padding,
+  borderRadius: uiControlPrimitives.button.profileMenuItem.radius,
+  cursor: uiControlPrimitives.button.profileMenuItem.cursor,
 }
 
 export default function UserProfileMenu({

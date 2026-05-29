@@ -4,6 +4,7 @@ import { useCallback } from 'react'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Transaction } from '../../lib/budgetPageTypes'
 import { getNextMonthText } from '../../lib/dateUtils'
+import { isTransactionInMonth } from '../../lib/transactionDomain'
 
 type Params = {
   supabase: SupabaseClient
@@ -66,7 +67,7 @@ export function useBudgetAppMonthDangerHandlers({
 
   const handleResetSelectedMonthData = useCallback(async () => {
     const monthTransactions = scopedTransactions.filter(
-      (transaction) => transaction.date.slice(0, 7) === selectedMonth
+      (transaction) => isTransactionInMonth(transaction, selectedMonth)
     )
 
     if (monthTransactions.length === 0) {
@@ -97,6 +98,7 @@ export function useBudgetAppMonthDangerHandlers({
         deleted_at: new Date().toISOString(),
       })
       .eq('profile_id', profileId)
+      .eq('is_deleted', false)
       .gte(
         'date',
         budgetStartDate && budgetStartDate.slice(0, 7) === selectedMonth
@@ -152,6 +154,7 @@ export function useBudgetAppMonthDangerHandlers({
         deleted_at: new Date().toISOString(),
       })
       .eq('profile_id', profileId)
+      .eq('is_deleted', false)
 
     if (error) {
       alert(`Błąd resetu historii: ${error.message}`)

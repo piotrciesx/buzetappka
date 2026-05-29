@@ -4,8 +4,11 @@ import { useCallback } from 'react'
 import type { Category, Transaction } from '../../lib/budgetPageTypes'
 import {
   getRecurringDisplayLabel,
+  getReminderMonthStatus,
+  isReminderMonthHandled,
   isRecurringExpectedInMonth,
 } from '../../lib/recurringTransactions'
+import { isTransactionInMonth } from '../../lib/transactionDomain'
 import { useRecurringOptions } from '../../lib/useRecurringOptions'
 
 type Params = {
@@ -71,18 +74,26 @@ export function useBudgetAppRecurringOptionsBridge({
           const hasTransactionInMonth = transactions.some(
             (transaction) =>
               transaction.recurring_transaction_id === reminder.id &&
-              transaction.date.slice(0, 7) === selectedMonth
+              isTransactionInMonth(transaction, selectedMonth)
           )
+          const reminderState = getReminderMonthStatus({
+            recurring: reminder,
+            monthText: selectedMonth,
+            monthStatuses: recurringReminderMonthStatuses,
+            executions: recurringExecutions,
+            transactions,
+          })
+          const isHandled = isReminderMonthHandled(reminderState)
 
           return {
             id: reminder.id,
             label: `${getRecurringDisplayLabel(reminder, categoriesById)}${
-              hasTransactionInMonth ? ' — już dodano wpis w tym miesiącu' : ''
+              isHandled ? ' — już dodano wpis w tym miesiącu' : ''
             }`,
             description: reminder.description || reminder.name,
             amount: reminder.amount,
             useAmountWhenCreating: Boolean(reminder.use_amount_when_creating),
-            hasTransactionInMonth,
+            hasTransactionInMonth: isHandled || hasTransactionInMonth,
           }
         })
         .sort((left, right) => Number(left.hasTransactionInMonth) - Number(right.hasTransactionInMonth))
@@ -90,6 +101,8 @@ export function useBudgetAppRecurringOptionsBridge({
     [
       categoriesById,
       isEnabled,
+      recurringExecutions,
+      recurringReminderMonthStatuses,
       recurringTransactions,
       selectedMonth,
       transactions,

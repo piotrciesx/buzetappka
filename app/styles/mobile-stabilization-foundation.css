@@ -1,0 +1,341 @@
+/* UI-13: final mobile stabilization layer. Mobile-only overrides; keep after layout-depth. */
+@media (max-width: 820px) {
+  :root {
+    --ui-mobile-top-gap: max(8px, env(safe-area-inset-top));
+    --ui-mobile-bottom-nav: 74px;
+    --ui-mobile-bottom-safe: env(safe-area-inset-bottom);
+    --ui-mobile-bottom-gap: calc(var(--ui-mobile-bottom-nav) + var(--ui-mobile-bottom-safe) + 10px);
+    --ui-mobile-panel-x: 8px;
+    --ui-mobile-panel-width: calc(100vw - (var(--ui-mobile-panel-x) * 2));
+    --ui-mobile-control-min: 40px;
+    --ui-mobile-icon-target: 40px;
+    --ui-mobile-overlay-max: calc(100dvh - var(--ui-mobile-top-gap) - var(--ui-mobile-bottom-safe) - 12px);
+  }
+
+  html,
+  body {
+    width: 100%;
+    min-width: 0 !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    overscroll-behavior-x: none;
+  }
+
+  [data-budget-app="true"] {
+    min-height: 100dvh !important;
+    overflow-x: clip !important;
+    overscroll-behavior-y: none;
+    padding-bottom: calc(var(--ui-mobile-bottom-gap) + 12px) !important;
+  }
+
+  [data-budget-app="true"] *,
+  [data-budget-app="true"] *::before,
+  [data-budget-app="true"] *::after {
+    box-sizing: border-box !important;
+  }
+
+  [data-budget-shell-content="true"],
+  [data-budget-workspace="true"],
+  [data-budget-workspace-main="true"],
+  [data-budget-tree-workspace="true"],
+  [data-level1-tree-shell="true"],
+  [data-level1-mobile-flow="true"],
+  [data-level1-mobile-block="true"],
+  [data-level1-expanded-content="true"],
+  [data-budget-tree-bottom-deck="true"],
+  [data-core-workspace-footer="true"],
+  [data-calendar-recent-panel="true"],
+  [data-month-calendar-panel="true"],
+  [data-reminder-panel="true"],
+  [data-recurring-panel="true"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-x: clip !important;
+  }
+
+  [data-budget-header-row="true"] {
+    z-index: var(--ui-z-topbar) !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 56px !important;
+    padding-inline: 8px !important;
+  }
+
+  [data-budget-topbar-month="true"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  [data-topbar-action],
+  [data-budget-topbar-month="true"] > button,
+  [data-budget-mobile-nav="true"] button,
+  [data-budget-mobile-more-menu="true"] button {
+    min-width: var(--ui-mobile-icon-target) !important;
+    min-height: var(--ui-mobile-icon-target) !important;
+    touch-action: manipulation;
+  }
+
+  [data-topbar-dropdown],
+  [data-profile-menu-dropdown="true"],
+  [data-budget-month-menu="true"],
+  [data-month-calendar-settings-panel="true"],
+  [data-reminder-popover="true"],
+  [data-mobile-category-menu-panel="true"],
+  [data-entries-menu-panel="true"] {
+    max-width: calc(100vw - 16px) !important;
+    max-height: calc(100dvh - 86px - var(--ui-mobile-bottom-safe)) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  [data-topbar-dropdown],
+  [data-profile-menu-dropdown="true"],
+  [data-budget-month-menu="true"] {
+    z-index: var(--ui-z-topbar-dropdown) !important;
+  }
+
+  [data-reminder-popover="true"],
+  [data-month-calendar-settings-panel="true"] {
+    z-index: var(--ui-z-mobile-popover) !important;
+  }
+
+  [data-category-entries-popup-backdrop="true"] {
+    z-index: var(--ui-z-category-overlay) !important;
+  }
+
+  [data-category-entries-popup="true"] {
+    width: var(--ui-mobile-panel-width) !important;
+    max-width: var(--ui-mobile-panel-width) !important;
+    max-height: var(--ui-mobile-overlay-max) !important;
+    overflow: hidden !important;
+  }
+
+  [data-category-entries-popup-body="true"],
+  [data-entries-tree-view="true"] {
+    min-height: 0 !important;
+    max-height: calc(var(--ui-mobile-overlay-max) - 58px) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  [data-sidebar-primary-backdrop="true"],
+  [data-budget-utility-backdrop="true"] {
+    z-index: var(--ui-z-side-panel-overlay) !important;
+  }
+
+  [data-app-view="settings"],
+  [data-app-view="profile"],
+  [data-budget-utility-panel="true"] {
+    left: var(--ui-mobile-panel-x) !important;
+    right: auto !important;
+    top: 58px !important;
+    width: var(--ui-mobile-panel-width) !important;
+    min-width: 0 !important;
+    max-width: var(--ui-mobile-panel-width) !important;
+    height: calc(100dvh - 58px - var(--ui-mobile-bottom-gap)) !important;
+    max-height: calc(100dvh - 58px - var(--ui-mobile-bottom-gap)) !important;
+    overflow: hidden !important;
+    overscroll-behavior: contain;
+  }
+
+  [data-budget-utility-body="true"],
+  [data-app-view="settings"],
+  [data-app-view="profile"] {
+    min-height: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    scroll-padding-bottom: calc(var(--ui-mobile-bottom-gap) + 20px) !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  [data-transaction-modal-overlay="true"],
+  [data-calendar-modal-overlay="true"],
+  [data-reminder-details-overlay="true"],
+  [data-budget-limit-modal-overlay="true"],
+  [data-draft-prompt-overlay="true"] {
+    position: fixed !important;
+    inset: 0 !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    padding: var(--ui-mobile-top-gap) 8px max(8px, var(--ui-mobile-bottom-safe)) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  [data-transaction-modal-overlay="true"] {
+    z-index: var(--ui-z-mobile-popover) !important;
+  }
+
+  [data-calendar-modal-overlay="true"],
+  [data-reminder-details-overlay="true"],
+  [data-budget-limit-modal-overlay="true"],
+  [data-draft-prompt-overlay="true"] {
+    z-index: var(--ui-z-mobile-critical) !important;
+  }
+
+  [data-transaction-modal="true"],
+  [data-calendar-modal="true"],
+  [data-reminder-details-modal="true"],
+  [data-budget-limit-modal="true"],
+  [data-draft-prompt-card="true"] {
+    width: var(--ui-mobile-panel-width) !important;
+    min-width: 0 !important;
+    max-width: var(--ui-mobile-panel-width) !important;
+    max-height: var(--ui-mobile-overlay-max) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    scroll-padding-bottom: calc(130px + var(--ui-mobile-bottom-safe)) !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  [data-transaction-modal="true"] input,
+  [data-transaction-modal="true"] select,
+  [data-transaction-modal="true"] textarea,
+  [data-calendar-modal="true"] input,
+  [data-calendar-modal="true"] select,
+  [data-calendar-modal="true"] textarea,
+  [data-reminder-details-modal="true"] input,
+  [data-reminder-details-modal="true"] select,
+  [data-reminder-details-modal="true"] textarea,
+  [data-recurring-panel="true"] input,
+  [data-recurring-panel="true"] select,
+  [data-recurring-panel="true"] textarea,
+  [data-topbar-dropdown="search"] input,
+  [data-search-filter-field] input,
+  [data-search-filter-field] select {
+    min-height: var(--ui-mobile-control-min) !important;
+    font-size: 16px !important;
+  }
+
+  [data-transaction-modal="true"] button,
+  [data-calendar-modal="true"] button,
+  [data-reminder-details-modal="true"] button,
+  [data-recurring-panel="true"] button,
+  [data-reminder-popover="true"] button,
+  [data-search-filter-field] button {
+    min-height: var(--ui-mobile-control-min) !important;
+    touch-action: manipulation;
+  }
+
+  [data-transaction-entry-form="true"],
+  [data-transaction-entry-extra="true"],
+  [data-payment-split-editor="true"],
+  [data-recurring-form-grid="true"],
+  [data-calendar-entry-row="true"] [style*="display: flex"],
+  [data-search-filter-field] {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  [data-month-calendar-panel="true"] {
+    overflow-x: hidden !important;
+    overscroll-behavior: contain;
+  }
+
+  [data-month-calendar-weekdays="true"],
+  [data-month-calendar-grid="true"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  }
+
+  [data-calendar-cell="true"],
+  [data-month-calendar-grid="true"] > button {
+    min-width: 0 !important;
+    min-height: 58px !important;
+    padding: 6px !important;
+    touch-action: manipulation;
+  }
+
+  [data-calendar-entry-row="true"],
+  [data-calendar-dayless-section="true"],
+  [data-calendar-dayless-summary="true"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  [data-reminder-action-row="true"],
+  [data-calendar-entry-actions="true"],
+  [data-category-actions="true"],
+  [data-entries-row-actions="true"] {
+    gap: 7px !important;
+  }
+
+  [data-reminder-action-row="true"] > button,
+  [data-calendar-entry-actions="true"] > button,
+  [data-category-actions="true"] button,
+  [data-category-actions="true"] summary,
+  [data-category-drag-handle="true"],
+  [data-category-toggle-icon="true"],
+  [data-entries-menu-trigger="true"],
+  [data-mobile-category-menu="true"] > summary {
+    min-width: var(--ui-mobile-icon-target) !important;
+    min-height: var(--ui-mobile-icon-target) !important;
+    touch-action: manipulation;
+  }
+
+  [data-category-drag-handle="true"] {
+    touch-action: none;
+  }
+
+  [data-category-drag-row="true"] {
+    min-height: 52px !important;
+    touch-action: pan-y;
+  }
+
+  [data-category-dragging="true"],
+  [data-category-dragging="true"] * {
+    user-select: none !important;
+    -webkit-user-select: none !important;
+  }
+
+  [data-entries-transaction-row="true"],
+  [data-entries-inline-composer="true"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  [data-entries-inline-main-row="true"],
+  [data-entries-inline-meta-row="true"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  [data-entries-inline-composer="true"] input,
+  [data-entries-inline-composer="true"] select,
+  [data-entries-transaction-row="true"] input,
+  [data-entries-transaction-row="true"] select {
+    min-height: var(--ui-mobile-control-min) !important;
+    font-size: 16px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  [data-calendar-cell="true"],
+  [data-month-calendar-grid="true"] > button {
+    min-height: 54px !important;
+    padding: 5px !important;
+  }
+
+  [data-month-calendar-grid="true"] > button > div:nth-child(n + 3) {
+    display: none !important;
+  }
+
+  [data-reminder-action-row="true"] > button,
+  [data-calendar-entry-actions="true"] > button {
+    flex: 1 1 100% !important;
+  }
+}

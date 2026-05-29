@@ -1,32 +1,34 @@
+import { uiControlPrimitives, uiOverlayContracts, uiSurfacePrimitives, uiZIndex } from '../../lib/uiFoundation'
+
 export const overlayStyle = {
   position: 'fixed',
   inset: 0,
-  background: 'rgba(17, 24, 39, 0.45)',
+  background: uiOverlayContracts.modal.backdrop,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  padding: 20,
-  zIndex: 1000,
+  padding: 'var(--ui-overlay-modal-padding)',
+  zIndex: uiZIndex.modal,
   overflowY: 'auto',
 } as const
 
 export const modalStyle = {
   width: '100%',
-  maxWidth: 860,
-  maxHeight: '85vh',
+  maxWidth: 820,
+  maxHeight: 'min(760px, calc(100dvh - 40px))',
   overflowY: 'auto' as const,
-  background: '#ffffff',
-  border: '1px solid #e5e7eb',
-  borderRadius: 16,
-  padding: 16,
-  boxShadow: '0 20px 40px rgba(0,0,0,0.18)',
+  background: uiSurfacePrimitives.modalSurface.background,
+  border: uiSurfacePrimitives.modalSurface.border,
+  borderRadius: uiSurfacePrimitives.modalSurface.radius,
+  padding: 'var(--ui-space-8)',
+  boxShadow: uiSurfacePrimitives.modalSurface.shadow,
   boxSizing: 'border-box',
 } as const
 
 export const sectionStyle = {
-  marginTop: 12,
-  paddingTop: 12,
-  borderTop: '1px solid #e5e7eb',
+  marginTop: 'var(--ui-space-6)',
+  paddingTop: 'var(--ui-space-6)',
+  borderTop: '1px solid var(--ui-surface-border-default)',
 } as const
 
 export const treeLevel2WrapStyle = {
@@ -37,11 +39,11 @@ export const treeLevel2WrapStyle = {
 } as const
 
 export const treeLevel3WrapStyle = {
-  marginTop: 8,
-  padding: 9,
-  border: '1px solid #e5e7eb',
-  borderRadius: 12,
-  background: '#f9fafb',
+  marginTop: 'var(--ui-space-4)',
+  padding: 'var(--ui-space-5)',
+  border: uiSurfacePrimitives.infoBox.border,
+  borderRadius: uiSurfacePrimitives.infoBox.radius,
+  background: uiSurfacePrimitives.infoBox.background,
 } as const
 
 export const treeLevel3ButtonsStyle = {
@@ -71,7 +73,7 @@ export const shortcutButtonStyle = {
 export const disabledLevel3WrapStyle = {
   ...treeLevel3WrapStyle,
   opacity: 0.55,
-  background: '#f3f4f6',
+  background: 'var(--ui-surface-info)',
   borderStyle: 'dashed' as const,
 } as const
 
@@ -79,10 +81,10 @@ export const serialToggleStyle = {
   display: 'flex',
   alignItems: 'center',
   gap: 8,
-  marginTop: 12,
-  fontSize: 14,
+  marginTop: 'var(--ui-space-6)',
+  fontSize: 'var(--ui-font-size-body)',
   fontWeight: 600,
-  color: '#374151',
+  color: 'var(--ui-color-control-text)',
 } as const
 
 export const dateFieldStyle = {
@@ -92,9 +94,9 @@ export const dateFieldStyle = {
 } as const
 
 export const dateLabelStyle = {
-  fontSize: 13,
+  fontSize: 'var(--ui-font-size-body-sm)',
   fontWeight: 600,
-  color: '#374151',
+  color: 'var(--ui-color-control-text)',
 } as const
 
 export const descriptionFieldWrapStyle = {
@@ -116,43 +118,43 @@ export const suggestionsDropdownStyle = {
   top: 'calc(100% + 6px)',
   left: 0,
   right: 0,
-  zIndex: 30,
-  background: '#ffffff',
-  border: '1px solid #d1d5db',
-  borderRadius: 12,
-  boxShadow: '0 12px 24px rgba(15, 23, 42, 0.12)',
+  zIndex: uiZIndex.popover,
+  background: uiSurfacePrimitives.dropdownSurface.background,
+  border: uiSurfacePrimitives.dropdownSurface.border,
+  borderRadius: uiSurfacePrimitives.dropdownSurface.radius,
+  boxShadow: uiSurfacePrimitives.dropdownSurface.shadow,
   overflow: 'hidden',
 } as const
 
 export const suggestionButtonStyle = {
   width: '100%',
   textAlign: 'left' as const,
-  background: '#ffffff',
+  background: 'var(--ui-surface-dropdown)',
   border: 'none',
   borderBottom: '1px solid #f1f5f9',
-  padding: '10px 12px',
+  padding: 'var(--ui-space-5) var(--ui-space-6)',
   cursor: 'pointer',
-  fontSize: 14,
-  color: '#111827',
+  fontSize: 'var(--ui-font-size-body)',
+  color: 'var(--ui-color-control-text)',
 } as const
 
 export const activeSuggestionButtonStyle = {
   ...suggestionButtonStyle,
-  background: '#eff6ff',
+  background: 'rgba(239, 246, 255, 0.92)',
 } as const
 
 export const helperTextStyle = {
-  fontSize: 13,
-  color: '#6b7280',
+  fontSize: 'var(--ui-font-size-body-sm)',
+  color: 'var(--ui-color-text-muted)',
   lineHeight: 1.45,
 } as const
 
 export const finalCategoryInfoStyle = {
-  marginTop: 8,
-  padding: 9,
-  borderRadius: 12,
-  border: '1px solid #dbeafe',
-  background: '#eff6ff',
+  marginTop: 'var(--ui-space-4)',
+  padding: 'var(--ui-space-5)',
+  borderRadius: 'var(--ui-radius-lg)',
+  border: '1px solid var(--ui-surface-border-info)',
+  background: 'var(--ui-surface-info)',
 } as const
 
 export const finalCategoryInfoTitleStyle = {
@@ -171,10 +173,10 @@ export const finalCategoryInfoValueStyle = {
 } as const
 
 export const tagInputWrapStyle = {
-  marginTop: 10,
+  marginTop: 'var(--ui-space-5)',
   display: 'flex',
   flexDirection: 'column' as const,
-  gap: 8,
+  gap: 'var(--ui-space-4)',
 } as const
 
 export const tagBadgesWrapStyle = {
@@ -187,12 +189,12 @@ export const tagBadgeStyle = {
   display: 'inline-flex',
   alignItems: 'center',
   gap: 6,
-  padding: '6px 10px',
-  borderRadius: 999,
+  padding: uiControlPrimitives.tag.default.padding,
+  borderRadius: uiControlPrimitives.tag.default.radius,
   border: '1px solid #bfdbfe',
-  background: '#eff6ff',
+  background: 'rgba(239, 246, 255, 0.92)',
   color: '#1d4ed8',
-  fontSize: 13,
+  fontSize: 'var(--ui-font-size-body-sm)',
   fontWeight: 600,
 } as const
 

@@ -17,6 +17,8 @@ export type Level3SectionProps = {
   renderTransactionsInline?: boolean
   onOpenEntries?: (categoryId: string) => void
   selectedMonth: string
+  profileId?: string
+  userId?: string
   budgetStartDate: string
   isClosingAfterSelectedMonth: boolean
   categorySum: number
@@ -72,6 +74,7 @@ export type Level3SectionProps = {
   onHeatmapModeChange: (value: HeatmapMode) => void
   onHeatmapInvertedChange: (value: boolean) => void
   heatmapStorageKey: string
+  legacyHeatmapStorageKeys?: string[]
   descriptionSuggestions: DescriptionSuggestionSet
   getPaymentSourceOptionsForCategoryId?: (
     categoryId: string

@@ -16,6 +16,8 @@ type Level2ChildrenProps = {
   sensors: ReturnType<typeof import('../../lib/usePressHoldDndSensors').usePressHoldDndSensors>
   isLevel3DndBlocked: boolean
   selectedMonth: string
+  profileId?: string
+  userId?: string
   budgetStartDate: string
   isSelectedMonthLocked: boolean
   canUseMonthCalendar: boolean
@@ -66,6 +68,7 @@ type Level2ChildrenProps = {
   heatmapInverted: boolean
   onHeatmapModeChange: (value: HeatmapMode) => void
   onHeatmapInvertedChange: (value: boolean) => void
+  getCalendarStorageKey?: (categoryId: string) => string
   descriptionSuggestions: {
     global: DescriptionSuggestion[]
     byCategory: Record<string, DescriptionSuggestion[]>
@@ -105,6 +108,8 @@ export default function Level2Children({
   sensors,
   isLevel3DndBlocked,
   selectedMonth,
+  profileId,
+  userId,
   budgetStartDate,
   isSelectedMonthLocked,
   canUseMonthCalendar,
@@ -137,6 +142,7 @@ export default function Level2Children({
   heatmapInverted,
   onHeatmapModeChange,
   onHeatmapInvertedChange,
+  getCalendarStorageKey,
   descriptionSuggestions,
   getPaymentSourceOptionsForCategoryId,
   getRecurringOptionsForCategoryId,
@@ -174,6 +180,8 @@ export default function Level2Children({
             key={l3.id}
             l3={l3}
             selectedMonth={selectedMonth}
+            profileId={profileId}
+            userId={userId}
             budgetStartDate={budgetStartDate}
             isClosingAfterSelectedMonth={isChildClosingAfterSelectedMonth(l3)}
             categorySum={getSumForCategory(l3.id)}
@@ -210,7 +218,8 @@ export default function Level2Children({
             heatmapInverted={heatmapInverted}
             onHeatmapModeChange={onHeatmapModeChange}
             onHeatmapInvertedChange={onHeatmapInvertedChange}
-            heatmapStorageKey={`budget-app-tree-calendar-${l3.id}`}
+            heatmapStorageKey={getCalendarStorageKey?.(l3.id) || ''}
+            legacyHeatmapStorageKeys={[`budget-app-tree-calendar-${l3.id}`]}
             descriptionSuggestions={descriptionSuggestions}
             getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
             getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}

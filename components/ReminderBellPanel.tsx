@@ -8,12 +8,13 @@ import {
 import { getUniqueCategoryLabel } from '../lib/categoryUtils'
 import {
   getInstallmentNumberForMonth,
-  getInstallmentSummary,
+  getInstallmentLifecycleSummary,
   getPendingRecurringTransactions,
   getRecurringFrequencyLabel,
   getRecurringKindLabel,
   getRecurringReminderDay,
 } from '../lib/recurringTransactions'
+import { isTransactionInMonth } from '../lib/transactionDomain'
 
 import ReminderBellDetailsModal from './reminder-bell/ReminderBellDetailsModal'
 import ReminderBellPopup from './reminder-bell/ReminderBellPopup'
@@ -29,6 +30,11 @@ import {
   panelStyle,
 } from './reminder-bell/reminderBellStyles'
 import { getInstallmentScheduleInfo, initialForm, normalizeDay, setDateDay, toAmount } from './reminder-bell/reminderBellUtils'
+import {
+  CalendarSurface,
+  ReminderActionRow,
+  ReminderCard,
+} from './reminder-calendar/reminderCalendarPrimitives'
 
 export default function ReminderBellPanel({
   selectedMonth,
@@ -56,9 +62,12 @@ export default function ReminderBellPanel({
         recurringTransactions,
         [],
         selectedMonth,
-        recurringReminderMonthStatuses
+        recurringReminderMonthStatuses,
+        {
+          transactions,
+        }
       ).filter((reminder) => !hiddenReminderIds.includes(reminder.id)),
-    [hiddenReminderIds, recurringReminderMonthStatuses, recurringTransactions, selectedMonth]
+    [hiddenReminderIds, recurringReminderMonthStatuses, recurringTransactions, selectedMonth, transactions]
   )
 
   const updateForm = <K extends keyof typeof initialForm>(key: K, value: (typeof initialForm)[K]) => {
@@ -143,7 +152,10 @@ export default function ReminderBellPanel({
 
   const getLinkedTransactions = (reminderId: string) => {
     return transactions
-      .filter((transaction) => transaction.recurring_transaction_id === reminderId)
+      .filter(
+        (transaction) =>
+          transaction.is_deleted !== true && transaction.recurring_transaction_id === reminderId
+      )
       .sort((left, right) => right.date.localeCompare(left.date))
   }
 
@@ -151,7 +163,8 @@ export default function ReminderBellPanel({
     return transactions.some(
       (transaction) =>
         transaction.recurring_transaction_id === reminderId &&
-        transaction.date.slice(0, 7) === selectedMonth
+        transaction.is_deleted !== true &&
+        isTransactionInMonth(transaction, selectedMonth)
     )
   }
 
@@ -173,7 +186,13 @@ export default function ReminderBellPanel({
   )
   const selectedDetailsLastTransaction = selectedDetailsLinkedTransactions[0]
   const selectedDetailsSummary = selectedDetailsReminder
-    ? getInstallmentSummary(selectedDetailsReminder, [], selectedMonth)
+    ? getInstallmentLifecycleSummary({
+        recurring: selectedDetailsReminder,
+        executions: [],
+        monthStatuses: recurringReminderMonthStatuses,
+        transactions,
+        referenceMonth: selectedMonth,
+      })
     : null
   const selectedDetailsSchedule = getInstallmentScheduleInfo(selectedDetailsReminder, selectedMonth)
   const selectedDetailsCompletedInstallments = selectedDetailsSchedule.scheduledDone
@@ -237,7 +256,7 @@ export default function ReminderBellPanel({
         )}
       </div>
 
-      <div style={panelStyle}>
+      <CalendarSurface data-reminder-panel="true" style={panelStyle}>
         <div style={styles.l2Name}>Przypomnienia</div>
         <div style={{ ...styles.emptyText, marginTop: 4 }}>
           Przypomnienie jest sugestią. Wpis powstaje dopiero po wybraniu akcji „Dodaj wpis”.
@@ -410,7 +429,7 @@ export default function ReminderBellPanel({
           )}
         </div>
 
-        <div style={{ ...styles.actions, marginTop: 12 }}>
+        <ReminderActionRow style={{ ...styles.actions, marginTop: 12 }}>
           <button
             type="button"
             style={{
@@ -428,7 +447,7 @@ export default function ReminderBellPanel({
               Anuluj
             </button>
           )}
-        </div>
+        </ReminderActionRow>
 
         <div style={{ ...gridStyle, marginTop: 14 }}>
           {recurringTransactions.length === 0 ? (
@@ -439,7 +458,7 @@ export default function ReminderBellPanel({
               const category = categoriesById[reminder.category_id]
 
               return (
-                <div key={reminder.id} style={cardStyle}>
+                <ReminderCard key={reminder.id} style={cardStyle}>
                   <div style={{ fontWeight: 600 }}>{reminder.name}</div>
                   <div style={styles.emptyText}>
                     Kategoria: {category?.name || 'Kategoria usunięta'}
@@ -460,7 +479,7 @@ export default function ReminderBellPanel({
                     </div>
                   )}
 
-                  <div style={{ ...styles.actions, marginTop: 10 }}>
+                  <ReminderActionRow style={{ ...styles.actions, marginTop: 10 }}>
                     <button type="button" style={styles.secondaryButton} onClick={() => startEdit(reminder)}>
                       Edytuj
                     </button>
@@ -480,13 +499,13 @@ export default function ReminderBellPanel({
                     >
                       Usuń
                     </button>
-                  </div>
-                </div>
+                  </ReminderActionRow>
+                </ReminderCard>
               )
             })
           )}
         </div>
-      </div>
+      </CalendarSurface>
 
       {selectedDetailsReminder && (
         <ReminderBellDetailsModal

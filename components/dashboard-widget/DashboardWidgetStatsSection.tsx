@@ -1,5 +1,6 @@
 import { NEUTRAL, labelStyle, listRowStyle, metricBoxStyle, progressTrackStyle } from './dashboardWidgetTileStyles'
 import { clampPercent, formatPercent } from './dashboardWidgetTileUtils'
+import { MetricCard, ProgressBar as ProgressBarPrimitive } from './dashboardWidgetPrimitives'
 
 export function MetricBox({
   label,
@@ -11,12 +12,12 @@ export function MetricBox({
   color?: string
 }) {
   return (
-    <div style={metricBoxStyle}>
+    <MetricCard style={metricBoxStyle}>
       <div style={labelStyle}>{label}</div>
       <div style={{ marginTop: 3, fontSize: 14, fontWeight: 600, color, lineHeight: 1.2 }}>
         {value}
       </div>
-    </div>
+    </MetricCard>
   )
 }
 
@@ -35,16 +36,7 @@ export function ProgressBar({
         <span style={labelStyle}>{label}</span>
         <strong style={{ color, fontWeight: 600 }}>{formatPercent(value)}</strong>
       </div>
-      <div style={progressTrackStyle}>
-        <div
-          style={{
-            width: `${clampPercent(value)}%`,
-            height: '100%',
-            borderRadius: 999,
-            background: color,
-          }}
-        />
-      </div>
+      <ProgressBarPrimitive value={clampPercent(value)} color={color} style={progressTrackStyle} />
     </div>
   )
 }

@@ -9,6 +9,13 @@ import {
   getPaymentSourceTypeLabel,
   PaymentSourceListKind,
 } from '../lib/paymentSources'
+import {
+  EmptyState,
+  ListRow,
+  MetadataGrid,
+  SettingsSection,
+  UtilityPanel,
+} from './utility-panels/utilityPanelPrimitives'
 
 const panelStyle = {
   marginBottom: 20,
@@ -278,6 +285,7 @@ export default function PaymentSourcesPanel(props: Props) {
 
   const renderMembershipBadge = (label: string, isActive: boolean, colorValue: string) => (
     <span
+      data-utility-badge="true"
       style={{
         ...badgeStyle,
         background: isActive ? `${colorValue}18` : '#f3f4f6',
@@ -290,10 +298,10 @@ export default function PaymentSourcesPanel(props: Props) {
   )
 
   return (
-    <section style={panelStyle}>
+    <UtilityPanel data-payment-sources-panel="true" style={panelStyle}>
       <style>{responsivePaymentSourcesStyle}</style>
-      <div style={settingsGridStyle}>
-        <div style={settingsCardStyle}>
+      <div data-payment-source-settings-grid="true" style={settingsGridStyle}>
+        <SettingsSection data-payment-source-card="true" style={settingsCardStyle}>
           <div style={settingsTitleStyle}>Przychody</div>
 
           <label style={checkboxLabelStyle}>
@@ -360,9 +368,9 @@ export default function PaymentSourcesPanel(props: Props) {
           >
             Kopiuj listę wydatków do przychodów
           </button>
-        </div>
+        </SettingsSection>
 
-        <div style={settingsCardStyle}>
+        <SettingsSection data-payment-source-card="true" style={settingsCardStyle}>
           <div style={settingsTitleStyle}>Wydatki</div>
 
           <label style={checkboxLabelStyle}>
@@ -429,10 +437,10 @@ export default function PaymentSourcesPanel(props: Props) {
           >
             Kopiuj listę przychodów do wydatków
           </button>
-        </div>
+        </SettingsSection>
       </div>
 
-      <div data-payment-source-form="true" style={sourceFormStyle}>
+      <SettingsSection data-payment-source-form="true" style={sourceFormStyle}>
         <div style={fieldStyle}>
           <label style={styles.sortLabel}>Nazwa</label>
           <input
@@ -539,11 +547,11 @@ export default function PaymentSourcesPanel(props: Props) {
             Anuluj edycję
           </button>
         )}
-      </div>
+      </SettingsSection>
 
-      <div style={listStyle}>
+      <div data-payment-source-list="true" style={listStyle}>
         {paymentSources.length === 0 ? (
-          <div style={styles.emptyStateCard}>Brak zapisanych źródeł płatności.</div>
+          <EmptyState style={styles.emptyStateCard}>Brak zapisanych źródeł płatności.</EmptyState>
         ) : (
           paymentSources.map((source) => {
             const stats = statsById[source.id] || {
@@ -554,7 +562,15 @@ export default function PaymentSourcesPanel(props: Props) {
             }
 
             return (
-              <div key={source.id} style={cardStyle}>
+              <ListRow
+                key={source.id}
+                data-payment-source-card="true"
+                style={{
+                  ...cardStyle,
+                  display: 'grid',
+                  gridTemplateColumns: 'minmax(0, 1fr)',
+                }}
+              >
                 <div style={sourceHeaderStyle}>
                   <div>
                     <div style={sourceNameStyle}>
@@ -599,22 +615,22 @@ export default function PaymentSourcesPanel(props: Props) {
                   {renderMembershipBadge('Wydatki', source.is_expense_source !== false, '#b91c1c')}
                 </div>
 
-                <div style={sourceStatsGridStyle}>
-                  <div style={sourceStatStyle}>
+                <MetadataGrid data-payment-source-stats="true" style={sourceStatsGridStyle}>
+                  <div data-payment-source-stat="true" style={sourceStatStyle}>
                     <b>Liczba wpisów:</b> {stats.transactionCount}
                   </div>
-                  <div style={sourceStatStyle}>
+                  <div data-payment-source-stat="true" style={sourceStatStyle}>
                     <b>Suma przychodów:</b> {stats.incomeTotal.toFixed(2)} zł
                   </div>
-                  <div style={sourceStatStyle}>
+                  <div data-payment-source-stat="true" style={sourceStatStyle}>
                     <b>Suma wydatków:</b> {stats.expenseTotal.toFixed(2)} zł
                   </div>
-                </div>
-              </div>
+                </MetadataGrid>
+              </ListRow>
             )
           })
         )}
       </div>
-    </section>
+    </UtilityPanel>
   )
 }

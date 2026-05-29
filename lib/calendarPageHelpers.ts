@@ -2,6 +2,7 @@ import { RefObject } from 'react'
 import { Category, Transaction } from './budgetPageTypes'
 import { TransactionDraftType } from './draftUtils'
 import { buildDateFromDayInput } from './dateUtils'
+import { getTransactionMonth } from './transactionDomain'
 
 type OpenCalendarTransactionCreatorParams = {
   selectedMonth: string
@@ -55,7 +56,10 @@ export const getTransactionsForCalendarMonth = (
   transactions: Transaction[],
   selectedMonth: string
 ) => {
-  return transactions.filter((transaction) => transaction.date.slice(0, 7) === selectedMonth)
+  return transactions.filter(
+    (transaction) =>
+      transaction.is_deleted !== true && getTransactionMonth(transaction) === selectedMonth
+  )
 }
 
 export const getLevel1DescendantCategoryIds = (categories: Category[], level1Id: string) => {
@@ -87,7 +91,8 @@ export const getTransactionsForLevel1AndMonth = (
 
   return transactions.filter(
     (transaction) =>
-      transaction.date.slice(0, 7) === selectedMonth &&
+      transaction.is_deleted !== true &&
+      getTransactionMonth(transaction) === selectedMonth &&
       descendantIds.includes(transaction.category_id)
   )
 }

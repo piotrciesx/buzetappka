@@ -21,6 +21,8 @@ export type Level2SectionProps = {
   onEditBudgetLimit?: (categoryId: string | null) => void
   getBudgetLimitView?: (categoryId: string | null) => BudgetLimitView | null
   selectedMonth: string
+  profileId?: string
+  userId?: string
   budgetStartDate: string
   isSelectedMonthLocked: boolean
   canUseMonthCalendar?: boolean
@@ -84,6 +86,8 @@ export type Level2SectionProps = {
   onHeatmapModeChange: (value: HeatmapMode) => void
   onHeatmapInvertedChange: (value: boolean) => void
   heatmapStorageKey: string
+  legacyHeatmapStorageKeys?: string[]
+  getCalendarStorageKey?: (categoryId: string) => string
   descriptionSuggestions: {
     global: DescriptionSuggestion[]
     byCategory: Record<string, DescriptionSuggestion[]>

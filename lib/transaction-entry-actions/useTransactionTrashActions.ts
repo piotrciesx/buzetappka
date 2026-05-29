@@ -11,6 +11,7 @@ import {
 
 type Params = {
   supabase: SupabaseClient
+  profileId: string
   activeTransactionsById: Record<string, Transaction>
   trashedTransactionsById: Record<string, Transaction>
   isAllowedMoveTarget: (transaction: Transaction, targetCategoryId: string) => boolean
@@ -22,6 +23,7 @@ type Params = {
 
 export const useTransactionTrashActions = ({
   supabase,
+  profileId,
   activeTransactionsById,
   trashedTransactionsById,
   isAllowedMoveTarget,
@@ -40,15 +42,16 @@ export const useTransactionTrashActions = ({
         throw new Error('locked-month')
       }
 
-      await moveTransactionsToCategoryHelper(supabase, transactionIds, targetCategoryId)
+      await moveTransactionsToCategoryHelper(supabase, profileId, transactionIds, targetCategoryId)
     },
-    [activeTransactionsById, guardTransactionsUnlocked, supabase]
+    [activeTransactionsById, guardTransactionsUnlocked, profileId, supabase]
   )
 
   const handleRestoreTransaction = useCallback(
     async (transactionId: string) => {
       await executeRestoreTransaction({
         transactionId,
+        profileId,
         trashedTransactionsById,
         supabase,
         setLastUndoAction,
@@ -62,6 +65,7 @@ export const useTransactionTrashActions = ({
       setLastUndoAction,
       supabase,
       trashedTransactionsById,
+      profileId,
     ]
   )
 
@@ -81,6 +85,7 @@ export const useTransactionTrashActions = ({
       await executeMoveTransaction({
         transactionId,
         targetCategoryId,
+        profileId,
         activeTransactionsById,
         isAllowedMoveTarget,
         supabase,
@@ -95,6 +100,7 @@ export const useTransactionTrashActions = ({
       guardTransactionsUnlocked,
       isAllowedMoveTarget,
       loadData,
+      profileId,
       setLastUndoAction,
       supabase,
     ]
@@ -115,6 +121,7 @@ export const useTransactionTrashActions = ({
 
       await executeDeleteTransaction({
         transactionId,
+        profileId,
         activeTransactionsById,
         supabase,
         setLastUndoAction,
@@ -127,6 +134,7 @@ export const useTransactionTrashActions = ({
       clearTransactionOperationUi,
       guardTransactionsUnlocked,
       loadData,
+      profileId,
       setLastUndoAction,
       supabase,
     ]
@@ -148,7 +156,7 @@ export const useTransactionTrashActions = ({
       }
 
       try {
-        await permanentlyDeleteTransactions(supabase, [transactionId])
+        await permanentlyDeleteTransactions(supabase, profileId, [transactionId])
         clearTransactionOperationUi()
         await loadData()
       } catch (error) {
@@ -157,7 +165,7 @@ export const useTransactionTrashActions = ({
         }
       }
     },
-    [clearTransactionOperationUi, loadData, supabase, trashedTransactionsById]
+    [clearTransactionOperationUi, loadData, profileId, supabase, trashedTransactionsById]
   )
 
   const handleEmptyTrash = useCallback(async () => {
@@ -176,7 +184,7 @@ export const useTransactionTrashActions = ({
     }
 
     try {
-      await permanentlyDeleteTransactions(supabase, trashedTransactionIds)
+      await permanentlyDeleteTransactions(supabase, profileId, trashedTransactionIds)
       clearTransactionOperationUi()
       await loadData()
     } catch (error) {
@@ -184,7 +192,7 @@ export const useTransactionTrashActions = ({
         alert(`Błąd opróżniania kosza: ${error.message}`)
       }
     }
-  }, [clearTransactionOperationUi, loadData, supabase, trashedTransactionsById])
+  }, [clearTransactionOperationUi, loadData, profileId, supabase, trashedTransactionsById])
 
   return {
     moveTransactionsToCategory,

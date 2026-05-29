@@ -2,6 +2,11 @@ import { CSSProperties } from 'react'
 import { Category, RecurringTransaction } from '../../lib/budgetPageTypes'
 import { getInstallmentNumberForMonth, getRecurringReminderDay } from '../../lib/recurringTransactions'
 import { itemStyle, popoverStyle } from './reminderBellStyles'
+import {
+  ReminderActionRow,
+  ReminderCard,
+  ReminderStatusBadge,
+} from '../reminder-calendar/reminderCalendarPrimitives'
 
 type Props = {
   selectedMonth: string
@@ -27,7 +32,7 @@ export default function ReminderBellPopup({
   setIsOpen,
 }: Props) {
   return (
-    <div style={popoverStyle}>
+    <div data-reminder-popover="true" style={popoverStyle}>
       <div style={styles.l2Name}>Przypomnienia wymagające decyzji</div>
 
       {pendingReminders.length === 0 ? (
@@ -39,14 +44,15 @@ export default function ReminderBellPopup({
           const hasDuplicate = hasLinkedTransactionInSelectedMonth(reminder.id)
 
           return (
-            <div key={reminder.id} style={itemStyle}>
+            <ReminderCard key={reminder.id} style={itemStyle}>
               <div style={{ fontWeight: 600 }}>{reminder.name}</div>
               <div style={styles.emptyText}>
                 {category?.name || 'Kategoria usunięta'} · dzień {getRecurringReminderDay(reminder)}
                 {installment ? ` · ${installment.current} / ${installment.total || '?'}` : ''}
               </div>
               {hasDuplicate && (
-                <div
+                <ReminderStatusBadge
+                  tone="warning"
                   style={{
                     ...styles.infoBox,
                     marginTop: 8,
@@ -55,9 +61,9 @@ export default function ReminderBellPopup({
                   }}
                 >
                   W tym miesiącu istnieje już wpis powiązany z tym przypomnieniem.
-                </div>
+                </ReminderStatusBadge>
               )}
-              <div style={{ ...styles.actions, marginTop: 8 }}>
+              <ReminderActionRow style={{ ...styles.actions, marginTop: 8 }}>
                 <button
                   type="button"
                   style={styles.primaryButton}
@@ -78,8 +84,8 @@ export default function ReminderBellPopup({
                 >
                   Oznacz jako przeczytane
                 </button>
-              </div>
-            </div>
+              </ReminderActionRow>
+            </ReminderCard>
           )
         })
       )}

@@ -130,15 +130,6 @@ export type FinancialGoal = {
 
 export type FinancialGoalAllocationMode = 'priority' | 'allocation'
 
-export type CategoryMonthlyLimit = {
-  id: string
-  profile_id: string
-  category_id: string
-  month: string
-  limit_amount: number
-  created_at?: string
-}
-
 export type BudgetLimitMode = 'normal' | 'strict'
 
 export type BudgetLimit = {

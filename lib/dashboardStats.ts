@@ -13,6 +13,7 @@ export type {
   DashboardMonthlyTrendPoint,
   DashboardMonthOverMonthMetric,
   DashboardMonthOverMonthStats,
+  DashboardOverview,
   DashboardSpendingPaceStatus,
   DashboardStats,
   DashboardStatsOptions,
@@ -22,6 +23,7 @@ export type {
 } from './dashboard-stats/dashboardStatsTypes'
 export { getDashboardStats } from './dashboard-stats/dashboardStatsCalculations'
 export { getLatestTransactions, getTopExpenseCategories } from './dashboard-stats/dashboardStatsRankings'
+export { getDashboardOverview } from './dashboard-stats/dashboardStatsOverview'
 export { getDashboardCategoryTrends, getDashboardDailyCashflowStats, getDashboardMonthOverMonthStats, getDashboardTrendStats } from './dashboard-stats/dashboardStatsTrends'
 export { getDashboardForecastStats } from './dashboard-stats/dashboardStatsForecast'
 export { getDashboardCategoryPatternStats } from './dashboard-stats/dashboardStatsPatterns'

@@ -24,6 +24,7 @@ type MigrationPromptState = {
 
 type UseCategoryVisibilityActionsParams = {
   supabase: SupabaseClient
+  profileId: string
   categories: Category[]
   transactions: Transaction[]
   selectedMonth: string
@@ -43,6 +44,7 @@ type UseCategoryVisibilityActionsParams = {
 
 export function useCategoryVisibilityActions({
   supabase,
+  profileId,
   categories,
   transactions,
   selectedMonth,
@@ -71,6 +73,7 @@ export function useCategoryVisibilityActions({
           reactivate_from: null,
         })
         .eq('id', categoryId)
+        .eq('profile_id', profileId)
         .select('id, active_to, reactivate_from')
         .maybeSingle()
 
@@ -100,6 +103,7 @@ export function useCategoryVisibilityActions({
     [
       clearTransactionOperationUi,
       loadData,
+      profileId,
       resetTransactionCreator,
       selectedMonth,
       setNewSubcategoryName,
@@ -284,6 +288,7 @@ export function useCategoryVisibilityActions({
           reactivate_from: null,
         })
         .eq('id', categoryId)
+        .eq('profile_id', profileId)
         .select('id, active_to, reactivate_from')
         .maybeSingle()
 
@@ -300,7 +305,7 @@ export function useCategoryVisibilityActions({
       await loadData()
       alert('Zaplanowane zamknięcie kategorii zostało cofnięte')
     },
-    [categories, loadData, selectedMonth, supabase]
+    [categories, loadData, profileId, selectedMonth, supabase]
   )
 
   const handleRestoreCategory = useCallback(
@@ -344,6 +349,7 @@ export function useCategoryVisibilityActions({
           reactivate_from: reactivateFromValue,
         })
         .eq('id', categoryId)
+        .eq('profile_id', profileId)
         .select('id, active_to, reactivate_from')
         .maybeSingle()
 
@@ -368,6 +374,7 @@ export function useCategoryVisibilityActions({
     [
       categories,
       loadData,
+      profileId,
       resetTransactionCreator,
       selectedMonth,
       setNewSubcategoryName,

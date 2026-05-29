@@ -148,7 +148,7 @@
   }
 
   [data-budget-utility-overlay="true"] {
-    z-index: 2600 !important;
+    z-index: var(--ui-z-side-panel-overlay) !important;
   }
 
   [data-sidebar-primary-backdrop="true"],

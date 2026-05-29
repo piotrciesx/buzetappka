@@ -9,8 +9,11 @@ import {
 import {
   buildRecurringSuggestions,
   getRecurringDisplayLabel,
+  getReminderMonthStatus,
+  isReminderMonthHandled,
   isRecurringExpectedInMonth,
 } from './recurringTransactions'
+import { isTransactionInMonth } from './transactionDomain'
 
 type Params = {
   visibleCategories: Category[]
@@ -67,24 +70,34 @@ export function useRecurringOptions({
         const hasTransactionInMonth = transactions.some(
           (transaction) =>
             transaction.recurring_transaction_id === recurring.id &&
-            transaction.date.slice(0, 7) === selectedMonth
+            isTransactionInMonth(transaction, selectedMonth)
         )
+        const reminderState = getReminderMonthStatus({
+          recurring,
+          monthText: selectedMonth,
+          monthStatuses: recurringReminderMonthStatuses,
+          executions: recurringExecutions,
+          transactions,
+        })
+        const isHandled = isReminderMonthHandled(reminderState)
 
         return {
           id: recurring.id,
           label: `${getRecurringDisplayLabel(recurring, categoriesById)}${
-            hasTransactionInMonth ? ' — już dodano wpis w tym miesiącu' : ''
+            isHandled ? ' — już dodano wpis w tym miesiącu' : ''
           }`,
           description: recurring.description || recurring.name,
           amount: recurring.amount,
           useAmountWhenCreating: Boolean(recurring.use_amount_when_creating),
-          hasTransactionInMonth,
+          hasTransactionInMonth: isHandled || hasTransactionInMonth,
         }
       })
       .sort((left, right) => Number(left.hasTransactionInMonth) - Number(right.hasTransactionInMonth))
   }, [
     categoriesById,
     isEnabled,
+    recurringExecutions,
+    recurringReminderMonthStatuses,
     recurringTransactions,
     selectedLevel2Id,
     selectedMonth,
@@ -102,6 +115,7 @@ export function useRecurringOptions({
       recurringTransactions,
       executions: recurringExecutions,
       monthStatuses: recurringReminderMonthStatuses,
+      transactions,
       selectedMonth,
       categoryId:
         selectedTransactionCategoryId ||
@@ -133,6 +147,7 @@ export function useRecurringOptions({
     selectedMonth,
     selectedTransactionCategoryId,
     selectedTransactionTypeId,
+    transactions,
   ])
 
   return {

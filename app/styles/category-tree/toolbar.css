@@ -75,7 +75,7 @@
   position: absolute !important;
   top: calc(100% + 8px) !important;
   right: 0 !important;
-  z-index: 60 !important;
+  z-index: var(--ui-z-sticky) !important;
   width: min(620px, calc(100vw - 560px)) !important;
   min-width: 420px !important;
   padding: 12px !important;
@@ -189,7 +189,7 @@
   position: absolute !important;
   top: calc(100% + 8px) !important;
   right: 0 !important;
-  z-index: 60 !important;
+  z-index: var(--ui-z-sticky) !important;
   width: min(620px, calc(100vw - 560px)) !important;
   min-width: 420px !important;
   padding: 12px !important;
@@ -244,7 +244,7 @@
   position: absolute !important;
   top: calc(100% + 8px) !important;
   right: 0 !important;
-  z-index: 40 !important;
+  z-index: var(--ui-z-sticky) !important;
   width: min(620px, calc(100vw - 560px)) !important;
   min-width: 420px !important;
   padding: 12px !important;
@@ -392,7 +392,7 @@
   position: absolute !important;
   top: calc(100% + 8px) !important;
   right: 0 !important;
-  z-index: 60 !important;
+  z-index: var(--ui-z-sticky) !important;
   width: min(620px, calc(100vw - 560px)) !important;
   min-width: 420px !important;
   padding: 12px !important;

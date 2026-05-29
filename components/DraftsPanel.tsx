@@ -1,5 +1,13 @@
 import type { CSSProperties } from 'react'
 import type { TransactionDraft } from '../lib/draftUtils'
+import {
+  ActionRow,
+  EmptyState,
+  ListRow,
+  MetadataGrid,
+  StatusBox,
+  UtilityPanel,
+} from './utility-panels/utilityPanelPrimitives'
 
 const draftsPanelStyle = {
   display: 'grid',
@@ -163,8 +171,8 @@ export default function DraftsPanel(props: Props) {
   } = props
 
   return (
-    <section style={draftsPanelStyle} aria-label="Szkice wpisów">
-      <div style={draftsHeaderStyle}>
+    <UtilityPanel style={draftsPanelStyle} aria-label="Szkice wpisów">
+      <ActionRow style={draftsHeaderStyle}>
         <button
           type="button"
           style={{ ...styles.secondaryButton, ...lightButtonStyle }}
@@ -175,14 +183,14 @@ export default function DraftsPanel(props: Props) {
         >
           {isCleaningAllDrafts ? 'Czyszczenie...' : 'Usuń wszystkie'}
         </button>
-      </div>
+      </ActionRow>
 
-      {draftsStatusText && <div style={compactStatusStyle}>{draftsStatusText}</div>}
+      {draftsStatusText && <StatusBox style={compactStatusStyle}>{draftsStatusText}</StatusBox>}
 
       {isDraftsLoading ? (
-        <div style={compactStatusStyle}>Ładowanie szkiców...</div>
+        <StatusBox style={compactStatusStyle}>Ładowanie szkiców...</StatusBox>
       ) : drafts.length === 0 ? (
-        <div style={compactStatusStyle}>Nie ma zapisanych szkiców.</div>
+        <EmptyState style={compactStatusStyle}>Nie ma zapisanych szkiców.</EmptyState>
       ) : (
         <div style={draftsListStyle}>
           {drafts.map((draft) => {
@@ -194,14 +202,14 @@ export default function DraftsPanel(props: Props) {
             const updatedLabel = formatDraftUpdatedAt(draft.updated_at)
 
             return (
-              <div key={draft.id} style={draftRowStyle}>
+              <ListRow key={draft.id} style={draftRowStyle}>
                 <div style={draftMainStyle}>
                   <div style={draftTopLineStyle}>
                     <strong style={draftTypeStyle}>{typeLabel}</strong>
                     <span style={draftCategoryStyle}>{getDraftLocationLabel(draft)}</span>
                   </div>
 
-                  <div style={draftDetailsStyle}>
+                  <MetadataGrid style={draftDetailsStyle}>
                     <div style={draftFieldStyle}>
                       <span style={draftLabelStyle}>Kwota</span>
                       <span style={draftValueStyle}>{amountLabel}</span>
@@ -218,10 +226,10 @@ export default function DraftsPanel(props: Props) {
                       <span style={draftLabelStyle}>Ostatnia zmiana</span>
                       <span style={draftValueStyle}>{updatedLabel}</span>
                     </div>
-                  </div>
+                  </MetadataGrid>
                 </div>
 
-                <div style={draftActionsStyle}>
+                <ActionRow style={draftActionsStyle}>
                   <button
                     type="button"
                     style={{ ...styles.primaryButton, ...lightButtonStyle }}
@@ -245,12 +253,12 @@ export default function DraftsPanel(props: Props) {
                   >
                     Usuń
                   </button>
-                </div>
-              </div>
+                </ActionRow>
+              </ListRow>
             )
           })}
         </div>
       )}
-    </section>
+    </UtilityPanel>
   )
 }

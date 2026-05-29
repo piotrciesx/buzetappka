@@ -12,6 +12,8 @@ type Level2TransactionsListProps = {
   l2: Category
   inlineAddToken: number
   selectedMonth: string
+  profileId?: string
+  userId?: string
   budgetStartDate: string
   isClosingAfterSelectedMonth: boolean
   isSelectedMonthLocked: boolean
@@ -62,6 +64,7 @@ type Level2TransactionsListProps = {
   onHeatmapModeChange: (value: HeatmapMode) => void
   onHeatmapInvertedChange: (value: boolean) => void
   heatmapStorageKey: string
+  legacyHeatmapStorageKeys?: string[]
   descriptionSuggestions: {
     global: DescriptionSuggestion[]
     byCategory: Record<string, DescriptionSuggestion[]>
@@ -93,6 +96,8 @@ export default function Level2TransactionsList({
   l2,
   inlineAddToken,
   selectedMonth,
+  profileId,
+  userId,
   budgetStartDate,
   isClosingAfterSelectedMonth,
   isSelectedMonthLocked,
@@ -125,6 +130,7 @@ export default function Level2TransactionsList({
   onHeatmapModeChange,
   onHeatmapInvertedChange,
   heatmapStorageKey,
+  legacyHeatmapStorageKeys,
   descriptionSuggestions,
   getPaymentSourceOptionsForCategoryId,
   getRecurringOptionsForCategoryId,
@@ -147,6 +153,8 @@ export default function Level2TransactionsList({
       showHeaderSum={false}
       showCategoryActions={false}
       selectedMonth={selectedMonth}
+      profileId={profileId}
+      userId={userId}
       budgetStartDate={budgetStartDate}
       isClosingAfterSelectedMonth={isClosingAfterSelectedMonth}
       categorySum={getSumForCategory(l2.id)}
@@ -184,6 +192,7 @@ export default function Level2TransactionsList({
       onHeatmapModeChange={onHeatmapModeChange}
       onHeatmapInvertedChange={onHeatmapInvertedChange}
       heatmapStorageKey={heatmapStorageKey}
+      legacyHeatmapStorageKeys={legacyHeatmapStorageKeys}
       descriptionSuggestions={descriptionSuggestions}
       getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
       getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}

@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { CalendarEntryRow } from '../reminder-calendar/reminderCalendarPrimitives'
 
 type MonthCalendarEmptyStateProps = {
   children: string
@@ -9,5 +10,5 @@ export default function MonthCalendarEmptyState({
   children,
   styles,
 }: MonthCalendarEmptyStateProps) {
-  return <div style={styles.emptyStateCard}>{children}</div>
+  return <CalendarEntryRow style={styles.emptyStateCard}>{children}</CalendarEntryRow>
 }

@@ -6,7 +6,11 @@ import {
   RecurringTransactionExecution,
   Transaction,
 } from './budgetPageTypes'
-import { getMonthCycleDate } from './recurringTransactions'
+import {
+  getMonthCycleDate,
+  getReminderMonthForTransactionLink,
+  ReminderMonthLifecycleStatus,
+} from './recurringTransactions'
 
 type UseRecurringTransactionCreatorParams = {
   recurringTransactions: RecurringTransaction[]
@@ -26,7 +30,7 @@ type UseRecurringTransactionCreatorParams = {
   saveRecurringReminderMonthStatus: (input: {
     reminderId: string
     month: string
-    status: RecurringReminderMonthStatus['status']
+    status: RecurringReminderMonthStatus['status'] | ReminderMonthLifecycleStatus
     transactionId?: string | null
   }) => Promise<void>
   amountInputRef: React.RefObject<HTMLInputElement | null>
@@ -231,8 +235,12 @@ export function useRecurringTransactionCreator({
       if (linkedRecurringId) {
         await saveRecurringReminderMonthStatus({
           reminderId: linkedRecurringId,
-          month: transaction.date.slice(0, 7),
-          status: 'linked',
+          month: getReminderMonthForTransactionLink({
+            transaction,
+            selectedMonth,
+            hasExplicitReminderSelection: Boolean(selectedRecurringTransactionId),
+          }),
+          status: 'handled_with_transaction',
           transactionId: transaction.id,
         })
       }
@@ -241,6 +249,7 @@ export function useRecurringTransactionCreator({
       restoreDescriptionSuggestion,
       saveRecurringReminderMonthStatus,
       selectedRecurringTransactionId,
+      selectedMonth,
     ]
   )
 

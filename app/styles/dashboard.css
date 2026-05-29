@@ -23,7 +23,7 @@
 [data-budget-utility-overlay="true"] {
   position: fixed;
   inset: 0;
-  z-index: 1200;
+  z-index: var(--ui-z-dashboard-overlay);
   pointer-events: none;
 }
 
@@ -66,7 +66,7 @@
 [data-dashboard-drawer-header="true"] {
   position: sticky;
   top: -14px;
-  z-index: 2;
+  z-index: var(--ui-z-local-overlay);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -203,7 +203,7 @@
 
 
 [data-budget-utility-overlay="true"] {
-  z-index: 1450;
+  z-index: var(--ui-z-dashboard-add-panel);
 }
 
 
@@ -295,7 +295,7 @@
   [data-budget-header-row="true"] {
     position: fixed;
     inset: 0 0 auto 0;
-    z-index: 90000;
+    z-index: var(--ui-z-topbar);
     min-height: var(--shell-top);
     margin: 0;
     padding: 10px 18px;

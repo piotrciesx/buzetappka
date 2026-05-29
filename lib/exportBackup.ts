@@ -4,7 +4,7 @@ import { SupabaseClient } from '@supabase/supabase-js'
 import { getCategoryPathLabel } from './budgetPageHelpers'
 import { Category } from './budgetPageTypes'
 import { triggerTextDownload } from './importExportUtils'
-import { isTransactionInBudgetRange } from './transactionScope'
+import { getEffectiveTransactionScope } from './transactionScope'
 
 type BackupRow = Record<string, unknown>
 
@@ -127,7 +127,30 @@ const escapeCsvValue = (value: unknown) => {
 
 const joinCsvRows = (rows: unknown[][]) => rows.map((row) => row.map(escapeCsvValue).join(';')).join('\n')
 
-const getPaymentSourceName = (transaction: BackupRow, paymentSourcesById: Record<string, BackupRow>) => {
+const getPaymentSourceName = (
+  transaction: BackupRow,
+  paymentSourcesById: Record<string, BackupRow>,
+  transactionPaymentSplitsByTransactionId: Record<string, BackupRow[]>
+) => {
+  const transactionId = getTextValue(transaction.id)
+  const splitRows = transactionPaymentSplitsByTransactionId[transactionId] || []
+
+  if (splitRows.length > 0) {
+    return splitRows
+      .map((split) => {
+        const paymentSourceId = getTextValue(split.payment_source_id)
+        const sourceName = getTextValue(paymentSourcesById[paymentSourceId]?.name)
+
+        if (!sourceName) {
+          return ''
+        }
+
+        return `${sourceName}: ${getTextValue(split.amount)}`
+      })
+      .filter(Boolean)
+      .join(', ')
+  }
+
   const paymentSourceId = getTextValue(transaction.payment_source_id)
 
   if (!paymentSourceId) {
@@ -157,12 +180,16 @@ const createBackupCsv = ({
   tagsById,
   transactionTagsByTransactionId,
   paymentSourcesById,
+  transactionPaymentSplitsByTransactionId,
+  includePaymentSources,
 }: {
   transactions: BackupRow[]
   categoriesById: Record<string, Category>
   tagsById: Record<string, BackupRow>
   transactionTagsByTransactionId: Record<string, BackupRow[]>
   paymentSourcesById: Record<string, BackupRow>
+  transactionPaymentSplitsByTransactionId: Record<string, BackupRow[]>
+  includePaymentSources: boolean
 }) => {
   const rows: unknown[][] = [
     ['date', 'category_name', 'amount', 'description', 'tags', 'payment_source', 'created_at'],
@@ -180,7 +207,9 @@ const createBackupCsv = ({
       transaction.amount,
       transaction.description,
       getTransactionTagsText(transaction, transactionTagsByTransactionId, tagsById),
-      getPaymentSourceName(transaction, paymentSourcesById),
+      includePaymentSources
+        ? getPaymentSourceName(transaction, paymentSourcesById, transactionPaymentSplitsByTransactionId)
+        : '',
       transaction.created_at,
     ])
   })
@@ -284,7 +313,10 @@ export const downloadProfileBackupJson = async (supabase: SupabaseClient, profil
 export const downloadProfileBackupCsv = async (
   supabase: SupabaseClient,
   profileId: string,
-  budgetStartDate?: string | null
+  budgetStartDate?: string | null,
+  options: {
+    includePaymentSources?: boolean
+  } = {}
 ) => {
   const backup = await fetchProfileBackup(supabase, profileId)
   const categoriesById = Object.fromEntries(
@@ -307,22 +339,39 @@ export const downloadProfileBackupCsv = async (
     },
     {}
   )
+  const transactionPaymentSplitsByTransactionId =
+    backup.transaction_payment_splits.reduce<Record<string, BackupRow[]>>((acc, split) => {
+      const transactionId = getTextValue(split.transaction_id)
+
+      if (!acc[transactionId]) {
+        acc[transactionId] = []
+      }
+
+      acc[transactionId].push(split)
+      return acc
+    }, {})
 
   triggerTextDownload({
     filename: `budget-transactions-${getBackupDateText()}.csv`,
     content: createBackupCsv({
-      transactions: backup.transactions.filter(
-        (transaction) =>
-          transaction.is_deleted !== true &&
-          isTransactionInBudgetRange(
-            { date: getTextValue(transaction.date) },
-            budgetStartDate
-          )
+      transactions: getEffectiveTransactionScope(
+        backup.transactions.map((transaction) => ({
+          ...transaction,
+          date: getTextValue(transaction.date),
+          day_is_null: transaction.day_is_null === true,
+          is_deleted: transaction.is_deleted === true,
+        })),
+        {
+          mode: 'export-active',
+          budgetStartDate,
+        }
       ),
       categoriesById,
       tagsById,
       transactionTagsByTransactionId,
       paymentSourcesById,
+      transactionPaymentSplitsByTransactionId,
+      includePaymentSources: options.includePaymentSources !== false,
     }),
     mimeType: 'text/csv;charset=utf-8',
   })

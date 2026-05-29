@@ -1,5 +1,7 @@
 'use client'
 
+import { uiControlPrimitives, uiOverlayPrimitives, uiSurfacePrimitives } from '../lib/uiFoundation'
+
 type Props = {
   isOpen: boolean
   x: number
@@ -11,28 +13,28 @@ type Props = {
 const backdropStyle = {
   position: 'fixed' as const,
   inset: 0,
-  zIndex: 1200,
+  zIndex: uiOverlayPrimitives.dropdown.layer,
 }
 
 const menuStyle = {
   position: 'fixed' as const,
   width: 180,
-  background: '#ffffff',
-  border: '1px solid #d1d5db',
-  borderRadius: 12,
-  boxShadow: '0 16px 32px rgba(15, 23, 42, 0.18)',
+  background: uiSurfacePrimitives.dropdownSurface.background,
+  border: uiSurfacePrimitives.dropdownSurface.border,
+  borderRadius: uiSurfacePrimitives.dropdownSurface.radius,
+  boxShadow: uiSurfacePrimitives.dropdownSurface.shadow,
   overflow: 'hidden' as const,
-  zIndex: 1201,
+  zIndex: uiOverlayPrimitives.dropdownRaised.layer,
 }
 
 const buttonBaseStyle = {
   width: '100%',
   border: 'none',
   background: '#ffffff',
-  padding: '10px 12px',
+  padding: uiControlPrimitives.button.menuItem.padding,
   textAlign: 'left' as const,
-  cursor: 'pointer',
-  fontSize: 14,
+  cursor: uiControlPrimitives.button.menuItem.cursor,
+  fontSize: uiControlPrimitives.button.menuItem.fontSize,
 }
 
 export default function DescriptionSuggestionDeleteMenu(props: Props) {

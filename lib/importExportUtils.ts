@@ -1,5 +1,6 @@
 import { Category, Transaction } from './budgetPageTypes'
 import { PaymentSplitInput, buildPaymentSplitPayload } from './paymentSplitUtils'
+import { getEffectiveTransactionScope } from './transactionScope'
 
 export type ParsedImportFile = {
   delimiter: string
@@ -444,6 +445,9 @@ export const createTransactionsExportCsv = ({
   categoriesById: Record<string, Category>
   getCategoryPathLabel: (categoryId: string, categoriesById: Record<string, Category>) => string
 }) => {
+  const activeTransactions = getEffectiveTransactionScope(transactions, {
+    mode: 'export-active',
+  })
   const rows: Array<Array<unknown>> = [
     [
       'amount',
@@ -457,7 +461,7 @@ export const createTransactionsExportCsv = ({
     ],
   ]
 
-  transactions.forEach((transaction) => {
+  activeTransactions.forEach((transaction) => {
     const paymentSplits = transactionPaymentSplitsMap[transaction.id] || []
 
     rows.push([
@@ -494,14 +498,29 @@ export const createBudgetBackupJson = ({
   trashedTransactions: Transaction[]
   transactionPaymentSplitsMap?: Record<string, Array<{ payment_source_id: string; amount: number }>>
 }) => {
+  const activeTransactions = getEffectiveTransactionScope(transactions, {
+    mode: 'export-active',
+  })
+  const backupTrashedTransactions = getEffectiveTransactionScope(trashedTransactions, {
+    mode: 'trash',
+  })
+  const backupTransactionIds = new Set(
+    [...activeTransactions, ...backupTrashedTransactions].map((transaction) => transaction.id)
+  )
+  const scopedTransactionPaymentSplitsMap = Object.fromEntries(
+    Object.entries(transactionPaymentSplitsMap).filter(([transactionId]) =>
+      backupTransactionIds.has(transactionId)
+    )
+  )
+
   return JSON.stringify(
     {
       exported_at: new Date().toISOString(),
       selected_month: selectedMonth,
       categories,
-      transactions,
-      trashed_transactions: trashedTransactions,
-      transaction_payment_splits: transactionPaymentSplitsMap,
+      transactions: activeTransactions,
+      trashed_transactions: backupTrashedTransactions,
+      transaction_payment_splits: scopedTransactionPaymentSplitsMap,
     },
     null,
     2
@@ -512,15 +531,12 @@ export const triggerTextDownload = ({
   filename,
   content,
   mimeType = 'text/plain;charset=utf-8',
-  includeBom = false,
 }: {
   filename: string
   content: string
   mimeType?: string
-  includeBom?: boolean
 }) => {
-  const payload = includeBom ? `\uFEFF${content}` : content
-  const blob = new Blob([payload], { type: mimeType })
+  const blob = new Blob([content], { type: mimeType })
   const url = window.URL.createObjectURL(blob)
   const link = document.createElement('a')
 

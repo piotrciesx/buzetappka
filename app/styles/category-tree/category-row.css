@@ -265,13 +265,13 @@
 [data-mobile-category-menu="true"],
 [data-transaction-menu="true"] {
   position: relative !important;
-  z-index: 3000 !important;
+  z-index: var(--ui-z-popover) !important;
 }
 
 [data-floating-dropdown="true"][open],
 [data-mobile-category-menu="true"][open],
 [data-transaction-menu="true"][open] {
-  z-index: 20000 !important;
+  z-index: var(--ui-z-category-popover) !important;
 }
 
 [data-mobile-category-menu-panel="true"],
@@ -279,7 +279,7 @@
   position: absolute !important;
   right: 0 !important;
   top: calc(100% + 7px) !important;
-  z-index: 20010 !important;
+  z-index: var(--ui-z-category-popover-elevated) !important;
   min-width: 190px !important;
   display: grid !important;
   gap: 5px !important;

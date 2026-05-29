@@ -8,7 +8,7 @@
     width: auto !important;
     max-width: none !important;
     transform: none !important;
-    z-index: var(--shell-topbar-overlay-z, 120000) !important;
+    z-index: var(--shell-topbar-overlay-z) !important;
   }
 }
 
@@ -265,7 +265,7 @@
   position: absolute !important;
   top: 12px !important;
   right: 12px !important;
-  z-index: 30 !important;
+  z-index: var(--ui-z-creator-dropdown) !important;
 }
 
 [data-month-calendar-settings-menu="true"] > summary {
@@ -424,7 +424,7 @@
   position: absolute !important;
   right: 0 !important;
   top: calc(100% + 7px) !important;
-  z-index: 22000 !important;
+  z-index: var(--ui-z-category-overlay) !important;
   width: min(360px, calc(100vw - 28px)) !important;
   max-height: min(420px, calc(100dvh - 120px)) !important;
   display: grid !important;

@@ -18,10 +18,12 @@ import {
   createPaymentSplitItemsFromStoredSplits,
   PaymentSplitInput,
 } from '../lib/paymentSplitUtils'
+import { isDaylessTransaction } from '../lib/transactionDomain'
 import { splitTagInput } from '../lib/tagUtils'
 import { useDescriptionSuggestions } from '../lib/useDescriptionSuggestions'
 import { useIsMobileViewport } from '../lib/useIsMobileViewport'
 import { createDraftId, type TransactionDraft } from '../lib/draftUtils'
+import { getProfileStorageKey, readProfileStorageValue } from '../lib/profileStorage'
 
 type Props = import('./category-tree/level3-section/level3SectionTypes').Level3SectionProps
 
@@ -36,6 +38,8 @@ export default function Level3Section(props: Props) {
     renderTransactionsInline = true,
     onOpenEntries,
     selectedMonth,
+    profileId,
+    userId,
     budgetStartDate,
     isClosingAfterSelectedMonth,
     categorySum,
@@ -73,6 +77,7 @@ export default function Level3Section(props: Props) {
     onHeatmapModeChange,
     onHeatmapInvertedChange,
     heatmapStorageKey,
+    legacyHeatmapStorageKeys,
     descriptionSuggestions,
     getPaymentSourceOptionsForCategoryId,
     getRecurringOptionsForCategoryId,
@@ -127,6 +132,15 @@ export default function Level3Section(props: Props) {
   const editDayInputRef = useRef<HTMLInputElement | null>(null)
 
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+  const legacyInlineDraftStorageKey = `budget-inline-draft-${l3.id}-${selectedMonth}`
+  const inlineDraftStorageKey =
+    userId && profileId
+      ? getProfileStorageKey({
+          userId,
+          profileId,
+          featureKey: `inline-draft:${l3.id}:${selectedMonth}`,
+        })
+      : ''
 
   const {
     filteredSuggestions: filteredEditSuggestions,
@@ -255,7 +269,7 @@ export default function Level3Section(props: Props) {
     setMovingTransactionId(null)
     setMoveTargetCategoryId('')
     setEditingTransactionId(transaction.id)
-    setEditDay(getDayInputFromDate(transaction.date, selectedMonth))
+    setEditDay(isDaylessTransaction(transaction) ? '' : getDayInputFromDate(transaction.date, selectedMonth))
     setEditAmount(String(getAmountNumber(transaction.amount)))
     setEditDescription(transaction.description || '')
     setEditTagNames(nextTagNames)
@@ -372,8 +386,16 @@ export default function Level3Section(props: Props) {
     }
 
     setIsInlineAdding(true)
-    const storageKey = `budget-inline-draft-${l3.id}-${selectedMonth}`
-    const storedDraft = typeof window === 'undefined' ? null : window.localStorage.getItem(storageKey)
+    const storedDraft =
+      typeof window === 'undefined' || !inlineDraftStorageKey
+        ? null
+        : readProfileStorageValue({
+            storageKey: inlineDraftStorageKey,
+            legacyStorageKeys:
+              inlineDraftStorageKey === legacyInlineDraftStorageKey
+                ? []
+                : [legacyInlineDraftStorageKey],
+          })
     let parsedDraft: Partial<{ id: string; day: string; amount: string; description: string; tags: string }> = {}
 
     if (storedDraft) {
@@ -406,8 +428,10 @@ export default function Level3Section(props: Props) {
   }, [
     canUsePaymentSources,
     getDefaultPaymentSourceIdForCategoryId,
+    inlineDraftStorageKey,
     isOpen,
     l3.id,
+    legacyInlineDraftStorageKey,
     openTransactionCreator,
     renderTransactionsInline,
     selectedMonth,
@@ -431,8 +455,8 @@ export default function Level3Section(props: Props) {
   const cancelInlineAdd = () => {
     suppressInlineDraftSaveRef.current = true
 
-    if (typeof window !== 'undefined') {
-      window.localStorage.removeItem(`budget-inline-draft-${l3.id}-${selectedMonth}`)
+    if (typeof window !== 'undefined' && inlineDraftStorageKey) {
+      window.localStorage.removeItem(inlineDraftStorageKey)
     }
 
     if (inlineDraftIdRef.current || latestInlineDraftRef.current) {
@@ -483,8 +507,8 @@ export default function Level3Section(props: Props) {
         canUsePaymentSources ? inlinePaymentSplitItems : undefined,
         inlineRecurringTransactionId || null
       )
-      if (typeof window !== 'undefined') {
-        window.localStorage.removeItem(`budget-inline-draft-${l3.id}-${selectedMonth}`)
+      if (typeof window !== 'undefined' && inlineDraftStorageKey) {
+        window.localStorage.removeItem(inlineDraftStorageKey)
       }
       if (inlineDraft) {
         await deleteDraft(inlineDraft.type)
@@ -502,10 +526,11 @@ export default function Level3Section(props: Props) {
     }
 
     const inlineDraft = buildInlineDraft()
-    const storageKey = `budget-inline-draft-${l3.id}-${selectedMonth}`
     const timeoutId = window.setTimeout(() => {
       if (!inlineDraft) {
-        window.localStorage.removeItem(storageKey)
+        if (inlineDraftStorageKey) {
+          window.localStorage.removeItem(inlineDraftStorageKey)
+        }
         latestInlineDraftRef.current = null
         if (inlineDraftIdRef.current) {
           void deleteDraft(inlineDraftType).catch(() => {})
@@ -513,16 +538,18 @@ export default function Level3Section(props: Props) {
         return
       }
 
-      window.localStorage.setItem(
-        storageKey,
-        JSON.stringify({
-          id: inlineDraft.id,
-          day: inlineDay,
-          amount: inlineAmount,
-          description: inlineDescription,
-          tags: inlineTagInput,
-        })
-      )
+      if (inlineDraftStorageKey) {
+        window.localStorage.setItem(
+          inlineDraftStorageKey,
+          JSON.stringify({
+            id: inlineDraft.id,
+            day: inlineDay,
+            amount: inlineAmount,
+            description: inlineDescription,
+            tags: inlineTagInput,
+          })
+        )
+      }
       saveInlineDraftToSharedSystem(inlineDraft)
     }, 450)
 
@@ -540,11 +567,10 @@ export default function Level3Section(props: Props) {
     inlineDay,
     inlineDescription,
     inlineDraftType,
+    inlineDraftStorageKey,
     inlineTagInput,
     isInlineAdding,
-    l3.id,
     saveInlineDraftToSharedSystem,
-    selectedMonth,
   ])
 
   const orderedTransactions = useMemo(() => {
@@ -552,7 +578,14 @@ export default function Level3Section(props: Props) {
   }, [transactions])
 
   return (
-    <div ref={setNodeRef} style={wrapStyle}>
+    <div
+      ref={setNodeRef}
+      style={wrapStyle}
+      data-category-section="true"
+      data-category-level="3"
+      data-category-open={isOpen ? 'true' : 'false'}
+      data-category-dragging={isDragging ? 'true' : 'false'}
+    >
       {!hideHeader && (
       <Level3SectionHeader
         name={headerName || l3.name}
@@ -642,6 +675,7 @@ export default function Level3Section(props: Props) {
         onHeatmapModeChange={onHeatmapModeChange}
         onHeatmapInvertedChange={onHeatmapInvertedChange}
         heatmapStorageKey={heatmapStorageKey}
+        legacyHeatmapStorageKeys={legacyHeatmapStorageKeys}
         descriptionSuggestions={descriptionSuggestions}
         transactionTagsMap={transactionTagsMap}
         transactionPaymentSplitsMap={transactionPaymentSplitsMap}

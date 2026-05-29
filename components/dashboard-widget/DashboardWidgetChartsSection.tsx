@@ -27,6 +27,11 @@ import {
   getExpenseChangeColor,
 } from './dashboardWidgetTileUtils'
 import { MetricBox } from './DashboardWidgetStatsSection'
+import {
+  ChartSurface,
+  ProgressBar as ProgressBarPrimitive,
+  RankingRow,
+} from './dashboardWidgetPrimitives'
 
 const getHeatmapColor = (balance: number, maxAbsBalance: number) => {
   if (balance === 0 || maxAbsBalance <= 0) return '#e5e7eb'
@@ -74,7 +79,7 @@ export function MiniLineChart({
   const zeroY = chartHeight - ((0 - min) / (max - min || 1)) * chartHeight
 
   return (
-    <div style={{ ...dashboardChartBox, gap: 6 }}>
+    <ChartSurface style={{ ...dashboardChartBox, gap: 6 }}>
       <svg viewBox={`0 0 ${width} ${chartHeight}`} role="img" style={{ width: '100%', height: '100%', maxHeight: height, overflow: 'hidden' }}>
         <line
           x1="0"
@@ -127,7 +132,7 @@ export function MiniLineChart({
           ))}
         </div>
       )}
-    </div>
+    </ChartSurface>
   )
 }
 
@@ -183,22 +188,17 @@ export function SimpleBars({
     <div style={{ display: 'grid', gap: 7 }}>
       {items.map((item) => (
         <div key={item.label}>
-          <div style={listRowStyle}>
+          <RankingRow style={listRowStyle}>
             <span style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
               {item.label}
             </span>
             <strong style={{ fontWeight: 600 }}>{formatMoney(item.value)}</strong>
-          </div>
-          <div style={progressTrackStyle}>
-            <div
-              style={{
-                width: `${clampPercent((item.value / maxValue) * 100)}%`,
-                height: '100%',
-                borderRadius: 999,
-                background: item.color ?? color,
-              }}
-            />
-          </div>
+          </RankingRow>
+          <ProgressBarPrimitive
+            value={clampPercent((item.value / maxValue) * 100)}
+            color={item.color ?? color}
+            style={progressTrackStyle}
+          />
         </div>
       ))}
     </div>
@@ -346,6 +346,7 @@ export function MonthOverMonthTable({
 
           return (
             <div
+              data-dashboard-widget-metric-card="true"
               key={metric.key}
               style={{
                 border: `1px solid ${SOFT_BORDER}`,

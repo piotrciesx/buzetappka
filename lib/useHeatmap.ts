@@ -1,6 +1,9 @@
 import { Dispatch, SetStateAction, useCallback } from 'react'
 import { Category, Transaction } from './budgetPageTypes'
-import { getAmountNumber } from './transactionUtils'
+import {
+  getRootLevel1IdForCategory as getRootLevel1IdForCategoryFromDomain,
+  getSignedAmountByRootType,
+} from './transactionDomain'
 
 export type HeatmapMode = 'normal' | 'balance'
 export type CalendarHeatmapVariant = 'balance' | 'income' | 'expense'
@@ -33,49 +36,20 @@ export function useHeatmap({
 
   const getRootLevel1IdForCategory = useCallback(
     (categoryId: string) => {
-      let currentCategory = categoriesById[categoryId]
-
-      while (currentCategory?.parent_id) {
-        currentCategory = categoriesById[currentCategory.parent_id]
-      }
-
-      if (!currentCategory || currentCategory.level !== 1) {
-        return null
-      }
-
-      return currentCategory.id
+      return getRootLevel1IdForCategoryFromDomain(categoryId, categoriesById)
     },
     [categoriesById]
   )
 
   const getSignedAmountForTransaction = useCallback(
     (transaction: Transaction) => {
-      const amount = getAmountNumber(transaction.amount)
-      const rootLevel1Id = getRootLevel1IdForCategory(transaction.category_id)
-
-      if (!rootLevel1Id) {
-        return 0
-      }
-
-      const rootCategory = categoriesById[rootLevel1Id]
-
-      if (!rootCategory) {
-        return 0
-      }
-
-      const normalizedName = rootCategory.name.trim().toLowerCase()
-
-      if (normalizedName === 'przychody') {
-        return amount
-      }
-
-      if (normalizedName === 'wydatki') {
-        return amount * -1
-      }
-
-      return 0
+      return getSignedAmountByRootType(transaction, {
+        categoriesById,
+        incomeLevel1Id,
+        expenseLevel1Id,
+      })
     },
-    [categoriesById, getRootLevel1IdForCategory]
+    [categoriesById, expenseLevel1Id, incomeLevel1Id]
   )
 
   const getCalendarHeatmapVariantForLevel1Id = useCallback(

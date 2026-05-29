@@ -5,6 +5,7 @@ import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
 import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
 import { getExistingDaysInMonth } from '../../lib/dateUtils'
+import { getTransactionDay, getTransactionMonth, isActiveTransaction } from '../../lib/transactionDomain'
 import type { DashboardWidgetPixelRect } from './dashboardWidgetTileTypes'
 import { BLUE, GREEN, MUTED, RED, SOFT_BORDER, SOFT_TEXT } from './dashboardWidgetTileStyles'
 import { clampPercent, formatMoney, formatPercent } from './dashboardWidgetTileUtils'
@@ -282,13 +283,13 @@ export default function DailyAveragesWidget({
   const activeDays = new Set<number>()
 
   transactions.forEach((transaction) => {
-    if (transaction.is_deleted || !transaction.date.startsWith(selectedMonth)) {
+    if (!isActiveTransaction(transaction) || getTransactionMonth(transaction) !== selectedMonth) {
       return
     }
 
-    const day = Number(transaction.date.slice(8, 10))
+    const day = getTransactionDay(transaction)
 
-    if (!Number.isFinite(day) || day < 1 || day > existingDays) {
+    if (day === null || day < 1 || day > existingDays) {
       return
     }
 

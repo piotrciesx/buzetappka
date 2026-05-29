@@ -2,7 +2,12 @@
 
 import { CSSProperties, useMemo, useState } from 'react'
 import type { Category } from '../lib/budgetPageTypes'
+import { uiControlPrimitives, uiOverlayPrimitives, uiSurfacePrimitives } from '../lib/uiFoundation'
 import type { BudgetLimitUsageState } from '../lib/useBudgetLimits'
+import {
+  ReminderCard,
+  ReminderStatusBadge,
+} from './reminder-calendar/reminderCalendarPrimitives'
 
 type Props = {
   alerts: BudgetLimitUsageState[]
@@ -17,11 +22,11 @@ const containerStyle: CSSProperties = {
 
 const countStyle: CSSProperties = {
   marginLeft: 6,
-  minWidth: 20,
-  height: 20,
-  borderRadius: 999,
-  background: '#dc2626',
-  color: '#ffffff',
+  minWidth: uiControlPrimitives.badge.danger.minWidth,
+  height: uiControlPrimitives.badge.danger.height,
+  borderRadius: uiControlPrimitives.badge.danger.radius,
+  background: uiControlPrimitives.badge.danger.background,
+  color: uiControlPrimitives.badge.danger.color,
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -35,12 +40,12 @@ const popoverStyle: CSSProperties = {
   top: 'calc(100% + 8px)',
   width: 400,
   maxWidth: 'calc(100vw - 32px)',
-  padding: 12,
-  border: '1px solid #e5e7eb',
-  borderRadius: 8,
-  background: '#ffffff',
-  boxShadow: '0 16px 36px rgba(15, 23, 42, 0.16)',
-  zIndex: 40,
+  padding: uiSurfacePrimitives.popoverSurface.padding,
+  border: uiSurfacePrimitives.popoverSurface.border,
+  borderRadius: uiSurfacePrimitives.popoverSurface.radius,
+  background: uiSurfacePrimitives.popoverSurface.background,
+  boxShadow: uiSurfacePrimitives.popoverSurface.shadow,
+  zIndex: uiOverlayPrimitives.inlinePopover.layer,
 }
 
 const itemButtonStyle: CSSProperties = {
@@ -120,7 +125,7 @@ export default function BudgetLimitAlertsPanel({
       </button>
 
       {isOpen && (
-        <div style={popoverStyle}>
+        <div data-reminder-popover="true" style={popoverStyle}>
           <div style={styles.l2Name}>Alerty limitów</div>
 
           {sortedAlerts.length === 0 ? (
@@ -139,12 +144,19 @@ export default function BudgetLimitAlertsPanel({
                     setIsOpen(false)
                   }}
                 >
-                  <div style={{ fontWeight: 600 }}>{categoryLabel}</div>
-                  <div style={metaStyle}>
+                  <ReminderCard style={{ padding: 0, border: 0, background: 'transparent' }}>
+                    <div style={{ fontWeight: 600 }}>{categoryLabel}</div>
+                    <div style={metaStyle}>
                     {formatMoney(alert.usageAmount)} / {formatMoney(alert.limit.amount)} ·{' '}
                     {alert.usagePercent.toFixed(1)}%
-                  </div>
-                  <div style={metaStyle}>{getAlertMessage(alert)}</div>
+                    </div>
+                    <ReminderStatusBadge
+                      tone={alert.alertState.level === 'exceeded' ? 'danger' : 'warning'}
+                      style={metaStyle}
+                    >
+                      {getAlertMessage(alert)}
+                    </ReminderStatusBadge>
+                  </ReminderCard>
                 </button>
               )
             })

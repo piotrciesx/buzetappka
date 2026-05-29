@@ -533,15 +533,9 @@ export default function TopItemsWidget({
     getSignedAmountForTransaction,
   })
 
-  const incomeEntries = allEntries
-    .filter((entry) => entry.amount > 0)
-    .sort(sortByAbsoluteAmount)
-
-  const expenseEntries = allEntries
-    .filter((entry) => entry.amount < 0)
-    .sort(sortByAbsoluteAmount)
-
   const mixedEntries = [...allEntries].sort(sortByAbsoluteAmount)
+  const incomeEntries = mixedEntries.filter((entry) => entry.amount > 0)
+  const expenseEntries = mixedEntries.filter((entry) => entry.amount < 0)
 
   if (incomeEntries.length === 0 && expenseEntries.length === 0) {
     return <div style={emptyStyle}>Brak wpisów w tym miesiącu.</div>

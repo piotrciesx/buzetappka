@@ -19,6 +19,7 @@ import FinancialGoalsModeControls from './financial-goals/FinancialGoalsModeCont
 import FinancialGoalsSummary from './financial-goals/FinancialGoalsSummary'
 import type { FinancialGoalsPanelProps, FormState } from './financial-goals/financialGoalsPanelTypes'
 import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
+import { getEffectiveTransactionScope } from '../lib/transactionScope'
 
 import {
   areAllocationMapsEqual,
@@ -37,6 +38,8 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
     goalPriorities,
     goalMonthConfigs,
     transactions,
+    budgetStartDate,
+    excludedMonthsSet,
     lockedMonthsSet,
     getSignedAmountForTransaction,
     onSaveGoal,
@@ -126,7 +129,11 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
       goals,
       priorities: goalPriorities,
       monthConfigs: effectiveMonthConfigs,
-      transactions,
+      transactions: getEffectiveTransactionScope(transactions, {
+        mode: 'goals',
+        budgetStartDate,
+        excludedMonthsSet,
+      }),
       selectedMonth,
       lockedMonthsSet,
       getSignedAmountForTransaction,
@@ -137,6 +144,8 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
     goalPriorities,
     goals,
     lockedMonthsSet,
+    budgetStartDate,
+    excludedMonthsSet,
     selectedMonth,
     transactions,
   ])
@@ -262,7 +271,11 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
       goals,
       priorities: effectiveGoalPriorities,
       monthConfigs: effectiveMonthConfigs,
-      transactions,
+      transactions: getEffectiveTransactionScope(transactions, {
+        mode: 'goals',
+        budgetStartDate,
+        excludedMonthsSet,
+      }),
       selectedMonth,
       lockedMonthsSet,
       getSignedAmountForTransaction,
@@ -273,6 +286,8 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
     getSignedAmountForTransaction,
     goals,
     lockedMonthsSet,
+    budgetStartDate,
+    excludedMonthsSet,
     selectedMonth,
     transactions,
   ])

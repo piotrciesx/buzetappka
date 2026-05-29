@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { Category, Transaction } from './budgetPageTypes'
+import { isActiveTransaction } from './transactionDomain'
 import {
   getAddableTransactionCategoryIds,
   getAddableTransactionCategoryRootIds,
@@ -34,7 +35,7 @@ export function useTransactionShortcutData({
 
   const activeTransactions = useMemo(() => {
     return transactions.filter((transaction) => {
-      if (transaction.is_deleted) {
+      if (!isActiveTransaction(transaction)) {
         return false
       }
 

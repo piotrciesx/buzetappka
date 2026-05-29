@@ -21,6 +21,14 @@ import {
 } from '../lib/importExportUtils'
 import { getCategoryPathLabel } from '../lib/budgetPageHelpers'
 import { splitTagInput } from '../lib/tagUtils'
+import {
+  ActionRow,
+  ListRow,
+  MetadataGrid,
+  SettingsSection,
+  StatusBox,
+  UtilityPanel,
+} from './utility-panels/utilityPanelPrimitives'
 
 type ImportExportPanelProps = {
   selectedMonth: string
@@ -210,7 +218,6 @@ export default function ImportExportPanel({
       filename: `budget_transactions_${normalizeFileNameMonth(selectedMonth)}.csv`,
       content: csv,
       mimeType: 'text/csv;charset=utf-8',
-      includeBom: true,
     })
   }
 
@@ -235,7 +242,6 @@ export default function ImportExportPanel({
       filename: 'budget_import_template.csv',
       content: createImportTemplateCsv(),
       mimeType: 'text/csv;charset=utf-8',
-      includeBom: true,
     })
   }
 
@@ -314,8 +320,8 @@ export default function ImportExportPanel({
   }
 
   return (
-    <section style={panelStyle}>
-      <div style={actionRowStyle}>
+    <UtilityPanel style={panelStyle}>
+      <ActionRow style={actionRowStyle}>
         <button style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={handleExportCsv} type="button">
           Eksport CSV aktywnych wpisów
         </button>
@@ -327,17 +333,17 @@ export default function ImportExportPanel({
         <button style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={handleDownloadTemplate} type="button">
           Pobierz template CSV
         </button>
-      </div>
+      </ActionRow>
 
-      <div style={compactInfoStyle}>
+      <StatusBox style={compactInfoStyle}>
         Wybierasz plik, mapujesz kolumny, sprawdzasz podgląd, poprawiasz opis i kategorię,
         zaznaczasz tylko te rekordy, które mają wejść, i dopiero wtedy importujesz.
-      </div>
+      </StatusBox>
 
       {canCreateTransactions ? (
         <>
-          <div style={importSectionStyle}>
-            <div style={actionRowStyle}>
+          <SettingsSection style={importSectionStyle}>
+            <ActionRow style={actionRowStyle}>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -362,18 +368,18 @@ export default function ImportExportPanel({
               >
                 Wyczyść import
               </button>
-            </div>
+            </ActionRow>
 
             {fileName && (
               <div style={styles.smallMutedText}>
                 Wczytany plik: <strong>{fileName}</strong>
               </div>
             )}
-          </div>
+          </SettingsSection>
 
           {headers.length > 0 && (
             <>
-              <div style={{ display: 'grid', gap: 12, marginBottom: 16 }}>
+              <SettingsSection style={{ display: 'grid', gap: 12, marginBottom: 16 }}>
                 <div>
                   <label style={styles.sortLabel}>Kolumna kwoty</label>
                   <select
@@ -483,20 +489,20 @@ export default function ImportExportPanel({
                     placeholder="np. bank, import, karta"
                   />
                 </div>
-              </div>
+              </SettingsSection>
 
-              <div style={{ ...styles.infoBox, marginBottom: 16 }}>
+              <StatusBox style={{ ...styles.infoBox, marginBottom: 16 }}>
                 Wiersze w pliku: <strong>{rows.length}</strong> | zaznaczone do importu:{' '}
                 <strong>{approvedRowsCount}</strong> | poprawne i zaznaczone:{' '}
                 <strong>{validRows.length}</strong> | z błędem: <strong>{invalidRowsCount}</strong>
-              </div>
+              </StatusBox>
 
               <div style={{ ...styles.smallMutedText, marginBottom: 12 }}>
                 Jeśli chcesz zaimportować tylko kilka wpisów, po prostu odznacz checkbox przy tych,
                 których nie chcesz wrzucać.
               </div>
 
-              <div style={{ ...actionRowStyle, marginBottom: 16 }}>
+              <ActionRow style={{ ...actionRowStyle, marginBottom: 16 }}>
                 <button type="button" style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={handleApproveAllValid}>
                   Zaznacz wszystkie poprawne
                 </button>
@@ -519,20 +525,23 @@ export default function ImportExportPanel({
                 >
                   {isImporting ? 'Importowanie...' : 'Importuj zaznaczone'}
                 </button>
-              </div>
+              </ActionRow>
 
               <div style={{ display: 'grid', gap: 10, marginBottom: 16 }}>
                 {editablePreviewRows.slice(0, 30).map((row) => (
-                  <div
+                  <ListRow
                     key={row.id}
+                    tone={row.errors.length === 0 ? 'default' : 'danger'}
                     style={{
                       border: '1px solid #d1d5db',
                       borderRadius: 12,
                       padding: 12,
                       background: row.errors.length === 0 ? '#f8fafc' : '#fef2f2',
+                      display: 'grid',
+                      gridTemplateColumns: 'minmax(0, 1fr)',
                     }}
                   >
-                    <div
+                    <ActionRow
                       style={{
                         display: 'flex',
                         gap: 10,
@@ -562,9 +571,9 @@ export default function ImportExportPanel({
                           {row.errors.join(' | ')}
                         </span>
                       )}
-                    </div>
+                    </ActionRow>
 
-                    <div style={{ display: 'grid', gap: 10 }}>
+                    <MetadataGrid style={{ display: 'grid', gap: 10 }}>
                       <div>
                         <label style={styles.sortLabel}>Kwota</label>
                         <input
@@ -658,21 +667,22 @@ export default function ImportExportPanel({
                           Ścieżka z pliku: <strong>{row.categoryPath}</strong>
                         </div>
                       )}
-                    </div>
-                  </div>
+                    </MetadataGrid>
+                  </ListRow>
                 ))}
               </div>
             </>
           )}
         </>
       ) : (
-        <div style={{ ...styles.smallMutedText, marginBottom: 8 }}>
+        <StatusBox style={{ ...styles.smallMutedText, marginBottom: 8 }}>
           Miesiąc <b>{selectedMonth}</b> jest zamknięty, więc import wpisów jest całkowicie ukryty.
-        </div>
+        </StatusBox>
       )}
 
       {importStatusText && (
-        <div
+        <StatusBox
+          tone={importStatusText.includes('Zaimportowano') ? 'success' : 'danger'}
           style={{
             ...styles.infoBox,
             borderColor: importStatusText.includes('Zaimportowano') ? '#bbf7d0' : '#fecaca',
@@ -680,8 +690,8 @@ export default function ImportExportPanel({
           }}
         >
           {importStatusText}
-        </div>
+        </StatusBox>
       )}
-    </section>
+    </UtilityPanel>
   )
 }

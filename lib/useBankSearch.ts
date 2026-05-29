@@ -4,6 +4,9 @@ import { useCallback, useMemo, useState } from 'react'
 import { Category, PaymentSource, Tag, Transaction, TransactionPaymentSplit } from './budgetPageTypes'
 import { getAmountNumber } from './transactionUtils'
 import { getCategoryPathLabel } from './budgetPageHelpers'
+import { getEffectiveTransactionScope } from './transactionScope'
+import { getTransactionMonth, isDaylessTransaction } from './transactionDomain'
+import { getPaymentSourceAttribution, isPaymentSourcesEnabledForLogic } from './paymentSources'
 
 export type BankSearchSortMode = 'newest' | 'oldest' | 'amount-desc' | 'amount-asc'
 
@@ -81,8 +84,10 @@ type UseBankSearchParams = {
   transactions: Transaction[]
   categories: Category[]
   categoriesById: Record<string, Category>
+  budgetStartDate?: string | null
   getSignedAmountForTransaction: (transaction: Transaction) => number
   paymentSources?: PaymentSource[]
+  isPaymentSourcesEnabled?: boolean
   transactionPaymentSplitsMap?: Record<string, TransactionPaymentSplit[]>
   tags?: Tag[]
   transactionTagsMap?: Record<string, Tag[]>
@@ -113,8 +118,10 @@ export function useBankSearch(params: UseBankSearchParams) {
     transactions,
     categories,
     categoriesById,
+    budgetStartDate,
     getSignedAmountForTransaction,
     paymentSources = [],
+    isPaymentSourcesEnabled = true,
     transactionPaymentSplitsMap = {},
     tags = [],
     transactionTagsMap = {},
@@ -122,6 +129,15 @@ export function useBankSearch(params: UseBankSearchParams) {
 
   const [searchState, setSearchState] = useState<BankSearchState>(DEFAULT_BANK_SEARCH_STATE)
   const [isPanelOpen, setIsPanelOpenState] = useState(true)
+
+  const scopedTransactions = useMemo(
+    () =>
+      getEffectiveTransactionScope(transactions, {
+        mode: 'search',
+        budgetStartDate,
+      }),
+    [budgetStartDate, transactions]
+  )
 
   const handleFieldChange = <K extends keyof BankSearchState>(
     key: K,
@@ -227,41 +243,30 @@ export function useBankSearch(params: UseBankSearchParams) {
 
   const getEffectiveSignedAmountForSourceFilter = useCallback(
     (transaction: Transaction, paymentSourceId: string) => {
-      if (!paymentSourceId) {
+      if (!isPaymentSourcesEnabledForLogic(isPaymentSourcesEnabled) || !paymentSourceId) {
         return {
           effectiveSignedAmount: getSignedAmountForTransaction(transaction),
-          matchedPaymentSourceId: transaction.payment_source_id || null,
+          matchedPaymentSourceId: null,
         }
       }
 
-      const splits = transactionPaymentSplitsMap[transaction.id] || []
-      const signedAmount = getSignedAmountForTransaction(transaction)
-      const sign = signedAmount >= 0 ? 1 : -1
-
-      if (splits.length > 0) {
-        const matchingAmount = splits
-          .filter((split) => split.payment_source_id === paymentSourceId)
-          .reduce((sum, split) => sum + split.amount, 0)
-
-        return {
-          effectiveSignedAmount: matchingAmount > 0 ? matchingAmount * sign : 0,
-          matchedPaymentSourceId: matchingAmount > 0 ? paymentSourceId : null,
-        }
-      }
-
-      if (transaction.payment_source_id === paymentSourceId) {
-        return {
-          effectiveSignedAmount: signedAmount,
-          matchedPaymentSourceId: paymentSourceId,
-        }
-      }
+      const attribution = getPaymentSourceAttribution({
+        transaction,
+        splitItems: transactionPaymentSplitsMap[transaction.id] || [],
+        getSignedAmountForTransaction,
+        getAmountNumber,
+        isPaymentSourcesEnabled,
+      })
+      const matchingSignedAmount = attribution
+        .filter((item) => item.paymentSourceId === paymentSourceId)
+        .reduce((sum, item) => sum + item.signedAmount, 0)
 
       return {
-        effectiveSignedAmount: 0,
-        matchedPaymentSourceId: null,
+        effectiveSignedAmount: matchingSignedAmount,
+        matchedPaymentSourceId: matchingSignedAmount !== 0 ? paymentSourceId : null,
       }
     },
-    [getSignedAmountForTransaction, transactionPaymentSplitsMap]
+    [getSignedAmountForTransaction, isPaymentSourcesEnabled, transactionPaymentSplitsMap]
   )
 
   const results = useMemo<BankSearchResult[]>(() => {
@@ -272,11 +277,14 @@ export function useBankSearch(params: UseBankSearchParams) {
     const normalizedDescription = normalizeSearchText(searchState.description)
     const parsedMin = parseAmountFilter(searchState.amountMin)
     const parsedMax = parseAmountFilter(searchState.amountMax)
+    const effectivePaymentSourceId = isPaymentSourcesEnabledForLogic(isPaymentSourcesEnabled)
+      ? searchState.paymentSourceId
+      : ''
 
-    const filtered = transactions
+    const filtered = scopedTransactions
       .map((transaction) => ({
         transaction,
-        ...getEffectiveSignedAmountForSourceFilter(transaction, searchState.paymentSourceId),
+        ...getEffectiveSignedAmountForSourceFilter(transaction, effectivePaymentSourceId),
       }))
       .filter(({ transaction, effectiveSignedAmount }) => {
         const amount = Math.abs(effectiveSignedAmount || getAmountNumber(transaction.amount))
@@ -296,15 +304,25 @@ export function useBankSearch(params: UseBankSearchParams) {
           return false
         }
 
-        if (searchState.paymentSourceId && effectiveSignedAmount === 0) {
+        if (effectivePaymentSourceId && effectiveSignedAmount === 0) {
           return false
         }
 
-        if (searchState.dateFrom && transaction.date < searchState.dateFrom) {
+        if (
+          searchState.dateFrom &&
+          (isDaylessTransaction(transaction)
+            ? getTransactionMonth(transaction) < searchState.dateFrom.slice(0, 7)
+            : transaction.date < searchState.dateFrom)
+        ) {
           return false
         }
 
-        if (searchState.dateTo && transaction.date > searchState.dateTo) {
+        if (
+          searchState.dateTo &&
+          (isDaylessTransaction(transaction)
+            ? getTransactionMonth(transaction) > searchState.dateTo.slice(0, 7)
+            : transaction.date > searchState.dateTo)
+        ) {
           return false
         }
 
@@ -337,39 +355,46 @@ export function useBankSearch(params: UseBankSearchParams) {
     doesTransactionMatchTagFilter,
     doesTransactionMatchTextFilter,
     getEffectiveSignedAmountForSourceFilter,
+    isPaymentSourcesEnabled,
     searchState,
-    transactions,
+    scopedTransactions,
   ])
 
   const summary = useMemo<BankSearchSummary>(() => {
-    const incomeTransactions = results.filter((item) => item.effectiveSignedAmount > 0)
-    const expenseTransactions = results.filter((item) => item.effectiveSignedAmount < 0)
+    let incomeTotal = 0
+    let expenseTotal = 0
+    let balance = 0
+    let incomeCount = 0
+    let expenseCount = 0
+    let maxIncomeResult: BankSearchResult | null = null
+    let maxExpenseResult: BankSearchResult | null = null
 
-    const incomeTotal = incomeTransactions.reduce((sum, item) => sum + item.effectiveSignedAmount, 0)
-    const expenseTotal = expenseTransactions.reduce(
-      (sum, item) => sum + Math.abs(item.effectiveSignedAmount),
-      0
-    )
-    const balance = results.reduce((sum, item) => sum + item.effectiveSignedAmount, 0)
+    for (const item of results) {
+      const signedAmount = item.effectiveSignedAmount
+      balance += signedAmount
 
-    const averageIncome = incomeTransactions.length > 0 ? incomeTotal / incomeTransactions.length : 0
-    const averageExpense = expenseTransactions.length > 0 ? expenseTotal / expenseTransactions.length : 0
+      if (signedAmount > 0) {
+        incomeTotal += signedAmount
+        incomeCount += 1
 
-    const maxIncomeTransaction =
-      incomeTransactions.length > 0
-        ? incomeTransactions.reduce((currentMax, item) =>
-            item.effectiveSignedAmount > currentMax.effectiveSignedAmount ? item : currentMax
-          ).transaction
-        : null
+        if (!maxIncomeResult || signedAmount > maxIncomeResult.effectiveSignedAmount) {
+          maxIncomeResult = item
+        }
+      }
 
-    const maxExpenseTransaction =
-      expenseTransactions.length > 0
-        ? expenseTransactions.reduce((currentMax, item) =>
-            Math.abs(item.effectiveSignedAmount) > Math.abs(currentMax.effectiveSignedAmount)
-              ? item
-              : currentMax
-          ).transaction
-        : null
+      if (signedAmount < 0) {
+        const expenseAmount = Math.abs(signedAmount)
+        expenseTotal += expenseAmount
+        expenseCount += 1
+
+        if (!maxExpenseResult || expenseAmount > Math.abs(maxExpenseResult.effectiveSignedAmount)) {
+          maxExpenseResult = item
+        }
+      }
+    }
+
+    const averageIncome = incomeCount > 0 ? incomeTotal / incomeCount : 0
+    const averageExpense = expenseCount > 0 ? expenseTotal / expenseCount : 0
 
     return {
       count: results.length,
@@ -378,8 +403,8 @@ export function useBankSearch(params: UseBankSearchParams) {
       balance,
       averageIncome,
       averageExpense,
-      maxIncomeTransaction,
-      maxExpenseTransaction,
+      maxIncomeTransaction: maxIncomeResult?.transaction ?? null,
+      maxExpenseTransaction: maxExpenseResult?.transaction ?? null,
     }
   }, [results])
 
@@ -395,30 +420,34 @@ export function useBankSearch(params: UseBankSearchParams) {
 
   const paymentSourceOptions = useMemo<BankSearchPaymentSourceOption[]>(() => {
     return paymentSources
+      .filter(() => isPaymentSourcesEnabledForLogic(isPaymentSourcesEnabled))
       .map((source) => ({
         id: source.id,
         label: source.name,
       }))
       .sort((a, b) => a.label.localeCompare(b.label, 'pl'))
-  }, [paymentSources])
+  }, [isPaymentSourcesEnabled, paymentSources])
 
   const tagOptions = useMemo<BankSearchTagOption[]>(() => {
-    const transactionIdsInScope = new Set(transactions.map((transaction) => transaction.id))
+    const transactionIdsInScope = new Set(scopedTransactions.map((transaction) => transaction.id))
+    const usedTagIds = new Set<string>()
+
+    Object.entries(transactionTagsMap).forEach(([transactionId, transactionTags]) => {
+      if (!transactionIdsInScope.has(transactionId)) {
+        return
+      }
+
+      transactionTags.forEach((transactionTag) => usedTagIds.add(transactionTag.id))
+    })
 
     return [...tags]
-      .filter((tag) =>
-        Object.entries(transactionTagsMap).some(
-          ([transactionId, transactionTags]) =>
-            transactionIdsInScope.has(transactionId) &&
-            transactionTags.some((transactionTag) => transactionTag.id === tag.id)
-        )
-      )
+      .filter((tag) => usedTagIds.has(tag.id))
       .map((tag) => ({
         id: tag.id,
         label: tag.name,
       }))
       .sort((a, b) => a.label.localeCompare(b.label, 'pl', { sensitivity: 'base' }))
-  }, [tags, transactionTagsMap, transactions])
+  }, [scopedTransactions, tags, transactionTagsMap])
 
   return {
     searchState,

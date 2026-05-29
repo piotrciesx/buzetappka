@@ -5,6 +5,7 @@ import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
 import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
 import { getExistingDaysInMonth } from '../../lib/dateUtils'
+import { isActiveTransaction, isTransactionInMonth } from '../../lib/transactionDomain'
 import type { DashboardWidgetPixelRect } from './dashboardWidgetTileTypes'
 import { GREEN, RED, SOFT_TEXT } from './dashboardWidgetTileStyles'
 import { clampPercent, formatMoney } from './dashboardWidgetTileUtils'
@@ -380,7 +381,7 @@ export default function CategoryRankingsWidget({
   const totalsByCategoryId = new Map<string, number>()
 
   transactions.forEach((transaction) => {
-    if (transaction.is_deleted || !transaction.date.startsWith(selectedMonth)) {
+    if (!isActiveTransaction(transaction) || !isTransactionInMonth(transaction, selectedMonth)) {
       return
     }
 

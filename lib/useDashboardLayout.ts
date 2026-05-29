@@ -24,6 +24,7 @@ import {
   DashboardWidgetLayoutItem,
   DashboardWidgetSize,
 } from './dashboardTypes'
+import { getProfileStorageKey, readProfileStorageValue } from './profileStorage'
 
 const DASHBOARD_LAYOUT_STORAGE_VERSION = 7
 
@@ -126,11 +127,14 @@ const sanitizeStoredWidgets = (value: unknown): DashboardWidgetLayoutItem[] => {
     })
 }
 
-const readDashboardLayout = (storageKey: string) => {
+const readDashboardLayout = (storageKey: string, legacyStorageKeys: string[] = []) => {
   if (typeof window === 'undefined') return []
 
   try {
-    const rawValue = window.localStorage.getItem(storageKey)
+    const rawValue = readProfileStorageValue({
+      storageKey,
+      legacyStorageKeys,
+    })
     if (!rawValue) return createDefaultDashboardWidgets()
 
     const parsedValue = JSON.parse(rawValue) as Partial<StoredDashboardLayout>
@@ -172,28 +176,58 @@ const writeDashboardLayout = (storageKey: string, widgets: DashboardWidgetLayout
 
 type UseDashboardLayoutOptions = {
   profileId: string
+  userId: string
 }
 
-export const useDashboardLayout = ({ profileId }: UseDashboardLayoutOptions) => {
-  const storageKey = `budget-dashboard-layout-${profileId}`
-  const [widgets, setWidgets] = useState<DashboardWidgetLayoutItem[]>(() =>
-    readDashboardLayout(storageKey)
-  )
+export const useDashboardLayout = ({ profileId, userId }: UseDashboardLayoutOptions) => {
+  const legacyStorageKey = `budget-dashboard-layout-${profileId}`
+  const storageKey = getProfileStorageKey({
+    userId,
+    profileId,
+    featureKey: 'dashboard-layout',
+  })
+  const [widgetState, setWidgetState] = useState(() => ({
+    storageKey,
+    widgets: readDashboardLayout(storageKey, [legacyStorageKey]),
+  }))
+  const widgets = widgetState.widgets
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setWidgetState({
+        storageKey,
+        widgets: readDashboardLayout(storageKey, [legacyStorageKey]),
+      })
+    }, 0)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [legacyStorageKey, storageKey])
 
   const setWidgetsAndStore = useCallback(
     (resolveWidgets: (prev: DashboardWidgetLayoutItem[]) => DashboardWidgetLayoutItem[]) => {
-      setWidgets((prev) => {
-        const nextWidgets = resolveWidgets(prev)
+      setWidgetState((prev) => {
+        const baseWidgets =
+          prev.storageKey === storageKey
+            ? prev.widgets
+            : readDashboardLayout(storageKey, [legacyStorageKey])
+        const nextWidgets = resolveWidgets(baseWidgets)
         writeDashboardLayout(storageKey, nextWidgets)
-        return nextWidgets
+        return {
+          storageKey,
+          widgets: nextWidgets,
+        }
       })
     },
-    [storageKey]
+    [legacyStorageKey, storageKey]
   )
 
   useEffect(() => {
+    if (widgetState.storageKey !== storageKey) {
+      return
+    }
+
     writeDashboardLayout(storageKey, widgets)
-  }, [storageKey, widgets])
+  }, [storageKey, widgetState.storageKey, widgets])
 
   const orderedWidgets = useMemo(() => sortDashboardWidgetsByPosition(widgets), [widgets])
 

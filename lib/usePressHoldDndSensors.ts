@@ -2,17 +2,27 @@
 
 import { MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core'
 
-export const usePressHoldDndSensors = () => {
+type PressHoldDndSensorOptions = {
+  mouseDistance?: number
+  touchDelay?: number
+  touchTolerance?: number
+}
+
+export const usePressHoldDndSensors = ({
+  mouseDistance = 6,
+  touchDelay = 560,
+  touchTolerance = 18,
+}: PressHoldDndSensorOptions = {}) => {
   return useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
-        distance: 6,
+        distance: mouseDistance,
       },
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 560,
-        tolerance: 18,
+        delay: touchDelay,
+        tolerance: touchTolerance,
       },
     })
   )

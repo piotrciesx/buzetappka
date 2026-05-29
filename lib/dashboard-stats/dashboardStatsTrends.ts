@@ -3,6 +3,7 @@ import { getUniqueCategoryLabel } from '../categoryUtils'
 import { getExistingDaysInMonth, isMonthExcludedFromStats } from '../dateUtils'
 import { getChange, getIncludedMonthRange, getMonthLabel, getTransactionDay, isTransactionInExistingStatsDate, isTransactionInMonth, shiftMonth } from '../dashboardStatsHelpers'
 import type { DashboardCategoryTrend, DashboardDailyCashflowPoint, DashboardDailyCashflowStats, DashboardMonthlyTrendPoint, DashboardMonthOverMonthStats, DashboardStatsOptions, DashboardTrendStats } from './dashboardStatsTypes'
+import { getTransactionMonth } from '../transactionDomain'
 
 const createEmptyMonthPoint = (month: string): DashboardMonthlyTrendPoint => ({
   month,
@@ -26,7 +27,7 @@ const getMonthlyTrendPoints = (
   ) as Record<string, DashboardMonthlyTrendPoint>
 
   for (const transaction of transactions) {
-    const month = transaction.date.slice(0, 7)
+    const month = getTransactionMonth(transaction)
     if (!isTransactionInExistingStatsDate(transaction)) continue
     if (!monthSet.has(month) || !categoriesById[transaction.category_id]) continue
 
@@ -212,7 +213,7 @@ export function getDashboardCategoryTrends(
   const categoryMap: Record<string, DashboardCategoryTrend> = {}
 
   for (const transaction of transactions) {
-    const month = transaction.date.slice(0, 7)
+    const month = getTransactionMonth(transaction)
     const category = categoriesById[transaction.category_id]
     if (!isTransactionInExistingStatsDate(transaction)) continue
     if (!monthSet.has(month) || !category) continue

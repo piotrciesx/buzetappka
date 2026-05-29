@@ -1,5 +1,6 @@
 import { Category, Transaction } from './budgetPageTypes'
 import { isCategoryVisibleInMonth } from './categoryUtils'
+import { getTransactionMonth } from './transactionDomain'
 
 export function isAllowedMoveTarget(
   transaction: Transaction,
@@ -44,7 +45,7 @@ export function isAllowedMoveTarget(
     return false
   }
 
-  const transactionMonth = transaction.date.slice(0, 7)
+  const transactionMonth = getTransactionMonth(transaction)
 
   if (!isCategoryVisibleInMonth(targetCategory, transactionMonth)) {
     return false

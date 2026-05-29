@@ -53,6 +53,8 @@ type UsePaymentSourcesParams = {
   expenseLevel1Id: string | null
   getRootLevel1IdForCategory: (categoryId: string) => string | null
   getAmountNumber: (value: unknown) => number
+  getSignedAmountForTransaction: (transaction: Transaction) => number
+  isPaymentSourcesEnabled?: boolean
   onDeletedSelectedPaymentSource?: (paymentSourceId: string) => void
 }
 
@@ -72,6 +74,8 @@ export function usePaymentSources({
   expenseLevel1Id,
   getRootLevel1IdForCategory,
   getAmountNumber,
+  getSignedAmountForTransaction,
+  isPaymentSourcesEnabled = true,
   onDeletedSelectedPaymentSource,
 }: UsePaymentSourcesParams) {
   const [paymentSources, setPaymentSources] = useState<PaymentSource[]>([])
@@ -84,6 +88,12 @@ export function usePaymentSources({
   }, [profileId])
 
   const loadPaymentSources = useCallback(async () => {
+    if (!isPaymentSourcesEnabled) {
+      setPaymentSources([])
+      setPaymentSourceSettings(DEFAULT_SETTINGS)
+      return
+    }
+
     const { data: sourcesData, error: sourcesError } = await supabase
       .from('payment_sources')
       .select('*')
@@ -138,10 +148,14 @@ export function usePaymentSources({
       showIncomePaymentSource: settings?.show_income_payment_source !== false,
       showExpensePaymentSource: settings?.show_expense_payment_source !== false,
     })
-  }, [profileId])
+  }, [isPaymentSourcesEnabled, profileId])
 
   const savePaymentSource = useCallback(
     async (input: SavePaymentSourceInput) => {
+      if (!isPaymentSourcesEnabled) {
+        return
+      }
+
       const trimmedName = input.name.trim()
 
       if (!trimmedName) {
@@ -170,11 +184,15 @@ export function usePaymentSources({
 
       await loadPaymentSources()
     },
-    [loadPaymentSources, profileId]
+    [isPaymentSourcesEnabled, loadPaymentSources, profileId]
   )
 
   const deletePaymentSource = useCallback(
     async (paymentSourceId: string) => {
+      if (!isPaymentSourcesEnabled) {
+        return
+      }
+
       const { error } = await supabase
         .from('payment_sources')
         .delete()
@@ -208,11 +226,21 @@ export function usePaymentSources({
       onDeletedSelectedPaymentSource?.(paymentSourceId)
       await loadPaymentSources()
     },
-    [loadPaymentSources, onDeletedSelectedPaymentSource, paymentSourceSettings, profileId]
+    [
+      isPaymentSourcesEnabled,
+      loadPaymentSources,
+      onDeletedSelectedPaymentSource,
+      paymentSourceSettings,
+      profileId,
+    ]
   )
 
   const savePaymentSourceSettings = useCallback(
     async (nextSettings: Partial<PaymentSourceSettings>) => {
+      if (!isPaymentSourcesEnabled) {
+        return
+      }
+
       const mergedSettings = {
         ...paymentSourceSettings,
         ...nextSettings,
@@ -220,8 +248,7 @@ export function usePaymentSources({
 
       const { error } = await supabase.from('profile_finance_settings').upsert({
         profile_id: profileId,
-        default_payment_source_id:
-          mergedSettings.defaultExpensePaymentSourceId || mergedSettings.defaultIncomePaymentSourceId,
+        default_payment_source_id: null,
         default_income_payment_source_id: mergedSettings.defaultIncomePaymentSourceId,
         default_expense_payment_source_id: mergedSettings.defaultExpensePaymentSourceId,
         show_income_payment_source: mergedSettings.showIncomePaymentSource,
@@ -234,7 +261,7 @@ export function usePaymentSources({
 
       setPaymentSourceSettings(mergedSettings)
     },
-    [paymentSourceSettings, profileId]
+    [isPaymentSourcesEnabled, paymentSourceSettings, profileId]
   )
 
   const setDefaultPaymentSource = useCallback(
@@ -261,6 +288,10 @@ export function usePaymentSources({
 
   const copyPaymentSourcesBetweenKinds = useCallback(
     async (sourceKind: PaymentSourceListKind, targetKind: PaymentSourceListKind) => {
+      if (!isPaymentSourcesEnabled) {
+        return
+      }
+
       const sourceKey = sourceKind === 'income' ? 'is_income_source' : 'is_expense_source'
       const targetKey = targetKind === 'income' ? 'is_income_source' : 'is_expense_source'
 
@@ -283,7 +314,7 @@ export function usePaymentSources({
 
       await loadPaymentSources()
     },
-    [loadPaymentSources, paymentSources, profileId]
+    [isPaymentSourcesEnabled, loadPaymentSources, paymentSources, profileId]
   )
 
   const buildOptionsForKind = useCallback(
@@ -315,14 +346,18 @@ export function usePaymentSources({
       expenseLevel1Id,
       getRootLevel1IdForCategory,
       getAmountNumber,
+      getSignedAmountForTransaction,
       transactionPaymentSplitsMap,
+      isPaymentSourcesEnabled,
     })
   }, [
     categoriesById,
     expenseLevel1Id,
     getAmountNumber,
+    getSignedAmountForTransaction,
     getRootLevel1IdForCategory,
     incomeLevel1Id,
+    isPaymentSourcesEnabled,
     paymentSources,
     transactionPaymentSplitsMap,
     transactions,

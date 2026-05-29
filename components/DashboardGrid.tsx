@@ -16,6 +16,7 @@ import {
 } from '../lib/dashboardTypes'
 import { DashboardStats, TopCategory } from '../lib/dashboardStats'
 import { Category, Tag, Transaction } from '../lib/budgetPageTypes'
+import { uiZIndex } from '../lib/uiFoundation'
 import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
 
 const DASHBOARD_GRID_GAP = 12
@@ -55,7 +56,7 @@ const ghostStyle: CSSProperties = {
   boxShadow: 'inset 0 0 0 1px rgba(96, 165, 250, 0.16)',
   transition: 'transform 180ms ease, width 180ms ease, height 180ms ease',
   pointerEvents: 'none',
-  zIndex: 1,
+  zIndex: uiZIndex.localRaised,
 }
 
 const getColumnWidth = (gridWidth: number) => {

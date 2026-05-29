@@ -1,3 +1,5 @@
+import { isDaylessTransaction } from '../../lib/transactionDomain'
+
 export type Category = {
   id: string
   name: string
@@ -45,8 +47,8 @@ export const normalizeAmountInput = (value: string) => {
 
 export const getOrderedLevel3Transactions = (transactions: Transaction[]) => {
   return [...transactions].sort((left, right) => {
-    const leftNoDay = Boolean(left.day_is_null)
-    const rightNoDay = Boolean(right.day_is_null)
+    const leftNoDay = isDaylessTransaction(left)
+    const rightNoDay = isDaylessTransaction(right)
 
     if (leftNoDay !== rightNoDay) {
       return leftNoDay ? 1 : -1
@@ -57,7 +59,7 @@ export const getOrderedLevel3Transactions = (transactions: Transaction[]) => {
 }
 
 export const getTransactionDateLabel = (transaction: Transaction) => {
-  if (transaction.day_is_null) {
+  if (isDaylessTransaction(transaction)) {
     return 'Bez dnia'
   }
 
@@ -66,7 +68,7 @@ export const getTransactionDateLabel = (transaction: Transaction) => {
 }
 
 export const getTransactionDayGroupLabel = (transaction: Transaction, selectedMonth?: string) => {
-  if (transaction.day_is_null) {
+  if (isDaylessTransaction(transaction)) {
     return 'Bez dnia'
   }
 

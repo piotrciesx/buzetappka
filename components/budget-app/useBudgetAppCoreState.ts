@@ -25,6 +25,7 @@ export type SidebarPrimaryPanel = 'profile' | 'settings' | null
 export function useBudgetAppCoreState() {
   const [categories, setCategories] = useState<Category[]>([])
   const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [activeScopeTransactions, setActiveScopeTransactions] = useState<Transaction[]>([])
   const [trashedTransactions, setTrashedTransactions] = useState<Transaction[]>([])
   const [tags, setTags] = useState<Tag[]>([])
   const [transactionTagsMap, setTransactionTagsMap] = useState<Record<string, Tag[]>>({})
@@ -58,6 +59,7 @@ export function useBudgetAppCoreState() {
   return {
     activeSidebarPrimaryPanel,
     activeUtilityPanel,
+    activeScopeTransactions,
     amountInputRef,
     budgetLimitEditorCategoryId,
     categories,
@@ -72,6 +74,7 @@ export function useBudgetAppCoreState() {
     searchPanelRef,
     setActiveSidebarPrimaryPanel,
     setActiveUtilityPanel,
+    setActiveScopeTransactions,
     setBudgetLimitEditorCategoryId,
     setCategories,
     setErrorText,

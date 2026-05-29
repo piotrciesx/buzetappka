@@ -64,6 +64,7 @@ export default function BudgetAppController({
   const {
     activeSidebarPrimaryPanel,
     activeUtilityPanel,
+    activeScopeTransactions,
     amountInputRef,
     budgetLimitEditorCategoryId,
     categories,
@@ -78,6 +79,7 @@ export default function BudgetAppController({
     searchPanelRef,
     setActiveSidebarPrimaryPanel,
     setActiveUtilityPanel,
+    setActiveScopeTransactions,
     setBudgetLimitEditorCategoryId,
     setCategories,
     setErrorText,
@@ -107,18 +109,21 @@ export default function BudgetAppController({
   const {
     effectiveVisibleModules,
     isBudgetLimitsModuleEnabled,
+    isFinancialGoalsModuleEnabled,
     isMonthCalendarModuleEnabled,
     isPaymentSourcesModuleEnabled,
     isRecurringTransactionsModuleEnabled,
     isSettingsPanelVisible,
     moduleVisibility,
     monthNavigation,
+    activeScopeTransactions: scopedActiveScopeTransactions,
     scopedTransactions,
     setIsSettingsPanelVisible,
   } = useBudgetAppShellState({
     profileId,
     userId,
     transactions,
+    activeScopeTransactions,
     activeSidebarPrimaryPanel,
     setActiveSidebarPrimaryPanel,
     activeUtilityPanel,
@@ -235,6 +240,7 @@ export default function BudgetAppController({
     handleBulkMoveSelected,
     handleUndoLastAction,
   } = useTransactionOperations({
+    profileId,
     lockedMonthsSet,
     setMigrationPromptState,
   })
@@ -301,14 +307,17 @@ export default function BudgetAppController({
   } = useBudgetAppWorkspaceDataBridge({
     profileId,
     scopedTransactions,
+    activeScopeTransactions: scopedActiveScopeTransactions,
     selectedMonth,
     categories,
+    isBudgetLimitsModuleEnabled,
     heatmapMode,
     setHeatmapMode,
     heatmapInverted,
     setHeatmapInverted,
     excludedMonthsSet,
     isPaymentSourcesModuleEnabled,
+    userId,
     transactionPaymentSplitsMap,
     tags,
     transactionTagsMap,
@@ -348,6 +357,7 @@ export default function BudgetAppController({
     incomeLevel1Id,
     expenseLevel1Id,
     getRootLevel1IdForCategory,
+    getSignedAmountForTransaction,
     selectedPaymentSourceId,
     setSelectedPaymentSourceId,
     isPaymentSourcesModuleEnabled,
@@ -360,6 +370,7 @@ export default function BudgetAppController({
     pinnedTransactionShortcutCategoriesByType,
     togglePinnedCategory,
   } = usePinnedCategories({
+    userId,
     profileId,
     addableTransactionCategoryIds,
     transactionCategoryPathLabels,
@@ -378,6 +389,7 @@ export default function BudgetAppController({
   } = useRecurringTransactions({
     profileId,
     selectedMonth,
+    isEnabled: isRecurringTransactionsModuleEnabled,
   })
 
   const {
@@ -392,6 +404,7 @@ export default function BudgetAppController({
     saveGoalAllocationsForMonth,
   } = useFinancialGoals({
     profileId,
+    isEnabled: isFinancialGoalsModuleEnabled,
   })
 
   const {
@@ -478,6 +491,7 @@ export default function BudgetAppController({
     setErrorText,
     setCategories,
     setTransactions,
+    setActiveScopeTransactions,
     setTrashedTransactions,
     setTransactionPaymentSplitsMap,
     setTransactionTagsMap,
@@ -490,6 +504,7 @@ export default function BudgetAppController({
     loadRecurringTransactions,
     loadFinancialGoals,
     loadDrafts,
+    isPaymentSourcesEnabled: isPaymentSourcesModuleEnabled,
   })
 
   const {
@@ -524,7 +539,7 @@ export default function BudgetAppController({
     selectedMonth,
     budgetStartDate,
     savedBudgetStartDate,
-    transactions,
+    transactions: scopedActiveScopeTransactions,
     scopedTransactions,
     selectedMonthTransactions,
     isSelectedMonthExcluded,
@@ -629,6 +644,7 @@ export default function BudgetAppController({
     handleRestoreCategory,
   } = useCategoryVisibilityActions({
     supabase,
+    profileId,
     categories,
     transactions: scopedTransactions,
     selectedMonth,
@@ -692,6 +708,8 @@ export default function BudgetAppController({
     handleLevel1DragStart,
     handleLevel3DragStart,
   } = useBudgetTreeSorting({
+    profileId,
+    userId,
     categories,
     setCategories,
     openLevel1Ids,
@@ -739,7 +757,7 @@ export default function BudgetAppController({
     dashboardDrawerProps,
     overlaySectionProps,
   } = useBudgetAppControllerViewProps({
-    activeBudgetLimitAlerts, activeBudgetLimits, activeTransactionsById, activeUtilityPanel, addableTransactionCategoryIds, applyDraftToTransactionCreator, bankSearchCategoryOptions, bankSearchPaymentSourceOptions, bankSearchResults, bankSearchState,
+    activeBudgetLimitAlerts, activeScopeTransactions: scopedActiveScopeTransactions, activeBudgetLimits, activeTransactionsById, activeUtilityPanel, addableTransactionCategoryIds, applyDraftToTransactionCreator, bankSearchCategoryOptions, bankSearchPaymentSourceOptions, bankSearchResults, bankSearchState,
     bankSearchSummary, bankSearchTagOptions, budgetStartDate, bulkActionErrorText, bulkMoveTargetCategoryId, calendarHeatmapVariant, canCreateTransactions, categories, categoriesById, cleanupAllDrafts,
     clearTransactionOperationUi, clearTransactionSelection, commonBulkMoveTargets, copyPaymentSourcesBetweenKinds, currentTransactionCreatorKind, deleteDraft, deleteFinancialGoal, deletePaymentSource, deleteRecurringTransaction, descriptionSuggestions, drafts,
     draftsStatusText, effectiveVisibleModules, errorText, expenseLevel1Id, finalCategoryOptions, financialGoalMonthConfigs, financialGoalPriorities, financialGoals, formatDraftUpdatedAt, getAmountNumber,

@@ -3,14 +3,11 @@
 import { CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
 import DashboardGrid from './DashboardGrid'
 import { Category, Tag, Transaction } from '../lib/budgetPageTypes'
-import {
-  getDashboardStats,
-  getLatestTransactions,
-  getTopExpenseCategories,
-} from '../lib/dashboardStats'
+import { getDashboardOverview } from '../lib/dashboardStats'
 import { useDashboardLayout } from '../lib/useDashboardLayout'
-import { filterTransactionsInScope } from '../lib/transactionScope'
+import { getEffectiveTransactionScope } from '../lib/transactionScope'
 import { DASHBOARD_WIDGET_DEFINITIONS } from '../lib/dashboardWidgetConfig'
+import { uiZIndex } from '../lib/uiFoundation'
 import type { DashboardContainerType } from '../lib/dashboardTypes'
 
 const panelStyle: CSSProperties = {
@@ -35,6 +32,7 @@ const headerStyle: CSSProperties = {
 
 type Props = {
   profileId: string
+  userId: string
   styles: Record<string, CSSProperties>
   transactions: Transaction[]
   transactionTagsMap?: Record<string, Tag[]>
@@ -47,6 +45,7 @@ type Props = {
 
 export default function DashboardPanel({
   profileId,
+  userId,
   styles,
   transactions,
   transactionTagsMap = {},
@@ -71,21 +70,27 @@ export default function DashboardPanel({
     moveWidget,
   } = useDashboardLayout({
     profileId,
+    userId,
   })
 
   const scopedTransactions = useMemo(
-    () => filterTransactionsInScope(transactions, budgetStartDate),
-    [transactions, budgetStartDate]
+    () =>
+      getEffectiveTransactionScope(transactions, {
+        mode: 'stats',
+        budgetStartDate,
+        excludedMonthsSet,
+      }),
+    [budgetStartDate, excludedMonthsSet, transactions]
   )
 
-  const dashboardStats = useMemo(
+  const dashboardOverview = useMemo(
     () =>
-      getDashboardStats(
+      getDashboardOverview(
         scopedTransactions,
         categoriesById,
         selectedMonth,
         getSignedAmountForTransaction,
-        { excludedMonthsSet }
+        { excludedMonthsSet, latestLimit: 8 }
       ),
     [
       scopedTransactions,
@@ -94,29 +99,6 @@ export default function DashboardPanel({
       getSignedAmountForTransaction,
       excludedMonthsSet,
     ]
-  )
-
-  const topExpenseCategories = useMemo(
-    () =>
-      getTopExpenseCategories(
-        scopedTransactions,
-        categoriesById,
-        selectedMonth,
-        getSignedAmountForTransaction,
-        { excludedMonthsSet }
-      ),
-    [
-      scopedTransactions,
-      categoriesById,
-      selectedMonth,
-      getSignedAmountForTransaction,
-      excludedMonthsSet,
-    ]
-  )
-
-  const latestTransactions = useMemo(
-    () => getLatestTransactions(scopedTransactions, selectedMonth, 8, { excludedMonthsSet }),
-    [scopedTransactions, selectedMonth, excludedMonthsSet]
   )
 
   useEffect(() => {
@@ -166,7 +148,7 @@ export default function DashboardPanel({
                 position: 'absolute',
                 right: 0,
                 top: 40,
-                zIndex: 8,
+                zIndex: uiZIndex.widgetOverlay,
                 width: 280,
                 borderRadius: 18,
                 border: '1px solid rgba(148, 163, 184, 0.28)',
@@ -232,9 +214,9 @@ export default function DashboardPanel({
         budgetStartDate={budgetStartDate}
         excludedMonthsSet={excludedMonthsSet}
         transactionTagsMap={transactionTagsMap}
-        dashboardStats={dashboardStats}
-        topExpenseCategories={topExpenseCategories}
-        latestTransactions={latestTransactions}
+        dashboardStats={dashboardOverview.dashboardStats}
+        topExpenseCategories={dashboardOverview.topExpenseCategories}
+        latestTransactions={dashboardOverview.latestTransactions}
         categoriesById={categoriesById}
         getSignedAmountForTransaction={getSignedAmountForTransaction}
         onWidgetConfigChange={updateWidgetConfig}

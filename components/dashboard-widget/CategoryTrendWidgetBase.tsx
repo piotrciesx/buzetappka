@@ -7,6 +7,13 @@ import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
 import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
 import { getUniqueCategoryLabel } from '../../lib/categoryUtils'
 import { getExistingDaysInMonth } from '../../lib/dateUtils'
+import {
+  getBudgetRootCategoryIds,
+  getTransactionMonth,
+  isActiveTransaction,
+} from '../../lib/transactionDomain'
+import { isMonthBeforeBudgetStart } from '../../lib/transactionScope'
+import { uiZIndex } from '../../lib/uiFoundation'
 import type { DashboardWidgetPixelRect } from './dashboardWidgetTileTypes'
 import { SOFT_BORDER, SOFT_TEXT } from './dashboardWidgetTileStyles'
 
@@ -169,7 +176,7 @@ const dropdownPanelStyle: CSSProperties = {
   position: 'absolute',
   left: 0,
   bottom: 28,
-  zIndex: 20,
+  zIndex: uiZIndex.widgetDropdown,
   width: 250,
   maxHeight: 260,
   overflowY: 'auto',
@@ -264,47 +271,14 @@ function getMonthList(selectedMonth: string, count: number) {
   return result
 }
 
-function getBudgetStartMonth(budgetStartDate: string) {
-  return budgetStartDate.slice(0, 7)
-}
-
-function isMonthBeforeBudgetStart(month: string, budgetStartDate: string) {
-  const budgetStartMonth = getBudgetStartMonth(budgetStartDate)
-  return Boolean(budgetStartMonth) && month < budgetStartMonth
-}
-
 function formatMonthLabel(month: string) {
   const [year, monthNumber] = month.split('-')
   return `${monthNumber}.${year.slice(2)}`
 }
 
-function getCategoryName(category: Category) {
-  return String((category as Category & { name?: string }).name ?? 'Bez nazwy')
-}
-
 function getCategoryParentId(category: Category) {
   const value = (category as Category & { parent_id?: string | null; parentId?: string | null }).parent_id
   return value ?? (category as Category & { parentId?: string | null }).parentId ?? null
-}
-
-function getCategoryKind(category: Category) {
-  const raw = String(
-    (category as Category & { kind?: string; type?: string; category_type?: string }).kind ??
-      (category as Category & { type?: string }).type ??
-      (category as Category & { category_type?: string }).category_type ??
-      ''
-  ).toLowerCase()
-
-  return raw
-}
-
-function isVariantRoot(category: Category, variant: 'income' | 'expense') {
-  const name = getCategoryName(category).toLowerCase()
-  const kind = getCategoryKind(category)
-
-  return variant === 'income'
-    ? kind === 'income' || kind === 'incomes' || name === 'przychody'
-    : kind === 'expense' || kind === 'expenses' || name === 'wydatki'
 }
 
 function getDayFromDate(date: string) {
@@ -368,7 +342,9 @@ function buildCategoryOptions(
     childrenByParent[parentId].push(category)
   })
 
-  const root = categories.find((category) => isVariantRoot(category, variant))
+  const { incomeLevel1Id, expenseLevel1Id } = getBudgetRootCategoryIds(categories)
+  const rootId = variant === 'income' ? incomeLevel1Id : expenseLevel1Id
+  const root = rootId ? categoriesById[rootId] : null
   const level2 = root ? childrenByParent[root.id] ?? [] : categories.filter((category) => !getCategoryParentId(category))
   const level3 = level2.flatMap((category) => childrenByParent[category.id] ?? [])
   const scopeCategoryIds = [...level2, ...level3].map((category) => category.id)
@@ -376,9 +352,9 @@ function buildCategoryOptions(
 
   const getTotalForIds = (categoryIds: Set<string>) => {
     return transactions.reduce((sum, transaction) => {
-      if (transaction.is_deleted || !categoryIds.has(transaction.category_id)) return sum
+      if (!isActiveTransaction(transaction) || !categoryIds.has(transaction.category_id)) return sum
 
-      const month = transaction.date.slice(0, 7)
+      const month = getTransactionMonth(transaction)
       const day = getDayFromDate(transaction.date)
       const existingDays = getExistingDaysInMonth(month)
 
@@ -504,9 +480,9 @@ export default function CategoryTrendWidgetBase({
     })
 
     transactions.forEach((transaction) => {
-      if (transaction.is_deleted) return
+      if (!isActiveTransaction(transaction)) return
 
-      const month = transaction.date.slice(0, 7)
+      const month = getTransactionMonth(transaction)
       const day = getDayFromDate(transaction.date)
       const monthPoint = map[month]
 

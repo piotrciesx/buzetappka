@@ -179,7 +179,7 @@
 
 [data-entries-menu-panel="true"] {
   position: fixed;
-  z-index: 130000;
+  z-index: var(--ui-z-global-critical);
   display: grid;
   gap: 4px;
   min-width: 154px;

@@ -5,6 +5,7 @@ import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
 import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
 import { getExistingDaysInMonth } from '../../lib/dateUtils'
+import { isActiveTransaction, isTransactionInMonth } from '../../lib/transactionDomain'
 import type { DashboardWidgetPixelRect } from './dashboardWidgetTileTypes'
 import { BLUE, GREEN, MUTED, RED, SOFT_BORDER, SOFT_TEXT } from './dashboardWidgetTileStyles'
 import { clampPercent, formatMoney } from './dashboardWidgetTileUtils'
@@ -340,7 +341,7 @@ export default function WeeklyTrendWidget({
   }
 
   transactions.forEach((transaction) => {
-    if (transaction.is_deleted || !transaction.date.startsWith(selectedMonth)) {
+    if (!isActiveTransaction(transaction) || !isTransactionInMonth(transaction, selectedMonth)) {
       return
     }
 
@@ -368,10 +369,26 @@ export default function WeeklyTrendWidget({
     week.count += 1
   })
 
-  const totalBalance = weeks.reduce((sum, week) => sum + week.balance, 0)
-  const bestWeek = [...weeks].sort((left, right) => right.balance - left.balance)[0]
-  const worstWeek = [...weeks].sort((left, right) => left.balance - right.balance)[0]
-  const busiestWeek = [...weeks].sort((left, right) => right.count - left.count)[0]
+  let totalBalance = 0
+  let bestWeek = weeks[0]
+  let worstWeek = weeks[0]
+  let busiestWeek = weeks[0]
+
+  weeks.forEach((week) => {
+    totalBalance += week.balance
+
+    if (week.balance > bestWeek.balance) {
+      bestWeek = week
+    }
+
+    if (week.balance < worstWeek.balance) {
+      worstWeek = week
+    }
+
+    if (week.count > busiestWeek.count) {
+      busiestWeek = week
+    }
+  })
   const maxBarValue = Math.max(1, ...weeks.map((week) => Math.max(week.income, week.expense)))
 
   return (

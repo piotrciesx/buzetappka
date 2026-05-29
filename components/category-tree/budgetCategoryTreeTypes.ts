@@ -20,6 +20,8 @@ export type BudgetCategoryTreeProps = {
   openLevel2Ids: string[]
   openLevel3Ids: string[]
   selectedMonth: string
+  profileId?: string
+  userId?: string
   budgetStartDate: string
   isSelectedMonthLocked: boolean
   canUseMonthCalendar?: boolean

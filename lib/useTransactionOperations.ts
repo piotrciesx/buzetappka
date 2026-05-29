@@ -7,11 +7,12 @@ import {
 } from './transactionActions'
 import { Transaction, UndoAction } from './budgetPageTypes'
 import { SupabaseClient } from '@supabase/supabase-js'
-import { Category } from './budgetPageTypes'
+import { getTransactionMonth as getTransactionMonthFromDomain } from './transactionDomain'
 
 type MoveTargetValidator = (transaction: Transaction, targetCategoryId: string) => boolean
 
 type UseTransactionOperationsParams = {
+  profileId: string
   lockedMonthsSet: Set<string>
   setMigrationPromptState: (value: null) => void
 }
@@ -41,6 +42,7 @@ type HandleUndoLastActionParams = {
 }
 
 export function useTransactionOperations({
+  profileId,
   lockedMonthsSet,
   setMigrationPromptState,
 }: UseTransactionOperationsParams) {
@@ -68,7 +70,7 @@ export function useTransactionOperations({
   }, [])
 
   const getTransactionMonth = useCallback((transaction: Transaction) => {
-    return transaction.date.slice(0, 7)
+    return getTransactionMonthFromDomain(transaction)
   }, [])
 
   const getLockedMonthsFromTransactions = useCallback(
@@ -125,6 +127,7 @@ export function useTransactionOperations({
 
       await executeBulkDeleteSelected({
         selectedTransactions,
+        profileId,
         supabase,
         setLastUndoAction,
         clearTransactionOperationUi,
@@ -132,7 +135,7 @@ export function useTransactionOperations({
         setBulkActionErrorText,
       })
     },
-    [guardTransactionsUnlocked]
+    [guardTransactionsUnlocked, profileId]
   )
 
   const handleBulkMoveSelected = useCallback(
@@ -151,6 +154,7 @@ export function useTransactionOperations({
       await executeBulkMoveSelected({
         selectedTransactions,
         bulkMoveTargetCategoryId,
+        profileId,
         isAllowedMoveTarget,
         supabase,
         setLastUndoAction,
@@ -159,7 +163,7 @@ export function useTransactionOperations({
         setBulkActionErrorText,
       })
     },
-    [guardTransactionsUnlocked]
+    [guardTransactionsUnlocked, profileId]
   )
 
   const handleUndoLastAction = useCallback(
@@ -188,13 +192,14 @@ export function useTransactionOperations({
 
       await executeUndoLastAction({
         lastUndoAction,
+        profileId,
         supabase,
         setLastUndoAction,
         clearTransactionOperationUi,
         loadData,
       })
     },
-    [guardTransactionsUnlocked, lastUndoAction]
+    [guardTransactionsUnlocked, lastUndoAction, profileId]
   )
 
   return {

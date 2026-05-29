@@ -1,4 +1,6 @@
 import type { Transaction } from '../../lib/budgetPageTypes'
+import { getCurrentMonthText, getDaysInMonth } from '../../lib/dateUtils'
+import { getTransactionDay, isActiveTransaction, isTransactionInMonth } from '../../lib/transactionDomain'
 import { BLUE, GREEN, RED } from './dashboardWidgetTileStyles'
 import { formatPercent } from './dashboardWidgetTileUtils'
 
@@ -21,31 +23,6 @@ export type BudgetMetrics = {
   status: BudgetStatus
 }
  
-function getDayFromDate(date: string) {
-  const day = Number(date.slice(8, 10))
-
-  return Number.isFinite(day) ? day : 0
-}
-
-function getDaysInCalendarMonth(month: string) {
-  const year = Number(month.slice(0, 4))
-  const monthIndex = Number(month.slice(5, 7))
-
-  if (!Number.isFinite(year) || !Number.isFinite(monthIndex)) {
-    return 0
-  }
-
-  return new Date(year, monthIndex, 0).getDate()
-}
-
-function getCurrentMonthText() {
-  const now = new Date()
-  const year = now.getFullYear()
-  const month = String(now.getMonth() + 1).padStart(2, '0')
-
-  return `${year}-${month}`
-}
-
 export function formatSignedPercent(value: number) {
   if (value > 0) {
     return `+${formatPercent(value)}`
@@ -152,21 +129,21 @@ export function buildMetrics({
   existingDays: number
   getSignedAmountForTransaction: (transaction: Transaction) => number
 }): BudgetMetrics {
-  const daysInMonth = getDaysInCalendarMonth(selectedMonth)
+  const daysInMonth = getDaysInMonth(selectedMonth)
   const safeExistingDays = Math.max(0, Math.min(existingDays, daysInMonth || existingDays))
 
-  const monthEntries = transactions.filter((transaction) => {
-    if (transaction.is_deleted || !transaction.date.startsWith(selectedMonth)) {
-      return false
-    }
-
-    const day = getDayFromDate(transaction.date)
-
-    return day >= 1 && day <= safeExistingDays
-  })
-
-  const totals = monthEntries.reduce(
+  const totals = transactions.reduce(
     (acc, transaction) => {
+      if (!isActiveTransaction(transaction) || !isTransactionInMonth(transaction, selectedMonth)) {
+        return acc
+      }
+
+      const day = getTransactionDay(transaction) || 0
+
+      if (day < 1 || day > safeExistingDays) {
+        return acc
+      }
+
       const amount = getSignedAmountForTransaction(transaction)
 
       if (amount >= 0) {

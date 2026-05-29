@@ -7,6 +7,7 @@ import {
   DASHBOARD_WIDGET_DEFINITION_BY_TYPE,
   DASHBOARD_WIDGET_DEFINITIONS,
 } from '../lib/dashboardWidgetConfig'
+import { uiZIndex } from '../lib/uiFoundation'
 import DashboardWidgetFrame from './dashboard-widget/DashboardWidgetFrame'
 import DashboardWidgetHeader from './dashboard-widget/DashboardWidgetHeader'
 import DashboardWidgetContent from './dashboard-widget/DashboardWidgetContent'
@@ -65,7 +66,11 @@ export default function DashboardWidgetTile({
         scaleY: 1,
       }),
       transition: isDragging ? 'none' : 'transform 180ms ease, width 180ms ease, height 180ms ease',
-      zIndex: isDragging ? 8 : isConfigOpen ? 7 : 2,
+      zIndex: isDragging
+        ? uiZIndex.widgetOverlay
+        : isConfigOpen
+          ? uiZIndex.widgetConfigOpen
+          : uiZIndex.localOverlay,
       pointerEvents: 'auto',
     }
   }, [isConfigOpen, isDragging, rect.height, rect.left, rect.top, rect.width, transform])

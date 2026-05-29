@@ -189,6 +189,7 @@ export function SortableLevel1Card(props: SortableProps) {
       style={wrapStyle}
       data-level1-card-shell="true"
       data-level1-mobile-block={isMobileViewport ? 'true' : undefined}
+      data-category-dragging={isDragging ? 'true' : 'false'}
     >
       <Level1CardBase
         level1Category={level1Category}

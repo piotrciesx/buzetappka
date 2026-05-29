@@ -1,4 +1,5 @@
 import { getMonthNumber } from './dateUtils'
+import { getTransactionMonth, isActiveTransaction, isTransactionInMonth } from './transactionDomain'
 
 type Transaction = {
   id: string
@@ -6,6 +7,7 @@ type Transaction = {
   amount: number | string
   description: string | null
   date: string
+  day_is_null?: boolean
   created_at?: string
   is_deleted?: boolean
   deleted_at?: string | null
@@ -26,7 +28,11 @@ export const getTransactionsForCategoryAndMonth = (
         return false
       }
 
-      return transaction.date.slice(0, 7) === selectedMonth
+      if (!isActiveTransaction(transaction)) {
+        return false
+      }
+
+      return isTransactionInMonth(transaction, selectedMonth)
     })
     .sort((a, b) => b.date.localeCompare(a.date))
 }
@@ -94,7 +100,11 @@ export const getEntryCountForCategoryFromMonth = (
       return false
     }
 
-    const transactionMonth = transaction.date.slice(0, 7)
+    if (!isActiveTransaction(transaction)) {
+      return false
+    }
+
+    const transactionMonth = getTransactionMonth(transaction)
     return getMonthNumber(transactionMonth) >= startMonthNumber
   }).length
 }
@@ -120,10 +130,14 @@ export const getFirstEntryMonthForCategoryFromMonth = (
         return false
       }
 
-      const transactionMonth = transaction.date.slice(0, 7)
+      if (!isActiveTransaction(transaction)) {
+        return false
+      }
+
+      const transactionMonth = getTransactionMonth(transaction)
       return getMonthNumber(transactionMonth) >= startMonthNumber
     })
-    .map((transaction) => transaction.date.slice(0, 7))
+    .map((transaction) => getTransactionMonth(transaction))
     .sort((a, b) => getMonthNumber(a) - getMonthNumber(b))
 
   return matchingMonths[0] || null
@@ -149,7 +163,11 @@ export const getTransactionsForCategoriesFromMonth = (
       return false
     }
 
-    const transactionMonth = transaction.date.slice(0, 7)
+    if (!isActiveTransaction(transaction)) {
+      return false
+    }
+
+    const transactionMonth = getTransactionMonth(transaction)
     return getMonthNumber(transactionMonth) >= startMonthNumber
   })
 }

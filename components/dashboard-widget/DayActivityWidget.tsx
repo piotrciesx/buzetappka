@@ -4,6 +4,7 @@ import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
 import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
 import { getExistingDaysInMonth } from '../../lib/dateUtils'
+import { isActiveTransaction, isTransactionInMonth } from '../../lib/transactionDomain'
 import type { DashboardWidgetPixelRect } from './dashboardWidgetTileTypes'
 import { BLUE, GREEN, MUTED, RED, SOFT_BORDER, SOFT_TEXT } from './dashboardWidgetTileStyles'
 import { clampPercent, formatPercent } from './dashboardWidgetTileUtils'
@@ -265,9 +266,9 @@ export default function DayActivityWidget({
   if (!isMonthExcluded && existingDaysInMonth > 0) {
     transactions.forEach((transaction) => {
       if (
-        transaction.is_deleted ||
+        !isActiveTransaction(transaction) ||
         transaction.day_is_null ||
-        !transaction.date.startsWith(selectedMonth)
+        !isTransactionInMonth(transaction, selectedMonth)
       ) {
         return
       }

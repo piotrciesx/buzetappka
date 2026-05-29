@@ -3,6 +3,7 @@ import type { HeatmapMode } from './monthCalendarTypes'
 import { calendarPanelStyle } from './monthCalendarStyles'
 import MonthCalendarGrid from './MonthCalendarGrid'
 import MonthCalendarLegend from './MonthCalendarLegend'
+import { CalendarSurface } from '../reminder-calendar/reminderCalendarPrimitives'
 
 type MonthCalendarContainerProps = {
   firstDayOffset: number
@@ -32,13 +33,13 @@ export default function MonthCalendarContainer({
 }: MonthCalendarContainerProps) {
   return (
     <>
-      <section data-month-calendar-panel="true" style={calendarPanelStyle}>
+      <CalendarSurface data-month-calendar-panel="true" style={calendarPanelStyle}>
         {toolbar}
         {notices}
         <MonthCalendarLegend heatmapMode={heatmapMode} legendLabels={legendLabels} />
         <MonthCalendarGrid firstDayOffset={firstDayOffset}>{dayCells}</MonthCalendarGrid>
         {noDaySection}
-      </section>
+      </CalendarSurface>
 
       {suggestionMenu}
       {dayModal}

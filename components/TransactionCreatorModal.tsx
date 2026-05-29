@@ -3,7 +3,9 @@
 import { KeyboardEvent, useEffect, useRef, useState } from 'react'
 import DescriptionSuggestionDeleteMenu from './DescriptionSuggestionDeleteMenu'
 import PaymentSplitEditor from './PaymentSplitEditor'
-import TransactionCreatorCategorySection from './transaction-creator/TransactionCreatorCategorySection'; import TransactionCreatorHeader from './transaction-creator/TransactionCreatorHeader'; import TransactionCreatorModeToggles from './transaction-creator/TransactionCreatorModeToggles'
+import TransactionCreatorCategorySection from './transaction-creator/TransactionCreatorCategorySection'
+import TransactionCreatorHeader from './transaction-creator/TransactionCreatorHeader'
+import TransactionCreatorModeToggles from './transaction-creator/TransactionCreatorModeToggles'
 import { getDayInputFromDate, normalizeDayInput } from '../lib/dateUtils'
 import { useDescriptionSuggestions } from '../lib/useDescriptionSuggestions'
 import { splitTagInput } from '../lib/tagUtils'
@@ -313,7 +315,7 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
                 />
 
                 {filteredSuggestions.length > 0 && (
-                  <div style={suggestionsDropdownStyle}>
+                  <div style={suggestionsDropdownStyle} data-transaction-suggestions="true">
                     {filteredSuggestions.map((suggestion, index) => {
                       const isActive = index === activeSuggestionIndex
                       const isLast = index === filteredSuggestions.length - 1
@@ -322,6 +324,8 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
                         <button
                           key={suggestion.text}
                           type="button"
+                          data-transaction-suggestion-item="true"
+                          data-transaction-suggestion-active={isActive ? 'true' : 'false'}
                           style={{
                             ...(isActive ? activeSuggestionButtonStyle : suggestionButtonStyle),
                             borderBottom: isLast ? 'none' : suggestionButtonStyle.borderBottom,
@@ -444,7 +448,11 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
           </div>
 
           <div style={tagInputWrapStyle} data-transaction-entry-extra="true">
-            <label style={dateLabelStyle} htmlFor="transaction-tags-input">
+            <label
+              style={dateLabelStyle}
+              htmlFor="transaction-tags-input"
+              data-transaction-field-label="true"
+            >
               Tagi
             </label>
 
@@ -465,13 +473,14 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
             />
 
             {selectedTagNames.length > 0 && (
-              <div style={tagBadgesWrapStyle}>
+              <div style={tagBadgesWrapStyle} data-transaction-tag-list="true">
                 {selectedTagNames.map((tagName) => (
-                  <span key={tagName} style={tagBadgeStyle}>
+                  <span key={tagName} style={tagBadgeStyle} data-transaction-tag-badge="true">
                     #{tagName}
                     <button
                       type="button"
                       style={tagRemoveButtonStyle}
+                      data-transaction-tag-remove="true"
                       onClick={() => handleRemoveTag(tagName)}
                     >
                       ×
@@ -483,7 +492,9 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
 
             {isPaymentSourceVisible && (
               <>
-                <label style={dateLabelStyle}>Źródło płatności</label>
+                <label style={dateLabelStyle} data-transaction-field-label="true">
+                  Źródło płatności
+                </label>
                 <PaymentSplitEditor
                   amount={amount}
                   isVisible={isPaymentSourceVisible}
@@ -500,8 +511,15 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
 
 
             {(recurringOptions.length > 0 || recurringSuggestions.length > 0) && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <label style={dateLabelStyle} htmlFor="transaction-recurring-link">
+              <div
+                style={{ display: 'flex', flexDirection: 'column', gap: 8 }}
+                data-transaction-recurring-field="true"
+              >
+                <label
+                  style={dateLabelStyle}
+                  htmlFor="transaction-recurring-link"
+                  data-transaction-field-label="true"
+                >
                   Powiąż z przypomnieniem
                 </label>
 
@@ -526,7 +544,10 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
                 </select>
 
                 {selectedRecurringOption?.hasTransactionInMonth && (
-                  <div style={{ ...styles.emptyText, color: '#92400e' }}>
+                  <div
+                    style={{ ...styles.emptyText, color: '#92400e' }}
+                    data-transaction-recurring-warning="true"
+                  >
                     To przypomnienie ma już wpis w tym miesiącu. Możesz dodać kolejny, jeśli to celowe.
                   </div>
                 )}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { supabase } from './supabaseClient'
 import {
   LEVEL2_SORT_DIRECTION_STORAGE_KEY,
@@ -15,8 +15,11 @@ import {
   sortCategoriesForDisplay,
 } from './budgetPageHelpers'
 import { Category, SortDirection, SortMode } from './budgetPageTypes'
+import { getProfileStorageKey, readProfileStorageValue } from './profileStorage'
 
 type UseBudgetTreeSortingParams = {
+  profileId: string
+  userId: string
   categories: Category[]
   setCategories: React.Dispatch<React.SetStateAction<Category[]>>
   openLevel1Ids: string[]
@@ -62,6 +65,8 @@ export function useBudgetTreeSorting(
 ): UseBudgetTreeSortingResult {
   const {
     categories,
+    profileId,
+    userId,
     setCategories,
     openLevel1Ids,
     openLevel2Ids,
@@ -83,9 +88,20 @@ export function useBudgetTreeSorting(
   const [level3SortMode, setLevel3SortMode] = useState<SortMode>('default')
   const [level3SortDirection, setLevel3SortDirection] = useState<SortDirection>('desc')
   const [hasHydratedSortPreferences, setHasHydratedSortPreferences] = useState(false)
+  const hydratedSortStorageScopeRef = useRef('')
   const [isReorderingLevel1, setIsReorderingLevel1] = useState(false)
   const [reorderingLevel1Id, setReorderingLevel1Id] = useState<string | null>(null)
   const [reorderingLevel2Id, setReorderingLevel2Id] = useState<string | null>(null)
+  const getScopedSortStorageKey = useCallback(
+    (featureKey: string) =>
+      getProfileStorageKey({
+        userId,
+        profileId,
+        featureKey,
+      }),
+    [profileId, userId]
+  )
+  const sortStorageScope = `${userId}:${profileId}`
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -93,14 +109,22 @@ export function useBudgetTreeSorting(
     }
 
     const timeoutId = window.setTimeout(() => {
-      const storedLevel2SortMode = window.localStorage.getItem(LEVEL2_SORT_MODE_STORAGE_KEY)
-      const storedLevel2SortDirection = window.localStorage.getItem(
-        LEVEL2_SORT_DIRECTION_STORAGE_KEY
-      )
-      const storedLevel3SortMode = window.localStorage.getItem(LEVEL3_SORT_MODE_STORAGE_KEY)
-      const storedLevel3SortDirection = window.localStorage.getItem(
-        LEVEL3_SORT_DIRECTION_STORAGE_KEY
-      )
+      const storedLevel2SortMode = readProfileStorageValue({
+        storageKey: getScopedSortStorageKey('sort-level2-mode'),
+        legacyStorageKeys: [LEVEL2_SORT_MODE_STORAGE_KEY],
+      })
+      const storedLevel2SortDirection = readProfileStorageValue({
+        storageKey: getScopedSortStorageKey('sort-level2-direction'),
+        legacyStorageKeys: [LEVEL2_SORT_DIRECTION_STORAGE_KEY],
+      })
+      const storedLevel3SortMode = readProfileStorageValue({
+        storageKey: getScopedSortStorageKey('sort-level3-mode'),
+        legacyStorageKeys: [LEVEL3_SORT_MODE_STORAGE_KEY],
+      })
+      const storedLevel3SortDirection = readProfileStorageValue({
+        storageKey: getScopedSortStorageKey('sort-level3-direction'),
+        legacyStorageKeys: [LEVEL3_SORT_DIRECTION_STORAGE_KEY],
+      })
 
       if (storedLevel2SortMode && isSortModeValue(storedLevel2SortMode)) {
         setLevel2SortMode(storedLevel2SortMode)
@@ -118,25 +142,38 @@ export function useBudgetTreeSorting(
         setLevel3SortDirection(storedLevel3SortDirection)
       }
 
+      hydratedSortStorageScopeRef.current = sortStorageScope
       setHasHydratedSortPreferences(true)
     }, 0)
 
     return () => {
       window.clearTimeout(timeoutId)
     }
-  }, [])
+  }, [getScopedSortStorageKey, sortStorageScope])
 
   useEffect(() => {
-    if (!hasHydratedSortPreferences || typeof window === 'undefined') {
+    if (
+      !hasHydratedSortPreferences ||
+      hydratedSortStorageScopeRef.current !== sortStorageScope ||
+      typeof window === 'undefined'
+    ) {
       return
     }
 
-    window.localStorage.setItem(LEVEL2_SORT_MODE_STORAGE_KEY, level2SortMode)
-    window.localStorage.setItem(LEVEL2_SORT_DIRECTION_STORAGE_KEY, level2SortDirection)
-    window.localStorage.setItem(LEVEL3_SORT_MODE_STORAGE_KEY, level3SortMode)
-    window.localStorage.setItem(LEVEL3_SORT_DIRECTION_STORAGE_KEY, level3SortDirection)
+    window.localStorage.setItem(getScopedSortStorageKey('sort-level2-mode'), level2SortMode)
+    window.localStorage.setItem(
+      getScopedSortStorageKey('sort-level2-direction'),
+      level2SortDirection
+    )
+    window.localStorage.setItem(getScopedSortStorageKey('sort-level3-mode'), level3SortMode)
+    window.localStorage.setItem(
+      getScopedSortStorageKey('sort-level3-direction'),
+      level3SortDirection
+    )
   }, [
+    getScopedSortStorageKey,
     hasHydratedSortPreferences,
+    sortStorageScope,
     level2SortMode,
     level2SortDirection,
     level3SortMode,
@@ -294,7 +331,11 @@ export function useBudgetTreeSorting(
 
       const results = await Promise.all(
         updatedSiblings.map((category) =>
-          supabase.from('categories').update({ sort_order: category.sort_order }).eq('id', category.id)
+          supabase
+            .from('categories')
+            .update({ sort_order: category.sort_order })
+            .eq('id', category.id)
+            .eq('profile_id', profileId)
         )
       )
 
@@ -309,7 +350,7 @@ export function useBudgetTreeSorting(
 
       setReorderingLevel2Id(null)
     },
-    [categories, reorderingLevel2Id, setCategories]
+    [categories, profileId, reorderingLevel2Id, setCategories]
   )
 
   const handleReorderLevel2 = useCallback(
@@ -360,7 +401,11 @@ export function useBudgetTreeSorting(
 
       const results = await Promise.all(
         updatedSiblings.map((category) =>
-          supabase.from('categories').update({ sort_order: category.sort_order }).eq('id', category.id)
+          supabase
+            .from('categories')
+            .update({ sort_order: category.sort_order })
+            .eq('id', category.id)
+            .eq('profile_id', profileId)
         )
       )
 
@@ -375,7 +420,7 @@ export function useBudgetTreeSorting(
 
       setReorderingLevel1Id(null)
     },
-    [categories, reorderingLevel1Id, setCategories]
+    [categories, profileId, reorderingLevel1Id, setCategories]
   )
 
   const handleReorderLevel1 = useCallback(
@@ -424,7 +469,11 @@ export function useBudgetTreeSorting(
 
       const results = await Promise.all(
         updatedSiblings.map((category) =>
-          supabase.from('categories').update({ sort_order: category.sort_order }).eq('id', category.id)
+          supabase
+            .from('categories')
+            .update({ sort_order: category.sort_order })
+            .eq('id', category.id)
+            .eq('profile_id', profileId)
         )
       )
 
@@ -439,7 +488,7 @@ export function useBudgetTreeSorting(
 
       setIsReorderingLevel1(false)
     },
-    [categories, isReorderingLevel1, setCategories]
+    [categories, isReorderingLevel1, profileId, setCategories]
   )
 
   const handleLevel3DragStart = useCallback(

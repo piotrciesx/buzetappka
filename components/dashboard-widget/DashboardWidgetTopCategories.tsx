@@ -1,6 +1,7 @@
 import type { TopCategory } from '../../lib/dashboardStats'
 import { RED, listRowStyle, listStyle, progressTrackStyle, smallTextStyle, labelStyle } from './dashboardWidgetTileStyles'
 import { clampPercent, formatMoney, formatPercent } from './dashboardWidgetTileUtils'
+import { ProgressBar as ProgressBarPrimitive, RankingRow } from './dashboardWidgetPrimitives'
 
 type DashboardWidgetTopCategoriesProps = {
   categories: TopCategory[]
@@ -28,24 +29,15 @@ export default function DashboardWidgetTopCategories({
 
         return (
           <div key={category.categoryId}>
-            <div style={listRowStyle}>
+            <RankingRow style={listRowStyle}>
               <span style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                 {index + 1}. {category.name}
               </span>
               <strong style={{ fontWeight: 600 }}>{formatMoney(category.total)}</strong>
-            </div>
+            </RankingRow>
             {showBars && (
               <>
-                <div style={progressTrackStyle}>
-                  <div
-                    style={{
-                      width: `${clampPercent(percent)}%`,
-                      height: '100%',
-                      borderRadius: 999,
-                      background: RED,
-                    }}
-                  />
-                </div>
+                <ProgressBarPrimitive value={clampPercent(percent)} color={RED} style={progressTrackStyle} />
                 <div style={{ ...labelStyle, marginTop: 2 }}>{formatPercent(percent)}</div>
               </>
             )}

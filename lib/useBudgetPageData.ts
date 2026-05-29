@@ -1,9 +1,11 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef } from 'react'
 import { sortCategoriesForDisplay } from './budgetPageHelpers'
 import { Category, Tag, Transaction, TransactionPaymentSplit } from './budgetPageTypes'
-import { getNextMonthText } from './dateUtils'
+import { getCurrentMonthText, getNextMonthText } from './dateUtils'
 import { supabase } from './supabaseClient'
 import { fetchTransactionTagsMap } from './tagUtils'
+import { permanentlyDeleteTransactions } from './transactionActions'
+import { TRANSACTION_SELECT_COLUMNS } from './transactionScope'
 
 type UseBudgetPageDataParams = {
   profileId: string
@@ -13,6 +15,7 @@ type UseBudgetPageDataParams = {
   setErrorText: Dispatch<SetStateAction<string>>
   setCategories: Dispatch<SetStateAction<Category[]>>
   setTransactions: Dispatch<SetStateAction<Transaction[]>>
+  setActiveScopeTransactions: Dispatch<SetStateAction<Transaction[]>>
   setTrashedTransactions: Dispatch<SetStateAction<Transaction[]>>
   setTransactionPaymentSplitsMap: Dispatch<SetStateAction<Record<string, TransactionPaymentSplit[]>>>
   setTransactionTagsMap: Dispatch<SetStateAction<Record<string, Tag[]>>>
@@ -25,6 +28,82 @@ type UseBudgetPageDataParams = {
   loadRecurringTransactions: () => Promise<void>
   loadFinancialGoals: () => Promise<void>
   loadDrafts: () => Promise<void>
+  isPaymentSourcesEnabled?: boolean
+}
+
+const ACTIVE_SCOPE_PAGE_SIZE = 1000
+const ACTIVE_SCOPE_MAX_ROWS = 10000
+const RELATION_LOOKUP_CHUNK_SIZE = 500
+
+const getActiveScopeEndDate = (selectedMonth: string) => {
+  const currentMonth = getCurrentMonthText()
+  const latestVisibleMonth = selectedMonth > currentMonth ? selectedMonth : currentMonth
+
+  return `${getNextMonthText(latestVisibleMonth)}-01`
+}
+
+const fetchActiveScopeTransactions = async ({
+  profileId,
+  budgetStartDate,
+  selectedMonth,
+}: {
+  profileId: string
+  budgetStartDate: string
+  selectedMonth: string
+}) => {
+  const scopeStartDate = budgetStartDate ? budgetStartDate.slice(0, 10) : '0001-01-01'
+  const scopeEndDate = getActiveScopeEndDate(selectedMonth)
+  const rows: Transaction[] = []
+
+  for (let from = 0; from < ACTIVE_SCOPE_MAX_ROWS; from += ACTIVE_SCOPE_PAGE_SIZE) {
+    const to = Math.min(from + ACTIVE_SCOPE_PAGE_SIZE - 1, ACTIVE_SCOPE_MAX_ROWS - 1)
+    const { data, error } = await supabase
+      .from('transactions')
+      .select(TRANSACTION_SELECT_COLUMNS)
+      .eq('profile_id', profileId)
+      .eq('is_deleted', false)
+      .gte('date', scopeStartDate)
+      .lt('date', scopeEndDate)
+      .order('date', { ascending: false })
+      .range(from, to)
+
+    if (error) {
+      throw error
+    }
+
+    rows.push(...((data || []) as Transaction[]))
+
+    if (!data || data.length < ACTIVE_SCOPE_PAGE_SIZE) {
+      break
+    }
+  }
+
+  return rows
+}
+
+const fetchTransactionPaymentSplits = async (transactionIds: string[]) => {
+  const rows: TransactionPaymentSplit[] = []
+
+  for (let index = 0; index < transactionIds.length; index += RELATION_LOOKUP_CHUNK_SIZE) {
+    const chunk = transactionIds.slice(index, index + RELATION_LOOKUP_CHUNK_SIZE)
+
+    if (chunk.length === 0) {
+      continue
+    }
+
+    const { data, error } = await supabase
+      .from('transaction_payment_splits')
+      .select('id, transaction_id, payment_source_id, amount, created_at')
+      .in('transaction_id', chunk)
+
+    if (error) {
+      throw error
+    }
+
+    rows.push(...((data || []) as TransactionPaymentSplit[]))
+  }
+
+  return rows
 }
 
 export function useBudgetPageData({
@@ -35,6 +114,7 @@ export function useBudgetPageData({
   setErrorText,
   setCategories,
   setTransactions,
+  setActiveScopeTransactions,
   setTrashedTransactions,
   setTransactionPaymentSplitsMap,
   setTransactionTagsMap,
@@ -47,6 +127,7 @@ export function useBudgetPageData({
   loadRecurringTransactions,
   loadFinancialGoals,
   loadDrafts,
+  isPaymentSourcesEnabled = true,
 }: UseBudgetPageDataParams) {
   const activeProfileIdRef = useRef(profileId)
 
@@ -54,6 +135,7 @@ export function useBudgetPageData({
     activeProfileIdRef.current = profileId
     setCategories([])
     setTransactions([])
+    setActiveScopeTransactions([])
     setTrashedTransactions([])
     setTransactionPaymentSplitsMap({})
     setTransactionTagsMap({})
@@ -65,6 +147,7 @@ export function useBudgetPageData({
     profileId,
     resetTreeOpenState,
     setCategories,
+    setActiveScopeTransactions,
     setErrorText,
     setStatus,
     setTags,
@@ -141,20 +224,38 @@ export function useBudgetPageData({
     resetTreeOpenState(firstLevel1Id)
 
     const trashAutoDeleteCutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
-    const { error: trashCleanupError } = await supabase
+    const { data: expiredTrashRowsForCleanup, error: trashLookupError } = await supabase
       .from('transactions')
-      .delete()
+      .select('id')
       .eq('profile_id', profileId)
       .eq('is_deleted', true)
       .lt('deleted_at', trashAutoDeleteCutoff)
 
-    if (trashCleanupError) {
-      setErrorText(trashCleanupError.message)
+    const expiredTrashRows = (expiredTrashRowsForCleanup || []) as Array<{ id: string }>
+
+    if (trashLookupError) {
+      setErrorText(trashLookupError.message)
       setStatus('Błąd przy czyszczeniu kosza')
       return
     }
 
     if (isStaleLoad()) {
+      return
+    }
+
+    try {
+      await permanentlyDeleteTransactions(
+        supabase,
+        profileId,
+        expiredTrashRows.map((transaction) => transaction.id)
+      )
+    } catch (trashCleanupError) {
+      const message =
+        trashCleanupError instanceof Error
+          ? trashCleanupError.message
+          : 'Nie udało się wyczyścić kosza'
+      setErrorText(message)
+      setStatus('Błąd przy czyszczeniu kosza')
       return
     }
 
@@ -166,9 +267,7 @@ export function useBudgetPageData({
 
     const { data: transactionsData, error: transactionsError } = await supabase
       .from('transactions')
-      .select(
-        'id, category_id, amount, description, date, day_is_null, payment_source_id, recurring_transaction_id, created_at, is_deleted, deleted_at'
-      )
+      .select(TRANSACTION_SELECT_COLUMNS)
       .eq('profile_id', profileId)
       .eq('is_deleted', false)
       .gte('date', monthStartDate)
@@ -189,16 +288,67 @@ export function useBudgetPageData({
     const transactionIds = nextTransactions.map((transaction) => transaction.id)
     setTransactions(nextTransactions)
 
-    const { data: splitRows, error: splitRowsError } =
-      transactionIds.length > 0
-        ? await supabase
-            .from('transaction_payment_splits')
-            .select('id, transaction_id, payment_source_id, amount, created_at')
-            .in('transaction_id', transactionIds)
-        : { data: [], error: null }
+    let nextActiveScopeTransactions: Transaction[] = []
 
-    if (splitRowsError) {
-      setErrorText(splitRowsError.message)
+    try {
+      nextActiveScopeTransactions = await fetchActiveScopeTransactions({
+        profileId,
+        budgetStartDate,
+        selectedMonth,
+      })
+    } catch (activeScopeError) {
+      const message =
+        activeScopeError instanceof Error
+          ? activeScopeError.message
+          : 'Nie udało się pobrać aktywnego zakresu wpisów'
+      setErrorText(message)
+      setStatus('Błąd przy pobieraniu aktywnego zakresu wpisów')
+      return
+    }
+
+    if (isStaleLoad()) {
+      return
+    }
+
+    const activeScopeTransactionIds = nextActiveScopeTransactions.map((transaction) => transaction.id)
+    setActiveScopeTransactions(nextActiveScopeTransactions)
+
+    const { data: trashedTransactionsData, error: trashedTransactionsError } = await supabase
+      .from('transactions')
+      .select(TRANSACTION_SELECT_COLUMNS)
+      .eq('profile_id', profileId)
+      .eq('is_deleted', true)
+      .order('deleted_at', { ascending: false })
+
+    if (trashedTransactionsError) {
+      setErrorText(trashedTransactionsError.message)
+      setStatus('Błąd przy pobieraniu kosza')
+      return
+    }
+
+    if (isStaleLoad()) {
+      return
+    }
+
+    const nextTrashedTransactions = (trashedTransactionsData || []) as Transaction[]
+    const allLoadedTransactionIds = [
+      ...new Set([...transactionIds, ...activeScopeTransactionIds]),
+      ...nextTrashedTransactions.map((transaction) => transaction.id),
+    ]
+
+    let splitRows: TransactionPaymentSplit[] = []
+
+    try {
+      splitRows =
+        isPaymentSourcesEnabled && allLoadedTransactionIds.length > 0
+          ? await fetchTransactionPaymentSplits(allLoadedTransactionIds)
+          : []
+    } catch (splitRowsError) {
+      const message =
+        splitRowsError instanceof Error
+          ? splitRowsError.message
+          : 'Nie udało się pobrać splitów płatności'
+      setErrorText(message)
       setStatus('Błąd przy pobieraniu splitów płatności')
       return
     }
@@ -207,7 +357,7 @@ export function useBudgetPageData({
       return
     }
 
-    const nextSplitsMap = ((splitRows || []) as TransactionPaymentSplit[]).reduce<
+    const nextSplitsMap = splitRows.reduce<
       Record<string, TransactionPaymentSplit[]>
     >((acc, row) => {
       if (!acc[row.transaction_id]) {
@@ -224,24 +374,7 @@ export function useBudgetPageData({
 
     setTransactionPaymentSplitsMap(nextSplitsMap)
 
-    const { data: trashedTransactionsData, error: trashedTransactionsError } = await supabase
-      .from('transactions')
-      .select(
-        'id, category_id, amount, description, date, day_is_null, payment_source_id, recurring_transaction_id, created_at, is_deleted, deleted_at'
-      )
-      .eq('profile_id', profileId)
-      .eq('is_deleted', true)
-      .gte('date', monthStartDate)
-      .lt('date', nextMonthStartDate)
-      .order('deleted_at', { ascending: false })
-
-    if (trashedTransactionsError) {
-      setErrorText(trashedTransactionsError.message)
-      setStatus('Błąd przy pobieraniu kosza')
-      return
-    }
-
-    setTrashedTransactions((trashedTransactionsData || []) as Transaction[])
+    setTrashedTransactions(nextTrashedTransactions)
 
     try {
       await loadPaymentSources()
@@ -262,7 +395,7 @@ export function useBudgetPageData({
       const nextTransactionTagsMap = await fetchTransactionTagsMap(
         supabase,
         profileId,
-        transactionIds
+        [...new Set([...transactionIds, ...activeScopeTransactionIds])]
       )
 
       if (isStaleLoad()) {
@@ -300,6 +433,7 @@ export function useBudgetPageData({
     setStatus('OK')
   }, [
     budgetStartDate,
+    isPaymentSourcesEnabled,
     loadDrafts,
     loadFinancialGoals,
     loadLockedMonths,
@@ -310,6 +444,7 @@ export function useBudgetPageData({
     profileId,
     resetTreeOpenState,
     selectedMonth,
+    setActiveScopeTransactions,
     setCategories,
     setErrorText,
     setStatus,

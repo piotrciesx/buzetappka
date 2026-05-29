@@ -4,6 +4,14 @@ import { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import UserAvatar from './UserAvatar'
 import { USER_AVATARS, getUserDisplayName, type UserPublicProfile } from '../lib/userAppearance'
+import {
+  ActionRow,
+  DangerZone,
+  EmptyState,
+  ListRow,
+  SettingsSection,
+  StatusBox,
+} from './utility-panels/utilityPanelPrimitives'
 
 type ProfileMemberRole = 'owner' | 'member'
 
@@ -409,7 +417,7 @@ export default function ProfileMembersPanel({
 
   return (
     <section style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid #e5e7eb' }}>
-      <div data-user-public-profile-editor="true">
+      <SettingsSection data-user-public-profile-editor="true">
         <div data-user-public-profile-preview="true">
           <UserAvatar avatarKey={avatarKeyDraft} label={displayNameDraft || 'Użytkownik'} size="lg" />
           <div>
@@ -449,17 +457,18 @@ export default function ProfileMembersPanel({
         >
           {isSavingPublicProfile ? 'Zapisywanie...' : 'Zapisz profil'}
         </button>
-      </div>
+      </SettingsSection>
 
       <div style={styles.l2Name}>Członkowie profilu</div>
 
-      <div style={{ display: 'grid', gap: 8, marginTop: 10 }}>
-        {isLoading && <div style={styles.smallMutedText}>Ładowanie członków...</div>}
+      <div data-profile-members-list="true" style={{ display: 'grid', gap: 8, marginTop: 10 }}>
+        {isLoading && <StatusBox style={styles.smallMutedText}>Ładowanie członków...</StatusBox>}
 
         {!isLoading &&
           members.map((member) => (
-            <div
+            <ListRow
               key={member.user_id || `${profileId}-${member.role || 'member'}`}
+              data-profile-member-row="true"
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -484,7 +493,7 @@ export default function ProfileMembersPanel({
                   </div>
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+              <ActionRow style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
                 <span>{member.role || 'member'}</span>
                 {member.user_id === userId && <span style={styles.smallMutedText}>to Ty</span>}
                 {isCurrentUserOwner && member.user_id !== userId && member.role === 'member' && (
@@ -507,16 +516,16 @@ export default function ProfileMembersPanel({
                     </button>
                   </>
                 )}
-              </div>
-            </div>
+              </ActionRow>
+            </ListRow>
           ))}
 
         {!isLoading && members.length === 0 && !errorText && (
-          <div style={styles.smallMutedText}>Brak członków do wyświetlenia.</div>
+          <EmptyState style={styles.smallMutedText}>Brak członków do wyświetlenia.</EmptyState>
         )}
 
-        {errorText && <div style={styles.infoBox}>{errorText}</div>}
-        {statusText && <div style={styles.smallMutedText}>{statusText}</div>}
+        {errorText && <StatusBox tone="danger" style={styles.infoBox}>{errorText}</StatusBox>}
+        {statusText && <StatusBox tone="success" style={styles.smallMutedText}>{statusText}</StatusBox>}
       </div>
 
       <div style={{ marginTop: 16 }}>
@@ -549,8 +558,8 @@ export default function ProfileMembersPanel({
         <div style={styles.l2Name}>Zaproś osobę</div>
 
         {canInvite ? (
-          <div style={{ display: 'grid', gap: 10, marginTop: 10 }}>
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'end' }}>
+          <SettingsSection data-profile-invite-section="true" style={{ display: 'grid', gap: 10, marginTop: 10 }}>
+            <ActionRow style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'end' }}>
               <label style={{ ...styles.sortLabel, minWidth: 260 }}>
                 Email osoby zapraszanej
                 <input
@@ -570,10 +579,10 @@ export default function ProfileMembersPanel({
               >
                 {isInvitationWorking ? 'Tworzenie...' : 'Zaproś osobę'}
               </button>
-            </div>
+            </ActionRow>
 
             {inviteLink && (
-              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+              <ActionRow style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
                 <input style={{ ...styles.input, flex: '1 1 320px' }} value={inviteLink} readOnly />
                 <button
                   type="button"
@@ -582,12 +591,12 @@ export default function ProfileMembersPanel({
                 >
                   Kopiuj
                 </button>
-              </div>
+              </ActionRow>
             )}
 
-            {invitationStatusText && <div style={styles.smallMutedText}>{invitationStatusText}</div>}
-            {invitationErrorText && <div style={styles.infoBox}>{invitationErrorText}</div>}
-          </div>
+            {invitationStatusText && <StatusBox tone="success" style={styles.smallMutedText}>{invitationStatusText}</StatusBox>}
+            {invitationErrorText && <StatusBox tone="danger" style={styles.infoBox}>{invitationErrorText}</StatusBox>}
+          </SettingsSection>
         ) : (
           <div style={{ ...styles.smallMutedText, marginTop: 8 }}>
             Zaproszenia może tworzyć właściciel profilu.
@@ -595,7 +604,7 @@ export default function ProfileMembersPanel({
         )}
       </div>
 
-      <section
+      <DangerZone
         style={{
           marginTop: 22,
           paddingTop: 16,
@@ -632,9 +641,9 @@ export default function ProfileMembersPanel({
             }}
           >
             {isOwnerWithOtherMembers && (
-              <div style={styles.infoBox}>
+              <StatusBox tone="danger" style={styles.infoBox}>
                 Przed usunięciem konta przekaż rolę ownera innemu członkowi profilu.
-              </div>
+              </StatusBox>
             )}
 
             {isCurrentUserMember && (
@@ -646,10 +655,10 @@ export default function ProfileMembersPanel({
 
             {isSoleOwner && (
               <>
-                <div style={styles.infoBox}>
+                <StatusBox tone="danger" style={styles.infoBox}>
                   Jesteś jedynym członkiem tego profilu. Usunięcie konta usunie również profil
                   budżetu oraz dane powiązane z tym profilem.
-                </div>
+                </StatusBox>
                 <label style={styles.sortLabel}>
                   Wpisz USUŃ KONTO
                   <input
@@ -678,10 +687,10 @@ export default function ProfileMembersPanel({
               </button>
             )}
 
-            {deleteAccountStatusText && <div style={styles.infoBox}>{deleteAccountStatusText}</div>}
+            {deleteAccountStatusText && <StatusBox tone="danger" style={styles.infoBox}>{deleteAccountStatusText}</StatusBox>}
           </div>
         )}
-      </section>
+      </DangerZone>
     </section>
   )
 }

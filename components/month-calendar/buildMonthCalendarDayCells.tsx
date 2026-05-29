@@ -13,6 +13,7 @@ import {
   calendarExpandBadgeStyle,
 } from './monthCalendarStyles'
 import { HeatmapMode, MonthCalendarPanelProps } from './monthCalendarTypes'
+import { CalendarCell } from '../reminder-calendar/reminderCalendarPrimitives'
 
 type DayStats = Record<string, { count: number; rawSum: number; signedSum: number }>
 
@@ -119,10 +120,19 @@ export const buildMonthCalendarDayCells = ({
       }
     }
 
+    const cellState = isBeforeBudgetStart
+      ? 'disabled'
+      : isFuture
+        ? 'future'
+        : isActive
+          ? 'selected'
+          : 'default'
+
     dayCells.push(
-      <button
+      <CalendarCell
         key={dayKey}
         type="button"
+        state={cellState}
         style={cellStyle}
         disabled={isBeforeBudgetStart}
         onClick={() => setSelectedDay(dayKey)}
@@ -187,7 +197,7 @@ export const buildMonthCalendarDayCells = ({
         ) : (
           <div style={{ ...calendarDayMetaStyle, color: dynamicTextColor }}>Brak wpisów</div>
         )}
-      </button>
+      </CalendarCell>
     )
   }
 

@@ -1,4 +1,5 @@
 import { CSSProperties } from 'react'
+import { uiZIndex } from '../../lib/uiFoundation'
 
 export const containerStyle: CSSProperties = {
   width: '100%',
@@ -38,7 +39,7 @@ export const popoverStyle: CSSProperties = {
   borderRadius: 8,
   background: '#ffffff',
   boxShadow: '0 16px 36px rgba(15, 23, 42, 0.16)',
-  zIndex: 3200,
+  zIndex: uiZIndex.mobileCritical,
 }
 
 export const panelStyle: CSSProperties = {
@@ -91,7 +92,7 @@ export const progressOuterStyle: CSSProperties = {
 export const modalOverlayStyle: CSSProperties = {
   position: 'fixed',
   inset: 0,
-  zIndex: 1000,
+  zIndex: uiZIndex.modalBase,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',

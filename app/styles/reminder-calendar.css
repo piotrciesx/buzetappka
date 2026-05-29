@@ -1,0 +1,173 @@
+[data-reminder-card="true"],
+[data-calendar-surface="true"],
+[data-calendar-entry-row="true"],
+[data-calendar-legend="true"] {
+  min-width: 0;
+  border: 1px solid var(--ui-glass-border-strong);
+  border-radius: var(--ui-radius-lg);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--ui-color-text);
+}
+
+[data-reminder-card="true"] {
+  display: grid;
+  gap: var(--ui-space-4);
+  padding: var(--ui-space-5);
+}
+
+[data-reminder-card="true"][data-reminder-tone="warning"] {
+  border-color: rgba(251, 191, 36, 0.56);
+  background: rgba(255, 251, 235, 0.78);
+  color: var(--ui-color-warning);
+}
+
+[data-reminder-card="true"][data-reminder-tone="danger"] {
+  border-color: var(--ui-surface-border-danger);
+  background: var(--ui-surface-status-danger);
+  color: var(--ui-color-danger);
+}
+
+[data-reminder-status-badge="true"] {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  min-height: var(--ui-badge-height-sm);
+  width: fit-content;
+  border: 1px solid var(--ui-surface-border-info);
+  border-radius: var(--ui-badge-radius);
+  padding: 3px 8px;
+  background: rgba(239, 246, 255, 0.74);
+  color: var(--ui-color-info);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+[data-reminder-status-badge="true"][data-reminder-tone="success"] {
+  border-color: rgba(134, 239, 172, 0.72);
+  background: rgba(240, 253, 244, 0.78);
+  color: var(--ui-color-success);
+}
+
+[data-reminder-status-badge="true"][data-reminder-tone="warning"] {
+  border-color: rgba(251, 191, 36, 0.64);
+  background: rgba(255, 251, 235, 0.78);
+  color: var(--ui-color-warning);
+}
+
+[data-reminder-status-badge="true"][data-reminder-tone="danger"] {
+  border-color: var(--ui-surface-border-danger);
+  background: var(--ui-surface-status-danger);
+  color: var(--ui-color-danger);
+}
+
+[data-reminder-action-row="true"] {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-4);
+}
+
+[data-reminder-popover="true"],
+[data-reminder-details-modal="true"],
+[data-month-calendar-settings-panel="true"] {
+  z-index: var(--ui-z-popover);
+}
+
+[data-calendar-surface="true"] {
+  display: grid;
+  gap: var(--ui-space-5);
+  margin-bottom: var(--ui-space-8);
+  padding: var(--ui-space-6);
+  border-radius: var(--ui-panel-radius);
+  background: var(--ui-glass-surface);
+  box-shadow: var(--ui-shadow-card);
+}
+
+[data-calendar-cell="true"] {
+  min-width: 0;
+  min-height: 70px;
+  border-radius: var(--ui-radius-md);
+  transition:
+    border-color var(--ui-motion-fast) var(--ui-motion-ease-standard),
+    box-shadow var(--ui-motion-fast) var(--ui-motion-ease-standard);
+}
+
+[data-calendar-cell="true"]:focus-visible {
+  border-color: var(--ui-control-focus-border) !important;
+  box-shadow: var(--ui-control-focus-ring) !important;
+  outline: none;
+}
+
+[data-calendar-cell="true"][data-calendar-cell-state="selected"] {
+  border-color: var(--ui-color-focus-border) !important;
+}
+
+[data-calendar-cell="true"][data-calendar-cell-state="future"],
+[data-calendar-cell="true"][data-calendar-cell-state="disabled"] {
+  color: var(--ui-color-text-muted);
+}
+
+[data-calendar-cell="true"][data-calendar-cell-state="excluded"] {
+  border-style: dashed !important;
+}
+
+[data-calendar-legend="true"] {
+  display: grid;
+  gap: var(--ui-space-4);
+  padding: var(--ui-space-5);
+  background: rgba(248, 250, 252, 0.72);
+}
+
+[data-heatmap-scale="true"] {
+  width: 100%;
+  height: 10px;
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-pill);
+  background:
+    linear-gradient(90deg, rgb(248, 187, 176) 0%, rgb(252, 235, 174) 50%, rgb(170, 221, 188) 100%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.65);
+}
+
+[data-calendar-entry-row="true"] {
+  display: grid;
+  gap: var(--ui-space-4);
+  padding: var(--ui-space-6);
+  background: var(--ui-surface-card);
+}
+
+[data-calendar-entry-row="true"] [data-reminder-action-row="true"],
+[data-calendar-entry-actions="true"] {
+  margin-top: var(--ui-space-5);
+}
+
+[data-calendar-dayless-section="true"] {
+  margin-top: var(--ui-space-9);
+  border-top: 1px solid var(--ui-surface-border-default);
+  padding-top: var(--ui-space-8);
+}
+
+[data-calendar-dayless-summary="true"] {
+  border: 1px solid var(--ui-glass-border-strong);
+  border-radius: var(--ui-radius-lg);
+  background: rgba(248, 250, 252, 0.72);
+}
+
+@media (max-width: 640px) {
+  [data-reminder-action-row="true"] {
+    align-items: stretch;
+  }
+
+  [data-reminder-action-row="true"] > button {
+    min-height: 36px;
+  }
+
+  [data-calendar-cell="true"] {
+    min-height: 64px;
+  }
+
+  [data-calendar-entry-row="true"] {
+    padding: var(--ui-space-5);
+  }
+}

@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Category } from './budgetPageTypes'
 import { sortCategoriesForDisplay } from './budgetPageHelpers'
 import { isCategoryVisibleInMonth } from './categoryUtils'
+import { getBudgetRootCategoryIds } from './transactionDomain'
 
 type UseBudgetCategoryTreeDataParams = {
   categories: Category[]
@@ -20,13 +21,12 @@ export function useBudgetCategoryTreeData({
     return visibleCategories.filter((category) => category.level === 1)
   }, [visibleCategories])
 
-  const expenseLevel1Id = useMemo(() => {
-    return level1.find((category) => category.name.trim().toLowerCase() === 'wydatki')?.id || null
+  const rootCategoryIds = useMemo(() => {
+    return getBudgetRootCategoryIds(level1)
   }, [level1])
 
-  const incomeLevel1Id = useMemo(() => {
-    return level1.find((category) => category.name.trim().toLowerCase() === 'przychody')?.id || null
-  }, [level1])
+  const expenseLevel1Id = rootCategoryIds.expenseLevel1Id
+  const incomeLevel1Id = rootCategoryIds.incomeLevel1Id
 
   const sortedLevel1 = useMemo(() => {
     return sortCategoriesForDisplay(level1)

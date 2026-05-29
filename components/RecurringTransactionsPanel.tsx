@@ -2,7 +2,12 @@
 
 import { useMemo, useState } from 'react'
 import { RecurringTransaction, Transaction } from '../lib/budgetPageTypes'
-import { getRecurringEffectiveStatus } from '../lib/recurringTransactions'
+import {
+  getRecurringLifecycleEffectiveStatus,
+  getReminderMonthStatus,
+  isReminderMonthHandled,
+} from '../lib/recurringTransactions'
+import { isTransactionInMonth } from '../lib/transactionDomain'
 import RecurringTransactionCard from './recurring-transactions/RecurringTransactionCard'
 import RecurringTransactionForm from './recurring-transactions/RecurringTransactionForm'
 import {
@@ -27,6 +32,11 @@ import {
   RecurringTransactionFormState,
   RecurringTransactionsPanelProps,
 } from './recurring-transactions/recurringTransactionsPanelTypes'
+import {
+  CalendarSurface,
+  ReminderActionRow,
+  ReminderStatusBadge,
+} from './reminder-calendar/reminderCalendarPrimitives'
 
 export default function RecurringTransactionsPanel(props: RecurringTransactionsPanelProps) {
   const {
@@ -34,6 +44,7 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
     isSelectedMonthLocked,
     recurringTransactions,
     recurringExecutions,
+    recurringReminderMonthStatuses,
     transactions,
     categoriesById,
     paymentSources,
@@ -52,6 +63,7 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
   const linkedTransactionsByReminderId = useMemo(() => {
     return transactions.reduce<Record<string, Transaction[]>>((acc, transaction) => {
       const reminderId = transaction.recurring_transaction_id
+      if (transaction.is_deleted === true) return acc
       if (!reminderId) return acc
       acc[reminderId] = [...(acc[reminderId] || []), transaction]
       return acc
@@ -60,24 +72,47 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
 
   const hasLinkedTransactionInMonth = (recurringId: string) =>
     Boolean(
-      linkedTransactionsByReminderId[recurringId]?.some(
-        (transaction) => transaction.date.slice(0, 7) === selectedMonth
+      linkedTransactionsByReminderId[recurringId]?.some((transaction) =>
+        isTransactionInMonth(transaction, selectedMonth)
       )
     )
 
+  const getReminderStateForSelectedMonth = (recurring: RecurringTransaction) =>
+    getReminderMonthStatus({
+      recurring,
+      monthText: selectedMonth,
+      monthStatuses: recurringReminderMonthStatuses,
+      executions: recurringExecutions,
+      transactions,
+    })
+
   const activeRecurring = useMemo(() => {
     return recurringTransactions.filter(
-      (item) => getRecurringEffectiveStatus(item, recurringExecutions, selectedMonth) === 'active'
+      (item) =>
+        getRecurringLifecycleEffectiveStatus({
+          recurring: item,
+          executions: recurringExecutions,
+          monthStatuses: recurringReminderMonthStatuses,
+          transactions,
+          referenceMonth: selectedMonth,
+        }) === 'active' &&
+        !isReminderMonthHandled(getReminderStateForSelectedMonth(item))
     )
-  }, [recurringExecutions, recurringTransactions, selectedMonth])
+  }, [recurringExecutions, recurringReminderMonthStatuses, recurringTransactions, selectedMonth, transactions])
 
   const archivedRecurring = useMemo(() => {
     return recurringTransactions.filter(
-      (item) => getRecurringEffectiveStatus(item, recurringExecutions, selectedMonth) !== 'active'
+      (item) =>
+        getRecurringLifecycleEffectiveStatus({
+          recurring: item,
+          executions: recurringExecutions,
+          monthStatuses: recurringReminderMonthStatuses,
+          transactions,
+          referenceMonth: selectedMonth,
+        }) !== 'active' ||
+        isReminderMonthHandled(getReminderStateForSelectedMonth(item))
     )
-  }, [recurringExecutions, recurringTransactions, selectedMonth])
-
-  const remainingActiveRecurring: RecurringTransaction[] = []
+  }, [recurringExecutions, recurringReminderMonthStatuses, recurringTransactions, selectedMonth, transactions])
 
   const resetForm = () => {
     setFormState(getInitialFormState())
@@ -157,7 +192,9 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
       selectedMonth={selectedMonth}
       isSelectedMonthLocked={isSelectedMonthLocked}
       recurringExecutions={recurringExecutions}
+      recurringReminderMonthStatuses={recurringReminderMonthStatuses}
       linkedTransactions={linkedTransactionsByReminderId[recurring.id] || []}
+      transactions={transactions}
       hasLinkedTransactionInMonth={hasLinkedTransactionInMonth(recurring.id)}
       categoriesById={categoriesById}
       paymentSources={paymentSources}
@@ -170,10 +207,10 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
   )
 
   return (
-    <section style={panelStyle}>
+    <CalendarSurface data-recurring-panel="true" style={panelStyle}>
       <style>{responsiveStyle}</style>
 
-      <div style={introRowStyle}>
+      <ReminderActionRow style={introRowStyle}>
         <p style={mutedTextStyle}>
           Przypomnienie nie jest wpisem. Pomaga podjąć decyzję w danym miesiącu: dodać wpis albo
           zamknąć przypomnienie jako przeczytane.
@@ -185,13 +222,13 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
         >
           {isFormOpen ? 'Schowaj formularz' : 'Dodaj przypomnienie'}
         </button>
-      </div>
+      </ReminderActionRow>
 
       {isSelectedMonthLocked && (
-        <div style={warningStyle}>
+        <ReminderStatusBadge tone="warning" style={warningStyle}>
           Miesiąc jest zamknięty, więc dodawanie wpisów z przypomnień jest niedostępne. Podgląd
           aktywnych i archiwalnych przypomnień nadal działa.
-        </div>
+        </ReminderStatusBadge>
       )}
 
       {isFormOpen && (
@@ -216,19 +253,12 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
         )}
       </section>
 
-      {false && remainingActiveRecurring.length > 0 && (
-        <section style={listStyle}>
-          <div style={sectionTitleStyle}>Pozostałe przypomnienia</div>
-          {remainingActiveRecurring.map((recurring) => renderReminderCard(recurring, 'active'))}
-        </section>
-      )}
-
       {archivedRecurring.length > 0 && (
         <section style={listStyle}>
           <div style={sectionTitleStyle}>Archiwum</div>
           {archivedRecurring.map((recurring) => renderReminderCard(recurring, 'archived'))}
         </section>
       )}
-    </section>
+    </CalendarSurface>
   )
 }

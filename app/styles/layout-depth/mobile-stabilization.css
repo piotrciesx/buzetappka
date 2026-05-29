@@ -83,7 +83,7 @@
   }
 
   [data-budget-sidebar="true"] {
-    z-index: 2400 !important;
+    z-index: var(--ui-z-mobile-panel) !important;
     height: var(--mobile-nav-height) !important;
     padding-bottom: max(7px, var(--mobile-safe-bottom)) !important;
   }
@@ -225,13 +225,13 @@
   }
 
   [data-transaction-modal-overlay="true"] {
-    z-index: 3100 !important;
+    z-index: var(--ui-z-mobile-popover) !important;
   }
 
   [data-calendar-modal-overlay="true"],
   [data-budget-limit-modal-overlay="true"],
   [data-draft-prompt-overlay="true"] {
-    z-index: 3200 !important;
+    z-index: var(--ui-z-mobile-critical) !important;
   }
 
   [data-transaction-modal="true"],
@@ -257,7 +257,7 @@
   [data-transaction-modal-title="true"] {
     position: sticky !important;
     top: -12px !important;
-    z-index: 3 !important;
+    z-index: var(--ui-z-local-above) !important;
     padding: 8px 0 !important;
     margin: -4px 0 4px !important;
     background: rgba(255, 255, 255, 0.96) !important;

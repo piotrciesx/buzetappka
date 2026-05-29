@@ -10,6 +10,7 @@ export type BudgetPageMainPanelsPropsContext = Record<string, any>
 export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsContext): ComponentProps<typeof BudgetPageMainPanels> {
   const {
     activeTransactionsById,
+    activeScopeTransactions,
     activeUtilityPanel,
     addableTransactionCategoryIds,
     applyDraftToTransactionCreator,
@@ -51,6 +52,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     financialGoalMonthConfigs,
     financialGoalPriorities,
     financialGoals,
+    excludedMonthsSet,
     formatDraftUpdatedAt,
     generatedForDate,
     getAmountNumber,
@@ -330,7 +332,9 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
           selectedMonth,
           categories,
           categoriesById,
-          transactions: scopedTransactions,
+          transactions: Array.isArray(activeScopeTransactions)
+            ? activeScopeTransactions
+            : scopedTransactions,
           trashedTransactions,
           transactionPaymentSplitsMap: isPaymentSourcesModuleEnabled ? transactionPaymentSplitsMap : {},
           importableCategoryIds: addableTransactionCategoryIds,
@@ -411,7 +415,11 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
           goals: financialGoals,
           goalPriorities: financialGoalPriorities,
           goalMonthConfigs: financialGoalMonthConfigs,
-          transactions: scopedTransactions,
+          transactions: Array.isArray(activeScopeTransactions)
+            ? activeScopeTransactions
+            : scopedTransactions,
+          budgetStartDate,
+          excludedMonthsSet,
           lockedMonthsSet,
           getSignedAmountForTransaction,
           onSaveGoal: saveFinancialGoal,
@@ -508,6 +516,8 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
           openLevel2Ids,
           openLevel3Ids,
           selectedMonth,
+          profileId,
+          userId,
           budgetStartDate,
           isSelectedMonthLocked,
           canUseMonthCalendar: isMonthCalendarModuleEnabled,

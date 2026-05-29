@@ -13,6 +13,7 @@ import { normalizeDayInput } from '../../lib/dateUtils'
 import type { DescriptionSuggestion } from '../../lib/suggestionUtils'
 import { splitTagInput } from '../../lib/tagUtils'
 import type { PaymentSplitInput } from '../../lib/paymentSplitUtils'
+import { uiZIndex } from '../../lib/uiFoundation'
 
 const inlineDescriptionFieldWrapStyle = {
   position: 'relative' as const,
@@ -24,7 +25,7 @@ const suggestionsDropdownStyle = {
   top: 'calc(100% + 6px)',
   left: 0,
   right: 0,
-  zIndex: 20020,
+  zIndex: uiZIndex.categoryAutocomplete,
   background: '#ffffff',
   border: '1px solid #d1d5db',
   borderRadius: 12,

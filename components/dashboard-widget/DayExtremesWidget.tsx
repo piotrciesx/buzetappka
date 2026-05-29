@@ -5,6 +5,7 @@ import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
 import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
 import { getExistingDaysInMonth } from '../../lib/dateUtils'
+import { getTransactionDay, getTransactionMonth, isActiveTransaction } from '../../lib/transactionDomain'
 import type { DashboardWidgetPixelRect } from './dashboardWidgetTileTypes'
 import { GREEN, RED, SOFT_BORDER, SOFT_TEXT } from './dashboardWidgetTileStyles'
 import { clampPercent, formatMoney } from './dashboardWidgetTileUtils'
@@ -141,10 +142,10 @@ export default function DayExtremesWidget({
   const daysMap: Record<number, DayStats> = {}
 
   transactions.forEach((t) => {
-    if (t.is_deleted || !t.date.startsWith(selectedMonth)) return
+    if (!isActiveTransaction(t) || getTransactionMonth(t) !== selectedMonth) return
 
-    const day = Number(t.date.slice(8, 10))
-    if (day < 1 || day > existingDays) return
+    const day = getTransactionDay(t)
+    if (day === null || day < 1 || day > existingDays) return
 
     if (!daysMap[day]) {
       daysMap[day] = { day, income: 0, expense: 0, balance: 0 }
@@ -167,12 +168,20 @@ export default function DayExtremesWidget({
     return <div style={emptyStyle}>Brak wpisów w tym miesiącu.</div>
   }
 
-  const maxIncomeDay = [...days].sort((a, b) => b.income - a.income)[0]
-  const maxExpenseDay = [...days].sort((a, b) => b.expense - a.expense)[0]
+  let maxIncomeDay = days[0]
+  let maxExpenseDay = days[0]
 
-  const topDays = [...days]
-    .sort((a, b) => Math.abs(b.balance) - Math.abs(a.balance))
-    .slice(0, 4)
+  days.forEach((day) => {
+    if (day.income > maxIncomeDay.income) {
+      maxIncomeDay = day
+    }
+
+    if (day.expense > maxExpenseDay.expense) {
+      maxExpenseDay = day
+    }
+  })
+
+  const topDays = [...days].sort((a, b) => Math.abs(b.balance) - Math.abs(a.balance)).slice(0, 4)
 
   const maxValue = Math.max(1, ...topDays.map((d) => Math.abs(d.balance)))
 

@@ -1,6 +1,14 @@
 import type { Category, Transaction } from '../../lib/budgetPageTypes'
+import { getIncludedMonthRange, shiftMonth } from '../../lib/dashboardStatsHelpers'
 import { getUniqueCategoryLabel } from '../../lib/categoryUtils'
-import { getExistingDaysInMonth } from '../../lib/dateUtils'
+import { getDaysInMonth, getExistingDaysInMonth } from '../../lib/dateUtils'
+import {
+  getTransactionDay,
+  getTransactionMonth,
+  isActiveTransaction,
+  isDaylessTransaction,
+  isTransactionInMonth,
+} from '../../lib/transactionDomain'
 import { GREEN, MUTED, RED } from './dashboardWidgetTileStyles'
 import { formatPercent } from './dashboardWidgetTileUtils'
 
@@ -34,71 +42,20 @@ export type LeakMetrics = {
   categories: CategoryLeak[]
 }
 
-function getDayFromDate(date: string) {
-  const day = Number(date.slice(8, 10))
-
-  return Number.isFinite(day) ? day : 0
-}
-
-function getDaysInCalendarMonth(month: string) {
-  const year = Number(month.slice(0, 4))
-  const monthIndex = Number(month.slice(5, 7))
-
-  if (!Number.isFinite(year) || !Number.isFinite(monthIndex)) {
-    return 0
-  }
-
-  return new Date(year, monthIndex, 0).getDate()
-}
-
-function getPreviousMonthText(month: string) {
-  const year = Number(month.slice(0, 4))
-  const monthIndex = Number(month.slice(5, 7))
-
-  if (!Number.isFinite(year) || !Number.isFinite(monthIndex)) {
-    return month
-  }
-
-  const date = new Date(year, monthIndex - 2, 1)
-  const nextYear = date.getFullYear()
-  const nextMonth = String(date.getMonth() + 1).padStart(2, '0')
-
-  return `${nextYear}-${nextMonth}`
-}
-
 function getPreviousMonths(selectedMonth: string, excludedMonthsSet: Set<string>, limit: number) {
-  const months: string[] = []
-  let cursor = getPreviousMonthText(selectedMonth)
-
-  while (months.length < limit) {
-    if (!excludedMonthsSet.has(cursor)) {
-      months.push(cursor)
-    }
-
-    cursor = getPreviousMonthText(cursor)
-  }
-
-  return months
-}
-
-function getTransactionMonth(transaction: Transaction) {
-  return transaction.date.slice(0, 7)
-}
-
-function isTransactionWithoutDay(transaction: Transaction) {
-  return Boolean((transaction as Transaction & { day_is_null?: boolean | null }).day_is_null)
+  return getIncludedMonthRange(shiftMonth(selectedMonth, -1), limit, excludedMonthsSet)
 }
 
 function shouldIncludeTransactionToDay(transaction: Transaction, month: string, dayLimit: number) {
-  if (!transaction.date.startsWith(month)) {
+  if (!isTransactionInMonth(transaction, month)) {
     return false
   }
 
-  if (isTransactionWithoutDay(transaction)) {
+  if (isDaylessTransaction(transaction)) {
     return true
   }
 
-  const day = getDayFromDate(transaction.date)
+  const day = getTransactionDay(transaction) || 0
 
   return day >= 1 && day <= dayLimit
 }
@@ -153,7 +110,7 @@ export function buildMetrics({
   getSignedAmountForTransaction: (transaction: Transaction) => number
 }): LeakMetrics {
   const existingDays = getExistingDaysInMonth(selectedMonth)
-  const daysInSelectedMonth = getDaysInCalendarMonth(selectedMonth)
+  const daysInSelectedMonth = getDaysInMonth(selectedMonth)
   const checkedDay = Math.max(
     1,
     Math.min(existingDays || daysInSelectedMonth, daysInSelectedMonth || existingDays || 1)
@@ -167,7 +124,7 @@ export function buildMetrics({
   let monthsCompared = 0
 
   transactions.forEach((transaction) => {
-    if (transaction.is_deleted) {
+    if (!isActiveTransaction(transaction)) {
       return
     }
 
@@ -189,13 +146,13 @@ export function buildMetrics({
   })
 
   baselineMonths.forEach((month) => {
-    const daysInMonth = getDaysInCalendarMonth(month)
+    const daysInMonth = getDaysInMonth(month)
     const dayLimit = Math.max(1, Math.min(checkedDay, daysInMonth || checkedDay))
     const monthTotals: Record<string, number> = {}
     let monthTotal = 0
 
     transactions.forEach((transaction) => {
-      if (transaction.is_deleted) {
+      if (!isActiveTransaction(transaction)) {
         return
       }
 

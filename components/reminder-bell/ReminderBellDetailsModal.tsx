@@ -15,6 +15,10 @@ import {
   modalStyle,
   progressOuterStyle,
 } from './reminderBellStyles'
+import {
+  CalendarEntryRow,
+  ReminderActionRow,
+} from '../reminder-calendar/reminderCalendarPrimitives'
 
 type ScheduleInfo = {
   scheduledDone: number
@@ -63,9 +67,9 @@ export default function ReminderBellDetailsModal({
   getTransactionCategoryName,
 }: Props) {
   return (
-        <div style={modalOverlayStyle} onClick={() => setDetailsReminderId(null)}>
-          <div style={modalStyle} onClick={(event) => event.stopPropagation()}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+        <div data-reminder-details-overlay="true" style={modalOverlayStyle} onClick={() => setDetailsReminderId(null)}>
+          <div data-reminder-details-modal="true" style={modalStyle} onClick={(event) => event.stopPropagation()}>
+            <ReminderActionRow style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
               <div>
                 <div style={styles.sectionTitle}>{selectedDetailsReminder.name}</div>
                 <div style={styles.emptyText}>
@@ -80,7 +84,7 @@ export default function ReminderBellDetailsModal({
               >
                 Zamknij
               </button>
-            </div>
+            </ReminderActionRow>
 
             <section style={detailSectionStyle}>
               <div style={detailSectionTitleStyle}>Podstawowe informacje</div>
@@ -242,12 +246,12 @@ export default function ReminderBellDetailsModal({
               ) : (
                 <div style={{ marginTop: 8 }}>
                   {selectedDetailsLinkedTransactions.map((transaction) => (
-                    <div key={transaction.id} style={linkedTransactionRowStyle}>
+                    <CalendarEntryRow key={transaction.id} style={linkedTransactionRowStyle}>
                       <div>{transaction.date}</div>
                       <div>{transaction.description || 'bez opisu'}</div>
                       <div>{formatAmount(transaction.amount)}</div>
                       <div>{getTransactionCategoryName(transaction)}</div>
-                    </div>
+                    </CalendarEntryRow>
                   ))}
                 </div>
               )}

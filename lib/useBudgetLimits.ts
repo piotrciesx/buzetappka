@@ -9,6 +9,8 @@ import type {
   Transaction,
 } from './budgetPageTypes'
 import { getDaysInMonth, getPrevMonthText } from './dateUtils'
+import { getEffectiveTransactionScope } from './transactionScope'
+import { getTransactionMonth } from './transactionDomain'
 import { supabase } from './supabaseClient'
 
 export type SaveBudgetLimitInput = {
@@ -33,10 +35,11 @@ export type BudgetLimitUsageState = {
 type UseBudgetLimitsParams = {
   profileId: string
   selectedMonth: string
+  isEnabled?: boolean
   categoriesById: Record<string, Category>
   expenseLevel1Id: string | null
   transactions: Transaction[]
-  excludedMonthsSet: Set<string>
+  budgetStartDate?: string | null
   getSignedAmountForTransaction: (transaction: Transaction) => number
 }
 
@@ -185,6 +188,7 @@ export const getBudgetLimitUsageAmount = ({
   categoriesById,
   expenseLevel1Id,
   transactions,
+  budgetStartDate,
   getSignedAmountForTransaction,
 }: {
   limit: BudgetLimit
@@ -192,6 +196,7 @@ export const getBudgetLimitUsageAmount = ({
   categoriesById: Record<string, Category>
   expenseLevel1Id: string | null
   transactions: Transaction[]
+  budgetStartDate?: string | null
   getSignedAmountForTransaction: (transaction: Transaction) => number
 }) => {
   const categoryIds = getLimitCategoryIds(limit, categoriesById, expenseLevel1Id)
@@ -200,12 +205,13 @@ export const getBudgetLimitUsageAmount = ({
     return 0
   }
 
-  return transactions.reduce((sum, transaction) => {
-    if (transaction.is_deleted) {
-      return sum
-    }
+  const scopedTransactions = getEffectiveTransactionScope(transactions, {
+    mode: 'limits',
+    budgetStartDate,
+  })
 
-    if (!transaction.date.startsWith(selectedMonth)) {
+  return scopedTransactions.reduce((sum, transaction) => {
+    if (getTransactionMonth(transaction) !== selectedMonth) {
       return sum
     }
 
@@ -222,10 +228,11 @@ export const getBudgetLimitUsageAmount = ({
 export function useBudgetLimits({
   profileId,
   selectedMonth,
+  isEnabled = true,
   categoriesById,
   expenseLevel1Id,
   transactions,
-  excludedMonthsSet,
+  budgetStartDate,
   getSignedAmountForTransaction,
 }: UseBudgetLimitsParams) {
   const [limits, setLimits] = useState<BudgetLimit[]>([])
@@ -237,6 +244,12 @@ export function useBudgetLimits({
   }, [profileId])
 
   const loadBudgetLimits = useCallback(async () => {
+    if (!isEnabled) {
+      setLimits([])
+      setIsLoading(false)
+      return
+    }
+
     setIsLoading(true)
 
     try {
@@ -254,15 +267,15 @@ export function useBudgetLimits({
     } finally {
       setIsLoading(false)
     }
-  }, [profileId])
+  }, [isEnabled, profileId])
 
   const activeLimits = useMemo(() => {
-    if (excludedMonthsSet.has(selectedMonth)) {
+    if (!isEnabled) {
       return []
     }
 
     return limits.filter((limit) => isBudgetLimitActiveInMonth(limit, selectedMonth))
-  }, [excludedMonthsSet, limits, selectedMonth])
+  }, [isEnabled, limits, selectedMonth])
 
   const monthProgressPercent = useMemo(
     () => getBudgetLimitMonthProgressPercent(selectedMonth),
@@ -283,12 +296,14 @@ export function useBudgetLimits({
         categoriesById,
         expenseLevel1Id,
         transactions,
+        budgetStartDate,
         getSignedAmountForTransaction,
       }),
     [
       categoriesById,
       expenseLevel1Id,
       getSignedAmountForTransaction,
+      budgetStartDate,
       selectedMonth,
       transactions,
     ]
@@ -329,6 +344,10 @@ export function useBudgetLimits({
 
   const addBudgetLimit = useCallback(
     async (input: SaveBudgetLimitInput) => {
+      if (!isEnabled) {
+        return
+      }
+
       assertValidBudgetLimitProfileId(profileId)
 
       const { error } = await supabase.from('budget_limits').insert(getBudgetLimitPayload(profileId, input))
@@ -339,11 +358,15 @@ export function useBudgetLimits({
 
       await loadBudgetLimits()
     },
-    [loadBudgetLimits, profileId]
+    [isEnabled, loadBudgetLimits, profileId]
   )
 
   const updateBudgetLimit = useCallback(
     async (input: UpdateBudgetLimitInput) => {
+      if (!isEnabled) {
+        return
+      }
+
       assertValidBudgetLimitProfileId(profileId)
 
       const existingLimit = limits.find((limit) => limit.id === input.id)
@@ -390,11 +413,15 @@ export function useBudgetLimits({
 
       await loadBudgetLimits()
     },
-    [limits, loadBudgetLimits, profileId]
+    [isEnabled, limits, loadBudgetLimits, profileId]
   )
 
   const deleteBudgetLimit = useCallback(
     async (limitId: string, effectiveMonth = selectedMonth) => {
+      if (!isEnabled) {
+        return
+      }
+
       assertValidBudgetLimitProfileId(profileId)
 
       const existingLimit = limits.find((limit) => limit.id === limitId)
@@ -419,11 +446,15 @@ export function useBudgetLimits({
 
       await loadBudgetLimits()
     },
-    [limits, loadBudgetLimits, profileId, selectedMonth]
+    [isEnabled, limits, loadBudgetLimits, profileId, selectedMonth]
   )
 
   const disableBudgetLimit = useCallback(
     async (limitId: string, endMonth: string) => {
+      if (!isEnabled) {
+        return
+      }
+
       assertValidBudgetLimitProfileId(profileId)
 
       const { error } = await supabase
@@ -438,7 +469,7 @@ export function useBudgetLimits({
 
       await loadBudgetLimits()
     },
-    [loadBudgetLimits, profileId]
+    [isEnabled, loadBudgetLimits, profileId]
   )
 
   return {

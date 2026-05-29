@@ -1,4 +1,5 @@
 import type { Transaction } from '../../lib/budgetPageTypes'
+import { isTransactionInMonth as isTransactionInMonthFromDomain } from '../../lib/transactionDomain'
 export { getDaysInMonth } from '../../lib/dateUtils'
 import { GREEN, MUTED, NEUTRAL, RED } from './dashboardWidgetTileStyles'
 
@@ -54,7 +55,7 @@ export const compareTransactionsByDate = (left: Transaction, right: Transaction)
 }
 
 export const isTransactionInMonth = (transaction: Transaction, selectedMonth: string) => {
-  return transaction.date.startsWith(selectedMonth)
+  return isTransactionInMonthFromDomain(transaction, selectedMonth)
 }
 
 export const getDayFromDate = (date: string) => {

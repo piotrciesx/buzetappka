@@ -2,25 +2,26 @@
 
 import { CSSProperties } from 'react'
 import { RecurringTransaction } from '../lib/budgetPageTypes'
+import { uiOverlayPrimitives, uiSurfacePrimitives } from '../lib/uiFoundation'
 
 const overlayStyle = {
   position: 'fixed',
   inset: 0,
-  background: 'rgba(15, 23, 42, 0.4)',
+  background: uiOverlayPrimitives.modalRaised.backdrop,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  padding: 20,
-  zIndex: 1001,
+  padding: uiOverlayPrimitives.modalRaised.padding,
+  zIndex: uiOverlayPrimitives.modalRaised.layer,
 } as const
 
 const modalStyle = {
   width: 'min(560px, 100%)',
-  background: '#ffffff',
-  border: '1px solid #dbeafe',
-  borderRadius: 16,
-  boxShadow: '0 20px 40px rgba(15, 23, 42, 0.18)',
-  padding: 20,
+  background: uiSurfacePrimitives.modalSurfaceInfoBorder.background,
+  border: uiSurfacePrimitives.modalSurfaceInfoBorder.border,
+  borderRadius: uiSurfacePrimitives.modalSurfaceInfoBorder.radius,
+  boxShadow: uiSurfacePrimitives.modalSurfaceInfoBorder.shadow,
+  padding: uiSurfacePrimitives.modalSurfaceInfoBorder.padding,
 } as const
 
 type Props = {
@@ -52,10 +53,10 @@ export default function RecurringExecutionConfirmModal(props: Props) {
             <div
               key={candidate.id}
               style={{
-                border: '1px solid #e5e7eb',
-                borderRadius: 12,
-                padding: 12,
-                background: '#f8fafc',
+                border: uiSurfacePrimitives.infoBox.border,
+                borderRadius: uiSurfacePrimitives.infoBox.radius,
+                padding: uiSurfacePrimitives.infoBox.padding,
+                background: uiSurfacePrimitives.infoBox.background,
               }}
             >
               <div style={{ fontWeight: 600 }}>{candidate.name}</div>

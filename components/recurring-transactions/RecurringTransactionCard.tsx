@@ -2,13 +2,14 @@ import { CSSProperties } from 'react'
 import {
   Category,
   PaymentSource,
+  RecurringReminderMonthStatus,
   RecurringTransaction,
   RecurringTransactionExecution,
   Transaction,
 } from '../../lib/budgetPageTypes'
 import {
   getInstallmentNumberForMonth,
-  getInstallmentSummary,
+  getInstallmentLifecycleSummary,
   getMonthCycleDate,
   getRecurringDisplayLabel,
   getRecurringFrequencyLabel,
@@ -28,6 +29,11 @@ import {
   warningStyle,
 } from './recurringTransactionsPanelStyles'
 import { formatMoney } from './recurringTransactionsPanelUtils'
+import {
+  ReminderActionRow,
+  ReminderCard,
+  ReminderStatusBadge,
+} from '../reminder-calendar/reminderCalendarPrimitives'
 
 type Props = {
   recurring: RecurringTransaction
@@ -35,7 +41,9 @@ type Props = {
   selectedMonth: string
   isSelectedMonthLocked: boolean
   recurringExecutions: RecurringTransactionExecution[]
+  recurringReminderMonthStatuses: RecurringReminderMonthStatus[]
   linkedTransactions: Transaction[]
+  transactions: Transaction[]
   hasLinkedTransactionInMonth: boolean
   categoriesById: Record<string, Category>
   paymentSources: PaymentSource[]
@@ -52,7 +60,9 @@ export default function RecurringTransactionCard({
   selectedMonth,
   isSelectedMonthLocked,
   recurringExecutions,
+  recurringReminderMonthStatuses,
   linkedTransactions,
+  transactions,
   hasLinkedTransactionInMonth,
   categoriesById,
   paymentSources,
@@ -69,7 +79,13 @@ export default function RecurringTransactionCard({
   const lastLinkedTransaction = [...linkedTransactions].sort((left, right) =>
     right.date.localeCompare(left.date)
   )[0]
-  const summary = getInstallmentSummary(recurring, recurringExecutions, selectedMonth)
+  const summary = getInstallmentLifecycleSummary({
+    recurring,
+    executions: recurringExecutions,
+    monthStatuses: recurringReminderMonthStatuses,
+    transactions,
+    referenceMonth: selectedMonth,
+  })
   const installment = getInstallmentNumberForMonth(recurring, selectedMonth)
   const progress =
     recurring.kind === 'installment' && summary.totalInstallments
@@ -77,13 +93,13 @@ export default function RecurringTransactionCard({
       : 0
 
   return (
-    <div style={cardStyle}>
+    <ReminderCard style={cardStyle}>
       <div style={cardHeaderStyle}>
         <div>
           <div style={cardNameStyle}>{recurring.name}</div>
           <div style={mutedTextStyle}>{getRecurringDisplayLabel(recurring, categoriesById)}</div>
         </div>
-        <div style={{ ...styles.actions, gap: 6 }}>
+        <ReminderActionRow style={{ ...styles.actions, gap: 6 }}>
           {mode !== 'archived' && (
             <button
               type="button"
@@ -120,14 +136,14 @@ export default function RecurringTransactionCard({
               Usuń
             </button>
           )}
-        </div>
+        </ReminderActionRow>
       </div>
 
       {hasLinkedTransactionInMonth && mode === 'active' && (
-        <div style={warningStyle}>
+        <ReminderStatusBadge tone="warning" style={warningStyle}>
           W tym miesiącu istnieje już wpis powiązany z tym przypomnieniem. Możesz dodać kolejny,
           jeśli to celowe.
-        </div>
+        </ReminderStatusBadge>
       )}
 
       <div style={metaGridStyle}>
@@ -173,6 +189,6 @@ export default function RecurringTransactionCard({
           {mode === 'archived' && <div style={mutedTextStyle}>Plan ratalny zakończony.</div>}
         </div>
       )}
-    </div>
+    </ReminderCard>
   )
 }

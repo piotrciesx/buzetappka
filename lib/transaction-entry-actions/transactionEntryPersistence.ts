@@ -15,6 +15,7 @@ export const syncTransactionTags = async (
 
 export const syncTransactionPaymentSplits = async (
   supabase: SupabaseClient,
+  profileId: string,
   transactionId: string,
   amountText: string,
   paymentSourceIdValue: string,
@@ -28,6 +29,21 @@ export const syncTransactionPaymentSplits = async (
 
   if (normalizedPaymentSplit.errors.length > 0) {
     throw new Error('invalid-payment-split-total')
+  }
+
+  const { data: scopedTransaction, error: scopedTransactionError } = await supabase
+    .from('transactions')
+    .select('id')
+    .eq('id', transactionId)
+    .eq('profile_id', profileId)
+    .maybeSingle()
+
+  if (scopedTransactionError) {
+    throw scopedTransactionError
+  }
+
+  if (!scopedTransaction) {
+    throw new Error('transaction-not-in-active-profile')
   }
 
   const { error: deleteError } = await supabase

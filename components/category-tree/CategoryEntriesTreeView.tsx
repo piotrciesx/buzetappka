@@ -19,6 +19,7 @@ import {
   getDayInputFromDate,
   normalizeDayInput,
 } from '../../lib/dateUtils'
+import { isDaylessTransaction } from '../../lib/transactionDomain'
 import type {
   CategoryEntriesPopupChildGroup,
   CategoryEntriesPopupViewModel,
@@ -237,7 +238,7 @@ export default function CategoryEntriesTreeView({
     setMovingTransactionId(null)
     setMoveTargetCategoryId('')
     setEditingTransactionId(transaction.id)
-    setEditDay(getDayInputFromDate(transaction.date, selectedMonth))
+    setEditDay(isDaylessTransaction(transaction) ? '' : getDayInputFromDate(transaction.date, selectedMonth))
     setEditDescription(transaction.description || '')
     setEditAmount(String(Math.abs(getAmountNumber(transaction.amount))))
   }

@@ -1,3 +1,5 @@
+import { uiZIndex } from '../../lib/uiFoundation'
+
 export const calendarPanelStyle = {
   marginBottom: 16,
   background: '#ffffff',
@@ -102,7 +104,7 @@ export const overlayStyle = {
   alignItems: 'center',
   justifyContent: 'center',
   padding: 16,
-  zIndex: 1000,
+  zIndex: uiZIndex.modalBase,
 } as const
 
 export const modalStyle = {
@@ -260,7 +262,7 @@ export const suggestionsDropdownStyle = {
   top: 'calc(100% + 4px)',
   left: 0,
   right: 0,
-  zIndex: 20,
+  zIndex: uiZIndex.widgetDropdown,
   background: '#ffffff',
   border: '1px solid #d1d5db',
   borderRadius: 10,
@@ -316,36 +318,39 @@ export const tagRemoveButtonStyle = {
 } as const
 
 export const primaryButtonStyle = {
-  border: '1px solid #2563eb',
-  background: '#2563eb',
-  color: '#ffffff',
-  borderRadius: 10,
-  padding: '8px 10px',
+  minHeight: 'var(--ui-button-height-standard)',
+  border: '1px solid var(--ui-button-border-strong)',
+  background: 'var(--ui-button-bg)',
+  color: 'var(--ui-button-text-strong)',
+  borderRadius: 'var(--ui-button-radius)',
+  padding: 'var(--ui-button-padding-standard)',
   cursor: 'pointer',
   fontSize: 13,
   fontWeight: 600,
 } as const
 
 export const secondaryButtonStyle = {
-  border: '1px solid #d1d5db',
-  background: '#ffffff',
-  color: '#111827',
-  borderRadius: 10,
-  padding: '8px 10px',
+  minHeight: 'var(--ui-button-height-utility)',
+  border: '1px solid var(--ui-button-border)',
+  background: 'var(--ui-button-bg)',
+  color: 'var(--ui-button-text)',
+  borderRadius: 'var(--ui-button-radius)',
+  padding: 'var(--ui-button-padding-utility)',
   cursor: 'pointer',
   fontSize: 13,
-  fontWeight: 600,
+  fontWeight: 560,
 } as const
 
 export const dangerButtonStyle = {
-  border: '1px solid #fecaca',
-  background: '#fff1f2',
-  color: '#b91c1c',
-  borderRadius: 10,
-  padding: '8px 10px',
+  minHeight: 'var(--ui-button-height-utility)',
+  border: '1px solid var(--ui-button-border)',
+  background: 'var(--ui-button-bg)',
+  color: 'var(--ui-color-expense)',
+  borderRadius: 'var(--ui-button-radius)',
+  padding: 'var(--ui-button-padding-utility)',
   cursor: 'pointer',
   fontSize: 13,
-  fontWeight: 600,
+  fontWeight: 560,
 } as const
 
 export const heatmapBarStyle = {

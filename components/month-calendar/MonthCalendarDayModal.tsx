@@ -13,6 +13,10 @@ import {
   primaryButtonStyle,
 } from './monthCalendarStyles'
 import MonthCalendarTransactionList from './MonthCalendarTransactionList'
+import {
+  CalendarEntryRow,
+  ReminderActionRow,
+} from '../reminder-calendar/reminderCalendarPrimitives'
 
 type MonthCalendarDayModalProps = {
   selectedDay: string
@@ -56,7 +60,7 @@ export default function MonthCalendarDayModal({
             <div style={modalSubtitleStyle}>Podgląd i operacje dla wpisów z wybranego dnia.</div>
           </div>
 
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <ReminderActionRow style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {!isSelectedMonthLocked && onAddTransactionForDay && (
               <button
                 type="button"
@@ -73,10 +77,10 @@ export default function MonthCalendarDayModal({
             <button type="button" style={closeButtonStyle} onClick={onClose}>
               zamknij
             </button>
-          </div>
+          </ReminderActionRow>
         </div>
 
-        <div style={daySummaryCardStyle}>
+        <CalendarEntryRow style={daySummaryCardStyle}>
           <div style={styles.l2Name}>Podsumowanie dnia</div>
           <div style={{ ...calendarDayMetaStyle, marginTop: 6 }}>
             {getDayMetricLabel()}:{' '}
@@ -93,7 +97,7 @@ export default function MonthCalendarDayModal({
           <div style={{ ...calendarDayMetaStyle, marginTop: 4 }}>
             Liczba wpisów: <strong>{selectedDayTransactions.length}</strong>
           </div>
-        </div>
+        </CalendarEntryRow>
 
         {selectedDayTransactions.length === 0 ? (
           <div style={emptyDayStyle}>

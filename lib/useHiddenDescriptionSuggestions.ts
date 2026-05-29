@@ -6,8 +6,10 @@ import {
   hideDescriptionSuggestion,
   restoreHiddenDescriptionSuggestion,
 } from './suggestionUtils'
+import { getProfileStorageKey, readProfileStorageValue } from './profileStorage'
 
 type UseHiddenDescriptionSuggestionsParams = {
+  userId: string
   profileId: string
   baseDescriptionSuggestions: {
     global: DescriptionSuggestion[]
@@ -15,56 +17,81 @@ type UseHiddenDescriptionSuggestionsParams = {
   }
 }
 
+const emptyHiddenDescriptionSuggestions = (): HiddenDescriptionSuggestionSet => ({
+  global: [],
+  byCategory: {},
+})
+
+const normalizeHiddenDescriptionSuggestions = (rawValue: string | null) => {
+  if (!rawValue) {
+    return emptyHiddenDescriptionSuggestions()
+  }
+
+  try {
+    const parsedValue = JSON.parse(rawValue) as HiddenDescriptionSuggestionSet
+
+    return {
+      global: Array.isArray(parsedValue.global)
+        ? parsedValue.global.filter((item): item is string => typeof item === 'string')
+        : [],
+      byCategory:
+        parsedValue.byCategory && typeof parsedValue.byCategory === 'object'
+          ? Object.fromEntries(
+              Object.entries(parsedValue.byCategory).map(([categoryId, values]) => [
+                categoryId,
+                Array.isArray(values)
+                  ? values.filter((item): item is string => typeof item === 'string')
+                  : [],
+              ])
+            )
+          : {},
+    }
+  } catch {
+    return emptyHiddenDescriptionSuggestions()
+  }
+}
+
 export function useHiddenDescriptionSuggestions({
+  userId,
   profileId,
   baseDescriptionSuggestions,
 }: UseHiddenDescriptionSuggestionsParams) {
-  const hiddenSuggestionsStorageKey = `budget-hidden-description-suggestions-${profileId}`
+  const legacyHiddenSuggestionsStorageKey = `budget-hidden-description-suggestions-${profileId}`
+  const hiddenSuggestionsStorageKey = getProfileStorageKey({
+    userId,
+    profileId,
+    featureKey: 'hidden-description-suggestions',
+  })
 
-  const [hiddenDescriptionSuggestions, setHiddenDescriptionSuggestions] =
-    useState<HiddenDescriptionSuggestionSet>(() => {
-      if (typeof window === 'undefined') {
-        return {
-          global: [],
-          byCategory: {},
-        }
-      }
+  const readHiddenDescriptionSuggestions = useCallback(() => {
+    if (typeof window === 'undefined') {
+      return emptyHiddenDescriptionSuggestions()
+    }
 
-      try {
-        const rawValue = window.localStorage.getItem(hiddenSuggestionsStorageKey)
+    return normalizeHiddenDescriptionSuggestions(
+      readProfileStorageValue({
+        storageKey: hiddenSuggestionsStorageKey,
+        legacyStorageKeys: [legacyHiddenSuggestionsStorageKey],
+      })
+    )
+  }, [hiddenSuggestionsStorageKey, legacyHiddenSuggestionsStorageKey])
 
-        if (!rawValue) {
-          return {
-            global: [],
-            byCategory: {},
-          }
-        }
+  const [hiddenDescriptionSuggestionsState, setHiddenDescriptionSuggestionsState] = useState(() => ({
+    storageKey: hiddenSuggestionsStorageKey,
+    value: readHiddenDescriptionSuggestions(),
+  }))
+  const hiddenDescriptionSuggestions = hiddenDescriptionSuggestionsState.value
 
-        const parsedValue = JSON.parse(rawValue) as HiddenDescriptionSuggestionSet
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setHiddenDescriptionSuggestionsState({
+        storageKey: hiddenSuggestionsStorageKey,
+        value: readHiddenDescriptionSuggestions(),
+      })
+    }, 0)
 
-        return {
-          global: Array.isArray(parsedValue.global)
-            ? parsedValue.global.filter((item): item is string => typeof item === 'string')
-            : [],
-          byCategory:
-            parsedValue.byCategory && typeof parsedValue.byCategory === 'object'
-              ? Object.fromEntries(
-                  Object.entries(parsedValue.byCategory).map(([categoryId, values]) => [
-                    categoryId,
-                    Array.isArray(values)
-                      ? values.filter((item): item is string => typeof item === 'string')
-                      : [],
-                  ])
-                )
-              : {},
-        }
-      } catch {
-        return {
-          global: [],
-          byCategory: {},
-        }
-      }
-    })
+    return () => window.clearTimeout(timeoutId)
+  }, [hiddenSuggestionsStorageKey, readHiddenDescriptionSuggestions])
 
   const descriptionSuggestions = useMemo(
     () =>
@@ -73,7 +100,10 @@ export function useHiddenDescriptionSuggestions({
   )
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
+    if (
+      typeof window === 'undefined' ||
+      hiddenDescriptionSuggestionsState.storageKey !== hiddenSuggestionsStorageKey
+    ) {
       return
     }
 
@@ -81,13 +111,23 @@ export function useHiddenDescriptionSuggestions({
       hiddenSuggestionsStorageKey,
       JSON.stringify(hiddenDescriptionSuggestions)
     )
-  }, [hiddenDescriptionSuggestions, hiddenSuggestionsStorageKey])
+  }, [
+    hiddenDescriptionSuggestions,
+    hiddenDescriptionSuggestionsState.storageKey,
+    hiddenSuggestionsStorageKey,
+  ])
 
   const handleDeleteDescriptionSuggestion = useCallback(
     (categoryId: string | null | undefined, suggestion: { text: string }) => {
-      setHiddenDescriptionSuggestions((prev) =>
-        hideDescriptionSuggestion(prev, baseDescriptionSuggestions, suggestion.text, categoryId)
-      )
+      setHiddenDescriptionSuggestionsState((prev) => ({
+        ...prev,
+        value: hideDescriptionSuggestion(
+          prev.value,
+          baseDescriptionSuggestions,
+          suggestion.text,
+          categoryId
+        ),
+      }))
     },
     [baseDescriptionSuggestions]
   )
@@ -98,9 +138,10 @@ export function useHiddenDescriptionSuggestions({
         return
       }
 
-      setHiddenDescriptionSuggestions((prev) =>
-        restoreHiddenDescriptionSuggestion(prev, descriptionText, categoryId)
-      )
+      setHiddenDescriptionSuggestionsState((prev) => ({
+        ...prev,
+        value: restoreHiddenDescriptionSuggestion(prev.value, descriptionText, categoryId),
+      }))
     },
     []
   )

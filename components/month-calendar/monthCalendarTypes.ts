@@ -71,6 +71,7 @@ export type MonthCalendarPanelProps = {
   defaultHeatmapMode?: HeatmapMode
   defaultHeatmapInverted?: boolean
   heatmapStorageKey?: string
+  legacyHeatmapStorageKeys?: string[]
   showHeatmapControls?: boolean
   descriptionSuggestions: DescriptionSuggestionSet
   getPaymentSourceOptionsForCategoryId?: (

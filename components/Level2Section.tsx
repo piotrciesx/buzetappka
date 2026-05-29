@@ -30,6 +30,8 @@ export default function Level2Section(props: Props) {
     onEditBudgetLimit,
     getBudgetLimitView,
     selectedMonth,
+    profileId,
+    userId,
     budgetStartDate,
     isSelectedMonthLocked,
     canUseMonthCalendar = true,
@@ -74,6 +76,8 @@ export default function Level2Section(props: Props) {
     onHeatmapModeChange,
     onHeatmapInvertedChange,
     heatmapStorageKey,
+    legacyHeatmapStorageKeys,
+    getCalendarStorageKey,
     descriptionSuggestions,
     getPaymentSourceOptionsForCategoryId,
     getRecurringOptionsForCategoryId,
@@ -101,7 +105,11 @@ export default function Level2Section(props: Props) {
   const hasChildren = sortedLevel3Children.length > 0
   const isLevel2DragBlocked = isDragDisabled || isOpen
 
-  const sensors = usePressHoldDndSensors()
+  const sensors = usePressHoldDndSensors({
+    mouseDistance: 8,
+    touchDelay: 640,
+    touchTolerance: 10,
+  })
   const isMobileViewport = useIsMobileViewport()
 
   const hasVisibleOpenLevel3 = sortedLevel3Children.some((category) =>
@@ -216,7 +224,14 @@ export default function Level2Section(props: Props) {
   }
 
   return (
-    <div ref={setNodeRef} style={wrapStyle}>
+    <div
+      ref={setNodeRef}
+      style={wrapStyle}
+      data-category-section="true"
+      data-category-level="2"
+      data-category-open={isOpen ? 'true' : 'false'}
+      data-category-dragging={isDragging ? 'true' : 'false'}
+    >
       <Level2SectionHeader
         name={l2.name}
         iconKey={l2.icon_key}
@@ -302,6 +317,7 @@ export default function Level2Section(props: Props) {
           onHeatmapModeChange={onHeatmapModeChange}
           onHeatmapInvertedChange={onHeatmapInvertedChange}
           heatmapStorageKey={heatmapStorageKey}
+          legacyHeatmapStorageKeys={legacyHeatmapStorageKeys}
           descriptionSuggestions={descriptionSuggestions}
           getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
           transactionTagsMap={transactionTagsMap}
@@ -335,6 +351,8 @@ export default function Level2Section(props: Props) {
           l2={l2}
           inlineAddToken={inlineAddToken}
           selectedMonth={selectedMonth}
+          profileId={profileId}
+          userId={userId}
           budgetStartDate={budgetStartDate}
           isClosingAfterSelectedMonth={isClosingAfterSelectedMonth}
           isSelectedMonthLocked={isSelectedMonthLocked}
@@ -367,6 +385,7 @@ export default function Level2Section(props: Props) {
           onHeatmapModeChange={onHeatmapModeChange}
           onHeatmapInvertedChange={onHeatmapInvertedChange}
           heatmapStorageKey={heatmapStorageKey}
+          legacyHeatmapStorageKeys={legacyHeatmapStorageKeys}
           descriptionSuggestions={descriptionSuggestions}
           getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
           getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}
@@ -421,6 +440,7 @@ export default function Level2Section(props: Props) {
           heatmapInverted={heatmapInverted}
           onHeatmapModeChange={onHeatmapModeChange}
           onHeatmapInvertedChange={onHeatmapInvertedChange}
+          getCalendarStorageKey={getCalendarStorageKey}
           descriptionSuggestions={descriptionSuggestions}
           getPaymentSourceOptionsForCategoryId={getPaymentSourceOptionsForCategoryId}
           getRecurringOptionsForCategoryId={getRecurringOptionsForCategoryId}

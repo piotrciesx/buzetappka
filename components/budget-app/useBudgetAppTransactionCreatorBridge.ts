@@ -2,7 +2,13 @@
 
 import { useCallback } from 'react'
 import type { Transaction } from '../../lib/budgetPageTypes'
-import { getMonthCycleDate } from '../../lib/recurringTransactions'
+import {
+  getMonthCycleDate,
+  getNextExpectedRecurringMonth,
+  getReminderMonthStatus,
+  getReminderMonthForTransactionLink,
+  isReminderMonthHandled,
+} from '../../lib/recurringTransactions'
 import { useBudgetPageDrafts } from '../../lib/useBudgetPageDrafts'
 import { useRecurringTransactionCreator } from '../../lib/useRecurringTransactionCreator'
 import { useTransactionCreatorOpeners } from '../../lib/useTransactionCreatorOpeners'
@@ -133,17 +139,52 @@ export function useBudgetAppTransactionCreatorBridge(ctx: Params) {
         return
       }
 
+      let reminderMonth = getReminderMonthForTransactionLink({
+        transaction,
+        selectedMonth: ctx.selectedMonth,
+        hasExplicitReminderSelection: Boolean(ctx.selectedRecurringTransactionId),
+      })
+      const selectedReminder = ctx.recurringTransactions.find((item: any) => item.id === reminderId)
+
+      if (selectedReminder && ctx.selectedRecurringTransactionId) {
+        const currentState = getReminderMonthStatus({
+          recurring: selectedReminder,
+          monthText: reminderMonth,
+          monthStatuses: ctx.recurringReminderMonthStatuses,
+          executions: ctx.recurringExecutions,
+          transactions: ctx.scopedTransactions,
+        })
+
+        if (isReminderMonthHandled(currentState) && currentState.transactionId !== transaction.id) {
+          const nextMonth = getNextExpectedRecurringMonth(selectedReminder, reminderMonth)
+          const shouldUseNextMonth =
+            nextMonth &&
+            window.confirm(
+              `To przypomnienie ma już zamknięty miesiąc ${reminderMonth}. Czy zaliczyć ten wpis na miesiąc ${nextMonth}?`
+            )
+
+          if (shouldUseNextMonth) {
+            reminderMonth = nextMonth
+          }
+        }
+      }
+
       await ctx.saveRecurringReminderMonthStatus({
         reminderId,
-        month: transaction.date.slice(0, 7),
-        status: 'linked',
+        month: reminderMonth,
+        status: 'handled_with_transaction',
         transactionId: transaction.id,
       })
     },
     [
       ctx.effectiveVisibleModules.recurringTransactions,
       ctx.saveRecurringReminderMonthStatus,
+      ctx.recurringExecutions,
+      ctx.recurringReminderMonthStatuses,
+      ctx.recurringTransactions,
       ctx.selectedRecurringTransactionId,
+      ctx.selectedMonth,
+      ctx.scopedTransactions,
     ]
   )
 

@@ -11,6 +11,7 @@ import { DescriptionSuggestion } from '../../lib/suggestionUtils'
 import { splitTagInput } from '../../lib/tagUtils'
 import { normalizeDayInput } from '../../lib/dateUtils'
 import { PaymentSplitInput, getTransactionPaymentSourceDisplayLines } from '../../lib/paymentSplitUtils'
+import { isDaylessTransaction } from '../../lib/transactionDomain'
 import { MonthCalendarPanelProps, Transaction } from './monthCalendarTypes'
 import { formatAmount, normalizeAmountInput } from './monthCalendarPanelUtils'
 import {
@@ -38,6 +39,11 @@ import {
   transactionTopRowStyle,
   wideInputStyle,
 } from './monthCalendarStyles'
+import {
+  CalendarEntryRow,
+  ReminderActionRow,
+  ReminderStatusBadge,
+} from '../reminder-calendar/reminderCalendarPrimitives'
 
 type Props = {
   transaction: Transaction
@@ -161,7 +167,7 @@ export default function MonthCalendarTransactionCard({
   const isEditing = editingTransactionId === transaction.id
   const isMovingCurrent = movingTransactionId === transaction.id
   const moveTargets = getMoveTargetsForTransaction(transaction)
-  const isNoDayTransaction = Boolean(transaction.day_is_null)
+  const isNoDayTransaction = isDaylessTransaction(transaction)
   const transactionTags = transactionTagsMap[transaction.id] || []
   const signedAmount = getSignedAmountForTransaction(transaction)
   const showSignedAmount = heatmapVariant === 'balance'
@@ -173,7 +179,7 @@ export default function MonthCalendarTransactionCard({
   })
 
   return (
-    <div style={transactionCardStyle}>
+    <CalendarEntryRow style={transactionCardStyle}>
       <div style={transactionTopRowStyle}>
         <div
           style={{
@@ -193,7 +199,11 @@ export default function MonthCalendarTransactionCard({
         </div>
 
         <div style={{ ...calendarDayMetaStyle, display: 'flex', alignItems: 'center', gap: 8 }}>
-          {isNoDayTransaction ? <span style={badgeStyle}>bez dnia</span> : <span>{transaction.date}</span>}
+          {isNoDayTransaction ? (
+            <ReminderStatusBadge tone="muted" style={badgeStyle}>bez dnia</ReminderStatusBadge>
+          ) : (
+            <span>{transaction.date}</span>
+          )}
         </div>
       </div>
 
@@ -365,13 +375,13 @@ export default function MonthCalendarTransactionCard({
       )}
 
       {!isEditing && context === 'no-day' && (
-        <div style={noDayHintStyle}>
+        <ReminderStatusBadge tone="info" style={noDayHintStyle}>
           Ten wpis należy do miesiąca, ale nie wpływa na konkretny dzień ani heatmapę.
-        </div>
+        </ReminderStatusBadge>
       )}
 
       {!isSelectedMonthLocked && (
-        <div style={transactionActionsStyle}>
+        <ReminderActionRow data-calendar-entry-actions="true" style={transactionActionsStyle}>
           {isEditing ? (
             <>
               <button
@@ -455,8 +465,8 @@ export default function MonthCalendarTransactionCard({
               </button>
             </>
           )}
-        </div>
+        </ReminderActionRow>
       )}
-    </div>
+    </CalendarEntryRow>
   )
 }

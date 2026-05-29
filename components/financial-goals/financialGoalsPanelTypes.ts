@@ -16,6 +16,8 @@ export type FinancialGoalsPanelProps = {
   goalPriorities: FinancialGoalMonthPriority[]
   goalMonthConfigs: FinancialGoalMonthConfig[]
   transactions: Transaction[]
+  budgetStartDate?: string | null
+  excludedMonthsSet: Set<string>
   lockedMonthsSet: Set<string>
   getSignedAmountForTransaction: (transaction: Transaction) => number
   onSaveGoal: (

@@ -5,6 +5,7 @@ import {
   FinancialGoalMonthPriority,
   Transaction,
 } from './budgetPageTypes'
+import { getTransactionMonth } from './transactionDomain'
 
 export type FinancialGoalComputedStatus = 'w trakcie' | 'zrealizowany' | 'niezrealizowany'
 
@@ -30,8 +31,6 @@ export type FinancialGoalPlan = {
 const FULL_PERCENT = 100
 
 const compareMonths = (left: string, right: string) => left.localeCompare(right)
-
-const getTransactionMonth = (transaction: Transaction) => transaction.date.slice(0, 7)
 
 const getMonthSequence = (fromMonth: string, toMonth: string) => {
   const months: string[] = []

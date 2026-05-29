@@ -15,6 +15,7 @@ export default function BudgetPageStatusPanelsContainer({
   const {
     activeUtilityPanel,
     activeSidebarPrimaryPanel,
+    activeScopeTransactions,
     autoExcludePartialMonths,
     budgetStartDate,
     calendarHeatmapVariant,
@@ -108,7 +109,11 @@ export default function BudgetPageStatusPanelsContainer({
   } = useUserPublicProfile(userId, userEmail)
 
   const profileTransactions = (
-    Array.isArray(transactions) ? transactions : scopedTransactions
+    Array.isArray(activeScopeTransactions)
+      ? activeScopeTransactions
+      : Array.isArray(transactions)
+        ? transactions
+        : scopedTransactions
   ) as Array<{ amount?: number | string; category_id?: string }>
   const categoryNamesById = new Map<string, string>(
     categories.map((category: { id: string; name: string }) => [category.id, category.name])
@@ -192,7 +197,10 @@ export default function BudgetPageStatusPanelsContainer({
           onToggleSettings: handleOpenSettingsPanel,
           onToggleImportExport: handleToggleImportExport,
           onExportBackupJson: () => downloadProfileBackupJson(supabase, profileId),
-          onExportBackupCsv: () => downloadProfileBackupCsv(supabase, profileId, budgetStartDate),
+          onExportBackupCsv: () =>
+            downloadProfileBackupCsv(supabase, profileId, budgetStartDate, {
+              includePaymentSources: effectiveVisibleModules.paymentSources,
+            }),
           onSignOut: signOut,
           styles,
         }}
@@ -283,7 +291,10 @@ export default function BudgetPageStatusPanelsContainer({
           onResetSelectedMonthData: handleResetSelectedMonthData,
           onResetAllHistory: handleResetAllHistory,
           onExportBackupJson: () => downloadProfileBackupJson(supabase, profileId),
-          onExportBackupCsv: () => downloadProfileBackupCsv(supabase, profileId, budgetStartDate),
+          onExportBackupCsv: () =>
+            downloadProfileBackupCsv(supabase, profileId, budgetStartDate, {
+              includePaymentSources: effectiveVisibleModules.paymentSources,
+            }),
           styles,
           defaultOpen: true,
           profileMembersPanel: (

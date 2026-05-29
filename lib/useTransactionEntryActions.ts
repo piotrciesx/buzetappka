@@ -118,24 +118,29 @@ export function useTransactionEntryActions({
     ) => {
       await syncTransactionPaymentSplitsHelper(
         supabase,
+        profileId,
         transactionId,
         amountText,
         paymentSourceIdValue,
         paymentSplitItemsValue
       )
     },
-    [supabase]
+    [profileId, supabase]
   )
 
   const rollbackInsertedTransaction = useCallback(
     async (transactionId: string) => {
-      const { error } = await supabase.from('transactions').delete().eq('id', transactionId)
+      const { error } = await supabase
+        .from('transactions')
+        .delete()
+        .eq('profile_id', profileId)
+        .eq('id', transactionId)
 
       if (error) {
         throw error
       }
     },
-    [supabase]
+    [profileId, supabase]
   )
 
   const confirmPotentialDuplicate = useCallback(
@@ -582,6 +587,7 @@ export function useTransactionEntryActions({
         .from('transactions')
         .update(transactionUpdates)
         .eq('id', transactionId)
+        .eq('profile_id', profileId)
 
       if (error) {
         alert(`Błąd zapisu: ${error.message}`)
@@ -604,6 +610,7 @@ export function useTransactionEntryActions({
       guardTransactionsUnlocked,
       isPaymentSourcesEnabled,
       loadData,
+      profileId,
       supabase,
       syncTransactionPaymentSplits,
       syncTransactionTags,
@@ -619,6 +626,7 @@ export function useTransactionEntryActions({
     handleEmptyTrash,
   } = useTransactionTrashActions({
     supabase,
+    profileId,
     activeTransactionsById,
     trashedTransactionsById,
     isAllowedMoveTarget,

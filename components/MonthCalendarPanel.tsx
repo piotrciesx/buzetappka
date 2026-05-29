@@ -33,6 +33,12 @@ import {
   getReferenceValue,
   getStoredHeatmapSettings,
 } from './month-calendar/monthCalendarPanelUtils'
+import { getEffectiveTransactionScope } from '../lib/transactionScope'
+import {
+  bucketTransactionsByConcreteDay,
+  isDaylessTransaction,
+  splitTransactionsByDayPresence,
+} from '../lib/transactionDomain'
 
 type MonthQuickFilter = 'all' | 'income' | 'expense' | 'no-day'
 
@@ -73,6 +79,7 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
     defaultHeatmapMode = 'balance',
     defaultHeatmapInverted = false,
     heatmapStorageKey,
+    legacyHeatmapStorageKeys = [],
     showHeatmapControls = true,
     descriptionSuggestions,
     getPaymentSourceOptionsForCategoryId,
@@ -83,7 +90,12 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
   } = props
 
   const [localHeatmapSettings, setLocalHeatmapSettings] = useState(() =>
-    getStoredHeatmapSettings(heatmapStorageKey, defaultHeatmapMode, defaultHeatmapInverted)
+    getStoredHeatmapSettings(
+      heatmapStorageKey,
+      legacyHeatmapStorageKeys,
+      defaultHeatmapMode,
+      defaultHeatmapInverted
+    )
   )
 
   const heatmapMode = controlledHeatmapMode ?? localHeatmapSettings.mode
@@ -152,25 +164,37 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
   const daysInMonth = getDaysInMonth(selectedMonth)
   const firstDayOffset = (new Date(year, month - 1, 1).getDay() + 6) % 7
 
+  const scopedTransactions = useMemo(
+    () =>
+      getEffectiveTransactionScope(transactions, {
+        mode: 'calendar',
+        budgetStartDate,
+      }),
+    [budgetStartDate, transactions]
+  )
+
   const filteredTransactions = useMemo(() => {
     if (quickFilter === 'income') {
-      return transactions.filter((transaction) => getSignedAmountForTransaction(transaction) > 0)
+      return scopedTransactions.filter((transaction) => getSignedAmountForTransaction(transaction) > 0)
     }
 
     if (quickFilter === 'expense') {
-      return transactions.filter((transaction) => getSignedAmountForTransaction(transaction) < 0)
+      return scopedTransactions.filter((transaction) => getSignedAmountForTransaction(transaction) < 0)
     }
 
     if (quickFilter === 'no-day') {
-      return transactions.filter((transaction) => transaction.day_is_null)
+      return scopedTransactions.filter((transaction) => isDaylessTransaction(transaction))
     }
 
-    return transactions
-  }, [getSignedAmountForTransaction, quickFilter, transactions])
+    return scopedTransactions
+  }, [getSignedAmountForTransaction, quickFilter, scopedTransactions])
 
-  const transactionsWithDay = useMemo(() => {
-    return filteredTransactions.filter((transaction) => !transaction.day_is_null)
-  }, [filteredTransactions])
+  const transactionDayBuckets = useMemo(
+    () => splitTransactionsByDayPresence(filteredTransactions),
+    [filteredTransactions]
+  )
+
+  const transactionsWithDay = transactionDayBuckets.withDay
 
   const isSelectedMonthPartial = isMonthPartialByBudgetStart(selectedMonth, budgetStartDate)
 
@@ -182,29 +206,14 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
     setSelectedDay(null)
   }, [budgetStartDate, selectedDay, selectedMonth])
 
-  const transactionsWithoutDay = useMemo(() => {
-    return filteredTransactions.filter((transaction) => transaction.day_is_null)
-  }, [filteredTransactions])
+  const transactionsWithoutDay = transactionDayBuckets.withoutDay
 
   const transactionsByDay = useMemo(() => {
-    return transactionsWithDay.reduce<Record<string, Transaction[]>>((acc, transaction) => {
-      if (isDateBeforeBudgetStart(transaction.date, budgetStartDate)) {
-        return acc
-      }
-
-      const day = transaction.date.slice(8, 10)
-
-      if (!day) {
-        return acc
-      }
-
-      if (!acc[day]) {
-        acc[day] = []
-      }
-
-      acc[day].push(transaction)
-      return acc
-    }, {})
+    return bucketTransactionsByConcreteDay(
+      transactionsWithDay.filter(
+        (transaction) => !isDateBeforeBudgetStart(transaction.date, budgetStartDate)
+      )
+    )
   }, [budgetStartDate, transactionsWithDay])
 
   const dayStats = useMemo(() => {
@@ -361,7 +370,7 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
     setMovingTransactionId(null)
     setMoveTargetCategoryId('')
     setEditingTransactionId(transaction.id)
-    setEditDay(transaction.day_is_null ? '' : getDayInputFromDate(transaction.date, selectedMonth))
+    setEditDay(isDaylessTransaction(transaction) ? '' : getDayInputFromDate(transaction.date, selectedMonth))
     setEditAmount(String(getAmountNumber(transaction.amount)))
     setEditDescription(transaction.description || '')
     const nextTagNames = (transactionTagsMap[transaction.id] || []).map((tag) => tag.name)
@@ -406,7 +415,7 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
 
     const normalizedDay = normalizeDayInput(editDay, selectedMonth)
     let nextTransactionDate = currentTransaction.date
-    let nextDayIsNull = Boolean(currentTransaction.day_is_null)
+    let nextDayIsNull = isDaylessTransaction(currentTransaction)
 
     if (normalizedDay) {
       const builtDate = buildDateFromDayInput(selectedMonth, normalizedDay)
@@ -418,7 +427,7 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
 
       nextTransactionDate = builtDate
       nextDayIsNull = false
-    } else if (!currentTransaction.day_is_null) {
+    } else if (!isDaylessTransaction(currentTransaction)) {
       alert('Podaj dzień transakcji')
       return
     } else {

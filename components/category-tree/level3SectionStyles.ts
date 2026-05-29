@@ -1,3 +1,5 @@
+import { uiZIndex } from '../../lib/uiFoundation'
+
 export const inlineDescriptionFieldWrapStyle = {
   flex: 1,
   minWidth: 220,
@@ -9,7 +11,7 @@ export const suggestionsDropdownStyle = {
   top: 'calc(100% + 6px)',
   left: 0,
   right: 0,
-  zIndex: 20020,
+  zIndex: uiZIndex.categoryAutocomplete,
   background: '#ffffff',
   border: '1px solid #d1d5db',
   borderRadius: 12,

@@ -1,8 +1,14 @@
 import { Category, Transaction } from './budgetPageTypes'
 import { isExistingDate, isMonthExcludedFromStats } from './dateUtils'
+import {
+  getTransactionDay as getTransactionDayFromDomain,
+  getTransactionMonth,
+  isDaylessTransaction as isDaylessTransactionFromDomain,
+  isTransactionInMonth as isTransactionInMonthFromDomain,
+} from './transactionDomain'
 
 export const isTransactionInMonth = (transaction: Transaction, selectedMonth: string) => {
-  return transaction.date.startsWith(selectedMonth)
+  return isTransactionInMonthFromDomain(transaction, selectedMonth)
 }
 
 export const isTransactionInExistingStatsDate = (transaction: Transaction) => {
@@ -10,7 +16,7 @@ export const isTransactionInExistingStatsDate = (transaction: Transaction) => {
 }
 
 export const isDaylessTransaction = (transaction: Transaction) => {
-  return Boolean((transaction as Transaction & { day_is_null?: boolean }).day_is_null)
+  return isDaylessTransactionFromDomain(transaction)
 }
 
 export const getMonthLabel = (month: string) => {
@@ -47,10 +53,7 @@ export const getIncludedMonthRange = (
 }
 
 export const getTransactionDay = (transaction: Transaction) => {
-  if (isDaylessTransaction(transaction)) return null
-
-  const day = Number(transaction.date.slice(8, 10))
-  return Number.isFinite(day) && day > 0 ? day : null
+  return getTransactionDayFromDomain(transaction)
 }
 
 export const getWeekdayIndex = (date: string) => {

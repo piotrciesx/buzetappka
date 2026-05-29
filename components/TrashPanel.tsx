@@ -1,6 +1,14 @@
 import type { CSSProperties } from 'react'
 import { getCategoryPathLabel } from '../lib/budgetPageHelpers'
 import { Category, Transaction } from '../lib/budgetPageTypes'
+import {
+  ActionRow,
+  EmptyState,
+  ListRow,
+  MetadataGrid,
+  StatusBox,
+  UtilityPanel,
+} from './utility-panels/utilityPanelPrimitives'
 
 type Props = {
   transactions: Transaction[]
@@ -155,8 +163,8 @@ export default function TrashPanel(props: Props) {
   } = props
 
   return (
-    <section style={panelStyle} aria-label="Kosz">
-      <div style={headerStyle}>
+    <UtilityPanel style={panelStyle} aria-label="Kosz">
+      <ActionRow style={headerStyle}>
         {transactions.length > 0 && (
           <button
             type="button"
@@ -168,16 +176,16 @@ export default function TrashPanel(props: Props) {
             Opróżnij kosz
           </button>
         )}
-      </div>
+      </ActionRow>
 
-      <div style={hintStyle}>
+      <StatusBox style={hintStyle}>
         {transactions.length === 0
           ? 'Brak usuniętych wpisów.'
           : `Usunięte wpisy: ${transactions.length}. Przywrócenie zwraca wpis do zwykłego widoku.`}
-      </div>
+      </StatusBox>
 
       {transactions.length === 0 ? (
-        <div style={hintStyle}>Kosz jest pusty.</div>
+        <EmptyState style={hintStyle}>Kosz jest pusty.</EmptyState>
       ) : (
         <div style={listStyle}>
           {transactions.map((transaction) => {
@@ -187,14 +195,14 @@ export default function TrashPanel(props: Props) {
             const deletedAtLabel = transaction.deleted_at ? transaction.deleted_at.slice(0, 16) : '-'
 
             return (
-              <div key={transaction.id} style={rowStyle}>
+              <ListRow key={transaction.id} style={rowStyle}>
                 <div style={mainStyle}>
                   <div style={topLineStyle}>
                     <strong style={amountStyle}>{getAmountNumber(transaction.amount)} zł</strong>
                     <span style={descriptionStyle}>{transaction.description || 'Bez opisu'}</span>
                   </div>
 
-                  <div style={detailsStyle}>
+                  <MetadataGrid style={detailsStyle}>
                     <div style={fieldStyle}>
                       <span style={labelStyle}>Data</span>
                       <span style={valueStyle}>{transaction.date}</span>
@@ -207,10 +215,10 @@ export default function TrashPanel(props: Props) {
                       <span style={labelStyle}>Usunięto</span>
                       <span style={valueStyle}>{deletedAtLabel}</span>
                     </div>
-                  </div>
+                  </MetadataGrid>
                 </div>
 
-                <div style={actionsStyle}>
+                <ActionRow style={actionsStyle}>
                   <button
                     type="button"
                     style={{ ...styles.secondaryButton, ...lightButtonStyle }}
@@ -230,12 +238,12 @@ export default function TrashPanel(props: Props) {
                   >
                     Usuń na stałe
                   </button>
-                </div>
-              </div>
+                </ActionRow>
+              </ListRow>
             )
           })}
         </div>
       )}
-    </section>
+    </UtilityPanel>
   )
 }

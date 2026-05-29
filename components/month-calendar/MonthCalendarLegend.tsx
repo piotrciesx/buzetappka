@@ -4,6 +4,10 @@ import {
   heatmapLegendLabelsStyle,
   heatmapLegendStyle,
 } from './monthCalendarStyles'
+import {
+  CalendarLegend,
+  HeatmapScale,
+} from '../reminder-calendar/reminderCalendarPrimitives'
 
 type MonthCalendarLegendProps = {
   heatmapMode: HeatmapMode
@@ -22,12 +26,12 @@ export default function MonthCalendarLegend({
   }
 
   return (
-    <div style={heatmapLegendStyle}>
+    <CalendarLegend style={heatmapLegendStyle}>
       <div style={heatmapLegendLabelsStyle}>
         <span>{legendLabels.left}</span>
         <span>{legendLabels.right}</span>
       </div>
-      <div style={heatmapLegendBarStyle} />
-    </div>
+      <HeatmapScale style={heatmapLegendBarStyle} />
+    </CalendarLegend>
   )
 }

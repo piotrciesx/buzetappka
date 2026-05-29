@@ -10,6 +10,10 @@ import {
 } from './recurringTransactionsPanelStyles'
 import { normalizeDay } from './recurringTransactionsPanelUtils'
 import { RecurringTransactionFormState } from './recurringTransactionsPanelTypes'
+import {
+  ReminderActionRow,
+  ReminderCard,
+} from '../reminder-calendar/reminderCalendarPrimitives'
 
 type Props = {
   formState: RecurringTransactionFormState
@@ -33,7 +37,7 @@ export default function RecurringTransactionForm({
   styles,
 }: Props) {
   return (
-    <div style={formStyle}>
+    <ReminderCard style={formStyle}>
       <div style={sectionTitleStyle}>
         {formState.id ? 'Edycja przypomnienia' : 'Nowe przypomnienie'}
       </div>
@@ -244,7 +248,7 @@ export default function RecurringTransactionForm({
         )}
       </div>
 
-      <div style={{ ...styles.actions, gap: 8 }}>
+      <ReminderActionRow style={{ ...styles.actions, gap: 8 }}>
         <button
           type="button"
           style={{ ...styles.primaryButton, ...lightButtonStyle }}
@@ -261,7 +265,7 @@ export default function RecurringTransactionForm({
         <button type="button" style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={onCancel}>
           Anuluj
         </button>
-      </div>
-    </div>
+      </ReminderActionRow>
+    </ReminderCard>
   )
 }

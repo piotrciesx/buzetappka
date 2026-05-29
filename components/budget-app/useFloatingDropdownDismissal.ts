@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { uiZIndex } from '../../lib/uiFoundation'
 
 export function useFloatingDropdownDismissal() {
   useEffect(() => {
@@ -42,7 +43,7 @@ export function useFloatingDropdownDismissal() {
       panel.style.setProperty('position', 'fixed', 'important')
       panel.style.setProperty('right', 'auto', 'important')
       panel.style.setProperty('bottom', 'auto', 'important')
-      panel.style.setProperty('z-index', '130000', 'important')
+      panel.style.setProperty('z-index', String(uiZIndex.globalCritical), 'important')
       panel.style.setProperty('visibility', 'hidden', 'important')
       panel.style.setProperty('max-height', `calc(100dvh - ${viewportPadding * 2}px)`, 'important')
       panel.style.setProperty('overflow-y', 'auto', 'important')

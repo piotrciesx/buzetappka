@@ -5,7 +5,12 @@ import type { BudgetUtilityPanel } from '../BudgetPageMainPanels'
 import type { Transaction } from '../../lib/budgetPageTypes'
 import { useAppModuleVisibility } from '../../lib/useAppModuleVisibility'
 import { useBudgetMonthNavigation } from '../../lib/useBudgetMonthNavigation'
-import { filterTransactionsByBudgetStartDate } from '../../lib/transactionScope'
+import {
+  getEffectiveAppMode,
+  getEffectiveModuleVisibility,
+  isModuleEnabledForLogic,
+} from '../../lib/modulePolicy'
+import { getEffectiveTransactionScope } from '../../lib/transactionScope'
 import { useFloatingDropdownDismissal } from './useFloatingDropdownDismissal'
 import type { SidebarPrimaryPanel } from './useBudgetAppCoreState'
 
@@ -13,6 +18,7 @@ type Params = {
   profileId: string
   userId: string
   transactions: Transaction[]
+  activeScopeTransactions: Transaction[]
   activeSidebarPrimaryPanel: SidebarPrimaryPanel
   setActiveSidebarPrimaryPanel: (value: SidebarPrimaryPanel | ((previous: SidebarPrimaryPanel) => SidebarPrimaryPanel)) => void
   activeUtilityPanel: BudgetUtilityPanel
@@ -23,6 +29,7 @@ export function useBudgetAppShellState({
   profileId,
   userId,
   transactions,
+  activeScopeTransactions,
   activeSidebarPrimaryPanel,
   setActiveSidebarPrimaryPanel,
   activeUtilityPanel,
@@ -52,40 +59,52 @@ export function useBudgetAppShellState({
 
   const effectiveVisibleModules = useMemo(
     () =>
-      monthNavigation.simpleMode
-        ? {
-            ...moduleVisibility.visibleModules,
-            dashboard: true,
-            monthCalendar: true,
-            paymentSources: false,
-            recurringTransactions: false,
-            financialGoals: false,
-            budgetLimits: false,
-          }
-        : {
-            ...moduleVisibility.visibleModules,
-            dashboard: true,
-            monthCalendar: true,
-          },
+      getEffectiveModuleVisibility({
+        visibleModules: moduleVisibility.visibleModules,
+        simpleMode: monthNavigation.simpleMode,
+      }),
     [monthNavigation.simpleMode, moduleVisibility.visibleModules]
+  )
+  const effectiveAppMode = useMemo(
+    () => getEffectiveAppMode(monthNavigation.simpleMode),
+    [monthNavigation.simpleMode]
   )
 
   const scopedTransactions = useMemo(
-    () => filterTransactionsByBudgetStartDate(transactions, monthNavigation.budgetStartDate),
+    () =>
+      getEffectiveTransactionScope(transactions, {
+        mode: 'search',
+        budgetStartDate: monthNavigation.budgetStartDate,
+      }),
     [monthNavigation.budgetStartDate, transactions]
+  )
+
+  const scopedActiveTransactions = useMemo(
+    () =>
+      getEffectiveTransactionScope(activeScopeTransactions, {
+        mode: 'search',
+        budgetStartDate: monthNavigation.budgetStartDate,
+      }),
+    [activeScopeTransactions, monthNavigation.budgetStartDate]
   )
 
   return {
     activeUtilityPanel,
+    effectiveAppMode,
     effectiveVisibleModules,
-    isBudgetLimitsModuleEnabled: effectiveVisibleModules.budgetLimits,
-    isMonthCalendarModuleEnabled: effectiveVisibleModules.monthCalendar,
-    isPaymentSourcesModuleEnabled: effectiveVisibleModules.paymentSources,
-    isRecurringTransactionsModuleEnabled: effectiveVisibleModules.recurringTransactions,
+    isBudgetLimitsModuleEnabled: isModuleEnabledForLogic(effectiveVisibleModules, 'budgetLimits'),
+    isFinancialGoalsModuleEnabled: isModuleEnabledForLogic(effectiveVisibleModules, 'financialGoals'),
+    isMonthCalendarModuleEnabled: isModuleEnabledForLogic(effectiveVisibleModules, 'monthCalendar'),
+    isPaymentSourcesModuleEnabled: isModuleEnabledForLogic(effectiveVisibleModules, 'paymentSources'),
+    isRecurringTransactionsModuleEnabled: isModuleEnabledForLogic(
+      effectiveVisibleModules,
+      'recurringTransactions'
+    ),
     isSettingsPanelVisible,
     moduleVisibility,
     monthNavigation,
     scopedTransactions,
+    activeScopeTransactions: scopedActiveTransactions,
     setActiveUtilityPanel,
     setIsSettingsPanelVisible,
   }

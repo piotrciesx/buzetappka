@@ -4,6 +4,7 @@ import { CSSProperties, forwardRef } from 'react'
 import { Category, Tag, TransactionPaymentSplit } from '../lib/budgetPageTypes'
 import { getCategoryPathLabel } from '../lib/budgetPageHelpers'
 import { getTransactionPaymentSourceDisplayLines } from '../lib/paymentSplitUtils'
+import { getTransactionMonth, isDaylessTransaction } from '../lib/transactionDomain'
 import {
   BankSearchCategoryOption,
   BankSearchPaymentSourceOption,
@@ -323,7 +324,7 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
 
                 return (
                   <div key={transaction.id} data-bank-search-history-row="true" style={historyRowStyle}>
-                    <div>{getTransactionDateLabel(transaction.day_is_null, transaction.date)}</div>
+                    <div>{getTransactionDateLabel(isDaylessTransaction(transaction), transaction.date)}</div>
                     <div
                       style={{
                         fontWeight: 600,
@@ -360,7 +361,7 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                         </div>
                       )}
                     </div>
-                    <div>{transaction.date ? transaction.date.slice(0, 7) : '—'}</div>
+                    <div>{getTransactionMonth(transaction) || '—'}</div>
                   </div>
                 )
               })

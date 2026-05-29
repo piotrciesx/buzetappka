@@ -65,7 +65,7 @@
   [data-budget-header-row="true"] {
     position: fixed !important;
     inset: 8px 10px auto 10px !important;
-    z-index: 90000 !important;
+    z-index: var(--ui-z-topbar) !important;
   }
 
   /* sidebar pod topbarem */
@@ -74,7 +74,7 @@
     inset: calc(var(--shell-top) + 18px) auto 16px 18px !important;
     width: var(--shell-left) !important;
     height: auto !important;
-    z-index: 1800 !important;
+    z-index: var(--ui-z-floating-menu-elevated) !important;
     overflow: hidden !important;
     border: 1px solid rgba(177, 204, 237, 0.72) !important;
     border-radius: 28px !important;
@@ -91,7 +91,7 @@
 
   /* prawy rail pod topbarem */
   [data-budget-context-rail="true"] {
-    z-index: 1700 !important;
+    z-index: var(--ui-z-floating-menu-base) !important;
   }
 
   /* dropdowny nad workspace */
@@ -100,13 +100,13 @@
   [data-transaction-menu="true"],
   [data-budget-month-menu="true"],
   [data-profile-menu-dropdown="true"] {
-    z-index: 120000 !important;
+    z-index: var(--ui-z-topbar-overlay) !important;
   }
 
   [data-floating-dropdown="true"][open],
   [data-mobile-category-menu="true"][open],
   [data-transaction-menu="true"][open] {
-    z-index: 120001 !important;
+    z-index: var(--ui-z-topbar-overlay-raised) !important;
   }
 
   /* środek strony nie może zachowywać się jak osobna warstwa */
@@ -149,6 +149,6 @@
   [data-tree-sort-inline="true"],
   [data-budget-month-menu="true"] {
     max-width: calc(100vw - 20px) !important;
-    z-index: 120000 !important;
+    z-index: var(--ui-z-topbar-overlay) !important;
   }
 }
