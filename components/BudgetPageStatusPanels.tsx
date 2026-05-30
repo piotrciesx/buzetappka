@@ -690,6 +690,7 @@ export default function BudgetPageStatusPanels({
                 onClick={() => toggleTopbarPanel('search')}
               >
                 <Icon name="search" />
+                <span>Szukaj...</span>
               </button>
               {openedTopbarPanel === 'search' && (
                 <div data-topbar-dropdown="search">
@@ -776,6 +777,18 @@ export default function BudgetPageStatusPanels({
                 </div>
               )}
             </div>
+
+            <button
+              type="button"
+              data-topbar-action="notifications"
+              aria-label="Powiadomienia"
+              title="Powiadomienia"
+              data-active={activeUtilityPanel === 'recurringTransactions' ? 'true' : 'false'}
+              disabled={!visibleModules.recurringTransactions}
+              onClick={() => openPanel('recurringTransactions')}
+            >
+              <Icon name="bell" />
+            </button>
 
             <button
               type="button"
