@@ -5,8 +5,8 @@
   --app-shell-page-y: 16px;
   --app-shell-gap: 16px;
   --app-shell-topbar-height: 74px;
-  --app-shell-left-width: 168px;
-  --app-shell-right-width: 304px;
+  --app-shell-left-width: 252px;
+  --app-shell-right-width: 324px;
   --app-shell-panel-radius: 18px;
   --app-shell-panel-border: var(--ui-color-soft-border);
   --app-shell-background: var(--ui-color-main-background);
@@ -29,7 +29,10 @@ body {
 
 [data-budget-app="true"] {
   display: grid !important;
-  grid-template-columns: var(--app-shell-left-width) minmax(0, 1fr);
+  grid-template-columns:
+    var(--app-shell-left-width)
+    minmax(0, 1fr)
+    var(--app-shell-right-width);
   grid-template-rows: var(--app-shell-topbar-height) minmax(0, 1fr);
   gap: var(--app-shell-gap);
   width: 100% !important;
@@ -53,7 +56,10 @@ body {
   position: relative;
   z-index: var(--ui-z-topbar);
   display: grid;
-  grid-template-columns: var(--app-shell-left-width) minmax(0, auto) minmax(0, 1fr);
+  grid-template-columns:
+    var(--app-shell-left-width)
+    minmax(280px, 0.72fr)
+    minmax(0, 1fr);
   align-items: center;
   gap: 18px;
   width: 100%;
@@ -146,29 +152,17 @@ body {
 }
 
 [data-budget-workspace="true"] {
-  grid-column: 2;
-  grid-row: 2;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--app-shell-right-width);
-  gap: var(--app-shell-gap);
-  width: 100%;
-  min-width: 0;
-  min-height: 0;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background: transparent;
-  border: 0;
-  box-shadow: none;
+  display: contents;
 }
 
-[data-budget-workspace-main="true"],
-[data-budget-context-rail="true"] {
+[data-budget-workspace-main="true"] {
+  grid-column: 2;
+  grid-row: 2;
   min-width: 0;
   min-height: 0;
   height: 100%;
   margin: 0;
+  padding: 18px;
   overflow: auto;
   border: 1px solid var(--app-shell-panel-border);
   border-radius: var(--app-shell-panel-radius);
@@ -176,17 +170,24 @@ body {
   box-shadow: none;
 }
 
-[data-budget-workspace-main="true"] {
-  padding: 18px;
-}
-
 [data-budget-context-rail="true"] {
+  grid-column: 3;
+  grid-row: 2;
   display: grid;
   align-content: start;
   gap: 12px;
   width: 100%;
   max-width: none;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  margin: 0;
   padding: 16px;
+  overflow: auto;
+  border: 1px solid var(--app-shell-panel-border);
+  border-radius: var(--app-shell-panel-radius);
+  background: var(--app-shell-panel);
+  box-shadow: none;
 }
 
 [data-budget-tree-workspace="true"],
@@ -201,7 +202,7 @@ body {
 }
 
 [data-app-view] {
-  grid-column: 2;
+  grid-column: 2 / 4;
   grid-row: 2;
   z-index: var(--ui-z-drawer);
   min-width: 0;
@@ -231,13 +232,8 @@ body {
 @media (max-width: 1100px) {
   :root {
     --app-shell-page-x: 14px;
-    --app-shell-left-width: 76px;
-    --app-shell-right-width: 264px;
-  }
-
-  [data-sidebar-label="true"],
-  [data-sidebar-section-label="true"] {
-    display: none;
+    --app-shell-left-width: 240px;
+    --app-shell-right-width: 300px;
   }
 }
 
