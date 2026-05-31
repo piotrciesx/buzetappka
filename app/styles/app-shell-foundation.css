@@ -258,9 +258,11 @@ body {
 }
 
 [data-budget-sidebar-nav="true"] {
-  display: flex;
-  flex-direction: column;
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
   align-content: stretch;
+  align-items: stretch !important;
   gap: 20px;
   width: 100%;
   min-width: 0;
@@ -270,9 +272,12 @@ body {
 }
 
 [data-sidebar-section] {
-  display: grid;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
+  width: 100%;
   min-width: 0;
+  max-width: 100%;
 }
 
 [data-sidebar-section="tools"],
@@ -329,6 +334,10 @@ body {
 
 [data-sidebar-section="tools"] [data-sidebar-item="goals"] {
   order: 1;
+}
+
+[data-sidebar-section="tools"] [data-sidebar-item="budget-limits"] {
+  order: 2;
 }
 
 [data-sidebar-section="tools"] [data-sidebar-item="recurring"] {

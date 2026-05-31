@@ -421,6 +421,13 @@ export default function BudgetPageStatusPanels({
       onClick: () => openPanel('financialGoals'),
     },
     {
+      id: 'budget-limits',
+      label: 'Budżety i limity',
+      icon: 'alert',
+      active: false,
+      onClick: () => window.dispatchEvent(new CustomEvent('budget-close-floating-ui')),
+    },
+    {
       id: 'recurring',
       label: 'Stałe płatności',
       icon: 'bell',
@@ -430,6 +437,7 @@ export default function BudgetPageStatusPanels({
   ] satisfies SidebarItem[]).filter((item) => {
     if (item.id === 'payments') return visibleModules.paymentSources
     if (item.id === 'goals') return visibleModules.financialGoals
+    if (item.id === 'budget-limits') return visibleModules.budgetLimits
     if (item.id === 'recurring') return visibleModules.recurringTransactions
     return true
   })

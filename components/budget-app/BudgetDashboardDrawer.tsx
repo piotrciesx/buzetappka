@@ -14,6 +14,10 @@ export default function BudgetDashboardDrawer({
   dashboardPanelProps,
   onClose,
 }: BudgetDashboardDrawerProps) {
+  if (!isOpen) {
+    return null
+  }
+
   return (
     <div data-dashboard-overlay="true" data-dashboard-open={isOpen ? 'true' : 'false'}>
       <button
