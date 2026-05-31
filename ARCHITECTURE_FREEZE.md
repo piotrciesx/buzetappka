@@ -299,6 +299,65 @@ Nie wolno już dodawać:
 - dashboardu opartego na `currentMonthTransactions` jako historii
 - logiki kategorii po nazwach
 
+## 9.1. Adaptive Widget Layout V1
+
+Status:
+- Kontrakt architektoniczny zamrozony.
+- Widgety nie sa jeszcze implementowane.
+- UI, drag/drop, konfiguracja i runtime placement pozostaja poza tym etapem.
+
+Stale obszary aplikacji:
+- `leftSidebar`
+- `topbar`
+
+Dynamiczne obszary aplikacji:
+- `workspace`
+- `rightWidgetArea`
+- `bottomWidgetArea`
+
+Kontrakt widgetu:
+- Widget nie moze byc przypisany na sztywno do jednego miejsca layoutu.
+- Kazdy widget musi miec jawny priorytet layoutowy.
+- Priorytet `1` jest najwyzszy.
+- Priorytet `8` jest najnizszy.
+- Priorytet decyduje o kolejnosci utrzymania widocznosci przy ograniczonej przestrzeni.
+
+Kontrakt dystrybucji:
+- `rightWidgetArea` ma pierwszenstwo przed `bottomWidgetArea`.
+- `rightWidgetArea` zawiera minimum 3 widgety.
+- `rightWidgetArea` zawiera maksimum 5 widgetow.
+- `bottomWidgetArea` moze zawierac tylko 0, 2 albo 3 widgety.
+- `bottomWidgetArea` nigdy nie moze zawierac 1 widgetu.
+
+Regula jednego dolnego widgetu:
+- Jezeli po dystrybucji mialby zostac dokladnie 1 widget w `bottomWidgetArea`, system musi przeniesc go do `rightWidgetArea`, jezeli miesci sie w limicie.
+- Jezeli przeniesienie nie jest mozliwe, widget musi zostac ukryty zgodnie z priorytetem.
+- Nie wolno zostawiac pojedynczego dolnego widgetu jako specjalnego layoutu.
+
+Reguly redukcji przy zmniejszaniu dostepnej przestrzeni:
+1. Znika najbardziej lewy widget z `bottomWidgetArea`.
+2. Znika kolejny najbardziej lewy widget z `bottomWidgetArea`.
+3. `bottomWidgetArea` znika calkowicie.
+4. Pozostaja widgety w `rightWidgetArea`.
+
+Reguly pustej przestrzeni:
+- Layout nie moze zostawiac duzych pustych obszarow po ukrytych widgetach.
+- Workspace ma odzyskiwac przestrzen po redukcji dolnej strefy.
+- Prawa strefa pozostaje preferowanym miejscem dla widgetow o wyzszym priorytecie.
+
+Nie wolno jeszcze implementowac:
+- runtime algorytmu dystrybucji widgetow
+- UI widget areas
+- nowych widgetow
+- drag/drop dla widgetow
+- konfiguracji uzytkownika dla polozenia widgetow
+- lokalnych breakpointow widgetow poza przyszlym centralnym resolverem
+
+Przyszly source-of-truth:
+- Jeden centralny resolver layoutu widgetow powinien decydowac o `rightWidgetArea`, `bottomWidgetArea` i ukrywaniu widgetow.
+- Komponenty widgetow nie moga samodzielnie decydowac o swojej strefie.
+- Widgety dashboardowe moga uzywac danych zgodnie z sekcja `9. Dashboard Aggregation`, ale nie moga tworzyc wlasnego scope danych.
+
 ## 10. Excluded Months
 
 Finalne source-of-truth:
