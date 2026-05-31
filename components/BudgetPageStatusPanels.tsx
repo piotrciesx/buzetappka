@@ -367,27 +367,18 @@ export default function BudgetPageStatusPanels({
       maximumFractionDigits: 2,
     }).format(value)
 
-  const basicSidebarItems: SidebarItem[] = [
-    {
-      id: 'profile',
-      label: 'Profil',
-      icon: 'user',
-      active: activeSidebarPrimaryPanel === 'profile',
-      onClick: () => {
-        window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
-        onOpenProfilePanel()
-      },
+  const settingsSidebarItem: SidebarItem = {
+    id: 'settings',
+    label: 'Ustawienia',
+    icon: 'settings',
+    active: isSettingsPanelVisible,
+    onClick: () => {
+      window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
+      onOpenSettingsPanel()
     },
-    {
-      id: 'settings',
-      label: 'Ustawienia',
-      icon: 'settings',
-      active: isSettingsPanelVisible,
-      onClick: () => {
-        window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
-        onOpenSettingsPanel()
-      },
-    },
+  }
+
+  const navigationSidebarItems: SidebarItem[] = [
     {
       id: 'dashboard',
       label: 'Statystyki',
@@ -397,27 +388,6 @@ export default function BudgetPageStatusPanels({
         window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
         onToggleDashboard()
       },
-    },
-    {
-      id: 'drafts',
-      label: 'Szkice',
-      icon: 'drafts',
-      active: activeUtilityPanel === 'drafts',
-      onClick: () => openPanel('drafts'),
-    },
-    {
-      id: 'import',
-      label: 'Dane / backup',
-      icon: 'backup',
-      active: activeUtilityPanel === 'importExport',
-      onClick: () => openPanel('importExport'),
-    },
-    {
-      id: 'trash',
-      label: 'Kosz',
-      icon: 'trash',
-      active: activeUtilityPanel === 'trash',
-      onClick: () => openPanel('trash'),
     },
     {
       id: 'calendar',
@@ -435,7 +405,7 @@ export default function BudgetPageStatusPanels({
     },
   ]
 
-  const optionalSidebarItems: SidebarItem[] = ([
+  const toolsSidebarItems: SidebarItem[] = ([
     {
       id: 'payments',
       label: 'Źródła płatności',
@@ -464,49 +434,68 @@ export default function BudgetPageStatusPanels({
     return true
   })
 
-  const sidebarItems = [...basicSidebarItems, ...optionalSidebarItems]
+  const reportsSidebarItems: SidebarItem[] = [
+    {
+      id: 'import',
+      label: 'Import / Eksport danych',
+      icon: 'backup',
+      active: activeUtilityPanel === 'importExport',
+      onClick: () => openPanel('importExport'),
+    },
+    {
+      id: 'trash',
+      label: 'Kosz',
+      icon: 'trash',
+      active: activeUtilityPanel === 'trash',
+      onClick: () => openPanel('trash'),
+    },
+  ]
+
+  const sidebarItems = [
+    ...navigationSidebarItems,
+    ...toolsSidebarItems,
+    ...reportsSidebarItems,
+    settingsSidebarItem,
+  ]
+
+  const renderSidebarItem = (item: SidebarItem) => (
+    <button
+      key={item.id}
+      type="button"
+      title={item.label}
+      aria-label={item.label}
+      data-active={item.active ? 'true' : 'false'}
+      data-sidebar-item={item.id}
+      onClick={item.onClick}
+    >
+      <Icon name={item.icon} />
+      <span data-sidebar-label="true">{item.label}</span>
+      {item.badge ? <span data-sidebar-badge="true">{item.badge}</span> : null}
+    </button>
+  )
 
   return (
     <>
       <aside data-budget-sidebar="true" aria-label="Moduły aplikacji">
         <nav data-budget-sidebar-nav="true" data-sidebar-desktop-nav="true">
-          <div data-sidebar-section="primary">
-            <span data-sidebar-section-label="true">Podstawowe</span>
-            {basicSidebarItems.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                title={item.label}
-                aria-label={item.label}
-                data-active={item.active ? 'true' : 'false'}
-                onClick={item.onClick}
-              >
-                <Icon name={item.icon} />
-                <span data-sidebar-label="true">{item.label}</span>
-                {item.badge ? <span data-sidebar-badge="true">{item.badge}</span> : null}
-              </button>
-            ))}
+          <div data-sidebar-section="navigation">
+            <span data-sidebar-section-label="true">NAWIGACJA</span>
+            {navigationSidebarItems.map(renderSidebarItem)}
           </div>
 
-          {optionalSidebarItems.length > 0 && (
-            <div data-sidebar-section="optional">
-              <span data-sidebar-section-label="true">Dodatkowe</span>
-              {optionalSidebarItems.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  title={item.label}
-                  aria-label={item.label}
-                  data-active={item.active ? 'true' : 'false'}
-                  onClick={item.onClick}
-                >
-                  <Icon name={item.icon} />
-                  <span data-sidebar-label="true">{item.label}</span>
-                  {item.badge ? <span data-sidebar-badge="true">{item.badge}</span> : null}
-                </button>
-              ))}
-            </div>
-          )}
+          <div data-sidebar-section="tools">
+            <span data-sidebar-section-label="true">NARZĘDZIA</span>
+            {toolsSidebarItems.map(renderSidebarItem)}
+          </div>
+
+          <div data-sidebar-section="reports">
+            <span data-sidebar-section-label="true">RAPORTY I DANE</span>
+            {reportsSidebarItems.map(renderSidebarItem)}
+          </div>
+
+          <div data-sidebar-section="settings">
+            {renderSidebarItem(settingsSidebarItem)}
+          </div>
         </nav>
 
         <nav data-budget-mobile-nav="true" aria-label="Główna nawigacja mobilna">
