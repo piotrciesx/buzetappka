@@ -23,7 +23,6 @@ type Props = {
 
 export default function MainWorkspaceBottomDeck({
   selectedMonth,
-  trashedCount,
   onOpenMonthCalendar,
   onOpenTrash,
 }: Props) {
@@ -42,24 +41,14 @@ export default function MainWorkspaceBottomDeck({
         </div>
       </section>
 
-      <section data-static-widget-area="bottom" data-static-widget="activity">
-        <header data-workspace-panel-header="true">
-          <h2>Aktywnosc</h2>
-        </header>
-        <div data-static-widget-body="true">
-          <p data-widget-placeholder="true">Placeholder widgetu dolnego.</p>
-        </div>
-      </section>
-
       <section data-static-widget-area="bottom" data-static-widget="trash">
         <header data-workspace-panel-header="true">
-          <h2>Kosz</h2>
+          <h2>Aktywnosc</h2>
           <button type="button" onClick={onOpenTrash}>
             Otworz
           </button>
         </header>
         <div data-static-widget-body="true">
-          <strong>{trashedCount}</strong>
           <p data-widget-placeholder="true">Placeholder widgetu dolnego.</p>
         </div>
       </section>
