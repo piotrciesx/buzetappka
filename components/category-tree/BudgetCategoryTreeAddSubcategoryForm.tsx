@@ -31,7 +31,7 @@ export default function BudgetCategoryTreeAddSubcategoryForm({
   }
 
   return (
-    <div style={styles.formRow}>
+    <div style={styles.formRow} data-level1-add-form="true">
       <input
         style={styles.input}
         placeholder={placeholder}

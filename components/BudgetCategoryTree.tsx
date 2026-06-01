@@ -262,7 +262,11 @@ export default function BudgetCategoryTree(props: Props) {
     const childrenLevel2 = getSortedLevel2Children(level1Category.id)
 
     if (childrenLevel2.length === 0) {
-      return <div style={styles.emptyText}>Brak kategorii poziomu 2</div>
+      return (
+        <div data-level2-list="true">
+          <div style={styles.emptyText}>Brak kategorii poziomu 2</div>
+        </div>
+      )
     }
 
     const isLevel2DndBlocked =
@@ -271,7 +275,7 @@ export default function BudgetCategoryTree(props: Props) {
 
     if (isLevel2DndBlocked) {
       return (
-        <div>
+        <div data-level2-list="true">
           {childrenLevel2.map((level2Category) => {
             const sortedLevel3Children = getSortedLevel3Children(level2Category.id)
 
@@ -287,45 +291,47 @@ export default function BudgetCategoryTree(props: Props) {
     }
 
     return (
-      <DndContext
-        sensors={dndSensors}
-        collisionDetection={closestCenter}
-        onDragEnd={async (event) => {
-          const { active, over } = event
+      <div data-level2-list="true">
+        <DndContext
+          sensors={dndSensors}
+          collisionDetection={closestCenter}
+          onDragEnd={async (event) => {
+            const { active, over } = event
 
-          if (!over || active.id === over.id) {
-            return
-          }
+            if (!over || active.id === over.id) {
+              return
+            }
 
-          const level2Ids = childrenLevel2.map((category) => category.id)
-          await handleReorderLevel2(
-            level1Category.id,
-            String(active.id),
-            getNearestDndSwapTargetId(
-              level2Ids,
+            const level2Ids = childrenLevel2.map((category) => category.id)
+            await handleReorderLevel2(
+              level1Category.id,
               String(active.id),
-              String(over.id),
-              isMobileViewport
+              getNearestDndSwapTargetId(
+                level2Ids,
+                String(active.id),
+                String(over.id),
+                isMobileViewport
+              )
             )
-          )
-        }}
-      >
-        <SortableContext
-          items={childrenLevel2.map((category) => category.id)}
-          strategy={verticalListSortingStrategy}
+          }}
         >
-          {childrenLevel2.map((level2Category) => {
-            const sortedLevel3Children = getSortedLevel3Children(level2Category.id)
+          <SortableContext
+            items={childrenLevel2.map((category) => category.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            {childrenLevel2.map((level2Category) => {
+              const sortedLevel3Children = getSortedLevel3Children(level2Category.id)
 
-            return renderLevel2Section(
-              level1Category,
-              level2Category,
-              sortedLevel3Children,
-              isLevel2DndBlocked
-            )
-          })}
-        </SortableContext>
-      </DndContext>
+              return renderLevel2Section(
+                level1Category,
+                level2Category,
+                sortedLevel3Children,
+                isLevel2DndBlocked
+              )
+            })}
+          </SortableContext>
+        </DndContext>
+      </div>
     )
   }
 
@@ -465,16 +471,28 @@ export default function BudgetCategoryTree(props: Props) {
 
   const renderLevel1Content = (level1Category: Category) => {
     const isLevel1CalendarOpen = openLevel1CalendarIds.includes(level1Category.id)
+    const level1Kind = getLevel1Kind(level1Category)
 
     return (
       <section
         key={`content-${level1Category.id}`}
         data-level1-expanded-content="true"
-        data-level1-kind={getLevel1Kind(level1Category)}
+        data-level1-kind={level1Kind}
       >
         {canUseMonthCalendar && isLevel1CalendarOpen && renderLevel1CalendarPanel(level1Category)}
-        {renderAddSubcategoryForm(level1Category.id, 'Nazwa kategorii')}
         {renderLevel2List(level1Category)}
+        {renderAddSubcategoryForm(level1Category.id, 'Nazwa kategorii')}
+        <button
+          type="button"
+          data-level1-add-category-button="true"
+          onClick={() => {
+            setOpenAddSubcategoryFor(level1Category.id)
+            setNewSubcategoryName('')
+            setNewSubcategoryIconKey(null)
+          }}
+        >
+          + Dodaj kategorię {level1Kind === 'income' ? 'przychodu' : 'wydatku'}
+        </button>
       </section>
     )
   }
