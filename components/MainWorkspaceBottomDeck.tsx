@@ -23,140 +23,46 @@ type Props = {
 
 export default function MainWorkspaceBottomDeck({
   selectedMonth,
-  calendarDays,
-  recentTransactions,
   trashedCount,
   onOpenMonthCalendar,
-  onOpenDay,
   onOpenTrash,
 }: Props) {
-  const today = new Date()
-  const currentMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`
-  const currentDay = today.getDate()
-  const visibleRecentTransactions = recentTransactions.slice(0, 6)
-
   return (
-    <section data-main-workspace-deck="true" aria-label="Kalendarz i ostatnie wpisy">
-      <div data-calendar-recent-panel="true">
-        <section data-workspace-calendar-pane="true" aria-label="Kalendarz miesiąca">
-          <div data-workspace-panel-header="true">
-            <div>
-              <span>Kalendarz</span>
-              <strong>{selectedMonth}</strong>
-            </div>
-            <div data-workspace-calendar-nav="true">
-              <button
-                type="button"
-                onClick={onOpenMonthCalendar}
-                aria-label="Otwórz pełny kalendarz miesiąca"
-                title="Otwórz kalendarz"
-              >
-                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-                  <path
-                    d="M8 5h11v11"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                  />
-                  <path
-                    d="M19 5 5 19"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
+    <section data-main-workspace-deck="true" aria-label="Dolne widgety workspace">
+      <section data-static-widget-area="bottom" data-static-widget="calendar">
+        <header data-workspace-panel-header="true">
+          <h2>Kalendarz</h2>
+          <button type="button" onClick={onOpenMonthCalendar}>
+            Otworz
+          </button>
+        </header>
+        <div data-static-widget-body="true">
+          <strong>{selectedMonth}</strong>
+          <p data-widget-placeholder="true">Placeholder widgetu dolnego.</p>
+        </div>
+      </section>
 
-          <div data-mini-calendar="main">
-            {['P', 'W', 'Ś', 'C', 'P', 'S', 'N'].map((dayLabel, index) => (
-              <small key={`${dayLabel}-${index}`}>{dayLabel}</small>
-            ))}
-            {calendarDays.map((dayNumber, index) =>
-              dayNumber ? (
-                <button
-                  key={`${selectedMonth}-${dayNumber}`}
-                  type="button"
-                  data-current-day={selectedMonth === currentMonth && dayNumber === currentDay}
-                  onClick={() => onOpenDay(String(dayNumber))}
-                >
-                  {dayNumber}
-                </button>
-              ) : (
-                <i key={`empty-${index}`} />
-              )
-            )}
-          </div>
-        </section>
+      <section data-static-widget-area="bottom" data-static-widget="activity">
+        <header data-workspace-panel-header="true">
+          <h2>Aktywnosc</h2>
+        </header>
+        <div data-static-widget-body="true">
+          <p data-widget-placeholder="true">Placeholder widgetu dolnego.</p>
+        </div>
+      </section>
 
-        <section data-workspace-recent-pane="true" aria-label="Ostatnie wpisy">
-          <div data-workspace-panel-header="true">
-            <div>
-              <span>Ostatnie wpisy</span>
-              <strong>{visibleRecentTransactions.length} w podglądzie</strong>
-            </div>
-          </div>
-          <div data-workspace-recent-rows="true">
-            {visibleRecentTransactions.length === 0 ? (
-              <small data-workspace-empty-placeholder="true">Brak wpisów w tym zakresie.</small>
-            ) : (
-              visibleRecentTransactions.map((transaction) => (
-                <div
-                  key={transaction.id}
-                  data-workspace-recent-row="true"
-                  data-transaction-kind={transaction.kind}
-                >
-                  <b>{transaction.amount} zł</b>
-                  <span>{transaction.description || 'Bez opisu'}</span>
-                  <small>{transaction.categoryLabel}</small>
-                  <time>{transaction.date}</time>
-                </div>
-              ))
-            )}
-          </div>
-        </section>
-      </div>
-
-      <footer data-workspace-bottom-bar="true">
-        <span>{selectedMonth}</span>
-        <button
-          type="button"
-          data-workspace-trash-chip="true"
-          onClick={onOpenTrash}
-          aria-label={`Kosz, liczba elementów: ${trashedCount}`}
-        >
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-            <path
-              d="M4 7h16"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeWidth="2"
-            />
-            <path
-              d="M10 11v6M14 11v6"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeWidth="2"
-            />
-            <path
-              d="M6 7l1 13h10l1-13M9 7V4h6v3"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-            />
-          </svg>
-          {trashedCount > 0 && <b>{trashedCount}</b>}
-        </button>
-      </footer>
+      <section data-static-widget-area="bottom" data-static-widget="trash">
+        <header data-workspace-panel-header="true">
+          <h2>Kosz</h2>
+          <button type="button" onClick={onOpenTrash}>
+            Otworz
+          </button>
+        </header>
+        <div data-static-widget-body="true">
+          <strong>{trashedCount}</strong>
+          <p data-widget-placeholder="true">Placeholder widgetu dolnego.</p>
+        </div>
+      </section>
     </section>
   )
 }
