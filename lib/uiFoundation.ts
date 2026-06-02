@@ -4,7 +4,8 @@ export const uiZIndex = {
   raised: 1,
   sticky: 40,
   dropdown: 1200,
-  popover: 3000,
+  popover: 2200,
+  panel: 2600,
   drawer: 2600,
   modal: 3000,
   toast: 12000,
@@ -116,7 +117,8 @@ export const uiPrimitiveContracts = {
   segmentedControl: ['default', 'compact'],
   card: ['default', 'elevated', 'interactive'],
   panel: ['workspace', 'utility', 'side', 'rail'],
-  modal: ['dialog', 'confirm', 'editor'],
+  modal: ['s', 'm', 'l', 'xl'],
+  overlay: ['popover', 'drawer', 'workspace'],
   dropdown: ['menu', 'autocomplete', 'topbar'],
   toolbar: ['default', 'compact', 'sticky'],
 } as const
@@ -306,6 +308,35 @@ export const uiButtonApi = {
   },
 } as const
 
+export const uiModalApi = {
+  classNames: {
+    backdrop: 'ui-overlay-backdrop',
+    modal: 'ui-modal',
+    modalS: 'ui-modal--s',
+    modalM: 'ui-modal--m',
+    modalL: 'ui-modal--l',
+    modalXl: 'ui-modal--xl',
+    header: 'ui-modal__header',
+    body: 'ui-modal__body',
+    footer: 'ui-modal__footer',
+    close: 'ui-modal__close',
+    popover: 'ui-popover',
+    drawer: 'ui-drawer',
+    workspaceOverlay: 'ui-workspace-overlay',
+  },
+  attributes: {
+    backdrop: 'data-overlay-backdrop',
+    size: 'data-modal-size',
+    layer: 'data-overlay-layer',
+    closeArea: 'data-modal-close-area',
+  },
+  backdrop: {
+    soft: 'soft',
+    standard: 'standard',
+    strong: 'strong',
+  },
+} as const
+
 export const uiControlPrimitives = {
   button: {
     hero: {
@@ -474,13 +505,70 @@ const uiFloatingLayerOverlayContract = {
   dismissesOnOutsidePointer: false,
 } as const
 
+export const uiBackdropPrimitives = {
+  soft: {
+    className: uiModalApi.classNames.backdrop,
+    tone: uiModalApi.backdrop.soft,
+    background: 'var(--ui-overlay-backdrop-soft)',
+    blur: 'var(--ui-overlay-backdrop-blur-soft)',
+  },
+  standard: {
+    className: uiModalApi.classNames.backdrop,
+    tone: uiModalApi.backdrop.standard,
+    background: 'var(--ui-overlay-backdrop)',
+    blur: 'var(--ui-overlay-backdrop-blur-standard)',
+  },
+  strong: {
+    className: uiModalApi.classNames.backdrop,
+    tone: uiModalApi.backdrop.strong,
+    background: 'var(--ui-overlay-backdrop-strong)',
+    blur: 'var(--ui-overlay-backdrop-blur-strong)',
+  },
+} as const
+
+export const uiModalSizePrimitives = {
+  s: {
+    className: uiModalApi.classNames.modalS,
+    width: 'var(--ui-modal-width-s)',
+    maxWidth: 'var(--ui-modal-max-width-s)',
+    maxHeight: 'var(--ui-modal-max-height-s)',
+  },
+  m: {
+    className: uiModalApi.classNames.modalM,
+    width: 'var(--ui-modal-width-m)',
+    maxWidth: 'var(--ui-modal-max-width-m)',
+    maxHeight: 'var(--ui-modal-max-height-m)',
+  },
+  l: {
+    className: uiModalApi.classNames.modalL,
+    width: 'var(--ui-modal-width-l)',
+    maxWidth: 'var(--ui-modal-max-width-l)',
+    maxHeight: 'var(--ui-modal-max-height-l)',
+  },
+  xl: {
+    className: uiModalApi.classNames.modalXl,
+    width: 'var(--ui-modal-width-xl)',
+    maxWidth: 'var(--ui-modal-max-width-xl)',
+    maxHeight: 'var(--ui-modal-max-height-xl)',
+  },
+} as const
+
 export const uiOverlayContracts = {
   modal: {
+    className: uiModalApi.classNames.modal,
     layer: uiZIndex.modal,
+    width: '100%',
+    maxWidth: 'var(--ui-modal-max-width-m)',
+    maxHeight: 'var(--ui-modal-max-height-m)',
     radius: 'var(--ui-modal-radius)',
     shadow: 'var(--ui-shadow-modal)',
     padding: 'var(--ui-overlay-modal-padding)',
     backdrop: 'var(--ui-overlay-backdrop)',
+    bodyOverflow: 'var(--ui-modal-body-overflow)',
+    headerPadding: 'var(--ui-modal-header-padding)',
+    bodyPadding: 'var(--ui-modal-body-padding)',
+    footerPadding: 'var(--ui-modal-footer-padding)',
+    closeArea: 'var(--ui-modal-close-area)',
     ownsFocus: true,
     dismissesOnBackdrop: true,
   },
@@ -493,10 +581,16 @@ export const uiOverlayContracts = {
     dismissesOnOutsidePointer: true,
   },
   popover: {
+    className: uiModalApi.classNames.popover,
     layer: uiZIndex.popover,
+    width: 'var(--ui-popover-width)',
+    minWidth: 'var(--ui-popover-min-width)',
+    maxWidth: 'var(--ui-popover-max-width)',
+    maxHeight: 'var(--ui-popover-max-height)',
     radius: 'var(--ui-radius-sm)',
     shadow: 'var(--ui-shadow-popover)',
     padding: 'var(--ui-overlay-popover-padding)',
+    bodyOverflow: 'var(--ui-popover-body-overflow)',
     ownsFocus: false,
     dismissesOnOutsidePointer: true,
   },
@@ -509,9 +603,28 @@ export const uiOverlayContracts = {
     dismissesOnBackdrop: true,
   },
   drawer: {
+    className: uiModalApi.classNames.drawer,
     layer: uiZIndex.drawer,
+    width: 'var(--ui-drawer-panel-width)',
+    maxWidth: 'var(--ui-drawer-panel-max-width)',
+    maxHeight: 'var(--ui-drawer-panel-max-height)',
     radius: 'var(--ui-panel-radius)',
     shadow: 'var(--ui-shadow-panel)',
+    padding: 'var(--ui-overlay-drawer-padding)',
+    bodyOverflow: 'var(--ui-drawer-panel-body-overflow)',
+    ownsFocus: true,
+    dismissesOnBackdrop: true,
+  },
+  workspaceOverlay: {
+    className: uiModalApi.classNames.workspaceOverlay,
+    layer: uiZIndex.panel,
+    width: 'var(--ui-workspace-overlay-width)',
+    maxWidth: 'var(--ui-workspace-overlay-max-width)',
+    maxHeight: 'var(--ui-workspace-overlay-max-height)',
+    radius: 'var(--ui-panel-radius)',
+    shadow: 'var(--ui-shadow-panel)',
+    padding: 'var(--ui-overlay-workspace-padding)',
+    bodyOverflow: 'var(--ui-workspace-overlay-body-overflow)',
     ownsFocus: true,
     dismissesOnBackdrop: true,
   },
@@ -535,6 +648,22 @@ export const uiOverlayContracts = {
 
 export const uiOverlayPrimitives = {
   modal: uiOverlayContracts.modal,
+  modalS: {
+    ...uiOverlayContracts.modal,
+    ...uiModalSizePrimitives.s,
+  },
+  modalM: {
+    ...uiOverlayContracts.modal,
+    ...uiModalSizePrimitives.m,
+  },
+  modalL: {
+    ...uiOverlayContracts.modal,
+    ...uiModalSizePrimitives.l,
+  },
+  modalXl: {
+    ...uiOverlayContracts.modal,
+    ...uiModalSizePrimitives.xl,
+  },
   modalBase: {
     ...uiOverlayContracts.modal,
     layer: uiZIndex.modalBase,
@@ -567,6 +696,10 @@ export const uiOverlayPrimitives = {
   },
   drawer: uiOverlayContracts.drawer,
   sidePanel: uiOverlayContracts.sidePanel,
+  workspaceOverlay: uiOverlayContracts.workspaceOverlay,
+  backdropSoft: uiBackdropPrimitives.soft,
+  backdropStandard: uiBackdropPrimitives.standard,
+  backdropStrong: uiBackdropPrimitives.strong,
   toast: uiOverlayContracts.toast,
   floatingLayer: uiOverlayContracts.floatingLayer,
   floatingActions: uiOverlayContracts.floatingActions,
@@ -574,5 +707,7 @@ export const uiOverlayPrimitives = {
 
 export type UiZIndexToken = keyof typeof uiZIndex
 export type UiLayoutPrimitive = keyof typeof uiLayoutPrimitives
+export type UiModalSize = keyof typeof uiModalSizePrimitives
+export type UiBackdropTone = keyof typeof uiBackdropPrimitives
 export type UiOverlayKind = keyof typeof uiOverlayContracts
 export type UiOverlayPrimitive = keyof typeof uiOverlayPrimitives
