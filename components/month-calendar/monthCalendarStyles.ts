@@ -1,23 +1,23 @@
 import { uiZIndex } from '../../lib/uiFoundation'
 
 export const calendarPanelStyle = {
-  marginBottom: 16,
+  marginBottom: 'var(--ui-spacing-xl)',
   background: 'var(--ui-color-card-background)',
   border: '1px solid var(--ui-color-divider-border)',
   borderRadius: 14,
-  padding: 12,
+  padding: 'var(--ui-spacing-card-padding)',
   boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
 } as const
 
 export const calendarWeekdaysStyle = {
   display: 'grid',
   gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
-  gap: 5,
-  marginTop: 8,
+  gap: 'var(--ui-spacing-xs)',
+  marginTop: 'var(--ui-spacing-md)',
 } as const
 
 export const calendarWeekdayStyle = {
-  padding: '5px 7px',
+  padding: 'var(--ui-spacing-xs) var(--ui-spacing-sm)',
   fontSize: 10,
   fontWeight: 600,
   textTransform: 'uppercase' as const,
@@ -27,19 +27,19 @@ export const calendarWeekdayStyle = {
 export const calendarGridStyle = {
   display: 'grid',
   gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
-  gap: 5,
-  marginTop: 5,
+  gap: 'var(--ui-spacing-xs)',
+  marginTop: 'var(--ui-spacing-xs)',
 } as const
 
 export const calendarDayCellStyle = {
   minHeight: 70,
   border: '1px solid var(--ui-color-divider-border)',
   borderRadius: 10,
-  padding: '7px 8px',
+  padding: 'var(--ui-spacing-sm) var(--ui-spacing-md)',
   background: 'var(--ui-color-soft-section-background)',
   display: 'flex',
   flexDirection: 'column' as const,
-  gap: 4,
+  gap: 'var(--ui-spacing-xs)',
   cursor: 'pointer',
   position: 'relative' as const,
   textAlign: 'left' as const,
@@ -69,7 +69,7 @@ export const calendarEmptyCellStyle = {
   minHeight: 70,
   border: '1px dashed var(--ui-color-divider-border)',
   borderRadius: 10,
-  padding: 8,
+  padding: 'var(--ui-spacing-md)',
   background: 'var(--ui-color-soft-section-background)',
 } as const
 
@@ -123,7 +123,7 @@ export const modalHeaderStyle = {
   alignItems: 'flex-start',
   justifyContent: 'space-between',
   gap: 12,
-  marginBottom: 14,
+  marginBottom: 'var(--ui-space-7)',
 } as const
 
 export const modalTitleStyle = {
@@ -151,7 +151,7 @@ export const closeButtonStyle = {
 export const daySummaryCardStyle = {
   border: '1px solid var(--ui-color-divider-border)',
   borderRadius: 12,
-  padding: 12,
+  padding: 'var(--ui-spacing-card-padding)',
   background: 'var(--ui-color-soft-section-background)',
   marginBottom: 14,
 } as const
@@ -159,13 +159,13 @@ export const daySummaryCardStyle = {
 export const transactionsListStyle = {
   display: 'flex',
   flexDirection: 'column' as const,
-  gap: 10,
+  gap: 'var(--ui-space-5)',
 } as const
 
 export const transactionCardStyle = {
   border: '1px solid var(--ui-color-divider-border)',
   borderRadius: 12,
-  padding: 12,
+  padding: 'var(--ui-spacing-card-padding)',
   background: 'var(--ui-color-card-background)',
 } as const
 
@@ -173,8 +173,8 @@ export const transactionTopRowStyle = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  gap: 12,
-  marginBottom: 8,
+  gap: 'var(--ui-spacing-card-section-gap)',
+  marginBottom: 'var(--ui-spacing-md)',
 } as const
 
 export const transactionAmountStyle = {
@@ -190,14 +190,14 @@ export const transactionDescriptionStyle = {
 
 export const transactionTagsStyle = {
   display: 'flex',
-  gap: 6,
+  gap: 'var(--ui-spacing-list-gap)',
   flexWrap: 'wrap' as const,
-  marginTop: 8,
+  marginTop: 'var(--ui-spacing-md)',
 } as const
 
 export const transactionTagBadgeStyle = {
   fontSize: 12,
-  padding: '4px 8px',
+  padding: 'var(--ui-spacing-xs) var(--ui-spacing-md)',
   borderRadius: 999,
   background: 'var(--ui-color-soft-blue)',
   border: '1px solid var(--ui-color-light-blue-border)',
@@ -208,7 +208,7 @@ export const transactionTagBadgeStyle = {
 export const emptyDayStyle = {
   border: '1px dashed var(--ui-color-soft-border)',
   borderRadius: 12,
-  padding: 14,
+  padding: 'var(--ui-space-7)',
   background: 'var(--ui-color-soft-section-background)',
   color: 'var(--ui-color-secondary-text)',
   fontSize: 14,
@@ -217,22 +217,22 @@ export const emptyDayStyle = {
 export const transactionActionsStyle = {
   display: 'flex',
   flexWrap: 'wrap' as const,
-  gap: 8,
-  marginTop: 10,
+  gap: 'var(--ui-spacing-action-gap)',
+  marginTop: 'var(--ui-space-5)',
 } as const
 
 export const formRowStyle = {
   display: 'flex',
   alignItems: 'center',
-  gap: 8,
+  gap: 'var(--ui-spacing-form-field-gap)',
   flexWrap: 'wrap' as const,
-  marginTop: 8,
+  marginTop: 'var(--ui-spacing-md)',
 } as const
 
 export const inputStyle = {
   border: '1px solid var(--ui-color-soft-border)',
   borderRadius: 10,
-  padding: '8px 10px',
+  padding: 'var(--ui-spacing-md) var(--ui-space-5)',
   fontSize: 14,
   minHeight: 38,
 } as const
@@ -282,23 +282,23 @@ export const suggestionButtonBaseStyle = {
 } as const
 
 export const tagFieldWrapStyle = {
-  marginTop: 8,
+  marginTop: 'var(--ui-spacing-md)',
   display: 'flex',
   flexDirection: 'column' as const,
-  gap: 8,
+  gap: 'var(--ui-spacing-form-field-gap)',
 } as const
 
 export const tagBadgesWrapStyle = {
   display: 'flex',
-  gap: 6,
+  gap: 'var(--ui-spacing-list-gap)',
   flexWrap: 'wrap' as const,
 } as const
 
 export const tagBadgeStyle = {
   display: 'inline-flex',
   alignItems: 'center',
-  gap: 6,
-  padding: '4px 8px',
+  gap: 'var(--ui-spacing-action-gap)',
+  padding: 'var(--ui-spacing-xs) var(--ui-spacing-md)',
   borderRadius: 999,
   background: 'var(--ui-color-soft-blue)',
   border: '1px solid var(--ui-color-light-blue-border)',
@@ -355,17 +355,17 @@ export const dangerButtonStyle = {
 
 export const heatmapBarStyle = {
   display: 'flex',
-  gap: 8,
+  gap: 'var(--ui-spacing-action-gap)',
   flexWrap: 'wrap' as const,
-  marginTop: 14,
-  marginBottom: 8,
+  marginTop: 'var(--ui-space-7)',
+  marginBottom: 'var(--ui-spacing-md)',
 } as const
 
 export const heatmapLegendStyle = {
   display: 'flex',
   flexDirection: 'column' as const,
-  gap: 8,
-  marginBottom: 8,
+  gap: 'var(--ui-spacing-card-section-gap)',
+  marginBottom: 'var(--ui-spacing-md)',
   fontSize: 12,
   color: 'var(--ui-color-secondary-text)',
 } as const
@@ -374,7 +374,7 @@ export const heatmapLegendLabelsStyle = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  gap: 12,
+  gap: 'var(--ui-spacing-card-section-gap)',
   fontSize: 12,
   fontWeight: 600,
   color: 'var(--ui-color-secondary-text)',
@@ -393,23 +393,23 @@ export const heatmapLegendBarStyle = {
 export const heatmapSwitchRowStyle = {
   display: 'flex',
   alignItems: 'center',
-  gap: 8,
+  gap: 'var(--ui-spacing-form-field-gap)',
   flexWrap: 'wrap' as const,
-  marginBottom: 8,
+  marginBottom: 'var(--ui-spacing-md)',
   fontSize: 12,
   color: 'var(--ui-color-secondary-text)',
 } as const
 
 export const noDaySectionStyle = {
-  marginTop: 18,
+  marginTop: 'var(--ui-space-9)',
   borderTop: '1px solid var(--ui-color-divider-border)',
-  paddingTop: 16,
+  paddingTop: 'var(--ui-spacing-xl)',
 } as const
 
 export const noDaySummaryStyle = {
-  marginTop: 8,
-  marginBottom: 12,
-  padding: 12,
+  marginTop: 'var(--ui-spacing-md)',
+  marginBottom: 'var(--ui-spacing-lg)',
+  padding: 'var(--ui-spacing-card-padding)',
   border: '1px solid var(--ui-color-divider-border)',
   borderRadius: 12,
   background: 'var(--ui-color-soft-section-background)',
@@ -418,19 +418,19 @@ export const noDaySummaryStyle = {
 export const noDayHintStyle = {
   fontSize: 12,
   color: 'var(--ui-color-secondary-text)',
-  marginTop: 6,
+  marginTop: 'var(--ui-spacing-sm)',
   lineHeight: 1.4,
 } as const
 
 export const badgeStyle = {
   display: 'inline-flex',
   alignItems: 'center',
-  gap: 6,
+  gap: 'var(--ui-spacing-list-gap)',
   border: '1px solid var(--ui-color-soft-border)',
   background: 'var(--ui-color-soft-section-background)',
   color: 'var(--ui-color-secondary-text)',
   borderRadius: 999,
-  padding: '4px 8px',
+  padding: 'var(--ui-spacing-xs) var(--ui-spacing-md)',
   fontSize: 12,
   fontWeight: 600,
 } as const

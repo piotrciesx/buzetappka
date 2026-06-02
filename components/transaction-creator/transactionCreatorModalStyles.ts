@@ -32,9 +32,9 @@ export const sectionStyle = {
 } as const
 
 export const treeLevel2WrapStyle = {
-  marginTop: 8,
+  marginTop: 'var(--ui-spacing-md)',
   display: 'flex',
-  gap: 6,
+  gap: 'var(--ui-spacing-list-gap)',
   flexWrap: 'wrap' as const,
 } as const
 
@@ -47,27 +47,27 @@ export const treeLevel3WrapStyle = {
 } as const
 
 export const treeLevel3ButtonsStyle = {
-  marginTop: 8,
+  marginTop: 'var(--ui-spacing-md)',
   display: 'flex',
-  gap: 6,
+  gap: 'var(--ui-spacing-list-gap)',
   flexWrap: 'wrap' as const,
 } as const
 
 export const shortcutListStyle = {
-  marginTop: 8,
+  marginTop: 'var(--ui-spacing-md)',
   display: 'flex',
-  gap: 6,
+  gap: 'var(--ui-spacing-list-gap)',
   flexWrap: 'wrap' as const,
 } as const
 
 export const shortcutButtonStyle = {
   display: 'flex',
   alignItems: 'center',
-  gap: 6,
+  gap: 'var(--ui-spacing-action-gap)',
   minWidth: 0,
   maxWidth: '100%',
   minHeight: 32,
-  padding: '6px 10px',
+  padding: 'var(--ui-spacing-sm) var(--ui-space-5)',
 } as const
 
 export const disabledLevel3WrapStyle = {
@@ -80,7 +80,7 @@ export const disabledLevel3WrapStyle = {
 export const serialToggleStyle = {
   display: 'flex',
   alignItems: 'center',
-  gap: 8,
+  gap: 'var(--ui-spacing-form-field-gap)',
   marginTop: 'var(--ui-space-6)',
   fontSize: 'var(--ui-font-size-body)',
   fontWeight: 600,
@@ -90,7 +90,7 @@ export const serialToggleStyle = {
 export const dateFieldStyle = {
   display: 'flex',
   flexDirection: 'column' as const,
-  gap: 6,
+  gap: 'var(--ui-spacing-form-field-gap)',
 } as const
 
 export const dateLabelStyle = {
@@ -105,7 +105,7 @@ export const descriptionFieldWrapStyle = {
   maxWidth: '100%',
   display: 'flex',
   flexDirection: 'column' as const,
-  gap: 4,
+  gap: 'var(--ui-spacing-xs)',
 } as const
 
 export const descriptionInputWrapStyle = {
@@ -163,7 +163,7 @@ export const finalCategoryInfoTitleStyle = {
   color: 'var(--ui-color-primary-blue)',
   letterSpacing: 0.3,
   textTransform: 'uppercase' as const,
-  marginBottom: 4,
+  marginBottom: 'var(--ui-spacing-xs)',
 } as const
 
 export const finalCategoryInfoValueStyle = {
@@ -176,19 +176,19 @@ export const tagInputWrapStyle = {
   marginTop: 'var(--ui-space-5)',
   display: 'flex',
   flexDirection: 'column' as const,
-  gap: 'var(--ui-space-4)',
+  gap: 'var(--ui-spacing-form-field-gap)',
 } as const
 
 export const tagBadgesWrapStyle = {
   display: 'flex',
-  gap: 8,
+  gap: 'var(--ui-spacing-list-gap)',
   flexWrap: 'wrap' as const,
 } as const
 
 export const tagBadgeStyle = {
   display: 'inline-flex',
   alignItems: 'center',
-  gap: 6,
+  gap: 'var(--ui-spacing-action-gap)',
   padding: uiControlPrimitives.tag.default.padding,
   borderRadius: uiControlPrimitives.tag.default.radius,
   border: '1px solid var(--ui-color-light-blue-border)',

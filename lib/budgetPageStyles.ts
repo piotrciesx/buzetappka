@@ -6,7 +6,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     width: '100%',
     maxWidth: 'none',
     boxSizing: 'border-box',
-    padding: '0 14px 22px 184px',
+    padding: '0 var(--ui-space-7) calc(var(--ui-space-10) + var(--ui-space-1)) 184px',
     margin: 0,
     fontFamily:
       'var(--font-app-sans), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
@@ -26,14 +26,14 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   pageSubtitle: {
     fontSize: 12,
     color: 'var(--ui-color-secondary-text)',
-    marginBottom: 12,
+    marginBottom: 'var(--ui-spacing-card-section-gap)',
   } as const,
 
   topPanel: {
     background: 'linear-gradient(145deg, rgba(255,255,255,0.90), rgba(248,250,252,0.74))',
     border: '1px solid rgba(203, 213, 225, 0.58)',
     borderRadius: 12,
-    padding: 6,
+    padding: 'var(--ui-spacing-sm)',
     marginBottom: 0,
     boxShadow: '0 14px 36px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255,255,255,0.86)',
     maxWidth: '100%',
@@ -44,8 +44,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     background: 'rgba(255,255,255,0.84)',
     border: '1px solid rgba(226, 232, 240, 0.82)',
     borderRadius: 14,
-    padding: 12,
-    marginBottom: 10,
+    padding: 'var(--ui-spacing-card-padding)',
+    marginBottom: 'var(--ui-space-5)',
     boxShadow: '0 10px 28px rgba(15,23,42,0.045)',
     maxWidth: '100%',
     boxSizing: 'border-box',
@@ -54,9 +54,9 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   monthBar: {
     display: 'flex',
     alignItems: 'center',
-    gap: 12,
+    gap: 'var(--ui-spacing-form-group-gap)',
     flexWrap: 'wrap' as const,
-    marginBottom: 14,
+    marginBottom: 'var(--ui-space-7)',
   } as const,
 
   monthLabel: {
@@ -64,7 +64,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     textAlign: 'center' as const,
     fontWeight: 620,
     fontSize: 15,
-    padding: '6px 12px',
+    padding: 'var(--ui-spacing-sm) var(--ui-spacing-lg)',
     background: 'linear-gradient(145deg, var(--ui-color-card-background), var(--ui-color-soft-blue))',
     border: '1px solid rgba(147, 197, 253, 0.52)',
     borderRadius: 999,
@@ -74,8 +74,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   monthNavigationSettingsCard: {
-    marginBottom: 14,
-    padding: 14,
+    marginBottom: 'var(--ui-space-7)',
+    padding: 'var(--ui-space-7)',
     background: 'var(--ui-color-soft-section-background)',
     border: '1px solid var(--ui-color-divider-border)',
     borderRadius: 12,
@@ -84,20 +84,20 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   monthNavigationSettingsTitle: {
     fontSize: 15,
     fontWeight: 600,
-    marginBottom: 10,
+    marginBottom: 'var(--ui-space-5)',
   } as const,
 
   monthNavigationSettingsRow: {
     display: 'flex',
     alignItems: 'center',
-    gap: 12,
+    gap: 'var(--ui-spacing-form-group-gap)',
     flexWrap: 'wrap' as const,
   } as const,
 
   monthNavigationField: {
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: 6,
+    gap: 'var(--ui-spacing-form-field-gap)',
   } as const,
 
   monthNavigationFieldLabel: {
@@ -109,21 +109,21 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   monthNavigationCheckboxLabel: {
     display: 'flex',
     alignItems: 'center',
-    gap: 8,
+    gap: 'var(--ui-spacing-form-field-gap)',
     fontSize: 14,
     fontWeight: 600,
     color: 'var(--ui-color-primary-text)',
   } as const,
 
   monthNavigationHint: {
-    marginTop: 10,
+    marginTop: 'var(--ui-space-5)',
     fontSize: 13,
     color: 'var(--ui-color-secondary-text)',
   } as const,
 
   infoRow: {
     display: 'flex',
-    gap: 12,
+    gap: 'var(--ui-spacing-card-section-gap)',
     flexWrap: 'wrap' as const,
   } as const,
 
@@ -131,7 +131,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     background: 'rgba(248,250,252,0.84)',
     border: '1px solid rgba(226, 232, 240, 0.88)',
     borderRadius: 12,
-    padding: '8px 10px',
+    padding: 'var(--ui-spacing-md) var(--ui-space-5)',
     fontSize: 12,
     maxWidth: '100%',
     boxSizing: 'border-box',
@@ -148,7 +148,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   sectionTitle: {
     fontSize: 17,
     fontWeight: 760,
-    marginBottom: 6,
+    marginBottom: 'var(--ui-spacing-sm)',
     color: 'var(--ui-color-primary-text)',
   } as const,
 
@@ -156,17 +156,17 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     background: 'var(--ui-color-card-background)',
     border: '1px solid var(--ui-color-divider-border)',
     borderRadius: 14,
-    padding: 16,
+    padding: 'var(--ui-spacing-xl)',
     color: 'var(--ui-color-secondary-text)',
     fontStyle: 'italic',
   } as const,
 
   l1Card: {
-    marginBottom: 5,
+    marginBottom: 'var(--ui-spacing-xs)',
     background: 'rgba(255, 255, 255, 0.72)',
     border: '1px solid rgba(219, 234, 254, 0.92)',
     borderRadius: 11,
-    padding: 5,
+    padding: 'var(--ui-spacing-xs)',
     boxShadow: '0 8px 22px var(--ui-shadow-light-color)',
     maxWidth: '100%',
     boxSizing: 'border-box',
@@ -176,19 +176,19 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     background: 'linear-gradient(145deg, rgba(239,246,255,0.98), rgba(226,239,255,0.84))',
     border: '1px solid rgba(147,197,253,0.46)',
     borderRadius: 9,
-    padding: '4px 7px',
+    padding: 'var(--ui-spacing-xs) var(--ui-spacing-sm)',
     fontWeight: 560,
     fontSize: 13,
-    marginBottom: 5,
+    marginBottom: 'var(--ui-spacing-xs)',
     display: 'flex',
     alignItems: 'center',
-    gap: 10,
+    gap: 'var(--ui-space-5)',
     cursor: 'pointer',
   } as const,
 
   l2Wrap: {
-    marginTop: 4,
-    marginLeft: 'clamp(3px, 1vw, 8px)',
+    marginTop: 'var(--ui-spacing-xs)',
+    marginLeft: 'clamp(var(--ui-space-1), 1vw, var(--ui-spacing-md))',
     minWidth: 0,
   } as const,
 
@@ -196,11 +196,11 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     background: 'linear-gradient(145deg, rgba(255,255,255,0.92), rgba(248,250,252,0.82))',
     border: '1px solid rgba(203, 213, 225, 0.72)',
     borderRadius: 9,
-    padding: '3px 6px',
+    padding: 'var(--ui-space-1) var(--ui-spacing-sm)',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 8,
+    gap: 'var(--ui-spacing-list-row-x)',
     flexWrap: 'wrap' as const,
     cursor: 'pointer',
   } as const,
@@ -208,7 +208,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   l2Left: {
     display: 'flex',
     alignItems: 'center',
-    gap: 7,
+    gap: 'var(--ui-spacing-sm)',
     flexWrap: 'wrap' as const,
     minWidth: 0,
   } as const,
@@ -234,8 +234,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
 
   closingBadge: {
     display: 'inline-block',
-    marginTop: 6,
-    padding: '4px 8px',
+    marginTop: 'var(--ui-spacing-sm)',
+    padding: 'var(--ui-spacing-xs) var(--ui-spacing-md)',
     borderRadius: 999,
     background: 'var(--ui-color-warning-soft)',
     border: '1px solid var(--ui-color-warning-soft)',
@@ -245,8 +245,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   l3Wrap: {
-    marginTop: 4,
-    marginLeft: 'clamp(3px, 1vw, 8px)',
+    marginTop: 'var(--ui-spacing-xs)',
+    marginLeft: 'clamp(var(--ui-space-1), 1vw, var(--ui-spacing-md))',
     minWidth: 0,
   } as const,
 
@@ -254,11 +254,11 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     background: 'rgba(255, 255, 255, 0.86)',
     border: '1px solid rgba(226, 232, 240, 0.9)',
     borderRadius: 9,
-    padding: '3px 6px',
+    padding: 'var(--ui-space-1) var(--ui-spacing-sm)',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 8,
+    gap: 'var(--ui-spacing-list-row-x)',
     flexWrap: 'wrap' as const,
     cursor: 'pointer',
   } as const,
@@ -295,7 +295,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
 
   actions: {
     display: 'flex',
-    gap: 6,
+    gap: 'var(--ui-spacing-action-gap)',
     flexWrap: 'wrap' as const,
     minWidth: 0,
   } as const,
@@ -343,11 +343,11 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   formRow: {
-    marginTop: 10,
+    marginTop: 'var(--ui-space-5)',
     display: 'flex',
-    gap: 8,
+    gap: 'var(--ui-spacing-form-field-gap)',
     flexWrap: 'wrap' as const,
-    padding: 12,
+    padding: 'var(--ui-spacing-lg)',
     background: 'var(--ui-color-soft-section-background)',
     border: '1px solid var(--ui-color-divider-border)',
     borderRadius: 12,
@@ -357,7 +357,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
 
   input: {
     height: 34,
-    padding: '0 11px',
+    padding: '0 var(--ui-spacing-lg)',
     borderRadius: 11,
     border: '1px solid rgba(203,213,225,0.92)',
     background: 'var(--ui-color-card-background)',
@@ -370,7 +370,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
 
   smallInput: {
     height: 32,
-    padding: '0 10px',
+    padding: '0 var(--ui-space-5)',
     borderRadius: 10,
     border: '1px solid rgba(203,213,225,0.92)',
     background: 'var(--ui-color-card-background)',
@@ -382,18 +382,18 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   transactionsBox: {
-    marginTop: 8,
+    marginTop: 'var(--ui-spacing-md)',
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: 2,
+    gap: 'var(--ui-space-1)',
   } as const,
 
   transactionRow: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 8,
-    padding: '3px 7px',
+    gap: 'var(--ui-spacing-list-row-x)',
+    padding: 'var(--ui-space-1) var(--ui-spacing-sm)',
     background: 'rgba(255,255,255,0.76)',
     border: '1px solid rgba(226,232,240,0.82)',
     borderRadius: 8,
@@ -406,7 +406,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   transactionLeft: {
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: 2,
+    gap: 'var(--ui-space-1)',
     minWidth: 0,
     overflowWrap: 'anywhere' as const,
   } as const,
@@ -422,33 +422,33 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   emptyText: {
-    marginTop: 8,
+    marginTop: 'var(--ui-spacing-md)',
     fontSize: 12,
     color: 'var(--ui-color-secondary-text)',
     fontStyle: 'italic',
   } as const,
 
   errorBox: {
-    marginTop: 12,
+    marginTop: 'var(--ui-spacing-lg)',
     color: 'var(--ui-color-expense)',
     background: 'var(--ui-color-expense-soft)',
     border: '1px solid var(--ui-color-expense-soft)',
-    padding: 12,
+    padding: 'var(--ui-spacing-lg)',
     borderRadius: 10,
   } as const,
 
   sortBar: {
     display: 'flex',
-    gap: 12,
+    gap: 'var(--ui-spacing-form-group-gap)',
     flexWrap: 'wrap' as const,
-    marginBottom: 14,
+    marginBottom: 'var(--ui-space-7)',
     alignItems: 'center',
   } as const,
 
   sortGroup: {
     display: 'flex',
     alignItems: 'center',
-    gap: 8,
+    gap: 'var(--ui-spacing-form-field-gap)',
     flexWrap: 'wrap' as const,
     minWidth: 0,
   } as const,
@@ -465,7 +465,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     bottom: 'max(14px, env(safe-area-inset-bottom))',
     display: 'flex',
     flexDirection: 'row' as const,
-    gap: 8,
+    gap: 'var(--ui-spacing-action-gap)',
     zIndex: uiZIndex.floatingAction,
     maxWidth: 'calc(100vw - 24px)',
   } as const,
