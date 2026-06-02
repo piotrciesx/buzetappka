@@ -53,7 +53,7 @@ export default function BudgetCategoryTreeLevel1Shell({
 }: Props) {
   const renderLimitIndicator = (level1Category: Category) =>
     level1Category.id === expenseLevel1Id && getBudgetLimitView ? (
-      <BudgetLimitIndicator view={getBudgetLimitView?.(null) ?? null} />
+      <BudgetLimitIndicator view={getBudgetLimitView?.(null) ?? null} variant="level1" />
     ) : null
 
   const handleDragEnd = async (event: DragEndEvent, useMobileTarget: boolean) => {

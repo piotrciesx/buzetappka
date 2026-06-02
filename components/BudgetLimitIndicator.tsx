@@ -12,6 +12,7 @@ export type BudgetLimitView = {
 
 type Props = {
   view: BudgetLimitView | null
+  variant?: 'default' | 'level1'
 }
 
 const formatMoney = (value: number) => `${value.toFixed(2)} zł`
@@ -60,7 +61,7 @@ const iconStyle: CSSProperties = {
   lineHeight: 1,
 }
 
-export default function BudgetLimitIndicator({ view }: Props) {
+export default function BudgetLimitIndicator({ view, variant = 'default' }: Props) {
   if (!view) {
     return null
   }
@@ -73,8 +74,33 @@ export default function BudgetLimitIndicator({ view }: Props) {
       ? '🔔'
       : ''
 
+  if (variant === 'level1') {
+    return (
+      <div style={wrapStyle} data-budget-limit-indicator="level1">
+        <span data-budget-limit-text="true">Limit miesięczny: {formatMoney(view.limit.amount)}</span>
+        <div data-budget-limit-level1-progress="true">
+          <span style={barStyle} data-budget-limit-bar="true">
+            <span
+              data-budget-limit-bar-fill="true"
+              style={{
+                display: 'block',
+                width: `${clampedPercent}%`,
+                height: '100%',
+                borderRadius: 999,
+                background: color,
+              }}
+            />
+          </span>
+          <strong style={{ color, fontWeight: 700 }} data-budget-limit-percent="true">
+            {formatMoney(view.usageAmount)} ({view.usagePercent.toFixed(0)}%)
+          </strong>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div style={wrapStyle} data-budget-limit-indicator="true">
+    <div style={wrapStyle} data-budget-limit-indicator="default">
       {alertIcon && (
         <span style={iconStyle} data-budget-limit-alert-icon="true">
           {alertIcon}
