@@ -308,9 +308,13 @@
   --ui-button-padding-standard: 0 14px;
   --ui-button-padding-utility: 0 12px;
   --ui-button-padding-md: var(--ui-button-padding-utility);
+  --ui-button-width-equal-min: 120px;
   --ui-button-menu-padding: 10px 12px;
   --ui-button-profile-menu-padding: 9px 10px;
   --ui-button-font-weight-md: 600;
+  --ui-button-font-weight-hero: 700;
+  --ui-button-font-weight-standard: 600;
+  --ui-button-font-weight-utility: 560;
   --ui-button-bg: var(--ui-color-card-background);
   --ui-button-bg-tint: var(--ui-color-extra-light-blue);
   --ui-button-bg-hover: var(--ui-color-soft-blue);
@@ -318,6 +322,12 @@
   --ui-button-border-strong: var(--ui-color-primary-blue);
   --ui-button-text: var(--ui-color-primary-navy);
   --ui-button-text-strong: var(--ui-color-primary-blue);
+  --ui-button-tone-default-border: var(--ui-button-border);
+  --ui-button-tone-default-text: var(--ui-button-text);
+  --ui-button-tone-danger-border: var(--ui-button-border);
+  --ui-button-tone-danger-text: var(--ui-color-expense);
+  --ui-button-tone-success-border: var(--ui-button-border);
+  --ui-button-tone-success-text: var(--ui-color-income);
   --ui-button-disabled-bg: var(--ui-color-soft-section-background);
   --ui-button-disabled-border: var(--ui-color-disabled-border);
   --ui-button-disabled-text: var(--ui-color-muted-text);

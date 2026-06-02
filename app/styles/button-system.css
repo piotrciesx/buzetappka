@@ -6,10 +6,18 @@
 }
 
 .ui-button,
+.ui-button--hero,
+.ui-button--standard,
+.ui-button--utility,
+.ui-button--icon,
 .ui-button-hero,
 .ui-button-standard,
 .ui-button-utility,
 .ui-button-icon,
+.ui-button-primary,
+.ui-button-secondary,
+.ui-button-danger,
+/* Legacy fallback: broad app button styling stays until component migration in B1-4. */
 [data-budget-app="true"] button,
 [data-budget-app="true"] summary[data-category-icon-picker-trigger="true"],
 [data-budget-app="true"] [data-tree-view-menu="true"] summary,
@@ -26,11 +34,13 @@
 }
 
 .ui-button,
+.ui-button--standard,
 .ui-button-standard,
 [data-budget-app="true"] button {
   min-height: var(--ui-button-height-standard);
 }
 
+.ui-button--hero,
 .ui-button-hero,
 [data-budget-app="true"] [data-topbar-action="primary-add"],
 [data-budget-app="true"] [data-settings-primary-action="true"] {
@@ -38,20 +48,23 @@
   padding: var(--ui-button-padding-hero) !important;
   border: 2px solid var(--ui-button-border-strong) !important;
   color: var(--ui-button-text-strong) !important;
-  font-weight: 700 !important;
+  font-weight: var(--ui-button-font-weight-hero) !important;
 }
 
+.ui-button--standard,
 .ui-button-standard,
 [data-budget-app="true"] button[aria-pressed="true"],
 [data-budget-app="true"] button[data-active="true"],
+[data-budget-app="true"] button[data-button-state="active"],
 [data-budget-app="true"] button[data-selected="true"] {
   min-height: var(--ui-button-height-standard) !important;
   padding: var(--ui-button-padding-standard) !important;
   border-color: var(--ui-button-border-strong) !important;
   color: var(--ui-button-text-strong) !important;
-  font-weight: 600 !important;
+  font-weight: var(--ui-button-font-weight-standard) !important;
 }
 
+.ui-button--utility,
 .ui-button-utility,
 [data-budget-app="true"] [data-dashboard-panel="true"] button,
 [data-budget-app="true"] [data-budget-utility-panel="true"] button,
@@ -68,9 +81,10 @@
 [data-budget-app="true"] [data-profile-menu-dropdown="true"] button {
   min-height: var(--ui-button-height-utility) !important;
   padding: var(--ui-button-padding-utility) !important;
-  font-weight: 560 !important;
+  font-weight: var(--ui-button-font-weight-utility) !important;
 }
 
+.ui-button--icon,
 .ui-button-icon,
 [data-budget-app="true"] [data-category-actions="true"] button,
 [data-budget-app="true"] [data-category-actions="true"] summary,
@@ -102,10 +116,17 @@
 }
 
 .ui-button:hover,
+.ui-button--hero:hover,
+.ui-button--standard:hover,
+.ui-button--utility:hover,
+.ui-button--icon:hover,
 .ui-button-hero:hover,
 .ui-button-standard:hover,
 .ui-button-utility:hover,
 .ui-button-icon:hover,
+.ui-button-primary:hover,
+.ui-button-secondary:hover,
+.ui-button-danger:hover,
 [data-budget-app="true"] button:hover,
 [data-budget-app="true"] summary[data-category-icon-picker-trigger="true"]:hover,
 [data-budget-app="true"] [data-tree-view-menu="true"] summary:hover,
@@ -120,26 +141,137 @@
 }
 
 .ui-button:active,
+.ui-button--hero:active,
+.ui-button--standard:active,
+.ui-button--utility:active,
+.ui-button--icon:active,
 .ui-button-hero:active,
 .ui-button-standard:active,
 .ui-button-utility:active,
 .ui-button-icon:active,
+.ui-button-primary:active,
+.ui-button-secondary:active,
+.ui-button-danger:active,
 [data-budget-app="true"] button:active {
   background: var(--ui-color-soft-blue, var(--ui-button-bg-hover)) !important;
   transform: translateY(0) !important;
 }
 
 .ui-button:disabled,
+.ui-button--hero:disabled,
+.ui-button--standard:disabled,
+.ui-button--utility:disabled,
+.ui-button--icon:disabled,
 .ui-button-hero:disabled,
 .ui-button-standard:disabled,
 .ui-button-utility:disabled,
 .ui-button-icon:disabled,
+.ui-button-primary:disabled,
+.ui-button-secondary:disabled,
+.ui-button-danger:disabled,
 [data-budget-app="true"] button:disabled {
   border-color: var(--ui-button-disabled-border) !important;
   background: var(--ui-button-disabled-bg) !important;
   color: var(--ui-button-disabled-text) !important;
   cursor: not-allowed !important;
   opacity: 1 !important;
+}
+
+.ui-button[data-button-state="active"],
+.ui-button--standard[data-button-state="active"],
+.ui-button--utility[data-button-state="active"],
+.ui-button-standard[data-button-state="active"],
+.ui-button-utility[data-button-state="active"] {
+  border-color: var(--ui-button-border-strong) !important;
+  color: var(--ui-button-text-strong) !important;
+}
+
+.ui-button[data-button-tone="default"],
+.ui-button--hero[data-button-tone="default"],
+.ui-button--standard[data-button-tone="default"],
+.ui-button--utility[data-button-tone="default"],
+.ui-button--icon[data-button-tone="default"] {
+  border-color: var(--ui-button-tone-default-border) !important;
+  color: var(--ui-button-tone-default-text) !important;
+}
+
+.ui-button[data-button-tone="danger"],
+.ui-button--hero[data-button-tone="danger"],
+.ui-button--standard[data-button-tone="danger"],
+.ui-button--utility[data-button-tone="danger"],
+.ui-button--icon[data-button-tone="danger"] {
+  border-color: var(--ui-button-tone-danger-border) !important;
+  color: var(--ui-button-tone-danger-text) !important;
+}
+
+.ui-button[data-button-tone="success"],
+.ui-button--hero[data-button-tone="success"],
+.ui-button--standard[data-button-tone="success"],
+.ui-button--utility[data-button-tone="success"],
+.ui-button--icon[data-button-tone="success"] {
+  border-color: var(--ui-button-tone-success-border) !important;
+  color: var(--ui-button-tone-success-text) !important;
+}
+
+.ui-button[data-button-width="auto"],
+.ui-button--hero[data-button-width="auto"],
+.ui-button--standard[data-button-width="auto"],
+.ui-button--utility[data-button-width="auto"] {
+  width: auto !important;
+}
+
+.ui-button[data-button-width="equal"],
+.ui-button--hero[data-button-width="equal"],
+.ui-button--standard[data-button-width="equal"],
+.ui-button--utility[data-button-width="equal"] {
+  min-width: var(--ui-button-width-equal-min) !important;
+}
+
+.ui-button[data-button-width="full"],
+.ui-button--hero[data-button-width="full"],
+.ui-button--standard[data-button-width="full"],
+.ui-button--utility[data-button-width="full"] {
+  width: 100% !important;
+}
+
+.ui-button[data-button-density="compact"],
+.ui-button--standard[data-button-density="compact"],
+.ui-button--utility[data-button-density="compact"] {
+  min-height: var(--ui-button-height-icon) !important;
+  padding: var(--ui-button-padding-utility) !important;
+}
+
+.ui-button[data-button-density="normal"],
+.ui-button--standard[data-button-density="normal"] {
+  min-height: var(--ui-button-height-standard) !important;
+}
+
+.ui-button--utility[data-button-density="normal"] {
+  min-height: var(--ui-button-height-utility) !important;
+}
+
+.ui-button-primary {
+  min-height: var(--ui-button-height-standard) !important;
+  padding: var(--ui-button-padding-standard) !important;
+  border: 1px solid var(--ui-button-border-strong) !important;
+  color: var(--ui-button-text-strong) !important;
+  font-weight: var(--ui-button-font-weight-standard) !important;
+}
+
+.ui-button-secondary {
+  min-height: var(--ui-button-height-utility) !important;
+  padding: var(--ui-button-padding-utility) !important;
+  border: 1px solid var(--ui-button-border) !important;
+  color: var(--ui-button-text) !important;
+  font-weight: var(--ui-button-font-weight-utility) !important;
+}
+
+.ui-button-danger {
+  min-height: var(--ui-button-height-utility) !important;
+  padding: var(--ui-button-padding-utility) !important;
+  border: 1px solid var(--ui-button-tone-danger-border) !important;
+  color: var(--ui-button-tone-danger-text) !important;
+  font-weight: var(--ui-button-font-weight-utility) !important;
 }
 
 [data-budget-app="true"] button[data-danger="true"],
