@@ -77,10 +77,9 @@ function Level1CardBase(props: BaseProps) {
         {...headerDragProps}
       >
         <div data-level1-card-overlay="true" aria-hidden="true" />
-        <div data-level1-card-wave="true" aria-hidden="true" />
 
         <div data-level1-card-content="true">
-          <div data-level1-card-main="true">
+          <div data-level1-top-area="true">
             <div data-level1-card-drag="true">{dragHandle}</div>
 
             <div data-level1-title-block="true">
@@ -93,33 +92,39 @@ function Level1CardBase(props: BaseProps) {
               )}
 
             </div>
-          </div>
 
-          <div data-level1-trend-icon="true" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="24" height="24">
-              <path
-                d={getTrendPath(kind)}
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2.05"
-              />
-            </svg>
-          </div>
-
-          {extraActions && (
-            <div
-              data-category-actions="true"
-              data-level1-actions="true"
-              style={styles.actions}
-              onClick={(event) => event.stopPropagation()}
-            >
-              {extraActions}
+            <div data-level1-trend-icon="true" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path
+                  d={getTrendPath(kind)}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2.05"
+                />
+              </svg>
             </div>
-          )}
 
-          {limitIndicator && <div data-level1-limit="true">{limitIndicator}</div>}
+            {extraActions && (
+              <div
+                data-category-actions="true"
+                data-level1-actions="true"
+                style={styles.actions}
+                onClick={(event) => event.stopPropagation()}
+              >
+                {extraActions}
+              </div>
+            )}
+          </div>
+
+          <div data-level1-middle-area="true">
+            <div data-level1-card-wave="true" aria-hidden="true" />
+          </div>
+
+          <div data-level1-bottom-area="true">
+            {limitIndicator && <div data-level1-limit="true">{limitIndicator}</div>}
+          </div>
         </div>
       </div>
 
