@@ -933,6 +933,7 @@ body {
 }
 
 [data-static-widget-area="bottom"] {
+  min-height: clamp(300px, 42vw, 520px);
   height: auto;
   aspect-ratio: 1;
 }
@@ -1027,13 +1028,12 @@ body {
 }
 
 [data-main-workspace-deck="true"] {
-  --bottom-widget-gap: 16px;
-  --bottom-widget-size: min(430px, calc((100% - var(--bottom-widget-gap)) / 2));
+  --bottom-widget-gap: 14px;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, var(--bottom-widget-size)));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--bottom-widget-gap);
   align-items: start;
-  justify-content: center;
+  justify-content: stretch;
 }
 
 [data-workspace-panel-header="true"] {
