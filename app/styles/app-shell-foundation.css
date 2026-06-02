@@ -523,10 +523,65 @@ body {
 }
 
 [data-level1-limit="true"] {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  align-self: end;
+  min-width: 0;
   max-width: 100%;
   color: var(--ui-color-secondary-text);
   font-size: 12px;
   line-height: 1.2;
+}
+
+[data-level1-card="true"][data-level1-has-limit="true"] [data-level1-card-main="true"] {
+  grid-row: 1 / 3;
+}
+
+[data-level1-card="true"][data-level1-has-limit="true"] [data-level1-card-wave="true"] {
+  display: none;
+}
+
+[data-level1-limit="true"] [data-budget-limit-indicator="true"] {
+  display: grid !important;
+  grid-template-columns: minmax(0, auto) auto minmax(72px, 1fr);
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100%;
+  min-width: 0;
+  margin-top: 0 !important;
+  flex-wrap: nowrap !important;
+  white-space: nowrap;
+}
+
+[data-level1-limit="true"] [data-budget-limit-indicator="true"]:has([data-budget-limit-alert-icon="true"]) {
+  grid-template-columns: auto minmax(0, auto) auto minmax(72px, 1fr);
+}
+
+[data-level1-limit="true"] [data-budget-limit-text="true"] {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-level1-limit="true"] [data-budget-limit-bar="true"] {
+  width: 100% !important;
+  min-width: 72px;
+}
+
+[data-level1-limit="true"] [data-budget-limit-indicator="true"]:has([data-budget-limit-alert-icon="true"]) [data-budget-limit-text="true"] {
+  grid-column: 2;
+}
+
+[data-level1-limit="true"] [data-budget-limit-indicator="true"]:has([data-budget-limit-alert-icon="true"]) [data-budget-limit-percent="true"] {
+  grid-column: 3;
+}
+
+[data-level1-limit="true"] [data-budget-limit-indicator="true"]:has([data-budget-limit-alert-icon="true"]) [data-budget-limit-bar="true"] {
+  grid-column: 4;
+}
+
+[data-level1-limit="true"] [data-budget-limit-alert-icon="true"] {
+  min-width: 0;
 }
 
 [data-level1-card-wave="true"] {

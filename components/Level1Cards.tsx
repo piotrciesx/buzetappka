@@ -70,6 +70,7 @@ function Level1CardBase(props: BaseProps) {
         data-category-drag-row="true"
         data-level1-card="true"
         data-level1-kind={kind}
+        data-level1-has-limit={limitIndicator ? 'true' : 'false'}
         data-level1-open={isOpen ? 'true' : 'false'}
         style={styles.l1Header}
         onClick={onToggle}
@@ -91,7 +92,6 @@ function Level1CardBase(props: BaseProps) {
                 </div>
               )}
 
-              {limitIndicator && <div data-level1-limit="true">{limitIndicator}</div>}
             </div>
           </div>
 
@@ -118,6 +118,8 @@ function Level1CardBase(props: BaseProps) {
               {extraActions}
             </div>
           )}
+
+          {limitIndicator && <div data-level1-limit="true">{limitIndicator}</div>}
         </div>
       </div>
 

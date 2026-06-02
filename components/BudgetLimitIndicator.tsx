@@ -74,14 +74,21 @@ export default function BudgetLimitIndicator({ view }: Props) {
       : ''
 
   return (
-    <div style={wrapStyle}>
-      {alertIcon && <span style={iconStyle}>{alertIcon}</span>}
-      <span>
+    <div style={wrapStyle} data-budget-limit-indicator="true">
+      {alertIcon && (
+        <span style={iconStyle} data-budget-limit-alert-icon="true">
+          {alertIcon}
+        </span>
+      )}
+      <span data-budget-limit-text="true">
         {formatMoney(view.usageAmount)} / {formatMoney(view.limit.amount)}
       </span>
-      <strong style={{ color, fontWeight: 600 }}>{view.usagePercent.toFixed(1)}%</strong>
-      <span style={barStyle}>
+      <strong style={{ color, fontWeight: 600 }} data-budget-limit-percent="true">
+        {view.usagePercent.toFixed(1)}%
+      </strong>
+      <span style={barStyle} data-budget-limit-bar="true">
         <span
+          data-budget-limit-bar-fill="true"
           style={{
             display: 'block',
             width: `${clampedPercent}%`,
