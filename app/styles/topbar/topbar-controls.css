@@ -173,10 +173,10 @@
   display: flex !important;
   align-items: center !important;
   justify-content: flex-end !important;
-  gap: var(--ui-space-4) !important;
+  gap: var(--ui-spacing-toolbar-gap) !important;
   margin-left: auto !important;
   margin-right: 4px !important;
-  padding-left: 12px !important;
+  padding-left: var(--ui-spacing-lg) !important;
   padding-right: 0 !important;
   overflow: visible !important;
   position: relative !important;
@@ -289,8 +289,8 @@
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: var(--ui-space-4) !important;
-  padding: 0 14px !important;
+  gap: var(--ui-spacing-action-gap) !important;
+  padding: 0 var(--ui-space-7) !important;
   color: var(--ui-color-primary-blue) !important;
   font-size: 12px !important;
   font-weight: 700 !important;
@@ -375,7 +375,7 @@
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: var(--ui-space-4) !important;
+  gap: var(--ui-spacing-action-gap) !important;
   padding: 0 var(--ui-space-7) !important;
   border: 1px solid rgba(186, 213, 246, 0.78) !important;
   border-radius: var(--ui-radius-lg) !important;
@@ -537,7 +537,7 @@
 [data-budget-topbar-month="true"] {
   min-width: 196px !important;
   grid-template-columns: 34px 34px minmax(96px, auto) !important;
-  column-gap: 12px !important;
+  column-gap: var(--ui-spacing-lg) !important;
 }
 
 [data-budget-topbar-month="true"] > button:first-child,

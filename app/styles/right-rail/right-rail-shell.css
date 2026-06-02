@@ -27,7 +27,7 @@
 
 [data-context-card] {
   display: grid;
-  gap: var(--ui-space-4);
+  gap: var(--ui-spacing-card-section-gap);
   padding: var(--ui-space-5) !important;
   border: 1px solid rgba(207, 217, 228, 0.78) !important;
   border-radius: var(--ui-radius-xl) !important;
@@ -47,7 +47,7 @@
   grid-template-columns: repeat(4, 36px) !important;
   justify-content: start !important;
   align-items: center !important;
-  gap: var(--ui-space-4) !important;
+  gap: var(--ui-spacing-toolbar-gap) !important;
   padding: 0 0 2px !important;
   border: 0 !important;
   border-radius: 0 !important;
@@ -175,7 +175,7 @@
   max-width: calc(100vw - 24px);
   max-height: calc(100dvh - 92px);
   display: grid;
-  gap: var(--ui-space-3);
+  gap: var(--ui-spacing-list-gap);
   padding: var(--ui-space-5);
   overflow: auto;
   border: 1px solid rgba(203, 213, 225, 0.9);
@@ -206,7 +206,7 @@
   box-sizing: border-box;
   border: 1px solid rgba(203, 213, 225, 0.86);
   border-radius: var(--ui-radius-md);
-  padding: 0 10px;
+  padding: 0 var(--ui-space-5);
   background: rgba(248, 250, 252, 0.8);
   color: var(--ui-color-primary-text);
   font-size: 12px;
@@ -233,15 +233,15 @@
 
 [data-rail-reminder-list="true"] {
   display: grid;
-  gap: 6px;
+  gap: var(--ui-spacing-list-gap);
 }
 
 [data-rail-reminder-item="true"] {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 8px;
-  padding: 7px 8px;
+  gap: var(--ui-spacing-list-row-x);
+  padding: 7px var(--ui-spacing-md);
   border: 1px solid rgba(226, 232, 240, 0.92);
   border-radius: 12px;
   background: rgba(248, 250, 252, 0.76);

@@ -2,11 +2,11 @@
 
 :root {
   --app-shell-page-x: 22px;
-  --app-shell-page-y: 16px;
-  --app-shell-gap: 16px;
+  --app-shell-page-y: var(--ui-spacing-xl);
+  --app-shell-gap: var(--ui-spacing-xl);
   --app-shell-topbar-height: 74px;
   --app-shell-content-height: calc(
-    100dvh - var(--app-shell-page-y) - 18px - var(--app-shell-topbar-height) - var(--app-shell-gap)
+    100dvh - var(--app-shell-page-y) - var(--ui-space-9) - var(--app-shell-topbar-height) - var(--app-shell-gap)
   );
   --app-shell-left-width: 240px;
   --app-shell-right-width: 304px;
@@ -40,7 +40,7 @@ body {
   min-height: 100dvh !important;
   height: 100dvh;
   margin: 0 !important;
-  padding: var(--app-shell-page-y) var(--app-shell-page-x) 18px !important;
+  padding: var(--app-shell-page-y) var(--app-shell-page-x) var(--ui-space-9) !important;
   overflow: hidden !important;
   background: var(--app-shell-background) !important;
   color: var(--app-shell-text) !important;
@@ -58,12 +58,12 @@ body {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 12px;
+  gap: var(--ui-spacing-topbar-gap);
   width: 100%;
   min-width: 0;
   min-height: var(--app-shell-topbar-height);
   margin: 0;
-  padding: 10px 16px;
+  padding: var(--ui-space-5) var(--ui-spacing-xl);
   overflow: visible;
   border: 1px solid var(--app-shell-panel-border);
   border-radius: var(--app-shell-panel-radius);
@@ -91,7 +91,7 @@ body {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 10px;
+  gap: var(--ui-space-5);
   min-width: 0;
   margin: 0;
 }
@@ -99,7 +99,7 @@ body {
 [data-budget-topbar-month="true"] {
   display: flex !important;
   align-items: center !important;
-  gap: 6px !important;
+  gap: var(--ui-spacing-sm) !important;
   margin: 0 !important;
   padding: 0 !important;
   background: transparent !important;
@@ -117,7 +117,7 @@ body {
   width: auto;
   height: 40px !important;
   min-height: 40px !important;
-  padding: 0 12px !important;
+  padding: 0 var(--ui-spacing-lg) !important;
   background: var(--app-shell-panel) !important;
   border-color: var(--app-shell-panel-border) !important;
   border-radius: 10px !important;
@@ -149,7 +149,7 @@ body {
   display: inline-flex;
   align-items: center;
   height: 40px;
-  padding: 0 4px;
+  padding: 0 var(--ui-spacing-xs);
   color: var(--app-shell-navy);
   white-space: nowrap;
 }
@@ -206,7 +206,7 @@ body {
   align-items: center !important;
   height: 40px !important;
   min-height: 40px !important;
-  padding: 0 14px !important;
+  padding: 0 var(--ui-space-7) !important;
   border: 1px solid var(--app-shell-panel-border) !important;
   border-radius: 10px !important;
   background: var(--app-shell-panel) !important;
@@ -216,13 +216,13 @@ body {
 
 [data-topbar-action="primary-add"],
 [data-topbar-action="pinned"] {
-  gap: 10px;
+  gap: var(--ui-space-5);
   min-width: 150px;
 }
 
 [data-topbar-action="search"] {
   justify-content: flex-start;
-  gap: 10px;
+  gap: var(--ui-space-5);
   width: 220px;
   color: var(--ui-color-secondary-text) !important;
 }
@@ -252,7 +252,7 @@ body {
   width: 100%;
   height: var(--app-shell-content-height);
   margin: 0;
-  padding: 18px 16px;
+  padding: var(--ui-space-9) var(--ui-spacing-xl);
   overflow: hidden;
   border: 1px solid var(--app-shell-panel-border);
   border-radius: var(--app-shell-panel-radius);
@@ -266,7 +266,7 @@ body {
   flex-wrap: nowrap !important;
   align-content: stretch;
   align-items: stretch !important;
-  gap: 20px;
+  gap: var(--ui-space-10);
   width: 100%;
   min-width: 0;
   min-height: 0;
@@ -278,7 +278,7 @@ body {
 [data-sidebar-section] {
   display: grid !important;
   grid-template-columns: minmax(0, 1fr);
-  gap: 10px;
+  gap: var(--ui-space-5);
   width: 100%;
   min-width: 0;
   max-width: 100%;
@@ -286,13 +286,13 @@ body {
 
 [data-sidebar-section="tools"],
 [data-sidebar-section="reports"] {
-  padding-top: 14px;
+  padding-top: var(--ui-space-7);
   border-top: 1px solid var(--app-shell-panel-border);
 }
 
 [data-sidebar-section="settings"] {
   margin-top: auto;
-  padding-top: 14px;
+  padding-top: var(--ui-space-7);
   border-top: 1px solid var(--app-shell-panel-border);
 }
 
@@ -308,10 +308,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 12px;
+  gap: var(--ui-spacing-lg);
   width: 100%;
   min-height: 42px;
-  padding: 0 12px;
+  padding: 0 var(--ui-spacing-lg);
   border: 1px solid transparent;
   border-radius: 10px;
   background: transparent;
@@ -389,13 +389,13 @@ body {
 }
 
 [data-budget-workspace-main="true"] {
-  padding: 18px;
+  padding: var(--ui-space-9);
 }
 
 [data-budget-workspace-main="true"] > [data-budget-tree-workspace="true"] {
   display: grid !important;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
-  gap: 12px;
+  gap: var(--ui-spacing-workspace-gap);
   width: 100%;
   min-width: 0;
   min-height: 100%;
@@ -418,7 +418,7 @@ body {
 [data-level1-tree-shell="true"] {
   display: grid !important;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 12px;
+  gap: var(--ui-spacing-workspace-gap);
 }
 
 [data-level1-header-grid="true"],
@@ -972,11 +972,11 @@ body {
 }
 
 [data-budget-tree-bottom-deck="true"] {
-  margin-top: 14px;
+  margin-top: var(--ui-space-7);
 }
 
 [data-budget-context-rail="true"] {
-  --static-widget-gap: 12px;
+  --static-widget-gap: var(--ui-spacing-widget-gap);
   --static-widget-height: calc(
     (var(--app-shell-content-height) - (var(--static-widget-gap) * 2)) / 3
   );
@@ -1000,11 +1000,11 @@ body {
 [data-static-widget-area] {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 12px;
+  gap: var(--ui-spacing-widget-gap);
   width: 100%;
   min-width: 0;
   min-height: 0;
-  padding: 16px;
+  padding: var(--ui-spacing-xl);
   overflow: hidden;
   border: 1px solid var(--app-shell-panel-border);
   border-radius: 14px;
@@ -1026,7 +1026,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--ui-spacing-toolbar-gap);
   min-width: 0;
 }
 
@@ -1050,7 +1050,7 @@ body {
   justify-content: center;
   min-width: 28px;
   height: 28px;
-  padding: 0 8px;
+  padding: 0 var(--ui-spacing-md);
   border: 1px solid var(--app-shell-panel-border);
   border-radius: 9px;
   color: var(--app-shell-navy);
@@ -1062,7 +1062,7 @@ body {
 [data-right-rail-panel-body="true"] {
   display: grid;
   align-content: start;
-  gap: 12px;
+  gap: var(--ui-spacing-widget-gap);
   min-width: 0;
   min-height: 0;
 }
@@ -1071,7 +1071,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--ui-spacing-widget-gap);
   min-width: 0;
   color: var(--app-shell-navy);
   font-size: 12px;
@@ -1112,7 +1112,7 @@ body {
 }
 
 [data-main-workspace-deck="true"] {
-  --bottom-widget-gap: 14px;
+  --bottom-widget-gap: var(--ui-space-7);
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--bottom-widget-gap);
@@ -1124,7 +1124,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--ui-spacing-toolbar-gap);
   min-width: 0;
 }
 
@@ -1134,7 +1134,7 @@ body {
   justify-content: center;
   min-width: 0;
   height: 28px;
-  padding: 0 10px;
+  padding: 0 var(--ui-space-5);
   border: 1px solid var(--ui-color-divider-border);
   border-radius: 9px;
   background: var(--app-shell-panel);
@@ -1147,7 +1147,7 @@ body {
 [data-static-widget-body="true"] {
   display: grid;
   align-content: start;
-  gap: 10px;
+  gap: var(--ui-space-5);
   min-width: 0;
   min-height: 0;
 }
@@ -1204,7 +1204,7 @@ body {
     display: block !important;
     height: auto;
     min-height: 100dvh !important;
-    padding: 10px !important;
+    padding: var(--ui-space-5) !important;
     overflow: visible !important;
   }
 
@@ -1216,7 +1216,7 @@ body {
     width: 100%;
     height: auto;
     min-height: 0;
-    margin: 0 0 12px;
+    margin: 0 0 var(--ui-spacing-lg);
     overflow: visible;
   }
 
@@ -1233,14 +1233,14 @@ body {
   [data-budget-mobile-nav="true"] {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 8px;
+    gap: var(--ui-spacing-md);
     width: 100%;
   }
 
   [data-budget-mobile-more-menu="true"] {
     display: grid;
-    gap: 8px;
+    gap: var(--ui-spacing-md);
     width: 100%;
-    margin-top: 8px;
+    margin-top: var(--ui-spacing-md);
   }
 }
