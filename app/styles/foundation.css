@@ -20,6 +20,36 @@
   --ui-space-12: 24px;
   --ui-space-16: 32px;
 
+  /* Semantic spacing scale */
+  --ui-spacing-xs: var(--ui-space-2);
+  --ui-spacing-sm: var(--ui-space-3);
+  --ui-spacing-md: var(--ui-space-4);
+  --ui-spacing-lg: var(--ui-space-6);
+  --ui-spacing-xl: var(--ui-space-8);
+
+  /* Semantic spacing roles */
+  --ui-spacing-shell-gap: var(--ui-spacing-lg);
+  --ui-spacing-topbar-gap: var(--ui-spacing-lg);
+  --ui-spacing-sidebar-section-gap: var(--ui-spacing-lg);
+  --ui-spacing-sidebar-item-gap: var(--ui-spacing-sm);
+  --ui-spacing-workspace-gap: var(--ui-spacing-lg);
+  --ui-spacing-card-padding: var(--ui-spacing-lg);
+  --ui-spacing-card-section-gap: var(--ui-spacing-md);
+  --ui-spacing-widget-gap: var(--ui-spacing-lg);
+  --ui-spacing-widget-padding: var(--ui-spacing-lg);
+  --ui-spacing-list-gap: var(--ui-spacing-sm);
+  --ui-spacing-list-row-y: var(--ui-spacing-sm);
+  --ui-spacing-list-row-x: var(--ui-spacing-md);
+  --ui-spacing-form-field-gap: var(--ui-spacing-md);
+  --ui-spacing-form-group-gap: var(--ui-spacing-lg);
+  --ui-spacing-dropdown-padding: var(--ui-spacing-md);
+  --ui-spacing-dropdown-item-y: var(--ui-spacing-sm);
+  --ui-spacing-dropdown-item-x: var(--ui-spacing-md);
+  --ui-spacing-modal-padding: var(--ui-spacing-xl);
+  --ui-spacing-modal-section-gap: var(--ui-spacing-lg);
+  --ui-spacing-toolbar-gap: var(--ui-spacing-md);
+  --ui-spacing-action-gap: var(--ui-spacing-md);
+
   /* Radius */
   --ui-radius-none: 0;
   --ui-radius-xs: 4px;
