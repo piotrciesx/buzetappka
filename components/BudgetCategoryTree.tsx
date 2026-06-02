@@ -479,8 +479,10 @@ export default function BudgetCategoryTree(props: Props) {
         data-level1-expanded-content="true"
         data-level1-kind={level1Kind}
       >
-        {canUseMonthCalendar && isLevel1CalendarOpen && renderLevel1CalendarPanel(level1Category)}
-        {renderLevel2List(level1Category)}
+        <div data-level1-tree-body="true">
+          {canUseMonthCalendar && isLevel1CalendarOpen && renderLevel1CalendarPanel(level1Category)}
+          {renderLevel2List(level1Category)}
+        </div>
         {renderAddSubcategoryForm(level1Category.id, 'Nazwa kategorii')}
         <button
           type="button"
