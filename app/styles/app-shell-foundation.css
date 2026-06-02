@@ -439,7 +439,7 @@ body {
 
 [data-level1-content-stack="true"] {
   column-gap: 14px;
-  row-gap: 58px;
+  row-gap: 29px;
 }
 
 [data-level1-header-grid="true"] > *,
