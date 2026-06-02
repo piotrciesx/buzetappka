@@ -1,4 +1,4 @@
-import { uiZIndex } from '../../lib/uiFoundation'
+import { uiControlPrimitives, uiZIndex } from '../../lib/uiFoundation'
 
 export const calendarPanelStyle = {
   marginBottom: 'var(--ui-spacing-xl)',
@@ -139,13 +139,14 @@ export const modalSubtitleStyle = {
 } as const
 
 export const closeButtonStyle = {
-  border: '1px solid var(--ui-color-soft-border)',
-  background: 'var(--ui-color-card-background)',
-  borderRadius: 10,
-  padding: '8px 10px',
-  cursor: 'pointer',
+  minHeight: uiControlPrimitives.button.utility.minHeight,
+  border: uiControlPrimitives.button.utility.border,
+  background: uiControlPrimitives.button.utility.background,
+  borderRadius: uiControlPrimitives.button.utility.radius,
+  padding: uiControlPrimitives.button.utility.padding,
+  cursor: uiControlPrimitives.button.utility.cursor,
   fontSize: 13,
-  fontWeight: 600,
+  fontWeight: uiControlPrimitives.button.utility.fontWeight,
 } as const
 
 export const daySummaryCardStyle = {
@@ -308,49 +309,54 @@ export const tagBadgeStyle = {
 } as const
 
 export const tagRemoveButtonStyle = {
-  border: 'none',
-  background: 'transparent',
-  color: 'var(--ui-color-primary-blue)',
-  cursor: 'pointer',
+  width: uiControlPrimitives.button.icon.width,
+  minWidth: uiControlPrimitives.button.icon.minWidth,
+  height: uiControlPrimitives.button.icon.height,
+  minHeight: uiControlPrimitives.button.icon.minHeight,
+  border: uiControlPrimitives.button.icon.border,
+  borderRadius: uiControlPrimitives.button.icon.radius,
+  background: uiControlPrimitives.button.icon.background,
+  color: uiControlPrimitives.button.icon.color,
+  cursor: uiControlPrimitives.button.icon.cursor,
   fontSize: 14,
   lineHeight: 1.2,
-  padding: 0,
+  padding: uiControlPrimitives.button.icon.padding,
 } as const
 
 export const primaryButtonStyle = {
-  minHeight: 'var(--ui-button-height-standard)',
-  border: '1px solid var(--ui-button-border-strong)',
-  background: 'var(--ui-button-bg)',
-  color: 'var(--ui-button-text-strong)',
-  borderRadius: 'var(--ui-button-radius)',
-  padding: 'var(--ui-button-padding-standard)',
-  cursor: 'pointer',
+  minHeight: uiControlPrimitives.button.standard.minHeight,
+  border: uiControlPrimitives.button.standard.border,
+  background: uiControlPrimitives.button.standard.background,
+  color: uiControlPrimitives.button.standard.color,
+  borderRadius: uiControlPrimitives.button.standard.radius,
+  padding: uiControlPrimitives.button.standard.padding,
+  cursor: uiControlPrimitives.button.standard.cursor,
   fontSize: 13,
-  fontWeight: 600,
+  fontWeight: uiControlPrimitives.button.standard.fontWeight,
 } as const
 
 export const secondaryButtonStyle = {
-  minHeight: 'var(--ui-button-height-utility)',
-  border: '1px solid var(--ui-button-border)',
-  background: 'var(--ui-button-bg)',
-  color: 'var(--ui-button-text)',
-  borderRadius: 'var(--ui-button-radius)',
-  padding: 'var(--ui-button-padding-utility)',
-  cursor: 'pointer',
+  minHeight: uiControlPrimitives.button.utility.minHeight,
+  border: uiControlPrimitives.button.utility.border,
+  background: uiControlPrimitives.button.utility.background,
+  color: uiControlPrimitives.button.utility.color,
+  borderRadius: uiControlPrimitives.button.utility.radius,
+  padding: uiControlPrimitives.button.utility.padding,
+  cursor: uiControlPrimitives.button.utility.cursor,
   fontSize: 13,
-  fontWeight: 560,
+  fontWeight: uiControlPrimitives.button.utility.fontWeight,
 } as const
 
 export const dangerButtonStyle = {
-  minHeight: 'var(--ui-button-height-utility)',
-  border: '1px solid var(--ui-button-border)',
-  background: 'var(--ui-button-bg)',
-  color: 'var(--ui-color-expense)',
-  borderRadius: 'var(--ui-button-radius)',
-  padding: 'var(--ui-button-padding-utility)',
-  cursor: 'pointer',
+  minHeight: uiControlPrimitives.button.utility.minHeight,
+  border: uiControlPrimitives.button.utility.border,
+  background: uiControlPrimitives.button.utility.background,
+  color: 'var(--ui-button-tone-danger-text)',
+  borderRadius: uiControlPrimitives.button.utility.radius,
+  padding: uiControlPrimitives.button.utility.padding,
+  cursor: uiControlPrimitives.button.utility.cursor,
   fontSize: 13,
-  fontWeight: 560,
+  fontWeight: uiControlPrimitives.button.utility.fontWeight,
 } as const
 
 export const heatmapBarStyle = {

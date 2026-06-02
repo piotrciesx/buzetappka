@@ -66,8 +66,14 @@ export const shortcutButtonStyle = {
   gap: 'var(--ui-spacing-action-gap)',
   minWidth: 0,
   maxWidth: '100%',
-  minHeight: 32,
-  padding: 'var(--ui-spacing-sm) var(--ui-space-5)',
+  minHeight: uiControlPrimitives.button.utility.minHeight,
+  padding: uiControlPrimitives.button.utility.padding,
+  borderRadius: uiControlPrimitives.button.utility.radius,
+  border: uiControlPrimitives.button.utility.border,
+  background: uiControlPrimitives.button.utility.background,
+  color: uiControlPrimitives.button.utility.color,
+  fontWeight: uiControlPrimitives.button.utility.fontWeight,
+  cursor: uiControlPrimitives.button.utility.cursor,
 } as const
 
 export const disabledLevel3WrapStyle = {
@@ -199,11 +205,16 @@ export const tagBadgeStyle = {
 } as const
 
 export const tagRemoveButtonStyle = {
-  border: 'none',
-  background: 'transparent',
-  color: 'var(--ui-color-primary-blue)',
-  cursor: 'pointer',
+  width: uiControlPrimitives.button.icon.width,
+  minWidth: uiControlPrimitives.button.icon.minWidth,
+  height: uiControlPrimitives.button.icon.height,
+  minHeight: uiControlPrimitives.button.icon.minHeight,
+  border: uiControlPrimitives.button.icon.border,
+  borderRadius: uiControlPrimitives.button.icon.radius,
+  background: uiControlPrimitives.button.icon.background,
+  color: uiControlPrimitives.button.icon.color,
+  cursor: uiControlPrimitives.button.icon.cursor,
   fontSize: 14,
   lineHeight: 1.2,
-  padding: 0,
+  padding: uiControlPrimitives.button.icon.padding,
 } as const
