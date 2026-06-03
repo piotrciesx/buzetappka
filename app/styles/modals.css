@@ -104,6 +104,152 @@
   padding: var(--ui-overlay-popover-padding);
 }
 
+.ui-dropdown {
+  z-index: var(--ui-z-dropdown);
+  width: var(--ui-dropdown-width-action);
+  max-width: var(--ui-dropdown-max-width-action);
+  max-height: var(--ui-dropdown-max-height-action);
+  display: grid;
+  gap: var(--ui-dropdown-gap);
+  overflow-y: var(--ui-dropdown-scroll-behavior);
+  border: var(--ui-dropdown-border);
+  border-radius: var(--ui-dropdown-radius);
+  background: var(--ui-surface-dropdown);
+  box-shadow: var(--ui-dropdown-shadow);
+  padding: var(--ui-dropdown-padding);
+  color: var(--ui-color-text);
+}
+
+.ui-dropdown--action {
+  width: var(--ui-dropdown-width-action);
+  max-width: var(--ui-dropdown-max-width-action);
+  max-height: var(--ui-dropdown-max-height-action);
+}
+
+.ui-dropdown--select {
+  width: var(--ui-dropdown-width-select);
+  max-width: var(--ui-dropdown-max-width-select);
+  max-height: var(--ui-dropdown-max-height-select);
+}
+
+.ui-dropdown--searchable {
+  width: var(--ui-dropdown-width-searchable);
+  max-width: var(--ui-dropdown-max-width-searchable);
+  max-height: var(--ui-dropdown-max-height-searchable);
+}
+
+.ui-dropdown--autocomplete {
+  width: var(--ui-dropdown-width-autocomplete);
+  max-width: var(--ui-dropdown-max-width-autocomplete);
+  max-height: var(--ui-dropdown-max-height-autocomplete);
+}
+
+.ui-dropdown--context {
+  width: var(--ui-dropdown-width-context);
+  max-width: var(--ui-dropdown-max-width-context);
+  max-height: var(--ui-dropdown-max-height-context);
+}
+
+.ui-popover--utility {
+  width: var(--ui-dropdown-width-utility);
+  max-width: var(--ui-dropdown-max-width-utility);
+  max-height: var(--ui-dropdown-max-height-utility);
+}
+
+.ui-dropdown[data-dropdown-placement="bottom"],
+.ui-popover[data-dropdown-placement="bottom"] {
+  margin-top: var(--ui-dropdown-placement-offset);
+}
+
+.ui-dropdown[data-dropdown-placement="top"],
+.ui-popover[data-dropdown-placement="top"] {
+  margin-bottom: var(--ui-dropdown-placement-offset);
+}
+
+.ui-dropdown[data-dropdown-placement="context"],
+.ui-popover[data-dropdown-placement="context"] {
+  margin: 0;
+}
+
+.ui-dropdown[data-dropdown-align="start"],
+.ui-popover[data-dropdown-align="start"] {
+  justify-self: start;
+}
+
+.ui-dropdown[data-dropdown-align="center"],
+.ui-popover[data-dropdown-align="center"] {
+  justify-self: center;
+}
+
+.ui-dropdown[data-dropdown-align="end"],
+.ui-popover[data-dropdown-align="end"] {
+  justify-self: end;
+}
+
+.ui-dropdown__item {
+  min-height: var(--ui-dropdown-item-height-action);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--ui-dropdown-gap);
+  padding: var(--ui-dropdown-item-padding);
+  border: 0;
+  border-radius: var(--ui-radius-sm);
+  background: transparent;
+  color: var(--ui-color-control-text);
+  text-align: left;
+}
+
+.ui-dropdown--select .ui-dropdown__item {
+  min-height: var(--ui-dropdown-item-height-select);
+}
+
+.ui-dropdown--searchable .ui-dropdown__item {
+  min-height: var(--ui-dropdown-item-height-searchable);
+}
+
+.ui-dropdown--autocomplete .ui-dropdown__item {
+  min-height: var(--ui-dropdown-item-height-autocomplete);
+}
+
+.ui-dropdown--context .ui-dropdown__item {
+  min-height: var(--ui-dropdown-item-height-context);
+}
+
+.ui-popover--utility .ui-dropdown__item {
+  min-height: var(--ui-dropdown-item-height-utility);
+}
+
+.ui-dropdown__item-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-dropdown__item-meta {
+  margin-left: auto;
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-meta);
+}
+
+.ui-dropdown__separator {
+  height: 1px;
+  margin: var(--ui-spacing-xs) 0;
+  background: var(--ui-color-divider-border);
+}
+
+.ui-dropdown__search {
+  min-height: var(--ui-input-height-md);
+  padding: var(--ui-dropdown-search-padding);
+}
+
+.ui-dropdown__empty {
+  padding: var(--ui-dropdown-item-padding);
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-body-sm);
+}
+
 .ui-drawer {
   z-index: var(--ui-z-drawer);
   width: var(--ui-drawer-panel-width);

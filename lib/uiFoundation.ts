@@ -119,7 +119,9 @@ export const uiPrimitiveContracts = {
   panel: ['workspace', 'utility', 'side', 'rail'],
   modal: ['s', 'm', 'l', 'xl'],
   overlay: ['popover', 'drawer', 'workspace'],
-  dropdown: ['menu', 'autocomplete', 'topbar'],
+  dropdown: ['action', 'select', 'searchable', 'autocomplete', 'context', 'utilityPopover'],
+  dropdownPlacement: ['bottom', 'top', 'context'],
+  dropdownAlign: ['start', 'center', 'end'],
   toolbar: ['default', 'compact', 'sticky'],
 } as const
 
@@ -334,6 +336,40 @@ export const uiModalApi = {
     soft: 'soft',
     standard: 'standard',
     strong: 'strong',
+  },
+} as const
+
+export const uiDropdownApi = {
+  classNames: {
+    dropdown: 'ui-dropdown',
+    action: 'ui-dropdown--action',
+    select: 'ui-dropdown--select',
+    searchable: 'ui-dropdown--searchable',
+    autocomplete: 'ui-dropdown--autocomplete',
+    context: 'ui-dropdown--context',
+    utilityPopover: 'ui-popover--utility',
+    item: 'ui-dropdown__item',
+    itemLabel: 'ui-dropdown__item-label',
+    itemMeta: 'ui-dropdown__item-meta',
+    separator: 'ui-dropdown__separator',
+    search: 'ui-dropdown__search',
+    empty: 'ui-dropdown__empty',
+  },
+  attributes: {
+    placement: 'data-dropdown-placement',
+    align: 'data-dropdown-align',
+    state: 'data-dropdown-state',
+    tone: 'data-dropdown-tone',
+  },
+  placement: {
+    bottom: 'bottom',
+    top: 'top',
+    context: 'context',
+  },
+  align: {
+    start: 'start',
+    center: 'center',
+    end: 'end',
   },
 } as const
 
@@ -553,6 +589,100 @@ export const uiModalSizePrimitives = {
   },
 } as const
 
+const uiDropdownBasePrimitive = {
+  className: uiDropdownApi.classNames.dropdown,
+  layer: uiZIndex.dropdown,
+  zIndex: 'var(--ui-z-dropdown)',
+  border: 'var(--ui-dropdown-border)',
+  radius: 'var(--ui-dropdown-radius)',
+  background: 'var(--ui-surface-dropdown)',
+  shadow: 'var(--ui-dropdown-shadow)',
+  padding: 'var(--ui-dropdown-padding)',
+  itemPadding: 'var(--ui-dropdown-item-padding)',
+  gap: 'var(--ui-dropdown-gap)',
+  placementOffset: 'var(--ui-dropdown-placement-offset)',
+  scrollBehavior: 'var(--ui-dropdown-scroll-behavior)',
+  dismissesOnOutsidePointer: true,
+  dismissesOnEscape: true,
+} as const
+
+export const uiDropdownPrimitives = {
+  actionMenu: {
+    ...uiDropdownBasePrimitive,
+    variantClassName: uiDropdownApi.classNames.action,
+    width: 'var(--ui-dropdown-width-action)',
+    maxWidth: 'var(--ui-dropdown-max-width-action)',
+    maxHeight: 'var(--ui-dropdown-max-height-action)',
+    itemHeight: 'var(--ui-dropdown-item-height-action)',
+    placement: uiDropdownApi.placement.bottom,
+    align: uiDropdownApi.align.end,
+  },
+  selectMenu: {
+    ...uiDropdownBasePrimitive,
+    variantClassName: uiDropdownApi.classNames.select,
+    width: 'var(--ui-dropdown-width-select)',
+    maxWidth: 'var(--ui-dropdown-max-width-select)',
+    maxHeight: 'var(--ui-dropdown-max-height-select)',
+    itemHeight: 'var(--ui-dropdown-item-height-select)',
+    placement: uiDropdownApi.placement.bottom,
+    align: uiDropdownApi.align.start,
+  },
+  searchableDropdown: {
+    ...uiDropdownBasePrimitive,
+    variantClassName: uiDropdownApi.classNames.searchable,
+    width: 'var(--ui-dropdown-width-searchable)',
+    maxWidth: 'var(--ui-dropdown-max-width-searchable)',
+    maxHeight: 'var(--ui-dropdown-max-height-searchable)',
+    itemHeight: 'var(--ui-dropdown-item-height-searchable)',
+    searchClassName: uiDropdownApi.classNames.search,
+    placement: uiDropdownApi.placement.bottom,
+    align: uiDropdownApi.align.start,
+  },
+  autocomplete: {
+    ...uiDropdownBasePrimitive,
+    variantClassName: uiDropdownApi.classNames.autocomplete,
+    layer: uiZIndex.popover,
+    zIndex: 'var(--ui-z-popover)',
+    width: 'var(--ui-dropdown-width-autocomplete)',
+    maxWidth: 'var(--ui-dropdown-max-width-autocomplete)',
+    maxHeight: 'var(--ui-dropdown-max-height-autocomplete)',
+    itemHeight: 'var(--ui-dropdown-item-height-autocomplete)',
+    placement: uiDropdownApi.placement.bottom,
+    align: uiDropdownApi.align.start,
+  },
+  contextMenu: {
+    ...uiDropdownBasePrimitive,
+    variantClassName: uiDropdownApi.classNames.context,
+    width: 'var(--ui-dropdown-width-context)',
+    maxWidth: 'var(--ui-dropdown-max-width-context)',
+    maxHeight: 'var(--ui-dropdown-max-height-context)',
+    itemHeight: 'var(--ui-dropdown-item-height-context)',
+    placement: uiDropdownApi.placement.context,
+    align: uiDropdownApi.align.start,
+  },
+  utilityPopover: {
+    className: uiModalApi.classNames.popover,
+    layer: uiZIndex.popover,
+    zIndex: 'var(--ui-z-popover)',
+    radius: 'var(--ui-radius-sm)',
+    background: 'var(--ui-surface-dropdown)',
+    shadow: 'var(--ui-shadow-popover)',
+    padding: 'var(--ui-overlay-popover-padding)',
+    bodyOverflow: 'var(--ui-popover-body-overflow)',
+    variantClassName: uiDropdownApi.classNames.utilityPopover,
+    width: 'var(--ui-dropdown-width-utility)',
+    maxWidth: 'var(--ui-dropdown-max-width-utility)',
+    maxHeight: 'var(--ui-dropdown-max-height-utility)',
+    itemHeight: 'var(--ui-dropdown-item-height-utility)',
+    itemPadding: 'var(--ui-dropdown-item-padding)',
+    gap: 'var(--ui-dropdown-gap)',
+    placement: uiDropdownApi.placement.bottom,
+    align: uiDropdownApi.align.end,
+    dismissesOnOutsidePointer: true,
+    dismissesOnEscape: true,
+  },
+} as const
+
 export const uiOverlayContracts = {
   modal: {
     className: uiModalApi.classNames.modal,
@@ -573,12 +703,22 @@ export const uiOverlayContracts = {
     dismissesOnBackdrop: true,
   },
   dropdown: {
+    className: uiDropdownApi.classNames.dropdown,
     layer: uiZIndex.dropdown,
+    width: 'var(--ui-dropdown-width-action)',
+    maxWidth: 'var(--ui-dropdown-max-width-action)',
+    maxHeight: 'var(--ui-dropdown-max-height-action)',
     radius: 'var(--ui-dropdown-radius)',
     shadow: 'var(--ui-shadow-dropdown)',
     padding: 'var(--ui-overlay-dropdown-padding)',
+    itemHeight: 'var(--ui-dropdown-item-height-action)',
+    itemPadding: 'var(--ui-dropdown-item-padding)',
+    gap: 'var(--ui-dropdown-gap)',
+    placementOffset: 'var(--ui-dropdown-placement-offset)',
+    bodyOverflow: 'var(--ui-dropdown-scroll-behavior)',
     ownsFocus: false,
     dismissesOnOutsidePointer: true,
+    dismissesOnEscape: true,
   },
   popover: {
     className: uiModalApi.classNames.popover,
@@ -678,6 +818,12 @@ export const uiOverlayPrimitives = {
     backdrop: 'var(--ui-overlay-backdrop-prompt)',
   },
   dropdown: uiOverlayContracts.dropdown,
+  actionMenu: uiDropdownPrimitives.actionMenu,
+  selectMenu: uiDropdownPrimitives.selectMenu,
+  searchableDropdown: uiDropdownPrimitives.searchableDropdown,
+  autocomplete: uiDropdownPrimitives.autocomplete,
+  contextMenu: uiDropdownPrimitives.contextMenu,
+  utilityPopover: uiDropdownPrimitives.utilityPopover,
   dropdownRaised: {
     ...uiOverlayContracts.dropdown,
     layer: uiZIndex.dropdownRaised,
@@ -709,5 +855,8 @@ export type UiZIndexToken = keyof typeof uiZIndex
 export type UiLayoutPrimitive = keyof typeof uiLayoutPrimitives
 export type UiModalSize = keyof typeof uiModalSizePrimitives
 export type UiBackdropTone = keyof typeof uiBackdropPrimitives
+export type UiDropdownPrimitive = keyof typeof uiDropdownPrimitives
+export type UiDropdownPlacement = keyof typeof uiDropdownApi.placement
+export type UiDropdownAlign = keyof typeof uiDropdownApi.align
 export type UiOverlayKind = keyof typeof uiOverlayContracts
 export type UiOverlayPrimitive = keyof typeof uiOverlayPrimitives
