@@ -417,7 +417,7 @@ export default function ProfileMembersPanel({
   }
 
   return (
-    <section style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid var(--ui-color-divider-border)' }}>
+    <section style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid var(--ui-border-divider)' }}>
       <SettingsSection data-user-public-profile-editor="true">
         <div data-user-public-profile-preview="true">
           <UserAvatar avatarKey={avatarKeyDraft} label={displayNameDraft || 'Użytkownik'} size="lg" />
@@ -477,7 +477,7 @@ export default function ProfileMembersPanel({
                 justifyContent: 'space-between',
                 gap: 12,
                 alignItems: 'center',
-                border: '1px solid var(--ui-color-divider-border)',
+                border: '1px solid var(--ui-border-divider)',
                 borderRadius: 8,
                 padding: '8px 10px',
                 flexWrap: 'wrap',
@@ -618,19 +618,19 @@ export default function ProfileMembersPanel({
         style={{
           marginTop: 22,
           paddingTop: 16,
-          borderTop: '1px solid var(--ui-color-expense-soft)',
+          borderTop: '1px solid var(--ui-financial-expense-soft)',
           display: 'grid',
           gap: 10,
         }}
       >
-        <div style={{ ...styles.l2Name, color: 'var(--ui-color-expense)' }}>Usuń konto</div>
+        <div style={{ ...styles.l2Name, color: 'var(--ui-financial-expense)' }}>Usuń konto</div>
         <div style={styles.smallMutedText}>
           To jest trwała akcja dotycząca Twojego konta użytkownika. Wpisy we wspólnych
           budżetach pozostają jako historia profilu.
         </div>
         <button
           type="button"
-          style={{ ...styles.secondaryButton, borderColor: 'var(--ui-color-expense-soft)', color: 'var(--ui-color-expense)' }}
+          style={{ ...styles.secondaryButton, borderColor: 'var(--ui-financial-expense-soft)', color: 'var(--ui-financial-expense)' }}
           onClick={() => {
             setIsDeleteAccountPanelOpen((previousValue) => !previousValue)
             setDeleteAccountStatusText('')
@@ -642,10 +642,10 @@ export default function ProfileMembersPanel({
         {isDeleteAccountPanelOpen && (
           <div
             style={{
-              border: '1px solid var(--ui-color-expense-soft)',
+              border: '1px solid var(--ui-financial-expense-soft)',
               borderRadius: 8,
               padding: 12,
-              background: 'var(--ui-color-expense-soft)',
+              background: 'var(--ui-financial-expense-soft)',
               display: 'grid',
               gap: 10,
             }}
@@ -687,7 +687,7 @@ export default function ProfileMembersPanel({
             {!isOwnerWithOtherMembers && (
               <button
                 type="button"
-                style={{ ...styles.secondaryButton, borderColor: 'var(--ui-color-expense)', color: 'var(--ui-color-expense)' }}
+                style={{ ...styles.secondaryButton, borderColor: 'var(--ui-financial-expense)', color: 'var(--ui-financial-expense)' }}
                 disabled={
                   isDeletingAccount ||
                   isMembershipActionWorking ||

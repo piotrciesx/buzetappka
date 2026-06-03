@@ -23,11 +23,11 @@ type Props = {
 const panelStyle: CSSProperties = {
   display: 'grid',
   gap: 12,
-  border: '1px solid rgba(203, 213, 225, 0.78)',
+  border: '1px solid var(--ui-border-soft)',
   borderRadius: 16,
   padding: 12,
-  background: 'rgba(255, 255, 255, 0.72)',
-  boxShadow: '0 10px 28px rgba(15, 23, 42, 0.045)',
+  background: 'var(--ui-glass-surface-soft)',
+  boxShadow: 'var(--ui-shadow-card)',
 }
 
 const headerStyle: CSSProperties = {
@@ -37,15 +37,15 @@ const headerStyle: CSSProperties = {
   flexWrap: 'wrap',
   alignItems: 'center',
   padding: '0 2px 10px',
-  borderBottom: '1px solid rgba(226, 232, 240, 0.86)',
+  borderBottom: '1px solid var(--ui-border-divider)',
 }
 
 const hintStyle: CSSProperties = {
-  border: '1px solid rgba(226, 232, 240, 0.86)',
+  border: '1px solid var(--ui-border-divider)',
   borderRadius: 12,
   padding: '9px 11px',
-  background: 'rgba(248, 250, 252, 0.74)',
-  color: 'var(--ui-color-secondary-text)',
+  background: 'var(--ui-surface-soft)',
+  color: 'var(--ui-text-secondary)',
   fontSize: 12,
   lineHeight: 1.4,
 }
@@ -61,10 +61,10 @@ const rowStyle: CSSProperties = {
   alignItems: 'center',
   gap: 12,
   minHeight: 74,
-  border: '1px solid rgba(226, 232, 240, 0.92)',
+  border: '1px solid var(--ui-border-divider)',
   borderRadius: 12,
   padding: '10px 12px',
-  background: 'rgba(248, 250, 252, 0.72)',
+  background: 'var(--ui-surface-soft)',
 }
 
 const mainStyle: CSSProperties = {
@@ -82,7 +82,7 @@ const topLineStyle: CSSProperties = {
 
 const amountStyle: CSSProperties = {
   flex: '0 0 auto',
-  color: 'var(--ui-color-expense)',
+  color: 'var(--ui-financial-expense)',
   fontSize: 14,
   fontWeight: 780,
   fontVariantNumeric: 'tabular-nums',
@@ -91,7 +91,7 @@ const amountStyle: CSSProperties = {
 const descriptionStyle: CSSProperties = {
   minWidth: 0,
   overflow: 'hidden',
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 13,
   fontWeight: 680,
   textOverflow: 'ellipsis',
@@ -109,12 +109,12 @@ const fieldStyle: CSSProperties = {
   minWidth: 0,
   display: 'grid',
   gap: 2,
-  color: 'var(--ui-color-secondary-text)',
+  color: 'var(--ui-text-secondary)',
   fontSize: 12,
 }
 
 const labelStyle: CSSProperties = {
-  color: 'var(--ui-color-muted-text)',
+  color: 'var(--ui-text-muted)',
   fontSize: 10,
   fontWeight: 720,
   textTransform: 'uppercase',
@@ -146,9 +146,9 @@ const lightButtonStyle: CSSProperties = {
 
 const lightDangerButtonStyle: CSSProperties = {
   ...lightButtonStyle,
-  borderColor: 'rgba(254, 205, 211, 0.9)',
-  background: 'rgba(255, 241, 242, 0.7)',
-  color: 'var(--ui-color-expense)',
+  borderColor: 'var(--ui-financial-expense-soft)',
+  background: 'var(--ui-financial-expense-soft)',
+  color: 'var(--ui-financial-expense)',
 }
 
 export default function TrashPanel(props: Props) {

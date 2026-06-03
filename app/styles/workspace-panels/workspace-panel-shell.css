@@ -16,12 +16,11 @@
   height: 376px !important;
   min-height: 376px !important;
   overflow: hidden !important;
-  border: 1px solid rgba(203, 213, 225, 0.78) !important;
+  border: 1px solid var(--ui-border-soft) !important;
   border-radius: 20px !important;
-  background: rgba(255, 255, 255, 0.74) !important;
+  background: var(--ui-glass-surface-soft) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.92),
-    0 18px 42px rgba(15, 23, 42, 0.06) !important;
+    var(--ui-shadow-card) !important;
 }
 
 [data-workspace-calendar-pane="true"],
@@ -54,10 +53,10 @@
   width: 1px !important;
   background: linear-gradient(
     180deg,
-    rgba(226, 232, 240, 0),
-    rgba(203, 213, 225, 0.58) 30%,
-    rgba(203, 213, 225, 0.38) 70%,
-    rgba(226, 232, 240, 0)
+    transparent,
+    var(--ui-border-soft) 30%,
+    var(--ui-border-divider) 70%,
+    transparent
   ) !important;
   pointer-events: none !important;
 }
@@ -76,10 +75,10 @@
   padding: 0 !important;
   display: grid !important;
   place-items: center !important;
-  border: 1px solid rgba(203, 213, 225, 0.58) !important;
+  border: 1px solid var(--ui-border-soft) !important;
   border-radius: 999px !important;
-  background: rgba(255, 255, 255, 0.62) !important;
-  color: var(--ui-color-secondary-text) !important;
+  background: var(--ui-glass-surface-soft) !important;
+  color: var(--ui-text-secondary) !important;
   font-size: 12px !important;
 }
 
@@ -108,7 +107,7 @@
   height: 16px !important;
   display: grid !important;
   place-items: center !important;
-  color: var(--ui-color-muted-text) !important;
+  color: var(--ui-text-muted) !important;
   font-size: 9px !important;
   font-weight: 620 !important;
 }
@@ -122,10 +121,10 @@
   min-height: 22px !important;
   display: grid !important;
   place-items: center !important;
-  border: 1px solid rgba(226, 232, 240, 0.84) !important;
+  border: 1px solid var(--ui-border-divider) !important;
   border-radius: 6px !important;
-  background: rgba(255, 255, 255, 0.68) !important;
-  color: var(--ui-color-secondary-text) !important;
+  background: var(--ui-glass-surface-soft) !important;
+  color: var(--ui-text-secondary) !important;
   font-size: 10px !important;
   font-style: normal !important;
   font-weight: 560 !important;
@@ -133,15 +132,15 @@
 
 [data-mini-calendar="true"] button:hover,
 [data-mini-calendar="main"] button:hover {
-  border-color: rgba(59, 130, 246, 0.36) !important;
-  background: var(--ui-color-soft-blue) !important;
-  color: var(--ui-color-primary-blue) !important;
+  border-color: var(--ui-border-active) !important;
+  background: var(--ui-surface-active) !important;
+  color: var(--ui-text-link) !important;
 }
 
 [data-mini-calendar="main"] button[data-current-day="true"] {
-  border-color: rgba(37, 99, 235, 0.38) !important;
-  background: rgba(219, 234, 254, 0.84) !important;
-  color: var(--ui-color-primary-blue) !important;
+  border-color: var(--ui-border-active) !important;
+  background: var(--ui-surface-active) !important;
+  color: var(--ui-text-link) !important;
   font-weight: 760 !important;
 }
 
@@ -160,13 +159,13 @@
 }
 
 [data-workspace-recent-header="true"] span {
-  color: var(--ui-color-primary-text) !important;
+  color: var(--ui-text-primary) !important;
   font-size: 13px !important;
   font-weight: 760 !important;
 }
 
 [data-workspace-recent-header="true"] small {
-  color: var(--ui-color-secondary-text) !important;
+  color: var(--ui-text-secondary) !important;
   font-size: 11px !important;
 }
 
@@ -189,10 +188,10 @@
   align-items: center !important;
   gap: 10px !important;
   padding: 7px 10px !important;
-  border: 1px solid rgba(226, 232, 240, 0.88) !important;
+  border: 1px solid var(--ui-border-divider) !important;
   border-radius: 10px !important;
-  background: rgba(255, 255, 255, 0.72) !important;
-  color: var(--ui-color-secondary-text) !important;
+  background: var(--ui-glass-surface-soft) !important;
+  color: var(--ui-text-secondary) !important;
   text-align: left !important;
   cursor: default !important;
   pointer-events: none !important;
@@ -201,22 +200,22 @@
 
 [data-workspace-recent-row="true"]:hover {
   transform: none !important;
-  background: rgba(255, 255, 255, 0.72) !important;
+  background: var(--ui-glass-surface-soft) !important;
 }
 
 [data-workspace-recent-row="true"] b {
-  color: var(--ui-color-primary-text) !important;
+  color: var(--ui-text-primary) !important;
   font-size: 12px !important;
   font-variant-numeric: tabular-nums;
   text-align: right;
 }
 
 [data-workspace-recent-row="true"][data-transaction-kind="income"] b {
-  color: var(--ui-color-income) !important;
+  color: var(--ui-financial-income) !important;
 }
 
 [data-workspace-recent-row="true"][data-transaction-kind="expense"] b {
-  color: var(--ui-color-expense) !important;
+  color: var(--ui-financial-expense) !important;
 }
 
 [data-workspace-recent-row="true"] span,
@@ -229,14 +228,14 @@
 }
 
 [data-workspace-recent-row="true"] span {
-  color: var(--ui-color-primary-text) !important;
+  color: var(--ui-text-primary) !important;
   font-size: 12px !important;
   font-weight: 620 !important;
 }
 
 [data-workspace-recent-row="true"] small,
 [data-workspace-recent-row="true"] time {
-  color: var(--ui-color-secondary-text) !important;
+  color: var(--ui-text-secondary) !important;
   font-size: 11px !important;
 }
 
@@ -245,16 +244,15 @@
   max-width: 100% !important;
   padding: 4px 8px !important;
   border-radius: 999px !important;
-  background: rgba(241, 245, 249, 0.92) !important;
-  color: var(--ui-color-secondary-text) !important;
+  background: var(--ui-surface-soft) !important;
+  color: var(--ui-text-secondary) !important;
 }
 
 [data-pinned-category-panel="true"] {
   padding: 16px !important;
-  border: 1px solid rgba(203, 213, 225, 0.78) !important;
+  border: 1px solid var(--ui-border-soft) !important;
   border-radius: 20px !important;
-  background: rgba(255, 255, 255, 0.7) !important;
+  background: var(--ui-glass-surface-soft) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.92),
-    0 16px 36px rgba(15, 23, 42, 0.055) !important;
+    var(--ui-shadow-card) !important;
 }

@@ -19,8 +19,8 @@ export const countStyle: CSSProperties = {
   minWidth: 20,
   height: 20,
   borderRadius: 999,
-  background: 'var(--ui-color-expense)',
-  color: 'var(--ui-color-card-background)',
+  background: 'var(--ui-financial-expense)',
+  color: 'var(--ui-text-inverse)',
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -35,17 +35,17 @@ export const popoverStyle: CSSProperties = {
   width: 400,
   maxWidth: 'calc(100vw - 32px)',
   padding: 12,
-  border: '1px solid var(--ui-color-divider-border)',
+  border: '1px solid var(--ui-border-divider)',
   borderRadius: 8,
-  background: 'var(--ui-color-card-background)',
-  boxShadow: '0 16px 36px rgba(15, 23, 42, 0.16)',
+  background: 'var(--ui-surface-card)',
+  boxShadow: 'var(--ui-shadow-dropdown)',
   zIndex: uiZIndex.mobileCritical,
 }
 
 export const panelStyle: CSSProperties = {
-  border: '1px solid var(--ui-color-divider-border)',
+  border: '1px solid var(--ui-border-divider)',
   borderRadius: 8,
-  background: 'var(--ui-color-card-background)',
+  background: 'var(--ui-surface-card)',
   padding: 12,
 }
 
@@ -58,14 +58,14 @@ export const gridStyle: CSSProperties = {
 
 export const itemStyle: CSSProperties = {
   padding: '10px 0',
-  borderTop: '1px solid var(--ui-color-soft-section-background)',
+  borderTop: '1px solid var(--ui-surface-soft)',
 }
 
 export const cardStyle: CSSProperties = {
-  border: '1px solid var(--ui-color-divider-border)',
+  border: '1px solid var(--ui-border-divider)',
   borderRadius: 8,
   padding: 12,
-  background: 'var(--ui-color-soft-section-background)',
+  background: 'var(--ui-surface-soft)',
 }
 
 export const fieldLabelStyle: CSSProperties = {
@@ -74,18 +74,18 @@ export const fieldLabelStyle: CSSProperties = {
   gap: 5,
   fontSize: 13,
   fontWeight: 600,
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
 }
 
 export const invalidInputStyle: CSSProperties = {
-  border: '1px solid var(--ui-color-expense)',
-  boxShadow: '0 0 0 2px rgba(239, 68, 68, 0.12)',
+  border: '1px solid var(--ui-status-error)',
+  boxShadow: 'var(--ui-control-focus-ring)',
 }
 
 export const progressOuterStyle: CSSProperties = {
   height: 8,
   borderRadius: 999,
-  background: 'var(--ui-color-divider-border)',
+  background: 'var(--ui-border-divider)',
   overflow: 'hidden',
 }
 
@@ -97,18 +97,18 @@ export const modalOverlayStyle: CSSProperties = {
   alignItems: 'center',
   justifyContent: 'center',
   padding: 20,
-  background: 'rgba(17, 24, 39, 0.45)',
+  background: 'var(--ui-overlay-backdrop-strong)',
 }
 
 export const modalStyle: CSSProperties = {
   width: 'min(760px, 100%)',
   maxHeight: '86vh',
   overflowY: 'auto',
-  border: '1px solid var(--ui-color-divider-border)',
+  border: '1px solid var(--ui-border-divider)',
   borderRadius: 8,
-  background: 'var(--ui-color-card-background)',
+  background: 'var(--ui-surface-card)',
   padding: 16,
-  boxShadow: '0 20px 40px rgba(15, 23, 42, 0.2)',
+  boxShadow: 'var(--ui-shadow-modal)',
 }
 
 export const detailGridStyle: CSSProperties = {
@@ -124,18 +124,18 @@ export const linkedTransactionRowStyle: CSSProperties = {
   gap: 8,
   alignItems: 'center',
   padding: '8px 0',
-  borderTop: '1px solid var(--ui-color-soft-section-background)',
+  borderTop: '1px solid var(--ui-surface-soft)',
   fontSize: 13,
 }
 
 export const detailSectionStyle: CSSProperties = {
   marginTop: 16,
   paddingTop: 14,
-  borderTop: '1px solid var(--ui-color-divider-border)',
+  borderTop: '1px solid var(--ui-border-divider)',
 }
 
 export const detailSectionTitleStyle: CSSProperties = {
   fontSize: 15,
   fontWeight: 600,
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
 }

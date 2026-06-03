@@ -13,11 +13,11 @@ const draftsPanelStyle = {
   display: 'grid',
   gap: 12,
   marginBottom: 20,
-  border: '1px solid rgba(203, 213, 225, 0.78)',
+  border: '1px solid var(--ui-border-soft)',
   borderRadius: 16,
   padding: 12,
-  background: 'rgba(255, 255, 255, 0.72)',
-  boxShadow: '0 10px 28px rgba(15, 23, 42, 0.045)',
+  background: 'var(--ui-glass-surface-soft)',
+  boxShadow: 'var(--ui-shadow-card)',
 } as const
 
 const draftsHeaderStyle = {
@@ -28,7 +28,7 @@ const draftsHeaderStyle = {
   alignItems: 'center',
   minHeight: 34,
   padding: '0 2px 10px',
-  borderBottom: '1px solid rgba(226, 232, 240, 0.86)',
+  borderBottom: '1px solid var(--ui-border-divider)',
 } as const
 
 const draftsListStyle = {
@@ -42,10 +42,10 @@ const draftRowStyle = {
   alignItems: 'center',
   gap: 12,
   minHeight: 72,
-  border: '1px solid rgba(226, 232, 240, 0.92)',
+  border: '1px solid var(--ui-border-divider)',
   borderRadius: 12,
   padding: '10px 12px',
-  background: 'rgba(248, 250, 252, 0.72)',
+  background: 'var(--ui-surface-soft)',
 } as const
 
 const draftMainStyle = {
@@ -63,14 +63,14 @@ const draftTopLineStyle = {
 } as const
 
 const draftTypeStyle = {
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 13,
   fontWeight: 760,
 } as const
 
 const draftCategoryStyle = {
   minWidth: 0,
-  color: 'var(--ui-color-secondary-text)',
+  color: 'var(--ui-text-secondary)',
   fontSize: 12,
   fontWeight: 650,
   overflow: 'hidden',
@@ -89,12 +89,12 @@ const draftFieldStyle = {
   minWidth: 0,
   display: 'grid',
   gap: 2,
-  color: 'var(--ui-color-secondary-text)',
+  color: 'var(--ui-text-secondary)',
   fontSize: 12,
 } as const
 
 const draftLabelStyle = {
-  color: 'var(--ui-color-muted-text)',
+  color: 'var(--ui-text-muted)',
   fontSize: 10,
   fontWeight: 720,
   textTransform: 'uppercase' as const,
@@ -127,17 +127,17 @@ const lightButtonStyle = {
 
 const lightDangerButtonStyle = {
   ...lightButtonStyle,
-  borderColor: 'rgba(254, 205, 211, 0.9)',
-  background: 'rgba(255, 241, 242, 0.7)',
-  color: 'var(--ui-color-expense)',
+  borderColor: 'var(--ui-financial-expense-soft)',
+  background: 'var(--ui-financial-expense-soft)',
+  color: 'var(--ui-financial-expense)',
 } as const
 
 const compactStatusStyle = {
-  border: '1px solid rgba(226, 232, 240, 0.86)',
+  border: '1px solid var(--ui-border-divider)',
   borderRadius: 12,
   padding: '10px 12px',
-  background: 'rgba(248, 250, 252, 0.72)',
-  color: 'var(--ui-color-secondary-text)',
+  background: 'var(--ui-surface-soft)',
+  color: 'var(--ui-text-secondary)',
   fontSize: 12,
 } as const
 

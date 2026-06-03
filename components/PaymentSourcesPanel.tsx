@@ -32,10 +32,10 @@ const panelStyle = {
 } as const
 
 const cardStyle = {
-  border: '1px solid rgba(226, 232, 240, 0.92)',
+  border: '1px solid var(--ui-border-divider)',
   borderRadius: 12,
   padding: 12,
-  background: 'rgba(255, 255, 255, 0.72)',
+  background: 'var(--ui-glass-surface-soft)',
 } as const
 
 const settingsGridStyle = {
@@ -62,13 +62,13 @@ const settingsCardStyle = {
   minWidth: 0,
   minHeight: 174,
   padding: 12,
-  border: '1px solid rgba(226, 232, 240, 0.92)',
+  border: '1px solid var(--ui-border-divider)',
   borderRadius: 12,
-  background: 'rgba(255, 255, 255, 0.64)',
+  background: 'var(--ui-glass-surface-soft)',
 } as const
 
 const settingsTitleStyle = {
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 13,
   fontWeight: 680,
 } as const
@@ -77,7 +77,7 @@ const checkboxLabelStyle = {
   display: 'flex',
   alignItems: 'center',
   gap: 8,
-  color: 'var(--ui-color-secondary-text)',
+  color: 'var(--ui-text-secondary)',
   fontSize: 12,
   fontWeight: 560,
   lineHeight: 1.35,
@@ -86,7 +86,7 @@ const checkboxLabelStyle = {
 const checkboxStyle = {
   width: 15,
   height: 15,
-  accentColor: 'var(--ui-color-primary-blue)',
+  accentColor: 'var(--ui-border-active)',
 } as const
 
 const fieldStyle = {
@@ -99,9 +99,9 @@ const lightButtonStyle = {
   minHeight: 30,
   borderRadius: 999,
   padding: '0 10px',
-  border: '1px solid rgba(203, 213, 225, 0.82)',
-  background: 'rgba(255, 255, 255, 0.68)',
-  color: 'var(--ui-color-secondary-text)',
+  border: '1px solid var(--ui-border-soft)',
+  background: 'var(--ui-glass-surface-soft)',
+  color: 'var(--ui-text-secondary)',
   fontSize: 12,
   fontWeight: 580,
   boxShadow: 'none',
@@ -110,9 +110,9 @@ const lightButtonStyle = {
 
 const lightDangerButtonStyle = {
   ...lightButtonStyle,
-  borderColor: 'rgba(248, 113, 113, 0.34)',
-  background: 'rgba(254, 242, 242, 0.66)',
-  color: 'var(--ui-color-expense)',
+  borderColor: 'var(--ui-financial-expense-soft)',
+  background: 'var(--ui-financial-expense-soft)',
+  color: 'var(--ui-financial-expense)',
 } as const
 
 const primaryActionStyle = {
@@ -131,9 +131,9 @@ const sourceFormStyle = {
   maxWidth: '100%',
   minWidth: 0,
   padding: 12,
-  border: '1px solid rgba(226, 232, 240, 0.92)',
+  border: '1px solid var(--ui-border-divider)',
   borderRadius: 12,
-  background: 'rgba(248, 250, 252, 0.62)',
+  background: 'var(--ui-surface-soft)',
 } as const
 
 const listStyle = {
@@ -150,14 +150,14 @@ const sourceHeaderStyle = {
 } as const
 
 const sourceNameStyle = {
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 14,
   fontWeight: 680,
 } as const
 
 const sourceMetaStyle = {
   marginTop: 3,
-  color: 'var(--ui-color-secondary-text)',
+  color: 'var(--ui-text-secondary)',
   fontSize: 12,
 } as const
 
@@ -170,10 +170,10 @@ const sourceStatsGridStyle = {
 
 const sourceStatStyle = {
   padding: '8px 9px',
-  border: '1px solid rgba(226, 232, 240, 0.9)',
+  border: '1px solid var(--ui-border-divider)',
   borderRadius: 10,
-  background: 'rgba(248, 250, 252, 0.7)',
-  color: 'var(--ui-color-secondary-text)',
+  background: 'var(--ui-surface-soft)',
+  color: 'var(--ui-text-secondary)',
   fontSize: 12,
 } as const
 
@@ -284,9 +284,9 @@ export default function PaymentSourcesPanel(props: Props) {
       data-utility-badge="true"
       style={{
         ...badgeStyle,
-        background: isActive ? 'var(--ui-color-soft-blue)' : 'var(--ui-color-soft-section-background)',
-        color: isActive ? colorValue : 'var(--ui-color-secondary-text)',
-        border: `1px solid ${isActive ? colorValue : 'var(--ui-color-soft-border)'}`,
+        background: isActive ? 'var(--ui-surface-active)' : 'var(--ui-surface-soft)',
+        color: isActive ? colorValue : 'var(--ui-text-secondary)',
+        border: `1px solid ${isActive ? colorValue : 'var(--ui-border-soft)'}`,
       }}
     >
       {label}
@@ -613,8 +613,8 @@ export default function PaymentSourcesPanel(props: Props) {
                 </div>
 
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
-                  {renderMembershipBadge('Przychody', source.is_income_source !== false, 'var(--ui-color-income)')}
-                  {renderMembershipBadge('Wydatki', source.is_expense_source !== false, 'var(--ui-color-expense)')}
+                  {renderMembershipBadge('Przychody', source.is_income_source !== false, 'var(--ui-financial-income)')}
+                  {renderMembershipBadge('Wydatki', source.is_expense_source !== false, 'var(--ui-financial-expense)')}
                 </div>
 
                 <MetadataGrid data-payment-source-stats="true" style={sourceStatsGridStyle}>

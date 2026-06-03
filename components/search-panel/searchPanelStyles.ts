@@ -47,9 +47,9 @@ export const resetButtonStyle = {
   minHeight: 34,
   padding: '0 12px',
   borderRadius: 999,
-  border: '1px solid rgba(203, 213, 225, 0.82)',
-  background: 'rgba(255, 255, 255, 0.68)',
-  color: 'var(--ui-color-secondary-text)',
+  border: '1px solid var(--ui-border-soft)',
+  background: 'var(--ui-glass-surface-soft)',
+  color: 'var(--ui-text-secondary)',
   cursor: 'pointer',
   fontSize: 12,
   fontWeight: 560,
@@ -63,28 +63,28 @@ export const statsGridStyle = {
 } as const
 
 export const statCardStyle = {
-  border: '1px solid rgba(226, 232, 240, 0.92)',
+  border: '1px solid var(--ui-border-divider)',
   borderRadius: 12,
   padding: '10px 11px',
-  background: 'rgba(255, 255, 255, 0.72)',
+  background: 'var(--ui-glass-surface-soft)',
 } as const
 
 export const incomeStatCardStyle = {
   ...statCardStyle,
-  background: 'var(--ui-color-income-soft)',
-  border: '1px solid var(--ui-color-income-soft)',
+  background: 'var(--ui-financial-income-soft)',
+  border: '1px solid var(--ui-financial-income-soft)',
 } as const
 
 export const expenseStatCardStyle = {
   ...statCardStyle,
-  background: 'var(--ui-color-expense-soft)',
-  border: '1px solid var(--ui-color-expense-soft)',
+  background: 'var(--ui-financial-expense-soft)',
+  border: '1px solid var(--ui-financial-expense-soft)',
 } as const
 
 export const balanceStatCardStyle = {
   ...statCardStyle,
-  background: 'var(--ui-color-soft-blue)',
-  border: '1px solid var(--ui-color-light-blue-border)',
+  background: 'var(--ui-surface-active)',
+  border: '1px solid var(--ui-border-active)',
 } as const
 
 export const statLabelStyle = {
@@ -108,17 +108,17 @@ export const tagsWrapStyle = {
 export const tagButtonBaseStyle = {
   padding: '8px 12px',
   borderRadius: 999,
-  border: '1px solid var(--ui-color-soft-border)',
-  background: 'var(--ui-color-card-background)',
+  border: '1px solid var(--ui-border-soft)',
+  background: 'var(--ui-surface-card)',
   cursor: 'pointer',
   fontSize: 13,
 } as const
 
 export const historyWrapStyle = {
-  border: '1px solid rgba(226, 232, 240, 0.92)',
+  border: '1px solid var(--ui-border-divider)',
   borderRadius: 12,
   overflow: 'hidden',
-  background: 'rgba(255, 255, 255, 0.72)',
+  background: 'var(--ui-glass-surface-soft)',
 } as const
 
 export const historyHeaderStyle = {
@@ -126,11 +126,11 @@ export const historyHeaderStyle = {
   gridTemplateColumns: '120px minmax(180px, 1.2fr) minmax(220px, 2fr) 130px',
   gap: 12,
   padding: '10px 12px',
-  background: 'rgba(248, 250, 252, 0.88)',
-  color: 'var(--ui-color-secondary-text)',
+  background: 'var(--ui-surface-soft)',
+  color: 'var(--ui-text-secondary)',
   fontWeight: 680,
   fontSize: 12,
-  borderBottom: '1px solid rgba(226, 232, 240, 0.92)',
+  borderBottom: '1px solid var(--ui-border-divider)',
 } as const
 
 export const historyRowStyle = {
@@ -138,7 +138,7 @@ export const historyRowStyle = {
   gridTemplateColumns: '120px minmax(180px, 1.2fr) minmax(220px, 2fr) 130px',
   gap: 12,
   padding: '11px 12px',
-  borderBottom: '1px solid rgba(238, 242, 247, 0.92)',
+  borderBottom: '1px solid var(--ui-border-divider)',
   alignItems: 'start',
   fontSize: 13,
 } as const
@@ -205,9 +205,9 @@ export const transactionTagBadgeStyle = {
   fontSize: 12,
   padding: '4px 8px',
   borderRadius: 999,
-  background: 'var(--ui-color-soft-blue)',
-  border: '1px solid var(--ui-color-light-blue-border)',
-  color: 'var(--ui-color-primary-blue)',
+  background: 'var(--ui-surface-active)',
+  border: '1px solid var(--ui-border-active)',
+  color: 'var(--ui-text-link)',
   cursor: 'pointer',
 } as const
 

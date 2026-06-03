@@ -10,23 +10,23 @@
   position: relative;
   overflow: visible;
   min-width: 0;
-  border: 1px solid rgba(203, 213, 225, 0.8);
+  border: 1px solid var(--ui-border-soft);
   border-radius: 16px;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.86), rgba(241, 245, 249, 0.74));
+  background: linear-gradient(145deg, var(--ui-glass-surface), var(--ui-surface-soft));
 }
 
 [data-pinned-category-card="true"][data-pinned-category-kind="income"],
 [data-pinned-category-kind="income"] {
-  border-color: rgba(134, 239, 172, 0.58) !important;
-  background: rgba(240, 253, 244, 0.82) !important;
-  color: var(--ui-color-income) !important;
+  border-color: var(--ui-financial-income-soft) !important;
+  background: var(--ui-financial-income-soft) !important;
+  color: var(--ui-financial-income) !important;
 }
 
 [data-pinned-category-card="true"][data-pinned-category-kind="expense"],
 [data-pinned-category-kind="expense"] {
-  border-color: rgba(254, 205, 211, 0.7) !important;
-  background: rgba(255, 241, 242, 0.82) !important;
-  color: var(--ui-color-expense) !important;
+  border-color: var(--ui-financial-expense-soft) !important;
+  background: var(--ui-financial-expense-soft) !important;
+  color: var(--ui-financial-expense) !important;
 }
 
 [data-pinned-category-main="true"] {
@@ -50,7 +50,7 @@
   display: grid;
   place-items: center;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.68);
+  background: var(--ui-glass-surface-soft);
 }
 
 [data-pinned-category-main="true"] div {
@@ -67,19 +67,19 @@
 }
 
 [data-pinned-category-main="true"] strong {
-  color: var(--ui-color-primary-text);
+  color: var(--ui-text-primary);
   font-size: 13px;
   font-weight: 760;
 }
 
 [data-pinned-category-main="true"] small {
-  color: var(--ui-color-secondary-text);
+  color: var(--ui-text-secondary);
   font-size: 11px;
 }
 
 [data-pinned-category-main="true"] b {
   grid-column: 1 / -1;
-  color: var(--ui-color-primary-text);
+  color: var(--ui-text-primary);
   font-size: 16px !important;
   white-space: nowrap !important;
   font-variant-numeric: tabular-nums;
@@ -101,10 +101,10 @@
   height: 28px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(203, 213, 225, 0.78);
+  border: 1px solid var(--ui-border-soft);
   border-radius: 9px;
-  background: rgba(255, 255, 255, 0.78);
-  color: var(--ui-color-secondary-text);
+  background: var(--ui-glass-surface);
+  color: var(--ui-text-secondary);
   cursor: pointer;
   list-style: none;
 }
@@ -132,7 +132,7 @@
   border-radius: var(--ui-radius-sm);
   padding: var(--ui-dropdown-item-padding);
   background: transparent;
-  color: var(--ui-color-secondary-text);
+  color: var(--ui-text-secondary);
   font-size: 12px;
   text-align: left;
 }
@@ -150,7 +150,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 0 2px !important;
-  color: var(--ui-color-secondary-text);
+  color: var(--ui-text-secondary);
   font-size: 12px;
   font-weight: 680;
 }
@@ -167,9 +167,9 @@
   justify-content: center !important;
   border-radius: 999px !important;
   padding: 0 !important;
-  border: 1px solid rgba(213, 222, 232, 0.9);
-  background: rgba(255, 255, 255, 0.72);
-  color: var(--ui-color-secondary-text);
+  border: 1px solid var(--ui-border-soft);
+  background: var(--ui-glass-surface-soft);
+  color: var(--ui-text-secondary);
   cursor: pointer;
 }
 
@@ -186,11 +186,11 @@
   height: 18px !important;
   display: grid !important;
   place-items: center !important;
-  border: 2px solid var(--ui-color-card-background) !important;
+  border: 2px solid var(--ui-surface-card) !important;
   border-radius: 999px !important;
   padding: 0 4px !important;
-  background: var(--ui-color-expense) !important;
-  color: var(--ui-color-card-background) !important;
+  background: var(--ui-financial-expense) !important;
+  color: var(--ui-text-inverse) !important;
   font-size: 10px !important;
   font-weight: 800 !important;
   line-height: 1 !important;
@@ -208,9 +208,9 @@
   min-height: 340px !important;
   margin-top: 0 !important;
   padding: 12px !important;
-  border: 1px solid rgba(213, 222, 232, 0.92) !important;
+  border: 1px solid var(--ui-border-soft) !important;
   border-radius: 16px !important;
-  background: rgba(255, 255, 255, 0.76) !important;
+  background: var(--ui-glass-surface-soft) !important;
   box-shadow: none !important;
 }
 
@@ -248,9 +248,9 @@
   min-height: 26px !important;
   border-radius: 999px !important;
   padding: 0 10px !important;
-  border: 1px solid rgba(203, 213, 225, 0.72) !important;
-  background: rgba(255, 255, 255, 0.62) !important;
-  color: var(--ui-color-secondary-text) !important;
+  border: 1px solid var(--ui-border-soft) !important;
+  background: var(--ui-glass-surface-soft) !important;
+  color: var(--ui-text-secondary) !important;
   font-size: 11px !important;
   font-weight: 680 !important;
 }
@@ -264,7 +264,7 @@
 }
 
 [data-workspace-bottom-feed="true"] > span {
-  color: var(--ui-color-secondary-text);
+  color: var(--ui-text-secondary);
   font-size: 11px;
   font-weight: 760;
   text-transform: uppercase;
@@ -279,27 +279,27 @@
   align-items: center;
   gap: 6px;
   padding: 0 8px;
-  border: 1px solid rgba(213, 222, 232, 0.9);
+  border: 1px solid var(--ui-border-soft);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.72);
-  color: var(--ui-color-secondary-text);
+  background: var(--ui-glass-surface-soft);
+  color: var(--ui-text-secondary);
   cursor: pointer;
 }
 
 [data-workspace-bottom-feed="true"] button b {
-  color: var(--ui-color-expense);
+  color: var(--ui-financial-expense);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
 
 [data-workspace-bottom-feed="true"] button[data-transaction-kind="income"] b {
-  color: var(--ui-color-income);
+  color: var(--ui-financial-income);
 }
 
 [data-workspace-bottom-feed="true"] button small {
   min-width: 0;
   overflow: hidden;
-  color: var(--ui-color-secondary-text);
+  color: var(--ui-text-secondary);
   font-size: 11px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -331,9 +331,9 @@
     height: 1px !important;
     background: linear-gradient(
       90deg,
-      rgba(226, 232, 240, 0),
-      rgba(203, 213, 225, 0.56),
-      rgba(226, 232, 240, 0)
+      transparent,
+      var(--ui-border-soft),
+      transparent
     ) !important;
   }
 
