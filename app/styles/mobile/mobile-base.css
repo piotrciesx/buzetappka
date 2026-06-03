@@ -438,18 +438,18 @@
 [data-floating-dropdown="true"],
 [data-mobile-category-menu="true"],
 [data-transaction-menu="true"] {
-  z-index: var(--ui-z-popover) !important;
+  z-index: var(--ui-z-dropdown) !important;
 }
 
 [data-floating-dropdown="true"][open],
 [data-mobile-category-menu="true"][open],
 [data-transaction-menu="true"][open] {
-  z-index: var(--ui-z-category-popover) !important;
+  z-index: var(--ui-z-dropdown-raised) !important;
 }
 
 [data-mobile-category-menu-panel="true"],
 [data-transaction-menu="true"] div {
-  z-index: var(--ui-z-category-popover-elevated) !important;
+  z-index: var(--ui-z-dropdown-raised) !important;
 }
 
 [data-category-actions="true"] summary,

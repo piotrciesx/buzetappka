@@ -34,7 +34,12 @@ export default function MonthCalendarToolbar({
     <>
       <MonthCalendarHeader title={title} subtitle={subtitle} styles={styles} />
       {showHeatmapControls && (
-        <details data-month-calendar-settings-menu="true" data-floating-dropdown="true">
+        <details
+          data-month-calendar-settings-menu="true"
+          data-floating-dropdown="true"
+          data-dropdown-placement="bottom"
+          data-dropdown-align="end"
+        >
           <summary aria-label="Ustawienia heatmapy" title="Ustawienia heatmapy">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
               <circle cx="5" cy="12" r="1.8" fill="currentColor" />
@@ -42,7 +47,10 @@ export default function MonthCalendarToolbar({
               <circle cx="19" cy="12" r="1.8" fill="currentColor" />
             </svg>
           </summary>
-          <div data-month-calendar-settings-panel="true">
+          <div
+            className="ui-popover ui-popover--utility"
+            data-month-calendar-settings-panel="true"
+          >
             <MonthCalendarHeatmapControls
               heatmapMode={heatmapMode}
               heatmapInverted={heatmapInverted}
@@ -66,7 +74,7 @@ export default function MonthCalendarToolbar({
               </label>
             )}
             {onResetHeatmapSettings && (
-              <button type="button" onClick={onResetHeatmapSettings}>
+              <button type="button" className="ui-dropdown__item" onClick={onResetHeatmapSettings}>
                 Reset
               </button>
             )}

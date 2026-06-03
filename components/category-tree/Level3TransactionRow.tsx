@@ -445,7 +445,12 @@ export default function Level3TransactionRow({
             </button>
           </>
         ) : !isSelectedMonthLocked ? (
-          <details data-transaction-menu="true" data-floating-dropdown="true">
+          <details
+            data-transaction-menu="true"
+            data-floating-dropdown="true"
+            data-dropdown-placement="bottom"
+            data-dropdown-align="end"
+          >
             <summary aria-label="Menu wpisu" title="Menu wpisu">
               <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
                 <circle cx="5" cy="12" r="1.8" fill="currentColor" />
@@ -453,9 +458,10 @@ export default function Level3TransactionRow({
                 <circle cx="19" cy="12" r="1.8" fill="currentColor" />
               </svg>
             </summary>
-            <div>
+            <div className="ui-dropdown ui-dropdown--action">
               <button
                 type="button"
+                className="ui-dropdown__item"
                 onClick={() => {
                   startEditingTransaction(transaction)
                 }}
@@ -465,6 +471,7 @@ export default function Level3TransactionRow({
 
               <button
                 type="button"
+                className="ui-dropdown__item"
                 onClick={() => {
                   startMovingTransaction(transaction)
                 }}
@@ -475,6 +482,7 @@ export default function Level3TransactionRow({
               {handleDuplicateTransaction && (
                 <button
                   type="button"
+                  className="ui-dropdown__item"
                   onClick={() => {
                     handleDuplicateTransaction(transaction)
                   }}
@@ -485,6 +493,8 @@ export default function Level3TransactionRow({
 
               <button
                 type="button"
+                className="ui-dropdown__item"
+                data-button-tone="danger"
                 onClick={async () => {
                   await handleDeleteTransaction(transaction.id)
                 }}

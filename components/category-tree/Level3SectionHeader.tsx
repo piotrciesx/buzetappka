@@ -248,6 +248,8 @@ export default function Level3SectionHeader({
           <details
             data-mobile-category-menu="true"
             data-floating-dropdown="true"
+            data-dropdown-placement="bottom"
+            data-dropdown-align="end"
             onClick={(event) => event.stopPropagation()}
           >
             <summary style={styles.secondaryButton} aria-label={`Menu kategorii ${name}`} title="Menu">
@@ -257,26 +259,29 @@ export default function Level3SectionHeader({
                 <circle cx="19" cy="12" r="1.8" fill="currentColor" />
               </svg>
             </summary>
-            <div data-mobile-category-menu-panel="true">
+            <div
+              className="ui-dropdown ui-dropdown--action"
+              data-mobile-category-menu-panel="true"
+            >
               {canUseMonthCalendar && (
-                <button type="button" style={styles.secondaryButton} onClick={onToggleCalendar}>
+                <button type="button" className="ui-dropdown__item" onClick={onToggleCalendar}>
                   {isCalendarOpen ? 'Zamknij kalendarz' : 'Otwórz kalendarz'}
                 </button>
               )}
 
               {canUseBudgetLimit && onEditBudgetLimit && (
-                <button type="button" style={styles.secondaryButton} onClick={onEditBudgetLimit}>
+                <button type="button" className="ui-dropdown__item" onClick={onEditBudgetLimit}>
                   {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
                 </button>
               )}
 
               {isClosingAfterSelectedMonth ? (
-                <button style={styles.secondaryButton} onClick={async () => onUndoScheduledHide()}>
+                <button className="ui-dropdown__item" onClick={async () => onUndoScheduledHide()}>
                   Cofnij zamknięcie
                 </button>
               ) : (
                 <>
-                  <button style={styles.secondaryButton} onClick={async () => onRenameCategory()}>
+                  <button className="ui-dropdown__item" onClick={async () => onRenameCategory()}>
                     Zmień nazwę
                   </button>
                   <details data-category-icon-picker-menu="true">
@@ -289,13 +294,13 @@ export default function Level3SectionHeader({
                       onChange={(nextIconKey) => void onIconChange(nextIconKey)}
                     />
                   </details>
-                  <button style={styles.dangerButton} onClick={async () => onHideNow()}>
+                  <button className="ui-dropdown__item" data-button-tone="danger" onClick={async () => onHideNow()}>
                     Ukryj teraz
                   </button>
-                  <button style={styles.dangerButton} onClick={async () => onHideNext()}>
+                  <button className="ui-dropdown__item" data-button-tone="danger" onClick={async () => onHideNext()}>
                     Ukryj od następnego
                   </button>
-                  <button style={styles.dangerButton} onClick={async () => onDeleteCategory()}>
+                  <button className="ui-dropdown__item" data-button-tone="danger" onClick={async () => onDeleteCategory()}>
                     Usuń
                   </button>
                 </>

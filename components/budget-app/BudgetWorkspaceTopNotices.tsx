@@ -251,7 +251,16 @@ export default function BudgetWorkspaceTopNotices({
           >
             Sortuj
           </button>
-          {openedNotice === 'sort' && <div data-tree-sort-inline="true">{sortContent}</div>}
+          {openedNotice === 'sort' && (
+            <div
+              className="ui-popover ui-popover--utility"
+              data-tree-sort-inline="true"
+              data-dropdown-placement="bottom"
+              data-dropdown-align="end"
+            >
+              {sortContent}
+            </div>
+          )}
         </div>
       )}
 

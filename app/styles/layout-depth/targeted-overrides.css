@@ -145,6 +145,34 @@
   visibility: visible !important;
 }
 
+[data-floating-dropdown="true"] > .ui-dropdown,
+[data-floating-dropdown="true"][data-transaction-menu="true"] > .ui-dropdown {
+  min-width: var(--ui-dropdown-width-action) !important;
+  max-width: var(--ui-dropdown-max-width-action) !important;
+  max-height: var(--ui-dropdown-max-height-action) !important;
+  gap: var(--ui-dropdown-gap) !important;
+  padding: var(--ui-dropdown-padding) !important;
+  border: var(--ui-dropdown-border) !important;
+  border-radius: var(--ui-dropdown-radius) !important;
+  background: var(--ui-surface-dropdown) !important;
+  box-shadow: var(--ui-dropdown-shadow) !important;
+  backdrop-filter: none !important;
+}
+
+[data-floating-dropdown="true"] > .ui-popover--utility,
+[data-tree-sort-inline="true"].ui-popover--utility {
+  min-width: var(--ui-popover-min-width) !important;
+  max-width: var(--ui-dropdown-max-width-utility) !important;
+  max-height: var(--ui-dropdown-max-height-utility) !important;
+  gap: var(--ui-dropdown-gap) !important;
+  padding: var(--ui-overlay-popover-padding) !important;
+  border: var(--ui-dropdown-border) !important;
+  border-radius: var(--ui-dropdown-radius) !important;
+  background: var(--ui-surface-dropdown) !important;
+  box-shadow: var(--ui-shadow-popover) !important;
+  backdrop-filter: none !important;
+}
+
 [data-budget-app="true"] {
   color: var(--ui-color-primary-navy);
 }
@@ -265,7 +293,7 @@
   position: absolute !important;
   top: 12px !important;
   right: 12px !important;
-  z-index: var(--ui-z-creator-dropdown) !important;
+  z-index: var(--ui-z-popover) !important;
 }
 
 [data-month-calendar-settings-menu="true"] > summary {
@@ -289,15 +317,16 @@
   position: absolute !important;
   top: calc(100% + 8px) !important;
   right: 0 !important;
-  width: min(260px, calc(100vw - 34px)) !important;
+  width: var(--ui-dropdown-width-utility) !important;
+  max-width: var(--ui-dropdown-max-width-utility) !important;
   display: grid !important;
-  gap: 9px !important;
-  padding: 10px !important;
-  border: 1px solid rgba(203, 213, 225, 0.86) !important;
-  border-radius: 14px !important;
-  background: rgba(255, 255, 255, 0.96) !important;
-  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.15) !important;
-  backdrop-filter: blur(18px) saturate(1.08) !important;
+  gap: var(--ui-dropdown-gap) !important;
+  padding: var(--ui-overlay-popover-padding) !important;
+  border: var(--ui-dropdown-border) !important;
+  border-radius: var(--ui-dropdown-radius) !important;
+  background: var(--ui-surface-dropdown) !important;
+  box-shadow: var(--ui-shadow-popover) !important;
+  backdrop-filter: none !important;
 }
 
 [data-month-calendar-heatmap-field="true"] {

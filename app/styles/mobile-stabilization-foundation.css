@@ -98,9 +98,12 @@
     z-index: var(--ui-z-topbar-dropdown) !important;
   }
 
-  [data-reminder-popover="true"],
-  [data-month-calendar-settings-panel="true"] {
+  [data-reminder-popover="true"] {
     z-index: var(--ui-z-mobile-popover) !important;
+  }
+
+  [data-month-calendar-settings-panel="true"] {
+    z-index: var(--ui-z-popover) !important;
   }
 
   [data-category-entries-popup-backdrop="true"] {

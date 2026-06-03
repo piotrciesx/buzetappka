@@ -30,13 +30,21 @@ export default function BudgetCategoryTreeLevel1Actions({
     <>
       {canUseBudgetLimit && budgetLimitView && <BudgetLimitIndicator view={budgetLimitView} />}
 
-      <details data-mobile-category-menu="true" data-floating-dropdown="true">
+      <details
+        data-mobile-category-menu="true"
+        data-floating-dropdown="true"
+        data-dropdown-placement="bottom"
+        data-dropdown-align="end"
+      >
         <summary style={styles.secondaryButton}>akcje</summary>
-        <div data-mobile-category-menu-panel="true">
+        <div
+          className="ui-dropdown ui-dropdown--action"
+          data-mobile-category-menu-panel="true"
+        >
           {canUseMonthCalendar && (
             <button
               type="button"
-              style={styles.secondaryButton}
+              className="ui-dropdown__item"
               onClick={(event) => {
                 event.stopPropagation()
                 toggleLevel1Calendar(level1Category.id)
@@ -49,7 +57,7 @@ export default function BudgetCategoryTreeLevel1Actions({
           {canUseBudgetLimit && onEditBudgetLimit && (
             <button
               type="button"
-              style={styles.secondaryButton}
+              className="ui-dropdown__item"
               onClick={(event) => {
                 event.stopPropagation()
                 onEditBudgetLimit(null)

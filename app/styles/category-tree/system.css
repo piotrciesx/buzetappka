@@ -20,8 +20,8 @@
   --tree-l3-indent: var(--ui-space-7);
   --tree-entry-indent: var(--ui-space-8);
   --tree-entry-row-height: 34px;
-  --tree-popover-z: var(--ui-z-category-popover);
-  --tree-popover-z-raised: var(--ui-z-category-popover-elevated);
+  --tree-popover-z: var(--ui-z-dropdown);
+  --tree-popover-z-raised: var(--ui-z-dropdown-raised);
 }
 
 [data-category-section="true"] {

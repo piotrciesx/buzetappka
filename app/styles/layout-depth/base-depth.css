@@ -95,18 +95,21 @@
   }
 
   /* dropdowny nad workspace */
-  [data-floating-dropdown="true"],
-  [data-mobile-category-menu="true"],
-  [data-transaction-menu="true"],
   [data-budget-month-menu="true"],
   [data-profile-menu-dropdown="true"] {
     z-index: var(--ui-z-topbar-overlay) !important;
   }
 
+  [data-floating-dropdown="true"],
+  [data-mobile-category-menu="true"],
+  [data-transaction-menu="true"] {
+    z-index: var(--ui-z-dropdown) !important;
+  }
+
   [data-floating-dropdown="true"][open],
   [data-mobile-category-menu="true"][open],
   [data-transaction-menu="true"][open] {
-    z-index: var(--ui-z-topbar-overlay-raised) !important;
+    z-index: var(--ui-z-dropdown-raised) !important;
   }
 
   /* środek strony nie może zachowywać się jak osobna warstwa */
@@ -148,7 +151,11 @@
   [data-mobile-category-menu-panel="true"],
   [data-tree-sort-inline="true"],
   [data-budget-month-menu="true"] {
-    max-width: calc(100vw - 20px) !important;
+    max-width: var(--ui-dropdown-max-width) !important;
+    z-index: var(--ui-z-dropdown-raised) !important;
+  }
+
+  [data-budget-month-menu="true"] {
     z-index: var(--ui-z-topbar-overlay) !important;
   }
 }

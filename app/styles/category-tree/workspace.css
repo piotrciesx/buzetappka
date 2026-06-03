@@ -260,7 +260,7 @@
   display: flex !important;
   top: calc(100% + 8px) !important;
   left: 0 !important;
-  z-index: var(--ui-z-workspace-popover) !important;
+  z-index: var(--ui-z-popover) !important;
   width: min(430px, calc(100vw - 260px)) !important;
   min-width: 300px !important;
   padding: 12px !important;
@@ -293,8 +293,11 @@
 [data-budget-status-right="true"] > [data-tree-sort-inline="true"] {
   left: auto !important;
   right: 0 !important;
-  width: min(620px, calc(100vw - 240px)) !important;
-  min-width: 420px !important;
+  z-index: var(--ui-z-popover) !important;
+  width: var(--ui-dropdown-width-utility) !important;
+  min-width: var(--ui-popover-min-width) !important;
+  max-width: var(--ui-dropdown-max-width-utility) !important;
+  max-height: var(--ui-dropdown-max-height-utility) !important;
 }
 
 [data-tree-sort-panel="true"] {

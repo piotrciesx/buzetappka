@@ -200,6 +200,10 @@
   text-align: left;
 }
 
+.ui-dropdown__item[data-button-tone="danger"] {
+  color: var(--ui-color-expense);
+}
+
 .ui-dropdown--select .ui-dropdown__item {
   min-height: var(--ui-dropdown-item-height-select);
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { uiZIndex } from '../../lib/uiFoundation'
+import { uiDropdownPrimitives } from '../../lib/uiFoundation'
 
 export function useFloatingDropdownDismissal() {
   useEffect(() => {
@@ -43,9 +43,13 @@ export function useFloatingDropdownDismissal() {
       panel.style.setProperty('position', 'fixed', 'important')
       panel.style.setProperty('right', 'auto', 'important')
       panel.style.setProperty('bottom', 'auto', 'important')
-      panel.style.setProperty('z-index', String(uiZIndex.globalCritical), 'important')
+      const layer = panel.classList.contains(uiDropdownPrimitives.utilityPopover.variantClassName)
+        ? uiDropdownPrimitives.utilityPopover.layer
+        : uiDropdownPrimitives.actionMenu.layer
+
+      panel.style.setProperty('z-index', String(layer), 'important')
       panel.style.setProperty('visibility', 'hidden', 'important')
-      panel.style.setProperty('max-height', `calc(100dvh - ${viewportPadding * 2}px)`, 'important')
+      panel.style.setProperty('max-height', 'var(--ui-dropdown-max-height-action)', 'important')
       panel.style.setProperty('overflow-y', 'auto', 'important')
 
       const triggerRect = trigger.getBoundingClientRect()
@@ -67,7 +71,7 @@ export function useFloatingDropdownDismissal() {
 
       panel.style.setProperty('top', `${top}px`, 'important')
       panel.style.setProperty('left', `${left}px`, 'important')
-      panel.style.setProperty('max-width', `calc(100vw - ${viewportPadding * 2}px)`, 'important')
+      panel.style.setProperty('max-width', 'var(--ui-dropdown-max-width)', 'important')
       panel.style.setProperty('visibility', 'visible', 'important')
       panel.dataset.dropdownPlacement = shouldOpenUp ? 'top' : 'bottom'
     }
