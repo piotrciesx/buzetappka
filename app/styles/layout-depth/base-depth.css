@@ -65,7 +65,7 @@
   [data-budget-header-row="true"] {
     position: fixed !important;
     inset: 8px 10px auto 10px !important;
-    z-index: var(--ui-z-topbar) !important;
+    z-index: var(--ui-z-popover) !important;
   }
 
   /* sidebar pod topbarem */
@@ -95,9 +95,12 @@
   }
 
   /* dropdowny nad workspace */
-  [data-budget-month-menu="true"],
-  [data-profile-menu-dropdown="true"] {
+  [data-budget-month-menu="true"] {
     z-index: var(--ui-z-topbar-overlay) !important;
+  }
+
+  [data-profile-menu-dropdown="true"] {
+    z-index: var(--ui-z-popover) !important;
   }
 
   [data-floating-dropdown="true"],

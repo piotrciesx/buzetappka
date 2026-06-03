@@ -8,7 +8,6 @@ import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
 import { getExistingDaysInMonth } from '../../lib/dateUtils'
 import { getTransactionMonth, isActiveTransaction } from '../../lib/transactionDomain'
 import { isMonthBeforeBudgetStart } from '../../lib/transactionScope'
-import { uiZIndex } from '../../lib/uiFoundation'
 import type { DashboardWidgetPixelRect } from './dashboardWidgetTileTypes'
 import { GREEN, RED, SOFT_BORDER, SOFT_TEXT } from './dashboardWidgetTileStyles'
 
@@ -151,15 +150,6 @@ const dropdownPanelStyle: CSSProperties = {
   position: 'absolute',
   left: 0,
   bottom: 28,
-  zIndex: uiZIndex.widgetDropdown,
-  width: 170,
-  border: `1px solid ${SOFT_BORDER}`,
-  borderRadius: 10,
-  background: 'rgba(255,255,255,0.98)',
-  boxShadow: '0 12px 28px rgba(15,23,42,0.12)',
-  padding: 8,
-  display: 'grid',
-  gap: 7,
 }
 
 const checkboxRowStyle: CSSProperties = {
@@ -523,8 +513,13 @@ export default function IncomeExpenseTrendWidget({
           </button>
 
           {isDropdownOpen && (
-            <div style={dropdownPanelStyle}>
-              <label style={checkboxRowStyle}>
+            <div
+              className="ui-dropdown ui-dropdown--action"
+              data-dropdown-placement="top"
+              data-dropdown-align="start"
+              style={dropdownPanelStyle}
+            >
+              <label className="ui-dropdown__item" style={checkboxRowStyle}>
                 <input
                   type="checkbox"
                   checked={showIncome}
@@ -533,7 +528,7 @@ export default function IncomeExpenseTrendWidget({
                 <span>przychody</span>
               </label>
 
-              <label style={checkboxRowStyle}>
+              <label className="ui-dropdown__item" style={checkboxRowStyle}>
                 <input
                   type="checkbox"
                   checked={showExpense}

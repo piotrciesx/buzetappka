@@ -1,7 +1,7 @@
 'use client'
 
 import { CSSProperties, useEffect, useRef, useState } from 'react'
-import { uiControlPrimitives, uiOverlayPrimitives, uiSurfacePrimitives } from '../lib/uiFoundation'
+import { uiControlPrimitives } from '../lib/uiFoundation'
 import UserAvatar from './UserAvatar'
 
 type UserProfileMenuProps = {
@@ -20,37 +20,6 @@ const dropdownStyle: CSSProperties = {
   position: 'fixed',
   right: 0,
   top: 62,
-  zIndex: uiOverlayPrimitives.profileDropdown.layer,
-  width: 240,
-  border: uiSurfacePrimitives.profileDropdownSurface.border,
-  borderRadius: uiSurfacePrimitives.profileDropdownSurface.radius,
-  background: uiSurfacePrimitives.profileDropdownSurface.background,
-  boxShadow: uiSurfacePrimitives.profileDropdownSurface.shadow,
-  padding: uiSurfacePrimitives.profileDropdownSurface.padding,
-}
-
-const avatarButtonStyle: CSSProperties = {
-  width: 40,
-  height: 40,
-  borderRadius: uiControlPrimitives.iconButton.avatar.radius,
-  border: '1px solid var(--ui-color-soft-border)',
-  background: 'var(--ui-color-primary-text)',
-  color: 'var(--ui-color-card-background)',
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontWeight: 700,
-  cursor: uiControlPrimitives.iconButton.avatar.cursor,
-}
-
-const menuButtonStyle: CSSProperties = {
-  width: '100%',
-  border: 0,
-  background: 'transparent',
-  textAlign: 'left',
-  padding: uiControlPrimitives.button.profileMenuItem.padding,
-  borderRadius: uiControlPrimitives.button.profileMenuItem.radius,
-  cursor: uiControlPrimitives.button.profileMenuItem.cursor,
 }
 
 export default function UserProfileMenu({
@@ -138,7 +107,19 @@ export default function UserProfileMenu({
     <div ref={rootRef} data-budget-profile-menu="true" style={{ position: 'relative' }}>
       <button
         type="button"
-        style={avatarButtonStyle}
+        style={{
+          width: 40,
+          height: 40,
+          borderRadius: uiControlPrimitives.iconButton.avatar.radius,
+          border: '1px solid var(--ui-color-soft-border)',
+          background: 'var(--ui-color-primary-text)',
+          color: 'var(--ui-color-card-background)',
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontWeight: 700,
+          cursor: uiControlPrimitives.iconButton.avatar.cursor,
+        }}
         aria-label="Menu profilu"
         onClick={() => {
           if (!isOpen) {
@@ -152,18 +133,26 @@ export default function UserProfileMenu({
       </button>
 
       {isOpen && (
-        <div data-profile-menu-dropdown="true" style={dropdownStyle}>
+        <div
+          className="ui-dropdown ui-dropdown--action"
+          data-profile-menu-dropdown="true"
+          data-dropdown-placement="bottom"
+          data-dropdown-align="end"
+          style={dropdownStyle}
+        >
           <div style={{ padding: '6px 10px 9px' }}>
             <strong>{profileLabel}</strong>
             {userEmail && <div style={styles.smallMutedText}>{userEmail}</div>}
           </div>
 
-          <button type="button" style={menuButtonStyle} onClick={showPlaceholder}>
+          <div className="ui-dropdown__separator" />
+
+          <button type="button" className="ui-dropdown__item" onClick={showPlaceholder}>
             Profil
           </button>
           <button
             type="button"
-            style={menuButtonStyle}
+            className="ui-dropdown__item"
             onClick={() => {
               setStatusText('')
               onToggleSettings()
@@ -171,12 +160,12 @@ export default function UserProfileMenu({
           >
             Ustawienia
           </button>
-          <button type="button" style={{ ...menuButtonStyle, color: 'var(--ui-color-muted-text)' }} onClick={showPlaceholder}>
+          <button type="button" className="ui-dropdown__item" onClick={showPlaceholder}>
             Tryb nocny / Tryb dzienny
           </button>
           <button
             type="button"
-            style={menuButtonStyle}
+            className="ui-dropdown__item"
             onClick={() => {
               setStatusText('')
               onToggleImportExport()
@@ -186,7 +175,7 @@ export default function UserProfileMenu({
           </button>
           <button
             type="button"
-            style={menuButtonStyle}
+            className="ui-dropdown__item"
             onClick={() => {
               setStatusText('')
               setIsBackupMenuOpen((previousValue) => !previousValue)
@@ -198,7 +187,7 @@ export default function UserProfileMenu({
             <div style={{ padding: '0 0 6px 12px' }}>
               <button
                 type="button"
-                style={menuButtonStyle}
+                className="ui-dropdown__item"
                 disabled={isExportingBackup}
                 onClick={() => void runBackupExport(onExportBackupJson)}
               >
@@ -206,7 +195,7 @@ export default function UserProfileMenu({
               </button>
               <button
                 type="button"
-                style={menuButtonStyle}
+                className="ui-dropdown__item"
                 disabled={isExportingBackup}
                 onClick={() => void runBackupExport(onExportBackupCsv)}
               >
@@ -214,7 +203,8 @@ export default function UserProfileMenu({
               </button>
             </div>
           )}
-          <button type="button" style={menuButtonStyle} onClick={() => void onSignOut()}>
+          <div className="ui-dropdown__separator" />
+          <button type="button" className="ui-dropdown__item" onClick={() => void onSignOut()}>
             Wyloguj
           </button>
 

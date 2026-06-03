@@ -15,7 +15,7 @@
   [data-budget-header-row="true"] {
     position: fixed !important;
     inset: 0 0 auto 0 !important;
-    z-index: var(--ui-z-topbar) !important;
+    z-index: var(--ui-z-popover) !important;
     width: 100% !important;
     max-width: none !important;
     min-height: var(--ui-shell-top-height) !important;
@@ -62,7 +62,7 @@
   }
 
   [data-topbar-dropdown] {
-    z-index: var(--ui-z-topbar-dropdown) !important;
+    z-index: var(--ui-z-popover) !important;
   }
 
   [data-budget-sidebar="true"] {

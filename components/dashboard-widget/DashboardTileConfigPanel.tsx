@@ -1,6 +1,5 @@
 import type { CSSProperties } from 'react'
 import { DASHBOARD_MODULE_LABELS, getDashboardDefinition } from '../../lib/dashboardWidgetConfig'
-import { uiZIndex } from '../../lib/uiFoundation'
 import type {
   DashboardModuleId,
   DashboardTileMode,
@@ -11,15 +10,6 @@ const panelStyle: CSSProperties = {
   position: 'absolute',
   top: 48,
   right: 12,
-  zIndex: uiZIndex.widgetConfig,
-  width: 280,
-  maxWidth: 'calc(100% - 24px)',
-  border: '1px solid rgba(148, 163, 184, 0.28)',
-  borderRadius: 16,
-  background: 'rgba(255, 255, 255, 0.94)',
-  boxShadow: '0 18px 44px rgba(15, 23, 42, 0.18)',
-  padding: 12,
-  backdropFilter: 'blur(16px)',
 }
 
 const rowStyle: CSSProperties = {
@@ -70,7 +60,14 @@ export default function DashboardTileConfigPanel({ widget, onChange }: Props) {
   }
 
   return (
-    <div data-dashboard-ignore-drag="true" data-dashboard-config-panel="true" style={panelStyle}>
+    <div
+      className="ui-popover ui-popover--utility"
+      data-dashboard-ignore-drag="true"
+      data-dashboard-config-panel="true"
+      data-dropdown-placement="bottom"
+      data-dropdown-align="end"
+      style={panelStyle}
+    >
       <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
         <button
           type="button"

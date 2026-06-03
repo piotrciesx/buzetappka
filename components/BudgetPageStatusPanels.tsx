@@ -544,13 +544,19 @@ export default function BudgetPageStatusPanels({
         </nav>
 
         {isMobileMoreOpen && (
-          <div data-budget-mobile-more-menu="true">
+          <div
+            className="ui-dropdown ui-dropdown--action"
+            data-budget-mobile-more-menu="true"
+            data-dropdown-placement="top"
+            data-dropdown-align="end"
+          >
             {sidebarItems
               .filter((item) => !['calendar', 'search'].includes(item.id))
               .map((item) => (
                 <button
                   key={item.id}
                   type="button"
+                  className="ui-dropdown__item"
                   data-active={item.active ? 'true' : 'false'}
                   onClick={() => {
                     setIsMobileMoreOpen(false)
@@ -608,7 +614,12 @@ export default function BudgetPageStatusPanels({
                 <span data-topbar-chevron="true" aria-hidden="true" />
               </button>
               {openedTopbarPanel === 'pinned' && (
-                <div data-topbar-dropdown="pinned">
+                <div
+                  className="ui-popover ui-popover--utility"
+                  data-topbar-dropdown="pinned"
+                  data-dropdown-placement="bottom"
+                  data-dropdown-align="end"
+                >
                   {pinnedCategories.length > 0 ? (
                     <div data-topbar-pinned-list="true">
                       {pinnedCategories.map((category) => {
@@ -618,6 +629,7 @@ export default function BudgetPageStatusPanels({
                           <button
                             key={category.id}
                             type="button"
+                            className="ui-dropdown__item"
                             data-topbar-pinned-item="true"
                             data-pinned-category-kind={category.kind}
                             title={category.label}
@@ -653,9 +665,15 @@ export default function BudgetPageStatusPanels({
                 <span data-topbar-chevron="true" aria-hidden="true" />
               </button>
               {openedTopbarPanel === 'add' && (
-                <div data-topbar-dropdown="add">
+                <div
+                  className="ui-dropdown ui-dropdown--action"
+                  data-topbar-dropdown="add"
+                  data-dropdown-placement="bottom"
+                  data-dropdown-align="end"
+                >
                   <button
                     type="button"
+                    className="ui-dropdown__item"
                     onClick={() => {
                       runTopbarAction(onQuickAddIncome || onQuickAdd)
                       setOpenedTopbarPanel(null)
@@ -665,6 +683,7 @@ export default function BudgetPageStatusPanels({
                   </button>
                   <button
                     type="button"
+                    className="ui-dropdown__item"
                     onClick={() => {
                       runTopbarAction(onQuickAddExpense || onQuickAdd)
                       setOpenedTopbarPanel(null)
@@ -690,7 +709,12 @@ export default function BudgetPageStatusPanels({
                 <span>Szukaj...</span>
               </button>
               {openedTopbarPanel === 'search' && (
-                <div data-topbar-dropdown="search">
+                <div
+                  className="ui-popover ui-popover--utility"
+                  data-topbar-dropdown="search"
+                  data-dropdown-placement="bottom"
+                  data-dropdown-align="end"
+                >
                   <input
                     ref={topbarSearchInputRef}
                     value={topbarSearchText}
@@ -720,13 +744,19 @@ export default function BudgetPageStatusPanels({
                 {previousMonthCloseReminder && <span data-topbar-action-badge="true">1</span>}
               </button>
               {openedTopbarPanel === 'alert' && (
-                <div data-topbar-dropdown="alert">
+                <div
+                  className="ui-popover ui-popover--utility"
+                  data-topbar-dropdown="alert"
+                  data-dropdown-placement="bottom"
+                  data-dropdown-align="end"
+                >
                   {previousMonthCloseReminder ? (
                     <>
                       <p>Poprzedni miesiąc {previousMonthCloseReminder} nie jest jeszcze zamknięty.</p>
                       <div data-topbar-dropdown-actions="true">
                         <button
                           type="button"
+                          className="ui-dropdown__item"
                           onClick={async () => {
                             await onLockPreviousMonth(previousMonthCloseReminder)
                             setOpenedTopbarPanel(null)
@@ -736,6 +766,7 @@ export default function BudgetPageStatusPanels({
                         </button>
                         <button
                           type="button"
+                          className="ui-dropdown__item"
                           onClick={() => {
                             onHidePreviousMonthCloseReminder()
                             setOpenedTopbarPanel(null)
@@ -764,7 +795,12 @@ export default function BudgetPageStatusPanels({
                 <Icon name="drafts" />
               </button>
               {openedTopbarPanel === 'note' && (
-                <div data-topbar-dropdown="note">
+                <div
+                  className="ui-popover ui-popover--utility"
+                  data-topbar-dropdown="note"
+                  data-dropdown-placement="bottom"
+                  data-dropdown-align="end"
+                >
                   <ProfileMonthNotePanel
                     profileId={profileId}
                     userId={userId}

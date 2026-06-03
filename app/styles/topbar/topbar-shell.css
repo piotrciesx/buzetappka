@@ -2,7 +2,7 @@
 [data-budget-header-row="true"] {
   position: fixed !important;
   inset: var(--ui-topbar-inset-y) var(--ui-topbar-inset-x) auto var(--ui-topbar-inset-x) !important;
-  z-index: var(--ui-z-topbar) !important;
+  z-index: var(--ui-z-popover) !important;
   min-width: 0 !important;
   width: auto !important;
   max-width: var(--ui-topbar-max-width) !important;

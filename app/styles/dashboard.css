@@ -295,7 +295,7 @@
   [data-budget-header-row="true"] {
     position: fixed;
     inset: 0 0 auto 0;
-    z-index: var(--ui-z-topbar);
+    z-index: var(--ui-z-popover);
     min-height: var(--shell-top);
     margin: 0;
     padding: 10px 18px;

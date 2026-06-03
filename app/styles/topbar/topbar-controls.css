@@ -180,7 +180,7 @@
   padding-right: 0 !important;
   overflow: visible !important;
   position: relative !important;
-  z-index: var(--ui-z-topbar-dropdown) !important;
+  z-index: var(--ui-z-popover) !important;
 }
 
 [data-topbar-floating-action="true"] {
@@ -188,7 +188,7 @@
   flex: 0 0 auto !important;
   display: inline-flex !important;
   overflow: visible !important;
-  z-index: var(--ui-z-topbar-critical) !important;
+  z-index: var(--ui-z-popover) !important;
 }
 
 [data-budget-topbar-quick-actions="true"] button {
@@ -420,36 +420,35 @@
   position: absolute !important;
   top: calc(100% + 10px) !important;
   right: 0 !important;
-  z-index: var(--ui-z-global-critical) !important;
-  min-width: 180px !important;
+  z-index: var(--ui-z-popover) !important;
+  min-width: var(--ui-popover-min-width) !important;
+  max-width: var(--ui-dropdown-max-width-utility) !important;
+  max-height: var(--ui-dropdown-max-height-utility) !important;
   display: grid !important;
-  gap: var(--ui-space-4) !important;
-  padding: var(--ui-space-5) !important;
-  border: 1px solid rgba(191, 219, 254, 0.95) !important;
-  border-radius: 16px !important;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(239, 247, 255, 0.96)),
-    rgba(255, 255, 255, 0.92) !important;
+  gap: var(--ui-dropdown-gap) !important;
+  padding: var(--ui-overlay-popover-padding) !important;
+  border: var(--ui-dropdown-border) !important;
+  border-radius: var(--ui-dropdown-radius) !important;
+  background: var(--ui-surface-dropdown) !important;
   color: var(--ui-color-primary-navy) !important;
-  box-shadow:
-    0 26px 70px rgba(15, 39, 71, 0.18),
-    0 4px 18px rgba(59, 130, 246, 0.08) !important;
-  backdrop-filter: blur(18px) saturate(1.08) !important;
+  box-shadow: var(--ui-shadow-popover) !important;
+  backdrop-filter: none !important;
   isolation: isolate !important;
   overflow: visible !important;
 }
 
 [data-topbar-dropdown="alert"] {
-  min-width: min(360px, calc(100vw - 32px)) !important;
+  width: var(--ui-dropdown-width-utility) !important;
 }
 
 [data-topbar-dropdown="note"] {
-  min-width: min(360px, calc(100vw - 32px)) !important;
+  width: var(--ui-dropdown-width-utility) !important;
 }
 
 [data-topbar-dropdown="search"] {
-  min-width: min(280px, calc(100vw - 32px)) !important;
-  padding: 7px !important;
+  width: var(--ui-dropdown-width-searchable) !important;
+  max-width: var(--ui-dropdown-max-width-searchable) !important;
+  padding: var(--ui-dropdown-search-padding) !important;
 }
 
 [data-topbar-dropdown="search"] input {

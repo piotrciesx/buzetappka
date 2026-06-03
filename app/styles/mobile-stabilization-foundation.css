@@ -55,7 +55,7 @@
   }
 
   [data-budget-header-row="true"] {
-    z-index: var(--ui-z-topbar) !important;
+    z-index: var(--ui-z-popover) !important;
     width: 100% !important;
     min-width: 0 !important;
     min-height: 56px !important;
@@ -92,10 +92,13 @@
     -webkit-overflow-scrolling: touch;
   }
 
-  [data-topbar-dropdown],
-  [data-profile-menu-dropdown="true"],
   [data-budget-month-menu="true"] {
     z-index: var(--ui-z-topbar-dropdown) !important;
+  }
+
+  [data-topbar-dropdown],
+  [data-profile-menu-dropdown="true"] {
+    z-index: var(--ui-z-popover) !important;
   }
 
   [data-reminder-popover="true"] {

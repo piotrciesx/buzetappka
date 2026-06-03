@@ -529,6 +529,26 @@
   box-shadow: var(--workspace-shadow-popup), inset 0 1px 0 rgba(255,255,255,0.82) !important;
 }
 
+[data-profile-menu-dropdown="true"].ui-dropdown {
+  z-index: var(--ui-z-popover) !important;
+  width: var(--ui-dropdown-width-utility) !important;
+  max-width: var(--ui-dropdown-max-width-utility) !important;
+  max-height: var(--ui-dropdown-max-height-utility) !important;
+  gap: var(--ui-dropdown-gap) !important;
+  padding: var(--ui-dropdown-padding) !important;
+  border: var(--ui-dropdown-border) !important;
+  border-radius: var(--ui-dropdown-radius) !important;
+  background: var(--ui-surface-dropdown) !important;
+  box-shadow: var(--ui-dropdown-shadow) !important;
+  backdrop-filter: none !important;
+}
+
+[data-profile-menu-dropdown="true"] .ui-dropdown__item {
+  min-height: var(--ui-dropdown-item-height-action) !important;
+  padding: var(--ui-dropdown-item-padding) !important;
+  border-radius: var(--ui-radius-sm) !important;
+}
+
 
 
 [data-budget-context-rail="true"] {

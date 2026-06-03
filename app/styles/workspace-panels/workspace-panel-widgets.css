@@ -93,7 +93,7 @@
 }
 
 [data-pinned-category-menu="true"][open] {
-  z-index: var(--ui-z-category-popover);
+  z-index: var(--ui-z-dropdown-raised);
 }
 
 [data-pinned-category-menu="true"] summary {
@@ -113,24 +113,25 @@
   position: absolute;
   top: calc(100% + 6px);
   right: 0;
-  z-index: var(--ui-z-category-popover-elevated);
-  min-width: 150px;
+  z-index: var(--ui-z-dropdown-raised);
+  min-width: var(--ui-dropdown-width-context);
+  max-width: var(--ui-dropdown-max-width-context);
   display: grid;
-  gap: 5px;
-  padding: 7px;
-  border: 1px solid rgba(203, 213, 225, 0.9);
-  border-radius: 12px;
-  background: var(--ui-color-card-background);
-  box-shadow: 0 18px 38px rgba(15, 23, 42, 0.16);
+  gap: var(--ui-dropdown-gap);
+  padding: var(--ui-dropdown-padding);
+  border: var(--ui-dropdown-border);
+  border-radius: var(--ui-dropdown-radius);
+  background: var(--ui-surface-dropdown);
+  box-shadow: var(--ui-dropdown-shadow);
 }
 
 [data-pinned-category-menu="true"] button {
-  min-height: 34px;
+  min-height: var(--ui-dropdown-item-height-context);
   justify-content: flex-start;
   border: 0;
-  border-radius: 9px;
-  padding: 0 10px;
-  background: rgba(241, 245, 249, 0.82);
+  border-radius: var(--ui-radius-sm);
+  padding: var(--ui-dropdown-item-padding);
+  background: transparent;
   color: var(--ui-color-secondary-text);
   font-size: 12px;
   text-align: left;
