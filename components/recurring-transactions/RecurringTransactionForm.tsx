@@ -1,5 +1,6 @@
 import { CSSProperties, Dispatch, SetStateAction } from 'react'
 import { Category, PaymentSource, RecurringTransaction } from '../../lib/budgetPageTypes'
+import { uiInputApi } from '../../lib/uiFoundation'
 import {
   fieldStyle,
   formGridStyle,
@@ -46,7 +47,8 @@ export default function RecurringTransactionForm({
         <label style={fieldStyle}>
           Typ
           <select
-            style={{ ...styles.input, width: '100%', minWidth: 0 }}
+            className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
+            data-input-width={uiInputApi.width.full}
             value={formState.kind}
             onChange={(event) =>
               setFormState((prev) => ({
@@ -67,7 +69,8 @@ export default function RecurringTransactionForm({
         <label style={fieldStyle}>
           {formState.kind === 'installment' ? 'Nazwa planu' : 'Nazwa przypomnienia'}
           <input
-            style={{ ...styles.input, width: '100%', minWidth: 0 }}
+            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+            data-input-width={uiInputApi.width.full}
             value={formState.name}
             onChange={(event) => setFormState((prev) => ({ ...prev, name: event.target.value }))}
             placeholder={formState.kind === 'installment' ? 'np. laptop 12 rat' : 'np. czynsz'}
@@ -77,7 +80,8 @@ export default function RecurringTransactionForm({
         <label style={fieldStyle}>
           Kategoria
           <select
-            style={{ ...styles.input, width: '100%', minWidth: 0 }}
+            className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
+            data-input-width={uiInputApi.width.full}
             value={formState.categoryId}
             onChange={(event) => setFormState((prev) => ({ ...prev, categoryId: event.target.value }))}
           >
@@ -93,7 +97,8 @@ export default function RecurringTransactionForm({
         <label style={fieldStyle}>
           Opis wpisu
           <input
-            style={{ ...styles.input, width: '100%', minWidth: 0 }}
+            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+            data-input-width={uiInputApi.width.full}
             value={formState.description}
             onChange={(event) =>
               setFormState((prev) => ({ ...prev, description: event.target.value }))
@@ -105,7 +110,8 @@ export default function RecurringTransactionForm({
         <label style={fieldStyle}>
           {formState.kind === 'installment' ? 'Kwota raty' : 'Kwota'}
           <input
-            style={{ ...styles.input, width: '100%', minWidth: 0 }}
+            className={uiInputApi.classNames.amountField}
+            data-input-width={uiInputApi.width.full}
             value={formState.amount}
             inputMode="decimal"
             onChange={(event) => setFormState((prev) => ({ ...prev, amount: event.target.value }))}
@@ -116,7 +122,8 @@ export default function RecurringTransactionForm({
         <label style={fieldStyle}>
           Dzień płatności
           <input
-            style={{ ...styles.input, width: '100%', minWidth: 0 }}
+            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+            data-input-width={uiInputApi.width.full}
             value={formState.reminderDay}
             inputMode="numeric"
             onChange={(event) =>
@@ -129,7 +136,8 @@ export default function RecurringTransactionForm({
         <label style={fieldStyle}>
           Częstotliwość
           <select
-            style={{ ...styles.input, width: '100%', minWidth: 0 }}
+            className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
+            data-input-width={uiInputApi.width.full}
             value={formState.frequency}
             onChange={(event) =>
               setFormState((prev) => ({
@@ -147,8 +155,9 @@ export default function RecurringTransactionForm({
         {formState.frequency === 'custom' && (
           <label style={fieldStyle}>
             Co ile miesięcy
-            <input
-              style={{ ...styles.input, width: '100%', minWidth: 0 }}
+              <input
+              className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+              data-input-width={uiInputApi.width.full}
               value={formState.customIntervalMonths}
               inputMode="numeric"
               onChange={(event) =>
@@ -166,7 +175,8 @@ export default function RecurringTransactionForm({
             <label style={fieldStyle}>
               Liczba rat
               <input
-                style={{ ...styles.input, width: '100%', minWidth: 0 }}
+                className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+                data-input-width={uiInputApi.width.full}
                 value={formState.installmentTotalCount}
                 inputMode="numeric"
                 onChange={(event) =>
@@ -182,7 +192,8 @@ export default function RecurringTransactionForm({
               Data pierwszej raty
               <input
                 type="date"
-                style={{ ...styles.input, width: '100%', minWidth: 0 }}
+                className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+                data-input-width={uiInputApi.width.full}
                 value={formState.startDate}
                 onChange={(event) => setFormState((prev) => ({ ...prev, startDate: event.target.value }))}
               />
@@ -192,7 +203,8 @@ export default function RecurringTransactionForm({
               Data ostatniej raty
               <input
                 type="date"
-                style={{ ...styles.input, width: '100%', minWidth: 0 }}
+                className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+                data-input-width={uiInputApi.width.full}
                 value={formState.endDate}
                 onChange={(event) => setFormState((prev) => ({ ...prev, endDate: event.target.value }))}
               />
@@ -201,7 +213,8 @@ export default function RecurringTransactionForm({
             <label style={fieldStyle}>
               Wpłata na start
               <input
-                style={{ ...styles.input, width: '100%', minWidth: 0 }}
+                className={uiInputApi.classNames.amountField}
+                data-input-width={uiInputApi.width.full}
                 value={formState.initialPaymentAmount}
                 inputMode="decimal"
                 onChange={(event) =>
@@ -231,7 +244,8 @@ export default function RecurringTransactionForm({
           <label style={fieldStyle}>
             Źródło płatności
             <select
-              style={{ ...styles.input, width: '100%', minWidth: 0 }}
+              className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
+              data-input-width={uiInputApi.width.full}
               value={formState.paymentSourceId}
               onChange={(event) =>
                 setFormState((prev) => ({ ...prev, paymentSourceId: event.target.value }))

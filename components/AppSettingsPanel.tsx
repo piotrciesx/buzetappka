@@ -1,6 +1,7 @@
 'use client'
 
 import { CSSProperties, ReactNode } from 'react'
+import { uiInputApi } from '../lib/uiFoundation'
 import {
   AppModuleKey,
   AppModuleVisibility,
@@ -164,6 +165,8 @@ export default function AppSettingsPanel({
           <label data-settings-field="true">
             <span>Data startowa budżetu</span>
             <input
+              className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+              data-input-width={uiInputApi.width.full}
               type="date"
               value={budgetStartDate}
               max={budgetStartMaxDate}

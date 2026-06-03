@@ -2,6 +2,7 @@
 
 import { CSSProperties, useMemo, useState } from 'react'
 import { PaymentSource, PaymentSourceType } from '../lib/budgetPageTypes'
+import { uiInputApi } from '../lib/uiFoundation'
 import {
   DEFAULT_PAYMENT_SOURCE_COLOR,
   DEFAULT_PAYMENT_SOURCE_EMOJI,
@@ -93,11 +94,6 @@ const fieldStyle = {
   display: 'grid',
   gap: 5,
 } as const
-
-const fullInputStyle: CSSProperties = {
-  width: '100%',
-  minWidth: 0,
-}
 
 const lightButtonStyle = {
   minHeight: 30,
@@ -328,7 +324,8 @@ export default function PaymentSourcesPanel(props: Props) {
             </label>
             <select
               id="income-default-payment-source"
-              style={{ ...styles.input, ...fullInputStyle }}
+              className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
+              data-input-width={uiInputApi.width.full}
               value={paymentSourceSettings.defaultIncomePaymentSourceId || ''}
               onChange={async (event) => {
                 setIsConfigSaving(true)
@@ -397,7 +394,8 @@ export default function PaymentSourcesPanel(props: Props) {
             </label>
             <select
               id="expense-default-payment-source"
-              style={{ ...styles.input, ...fullInputStyle }}
+              className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
+              data-input-width={uiInputApi.width.full}
               value={paymentSourceSettings.defaultExpensePaymentSourceId || ''}
               onChange={async (event) => {
                 setIsConfigSaving(true)
@@ -444,7 +442,8 @@ export default function PaymentSourcesPanel(props: Props) {
         <div style={fieldStyle}>
           <label style={styles.sortLabel}>Nazwa</label>
           <input
-            style={{ ...styles.input, ...fullInputStyle }}
+            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+            data-input-width={uiInputApi.width.full}
             placeholder="np. Karta Visa, Gotówka, Konto firmowe"
             value={name}
             onChange={(event) => setName(event.target.value)}
@@ -454,7 +453,8 @@ export default function PaymentSourcesPanel(props: Props) {
         <div style={fieldStyle}>
           <label style={styles.sortLabel}>Typ</label>
           <select
-            style={{ ...styles.input, ...fullInputStyle }}
+            className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
+            data-input-width={uiInputApi.width.full}
             value={type}
             onChange={(event) => {
               const nextType = event.target.value as PaymentSourceType
@@ -479,7 +479,8 @@ export default function PaymentSourcesPanel(props: Props) {
         <div style={fieldStyle}>
           <label style={styles.sortLabel}>Ikonka</label>
           <input
-            style={{ ...styles.smallInput, width: '100%' }}
+            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputS}`}
+            data-input-width={uiInputApi.width.full}
             placeholder="Emoji"
             value={emoji}
             onChange={(event) => setEmoji(event.target.value)}
@@ -489,7 +490,8 @@ export default function PaymentSourcesPanel(props: Props) {
         <div style={fieldStyle}>
           <label style={styles.sortLabel}>Kolor</label>
           <input
-            style={{ ...styles.smallInput, width: '100%', padding: 4 }}
+            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputS}`}
+            data-input-width={uiInputApi.width.full}
             type="color"
             value={color}
             onChange={(event) => setColor(event.target.value)}

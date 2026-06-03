@@ -6,6 +6,7 @@ import {
   Transaction,
 } from '../lib/budgetPageTypes'
 import { getUniqueCategoryLabel } from '../lib/categoryUtils'
+import { uiInputApi } from '../lib/uiFoundation'
 import {
   getInstallmentNumberForMonth,
   getInstallmentLifecycleSummary,
@@ -26,7 +27,6 @@ import {
   countStyle,
   fieldLabelStyle,
   gridStyle,
-  invalidInputStyle,
   panelStyle,
 } from './reminder-bell/reminderBellStyles'
 import { getInstallmentScheduleInfo, initialForm, normalizeDay, setDateDay, toAmount } from './reminder-bell/reminderBellUtils'
@@ -266,7 +266,8 @@ export default function ReminderBellPanel({
           <label style={fieldLabelStyle}>
             Nazwa przypomnienia
             <input
-              style={styles.input}
+              className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+              data-input-width={uiInputApi.width.full}
               value={form.name}
               onChange={(event) => updateForm('name', event.target.value)}
               placeholder="np. czynsz"
@@ -276,7 +277,8 @@ export default function ReminderBellPanel({
           <label style={fieldLabelStyle}>
             Opis wpisu
             <input
-              style={styles.input}
+              className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+              data-input-width={uiInputApi.width.full}
               value={form.entryDescription}
               onChange={(event) => updateForm('entryDescription', event.target.value)}
               placeholder="tekst wpisu po dodaniu"
@@ -286,7 +288,9 @@ export default function ReminderBellPanel({
           <label style={fieldLabelStyle}>
             Kategoria
             <select
-              style={{ ...styles.input, ...(shouldHighlightCategory ? invalidInputStyle : {}) }}
+              className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
+              data-input-state={shouldHighlightCategory ? uiInputApi.state.error : uiInputApi.state.default}
+              data-input-width={uiInputApi.width.full}
               value={form.categoryId}
               onChange={(event) => {
                 updateForm('categoryId', event.target.value)
@@ -312,7 +316,8 @@ export default function ReminderBellPanel({
           <label style={fieldLabelStyle}>
             Typ
             <select
-              style={styles.input}
+              className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
+              data-input-width={uiInputApi.width.full}
               value={form.kind}
               onChange={(event) => updateForm('kind', event.target.value as RecurringTransaction['kind'])}
             >
@@ -324,7 +329,8 @@ export default function ReminderBellPanel({
           <label style={fieldLabelStyle}>
             Częstotliwość
             <select
-              style={styles.input}
+              className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
+              data-input-width={uiInputApi.width.full}
               value={form.frequency}
               onChange={(event) =>
                 updateForm('frequency', event.target.value as RecurringTransaction['frequency'])
@@ -340,7 +346,8 @@ export default function ReminderBellPanel({
             <label style={fieldLabelStyle}>
               Co ile miesięcy
               <input
-                style={styles.input}
+                className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+                data-input-width={uiInputApi.width.full}
                 value={form.customIntervalMonths}
                 inputMode="numeric"
                 onChange={(event) =>
@@ -353,7 +360,8 @@ export default function ReminderBellPanel({
           <label style={fieldLabelStyle}>
             Dzień przypomnienia
             <input
-              style={styles.input}
+              className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+              data-input-width={uiInputApi.width.full}
               value={form.reminderDay}
               inputMode="numeric"
               onChange={(event) => updateForm('reminderDay', normalizeDay(event.target.value))}
@@ -364,7 +372,8 @@ export default function ReminderBellPanel({
           <label style={fieldLabelStyle}>
             Kwota
             <input
-              style={styles.input}
+              className={uiInputApi.classNames.amountField}
+              data-input-width={uiInputApi.width.full}
               value={form.amount}
               inputMode="decimal"
               onChange={(event) => updateForm('amount', event.target.value)}
@@ -376,7 +385,8 @@ export default function ReminderBellPanel({
             <label style={fieldLabelStyle}>
               Liczba rat
               <input
-                style={styles.input}
+                className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+                data-input-width={uiInputApi.width.full}
                 value={form.installmentTotalCount}
                 inputMode="numeric"
                 onChange={(event) =>
@@ -400,7 +410,8 @@ export default function ReminderBellPanel({
               Data początku
               <input
                 type="date"
-                style={styles.input}
+                className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+                data-input-width={uiInputApi.width.full}
                 value={form.startDate}
                 onChange={(event) => updateForm('startDate', event.target.value)}
               />
@@ -421,7 +432,8 @@ export default function ReminderBellPanel({
               Data końca
               <input
                 type="date"
-                style={styles.input}
+                className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+                data-input-width={uiInputApi.width.full}
                 value={form.endDate}
                 onChange={(event) => updateForm('endDate', event.target.value)}
               />

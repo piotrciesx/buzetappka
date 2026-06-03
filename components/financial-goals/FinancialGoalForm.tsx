@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { uiInputApi } from '../../lib/uiFoundation'
 import type { FormState } from './financialGoalsPanelTypes'
 
 type FinancialGoalFormProps = {
@@ -26,14 +27,16 @@ export default function FinancialGoalForm({
       data-financial-goal-form="true"
     >
       <input
-        style={styles.input}
+        className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+        data-input-width={uiInputApi.width.compact}
         placeholder="Nazwa celu"
         value={formState.name}
         onChange={(event) => onFormStateChange({ ...formState, name: event.target.value })}
       />
 
       <input
-        style={styles.smallInput}
+        className={uiInputApi.classNames.amountField}
+        data-input-width={uiInputApi.width.compact}
         placeholder="Kwota docelowa"
         inputMode="decimal"
         value={formState.targetAmount}
@@ -43,7 +46,8 @@ export default function FinancialGoalForm({
       />
 
       <input
-        style={styles.input}
+        className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+        data-input-width={uiInputApi.width.compact}
         type="month"
         value={formState.deadlineMonth}
         onChange={(event) =>

@@ -472,3 +472,157 @@
   --ui-workspace-overlay-max-height: calc(100dvh - 84px);
   --ui-workspace-overlay-body-overflow: auto;
 }
+
+.ui-input,
+.ui-search-field,
+.ui-amount-field,
+.ui-select {
+  width: auto;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  height: var(--ui-input-height-m);
+  min-height: var(--ui-input-height-m);
+  padding: var(--ui-input-padding-m);
+  border: var(--ui-input-border);
+  border-radius: var(--ui-input-radius);
+  background: var(--ui-input-bg);
+  color: var(--ui-input-text);
+  font: inherit;
+  font-size: var(--ui-input-font-size-m);
+  outline: none;
+  transition:
+    border-color var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    box-shadow var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    background var(--ui-motion-hover) var(--ui-motion-ease-standard);
+}
+
+.ui-input::placeholder,
+.ui-search-field::placeholder,
+.ui-amount-field::placeholder,
+.ui-textarea::placeholder {
+  color: var(--ui-input-placeholder);
+}
+
+.ui-input:focus,
+.ui-search-field:focus,
+.ui-amount-field:focus,
+.ui-select:focus,
+.ui-textarea:focus {
+  border-color: var(--ui-control-focus-border);
+  box-shadow: var(--ui-control-focus-ring);
+}
+
+.ui-input--s {
+  height: var(--ui-input-height-s);
+  min-height: var(--ui-input-height-s);
+  padding: var(--ui-input-padding-s);
+  font-size: var(--ui-input-font-size-s);
+}
+
+.ui-input--m {
+  height: var(--ui-input-height-m);
+  min-height: var(--ui-input-height-m);
+  padding: var(--ui-input-padding-m);
+  font-size: var(--ui-input-font-size-m);
+}
+
+.ui-input--l {
+  height: var(--ui-input-height-l);
+  min-height: var(--ui-input-height-l);
+  padding: var(--ui-input-padding-l);
+  font-size: var(--ui-input-font-size-l);
+}
+
+.ui-search-field {
+  height: var(--ui-search-field-height);
+  min-height: var(--ui-search-field-height);
+  padding: var(--ui-search-field-padding);
+}
+
+.ui-amount-field {
+  height: var(--ui-amount-field-height);
+  min-height: var(--ui-amount-field-height);
+  padding: var(--ui-amount-field-padding);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-textarea {
+  width: auto;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-height: var(--ui-textarea-min-height);
+  padding: var(--ui-textarea-padding);
+  border: var(--ui-input-border);
+  border-radius: var(--ui-input-radius);
+  background: var(--ui-input-bg);
+  color: var(--ui-input-text);
+  font: inherit;
+  font-size: var(--ui-input-font-size-m);
+  outline: none;
+  resize: vertical;
+  transition:
+    border-color var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    box-shadow var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    background var(--ui-motion-hover) var(--ui-motion-ease-standard);
+}
+
+.ui-select {
+  appearance: auto;
+}
+
+.ui-input[data-input-width="compact"],
+.ui-search-field[data-input-width="compact"],
+.ui-amount-field[data-input-width="compact"],
+.ui-select[data-input-width="compact"],
+.ui-textarea[data-input-width="compact"] {
+  width: auto;
+  max-width: 100%;
+}
+
+.ui-input[data-input-width="full"],
+.ui-search-field[data-input-width="full"],
+.ui-amount-field[data-input-width="full"],
+.ui-select[data-input-width="full"],
+.ui-textarea[data-input-width="full"] {
+  width: 100%;
+}
+
+.ui-input[data-input-density="compact"],
+.ui-search-field[data-input-density="compact"],
+.ui-amount-field[data-input-density="compact"],
+.ui-select[data-input-density="compact"] {
+  height: var(--ui-input-height-s);
+  min-height: var(--ui-input-height-s);
+  padding: var(--ui-input-padding-s);
+  font-size: var(--ui-input-font-size-s);
+}
+
+.ui-textarea[data-input-density="compact"] {
+  padding: var(--ui-spacing-sm) var(--ui-spacing-md);
+  font-size: var(--ui-input-font-size-s);
+}
+
+.ui-input[data-input-state="error"],
+.ui-search-field[data-input-state="error"],
+.ui-amount-field[data-input-state="error"],
+.ui-select[data-input-state="error"],
+.ui-textarea[data-input-state="error"] {
+  border-color: var(--ui-input-error-border);
+}
+
+.ui-input[data-input-state="disabled"],
+.ui-search-field[data-input-state="disabled"],
+.ui-amount-field[data-input-state="disabled"],
+.ui-select[data-input-state="disabled"],
+.ui-textarea[data-input-state="disabled"],
+.ui-input:disabled,
+.ui-search-field:disabled,
+.ui-amount-field:disabled,
+.ui-select:disabled,
+.ui-textarea:disabled {
+  cursor: not-allowed;
+  opacity: var(--ui-input-disabled-opacity);
+}

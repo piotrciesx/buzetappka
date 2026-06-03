@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import { uiOverlayPrimitives, uiSurfacePrimitives } from '../../lib/uiFoundation'
+import { uiInputApi, uiOverlayPrimitives, uiSurfacePrimitives } from '../../lib/uiFoundation'
 import type { FormState } from './financialGoalsPanelTypes'
 
 const overlayStyle = {
@@ -53,7 +53,8 @@ export default function FinancialGoalEditModal({
           <div>
             <label style={styles.sortLabel}>Nazwa</label>
             <input
-              style={styles.input}
+              className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+              data-input-width={uiInputApi.width.full}
               value={formState.name}
               onChange={(event) => onFormStateChange({ ...formState, name: event.target.value })}
             />
@@ -62,7 +63,8 @@ export default function FinancialGoalEditModal({
           <div>
             <label style={styles.sortLabel}>Kwota docelowa</label>
             <input
-              style={styles.input}
+              className={uiInputApi.classNames.amountField}
+              data-input-width={uiInputApi.width.full}
               inputMode="decimal"
               value={formState.targetAmount}
               onChange={(event) =>
@@ -74,7 +76,8 @@ export default function FinancialGoalEditModal({
           <div>
             <label style={styles.sortLabel}>Deadline</label>
             <input
-              style={styles.input}
+              className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+              data-input-width={uiInputApi.width.full}
               type="month"
               value={formState.deadlineMonth}
               onChange={(event) =>

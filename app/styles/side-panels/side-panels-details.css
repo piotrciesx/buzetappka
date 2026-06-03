@@ -230,10 +230,6 @@
   border-top: 0 !important;
 }
 
-[data-settings-section="profile"] input {
-  border-radius: 12px !important;
-}
-
 [data-settings-section="profile"] section:last-child {
   margin-top: 16px !important;
   padding: 12px !important;

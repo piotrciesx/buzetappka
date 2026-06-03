@@ -3,7 +3,7 @@
 import type { CSSProperties } from 'react'
 import { useEffect, useState } from 'react'
 import type { BudgetLimit, BudgetLimitMode } from '../lib/budgetPageTypes'
-import { uiControlPrimitives, uiOverlayPrimitives, uiSurfacePrimitives } from '../lib/uiFoundation'
+import { uiControlPrimitives, uiInputApi, uiOverlayPrimitives, uiSurfacePrimitives } from '../lib/uiFoundation'
 import type { SaveBudgetLimitInput } from '../lib/useBudgetLimits'
 
 type Props = {
@@ -65,28 +65,6 @@ const labelStyle: CSSProperties = {
   color: 'var(--ui-color-secondary-text)',
   fontSize: 13,
   fontWeight: 500,
-}
-
-const inputStyle: CSSProperties = {
-  height: uiControlPrimitives.input.modal.height,
-  borderRadius: uiControlPrimitives.input.modal.radius,
-  border: uiControlPrimitives.input.modal.border,
-  background: uiControlPrimitives.input.modal.background,
-  color: uiControlPrimitives.input.modal.color,
-  fontSize: uiControlPrimitives.input.modal.fontSize,
-  padding: uiControlPrimitives.input.modal.padding,
-  outline: uiControlPrimitives.input.modal.outline,
-}
-
-const selectStyle: CSSProperties = {
-  height: uiControlPrimitives.select.modal.height,
-  borderRadius: uiControlPrimitives.select.modal.radius,
-  border: uiControlPrimitives.select.modal.border,
-  background: uiControlPrimitives.select.modal.background,
-  color: uiControlPrimitives.select.modal.color,
-  fontSize: uiControlPrimitives.select.modal.fontSize,
-  padding: uiControlPrimitives.select.modal.padding,
-  outline: uiControlPrimitives.select.modal.outline,
 }
 
 const helpTextStyle: CSSProperties = {
@@ -286,7 +264,8 @@ export default function BudgetLimitEditorModal({
           <label style={labelStyle}>
             Kwota limitu
             <input
-              style={inputStyle}
+              className={uiInputApi.classNames.amountField}
+              data-input-width={uiInputApi.width.full}
               inputMode="decimal"
               value={amount}
               onChange={(event) => setAmount(event.target.value.replace(',', '.'))}
@@ -297,7 +276,8 @@ export default function BudgetLimitEditorModal({
           <label style={labelStyle}>
             Tryb alertu
             <select
-              style={selectStyle}
+              className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputL}`}
+              data-input-width={uiInputApi.width.full}
               value={mode}
               onChange={(event) => setMode(event.target.value as BudgetLimitMode)}
             >
@@ -364,7 +344,8 @@ export default function BudgetLimitEditorModal({
             <label style={labelStyle}>
               Miesiąc końca
               <input
-                style={inputStyle}
+                className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
+                data-input-width={uiInputApi.width.full}
                 type="month"
                 min={selectedMonth}
                 value={endMonth}

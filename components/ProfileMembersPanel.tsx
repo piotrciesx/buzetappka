@@ -4,6 +4,7 @@ import { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import UserAvatar from './UserAvatar'
 import { USER_AVATARS, getUserDisplayName, type UserPublicProfile } from '../lib/userAppearance'
+import { uiInputApi } from '../lib/uiFoundation'
 import {
   ActionRow,
   DangerZone,
@@ -428,6 +429,8 @@ export default function ProfileMembersPanel({
         <label>
           Nazwa użytkownika
           <input
+            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+            data-input-width={uiInputApi.width.full}
             value={displayNameDraft}
             onChange={(event) => setDisplayNameDraft(event.target.value)}
             maxLength={48}
@@ -564,7 +567,9 @@ export default function ProfileMembersPanel({
                 Email osoby zapraszanej
                 <input
                   type="email"
-                  style={{ ...styles.input, marginTop: 6 }}
+                  className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+                  data-input-width={uiInputApi.width.full}
+                  style={{ marginTop: 6 }}
                   value={inviteEmail}
                   onChange={(event) => setInviteEmail(event.target.value)}
                   placeholder="opcjonalnie"
@@ -583,7 +588,12 @@ export default function ProfileMembersPanel({
 
             {inviteLink && (
               <ActionRow style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-                <input style={{ ...styles.input, flex: '1 1 320px' }} value={inviteLink} readOnly />
+                <input
+                  className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+                  style={{ flex: '1 1 320px' }}
+                  value={inviteLink}
+                  readOnly
+                />
                 <button
                   type="button"
                   style={styles.secondaryButton}
@@ -663,7 +673,9 @@ export default function ProfileMembersPanel({
                   Wpisz USUŃ KONTO
                   <input
                     type="text"
-                    style={{ ...styles.input, marginTop: 6 }}
+                    className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+                    data-input-width={uiInputApi.width.full}
+                    style={{ marginTop: 6 }}
                     value={deleteAccountConfirmationText}
                     onChange={(event) => setDeleteAccountConfirmationText(event.target.value)}
                     disabled={isDeletingAccount}
