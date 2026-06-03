@@ -59,7 +59,7 @@ const compactSectionStyle: CSSProperties = {
 const wideMainSectionStyle: CSSProperties = {
   ...sectionStyle,
   gridTemplateRows: 'auto minmax(0, 1fr)',
-  borderRight: '1px solid rgba(203,213,225,0.48)',
+  borderRight: '1px solid var(--ui-chart-grid)',
   paddingRight: 14,
 }
 
@@ -176,7 +176,7 @@ const indexStyle: CSSProperties = {
 
 const descriptionStyle: CSSProperties = {
   minWidth: 0,
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 10.8,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -241,7 +241,7 @@ const highlightCardStyle: CSSProperties = {
   overflow: 'hidden',
   borderRadius: 16,
   border: `1px solid ${SOFT_BORDER}`,
-  background: 'rgba(255,255,255,0.5)',
+  background: 'var(--ui-glass-surface-soft)',
   padding: '12px 12px 10px',
   display: 'grid',
   gridTemplateRows: 'auto auto auto minmax(0, 1fr)',
@@ -285,7 +285,7 @@ const highlightDescriptionStyle: CSSProperties = {
   fontSize: 12,
   lineHeight: 1.2,
   fontWeight: 600,
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
 }
 
 const highlightCategoryStyle: CSSProperties = {

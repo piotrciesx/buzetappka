@@ -18,7 +18,7 @@ const rowStyle: CSSProperties = {
   gap: 8,
   alignItems: 'center',
   padding: '7px 0',
-  borderBottom: '1px solid rgba(226, 232, 240, 0.78)',
+  borderBottom: '1px solid var(--ui-border-divider)',
 }
 
 type Props = {
@@ -80,11 +80,11 @@ export default function DashboardTileConfigPanel({ widget, onChange }: Props) {
           }
           style={{
             flex: 1,
-            border: '1px solid rgba(148, 163, 184, 0.32)',
+            border: '1px solid var(--ui-border-soft)',
             borderRadius: 999,
             padding: '7px 10px',
-            background: widget.mode === 'auto' ? 'var(--ui-color-primary-text)' : 'var(--ui-color-card-background)',
-            color: widget.mode === 'auto' ? 'var(--ui-color-card-background)' : 'var(--ui-color-secondary-text)',
+            background: widget.mode === 'auto' ? 'var(--ui-text-primary)' : 'var(--ui-surface-card)',
+            color: widget.mode === 'auto' ? 'var(--ui-surface-card)' : 'var(--ui-text-secondary)',
             fontSize: 12,
             fontWeight: 600,
           }}
@@ -96,11 +96,11 @@ export default function DashboardTileConfigPanel({ widget, onChange }: Props) {
           onClick={() => updateModules(widget.enabledModules)}
           style={{
             flex: 1,
-            border: '1px solid rgba(148, 163, 184, 0.32)',
+            border: '1px solid var(--ui-border-soft)',
             borderRadius: 999,
             padding: '7px 10px',
-            background: widget.mode === 'custom' ? 'var(--ui-color-primary-text)' : 'var(--ui-color-card-background)',
-            color: widget.mode === 'custom' ? 'var(--ui-color-card-background)' : 'var(--ui-color-secondary-text)',
+            background: widget.mode === 'custom' ? 'var(--ui-text-primary)' : 'var(--ui-surface-card)',
+            color: widget.mode === 'custom' ? 'var(--ui-surface-card)' : 'var(--ui-text-secondary)',
             fontSize: 12,
             fontWeight: 600,
           }}

@@ -79,8 +79,8 @@ const summaryCardStyle: CSSProperties = {
   minWidth: 0,
   border: `1px solid ${SOFT_BORDER}`,
   borderRadius: 13,
-  background: 'linear-gradient(145deg, rgba(255,255,255,0.84), rgba(248,250,252,0.62))',
-  boxShadow: 'inset 1px 1px 0 rgba(255,255,255,0.86)',
+  background: 'linear-gradient(145deg, var(--ui-glass-surface), var(--ui-surface-soft))',
+  boxShadow: 'inset 1px 1px 0 var(--ui-glass-surface)',
   padding: '8px 9px',
   display: 'grid',
   gap: 3,
@@ -106,7 +106,7 @@ const summaryLabelStyle: CSSProperties = {
 
 const summaryValueStyle: CSSProperties = {
   minWidth: 0,
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 15,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -125,7 +125,7 @@ const chartBoxStyle: CSSProperties = {
   minHeight: 0,
   border: `1px solid ${SOFT_BORDER}`,
   borderRadius: 16,
-  background: 'rgba(255,255,255,0.58)',
+  background: 'var(--ui-glass-surface-soft)',
   padding: '10px 10px 8px',
   display: 'grid',
   gap: 8,
@@ -149,7 +149,7 @@ const compactRowStyle: CSSProperties = {
 
 const rowLabelStyle: CSSProperties = {
   minWidth: 0,
-  color: 'var(--ui-color-secondary-text)',
+  color: 'var(--ui-text-secondary)',
   fontSize: 10.5,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -174,14 +174,14 @@ const trackStyle: CSSProperties = {
   minWidth: 0,
   height: 10,
   borderRadius: 999,
-  background: 'rgba(226,232,240,0.82)',
+  background: 'var(--ui-chart-grid)',
   overflow: 'hidden',
 }
 
 const fillStyle: CSSProperties = {
   height: '100%',
   borderRadius: 999,
-  boxShadow: 'inset 1px 1px 0 rgba(255,255,255,0.42)',
+  boxShadow: 'inset 1px 1px 0 var(--ui-glass-surface-soft)',
 }
 
 const footerGridStyle: CSSProperties = {
@@ -195,7 +195,7 @@ const footerCardStyle: CSSProperties = {
   minWidth: 0,
   border: `1px solid ${SOFT_BORDER}`,
   borderRadius: 12,
-  background: 'rgba(255,255,255,0.62)',
+  background: 'var(--ui-glass-surface-soft)',
   padding: '6px 7px',
   display: 'grid',
   gap: 2,
@@ -215,7 +215,7 @@ const footerLabelStyle: CSSProperties = {
 
 const footerValueStyle: CSSProperties = {
   minWidth: 0,
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 11.5,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -249,7 +249,7 @@ function SummaryCard({
   return (
     <div style={summaryCardStyle}>
       <div style={summaryLabelStyle}>{label}</div>
-      <div style={{ ...summaryValueStyle, color: color || 'var(--ui-color-primary-text)' }}>{value}</div>
+      <div style={{ ...summaryValueStyle, color: color || 'var(--ui-text-primary)' }}>{value}</div>
     </div>
   )
 }

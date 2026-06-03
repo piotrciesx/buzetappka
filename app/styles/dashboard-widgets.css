@@ -1,12 +1,12 @@
 [data-dashboard-widget-shell="true"] {
-  border-color: var(--ui-color-border) !important;
+  border-color: var(--ui-border-soft) !important;
   border-radius: var(--ui-card-radius) !important;
   background: var(--ui-surface-widget) !important;
   box-shadow: var(--ui-shadow-card) !important;
 }
 
 [data-dashboard-widget-shell="true"]:hover {
-  border-color: rgba(148, 163, 184, 0.72) !important;
+  border-color: var(--ui-border-strong) !important;
   box-shadow: var(--ui-shadow-subtle) !important;
 }
 
@@ -40,9 +40,9 @@
 }
 
 [data-dashboard-widget-metric-card="true"] {
-  border: 1px solid var(--ui-color-border) !important;
+  border: 1px solid var(--ui-border-soft) !important;
   border-radius: var(--ui-radius-md) !important;
-  background: rgba(255, 255, 255, 0.76) !important;
+  background: var(--ui-glass-surface-soft) !important;
   box-shadow: none !important;
 }
 
@@ -58,7 +58,7 @@
   width: 100% !important;
   overflow: hidden !important;
   border-radius: var(--ui-radius-pill) !important;
-  background: rgba(203, 213, 225, 0.72) !important;
+  background: var(--ui-border-soft) !important;
 }
 
 [data-dashboard-widget-progress-fill="true"] {
@@ -85,8 +85,8 @@
   padding: var(--ui-space-6) !important;
   border: 1px dashed var(--ui-surface-empty-border) !important;
   border-radius: var(--ui-radius-lg) !important;
-  background: rgba(255, 255, 255, 0.48) !important;
-  color: var(--ui-color-text-muted) !important;
+  background: var(--ui-glass-surface-soft) !important;
+  color: var(--ui-text-muted) !important;
   text-align: center !important;
 }
 

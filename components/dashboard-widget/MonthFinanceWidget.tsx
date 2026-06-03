@@ -30,7 +30,7 @@ function IncomeExpenseDonut({
         background:
           total > 0
             ? `conic-gradient(${GREEN} 0 ${percent}%, ${RED} ${percent}% 100%)`
-            : 'conic-gradient(var(--ui-color-divider-border), var(--ui-color-soft-section-background))',
+            : 'conic-gradient(var(--ui-border-divider), var(--ui-surface-soft))',
         display: 'grid',
         placeItems: 'center',
       }}
@@ -40,7 +40,7 @@ function IncomeExpenseDonut({
           width: holeSize,
           height: holeSize,
           borderRadius: '50%',
-          background: 'var(--ui-color-card-background)',
+          background: 'var(--ui-surface-card)',
           boxShadow: 'inset 0 1px 7px var(--ui-shadow-medium-color)',
         }}
       />
@@ -60,7 +60,7 @@ function BalanceBlock({
       <div
         style={{
           fontSize: compact ? 9.5 : 11.5,
-          color: 'var(--ui-color-secondary-text)',
+          color: 'var(--ui-text-secondary)',
           fontWeight: 600,
           marginBottom: 2,
         }}
@@ -100,16 +100,16 @@ function MetricCard({
 }) {
   const tint =
     color === GREEN
-      ? 'var(--ui-color-income-soft)'
+      ? 'var(--ui-financial-income-soft)'
       : color === RED
-        ? 'var(--ui-color-expense-soft)'
-        : 'var(--ui-color-soft-blue)'
+        ? 'var(--ui-financial-expense-soft)'
+        : 'var(--ui-surface-active)'
   const borderColor =
     color === GREEN
-      ? 'var(--ui-color-income-soft)'
+      ? 'var(--ui-financial-income-soft)'
       : color === RED
-        ? 'var(--ui-color-expense-soft)'
-        : 'var(--ui-color-light-blue-border)'
+        ? 'var(--ui-financial-expense-soft)'
+        : 'var(--ui-border-active)'
 
   if (compact) {
     return (
@@ -124,7 +124,7 @@ function MetricCard({
           borderRadius: 13,
           background: tint,
           border: `1px solid ${borderColor}`,
-          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.70)',
+          boxShadow: 'inset 0 1px 0 var(--ui-glass-surface-soft)',
         }}
       >
         <div
@@ -146,7 +146,7 @@ function MetricCard({
         <div style={{ minWidth: 0 }}>
           <div
             style={{
-              color: 'var(--ui-color-secondary-text)',
+              color: 'var(--ui-text-secondary)',
               fontSize: 9.5,
               lineHeight: 1.2,
               fontWeight: 600,
@@ -188,7 +188,7 @@ function MetricCard({
         borderRadius: 15,
         background: tint,
         border: `1px solid ${borderColor}`,
-        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.70)',
+        boxShadow: 'inset 0 1px 0 var(--ui-glass-surface-soft)',
       }}
     >
       <div

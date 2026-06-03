@@ -104,7 +104,7 @@ const dateStyle: CSSProperties = {
 
 const descriptionStyle: CSSProperties = {
   minWidth: 0,
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 11,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -138,7 +138,7 @@ const amountStyle: CSSProperties = {
 const chartPanelStyle: CSSProperties = {
   minWidth: 0,
   minHeight: 0,
-  borderLeft: '1px solid rgba(203,213,225,0.48)',
+  borderLeft: '1px solid var(--ui-chart-grid)',
   paddingLeft: 18,
   display: 'grid',
   gridTemplateRows: 'auto 1fr',
@@ -148,7 +148,7 @@ const chartPanelStyle: CSSProperties = {
 
 const chartTitleStyle: CSSProperties = {
   minWidth: 0,
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 12,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -216,7 +216,7 @@ const verticalTrackStyle: CSSProperties = {
   minHeight: 86,
   maxHeight: 168,
   borderRadius: 999,
-  background: 'rgba(226,232,240,0.78)',
+  background: 'var(--ui-chart-grid)',
   display: 'flex',
   alignItems: 'flex-end',
   overflow: 'hidden',

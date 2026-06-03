@@ -17,55 +17,6 @@ export type DayPoint = {
 
 export const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
 
-const rgbToCss = ([r, g, b]: [number, number, number]) => `rgb(${r}, ${g}, ${b})`
-
-const hslToRgb = (
-  hue: number,
-  saturationPercent: number,
-  lightnessPercent: number
-): [number, number, number] => {
-  const saturation = clamp(saturationPercent, 0, 100) / 100
-  const lightness = clamp(lightnessPercent, 0, 100) / 100
-  const chroma = (1 - Math.abs(2 * lightness - 1)) * saturation
-  const hueSection = (((hue % 360) + 360) % 360) / 60
-  const secondComponent = chroma * (1 - Math.abs((hueSection % 2) - 1))
-  const match = lightness - chroma / 2
-
-  let redPrime = 0
-  let greenPrime = 0
-  let bluePrime = 0
-
-  if (hueSection >= 0 && hueSection < 1) {
-    redPrime = chroma
-    greenPrime = secondComponent
-  } else if (hueSection < 2) {
-    redPrime = secondComponent
-    greenPrime = chroma
-  } else if (hueSection < 3) {
-    greenPrime = chroma
-    bluePrime = secondComponent
-  } else if (hueSection < 4) {
-    greenPrime = secondComponent
-    bluePrime = chroma
-  } else if (hueSection < 5) {
-    redPrime = secondComponent
-    bluePrime = chroma
-  } else {
-    redPrime = chroma
-    bluePrime = secondComponent
-  }
-
-  return [
-    Math.round((redPrime + match) * 255),
-    Math.round((greenPrime + match) * 255),
-    Math.round((bluePrime + match) * 255),
-  ]
-}
-
-const getLuminance = ([r, g, b]: [number, number, number]) => {
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b
-}
-
 const getSortedNumbers = (values: number[]) => [...values].sort((left, right) => left - right)
 
 const getQuantile = (sortedValues: number[], quantile: number) => {
@@ -114,12 +65,10 @@ export const getBalanceHeatmapVisual = (
   positiveReference: number
 ) => {
   if (value === 0) {
-    const neutralRgb = hslToRgb(42, 92, 56)
-
     return {
-      background: rgbToCss(neutralRgb),
-      textColor: 'var(--ui-color-primary-text)',
-      borderColor: rgbToCss(hslToRgb(34, 92, 36)),
+      background: 'var(--ui-heatmap-low)',
+      textColor: 'var(--ui-text-primary)',
+      borderColor: 'var(--ui-heatmap-border)',
     }
   }
 
@@ -128,18 +77,24 @@ export const getBalanceHeatmapVisual = (
     Math.abs(value),
     isPositive ? positiveReference : negativeReference
   )
-  const hue = isPositive ? 145 : 8
-  const saturation = 88 + intensity * 8
-  const lightness = 62 - intensity * 24
-  const borderLightness = Math.max(lightness - 18, 20)
-  const backgroundRgb = hslToRgb(hue, saturation, lightness)
-  const borderRgb = hslToRgb(hue, Math.min(100, saturation + 4), borderLightness)
-  const luminance = getLuminance(backgroundRgb)
+  const isStrong = intensity >= 0.62
+  const isMedium = intensity >= 0.34
+  const background = isPositive
+    ? isStrong
+      ? 'var(--ui-chart-positive)'
+      : 'var(--ui-chart-positive-soft)'
+    : isStrong
+      ? 'var(--ui-chart-negative)'
+      : 'var(--ui-chart-negative-soft)'
 
   return {
-    background: rgbToCss(backgroundRgb),
-    textColor: luminance < 162 ? 'var(--ui-color-card-background)' : 'var(--ui-color-primary-text)',
-    borderColor: rgbToCss(borderRgb),
+    background,
+    textColor: isStrong ? 'var(--ui-heatmap-text-inverse)' : 'var(--ui-heatmap-text)',
+    borderColor: isMedium
+      ? isPositive
+        ? 'var(--ui-chart-positive)'
+        : 'var(--ui-chart-negative)'
+      : 'var(--ui-heatmap-border)',
   }
 }
 

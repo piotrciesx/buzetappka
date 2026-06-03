@@ -21,10 +21,10 @@ type AuthScreenProps = {
 
 type AuthMode = 'login' | 'register'
 
-const NAVY = 'var(--ui-color-primary-navy)'
-const BLUE = 'var(--ui-color-primary-blue)'
-const SOFT_TEXT = 'var(--ui-color-secondary-text)'
-const BORDER = 'var(--ui-color-light-blue-border)'
+const NAVY = 'var(--ui-text-primary)'
+const BLUE = 'var(--ui-text-link)'
+const SOFT_TEXT = 'var(--ui-text-secondary)'
+const BORDER = 'var(--ui-border-active)'
 
 const authStyles: Styles = {
   page: {
@@ -35,7 +35,7 @@ const authStyles: Styles = {
     justifyContent: 'center',
     padding: 32,
     background:
-      'radial-gradient(circle at 18% 20%, rgba(37,99,235,.18), transparent 35%), radial-gradient(circle at 72% 78%, rgba(96,165,250,.24), transparent 38%), linear-gradient(135deg, var(--ui-color-extra-light-blue) 0%, var(--ui-color-soft-blue) 52%, var(--ui-color-extra-light-blue) 100%)',
+      'radial-gradient(circle at 18% 20%, var(--ui-status-info-soft), transparent 35%), radial-gradient(circle at 72% 78%, var(--ui-surface-active), transparent 38%), linear-gradient(135deg, var(--ui-status-info-soft) 0%, var(--ui-surface-active) 52%, var(--ui-status-info-soft) 100%)',
     color: NAVY,
     fontFamily:
       'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
@@ -48,8 +48,8 @@ const authStyles: Styles = {
     overflow: 'hidden',
     borderRadius: 34,
     border: `1px solid ${BORDER}`,
-    background: 'rgba(255, 255, 255, 0.72)',
-    boxShadow: '0 30px 90px rgba(7, 26, 61, 0.13)',
+    background: 'var(--ui-glass-surface-soft)',
+    boxShadow: '0 30px 90px var(--ui-shadow-strong-color)',
     backdropFilter: 'blur(18px)',
   },
   brandPane: {
@@ -59,18 +59,18 @@ const authStyles: Styles = {
     flexDirection: 'column',
     overflow: 'hidden',
     background:
-      'radial-gradient(circle at top left, rgba(96,165,250,.16), transparent 34%), radial-gradient(circle at bottom right, rgba(37,99,235,.12), transparent 38%), linear-gradient(135deg, rgba(255,255,255,.82), rgba(232,242,255,.74))',
+      'radial-gradient(circle at top left, var(--ui-status-info-soft), transparent 34%), radial-gradient(circle at bottom right, var(--ui-status-info-soft), transparent 38%), linear-gradient(135deg, var(--ui-glass-surface), var(--ui-surface-active))',
   },
   authPane: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 44,
-    background: 'rgba(255,255,255,.72)',
+    background: 'var(--ui-glass-surface-soft)',
   },
   tagline: {
     marginTop: 12,
-    color: 'var(--ui-color-secondary-text)',
+    color: 'var(--ui-text-secondary)',
     fontSize: 27,
     fontWeight: 300,
     letterSpacing: '-0.045em',
@@ -121,7 +121,7 @@ const authStyles: Styles = {
   },
   featureText: {
     margin: 0,
-    color: 'var(--ui-color-secondary-text)',
+    color: 'var(--ui-text-secondary)',
     fontSize: 11.5,
     lineHeight: 1.2,
     fontWeight: 400,
@@ -133,10 +133,10 @@ const authStyles: Styles = {
     minHeight: 340,
     marginTop: 6,
     borderRadius: 28,
-    border: '1px dashed rgba(15, 95, 232, 0.28)',
+    border: '1px dashed var(--ui-border-active)',
     background:
-      'linear-gradient(145deg, rgba(255,255,255,.45), rgba(208,228,255,.28))',
-    boxShadow: 'inset 0 1px 0 rgba(255,255,255,.8), 0 22px 70px rgba(7,26,61,.08)',
+      'linear-gradient(145deg, var(--ui-glass-surface-soft), var(--ui-surface-active))',
+    boxShadow: 'inset 0 1px 0 var(--ui-glass-surface), 0 22px 70px var(--ui-shadow-medium-color)',
     overflow: 'hidden',
   },
   previewLabel: {
@@ -146,9 +146,9 @@ const authStyles: Styles = {
     maxWidth: 310,
     padding: '12px 16px',
     borderRadius: 16,
-    background: 'rgba(255,255,255,.68)',
-    border: '1px solid rgba(126,153,190,.22)',
-    color: 'var(--ui-color-secondary-text)',
+    background: 'var(--ui-glass-surface-soft)',
+    border: '1px solid var(--ui-border-soft)',
+    color: 'var(--ui-text-secondary)',
     fontSize: 13,
     lineHeight: 1.35,
     fontWeight: 520,
@@ -158,9 +158,9 @@ const authStyles: Styles = {
     maxWidth: 430,
     padding: '52px 44px',
     borderRadius: 32,
-    border: '1px solid rgba(126,153,190,.2)',
-    background: 'rgba(255,255,255,.9)',
-    boxShadow: '0 24px 72px rgba(7,26,61,.11)',
+    border: '1px solid var(--ui-border-soft)',
+    background: 'var(--ui-glass-surface-strong)',
+    boxShadow: '0 24px 72px var(--ui-shadow-strong-color)',
   },
   cardTitle: {
     margin: 0,
@@ -191,20 +191,20 @@ const authStyles: Styles = {
     padding: 4,
     borderRadius: 8,
     border: `1px solid ${BORDER}`,
-    background: 'var(--ui-color-extra-light-blue)',
+    background: 'var(--ui-status-info-soft)',
   },
   modeButton: {
     minHeight: 36,
     border: `1px solid ${BORDER}`,
     borderRadius: 8,
-    background: 'var(--ui-color-card-background)',
+    background: 'var(--ui-surface-card)',
     color: NAVY,
     fontSize: 14,
     fontWeight: 560,
     cursor: 'pointer',
   },
   modeButtonActive: {
-    background: 'var(--ui-color-soft-blue)',
+    background: 'var(--ui-surface-active)',
     color: BLUE,
     borderColor: BLUE,
     boxShadow: 'none',
@@ -221,8 +221,8 @@ const authStyles: Styles = {
     padding: '0 18px',
     borderRadius: 18,
     border: `1px solid ${BORDER}`,
-    background: 'rgba(255,255,255,.74)',
-    boxShadow: 'inset 0 1px 0 rgba(255,255,255,.82)',
+    background: 'var(--ui-glass-surface-soft)',
+    boxShadow: 'inset 0 1px 0 var(--ui-glass-surface)',
   },
   input: {
     width: '100%',
@@ -238,7 +238,7 @@ const authStyles: Styles = {
     marginTop: 8,
     border: `2px solid ${BLUE}`,
     borderRadius: 8,
-    background: 'var(--ui-color-card-background)',
+    background: 'var(--ui-surface-card)',
     color: BLUE,
     fontSize: 15,
     fontWeight: 700,
@@ -250,14 +250,14 @@ const authStyles: Styles = {
     alignItems: 'center',
     gap: 14,
     margin: '28px 0',
-    color: 'var(--ui-color-muted-text)',
+    color: 'var(--ui-text-muted)',
     fontSize: 14,
     fontWeight: 350,
   },
   dividerLine: {
     flex: 1,
     height: 1,
-    background: 'rgba(148,163,184,.26)',
+    background: 'var(--ui-border-soft)',
   },
   secondaryButton: {
     width: '100%',
@@ -268,7 +268,7 @@ const authStyles: Styles = {
     gap: 12,
     borderRadius: 8,
     border: `1px solid ${BORDER}`,
-    background: 'var(--ui-color-card-background)',
+    background: 'var(--ui-surface-card)',
     color: NAVY,
     fontSize: 15,
     fontWeight: 520,
@@ -281,7 +281,7 @@ const authStyles: Styles = {
     border: `1px solid ${BORDER}`,
     borderRadius: 8,
     padding: '0 12px',
-    background: 'var(--ui-color-card-background)',
+    background: 'var(--ui-surface-card)',
     color: BLUE,
     fontSize: 14,
     fontWeight: 560,
@@ -293,7 +293,7 @@ const authStyles: Styles = {
     justifyContent: 'center',
     gap: 9,
     marginTop: 28,
-    color: 'var(--ui-color-secondary-text)',
+    color: 'var(--ui-text-secondary)',
     fontSize: 13,
     fontWeight: 420,
   },
@@ -301,9 +301,9 @@ const authStyles: Styles = {
     marginBottom: 18,
     padding: '14px 16px',
     borderRadius: 18,
-    border: '1px solid rgba(37,99,235,.24)',
-    background: 'rgba(37,99,235,.10)',
-    color: 'var(--ui-color-primary-navy)',
+    border: '1px solid var(--ui-border-active)',
+    background: 'var(--ui-status-info-soft)',
+    color: 'var(--ui-text-primary)',
     fontSize: 14,
     lineHeight: 1.5,
     fontWeight: 500,
@@ -316,7 +316,7 @@ const authStyles: Styles = {
     justifyContent: 'center',
     padding: 24,
     background:
-      'radial-gradient(circle at 20% 20%, rgba(37,99,235,.14), transparent 34%), linear-gradient(135deg, var(--ui-color-extra-light-blue) 0%, var(--ui-color-main-background) 48%, var(--ui-color-soft-section-background) 100%)',
+      'radial-gradient(circle at 20% 20%, var(--ui-status-info-soft), transparent 34%), linear-gradient(135deg, var(--ui-status-info-soft) 0%, var(--ui-surface-app) 48%, var(--ui-surface-soft) 100%)',
     fontFamily:
       'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   },
@@ -325,8 +325,8 @@ const authStyles: Styles = {
     padding: 34,
     borderRadius: 28,
     border: `1px solid ${BORDER}`,
-    background: 'rgba(255,255,255,.9)',
-    boxShadow: '0 24px 72px rgba(7,26,61,.12)',
+    background: 'var(--ui-glass-surface-strong)',
+    boxShadow: '0 24px 72px var(--ui-shadow-strong-color)',
   },
   compactTitle: {
     margin: 0,
@@ -351,9 +351,9 @@ const authStyles: Styles = {
   dangerBox: {
     padding: '14px 16px',
     borderRadius: 18,
-    border: '1px solid var(--ui-color-warning)',
-    background: 'var(--ui-color-warning-soft)',
-    color: 'var(--ui-color-warning)',
+    border: '1px solid var(--ui-status-warning)',
+    background: 'var(--ui-status-warning-soft)',
+    color: 'var(--ui-status-warning)',
     fontSize: 14,
     lineHeight: 1.45,
   },
@@ -362,8 +362,8 @@ const authStyles: Styles = {
 function MailIcon() {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="3.5" y="5.5" width="17" height="13" rx="2.5" stroke="var(--ui-color-secondary-text)" strokeWidth="1.8" />
-      <path d="M5 7.5l7 5 7-5" stroke="var(--ui-color-secondary-text)" strokeWidth="1.8" strokeLinecap="round" />
+      <rect x="3.5" y="5.5" width="17" height="13" rx="2.5" stroke="var(--ui-text-secondary)" strokeWidth="1.8" />
+      <path d="M5 7.5l7 5 7-5" stroke="var(--ui-text-secondary)" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   )
 }
@@ -371,8 +371,8 @@ function MailIcon() {
 function LockIcon() {
   return (
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="5.5" y="10" width="13" height="10" rx="2.5" stroke="var(--ui-color-secondary-text)" strokeWidth="1.8" />
-      <path d="M8.5 10V8a3.5 3.5 0 017 0v2" stroke="var(--ui-color-secondary-text)" strokeWidth="1.8" strokeLinecap="round" />
+      <rect x="5.5" y="10" width="13" height="10" rx="2.5" stroke="var(--ui-text-secondary)" strokeWidth="1.8" />
+      <path d="M8.5 10V8a3.5 3.5 0 017 0v2" stroke="var(--ui-text-secondary)" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   )
 }
@@ -381,19 +381,19 @@ function GoogleIcon() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
       <path
-        fill="var(--ui-color-primary-blue)"
+        fill="var(--ui-text-link)"
         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
       />
       <path
-        fill="var(--ui-color-income)"
+        fill="var(--ui-financial-income)"
         d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
       />
       <path
-        fill="var(--ui-color-warning)"
+        fill="var(--ui-status-warning)"
         d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z"
       />
       <path
-        fill="var(--ui-color-expense)"
+        fill="var(--ui-financial-expense)"
         d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06L5.84 9.9C6.71 7.3 9.14 5.38 12 5.38z"
       />
     </svg>

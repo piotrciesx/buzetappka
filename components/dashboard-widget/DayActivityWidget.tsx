@@ -81,8 +81,8 @@ const cardStyle = {
   minHeight: 98,
   border: `1px solid ${SOFT_BORDER}`,
   borderRadius: 14,
-  background: 'linear-gradient(145deg, rgba(255,255,255,0.82), rgba(248,250,252,0.62))',
-  boxShadow: 'inset 1px 1px 0 rgba(255,255,255,0.86)',
+  background: 'linear-gradient(145deg, var(--ui-glass-surface), var(--ui-surface-soft))',
+  boxShadow: 'inset 1px 1px 0 var(--ui-glass-surface)',
   padding: '9px 10px',
   display: 'grid',
   gridTemplateRows: '32px 1fr 16px',
@@ -150,8 +150,8 @@ const chartPanelStyle = {
   minHeight: 0,
   border: `1px solid ${SOFT_BORDER}`,
   borderRadius: 14,
-  background: 'linear-gradient(145deg, rgba(255,255,255,0.8), rgba(248,250,252,0.58))',
-  boxShadow: 'inset 1px 1px 0 rgba(255,255,255,0.86)',
+  background: 'linear-gradient(145deg, var(--ui-glass-surface), var(--ui-surface-soft))',
+  boxShadow: 'inset 1px 1px 0 var(--ui-glass-surface)',
   padding: 11,
   display: 'grid',
   gap: 11,
@@ -160,7 +160,7 @@ const chartPanelStyle = {
 }
 
 const chartTitleStyle = {
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 12.5,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -207,7 +207,7 @@ function BarRow({
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 8,
-          color: 'var(--ui-color-secondary-text)',
+          color: 'var(--ui-text-secondary)',
           fontSize: 12,
           lineHeight: 1.2,
           fontWeight: 500,
@@ -234,7 +234,7 @@ function BarRow({
           width: '100%',
           height: 11,
           borderRadius: 999,
-          background: 'rgba(148, 163, 184, 0.16)',
+          background: 'var(--ui-chart-neutral-soft)',
           overflow: 'hidden',
         }}
       >

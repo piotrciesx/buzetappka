@@ -60,7 +60,7 @@ const summaryGridStyle: CSSProperties = {
 const summaryCardStyle: CSSProperties = {
   border: `1px solid ${SOFT_BORDER}`,
   borderRadius: 12,
-  background: 'rgba(255,255,255,0.75)',
+  background: 'var(--ui-glass-surface-soft)',
   padding: '8px 10px',
   display: 'grid',
   gap: 2,
@@ -80,7 +80,7 @@ const valueStyle: CSSProperties = {
 const listStyle: CSSProperties = {
   border: `1px solid ${SOFT_BORDER}`,
   borderRadius: 14,
-  background: 'rgba(255,255,255,0.6)',
+  background: 'var(--ui-glass-surface-soft)',
   padding: '8px 8px 6px',
   display: 'grid',
   gap: 6,
@@ -97,7 +97,7 @@ const rowStyle: CSSProperties = {
 
 const barTrackStyle: CSSProperties = {
   height: 8,
-  background: 'rgba(226,232,240,0.8)',
+  background: 'var(--ui-chart-grid)',
   borderRadius: 4,
   overflow: 'hidden',
 }

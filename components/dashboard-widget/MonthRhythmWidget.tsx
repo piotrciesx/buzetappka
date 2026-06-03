@@ -103,11 +103,11 @@ function MonthCalendarHeatmap({
                   width: cellSize,
                   height: cellSize,
                   borderRadius: compact ? 8 : 9,
-                  background: isInactive ? 'var(--ui-color-soft-section-background)' : visual.background,
+                  background: isInactive ? 'var(--ui-surface-soft)' : visual.background,
                   border: day.isBeforeBudgetStart
-                    ? '1px dashed var(--ui-color-soft-border)'
+                    ? '1px dashed var(--ui-border-soft)'
                     : day.isFuture
-                      ? '1px solid var(--ui-color-disabled-border)'
+                      ? '1px solid var(--ui-border-disabled)'
                       : `1px solid ${visual.borderColor}`,
                   display: 'grid',
                   placeItems: 'center',
@@ -175,7 +175,7 @@ function CashflowChart({ days }: { days: DayPoint[] }) {
         overflow: 'hidden',
       }}
     >
-      <div style={{ color: 'var(--ui-color-primary-text)', fontSize: 14, fontWeight: 600 }}>
+      <div style={{ color: 'var(--ui-text-primary)', fontSize: 14, fontWeight: 600 }}>
         Trend
       </div>
 
@@ -252,7 +252,7 @@ function CashflowChart({ days }: { days: DayPoint[] }) {
               x2={width}
               y1={zeroY}
               y2={zeroY}
-              stroke="var(--ui-color-muted-text)"
+              stroke="var(--ui-text-muted)"
               strokeWidth="1.2"
               strokeDasharray="5 5"
               vectorEffect="non-scaling-stroke"
@@ -288,7 +288,7 @@ function CashflowChart({ days }: { days: DayPoint[] }) {
               maxWidth: 146,
               overflow: 'hidden',
               textOverflow: 'ellipsis',
-              textShadow: '0 1px 0 rgba(255,255,255,0.92)',
+              textShadow: '0 1px 0 var(--ui-glass-surface-strong)',
             }}
           >
             {formatMoney(finalValue)}
@@ -340,7 +340,7 @@ export default function MonthRhythmWidget({
         }}
       >
         <div style={{ minWidth: 0 }}>
-          <div style={{ color: 'var(--ui-color-primary-text)', fontSize: 13, fontWeight: 600, lineHeight: 1.2 }}>
+          <div style={{ color: 'var(--ui-text-primary)', fontSize: 13, fontWeight: 600, lineHeight: 1.2 }}>
             Rytm dni
           </div>
         </div>
@@ -376,7 +376,7 @@ export default function MonthRhythmWidget({
         }}
       >
         <div>
-          <div style={{ color: 'var(--ui-color-primary-text)', fontSize: 13, fontWeight: 600, lineHeight: 1.2 }}>
+          <div style={{ color: 'var(--ui-text-primary)', fontSize: 13, fontWeight: 600, lineHeight: 1.2 }}>
             Rytm dni
           </div>
         </div>

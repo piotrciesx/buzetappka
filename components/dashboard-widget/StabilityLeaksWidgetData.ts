@@ -12,7 +12,7 @@ import {
 import { GREEN, MUTED, RED } from './dashboardWidgetTileStyles'
 import { formatPercent } from './dashboardWidgetTileUtils'
 
-const WARNING = 'var(--ui-color-warning)'
+const WARNING = 'var(--ui-status-warning)'
 
 export type CategoryLeak = {
   categoryId: string

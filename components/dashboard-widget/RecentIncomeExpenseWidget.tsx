@@ -147,7 +147,7 @@ const dateStyle: CSSProperties = {
 
 const descriptionStyle: CSSProperties = {
   minWidth: 0,
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 10.8,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -187,7 +187,7 @@ const amountStyle: CSSProperties = {
 
 const dividerStyle: CSSProperties = {
   minWidth: 0,
-  borderLeft: '1px solid rgba(203,213,225,0.48)',
+  borderLeft: '1px solid var(--ui-chart-grid)',
   paddingLeft: 18,
   display: 'grid',
   minHeight: 0,

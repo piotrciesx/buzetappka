@@ -65,9 +65,9 @@ export default function DashboardWidgetFrame({
           cursor: 'default',
           borderColor: isDragging ? BLUE : tileStyle.borderColor,
           boxShadow: isDragging
-            ? '0 18px 36px rgba(37, 99, 235, 0.16)'
+            ? '0 18px 36px var(--ui-shadow-medium-color)'
             : isHovered
-              ? 'inset 0 1px 0 rgba(255,255,255,0.94), 0 10px 24px rgba(15, 23, 42, 0.09)'
+              ? 'inset 0 1px 0 var(--ui-glass-surface-strong), 0 10px 24px var(--ui-shadow-medium-color)'
               : tileStyle.boxShadow,
           transform: undefined,
           opacity: isDropBlocked ? 0.82 : 1,

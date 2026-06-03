@@ -54,9 +54,9 @@
   gap: var(--ui-spacing-card-section-gap) !important;
   margin: var(--ui-space-1) 0 0 !important;
   padding: var(--ui-spacing-card-section-gap) !important;
-  border: 1px solid rgba(186, 213, 246, 0.48) !important;
+  border: 1px solid var(--ui-border-active) !important;
   border-radius: 18px !important;
-  background: rgba(255, 255, 255, 0.5) !important;
+  background: var(--ui-glass-surface-soft) !important;
   box-shadow: none !important;
 }
 
@@ -127,7 +127,7 @@
   height: 28px !important;
   display: block !important;
   border-radius: 999px !important;
-  background: rgba(203, 213, 225, 0.82) !important;
+  background: var(--ui-border-soft) !important;
 }
 
 [data-budget-pinned-categories="true"] {
@@ -148,32 +148,32 @@
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  border: 1px solid rgba(203, 213, 225, 0.78) !important;
+  border: 1px solid var(--ui-border-soft) !important;
   border-radius: 11px !important;
   padding: 0 var(--ui-spacing-md) !important;
-  background: rgba(255, 255, 255, 0.78) !important;
-  color: var(--ui-color-secondary-text) !important;
+  background: var(--ui-glass-surface) !important;
+  color: var(--ui-text-secondary) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.86),
-    0 6px 16px rgba(15, 23, 42, 0.035) !important;
+    inset 0 1px 0 var(--ui-glass-surface),
+    0 6px 16px var(--ui-shadow-light-color) !important;
   cursor: pointer !important;
 }
 
 [data-budget-pinned-category="true"]:hover {
-  border-color: rgba(148, 163, 184, 0.9) !important;
-  background: rgba(248, 250, 252, 0.92) !important;
+  border-color: var(--ui-border-strong) !important;
+  background: var(--ui-surface-soft) !important;
 }
 
 [data-budget-pinned-category="true"][data-pinned-category-kind="income"] {
-  border-color: rgba(134, 239, 172, 0.62) !important;
-  background: rgba(240, 253, 244, 0.78) !important;
-  color: var(--ui-color-income) !important;
+  border-color: var(--ui-financial-income-soft) !important;
+  background: var(--ui-financial-income-soft) !important;
+  color: var(--ui-financial-income) !important;
 }
 
 [data-budget-pinned-category="true"][data-pinned-category-kind="expense"] {
-  border-color: rgba(254, 205, 211, 0.74) !important;
-  background: rgba(255, 241, 242, 0.78) !important;
-  color: var(--ui-color-expense) !important;
+  border-color: var(--ui-financial-expense-soft) !important;
+  background: var(--ui-financial-expense-soft) !important;
+  color: var(--ui-financial-expense) !important;
 }
 
 [data-budget-pinned-category="true"] span {
@@ -214,14 +214,14 @@
   height: 38px !important;
   display: inline-grid !important;
   place-items: center !important;
-  border: 1px solid rgba(198, 209, 221, 0.82) !important;
+  border: 1px solid var(--ui-border-soft) !important;
   border-radius: 12px !important;
   padding: 0 !important;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(238, 244, 250, 0.78)) !important;
-  color: var(--ui-color-secondary-text) !important;
+  background: linear-gradient(180deg, var(--ui-glass-surface-strong), var(--ui-surface-soft)) !important;
+  color: var(--ui-text-secondary) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.92),
-    0 8px 18px rgba(15, 23, 42, 0.045) !important;
+    inset 0 1px 0 var(--ui-glass-surface-strong),
+    var(--ui-shadow-subtle) !important;
   cursor: pointer !important;
 }
 
@@ -245,10 +245,10 @@
   height: 18px !important;
   display: grid !important;
   place-items: center !important;
-  border: 2px solid var(--ui-color-card-background) !important;
+  border: 2px solid var(--ui-surface-card) !important;
   border-radius: 999px !important;
-  background: var(--ui-color-expense) !important;
-  color: var(--ui-color-card-background) !important;
+  background: var(--ui-financial-expense) !important;
+  color: var(--ui-surface-card) !important;
   font-size: 10px !important;
   font-weight: 800 !important;
   line-height: 1 !important;
@@ -264,11 +264,11 @@
   width: min(430px, calc(100vw - 260px)) !important;
   min-width: 300px !important;
   padding: 12px !important;
-  border: 1px solid rgba(148, 163, 184, 0.38) !important;
+  border: 1px solid var(--ui-border-soft) !important;
   border-radius: 14px !important;
-  background: rgba(255, 255, 255, 0.98) !important;
-  box-shadow: 0 22px 54px rgba(15, 23, 42, 0.16) !important;
-  color: var(--ui-color-primary-text) !important;
+  background: var(--ui-glass-surface-strong) !important;
+  box-shadow: 0 22px 54px var(--ui-shadow-strong-color) !important;
+  color: var(--ui-text-primary) !important;
 }
 
 [data-budget-alert-actions="true"] {
@@ -326,14 +326,14 @@
   display: grid !important;
   gap: var(--ui-spacing-list-gap) !important;
   padding: var(--ui-spacing-md) !important;
-  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  border: 1px solid var(--ui-border-divider) !important;
   border-radius: 10px !important;
-  background: rgba(248, 250, 252, 0.9) !important;
+  background: var(--ui-surface-soft) !important;
 }
 
 [data-month-note-item="true"] p {
   margin: 0 !important;
-  color: var(--ui-color-secondary-text) !important;
+  color: var(--ui-text-secondary) !important;
   font-size: 12px !important;
   line-height: 1.45 !important;
   white-space: pre-wrap !important;
@@ -347,11 +347,11 @@
 
 [data-month-note-actions="true"] button {
   min-height: 26px !important;
-  border: 1px solid rgba(203, 213, 225, 0.86) !important;
+  border: 1px solid var(--ui-border-soft) !important;
   border-radius: 999px !important;
   padding: 0 var(--ui-spacing-md) !important;
-  background: var(--ui-color-card-background) !important;
-  color: var(--ui-color-secondary-text) !important;
+  background: var(--ui-surface-card) !important;
+  color: var(--ui-text-secondary) !important;
   font-size: 11px !important;
   font-weight: 650 !important;
 }

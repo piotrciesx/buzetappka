@@ -205,9 +205,19 @@
   --ui-chart-negative: #b91c1c;
   --ui-chart-neutral: #64748b;
   --ui-chart-blue: var(--ui-color-primary-blue);
+  --ui-chart-positive-soft: var(--ui-financial-income-soft);
+  --ui-chart-negative-soft: var(--ui-financial-expense-soft);
+  --ui-chart-neutral-soft: var(--ui-surface-soft);
+  --ui-chart-grid: var(--ui-border-divider);
+  --ui-chart-axis: var(--ui-text-muted);
+  --ui-chart-surface: var(--ui-glass-surface-soft);
   --ui-heatmap-low: #dbeafe;
   --ui-heatmap-medium: #93c5fd;
   --ui-heatmap-high: #1d4ed8;
+  --ui-heatmap-empty: var(--ui-surface-soft);
+  --ui-heatmap-border: var(--ui-border-disabled);
+  --ui-heatmap-text: var(--ui-text-primary);
+  --ui-heatmap-text-inverse: var(--ui-text-inverse);
 
   /* Surfaces */
   --ui-surface-app: var(--ui-color-main-background);

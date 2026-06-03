@@ -11,12 +11,12 @@
   --app-shell-left-width: 240px;
   --app-shell-right-width: 304px;
   --app-shell-panel-radius: 18px;
-  --app-shell-panel-border: var(--ui-color-soft-border);
-  --app-shell-background: var(--ui-color-main-background);
-  --app-shell-panel: var(--ui-color-card-background);
-  --app-shell-panel-soft: var(--ui-color-soft-section-background);
-  --app-shell-text: var(--ui-color-primary-text);
-  --app-shell-navy: var(--ui-color-primary-navy);
+  --app-shell-panel-border: var(--ui-border-soft);
+  --app-shell-background: var(--ui-surface-app);
+  --app-shell-panel: var(--ui-surface-card);
+  --app-shell-panel-soft: var(--ui-surface-soft);
+  --app-shell-text: var(--ui-text-primary);
+  --app-shell-navy: var(--ui-text-link);
 }
 
 html,
@@ -224,7 +224,7 @@ body {
   justify-content: flex-start;
   gap: var(--ui-space-5);
   width: 220px;
-  color: var(--ui-color-secondary-text) !important;
+  color: var(--ui-text-secondary) !important;
 }
 
 [data-topbar-action="month-note"],
@@ -460,7 +460,7 @@ body {
   position: relative;
   min-height: 168px;
   overflow: hidden;
-  border: 1px solid var(--ui-color-divider-border);
+  border: 1px solid var(--ui-border-divider);
   border-radius: 14px;
   background: var(--app-shell-panel);
   box-shadow: none;
@@ -532,17 +532,17 @@ body {
 }
 
 [data-level1-card="true"][data-level1-kind="income"] [data-level1-summary="true"] strong {
-  color: var(--ui-color-income);
+  color: var(--ui-financial-income);
 }
 
 [data-level1-card="true"][data-level1-kind="expense"] [data-level1-summary="true"] strong {
-  color: var(--ui-color-expense);
+  color: var(--ui-financial-expense);
 }
 
 [data-level1-limit="true"] {
   min-width: 0;
   max-width: 100%;
-  color: var(--ui-color-secondary-text);
+  color: var(--ui-text-secondary);
   font-size: 12px;
   line-height: 1.2;
   z-index: 2;
@@ -588,7 +588,7 @@ body {
   min-width: 0;
   height: 7px !important;
   border-radius: 999px !important;
-  background: rgba(226, 232, 240, 0.92) !important;
+  background: var(--ui-border-divider) !important;
 }
 
 [data-level1-limit="true"] [data-budget-limit-bar-fill="true"] {
@@ -621,7 +621,7 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: var(--ui-color-soft-section-background);
+  background: var(--ui-surface-soft);
 }
 
 [data-level1-actions="true"] {
@@ -642,7 +642,7 @@ body {
   height: auto;
   padding: 14px 12px 12px;
   overflow: visible;
-  border: 1px solid var(--ui-color-divider-border) !important;
+  border: 1px solid var(--ui-border-divider) !important;
   border-radius: 14px !important;
   background: var(--app-shell-panel) !important;
   box-shadow: none !important;
@@ -695,14 +695,14 @@ body {
   min-height: 48px !important;
   max-height: 52px !important;
   padding: 0 4px !important;
-  border-bottom: 1px solid var(--ui-color-divider-border) !important;
+  border-bottom: 1px solid var(--ui-border-divider) !important;
 }
 
 [data-level1-expanded-content="true"] [data-category-drag-row="true"][data-category-level="3"] {
   min-height: 40px !important;
   max-height: 46px !important;
   padding: 0 4px 0 28px !important;
-  border-bottom: 1px solid var(--ui-color-divider-border) !important;
+  border-bottom: 1px solid var(--ui-border-divider) !important;
 }
 
 [data-level1-expanded-content="true"] [data-category-row-main="true"] {
@@ -772,7 +772,7 @@ body {
   margin: 0 !important;
   gap: 6px !important;
   overflow: hidden;
-  color: var(--ui-color-secondary-text) !important;
+  color: var(--ui-text-secondary) !important;
   font-size: 11px !important;
   line-height: 1 !important;
   white-space: nowrap;
@@ -838,7 +838,7 @@ body {
   justify-content: center !important;
   width: 28px !important;
   height: 28px !important;
-  border: 1px solid var(--ui-color-divider-border) !important;
+  border: 1px solid var(--ui-border-divider) !important;
   border-radius: 9px !important;
   background: var(--app-shell-panel) !important;
 }
@@ -891,7 +891,7 @@ body {
   min-height: 0 !important;
   margin: 0 !important;
   padding: 12px 4px !important;
-  color: var(--ui-color-muted-text) !important;
+  color: var(--ui-text-muted) !important;
   font-size: 13px !important;
   line-height: 1.4 !important;
   background: transparent !important;
@@ -908,7 +908,7 @@ body {
   min-height: 40px !important;
   margin: 0 !important;
   padding: 6px !important;
-  border: 1px solid var(--ui-color-divider-border) !important;
+  border: 1px solid var(--ui-border-divider) !important;
   border-radius: 10px !important;
   background: var(--app-shell-panel) !important;
   box-shadow: none !important;
@@ -931,7 +931,7 @@ body {
   justify-content: center !important;
   height: 30px !important;
   padding: 0 10px !important;
-  border: 1px solid var(--ui-color-divider-border) !important;
+  border: 1px solid var(--ui-border-divider) !important;
   border-radius: 8px !important;
   background: var(--app-shell-panel) !important;
   color: var(--app-shell-navy) !important;
@@ -949,7 +949,7 @@ body {
   min-height: 38px;
   margin-top: 0;
   padding: 0 14px;
-  border: 1px solid var(--ui-color-divider-border);
+  border: 1px solid var(--ui-border-divider);
   border-radius: 10px;
   background: var(--app-shell-panel);
   color: var(--app-shell-navy);
@@ -1095,7 +1095,7 @@ body {
 
 [data-widget-placeholder="true"] {
   margin: 0;
-  color: var(--ui-color-secondary-text);
+  color: var(--ui-text-secondary);
   font-size: 12px;
   line-height: 1.4;
 }
@@ -1135,7 +1135,7 @@ body {
   min-width: 0;
   height: 28px;
   padding: 0 var(--ui-space-5);
-  border: 1px solid var(--ui-color-divider-border);
+  border: 1px solid var(--ui-border-divider);
   border-radius: 9px;
   background: var(--app-shell-panel);
   color: var(--app-shell-navy);

@@ -34,12 +34,15 @@ import {
 } from './dashboardWidgetPrimitives'
 
 const getHeatmapColor = (balance: number, maxAbsBalance: number) => {
-  if (balance === 0 || maxAbsBalance <= 0) return 'var(--ui-color-divider-border)'
+  if (balance === 0 || maxAbsBalance <= 0) return 'var(--ui-heatmap-empty)'
 
   const intensity = Math.max(0.18, Math.min(1, Math.abs(balance) / maxAbsBalance))
-  const alpha = 0.2 + intensity * 0.65
 
-  return balance > 0 ? `rgba(21, 128, 61, ${alpha})` : `rgba(185, 28, 28, ${alpha})`
+  if (intensity >= 0.62) {
+    return balance > 0 ? 'var(--ui-chart-positive)' : 'var(--ui-chart-negative)'
+  }
+
+  return balance > 0 ? 'var(--ui-chart-positive-soft)' : 'var(--ui-chart-negative-soft)'
 }
 
 const getPolylinePoints = (values: number[], width: number, height: number) => {
@@ -86,7 +89,7 @@ export function MiniLineChart({
           x2={width}
           y1={zeroY}
           y2={zeroY}
-          stroke="var(--ui-color-soft-border)"
+          stroke="var(--ui-border-soft)"
           strokeWidth="1"
           strokeDasharray="4 4"
         />
@@ -237,11 +240,11 @@ export function Heatmap({ days, dense }: { days: DayMetric[]; dense: boolean }) 
             maxHeight: '100%',
             borderRadius: 5,
             background: getHeatmapColor(day.balance, maxAbsBalance),
-            border: '1px solid rgba(17, 24, 39, 0.06)',
+            border: '1px solid var(--ui-border-soft)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: Math.abs(day.balance) > maxAbsBalance * 0.6 ? 'var(--ui-color-card-background)' : 'var(--ui-color-primary-text)',
+            color: Math.abs(day.balance) > maxAbsBalance * 0.6 ? 'var(--ui-surface-card)' : 'var(--ui-text-primary)',
             fontSize: dense ? 0 : 9,
             fontWeight: 600,
           }}
@@ -351,7 +354,7 @@ export function MonthOverMonthTable({
               style={{
                 border: `1px solid ${SOFT_BORDER}`,
                 borderRadius: 10,
-                background: 'var(--ui-color-card-background)',
+                background: 'var(--ui-surface-card)',
                 padding: 8,
                 display: 'grid',
                 gap: 5,

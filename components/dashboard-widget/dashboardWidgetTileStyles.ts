@@ -1,13 +1,13 @@
 import type { CSSProperties } from 'react'
 
-export const GREEN = 'var(--ui-color-income)'
-export const RED = 'var(--ui-color-expense)'
-export const NEUTRAL = 'var(--ui-color-primary-text)'
-export const MUTED = 'var(--ui-color-secondary-text)'
-export const SOFT_TEXT = 'var(--ui-color-secondary-text)'
-export const SOFT_BORDER = 'rgba(148, 163, 184, 0.24)'
-export const BLUE = 'var(--ui-color-primary-blue)'
-export const SERIES_COLORS = [GREEN, RED, BLUE, 'var(--ui-color-primary-navy)', 'var(--ui-color-income)', 'var(--ui-color-warning)', 'var(--ui-color-primary-navy)']
+export const GREEN = 'var(--ui-financial-income)'
+export const RED = 'var(--ui-financial-expense)'
+export const NEUTRAL = 'var(--ui-text-primary)'
+export const MUTED = 'var(--ui-text-secondary)'
+export const SOFT_TEXT = 'var(--ui-text-secondary)'
+export const SOFT_BORDER = 'var(--ui-border-soft)'
+export const BLUE = 'var(--ui-chart-blue)'
+export const SERIES_COLORS = [GREEN, RED, BLUE, 'var(--ui-chart-neutral)', 'var(--ui-financial-income)', 'var(--ui-status-warning)', 'var(--ui-chart-neutral)']
 
 export const tileStyle: CSSProperties = {
   position: 'relative',
@@ -23,7 +23,7 @@ export const tileStyle: CSSProperties = {
   background: 'var(--ui-surface-widget)',
   borderWidth: 1,
   borderStyle: 'solid',
-  borderColor: 'var(--ui-color-border)',
+  borderColor: 'var(--ui-border-soft)',
   borderRadius: 'var(--ui-card-radius)',
   boxShadow: 'var(--ui-shadow-card)',
   padding: 'var(--ui-surface-card-padding)',
@@ -46,17 +46,17 @@ export const selectStyle: CSSProperties = {
   width: '100%',
   borderWidth: 1,
   borderStyle: 'solid',
-  borderColor: 'var(--ui-color-control-border)',
+  borderColor: 'var(--ui-border-active)',
   borderRadius: 'var(--ui-input-radius)',
   padding: '6px 8px',
   fontSize: 12,
   fontWeight: 720,
-  background: 'var(--ui-color-card-background)',
-  color: 'var(--ui-color-control-text)',
+  background: 'var(--ui-surface-card)',
+  color: 'var(--ui-text-primary)',
 }
 
 export const tileTitleStyle: CSSProperties = {
-  color: 'var(--ui-color-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 'var(--ui-font-size-body-sm)',
   fontWeight: 760,
   lineHeight: 1.2,
@@ -72,7 +72,7 @@ export const metaStyle: CSSProperties = {
   marginTop: 4,
   fontSize: 10,
   lineHeight: 1.25,
-  color: 'var(--ui-color-text-muted)',
+  color: 'var(--ui-text-muted)',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -129,9 +129,9 @@ export const dashboardMetricCard: CSSProperties = {
   maxWidth: '100%',
   overflow: 'hidden',
   boxSizing: 'border-box',
-  border: `1px solid rgba(255,255,255,0.62)`,
+  border: `1px solid var(--ui-glass-surface-soft)`,
   borderRadius: 'var(--ui-radius-lg)',
-  background: 'rgba(255, 255, 255, 0.72)',
+  background: 'var(--ui-glass-surface-soft)',
   padding: 'var(--ui-space-4)',
   boxShadow: 'none',
   backdropFilter: 'none',
@@ -185,7 +185,7 @@ export const metricGridStyle: CSSProperties = {
 export const metricBoxStyle: CSSProperties = {
   border: `1px solid ${SOFT_BORDER}`,
   borderRadius: 'var(--ui-radius-md)',
-  background: 'rgba(255, 255, 255, 0.72)',
+  background: 'var(--ui-glass-surface-soft)',
   padding: 'var(--ui-space-4)',
   minWidth: 0,
 }
@@ -194,7 +194,7 @@ export const progressTrackStyle: CSSProperties = {
   width: '100%',
   height: 6,
   borderRadius: 'var(--ui-radius-pill)',
-  background: 'rgba(203, 213, 225, 0.72)',
+  background: 'var(--ui-chart-grid)',
   marginTop: 5,
 }
 
@@ -217,16 +217,16 @@ export const dragHandleStyle: CSSProperties = {
   borderRadius: 'var(--ui-button-radius)',
   borderWidth: 1,
   borderStyle: 'solid',
-  borderColor: 'rgba(148,163,184,0.32)',
+  borderColor: 'var(--ui-border-soft)',
   background:
-    'linear-gradient(145deg, rgba(255,255,255,0.86), rgba(241,245,249,0.66))',
-  color: 'var(--ui-color-primary-text)',
+    'linear-gradient(145deg, var(--ui-glass-surface), var(--ui-surface-soft))',
+  color: 'var(--ui-text-primary)',
   cursor: 'grab',
   touchAction: 'none',
   fontWeight: 600,
   lineHeight: 1.2,
   boxShadow:
-    'inset 1px 1px 0 rgba(255,255,255,0.92), 0 6px 14px var(--ui-shadow-medium-color)',
+    'inset 1px 1px 0 var(--ui-glass-surface-strong), 0 6px 14px var(--ui-shadow-medium-color)',
 }
 
 export const iconButtonStyle: CSSProperties = {

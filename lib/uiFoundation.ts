@@ -158,11 +158,21 @@ export const uiColorRoleTokens = {
     negative: 'var(--ui-chart-negative)',
     neutral: 'var(--ui-chart-neutral)',
     blue: 'var(--ui-chart-blue)',
+    positiveSoft: 'var(--ui-chart-positive-soft)',
+    negativeSoft: 'var(--ui-chart-negative-soft)',
+    neutralSoft: 'var(--ui-chart-neutral-soft)',
+    grid: 'var(--ui-chart-grid)',
+    axis: 'var(--ui-chart-axis)',
+    surface: 'var(--ui-chart-surface)',
   },
   heatmap: {
     low: 'var(--ui-heatmap-low)',
     medium: 'var(--ui-heatmap-medium)',
     high: 'var(--ui-heatmap-high)',
+    empty: 'var(--ui-heatmap-empty)',
+    border: 'var(--ui-heatmap-border)',
+    text: 'var(--ui-heatmap-text)',
+    textInverse: 'var(--ui-heatmap-text-inverse)',
   },
 } as const
 

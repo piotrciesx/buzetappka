@@ -36,7 +36,7 @@ type RankingItem = {
 const FONT =
   'var(--font-app-sans)'
 
-const DONUT_COLORS = ['var(--ui-color-income)', 'var(--ui-color-expense)', 'var(--ui-color-primary-blue)', 'var(--ui-color-primary-blue)', 'var(--ui-color-warning)']
+const DONUT_COLORS = ['var(--ui-financial-income)', 'var(--ui-financial-expense)', 'var(--ui-chart-blue)', 'var(--ui-chart-blue)', 'var(--ui-status-warning)']
 
 const rootStyle: CSSProperties = {
   width: '100%',
@@ -94,7 +94,7 @@ const compactRowStyle: CSSProperties = {
 
 const rankStyle: CSSProperties = {
   minWidth: 0,
-  color: 'rgba(100,116,139,0.62)',
+  color: 'var(--ui-chart-neutral)',
   fontSize: 10.2,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -110,7 +110,7 @@ const middleStyle: CSSProperties = {
 
 const nameStyle: CSSProperties = {
   minWidth: 0,
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 10.9,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -138,7 +138,7 @@ const trackStyle: CSSProperties = {
   maxHeight: 6,
   flex: '0 0 6px',
   borderRadius: 999,
-  background: 'rgba(226,232,240,0.72)',
+  background: 'var(--ui-chart-grid)',
   overflow: 'hidden',
   transform: 'translateZ(0)',
 }
@@ -153,7 +153,7 @@ const fillStyle: CSSProperties = {
 const chartPanelStyle: CSSProperties = {
   minWidth: 0,
   minHeight: 0,
-  borderLeft: '1px solid rgba(203,213,225,0.48)',
+  borderLeft: '1px solid var(--ui-chart-grid)',
   paddingLeft: 18,
   display: 'grid',
   gridTemplateRows: 'auto 1fr',
@@ -163,7 +163,7 @@ const chartPanelStyle: CSSProperties = {
 
 const chartTitleStyle: CSSProperties = {
   minWidth: 0,
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 12,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -226,7 +226,7 @@ const dotStyle: CSSProperties = {
 
 const legendNameStyle: CSSProperties = {
   minWidth: 0,
-  color: 'var(--ui-color-secondary-text)',
+  color: 'var(--ui-text-secondary)',
   fontSize: 9.8,
   lineHeight: 1.2,
   fontWeight: 500,
@@ -463,7 +463,7 @@ export default function CategoryRankingsWidget({
                     cy="60"
                     r="36"
                     fill="none"
-                    stroke="rgba(226,232,240,0.9)"
+                    stroke="var(--ui-chart-grid)"
                     strokeWidth="14"
                   />
 
@@ -488,7 +488,7 @@ export default function CategoryRankingsWidget({
                     x="60"
                     y="57"
                     textAnchor="middle"
-                    fill="var(--ui-color-primary-text)"
+                    fill="var(--ui-text-primary)"
                     fontSize="12"
                     fontWeight="700"
                   >
@@ -498,7 +498,7 @@ export default function CategoryRankingsWidget({
                     x="60"
                     y="73"
                     textAnchor="middle"
-                    fill="rgba(100,116,139,0.72)"
+                    fill="var(--ui-chart-neutral)"
                     fontSize="9"
                     fontWeight="560"
                   >

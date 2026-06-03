@@ -7,7 +7,7 @@ import { clampPercent, formatMoney } from './dashboardWidgetTileUtils'
 import type { StabilityLeaksWidgetProps } from './dashboardWidgetTypes'
 import { buildMetrics, formatLeakPercent, getLeakColor, getLeakCountText, type CategoryLeak, type LeakMetrics } from './StabilityLeaksWidgetData'
 
-const NEUTRAL_BAR = 'rgba(100,116,139,0.72)'
+const NEUTRAL_BAR = 'var(--ui-chart-neutral)'
 
 const FONT =
   'var(--font-app-sans)'
@@ -49,7 +49,7 @@ const panelStyle: CSSProperties = {
 
 const borderedPanelStyle: CSSProperties = {
   ...panelStyle,
-  borderRight: '1px solid rgba(203,213,225,0.48)',
+  borderRight: '1px solid var(--ui-chart-grid)',
   paddingRight: 15,
 }
 
@@ -64,7 +64,7 @@ const panelHeaderStyle: CSSProperties = {
 
 const titleStyle: CSSProperties = {
   minWidth: 0,
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 11,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -205,7 +205,7 @@ const numberLabelStyle: CSSProperties = {
 
 const numberValueStyle: CSSProperties = {
   minWidth: 0,
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 13,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -260,7 +260,7 @@ const leakTextStyle: CSSProperties = {
 
 const leakNameStyle: CSSProperties = {
   minWidth: 0,
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 11,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -339,7 +339,7 @@ const barTrackStyle: CSSProperties = {
   width: '100%',
   height: 6,
   borderRadius: 999,
-  background: 'rgba(203,213,225,0.44)',
+  background: 'var(--ui-chart-grid)',
   overflow: 'hidden',
 }
 

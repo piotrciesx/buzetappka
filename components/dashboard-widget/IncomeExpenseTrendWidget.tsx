@@ -59,7 +59,7 @@ const chartBoxStyle: CSSProperties = {
   minHeight: 0,
   border: `1px solid ${SOFT_BORDER}`,
   borderRadius: 14,
-  background: 'rgba(255,255,255,0.6)',
+  background: 'var(--ui-glass-surface-soft)',
   padding: '6px 7px 0',
   display: 'grid',
   gridTemplateRows: 'minmax(0, 1fr)',
@@ -91,7 +91,7 @@ const scaleLabelBaseStyle: CSSProperties = {
   left: 0,
   width: 34,
   textAlign: 'right',
-  color: 'rgba(100,116,139,0.52)',
+  color: 'var(--ui-chart-axis)',
   fontSize: 8.5,
   lineHeight: 1.2,
   fontWeight: 500,
@@ -134,8 +134,8 @@ const dropdownButtonStyle: CSSProperties = {
   height: 24,
   border: `1px solid ${SOFT_BORDER}`,
   borderRadius: 8,
-  background: 'rgba(255,255,255,0.86)',
-  color: 'var(--ui-color-secondary-text)',
+  background: 'var(--ui-glass-surface)',
+  color: 'var(--ui-text-secondary)',
   fontSize: 10.5,
   fontWeight: 600,
   padding: '2px 8px',
@@ -156,7 +156,7 @@ const checkboxRowStyle: CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   gap: 7,
-  color: 'var(--ui-color-secondary-text)',
+  color: 'var(--ui-text-secondary)',
   fontSize: 11,
   fontWeight: 600,
   cursor: 'pointer',
@@ -429,7 +429,7 @@ export default function IncomeExpenseTrendWidget({
                     y1={y}
                     x2={chartRight}
                     y2={y}
-                    stroke={value === 0 ? 'rgba(148,163,184,0.34)' : 'rgba(148,163,184,0.16)'}
+                    stroke={value === 0 ? 'var(--ui-chart-grid)' : 'var(--ui-chart-neutral-soft)'}
                     strokeWidth={value === 0 ? 1 : 0.8}
                     vectorEffect="non-scaling-stroke"
                   />

@@ -54,16 +54,16 @@ const FONT =
   'var(--font-app-sans)'
 
 const SERIES_COLORS = [
-  'var(--ui-color-income)',
-  'var(--ui-color-primary-blue)',
-  'var(--ui-color-primary-navy)',
-  'var(--ui-color-warning)',
-  'var(--ui-color-expense)',
-  'var(--ui-color-income)',
-  'var(--ui-color-primary-blue)',
-  'var(--ui-color-primary-blue)',
-  'var(--ui-color-warning)',
-  'var(--ui-color-expense)',
+  'var(--ui-financial-income)',
+  'var(--ui-chart-blue)',
+  'var(--ui-chart-neutral)',
+  'var(--ui-status-warning)',
+  'var(--ui-financial-expense)',
+  'var(--ui-financial-income)',
+  'var(--ui-chart-blue)',
+  'var(--ui-chart-blue)',
+  'var(--ui-status-warning)',
+  'var(--ui-financial-expense)',
 ]
 
 const rootStyle: CSSProperties = {
@@ -85,7 +85,7 @@ const chartBoxStyle: CSSProperties = {
   minHeight: 0,
   border: `1px solid ${SOFT_BORDER}`,
   borderRadius: 14,
-  background: 'rgba(255,255,255,0.6)',
+  background: 'var(--ui-glass-surface-soft)',
   padding: '6px 7px 0',
   display: 'grid',
   gridTemplateRows: 'minmax(0, 1fr)',
@@ -117,7 +117,7 @@ const scaleLabelBaseStyle: CSSProperties = {
   left: 0,
   width: 34,
   textAlign: 'right',
-  color: 'rgba(100,116,139,0.52)',
+  color: 'var(--ui-chart-axis)',
   fontSize: 8.5,
   lineHeight: 1.2,
   fontWeight: 500,
@@ -160,8 +160,8 @@ const dropdownButtonStyle: CSSProperties = {
   height: 24,
   border: `1px solid ${SOFT_BORDER}`,
   borderRadius: 8,
-  background: 'rgba(255,255,255,0.86)',
-  color: 'var(--ui-color-secondary-text)',
+  background: 'var(--ui-glass-surface)',
+  color: 'var(--ui-text-secondary)',
   fontSize: 10.5,
   fontWeight: 600,
   padding: '2px 8px',
@@ -182,8 +182,8 @@ const dropdownPanelStyle: CSSProperties = {
   overflowY: 'auto',
   border: `1px solid ${SOFT_BORDER}`,
   borderRadius: 10,
-  background: 'rgba(255,255,255,0.98)',
-  boxShadow: '0 12px 28px rgba(15,23,42,0.12)',
+  background: 'var(--ui-glass-surface-strong)',
+  boxShadow: '0 12px 28px var(--ui-shadow-strong-color)',
   padding: 8,
   display: 'grid',
   gap: 7,
@@ -204,7 +204,7 @@ const checkboxRowStyle: CSSProperties = {
   gridTemplateColumns: 'auto 8px minmax(0, 1fr)',
   alignItems: 'center',
   gap: 7,
-  color: 'var(--ui-color-secondary-text)',
+  color: 'var(--ui-text-secondary)',
   fontSize: 11,
   fontWeight: 600,
   cursor: 'pointer',
@@ -571,7 +571,7 @@ export default function CategoryTrendWidgetBase({
                     y1={y}
                     x2={chartRight}
                     y2={y}
-                    stroke={value === 0 ? 'rgba(148,163,184,0.34)' : 'rgba(148,163,184,0.16)'}
+                    stroke={value === 0 ? 'var(--ui-chart-grid)' : 'var(--ui-chart-neutral-soft)'}
                     strokeWidth={value === 0 ? 1 : 0.8}
                     vectorEffect="non-scaling-stroke"
                   />

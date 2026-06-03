@@ -4,7 +4,7 @@ import { getTransactionDay, isActiveTransaction, isTransactionInMonth } from '..
 import { BLUE, GREEN, RED } from './dashboardWidgetTileStyles'
 import { formatPercent } from './dashboardWidgetTileUtils'
 
-const WARNING = 'var(--ui-color-warning)'
+const WARNING = 'var(--ui-status-warning)'
 
 export type BudgetStatus = {
   label: string

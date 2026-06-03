@@ -8,7 +8,7 @@ import { clampPercent, formatMoney, formatPercent } from './dashboardWidgetTileU
 import type { BudgetControlWidgetProps } from './dashboardWidgetTypes'
 import { buildMetrics, formatSignedPercent, getComparisonNote, getPaceNote, type BudgetMetrics } from './BudgetControlWidgetData'
 
-const WARNING = 'var(--ui-color-warning)'
+const WARNING = 'var(--ui-status-warning)'
 
 const FONT =
   'var(--font-app-sans)'
@@ -50,7 +50,7 @@ const panelStyle: CSSProperties = {
 
 const borderedPanelStyle: CSSProperties = {
   ...panelStyle,
-  borderRight: '1px solid rgba(203,213,225,0.48)',
+  borderRight: '1px solid var(--ui-chart-grid)',
   paddingRight: 15,
 }
 
@@ -65,7 +65,7 @@ const panelHeaderStyle: CSSProperties = {
 
 const titleStyle: CSSProperties = {
   minWidth: 0,
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 11,
   lineHeight: 1.2,
   fontWeight: 600,
@@ -211,7 +211,7 @@ const progressHeaderStyle: CSSProperties = {
 
 const progressLabelStyle: CSSProperties = {
   minWidth: 0,
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 10.5,
   lineHeight: 1.2,
   fontWeight: 500,
@@ -233,7 +233,7 @@ const progressTrackStyle: CSSProperties = {
   width: '100%',
   height: 7,
   borderRadius: 999,
-  background: 'rgba(203,213,225,0.44)',
+  background: 'var(--ui-chart-grid)',
   overflow: 'hidden',
   marginTop: 7,
 }
@@ -306,7 +306,7 @@ const comparisonLabelStyle: CSSProperties = {
 
 const comparisonValueStyle: CSSProperties = {
   minWidth: 0,
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: 13,
   lineHeight: 1.2,
   fontWeight: 600,
