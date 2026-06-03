@@ -273,23 +273,6 @@
 [data-entries-tree-view="true"] [data-entries-transaction-row="true"] input,
 [data-entries-tree-view="true"] [data-entries-transaction-row="true"] select {
   min-width: 0;
-  height: 30px;
-  padding: 0 var(--ui-spacing-md);
-  border: 1px solid rgba(147, 197, 253, 0.42);
-  border-radius: 9px;
-  background: rgba(255, 255, 255, 0.78);
-  color: var(--ui-color-primary-navy);
-  font: inherit;
-  font-size: 0.78rem;
-  outline: none;
-}
-
-[data-entries-tree-view="true"] [data-entries-inline-composer="true"] input:focus,
-[data-entries-tree-view="true"] [data-entries-inline-composer="true"] select:focus,
-[data-entries-tree-view="true"] [data-entries-transaction-row="true"] input:focus,
-[data-entries-tree-view="true"] [data-entries-transaction-row="true"] select:focus {
-  border-color: rgba(59, 130, 246, 0.72);
-  box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.22);
 }
 
 [data-entries-tree-view="true"] [data-entries-inline-composer="true"] button,

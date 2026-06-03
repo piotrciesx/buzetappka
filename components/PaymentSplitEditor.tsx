@@ -1,6 +1,7 @@
 'use client'
 
 import { CSSProperties } from 'react'
+import { uiInputApi } from '../lib/uiFoundation'
 import {
   buildPaymentSplitPayload,
   createPaymentSplitItemsFromSingleSource,
@@ -119,7 +120,8 @@ export default function PaymentSplitEditor({
         <>
           <select
             data-payment-source-select="true"
-            style={styles.input}
+            className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputL}`}
+            data-input-width={uiInputApi.width.full}
             value={selectedPaymentSourceId}
             onChange={(event) => setSelectedPaymentSourceId(event.target.value)}
           >
@@ -149,7 +151,9 @@ export default function PaymentSplitEditor({
               <select
                 data-payment-source-select="true"
                 data-payment-split-source="true"
-                style={{ ...styles.input, flex: '1 1 220px', minWidth: 220 }}
+                className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputL}`}
+                data-input-width={uiInputApi.width.full}
+                style={{ flex: '1 1 220px', minWidth: 220 }}
                 value={item.paymentSourceId}
                 onChange={(event) => handleSplitSourceChange(index, event.target.value)}
               >
@@ -163,7 +167,9 @@ export default function PaymentSplitEditor({
 
               <input
                 data-payment-split-amount="true"
-                style={{ ...styles.smallInput, width: 110 }}
+                className={uiInputApi.classNames.amountField}
+                data-input-width={uiInputApi.width.compact}
+                style={{ width: 110 }}
                 placeholder="kwota"
                 inputMode="decimal"
                 value={item.amount}

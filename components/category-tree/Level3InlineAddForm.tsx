@@ -13,7 +13,7 @@ import { normalizeDayInput } from '../../lib/dateUtils'
 import type { DescriptionSuggestion } from '../../lib/suggestionUtils'
 import { splitTagInput } from '../../lib/tagUtils'
 import type { PaymentSplitInput } from '../../lib/paymentSplitUtils'
-import { uiZIndex } from '../../lib/uiFoundation'
+import { uiInputApi, uiZIndex } from '../../lib/uiFoundation'
 
 const inlineDescriptionFieldWrapStyle = {
   position: 'relative' as const,
@@ -234,7 +234,9 @@ export default function Level3InlineAddForm({
       <div data-inline-entry-main-row="true">
         <input
           ref={inlineDayInputRef}
-          style={styles.smallInput}
+          className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputS}`}
+          data-input-density={uiInputApi.density.compact}
+          data-input-width={uiInputApi.width.full}
           value={inlineDay}
           onChange={(event) => setInlineDay(normalizeDayInput(event.target.value, selectedMonth))}
           placeholder="dzień"
@@ -253,7 +255,9 @@ export default function Level3InlineAddForm({
         <div style={inlineDescriptionFieldWrapStyle} data-inline-description-wrap="true">
           <input
             ref={inlineDescriptionInputRef}
-            style={styles.input}
+            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputS}`}
+            data-input-density={uiInputApi.density.compact}
+            data-input-width={uiInputApi.width.full}
             value={inlineDescription}
             onChange={(event) => setInlineDescription(event.target.value)}
             placeholder="opis"
@@ -310,7 +314,9 @@ export default function Level3InlineAddForm({
 
         <input
           ref={inlineAmountInputRef}
-          style={styles.smallInput}
+          className={uiInputApi.classNames.amountField}
+          data-input-density={uiInputApi.density.compact}
+          data-input-width={uiInputApi.width.full}
           value={inlineAmount}
           onChange={(event) => setInlineAmount(normalizeAmountInput(event.target.value))}
           placeholder="kwota"
@@ -378,7 +384,9 @@ export default function Level3InlineAddForm({
       {isTagsOpen && (
         <div data-inline-entry-extra-row="true">
           <input
-            style={styles.input}
+            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputS}`}
+            data-input-density={uiInputApi.density.compact}
+            data-input-width={uiInputApi.width.full}
             value={inlineTagInput}
             onChange={(event) => {
               const nextValue = event.target.value
@@ -446,7 +454,9 @@ export default function Level3InlineAddForm({
           <label style={{ ...styles.emptyText, display: 'flex', flexDirection: 'column', gap: 6 }}>
             Powiąż z przypomnieniem
             <select
-              style={styles.input}
+              className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputS}`}
+              data-input-density={uiInputApi.density.compact}
+              data-input-width={uiInputApi.width.full}
               value={selectedRecurringTransactionId}
               onChange={(event) => applyRecurringLink(event.target.value)}
             >

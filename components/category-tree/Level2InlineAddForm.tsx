@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { uiInputApi } from '../../lib/uiFoundation'
 import CategoryIconPicker from '../CategoryIconPicker'
 
 type Level2InlineAddFormProps = {
@@ -23,7 +24,8 @@ export default function Level2InlineAddForm({
   return (
     <div style={styles.formRow}>
       <input
-        style={styles.input}
+        className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+        data-input-width={uiInputApi.width.full}
         placeholder="Nazwa podkategorii"
         value={value}
         onChange={(e) => setValue(e.target.value)}

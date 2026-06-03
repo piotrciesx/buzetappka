@@ -363,10 +363,6 @@
   gap: var(--ui-spacing-form-field-gap) !important;
 }
 
-[data-inline-entry-main-row="true"] input {
-  min-height: 32px !important;
-}
-
 [data-inline-entry-main-row="true"] > button {
   width: auto !important;
   min-width: 66px !important;

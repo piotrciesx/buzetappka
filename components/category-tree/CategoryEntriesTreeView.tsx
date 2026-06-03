@@ -14,6 +14,7 @@ import type { Tag, TransactionPaymentSplit } from '../../lib/budgetPageTypes'
 import type { PaymentSplitInput } from '../../lib/paymentSplitUtils'
 import type { DescriptionSuggestion } from '../../lib/suggestionUtils'
 import type { TransactionDraft } from '../../lib/draftUtils'
+import { uiInputApi } from '../../lib/uiFoundation'
 import {
   buildDateFromDayInput,
   getDayInputFromDate,
@@ -491,6 +492,9 @@ export default function CategoryEntriesTreeView({
         <div data-entries-inline-main-row="true">
           <input
             ref={inlineDayInputRef}
+            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputS}`}
+            data-input-density={uiInputApi.density.compact}
+            data-input-width={uiInputApi.width.full}
             value={inlineDay}
             placeholder="dzień"
             inputMode="numeric"
@@ -500,6 +504,9 @@ export default function CategoryEntriesTreeView({
           />
           <input
             ref={inlineDescriptionInputRef}
+            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputS}`}
+            data-input-density={uiInputApi.density.compact}
+            data-input-width={uiInputApi.width.full}
             value={inlineDescription}
             placeholder="Opis"
             disabled={isDisabled}
@@ -508,6 +515,9 @@ export default function CategoryEntriesTreeView({
           />
           <input
             ref={inlineAmountInputRef}
+            className={uiInputApi.classNames.amountField}
+            data-input-density={uiInputApi.density.compact}
+            data-input-width={uiInputApi.width.full}
             value={inlineAmount}
             placeholder="Kwota"
             inputMode="decimal"
@@ -521,6 +531,9 @@ export default function CategoryEntriesTreeView({
 
         <div data-entries-inline-meta-row="true">
           <input
+            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputS}`}
+            data-input-density={uiInputApi.density.compact}
+            data-input-width={uiInputApi.width.full}
             value={inlineTags}
             placeholder="Tagi"
             disabled={isDisabled}
@@ -529,6 +542,9 @@ export default function CategoryEntriesTreeView({
           />
           {paymentSourceOptions.length > 0 && (
             <select
+              className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputS}`}
+              data-input-density={uiInputApi.density.compact}
+              data-input-width={uiInputApi.width.full}
               value={inlinePaymentSourceId}
               disabled={isDisabled}
               onChange={(event) => setInlinePaymentSourceId(event.target.value)}
@@ -544,6 +560,9 @@ export default function CategoryEntriesTreeView({
           )}
           {recurringOptions.length > 0 && (
             <select
+              className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputS}`}
+              data-input-density={uiInputApi.density.compact}
+              data-input-width={uiInputApi.width.full}
               value={inlineRecurringTransactionId}
               disabled={isDisabled}
               onChange={(event) => setInlineRecurringTransactionId(event.target.value)}
@@ -647,6 +666,9 @@ export default function CategoryEntriesTreeView({
           }}
         >
           <input
+            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputS}`}
+            data-input-density={uiInputApi.density.compact}
+            data-input-width={uiInputApi.width.full}
             value={editDay}
             placeholder="dzień"
             inputMode="numeric"
@@ -654,12 +676,18 @@ export default function CategoryEntriesTreeView({
             onChange={(event) => setEditDay(normalizeDayInput(event.target.value, selectedMonth))}
           />
           <input
+            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputS}`}
+            data-input-density={uiInputApi.density.compact}
+            data-input-width={uiInputApi.width.full}
             value={editDescription}
             placeholder="Opis"
             disabled={isUpdating}
             onChange={(event) => setEditDescription(event.target.value)}
           />
           <input
+            className={uiInputApi.classNames.amountField}
+            data-input-density={uiInputApi.density.compact}
+            data-input-width={uiInputApi.width.full}
             value={editAmount}
             placeholder="Kwota"
             inputMode="decimal"
@@ -682,6 +710,9 @@ export default function CategoryEntriesTreeView({
       return (
         <div key={transaction.id} data-entries-transaction-row="true" data-entries-transaction-moving="true">
           <select
+            className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputS}`}
+            data-input-density={uiInputApi.density.compact}
+            data-input-width={uiInputApi.width.full}
             value={moveTargetCategoryId}
             disabled={isMoving}
             onChange={(event) => setMoveTargetCategoryId(event.target.value)}

@@ -7,6 +7,7 @@ import TransactionCreatorCategorySection from './transaction-creator/Transaction
 import TransactionCreatorHeader from './transaction-creator/TransactionCreatorHeader'
 import TransactionCreatorModeToggles from './transaction-creator/TransactionCreatorModeToggles'
 import { getDayInputFromDate, normalizeDayInput } from '../lib/dateUtils'
+import { uiInputApi } from '../lib/uiFoundation'
 import { useDescriptionSuggestions } from '../lib/useDescriptionSuggestions'
 import { splitTagInput } from '../lib/tagUtils'
 import {
@@ -302,7 +303,8 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
                 <input
                   ref={descriptionInputRef}
                   data-transaction-description-input="true"
-                  style={styles.input}
+                  className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
+                  data-input-width={uiInputApi.width.full}
                   placeholder="opis"
                   value={description}
                   autoComplete="off"
@@ -351,8 +353,11 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
             <input
               ref={amountInputRef}
               data-transaction-amount-input="true"
-              style={{ ...styles.smallInput, order: 3 }}
+              className={uiInputApi.classNames.amountField}
+              data-input-width={uiInputApi.width.full}
+              style={{ order: 3 }}
               placeholder="kwota"
+              inputMode="decimal"
               value={amount}
               onChange={(event) => setAmount(normalizeAmountInput(event.target.value))}
               onKeyDown={(event) => {
@@ -367,7 +372,8 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
               <input
                 ref={dayInputRef}
                 data-transaction-day-input="true"
-                style={styles.smallInput}
+                className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
+                data-input-width={uiInputApi.width.full}
                 value={dayInputValue}
                 placeholder="dzień"
                 inputMode="numeric"
@@ -460,7 +466,8 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
               ref={tagInputRef}
               id="transaction-tags-input"
               data-transaction-tags-input="true"
-              style={styles.input}
+              className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
+              data-input-width={uiInputApi.width.full}
               placeholder="np. sklep, dom, jedzenie"
               value={tagInputValue}
               autoComplete="off"
@@ -526,7 +533,8 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
                 <select
                   id="transaction-recurring-link"
                   data-transaction-recurring-select="true"
-                  style={styles.input}
+                  className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputL}`}
+                  data-input-width={uiInputApi.width.full}
                   value={selectedRecurringTransactionId}
                   onChange={(event) => applyRecurringLink(event.target.value)}
                 >

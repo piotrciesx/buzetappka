@@ -1,5 +1,3 @@
-import { CSSProperties } from 'react'
-
 export const panelStyle = {
   border: 0,
   borderRadius: 0,
@@ -44,11 +42,6 @@ export const actionFilterFieldStyle = {
   alignSelf: 'end',
   justifyItems: 'end',
 } as const
-
-export const searchInputStyle: CSSProperties = {
-  width: '100%',
-  minWidth: 0,
-}
 
 export const resetButtonStyle = {
   minHeight: 34,

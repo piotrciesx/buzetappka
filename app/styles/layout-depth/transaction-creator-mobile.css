@@ -185,14 +185,9 @@
   [data-transaction-recurring-select="true"],
   [data-payment-source-select="true"],
   [data-payment-split-amount="true"] {
-    height: 40px !important;
-    min-height: 40px !important;
     width: 100% !important;
     min-width: 0 !important;
     max-width: 100% !important;
-    padding: 0 10px !important;
-    border-radius: 10px !important;
-    line-height: 40px !important;
   }
 
   [data-transaction-description-input="true"] {

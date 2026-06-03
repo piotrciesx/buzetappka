@@ -3,6 +3,7 @@
 import { CSSProperties, forwardRef } from 'react'
 import { Category, Tag, TransactionPaymentSplit } from '../lib/budgetPageTypes'
 import { getCategoryPathLabel } from '../lib/budgetPageHelpers'
+import { uiInputApi } from '../lib/uiFoundation'
 import { getTransactionPaymentSourceDisplayLines } from '../lib/paymentSplitUtils'
 import { getTransactionMonth, isDaylessTransaction } from '../lib/transactionDomain'
 import {
@@ -45,7 +46,6 @@ import {
   regularFilterFieldStyle,
   compactFilterFieldStyle,
   actionFilterFieldStyle,
-  searchInputStyle,
   resetButtonStyle,
   statsGridStyle,
   statCardStyle,
@@ -115,7 +115,8 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                 value={searchState.description}
                 onChange={(event) => onFieldChange('description', event.target.value)}
                 placeholder="np. biedronka, czynsz, premia"
-                style={{ ...styles.input, ...searchInputStyle }}
+                className={uiInputApi.classNames.searchField}
+                data-input-width={uiInputApi.width.full}
               />
             </div>
 
@@ -127,7 +128,8 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                 id="bank-search-category"
                 value={searchState.categoryId}
                 onChange={(event) => onFieldChange('categoryId', event.target.value)}
-                style={{ ...styles.input, ...searchInputStyle }}
+                className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
+                data-input-width={uiInputApi.width.full}
               >
                 <option value="">Wszystkie kategorie</option>
                 {categoryOptions.map((option) => (
@@ -147,7 +149,8 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                 type="date"
                 value={searchState.dateFrom}
                 onChange={(event) => onFieldChange('dateFrom', event.target.value)}
-                style={{ ...styles.input, ...searchInputStyle }}
+                className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+                data-input-width={uiInputApi.width.full}
               />
             </div>
 
@@ -160,7 +163,8 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                 type="date"
                 value={searchState.dateTo}
                 onChange={(event) => onFieldChange('dateTo', event.target.value)}
-                style={{ ...styles.input, ...searchInputStyle }}
+                className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+                data-input-width={uiInputApi.width.full}
               />
             </div>
 
@@ -174,7 +178,8 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                 value={searchState.amountMin}
                 onChange={(event) => onFieldChange('amountMin', event.target.value)}
                 placeholder="np. 100"
-                style={{ ...styles.input, ...searchInputStyle }}
+                className={uiInputApi.classNames.amountField}
+                data-input-width={uiInputApi.width.full}
               />
             </div>
 
@@ -188,7 +193,8 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                 value={searchState.amountMax}
                 onChange={(event) => onFieldChange('amountMax', event.target.value)}
                 placeholder="np. 1500"
-                style={{ ...styles.input, ...searchInputStyle }}
+                className={uiInputApi.classNames.amountField}
+                data-input-width={uiInputApi.width.full}
               />
             </div>
 
@@ -200,7 +206,8 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                 id="bank-search-payment-source"
                 value={searchState.paymentSourceId}
                 onChange={(event) => onFieldChange('paymentSourceId', event.target.value)}
-                style={{ ...styles.input, ...searchInputStyle }}
+                className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
+                data-input-width={uiInputApi.width.full}
               >
                 <option value="">Wszystkie źródła</option>
                 {paymentSourceOptions.map((option) => (
@@ -221,7 +228,8 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                 onChange={(event) =>
                   onFieldChange('sortMode', event.target.value as BankSearchSortMode)
                 }
-                style={{ ...styles.input, ...searchInputStyle }}
+                className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
+                data-input-width={uiInputApi.width.full}
               >
                 <option value="newest">najnowsze najpierw</option>
                 <option value="oldest">najstarsze najpierw</option>

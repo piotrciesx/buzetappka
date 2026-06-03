@@ -230,25 +230,6 @@ export const formRowStyle = {
   marginTop: 'var(--ui-spacing-md)',
 } as const
 
-export const inputStyle = {
-  border: '1px solid var(--ui-color-soft-border)',
-  borderRadius: 10,
-  padding: 'var(--ui-spacing-md) var(--ui-space-5)',
-  fontSize: 14,
-  minHeight: 38,
-} as const
-
-export const smallInputStyle = {
-  ...inputStyle,
-  width: 90,
-} as const
-
-export const wideInputStyle = {
-  ...inputStyle,
-  flex: 1,
-  minWidth: 180,
-} as const
-
 export const descriptionFieldWrapStyle = {
   flex: 1,
   minWidth: 220,

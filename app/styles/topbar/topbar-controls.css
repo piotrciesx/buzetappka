@@ -453,15 +453,7 @@
 
 [data-topbar-dropdown="search"] input {
   width: 100% !important;
-  height: 34px !important;
   min-width: 0 !important;
-  border: 1px solid rgba(186, 213, 246, 0.72) !important;
-  border-radius: 10px !important;
-  padding: 0 10px !important;
-  background: rgba(248, 251, 255, 0.94) !important;
-  color: var(--ui-color-primary-navy) !important;
-  font-size: 12px !important;
-  outline: none !important;
 }
 
 [data-topbar-dropdown] p {

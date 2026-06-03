@@ -11,6 +11,7 @@ import { DescriptionSuggestion } from '../../lib/suggestionUtils'
 import { splitTagInput } from '../../lib/tagUtils'
 import { normalizeDayInput } from '../../lib/dateUtils'
 import { PaymentSplitInput, getTransactionPaymentSourceDisplayLines } from '../../lib/paymentSplitUtils'
+import { uiInputApi } from '../../lib/uiFoundation'
 import { isDaylessTransaction } from '../../lib/transactionDomain'
 import { MonthCalendarPanelProps, Transaction } from './monthCalendarTypes'
 import { formatAmount, normalizeAmountInput } from './monthCalendarPanelUtils'
@@ -23,7 +24,6 @@ import {
   noDayHintStyle,
   primaryButtonStyle,
   secondaryButtonStyle,
-  smallInputStyle,
   suggestionButtonBaseStyle,
   suggestionsDropdownStyle,
   tagBadgeStyle,
@@ -37,7 +37,6 @@ import {
   transactionTagBadgeStyle,
   transactionTagsStyle,
   transactionTopRowStyle,
-  wideInputStyle,
 } from './monthCalendarStyles'
 import {
   CalendarEntryRow,
@@ -210,7 +209,8 @@ export default function MonthCalendarTransactionCard({
       {isEditing ? (
         <div style={formRowStyle}>
           <input
-            style={smallInputStyle}
+            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+            data-input-width={uiInputApi.width.compact}
             value={editDay}
             onChange={(event) => setEditDay(normalizeDayInput(event.target.value, selectedMonth))}
             placeholder={isNoDayTransaction ? 'dzień (opcjonalnie)' : 'dzień'}
@@ -223,7 +223,8 @@ export default function MonthCalendarTransactionCard({
 
           <input
             ref={editAmountInputRef}
-            style={smallInputStyle}
+            className={uiInputApi.classNames.amountField}
+            data-input-width={uiInputApi.width.compact}
             value={editAmount}
             onChange={(event) => setEditAmount(normalizeAmountInput(event.target.value))}
             placeholder="kwota"
@@ -235,7 +236,8 @@ export default function MonthCalendarTransactionCard({
           <div style={descriptionFieldWrapStyle}>
             <input
               ref={editDescriptionInputRef}
-              style={wideInputStyle}
+              className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+              data-input-width={uiInputApi.width.full}
               value={editDescription}
               onChange={(event) => setEditDescription(event.target.value)}
               onFocus={() => setIsEditDescriptionFocused(true)}
@@ -279,7 +281,8 @@ export default function MonthCalendarTransactionCard({
 
           <div style={tagFieldWrapStyle}>
             <input
-              style={wideInputStyle}
+              className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+              data-input-width={uiInputApi.width.full}
               value={editTagInput}
               onChange={(event) => {
                 const nextValue = event.target.value
@@ -334,7 +337,8 @@ export default function MonthCalendarTransactionCard({
       ) : isMovingCurrent ? (
         <div style={formRowStyle}>
           <select
-            style={wideInputStyle}
+            className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
+            data-input-width={uiInputApi.width.full}
             value={moveTargetCategoryId}
             onChange={(event) => setMoveTargetCategoryId(event.target.value)}
           >

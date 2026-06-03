@@ -14,6 +14,7 @@ import { getTransactionPaymentSourceDisplayLines } from '../../lib/paymentSplitU
 import type { DescriptionSuggestion } from '../../lib/suggestionUtils'
 import { normalizeDayInput } from '../../lib/dateUtils'
 import { splitTagInput } from '../../lib/tagUtils'
+import { uiInputApi } from '../../lib/uiFoundation'
 import {
   activeSuggestionButtonStyle,
   clickableTagBadgeStyle,
@@ -197,7 +198,9 @@ export default function Level3TransactionRow({
           <div data-transaction-edit-grid="true">
             <input
               ref={editDayInputRef}
-              style={styles.smallInput}
+              className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputS}`}
+              data-input-density={uiInputApi.density.compact}
+              data-input-width={uiInputApi.width.full}
               value={editDay}
               onChange={(event) => setEditDay(normalizeDayInput(event.target.value, selectedMonth))}
               placeholder="dzień"
@@ -216,7 +219,9 @@ export default function Level3TransactionRow({
             <div style={inlineDescriptionFieldWrapStyle}>
               <input
                 ref={editDescriptionInputRef}
-                style={styles.input}
+                className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputS}`}
+                data-input-density={uiInputApi.density.compact}
+                data-input-width={uiInputApi.width.full}
                 value={editDescription}
                 onChange={(event) => setEditDescription(event.target.value)}
                 placeholder="opis"
@@ -281,7 +286,9 @@ export default function Level3TransactionRow({
 
             <input
               ref={editAmountInputRef}
-              style={styles.smallInput}
+              className={uiInputApi.classNames.amountField}
+              data-input-density={uiInputApi.density.compact}
+              data-input-width={uiInputApi.width.full}
               value={editAmount}
               onChange={(event) => setEditAmount(normalizeAmountInput(event.target.value))}
               placeholder="kwota"
@@ -292,7 +299,9 @@ export default function Level3TransactionRow({
 
             <div style={tagFieldWrapStyle}>
               <input
-                style={styles.input}
+                className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputS}`}
+                data-input-density={uiInputApi.density.compact}
+                data-input-width={uiInputApi.width.full}
                 value={editTagInput}
                 onChange={(event) => {
                   const nextValue = event.target.value
@@ -346,7 +355,9 @@ export default function Level3TransactionRow({
             <b data-transaction-amount="true">{amount.toLocaleString('pl-PL')} zł</b>
             <span data-transaction-description="true">{transaction.description || 'Bez opisu'}</span>
             <select
-              style={styles.input}
+              className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputS}`}
+              data-input-density={uiInputApi.density.compact}
+              data-input-width={uiInputApi.width.full}
               value={moveTargetCategoryId}
               onChange={(event) => setMoveTargetCategoryId(event.target.value)}
             >

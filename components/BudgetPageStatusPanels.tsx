@@ -8,6 +8,7 @@ import UserProfileMenu from './UserProfileMenu'
 import UserAvatar from './UserAvatar'
 import type { BudgetUtilityPanel } from './BudgetPageMainPanels'
 import type { AppModuleVisibility } from '../lib/useAppModuleVisibility'
+import { uiInputApi } from '../lib/uiFoundation'
 
 type SidebarPrimaryPanel = 'profile' | 'settings' | null
 
@@ -717,6 +718,9 @@ export default function BudgetPageStatusPanels({
                 >
                   <input
                     ref={topbarSearchInputRef}
+                    className={uiInputApi.classNames.searchField}
+                    data-input-width={uiInputApi.width.full}
+                    data-input-density={uiInputApi.density.compact}
                     value={topbarSearchText}
                     onChange={(event) => setTopbarSearchText(event.target.value)}
                     onKeyDown={(event) => {
