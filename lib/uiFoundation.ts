@@ -102,6 +102,70 @@ export const uiColorTokens = {
   expenseGradient: 'linear-gradient(180deg,#FFF6F6 0%,#FFF0F0 100%)',
 } as const
 
+export const uiColorRoleTokens = {
+  surface: {
+    app: 'var(--ui-surface-app)',
+    card: 'var(--ui-surface-card)',
+    soft: 'var(--ui-surface-soft)',
+    hover: 'var(--ui-surface-hover)',
+    active: 'var(--ui-surface-active)',
+    disabled: 'var(--ui-surface-disabled)',
+  },
+  text: {
+    primary: 'var(--ui-text-primary)',
+    secondary: 'var(--ui-text-secondary)',
+    muted: 'var(--ui-text-muted)',
+    inverse: 'var(--ui-text-inverse)',
+    link: 'var(--ui-text-link)',
+  },
+  border: {
+    soft: 'var(--ui-border-soft)',
+    strong: 'var(--ui-border-strong)',
+    active: 'var(--ui-border-active)',
+    divider: 'var(--ui-border-divider)',
+    disabled: 'var(--ui-border-disabled)',
+  },
+  financial: {
+    income: 'var(--ui-financial-income)',
+    incomeSoft: 'var(--ui-financial-income-soft)',
+    expense: 'var(--ui-financial-expense)',
+    expenseSoft: 'var(--ui-financial-expense-soft)',
+    balancePositive: 'var(--ui-financial-balance-positive)',
+    balanceNegative: 'var(--ui-financial-balance-negative)',
+  },
+  status: {
+    success: 'var(--ui-status-success)',
+    successSoft: 'var(--ui-status-success-soft)',
+    warning: 'var(--ui-status-warning)',
+    warningSoft: 'var(--ui-status-warning-soft)',
+    error: 'var(--ui-status-error)',
+    errorSoft: 'var(--ui-status-error-soft)',
+    info: 'var(--ui-status-info)',
+    infoSoft: 'var(--ui-status-info-soft)',
+  },
+  overlay: {
+    backdropSoft: 'var(--ui-overlay-backdrop-soft)',
+    backdropStandard: 'var(--ui-overlay-backdrop-standard)',
+    backdropStrong: 'var(--ui-overlay-backdrop-strong)',
+  },
+  shadow: {
+    light: 'var(--ui-shadow-light)',
+    medium: 'var(--ui-shadow-medium)',
+    strong: 'var(--ui-shadow-strong)',
+  },
+  chart: {
+    positive: 'var(--ui-chart-positive)',
+    negative: 'var(--ui-chart-negative)',
+    neutral: 'var(--ui-chart-neutral)',
+    blue: 'var(--ui-chart-blue)',
+  },
+  heatmap: {
+    low: 'var(--ui-heatmap-low)',
+    medium: 'var(--ui-heatmap-medium)',
+    high: 'var(--ui-heatmap-high)',
+  },
+} as const
+
 export const uiPrimitiveContracts = {
   button: ['hero', 'standard', 'utility', 'icon'],
   buttonState: ['active'],
