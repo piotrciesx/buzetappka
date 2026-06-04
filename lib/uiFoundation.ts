@@ -236,6 +236,11 @@ export const uiPrimitiveContracts = {
   dropdown: ['action', 'select', 'searchable', 'autocomplete', 'context', 'utilityPopover'],
   dropdownPlacement: ['bottom', 'top', 'context'],
   dropdownAlign: ['start', 'center', 'end'],
+  list: ['compact', 'normal'],
+  row: ['xs', 'sm', 'md', 'lg'],
+  rowKind: ['list', 'category', 'transaction', 'ranking', 'utility', 'table'],
+  rowState: ['default', 'hover', 'active', 'selected', 'open', 'dragging', 'disabled'],
+  rowDensity: ['compact', 'normal'],
   toolbar: ['default', 'compact', 'sticky'],
   typography: ['t1', 't2', 't3', 't4', 't5'],
   typographyRole: ['financialValue', 'label', 'metadata', 'helper', 'placeholder', 'widgetTitle', 'widgetMeta', 'dashboardValue'],
@@ -599,6 +604,117 @@ export const uiInputApi = {
   density: {
     compact: 'compact',
     normal: 'normal',
+  },
+} as const
+
+export const uiListRowApi = {
+  classNames: {
+    list: 'ui-list',
+    listCompact: 'ui-list--compact',
+    listNormal: 'ui-list--normal',
+    row: 'ui-row',
+    rowXs: 'ui-row--xs',
+    rowSm: 'ui-row--sm',
+    rowMd: 'ui-row--md',
+    rowLg: 'ui-row--lg',
+    main: 'ui-row__main',
+    meta: 'ui-row__meta',
+    value: 'ui-row__value',
+    actions: 'ui-row__actions',
+    icon: 'ui-row__icon',
+    drag: 'ui-row__drag',
+  },
+  attributes: {
+    kind: 'data-row-kind',
+    state: 'data-row-state',
+    density: 'data-row-density',
+  },
+  kind: {
+    list: 'list',
+    category: 'category',
+    transaction: 'transaction',
+    ranking: 'ranking',
+    utility: 'utility',
+    table: 'table',
+  },
+  state: {
+    default: 'default',
+    hover: 'hover',
+    active: 'active',
+    selected: 'selected',
+    open: 'open',
+    dragging: 'dragging',
+    disabled: 'disabled',
+  },
+  density: {
+    compact: 'compact',
+    normal: 'normal',
+  },
+} as const
+
+export const uiListRowPrimitives = {
+  list: {
+    className: uiListRowApi.classNames.list,
+    gap: 'var(--ui-row-section-gap)',
+  },
+  listCompact: {
+    className: `${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listCompact}`,
+    gap: 'var(--ui-spacing-xs)',
+  },
+  listNormal: {
+    className: `${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`,
+    gap: 'var(--ui-row-section-gap)',
+  },
+  row: {
+    className: uiListRowApi.classNames.row,
+    minHeight: 'var(--ui-row-height-md)',
+    padding: 'var(--ui-row-padding-y) var(--ui-row-padding-x)',
+    gap: 'var(--ui-row-gap)',
+    divider: 'var(--ui-row-divider)',
+    background: 'transparent',
+  },
+  rowXs: {
+    className: `${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowXs}`,
+    minHeight: 'var(--ui-row-height-xs)',
+  },
+  rowSm: {
+    className: `${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowSm}`,
+    minHeight: 'var(--ui-row-height-sm)',
+  },
+  rowMd: {
+    className: `${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowMd}`,
+    minHeight: 'var(--ui-row-height-md)',
+  },
+  rowLg: {
+    className: `${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowLg}`,
+    minHeight: 'var(--ui-row-height-lg)',
+  },
+  main: {
+    className: uiListRowApi.classNames.main,
+    gap: 'var(--ui-spacing-xs)',
+  },
+  meta: {
+    className: uiListRowApi.classNames.meta,
+    color: 'var(--ui-text-muted)',
+    fontSize: 'var(--ui-type-metadata)',
+    lineHeight: 'var(--ui-line-height-compact)',
+  },
+  value: {
+    className: uiListRowApi.classNames.value,
+    color: 'var(--ui-text-primary)',
+  },
+  actions: {
+    className: uiListRowApi.classNames.actions,
+    gap: 'var(--ui-spacing-xs)',
+    actionSize: 'var(--ui-row-action-size)',
+  },
+  icon: {
+    className: uiListRowApi.classNames.icon,
+    size: 'var(--ui-row-icon-size)',
+  },
+  drag: {
+    className: uiListRowApi.classNames.drag,
+    size: 'var(--ui-row-drag-size)',
   },
 } as const
 
@@ -1193,5 +1309,9 @@ export type UiBackdropTone = keyof typeof uiBackdropPrimitives
 export type UiDropdownPrimitive = keyof typeof uiDropdownPrimitives
 export type UiDropdownPlacement = keyof typeof uiDropdownApi.placement
 export type UiDropdownAlign = keyof typeof uiDropdownApi.align
+export type UiListRowPrimitive = keyof typeof uiListRowPrimitives
+export type UiRowKind = keyof typeof uiListRowApi.kind
+export type UiRowState = keyof typeof uiListRowApi.state
+export type UiRowDensity = keyof typeof uiListRowApi.density
 export type UiOverlayKind = keyof typeof uiOverlayContracts
 export type UiOverlayPrimitive = keyof typeof uiOverlayPrimitives
