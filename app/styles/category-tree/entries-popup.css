@@ -156,7 +156,7 @@
   height: 24px;
   place-items: center;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: var(--ui-radius-sm);
   background: transparent;
   color: var(--ui-text-secondary);
   cursor: pointer;
@@ -172,7 +172,7 @@
 [data-entries-tree-view="true"] [data-entries-menu-trigger="true"][aria-expanded="true"] {
   border-color: var(--ui-border-active);
   background: var(--ui-status-info-soft);
-  box-shadow: 0 7px 16px var(--ui-shadow-medium-color);
+  box-shadow: var(--ui-shadow-medium);
   color: var(--ui-text-link);
   opacity: 1;
 }
@@ -189,8 +189,8 @@
   border: 1px solid var(--ui-border-active);
   border-radius: 13px;
   background:
-    linear-gradient(180deg, var(--ui-glass-surface-strong), var(--ui-status-info-soft)),
-    var(--ui-glass-surface);
+    linear-gradient(180deg, var(--ui-surface-card), var(--ui-status-info-soft)),
+    var(--ui-surface-card);
   box-shadow:
     0 26px 70px var(--ui-shadow-strong-color),
     0 4px 18px var(--ui-shadow-medium-color);
@@ -200,7 +200,7 @@
   min-height: 30px;
   padding: 0 10px;
   border: 1px solid transparent;
-  border-radius: 9px;
+  border-radius: var(--ui-radius-sm);
   background: transparent;
   color: var(--ui-text-link);
   font: inherit;
@@ -234,7 +234,7 @@
   margin: var(--ui-space-1) 0 var(--ui-spacing-xs);
   padding: var(--ui-spacing-xs);
   border: 1px solid var(--ui-border-active);
-  border-radius: 11px;
+  border-radius: var(--ui-radius-md);
   background: var(--ui-surface-soft);
 }
 
@@ -280,7 +280,7 @@
   height: 30px;
   padding: 0 var(--ui-space-5);
   border: 1px solid var(--ui-border-active);
-  border-radius: 9px;
+  border-radius: var(--ui-radius-sm);
   background: linear-gradient(180deg, var(--ui-surface-card), var(--ui-status-info-soft));
   color: var(--ui-text-link);
   font: inherit;
@@ -358,7 +358,7 @@
   min-height: 36px;
   padding: var(--ui-space-1) var(--ui-spacing-xs);
   border: 1px solid transparent;
-  border-radius: 10px;
+  border-radius: var(--ui-radius-md);
   background: transparent;
   transition:
     background 0.16s ease,
@@ -392,8 +392,8 @@
 [data-entries-tree-view="true"]
   [data-entries-transaction-row="true"][data-entries-transaction-selected="true"] {
   border-color: var(--ui-border-active);
-  background: var(--ui-glass-surface-soft);
-  box-shadow: 0 4px 10px var(--ui-shadow-light-color);
+  background: var(--ui-surface-card);
+  box-shadow: var(--ui-shadow-light);
 }
 
 [data-entries-tree-view="true"] [data-entries-transaction-select="true"] {

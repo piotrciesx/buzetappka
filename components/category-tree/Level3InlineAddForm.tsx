@@ -26,17 +26,17 @@ const suggestionsDropdownStyle = {
   left: 0,
   right: 0,
   zIndex: uiZIndex.categoryAutocomplete,
-  background: 'var(--ui-color-card-background)',
-  border: '1px solid var(--ui-color-soft-border)',
-  borderRadius: 12,
-  boxShadow: '0 12px 24px rgba(15, 23, 42, 0.12)',
+  background: 'var(--ui-surface-card)',
+  border: '1px solid var(--ui-border-soft)',
+  borderRadius: 'var(--ui-radius-lg)',
+  boxShadow: 'var(--ui-shadow-medium)',
   overflow: 'hidden',
 } as const
 
 const suggestionButtonStyle = {
   width: '100%',
   textAlign: 'left' as const,
-  background: 'var(--ui-color-card-background)',
+  background: 'var(--ui-surface-card)',
   border: 'none',
   borderBottom: '1px solid var(--ui-color-soft-section-background)',
   padding: '10px 12px',
@@ -47,7 +47,7 @@ const suggestionButtonStyle = {
 
 const activeSuggestionButtonStyle = {
   ...suggestionButtonStyle,
-  background: 'var(--ui-color-soft-blue)',
+  background: 'var(--ui-surface-active)',
 } as const
 
 const helperTextStyle = {
@@ -69,8 +69,8 @@ const tagBadgeStyle = {
   gap: 6,
   padding: '4px 8px',
   borderRadius: 999,
-  background: 'var(--ui-color-soft-blue)',
-  border: '1px solid var(--ui-color-light-blue-border)',
+  background: 'var(--ui-surface-active)',
+  border: '1px solid var(--ui-border-active)',
   color: 'var(--ui-color-primary-blue)',
   fontSize: 12,
   fontWeight: 600,

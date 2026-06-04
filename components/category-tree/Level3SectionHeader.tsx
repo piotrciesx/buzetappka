@@ -132,7 +132,7 @@ export default function Level3SectionHeader({
       data-category-open={isOpen ? 'true' : 'false'}
       style={{
         ...styles.l3Header,
-        boxShadow: isDragging ? '0 12px 24px rgba(0, 0, 0, 0.12)' : styles.l3Header.boxShadow,
+        boxShadow: isDragging ? 'var(--ui-shadow-medium)' : styles.l3Header.boxShadow,
       }}
       onClick={() => {
         if (!isDragging) {

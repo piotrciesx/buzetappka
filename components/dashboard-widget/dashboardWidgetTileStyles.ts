@@ -130,11 +130,11 @@ export const dashboardMetricCard: CSSProperties = {
   maxWidth: '100%',
   overflow: 'hidden',
   boxSizing: 'border-box',
-  border: `1px solid var(--ui-glass-surface-soft)`,
+  border: `1px solid var(--ui-border-soft)`,
   borderRadius: 'var(--ui-radius-lg)',
-  background: 'var(--ui-glass-surface-soft)',
+  background: 'var(--ui-surface-card)',
   padding: 'var(--ui-space-4)',
-  boxShadow: 'none',
+  boxShadow: 'var(--ui-shadow-none)',
   backdropFilter: 'none',
 }
 
@@ -184,9 +184,9 @@ export const metricGridStyle: CSSProperties = {
 }
 
 export const metricBoxStyle: CSSProperties = {
-  border: `1px solid ${SOFT_BORDER}`,
+  border: `1px solid var(--ui-border-soft)`,
   borderRadius: 'var(--ui-radius-md)',
-  background: 'var(--ui-glass-surface-soft)',
+  background: 'var(--ui-surface-card)',
   padding: 'var(--ui-space-4)',
   minWidth: 0,
 }
@@ -219,15 +219,13 @@ export const dragHandleStyle: CSSProperties = {
   borderWidth: 1,
   borderStyle: 'solid',
   borderColor: 'var(--ui-border-soft)',
-  background:
-    'linear-gradient(145deg, var(--ui-glass-surface), var(--ui-surface-soft))',
+  background: 'var(--ui-surface-card)',
   color: 'var(--ui-text-primary)',
   cursor: 'grab',
   touchAction: 'none',
   fontWeight: uiTypographyTokens.weight.semibold,
   lineHeight: uiTypographyTokens.lineHeight.compact,
-  boxShadow:
-    'inset 1px 1px 0 var(--ui-glass-surface-strong), 0 6px 14px var(--ui-shadow-medium-color)',
+  boxShadow: 'var(--ui-shadow-medium)',
 }
 
 export const iconButtonStyle: CSSProperties = {

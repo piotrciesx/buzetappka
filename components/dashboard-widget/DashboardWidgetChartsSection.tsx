@@ -353,8 +353,8 @@ export function MonthOverMonthTable({
               data-dashboard-widget-metric-card="true"
               key={metric.key}
               style={{
-                border: `1px solid ${SOFT_BORDER}`,
-                borderRadius: 10,
+                border: `1px solid var(--ui-border-soft)`,
+                borderRadius: 'var(--ui-radius-md)',
                 background: 'var(--ui-surface-card)',
                 padding: 8,
                 display: 'grid',

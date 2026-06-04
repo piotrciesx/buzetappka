@@ -1,7 +1,7 @@
 'use client'
 
 import { CSSProperties, useState } from 'react'
-import { uiTypographyTokens } from '../lib/uiFoundation'
+import { uiSurfacePrimitives, uiTypographyTokens } from '../lib/uiFoundation'
 
 type Styles = Record<string, CSSProperties>
 
@@ -47,10 +47,10 @@ const authStyles: Styles = {
     display: 'grid',
     gridTemplateColumns: '1.06fr .94fr',
     overflow: 'hidden',
-    borderRadius: 34,
+    borderRadius: 'var(--ui-radius-3xl)',
     border: `1px solid ${BORDER}`,
-    background: 'var(--ui-glass-surface-soft)',
-    boxShadow: '0 30px 90px var(--ui-shadow-strong-color)',
+    background: uiSurfacePrimitives.surfacePanel.background,
+    boxShadow: 'var(--ui-shadow-strong)',
     backdropFilter: 'blur(18px)',
   },
   brandPane: {
@@ -67,7 +67,7 @@ const authStyles: Styles = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: 44,
-    background: 'var(--ui-glass-surface-soft)',
+    background: 'var(--ui-surface-card)',
   },
   tagline: {
     marginTop: 12,
@@ -133,11 +133,11 @@ const authStyles: Styles = {
     flex: 1,
     minHeight: 340,
     marginTop: 6,
-    borderRadius: 28,
+    borderRadius: 'var(--ui-radius-3xl)',
     border: '1px dashed var(--ui-border-active)',
     background:
       'linear-gradient(145deg, var(--ui-glass-surface-soft), var(--ui-surface-active))',
-    boxShadow: 'inset 0 1px 0 var(--ui-glass-surface), 0 22px 70px var(--ui-shadow-medium-color)',
+    boxShadow: 'var(--ui-shadow-medium)',
     overflow: 'hidden',
   },
   previewLabel: {
@@ -146,8 +146,8 @@ const authStyles: Styles = {
     top: 26,
     maxWidth: 310,
     padding: '12px 16px',
-    borderRadius: 16,
-    background: 'var(--ui-glass-surface-soft)',
+    borderRadius: 'var(--ui-radius-2xl)',
+    background: 'var(--ui-surface-card)',
     border: '1px solid var(--ui-border-soft)',
     color: 'var(--ui-text-secondary)',
     fontSize: uiTypographyTokens.role.label,
@@ -158,10 +158,10 @@ const authStyles: Styles = {
     width: '100%',
     maxWidth: 430,
     padding: '52px 44px',
-    borderRadius: 32,
+    borderRadius: 'var(--ui-radius-3xl)',
     border: '1px solid var(--ui-border-soft)',
-    background: 'var(--ui-glass-surface-strong)',
-    boxShadow: '0 24px 72px var(--ui-shadow-strong-color)',
+    background: uiSurfacePrimitives.surfaceCard.background,
+    boxShadow: 'var(--ui-shadow-strong)',
   },
   cardTitle: {
     margin: 0,
@@ -190,14 +190,14 @@ const authStyles: Styles = {
     gap: 6,
     marginBottom: 24,
     padding: 4,
-    borderRadius: 8,
+    borderRadius: 'var(--ui-radius-sm)',
     border: `1px solid ${BORDER}`,
     background: 'var(--ui-status-info-soft)',
   },
   modeButton: {
     minHeight: 36,
     border: `1px solid ${BORDER}`,
-    borderRadius: 8,
+    borderRadius: 'var(--ui-radius-sm)',
     background: 'var(--ui-surface-card)',
     color: NAVY,
     fontSize: uiTypographyTokens.hierarchy.t3,
@@ -220,10 +220,10 @@ const authStyles: Styles = {
     gap: 12,
     minHeight: 58,
     padding: '0 18px',
-    borderRadius: 18,
+    borderRadius: 'var(--ui-radius-3xl)',
     border: `1px solid ${BORDER}`,
-    background: 'var(--ui-glass-surface-soft)',
-    boxShadow: 'inset 0 1px 0 var(--ui-glass-surface)',
+    background: 'var(--ui-surface-card)',
+    boxShadow: 'var(--ui-shadow-none)',
   },
   input: {
     width: '100%',
@@ -238,7 +238,7 @@ const authStyles: Styles = {
     minHeight: 44,
     marginTop: 8,
     border: `2px solid ${BLUE}`,
-    borderRadius: 8,
+    borderRadius: 'var(--ui-radius-sm)',
     background: 'var(--ui-surface-card)',
     color: BLUE,
     fontSize: uiTypographyTokens.hierarchy.t3,
@@ -267,7 +267,7 @@ const authStyles: Styles = {
     alignItems: 'center',
     justifyContent: 'center',
     gap: 12,
-    borderRadius: 8,
+    borderRadius: 'var(--ui-radius-sm)',
     border: `1px solid ${BORDER}`,
     background: 'var(--ui-surface-card)',
     color: NAVY,
@@ -280,7 +280,7 @@ const authStyles: Styles = {
     margin: '2px auto 0',
     minHeight: 36,
     border: `1px solid ${BORDER}`,
-    borderRadius: 8,
+    borderRadius: 'var(--ui-radius-sm)',
     padding: '0 12px',
     background: 'var(--ui-surface-card)',
     color: BLUE,
@@ -301,7 +301,7 @@ const authStyles: Styles = {
   infoBox: {
     marginBottom: 18,
     padding: '14px 16px',
-    borderRadius: 18,
+    borderRadius: 'var(--ui-radius-3xl)',
     border: '1px solid var(--ui-border-active)',
     background: 'var(--ui-status-info-soft)',
     color: 'var(--ui-text-primary)',
@@ -324,10 +324,10 @@ const authStyles: Styles = {
   compactCard: {
     width: 'min(520px, 100%)',
     padding: 34,
-    borderRadius: 28,
+    borderRadius: 'var(--ui-radius-3xl)',
     border: `1px solid ${BORDER}`,
-    background: 'var(--ui-glass-surface-strong)',
-    boxShadow: '0 24px 72px var(--ui-shadow-strong-color)',
+    background: uiSurfacePrimitives.surfaceCard.background,
+    boxShadow: 'var(--ui-shadow-strong)',
   },
   compactTitle: {
     margin: 0,
@@ -351,7 +351,7 @@ const authStyles: Styles = {
   },
   dangerBox: {
     padding: '14px 16px',
-    borderRadius: 18,
+    borderRadius: 'var(--ui-radius-3xl)',
     border: '1px solid var(--ui-status-warning)',
     background: 'var(--ui-status-warning-soft)',
     color: 'var(--ui-status-warning)',

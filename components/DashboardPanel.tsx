@@ -7,17 +7,16 @@ import { getDashboardOverview } from '../lib/dashboardStats'
 import { useDashboardLayout } from '../lib/useDashboardLayout'
 import { getEffectiveTransactionScope } from '../lib/transactionScope'
 import { DASHBOARD_WIDGET_DEFINITIONS } from '../lib/dashboardWidgetConfig'
-import { uiZIndex, uiTypographyTokens } from '../lib/uiFoundation'
+import { uiSurfacePrimitives, uiZIndex, uiTypographyTokens } from '../lib/uiFoundation'
 import type { DashboardContainerType } from '../lib/dashboardTypes'
 
 const panelStyle: CSSProperties = {
   marginBottom: 14,
-  background:
-    'linear-gradient(145deg, rgba(255,255,255,0.78), rgba(241,245,249,0.66)), radial-gradient(circle at 12% 0%, rgba(59,130,246,0.13), transparent 32%), radial-gradient(circle at 92% 8%, rgba(20,184,166,0.10), transparent 28%)',
-  border: '1px solid rgba(226, 232, 240, 0.72)',
-  borderRadius: 18,
+  background: uiSurfacePrimitives.surfacePanel.background,
+  border: uiSurfacePrimitives.surfacePanel.border,
+  borderRadius: uiSurfacePrimitives.surfacePanel.radius,
   padding: 14,
-  boxShadow: '0 22px 64px rgba(15, 23, 42, 0.11), inset 0 1px 0 rgba(255,255,255,0.72)',
+  boxShadow: uiSurfacePrimitives.surfacePanel.shadow,
   backdropFilter: 'blur(24px) saturate(1.18)',
 }
 
@@ -150,10 +149,10 @@ export default function DashboardPanel({
                 top: 40,
                 zIndex: uiZIndex.widgetOverlay,
                 width: 280,
-                borderRadius: 18,
-                border: '1px solid rgba(148, 163, 184, 0.28)',
-                background: 'rgba(255, 255, 255, 0.94)',
-                boxShadow: '0 18px 44px rgba(15, 23, 42, 0.18)',
+                borderRadius: uiSurfacePrimitives.surfaceDropdown.radius,
+                border: uiSurfacePrimitives.surfaceDropdown.border,
+                background: uiSurfacePrimitives.surfaceDropdown.background,
+                boxShadow: uiSurfacePrimitives.surfaceDropdown.shadow,
                 padding: 12,
                 backdropFilter: 'blur(16px)',
               }}

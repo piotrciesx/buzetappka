@@ -73,10 +73,10 @@ const compactSummaryGridStyle: CSSProperties = {
 
 const summaryCardStyle: CSSProperties = {
   minWidth: 0,
-  border: `1px solid ${SOFT_BORDER}`,
-  borderRadius: 13,
-  background: 'linear-gradient(145deg, var(--ui-glass-surface), var(--ui-surface-soft))',
-  boxShadow: 'inset 1px 1px 0 var(--ui-glass-surface)',
+  border: `1px solid var(--ui-border-soft)`,
+  borderRadius: 'var(--ui-radius-lg)',
+  background: 'var(--ui-surface-card)',
+  boxShadow: 'var(--ui-shadow-none)',
   padding: '8px 9px',
   display: 'grid',
   gap: 3,
@@ -108,9 +108,9 @@ const summaryValueStyle: CSSProperties = {
 const chartBoxStyle: CSSProperties = {
   minWidth: 0,
   minHeight: 0,
-  border: `1px solid ${SOFT_BORDER}`,
-  borderRadius: 16,
-  background: 'var(--ui-glass-surface-soft)',
+  border: `1px solid var(--ui-border-soft)`,
+  borderRadius: 'var(--ui-radius-2xl)',
+  background: 'var(--ui-surface-card)',
   padding: '10px 10px 8px',
   display: 'grid',
   gridTemplateRows: '1fr auto',
@@ -154,7 +154,7 @@ const barBaseStyle: CSSProperties = {
   minWidth: 9,
   maxWidth: 24,
   borderRadius: 4,
-  boxShadow: 'inset 1px 1px 0 var(--ui-glass-surface-soft)',
+  boxShadow: 'var(--ui-shadow-none)',
 }
 
 const weekLabelStyle: CSSProperties = {
@@ -198,9 +198,9 @@ const footerGridStyle: CSSProperties = {
 
 const weekMiniCardStyle: CSSProperties = {
   minWidth: 0,
-  border: `1px solid ${SOFT_BORDER}`,
-  borderRadius: 12,
-  background: 'var(--ui-glass-surface-soft)',
+  border: `1px solid var(--ui-border-soft)`,
+  borderRadius: 'var(--ui-radius-lg)',
+  background: 'var(--ui-surface-card)',
   padding: '6px 7px',
   display: 'grid',
   gap: 2,

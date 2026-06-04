@@ -79,9 +79,9 @@ const compactIncomeExpenseGridStyle: CSSProperties = {
 const summaryCardStyle: CSSProperties = {
   minWidth: 0,
   border: `1px solid ${SOFT_BORDER}`,
-  borderRadius: 13,
-  background: 'linear-gradient(145deg, var(--ui-glass-surface), var(--ui-surface-soft))',
-  boxShadow: 'inset 1px 1px 0 var(--ui-glass-surface)',
+  borderRadius: 'var(--ui-radius-lg)',
+  background: 'var(--ui-surface-card)',
+  boxShadow: 'var(--ui-shadow-none)',
   padding: '8px 9px',
   display: 'grid',
   gap: 3,
@@ -126,7 +126,7 @@ const chartBoxStyle: CSSProperties = {
   minHeight: 0,
   border: `1px solid ${SOFT_BORDER}`,
   borderRadius: 16,
-  background: 'var(--ui-glass-surface-soft)',
+  background: 'var(--ui-surface-card)',
   padding: '10px 10px 8px',
   display: 'grid',
   gap: 8,
@@ -182,7 +182,7 @@ const trackStyle: CSSProperties = {
 const fillStyle: CSSProperties = {
   height: '100%',
   borderRadius: 999,
-  boxShadow: 'inset 1px 1px 0 var(--ui-glass-surface-soft)',
+  boxShadow: 'var(--ui-shadow-none)',
 }
 
 const footerGridStyle: CSSProperties = {
@@ -195,8 +195,8 @@ const footerGridStyle: CSSProperties = {
 const footerCardStyle: CSSProperties = {
   minWidth: 0,
   border: `1px solid ${SOFT_BORDER}`,
-  borderRadius: 12,
-  background: 'var(--ui-glass-surface-soft)',
+  borderRadius: 'var(--ui-radius-lg)',
+  background: 'var(--ui-surface-card)',
   padding: '6px 7px',
   display: 'grid',
   gap: 2,

@@ -67,7 +67,7 @@ export default function DashboardWidgetFrame({
           boxShadow: isDragging
             ? '0 18px 36px var(--ui-shadow-medium-color)'
             : isHovered
-              ? 'inset 0 1px 0 var(--ui-glass-surface-strong), 0 10px 24px var(--ui-shadow-medium-color)'
+              ? 'var(--ui-shadow-medium)'
               : tileStyle.boxShadow,
           transform: undefined,
           opacity: isDropBlocked ? 0.82 : 1,

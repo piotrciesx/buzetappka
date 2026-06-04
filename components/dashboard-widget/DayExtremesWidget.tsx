@@ -59,9 +59,9 @@ const summaryGridStyle: CSSProperties = {
 }
 
 const summaryCardStyle: CSSProperties = {
-  border: `1px solid ${SOFT_BORDER}`,
-  borderRadius: 12,
-  background: 'var(--ui-glass-surface-soft)',
+  border: `1px solid var(--ui-border-soft)`,
+  borderRadius: 'var(--ui-radius-lg)',
+  background: 'var(--ui-surface-card)',
   padding: '8px 10px',
   display: 'grid',
   gap: 2,
@@ -79,9 +79,9 @@ const valueStyle: CSSProperties = {
 }
 
 const listStyle: CSSProperties = {
-  border: `1px solid ${SOFT_BORDER}`,
-  borderRadius: 14,
-  background: 'var(--ui-glass-surface-soft)',
+  border: `1px solid var(--ui-border-soft)`,
+  borderRadius: 'var(--ui-radius-xl)',
+  background: 'var(--ui-surface-card)',
   padding: '8px 8px 6px',
   display: 'grid',
   gap: 6,

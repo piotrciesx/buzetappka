@@ -2,7 +2,7 @@
   border-color: var(--ui-border-soft) !important;
   border-radius: var(--ui-card-radius) !important;
   background: var(--ui-surface-widget) !important;
-  box-shadow: var(--ui-shadow-card) !important;
+  box-shadow: var(--ui-shadow-light) !important;
 }
 
 [data-dashboard-widget-shell="true"]:hover {
@@ -25,7 +25,7 @@
 [data-dashboard-config-panel="true"] select {
   min-height: var(--ui-button-height-sm) !important;
   border-radius: var(--ui-button-radius) !important;
-  box-shadow: none !important;
+  box-shadow: var(--ui-shadow-none) !important;
 }
 
 [data-dashboard-widget-body="true"] {
@@ -42,8 +42,8 @@
 [data-dashboard-widget-metric-card="true"] {
   border: 1px solid var(--ui-border-soft) !important;
   border-radius: var(--ui-radius-md) !important;
-  background: var(--ui-glass-surface-soft) !important;
-  box-shadow: none !important;
+  background: var(--ui-surface-card) !important;
+  box-shadow: var(--ui-shadow-none) !important;
 }
 
 [data-dashboard-widget-chart-surface="true"] {
@@ -85,7 +85,7 @@
   padding: var(--ui-space-6) !important;
   border: 1px dashed var(--ui-surface-empty-border) !important;
   border-radius: var(--ui-radius-lg) !important;
-  background: var(--ui-glass-surface-soft) !important;
+  background: var(--ui-surface-card) !important;
   color: var(--ui-text-muted) !important;
   text-align: center !important;
 }

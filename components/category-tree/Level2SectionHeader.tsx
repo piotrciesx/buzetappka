@@ -132,7 +132,7 @@ export default function Level2SectionHeader({
       data-category-open={isOpen ? 'true' : 'false'}
       style={{
         ...styles.l2Header,
-        boxShadow: isDragging ? '0 12px 24px rgba(0, 0, 0, 0.12)' : styles.l2Header.boxShadow,
+        boxShadow: isDragging ? 'var(--ui-shadow-medium)' : styles.l2Header.boxShadow,
       }}
       onClick={() => {
         if (!isDragging) {

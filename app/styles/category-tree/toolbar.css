@@ -8,7 +8,7 @@
 [data-tree-view-menu="true"] summary {
   width: 30px !important;
   height: 30px !important;
-  border-radius: 8px !important;
+  border-radius: var(--ui-radius-sm) !important;
   font-size: var(--ui-type-label) !important;
   line-height: var(--ui-line-height-compact);
 }
@@ -44,9 +44,9 @@
   display: inline-grid !important;
   place-items: center !important;
   border: 1px solid var(--ui-border-soft) !important;
-  border-radius: 12px !important;
+  border-radius: var(--ui-radius-lg) !important;
   padding: 0 !important;
-  background: linear-gradient(180deg, var(--ui-glass-surface), var(--ui-surface-soft)) !important;
+  background: linear-gradient(180deg, var(--ui-surface-card), var(--ui-surface-soft)) !important;
   color: var(--ui-text-secondary) !important;
   font-size: var(--ui-type-t2) !important;
   box-shadow: var(--ui-shadow-subtle) !important;
@@ -100,12 +100,12 @@
   place-items: center !important;
   padding: 0 !important;
   border: 1px solid var(--ui-border-soft) !important;
-  border-radius: 12px !important;
+  border-radius: var(--ui-radius-lg) !important;
   background:
-    linear-gradient(180deg, var(--ui-glass-surface), var(--ui-surface-soft)) !important;
+    linear-gradient(180deg, var(--ui-surface-card), var(--ui-surface-soft)) !important;
   color: var(--ui-text-secondary) !important;
   box-shadow:
-    inset 0 1px 0 var(--ui-glass-surface-strong),
+    inset 0 1px 0 var(--ui-surface-card),
     0 8px 18px var(--ui-shadow-light-color) !important;
   line-height: var(--ui-line-height-compact) !important;
 }
@@ -113,7 +113,7 @@
 [data-tree-toolbar-actions="true"] [data-workspace-action]:hover {
   border-color: var(--ui-border-strong) !important;
   background:
-    linear-gradient(180deg, var(--ui-glass-surface-strong), var(--ui-surface-soft)) !important;
+    linear-gradient(180deg, var(--ui-surface-card), var(--ui-surface-soft)) !important;
 }
 
 [data-tree-toolbar-actions="true"] [data-workspace-action] svg {
@@ -136,7 +136,7 @@
   min-height: 34px !important;
   height: 34px !important;
   padding: 0 12px !important;
-  border-radius: 10px !important;
+  border-radius: var(--ui-radius-md) !important;
 }
 
 [data-tree-sort-control="true"] [data-tree-sort-inline="true"] {
@@ -159,9 +159,9 @@
   display: inline-grid !important;
   place-items: center !important;
   border: 1px solid var(--ui-border-soft) !important;
-  border-radius: 12px !important;
+  border-radius: var(--ui-radius-lg) !important;
   padding: 0 !important;
-  background: linear-gradient(180deg, var(--ui-glass-surface), var(--ui-surface-soft)) !important;
+  background: linear-gradient(180deg, var(--ui-surface-card), var(--ui-surface-soft)) !important;
   color: var(--ui-text-secondary) !important;
   font-size: var(--ui-type-t2) !important;
   box-shadow: var(--ui-shadow-subtle) !important;
@@ -213,8 +213,8 @@
   display: inline-grid !important;
   place-items: center !important;
   border: 1px solid var(--ui-border-soft) !important;
-  border-radius: 12px !important;
-  background: linear-gradient(180deg, var(--ui-glass-surface), var(--ui-surface-soft)) !important;
+  border-radius: var(--ui-radius-lg) !important;
+  background: linear-gradient(180deg, var(--ui-surface-card), var(--ui-surface-soft)) !important;
   color: var(--ui-text-secondary) !important;
   box-shadow: var(--ui-shadow-subtle) !important;
 }
@@ -332,7 +332,7 @@
 [data-budget-workspace-main="true"] > div:last-child > [data-tree-sort-inline="true"] select {
   height: 28px !important;
   min-width: 126px !important;
-  border-radius: 8px !important;
+  border-radius: var(--ui-radius-sm) !important;
   font-size: var(--ui-type-widget-meta) !important;
 }
 
@@ -349,7 +349,7 @@
   min-width: 30px !important;
   height: 30px !important;
   min-height: 30px !important;
-  border-radius: 8px !important;
+  border-radius: var(--ui-radius-sm) !important;
   font-size: var(--ui-type-label) !important;
 }
 
@@ -372,9 +372,9 @@
   display: inline-grid !important;
   place-items: center !important;
   border: 1px solid var(--ui-border-soft) !important;
-  border-radius: 12px !important;
+  border-radius: var(--ui-radius-lg) !important;
   padding: 0 !important;
-  background: linear-gradient(180deg, var(--ui-glass-surface), var(--ui-surface-soft)) !important;
+  background: linear-gradient(180deg, var(--ui-surface-card), var(--ui-surface-soft)) !important;
   color: var(--ui-text-secondary) !important;
   font-size: var(--ui-type-t2) !important;
   box-shadow: var(--ui-shadow-subtle) !important;

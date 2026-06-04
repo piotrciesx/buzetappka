@@ -126,17 +126,17 @@ function MetricCard({
           alignItems: 'center',
           gap: 8,
           padding: '8px 9px',
-          borderRadius: 13,
+          borderRadius: 'var(--ui-radius-lg)',
           background: tint,
           border: `1px solid ${borderColor}`,
-          boxShadow: 'inset 0 1px 0 var(--ui-glass-surface-soft)',
+          boxShadow: 'var(--ui-shadow-none)',
         }}
       >
         <div
           style={{
             width: 24,
             height: 24,
-            borderRadius: 9,
+            borderRadius: 'var(--ui-radius-sm)',
             display: 'grid',
             placeItems: 'center',
             background: tint,
@@ -190,17 +190,17 @@ function MetricCard({
         alignItems: 'center',
         gap: 9,
         padding: '8px 11px',
-        borderRadius: 15,
+        borderRadius: 'var(--ui-radius-xl)',
         background: tint,
         border: `1px solid ${borderColor}`,
-        boxShadow: 'inset 0 1px 0 var(--ui-glass-surface-soft)',
+        boxShadow: 'var(--ui-shadow-none)',
       }}
     >
       <div
         style={{
           width: 26,
           height: 26,
-          borderRadius: 10,
+          borderRadius: 'var(--ui-radius-md)',
           display: 'grid',
           placeItems: 'center',
           background: tint,
