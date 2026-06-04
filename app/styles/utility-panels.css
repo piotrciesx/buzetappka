@@ -24,7 +24,7 @@
   min-width: 0;
   border: 1px solid var(--ui-border-soft);
   border-radius: var(--ui-radius-lg);
-  background: var(--ui-surface-soft);
+  background: var(--ui-surface-card);
 }
 
 [data-utility-settings-section="true"] {
@@ -82,7 +82,7 @@
 
 [data-utility-status-box="true"][data-utility-tone="info"] {
   border-color: var(--ui-surface-border-info);
-  background: var(--ui-status-info-soft);
+  background: var(--ui-surface-card);
   color: var(--ui-status-info);
 }
 
@@ -147,7 +147,7 @@
   padding: var(--ui-spacing-md) var(--ui-space-5);
   border: 1px solid var(--ui-border-soft);
   border-radius: var(--ui-radius-md);
-  background: var(--ui-surface-info);
+  background: var(--ui-surface-card);
   color: var(--ui-text-secondary);
   font-size: var(--ui-type-metadata);
 }
@@ -159,7 +159,7 @@
 [data-month-note-item="true"] {
   border-color: var(--ui-border-soft) !important;
   border-radius: var(--ui-radius-lg) !important;
-  background: var(--ui-surface-soft) !important;
+  background: var(--ui-surface-card) !important;
 }
 
 [data-user-public-profile-editor="true"],
@@ -180,14 +180,14 @@
   border: 1px solid var(--ui-border-soft) !important;
   border-radius: var(--ui-radius-lg) !important;
   padding: var(--ui-spacing-md) var(--ui-space-5) !important;
-  background: var(--ui-surface-soft);
+  background: var(--ui-surface-card);
 }
 
 [data-settings-panel-content="true"] [data-settings-status="true"],
 [data-settings-panel-content="true"] [data-settings-simple-note="true"] {
   border-color: var(--ui-surface-border-info);
   border-radius: var(--ui-radius-lg);
-  background: var(--ui-status-info-soft);
+  background: var(--ui-surface-card);
   color: var(--ui-status-info);
 }
 

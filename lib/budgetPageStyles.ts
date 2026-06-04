@@ -65,7 +65,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     fontWeight: uiTypographyTokens.weight.semibold,
     fontSize: uiTypographyTokens.hierarchy.t3,
     padding: 'var(--ui-spacing-sm) var(--ui-spacing-lg)',
-    background: 'var(--ui-surface-active)',
+    background: 'var(--ui-surface-card)',
     border: '1px solid var(--ui-border-active)',
     borderRadius: 'var(--ui-radius-pill)',
     color: 'var(--ui-text-link)',
@@ -76,7 +76,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   monthNavigationSettingsCard: {
     marginBottom: 'var(--ui-space-7)',
     padding: 'var(--ui-space-7)',
-    background: 'var(--ui-surface-soft)',
+    background: 'var(--ui-surface-card)',
     border: '1px solid var(--ui-border-divider)',
     borderRadius: 'var(--ui-radius-lg)',
   } as const,
@@ -128,7 +128,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   infoBox: {
-    background: 'var(--ui-surface-soft)',
+    background: 'var(--ui-surface-card)',
     border: '1px solid var(--ui-border-divider)',
     borderRadius: 'var(--ui-radius-lg)',
     padding: 'var(--ui-spacing-md) var(--ui-space-5)',
@@ -163,8 +163,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
 
   l1Card: {
     marginBottom: 'var(--ui-spacing-xs)',
-    background: 'var(--ui-glass-surface-soft)',
-    border: '1px solid var(--ui-status-info-soft)',
+    background: 'var(--ui-surface-card)',
+    border: '1px solid var(--ui-border-soft)',
     borderRadius: 11,
     padding: 'var(--ui-spacing-xs)',
     boxShadow: '0 8px 22px var(--ui-shadow-light-color)',
@@ -173,8 +173,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   l1Header: {
-    background: 'linear-gradient(145deg, var(--ui-status-info-soft), var(--ui-surface-active))',
-    border: '1px solid var(--ui-border-active)',
+    background: 'var(--ui-surface-card)',
+    border: '1px solid var(--ui-border-soft)',
     borderRadius: 9,
     padding: 'var(--ui-spacing-xs) var(--ui-spacing-sm)',
     fontWeight: uiTypographyTokens.weight.medium,
@@ -193,7 +193,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   l2Header: {
-    background: 'linear-gradient(145deg, var(--ui-glass-surface-strong), var(--ui-surface-soft))',
+    background: 'var(--ui-surface-card)',
     border: '1px solid var(--ui-border-soft)',
     borderRadius: 9,
     padding: 'var(--ui-space-1) var(--ui-spacing-sm)',
@@ -251,7 +251,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   l3Header: {
-    background: 'var(--ui-glass-surface)',
+    background: 'var(--ui-surface-card)',
     border: '1px solid var(--ui-border-divider)',
     borderRadius: 9,
     padding: 'var(--ui-space-1) var(--ui-spacing-sm)',
@@ -276,7 +276,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     height: 26,
     borderRadius: 9,
     border: '1px solid var(--ui-border-soft)',
-    background: 'linear-gradient(145deg, var(--ui-surface-card), var(--ui-surface-soft))',
+    background: 'var(--ui-surface-card)',
     color: 'var(--ui-text-secondary)',
     display: 'inline-flex',
     alignItems: 'center',
@@ -348,7 +348,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     gap: 'var(--ui-spacing-form-field-gap)',
     flexWrap: 'wrap' as const,
     padding: 'var(--ui-spacing-lg)',
-    background: 'var(--ui-surface-soft)',
+    background: 'var(--ui-surface-card)',
     border: '1px solid var(--ui-border-divider)',
     borderRadius: 'var(--ui-radius-lg)',
     maxWidth: '100%',
@@ -394,8 +394,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     alignItems: 'center',
     gap: 'var(--ui-spacing-list-row-x)',
     padding: 'var(--ui-space-1) var(--ui-spacing-sm)',
-    background: 'var(--ui-glass-surface-soft)',
-    border: '1px solid var(--ui-glass-border-strong)',
+    background: 'var(--ui-surface-card)',
+    border: '1px solid var(--ui-border-soft)',
     borderRadius: 8,
     fontSize: uiTypographyTokens.role.metadata,
     maxWidth: '100%',

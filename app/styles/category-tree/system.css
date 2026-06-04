@@ -182,14 +182,14 @@
 [data-category-drag-handle="true"]:hover,
 [data-category-toggle-icon="true"]:hover {
   border-color: var(--tree-row-border-hover) !important;
-  background: var(--ui-surface-soft) !important;
+  background: var(--ui-surface-hover) !important;
   color: var(--ui-text-link) !important;
 }
 
 [data-category-quick-add="true"],
 [data-category-icon-action="calendar"][data-active="true"] {
   border-color: var(--ui-border-active) !important;
-  background: var(--ui-status-info-soft) !important;
+  background: var(--ui-surface-card) !important;
   color: var(--ui-text-link) !important;
 }
 
@@ -233,7 +233,7 @@
 [data-transaction-menu="true"] button:hover,
 [data-entries-menu-panel="true"] button:hover,
 [data-category-icon-picker-trigger="true"]:hover {
-  background: var(--ui-surface-soft) !important;
+  background: var(--ui-surface-hover) !important;
   color: var(--ui-text-link) !important;
 }
 
@@ -279,14 +279,14 @@
 [data-entries-tree-view="true"]
   [data-entries-transaction-row="true"][data-entries-transaction-selected="true"] {
   border-color: var(--ui-border-soft) !important;
-  background: var(--ui-surface-soft) !important;
+  background: var(--ui-surface-hover) !important;
   box-shadow: none !important;
 }
 
 [data-entries-tree-view="true"] [data-entries-inline-composer="true"] {
   border-color: var(--ui-border-soft) !important;
   border-radius: var(--ui-radius-md) !important;
-  background: var(--ui-surface-soft) !important;
+  background: var(--ui-surface-card) !important;
 }
 
 [data-category-section="true"][data-category-level="2"][data-category-open="true"] > :not([data-category-drag-row="true"]),

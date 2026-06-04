@@ -33,7 +33,7 @@ export const suggestionButtonStyle = {
 
 export const activeSuggestionButtonStyle = {
   ...suggestionButtonStyle,
-  background: 'var(--ui-surface-active)',
+  background: 'var(--ui-surface-hover)',
 } as const
 
 export const tagFieldWrapStyle = {
@@ -55,9 +55,9 @@ export const tagBadgeStyle = {
   gap: 6,
   padding: '4px 8px',
   borderRadius: 999,
-  background: 'var(--ui-surface-active)',
+  background: 'var(--ui-surface-card)',
   border: '1px solid var(--ui-border-active)',
-  color: 'var(--ui-color-primary-blue)',
+  color: 'var(--ui-color-primary-navy)',
   fontSize: 12,
   fontWeight: 600,
 } as const
@@ -70,7 +70,7 @@ export const clickableTagBadgeStyle = {
 export const tagRemoveButtonStyle = {
   border: 'none',
   background: 'transparent',
-  color: 'var(--ui-color-primary-blue)',
+  color: 'var(--ui-color-primary-navy)',
   cursor: 'pointer',
   fontSize: 14,
   lineHeight: 1.2,

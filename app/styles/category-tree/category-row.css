@@ -162,7 +162,7 @@
   place-items: center !important;
   border-radius: 999px !important;
   color: var(--ui-text-link) !important;
-  background: var(--ui-status-info-soft) !important;
+  background: var(--ui-surface-card) !important;
 }
 
 [data-budget-tree-workspace="true"] [data-category-drag-handle="true"],
@@ -221,9 +221,9 @@
 
 [data-level1-expanded-content="true"] [data-category-drag-row="true"][data-category-level="2"] [data-category-actions="true"] button,
 [data-level1-expanded-content="true"] [data-category-drag-row="true"][data-category-level="2"] [data-category-actions="true"] summary {
-  border: 1px solid var(--ui-border-active) !important;
+  border: 1px solid var(--ui-border-soft) !important;
   border-radius: var(--ui-radius-md) !important;
-  background: linear-gradient(145deg, var(--ui-surface-card), var(--ui-surface-active)) !important;
+  background: var(--ui-surface-card) !important;
   color: var(--ui-text-link) !important;
   box-shadow:
     inset 0 1px 0 var(--ui-surface-card),
@@ -232,8 +232,8 @@
 
 [data-level1-expanded-content="true"] [data-category-drag-row="true"][data-category-level="2"] [data-category-actions="true"] button:hover,
 [data-level1-expanded-content="true"] [data-category-drag-row="true"][data-category-level="2"] [data-category-actions="true"] summary:hover {
-  border-color: var(--ui-border-active) !important;
-  background: linear-gradient(145deg, var(--ui-status-info-soft), var(--ui-surface-active)) !important;
+  border-color: var(--ui-border-soft) !important;
+  background: var(--ui-surface-hover) !important;
   color: var(--ui-text-link) !important;
 }
 
@@ -244,7 +244,7 @@
 
 [data-category-icon-action="calendar"][data-active="true"] {
   border-color: var(--ui-border-active) !important;
-  background: var(--ui-status-info-soft) !important;
+  background: var(--ui-surface-card) !important;
   color: var(--ui-text-link) !important;
 }
 
@@ -256,8 +256,8 @@
 
 [data-level1-expanded-content="true"] [data-category-drag-row="true"][data-category-level="2"] [data-category-icon-action="calendar"][data-active="true"],
 [data-level1-expanded-content="true"] [data-category-drag-row="true"][data-category-level="2"] [data-category-quick-add="true"] {
-  border-color: var(--ui-border-active) !important;
-  background: linear-gradient(145deg, var(--ui-surface-card), var(--ui-surface-active)) !important;
+  border-color: var(--ui-border-soft) !important;
+  background: var(--ui-surface-card) !important;
   color: var(--ui-text-link) !important;
 }
 
@@ -308,11 +308,11 @@
 
 [data-mobile-category-menu-panel="true"] button:hover,
 [data-transaction-menu="true"] button:hover {
-  background: var(--ui-border-divider) !important;
+  background: var(--ui-surface-hover) !important;
 }
 
 [data-level1-expanded-content="true"] [data-mobile-category-menu-panel="true"] {
-  border: 1px solid var(--ui-border-active) !important;
+  border: 1px solid var(--ui-border-soft) !important;
   border-radius: var(--ui-radius-2xl) !important;
   background: var(--ui-surface-card) !important;
   color: var(--ui-text-secondary) !important;
@@ -325,9 +325,9 @@
 
 [data-level1-expanded-content="true"] [data-mobile-category-menu-panel="true"] button,
 [data-level1-expanded-content="true"] [data-mobile-category-menu-panel="true"] [data-category-icon-picker-trigger="true"] {
-  border: 1px solid var(--ui-border-active) !important;
+  border: 1px solid var(--ui-border-soft) !important;
   border-radius: var(--ui-radius-sm) !important;
-  background: linear-gradient(145deg, var(--ui-surface-card), var(--ui-surface-active)) !important;
+  background: var(--ui-surface-card) !important;
   color: var(--ui-text-link) !important;
   box-shadow:
     inset 0 1px 0 var(--ui-surface-card),
@@ -336,8 +336,8 @@
 
 [data-level1-expanded-content="true"] [data-mobile-category-menu-panel="true"] button:hover,
 [data-level1-expanded-content="true"] [data-mobile-category-menu-panel="true"] [data-category-icon-picker-trigger="true"]:hover {
-  border-color: var(--ui-border-active) !important;
-  background: linear-gradient(145deg, var(--ui-status-info-soft), var(--ui-surface-active)) !important;
+  border-color: var(--ui-border-soft) !important;
+  background: var(--ui-surface-hover) !important;
   color: var(--ui-text-link) !important;
 }
 
@@ -401,7 +401,7 @@
 
 [data-inline-entry-options="true"] button[data-inline-option-active="true"] {
   border-color: var(--ui-border-active) !important;
-  background: var(--ui-status-info-soft) !important;
+  background: var(--ui-surface-card) !important;
   color: var(--ui-text-link) !important;
 }
 
@@ -449,7 +449,7 @@
 
 [data-transaction-row="true"][data-transaction-selected="true"] {
   border-color: var(--ui-border-active) !important;
-  background: var(--ui-row-selected-bg) !important;
+  background: var(--ui-surface-card) !important;
 }
 
 [data-transaction-row-main="true"] {

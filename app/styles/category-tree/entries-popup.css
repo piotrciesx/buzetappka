@@ -33,7 +33,7 @@
   height: 7px;
   border: 1px solid var(--ui-border-active);
   border-radius: 3px;
-  background: var(--ui-status-info-soft);
+  background: var(--ui-surface-card);
   content: "";
   transform: translateY(-50%);
 }
@@ -72,12 +72,7 @@
   left: 4px;
   width: 1px;
   border-radius: 999px;
-  background: linear-gradient(
-    180deg,
-    var(--entries-branch-line-soft),
-    var(--entries-branch-line),
-    var(--entries-branch-line-soft)
-  );
+  background: var(--entries-branch-line-soft);
   content: "";
 }
 
@@ -170,8 +165,8 @@
 
 [data-entries-tree-view="true"] [data-entries-menu-trigger="true"]:hover,
 [data-entries-tree-view="true"] [data-entries-menu-trigger="true"][aria-expanded="true"] {
-  border-color: var(--ui-border-active);
-  background: var(--ui-status-info-soft);
+  border-color: var(--ui-border-soft);
+  background: var(--ui-surface-hover);
   box-shadow: var(--ui-shadow-medium);
   color: var(--ui-text-link);
   opacity: 1;
@@ -186,11 +181,9 @@
   max-width: calc(100vw - 24px);
   overflow-y: auto;
   padding: 6px;
-  border: 1px solid var(--ui-border-active);
+  border: 1px solid var(--ui-border-soft);
   border-radius: 13px;
-  background:
-    linear-gradient(180deg, var(--ui-surface-card), var(--ui-status-info-soft)),
-    var(--ui-surface-card);
+  background: var(--ui-surface-card);
   box-shadow:
     0 26px 70px var(--ui-shadow-strong-color),
     0 4px 18px var(--ui-shadow-medium-color);
@@ -211,8 +204,8 @@
 }
 
 [data-entries-menu-panel="true"] button:hover {
-  border-color: var(--ui-border-active);
-  background: var(--ui-status-info-soft);
+  border-color: var(--ui-border-soft);
+  background: var(--ui-surface-hover);
   color: var(--ui-text-link);
 }
 
@@ -233,9 +226,9 @@
   min-width: 0;
   margin: var(--ui-space-1) 0 var(--ui-spacing-xs);
   padding: var(--ui-spacing-xs);
-  border: 1px solid var(--ui-border-active);
+  border: 1px solid var(--ui-border-soft);
   border-radius: var(--ui-radius-md);
-  background: var(--ui-surface-soft);
+  background: var(--ui-surface-card);
 }
 
 [data-entries-tree-view="true"] [data-entries-inline-main-row="true"],
@@ -279,9 +272,9 @@
 [data-entries-tree-view="true"] [data-entries-row-actions="true"] button {
   height: 30px;
   padding: 0 var(--ui-space-5);
-  border: 1px solid var(--ui-border-active);
+  border: 1px solid var(--ui-border-soft);
   border-radius: var(--ui-radius-sm);
-  background: linear-gradient(180deg, var(--ui-surface-card), var(--ui-status-info-soft));
+  background: var(--ui-surface-card);
   color: var(--ui-text-link);
   font: inherit;
   font-size: var(--ui-type-metadata);
@@ -291,8 +284,8 @@
 
 [data-entries-tree-view="true"] [data-entries-inline-composer="true"] button:hover,
 [data-entries-tree-view="true"] [data-entries-row-actions="true"] button:hover {
-  border-color: var(--ui-border-active);
-  background: var(--ui-status-info-soft);
+  border-color: var(--ui-border-soft);
+  background: var(--ui-surface-hover);
 }
 
 [data-entries-tree-view="true"] [data-entries-inline-composer="true"] button:disabled,
@@ -528,13 +521,13 @@
 [data-entries-tree-view="true"]
   [data-entries-transaction-row="true"][data-entries-transaction-editing="true"] {
   grid-template-columns: 58px minmax(140px, 1fr) 86px max-content;
-  background: var(--ui-surface-soft);
+  background: var(--ui-surface-card);
 }
 
 [data-entries-tree-view="true"]
   [data-entries-transaction-row="true"][data-entries-transaction-moving="true"] {
   grid-template-columns: minmax(160px, 1fr) max-content;
-  background: var(--ui-surface-soft);
+  background: var(--ui-surface-card);
 }
 
 [data-entries-tree-view="true"] [data-entries-row-actions="true"] {
@@ -549,9 +542,9 @@
   width: min(360px, 100%);
   margin: calc(var(--ui-space-12) + var(--ui-spacing-xs)) auto;
   padding: calc(var(--ui-space-10) + var(--ui-space-1)) var(--ui-space-7);
-  border: 1px dashed var(--ui-border-active);
+  border: 1px dashed var(--ui-border-soft);
   border-radius: 14px;
-  background: var(--ui-surface-soft);
+  background: var(--ui-surface-card);
   color: var(--ui-text-secondary);
   text-align: center;
 }

@@ -621,7 +621,7 @@ body {
   width: 36px;
   height: 36px;
   border-radius: var(--ui-radius-md);
-  background: var(--ui-surface-soft);
+  background: var(--ui-surface-card);
 }
 
 [data-level1-actions="true"] {
@@ -1183,7 +1183,7 @@ body {
 [data-workspace-bottom-bar="true"] {
   border-color: var(--app-shell-panel-border);
   border-radius: var(--ui-radius-lg);
-  background: var(--app-shell-panel-soft);
+  background: var(--app-shell-panel);
   box-shadow: var(--ui-shadow-none);
 }
 

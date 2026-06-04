@@ -47,7 +47,7 @@ const suggestionButtonStyle = {
 
 const activeSuggestionButtonStyle = {
   ...suggestionButtonStyle,
-  background: 'var(--ui-surface-active)',
+  background: 'var(--ui-surface-hover)',
 } as const
 
 const helperTextStyle = {
@@ -69,9 +69,9 @@ const tagBadgeStyle = {
   gap: 6,
   padding: '4px 8px',
   borderRadius: 999,
-  background: 'var(--ui-surface-active)',
+  background: 'var(--ui-surface-card)',
   border: '1px solid var(--ui-border-active)',
-  color: 'var(--ui-color-primary-blue)',
+  color: 'var(--ui-color-primary-navy)',
   fontSize: 12,
   fontWeight: 600,
 } as const
@@ -79,7 +79,7 @@ const tagBadgeStyle = {
 const tagRemoveButtonStyle = {
   border: 'none',
   background: 'transparent',
-  color: 'var(--ui-color-primary-blue)',
+  color: 'var(--ui-color-primary-navy)',
   cursor: 'pointer',
   fontSize: 14,
   lineHeight: 1.2,
