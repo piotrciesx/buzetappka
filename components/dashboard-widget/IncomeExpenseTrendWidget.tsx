@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
 import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
@@ -92,9 +93,9 @@ const scaleLabelBaseStyle: CSSProperties = {
   width: 34,
   textAlign: 'right',
   color: 'var(--ui-chart-axis)',
-  fontSize: 8.5,
-  lineHeight: 1.2,
-  fontWeight: 500,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.medium,
   transform: 'translateY(-50%)',
   pointerEvents: 'none',
   userSelect: 'none',
@@ -104,9 +105,9 @@ const scaleLabelBaseStyle: CSSProperties = {
 const monthLabelBaseStyle: CSSProperties = {
   position: 'absolute',
   color: SOFT_TEXT,
-  fontSize: 8.5,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   textAlign: 'center',
   transform: 'translateX(-50%)',
   pointerEvents: 'none',
@@ -136,8 +137,8 @@ const dropdownButtonStyle: CSSProperties = {
   borderRadius: 8,
   background: 'var(--ui-glass-surface)',
   color: 'var(--ui-text-secondary)',
-  fontSize: 10.5,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  fontWeight: uiTypographyTokens.weight.semibold,
   padding: '2px 8px',
   display: 'flex',
   alignItems: 'center',
@@ -157,8 +158,8 @@ const checkboxRowStyle: CSSProperties = {
   alignItems: 'center',
   gap: 7,
   color: 'var(--ui-text-secondary)',
-  fontSize: 11,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  fontWeight: uiTypographyTokens.weight.semibold,
   cursor: 'pointer',
 }
 
@@ -169,9 +170,9 @@ const legendStyle: CSSProperties = {
   alignItems: 'center',
   gap: 10,
   color: SOFT_TEXT,
-  fontSize: 10.5,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   overflow: 'hidden',
 }
 
@@ -195,7 +196,7 @@ const emptyStyle: CSSProperties = {
   placeItems: 'center',
   height: '100%',
   color: SOFT_TEXT,
-  fontSize: 12,
+  fontSize: uiTypographyTokens.role.metadata,
   textAlign: 'center',
   padding: 10,
 }

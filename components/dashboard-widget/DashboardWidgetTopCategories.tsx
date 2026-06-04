@@ -1,4 +1,5 @@
 import type { TopCategory } from '../../lib/dashboardStats'
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 import { RED, listRowStyle, listStyle, progressTrackStyle, smallTextStyle, labelStyle } from './dashboardWidgetTileStyles'
 import { clampPercent, formatMoney, formatPercent } from './dashboardWidgetTileUtils'
 import { ProgressBar as ProgressBarPrimitive, RankingRow } from './dashboardWidgetPrimitives'
@@ -33,7 +34,7 @@ export default function DashboardWidgetTopCategories({
               <span style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                 {index + 1}. {category.name}
               </span>
-              <strong style={{ fontWeight: 600 }}>{formatMoney(category.total)}</strong>
+              <strong style={{ fontWeight: uiTypographyTokens.weight.semibold }}>{formatMoney(category.total)}</strong>
             </RankingRow>
             {showBars && (
               <>

@@ -7,7 +7,7 @@ import { getDashboardOverview } from '../lib/dashboardStats'
 import { useDashboardLayout } from '../lib/useDashboardLayout'
 import { getEffectiveTransactionScope } from '../lib/transactionScope'
 import { DASHBOARD_WIDGET_DEFINITIONS } from '../lib/dashboardWidgetConfig'
-import { uiZIndex } from '../lib/uiFoundation'
+import { uiZIndex, uiTypographyTokens } from '../lib/uiFoundation'
 import type { DashboardContainerType } from '../lib/dashboardTypes'
 
 const panelStyle: CSSProperties = {
@@ -158,7 +158,7 @@ export default function DashboardPanel({
                 backdropFilter: 'blur(16px)',
               }}
             >
-              <label style={{ display: 'grid', gap: 6, fontSize: 12, color: 'var(--ui-color-secondary-text)' }}>
+              <label style={{ display: 'grid', gap: 6, fontSize: uiTypographyTokens.role.metadata, color: 'var(--ui-color-secondary-text)' }}>
                 Typ kontenera
                 <select
                   value={containerTypeToAdd}
@@ -197,8 +197,8 @@ export default function DashboardPanel({
                 right: 0,
                 top: isAddPanelOpen ? 180 : 42,
                 color: 'var(--ui-color-income)',
-                fontSize: 12,
-                fontWeight: 600,
+                fontSize: uiTypographyTokens.role.metadata,
+                fontWeight: uiTypographyTokens.weight.semibold,
               }}
             >
               {addFeedbackText}

@@ -1,6 +1,7 @@
 'use client'
 
 import type { CSSProperties } from 'react'
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
 import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
@@ -95,9 +96,9 @@ const compactRowStyle: CSSProperties = {
 const rankStyle: CSSProperties = {
   minWidth: 0,
   color: 'var(--ui-chart-neutral)',
-  fontSize: 10.2,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
 }
 
@@ -111,9 +112,9 @@ const middleStyle: CSSProperties = {
 const nameStyle: CSSProperties = {
   minWidth: 0,
   color: 'var(--ui-text-primary)',
-  fontSize: 10.9,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -121,9 +122,9 @@ const nameStyle: CSSProperties = {
 
 const amountStyle: CSSProperties = {
   minWidth: 0,
-  fontSize: 10.8,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   textAlign: 'right',
   whiteSpace: 'nowrap',
   overflow: 'visible',
@@ -164,9 +165,9 @@ const chartPanelStyle: CSSProperties = {
 const chartTitleStyle: CSSProperties = {
   minWidth: 0,
   color: 'var(--ui-text-primary)',
-  fontSize: 12,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.metadata,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -175,9 +176,9 @@ const chartTitleStyle: CSSProperties = {
 const chartSubtitleStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
-  fontSize: 10.3,
-  lineHeight: 1.2,
-  fontWeight: 500,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.medium,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -227,9 +228,9 @@ const dotStyle: CSSProperties = {
 const legendNameStyle: CSSProperties = {
   minWidth: 0,
   color: 'var(--ui-text-secondary)',
-  fontSize: 9.8,
-  lineHeight: 1.2,
-  fontWeight: 500,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.medium,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -238,9 +239,9 @@ const legendNameStyle: CSSProperties = {
 const legendPercentStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
-  fontSize: 9.6,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
 }
 
@@ -250,8 +251,8 @@ const emptyStyle: CSSProperties = {
   display: 'grid',
   placeItems: 'center',
   color: SOFT_TEXT,
-  fontSize: 12,
-  lineHeight: 1.35,
+  fontSize: uiTypographyTokens.role.metadata,
+  lineHeight: uiTypographyTokens.lineHeight.body,
   textAlign: 'center',
   padding: 12,
   fontFamily: FONT,
@@ -489,8 +490,8 @@ export default function CategoryRankingsWidget({
                     y="57"
                     textAnchor="middle"
                     fill="var(--ui-text-primary)"
-                    fontSize="12"
-                    fontWeight="700"
+                    fontSize="var(--ui-type-metadata)"
+                    fontWeight="var(--ui-font-weight-bold)"
                   >
                     TOP 5
                   </text>
@@ -499,8 +500,8 @@ export default function CategoryRankingsWidget({
                     y="73"
                     textAnchor="middle"
                     fill="var(--ui-chart-neutral)"
-                    fontSize="9"
-                    fontWeight="560"
+                    fontSize="var(--ui-type-widget-meta)"
+                    fontWeight="var(--ui-font-weight-medium)"
                   >
                     udział
                   </text>

@@ -1,7 +1,7 @@
 'use client'
 
 import { CSSProperties, useEffect, useRef, useState } from 'react'
-import { uiControlPrimitives } from '../lib/uiFoundation'
+import { uiControlPrimitives, uiTypographyTokens } from '../lib/uiFoundation'
 import UserAvatar from './UserAvatar'
 
 type UserProfileMenuProps = {
@@ -117,7 +117,7 @@ export default function UserProfileMenu({
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontWeight: 700,
+          fontWeight: uiTypographyTokens.weight.bold,
           cursor: uiControlPrimitives.iconButton.avatar.cursor,
         }}
         aria-label="Menu profilu"

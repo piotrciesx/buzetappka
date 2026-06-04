@@ -221,7 +221,7 @@
   [data-search-filter-field] input,
   [data-search-filter-field] select {
     min-height: var(--ui-mobile-control-min) !important;
-    font-size: 16px !important;
+    font-size: var(--ui-type-t2) !important;
   }
 
   [data-transaction-modal="true"] button,
@@ -325,7 +325,7 @@
   [data-entries-transaction-row="true"] input,
   [data-entries-transaction-row="true"] select {
     min-height: var(--ui-mobile-control-min) !important;
-    font-size: 16px !important;
+    font-size: var(--ui-type-t2) !important;
   }
 }
 

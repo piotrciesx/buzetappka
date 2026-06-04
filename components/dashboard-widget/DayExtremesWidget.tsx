@@ -1,6 +1,7 @@
 'use client'
 
 import type { CSSProperties } from 'react'
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
 import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
@@ -67,14 +68,14 @@ const summaryCardStyle: CSSProperties = {
 }
 
 const labelStyle: CSSProperties = {
-  fontSize: 10.5,
+  fontSize: uiTypographyTokens.role.widgetMeta,
   color: SOFT_TEXT,
-  fontWeight: 600,
+  fontWeight: uiTypographyTokens.weight.semibold,
 }
 
 const valueStyle: CSSProperties = {
-  fontSize: 14,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.hierarchy.t3,
+  fontWeight: uiTypographyTokens.weight.semibold,
 }
 
 const listStyle: CSSProperties = {
@@ -91,8 +92,8 @@ const rowStyle: CSSProperties = {
   gridTemplateColumns: '70px 1fr 70px',
   alignItems: 'center',
   gap: 6,
-  fontSize: 11.5,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  fontWeight: uiTypographyTokens.weight.semibold,
 }
 
 const barTrackStyle: CSSProperties = {
@@ -112,7 +113,7 @@ const emptyStyle: CSSProperties = {
   display: 'grid',
   placeItems: 'center',
   color: SOFT_TEXT,
-  fontSize: 12,
+  fontSize: uiTypographyTokens.role.metadata,
   textAlign: 'center',
 }
 

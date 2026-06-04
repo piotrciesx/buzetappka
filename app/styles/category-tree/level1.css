@@ -198,19 +198,19 @@
 [data-level1-card-title="true"],
 [data-level1-title-block="true"] > div:first-child {
   color: var(--ui-text-primary) !important;
-  font-size: 15.5px !important;
-  font-weight: 650 !important;
-  line-height: 1.08 !important;
-  letter-spacing: -0.012em;
+  font-size: var(--ui-type-t3) !important;
+  font-weight: var(--ui-font-weight-semibold) !important;
+  line-height: var(--ui-line-height-heading) !important;
+  letter-spacing: 0;
 }
 
 [data-level1-summary="true"] strong {
   display: block !important;
   background: transparent !important;
-  font-size: 28px !important;
-  font-weight: 690 !important;
-  line-height: 1 !important;
-  letter-spacing: -0.018em;
+  font-size: var(--ui-type-dashboard-value) !important;
+  font-weight: var(--ui-font-weight-semibold) !important;
+  line-height: var(--ui-line-height-compact) !important;
+  letter-spacing: 0;
   font-variant-numeric: tabular-nums;
 }
 
@@ -372,8 +372,8 @@
   border-radius: 9px !important;
   background: linear-gradient(145deg, var(--ui-glass-surface-strong), var(--ui-surface-active)) !important;
   color: var(--ui-text-link) !important;
-  font-size: 12px !important;
-  font-weight: 650 !important;
+  font-size: var(--ui-type-metadata) !important;
+  font-weight: var(--ui-font-weight-semibold) !important;
   text-align: left !important;
   box-shadow:
     inset 0 1px 0 var(--ui-glass-surface-strong),

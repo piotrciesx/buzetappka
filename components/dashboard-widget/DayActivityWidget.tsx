@@ -1,5 +1,6 @@
 'use client'
 
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
 import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
@@ -101,9 +102,9 @@ const compactCardStyle = {
 const labelStyle = {
   minWidth: 0,
   color: SOFT_TEXT,
-  fontSize: 11,
+  fontSize: uiTypographyTokens.role.widgetMeta,
   lineHeight: '15px',
-  fontWeight: 500,
+  fontWeight: uiTypographyTokens.weight.medium,
   overflow: 'hidden',
   display: '-webkit-box',
   WebkitLineClamp: 2,
@@ -120,25 +121,25 @@ const compactLabelStyle = {
 const valueStyle = {
   minWidth: 0,
   alignSelf: 'center',
-  fontSize: 23,
-  lineHeight: 1.2,
-  fontWeight: 600,
-  letterSpacing: '-0.035em',
+  fontSize: uiTypographyTokens.role.financialValue,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
+  letterSpacing: 0,
   fontFamily: FONT_FAMILY,
 }
 
 const compactValueStyle = {
   ...valueStyle,
-  fontSize: 18,
+  fontSize: uiTypographyTokens.hierarchy.t2,
   letterSpacing: 0,
 }
 
 const percentStyle = {
   minWidth: 0,
   color: MUTED,
-  fontSize: 10.5,
+  fontSize: uiTypographyTokens.role.widgetMeta,
   lineHeight: '16px',
-  fontWeight: 500,
+  fontWeight: uiTypographyTokens.weight.medium,
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap' as const,
@@ -161,9 +162,9 @@ const chartPanelStyle = {
 
 const chartTitleStyle = {
   color: 'var(--ui-text-primary)',
-  fontSize: 12.5,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.label,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   fontFamily: FONT_FAMILY,
 }
 
@@ -208,9 +209,9 @@ function BarRow({
           justifyContent: 'space-between',
           gap: 8,
           color: 'var(--ui-text-secondary)',
-          fontSize: 12,
-          lineHeight: 1.2,
-          fontWeight: 500,
+          fontSize: uiTypographyTokens.role.metadata,
+          lineHeight: uiTypographyTokens.lineHeight.compact,
+          fontWeight: uiTypographyTokens.weight.medium,
           fontFamily: FONT_FAMILY,
         }}
       >
@@ -327,9 +328,9 @@ export default function DayActivityWidget({
             gridTemplateRows: 'auto',
             alignContent: 'center',
             color: MUTED,
-            fontSize: 13,
-            lineHeight: 1.35,
-            fontWeight: 500,
+            fontSize: uiTypographyTokens.role.label,
+            lineHeight: uiTypographyTokens.lineHeight.body,
+            fontWeight: uiTypographyTokens.weight.medium,
           }}
         >
           Ten miesiąc jest wyłączony ze statystyk.

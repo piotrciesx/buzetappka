@@ -1,6 +1,7 @@
 'use client'
 
 import { CSSProperties, useState } from 'react'
+import { uiTypographyTokens } from '../lib/uiFoundation'
 
 type Styles = Record<string, CSSProperties>
 
@@ -71,13 +72,13 @@ const authStyles: Styles = {
   tagline: {
     marginTop: 12,
     color: 'var(--ui-text-secondary)',
-    fontSize: 27,
-    fontWeight: 300,
-    letterSpacing: '-0.045em',
+    fontSize: uiTypographyTokens.role.dashboardValue,
+    fontWeight: uiTypographyTokens.weight.regular,
+    letterSpacing: 0,
   },
   taglineAccent: {
     color: BLUE,
-    fontWeight: 420,
+    fontWeight: uiTypographyTokens.weight.regular,
   },
   blueStroke: {
     width: 72,
@@ -114,17 +115,17 @@ const authStyles: Styles = {
   featureTitle: {
     margin: 0,
     color: NAVY,
-    fontSize: 13,
-    lineHeight: 1.15,
-    fontWeight: 560,
-    letterSpacing: '-0.03em',
+    fontSize: uiTypographyTokens.role.label,
+    lineHeight: uiTypographyTokens.lineHeight.compact,
+    fontWeight: uiTypographyTokens.weight.medium,
+    letterSpacing: 0,
   },
   featureText: {
     margin: 0,
     color: 'var(--ui-text-secondary)',
-    fontSize: 11.5,
-    lineHeight: 1.2,
-    fontWeight: 400,
+    fontSize: uiTypographyTokens.role.widgetMeta,
+    lineHeight: uiTypographyTokens.lineHeight.compact,
+    fontWeight: uiTypographyTokens.weight.regular,
     maxWidth: 110,
   },
   previewPlaceholder: {
@@ -149,9 +150,9 @@ const authStyles: Styles = {
     background: 'var(--ui-glass-surface-soft)',
     border: '1px solid var(--ui-border-soft)',
     color: 'var(--ui-text-secondary)',
-    fontSize: 13,
-    lineHeight: 1.35,
-    fontWeight: 520,
+    fontSize: uiTypographyTokens.role.label,
+    lineHeight: uiTypographyTokens.lineHeight.body,
+    fontWeight: uiTypographyTokens.weight.medium,
   },
   card: {
     width: '100%',
@@ -165,23 +166,23 @@ const authStyles: Styles = {
   cardTitle: {
     margin: 0,
     color: NAVY,
-    fontSize: 34,
-    lineHeight: 1.1,
-    fontWeight: 620,
-    letterSpacing: '-0.045em',
+    fontSize: uiTypographyTokens.role.dashboardValue,
+    lineHeight: uiTypographyTokens.lineHeight.heading,
+    fontWeight: uiTypographyTokens.weight.semibold,
+    letterSpacing: 0,
     textAlign: 'center',
   },
   cardSubtitle: {
     margin: '12px 0 34px',
     color: SOFT_TEXT,
-    fontSize: 16,
-    lineHeight: 1.5,
-    fontWeight: 350,
+    fontSize: uiTypographyTokens.hierarchy.t2,
+    lineHeight: uiTypographyTokens.lineHeight.body,
+    fontWeight: uiTypographyTokens.weight.regular,
     textAlign: 'center',
   },
   appNameAccent: {
     color: BLUE,
-    fontWeight: 560,
+    fontWeight: uiTypographyTokens.weight.medium,
   },
   modeSwitch: {
     display: 'grid',
@@ -199,8 +200,8 @@ const authStyles: Styles = {
     borderRadius: 8,
     background: 'var(--ui-surface-card)',
     color: NAVY,
-    fontSize: 14,
-    fontWeight: 560,
+    fontSize: uiTypographyTokens.hierarchy.t3,
+    fontWeight: uiTypographyTokens.weight.medium,
     cursor: 'pointer',
   },
   modeButtonActive: {
@@ -230,8 +231,8 @@ const authStyles: Styles = {
     outline: 0,
     background: 'transparent',
     color: NAVY,
-    fontSize: 15,
-    fontWeight: 360,
+    fontSize: uiTypographyTokens.hierarchy.t3,
+    fontWeight: uiTypographyTokens.weight.regular,
   },
   primaryButton: {
     minHeight: 44,
@@ -240,8 +241,8 @@ const authStyles: Styles = {
     borderRadius: 8,
     background: 'var(--ui-surface-card)',
     color: BLUE,
-    fontSize: 15,
-    fontWeight: 700,
+    fontSize: uiTypographyTokens.hierarchy.t3,
+    fontWeight: uiTypographyTokens.weight.bold,
     cursor: 'pointer',
     boxShadow: 'none',
   },
@@ -251,8 +252,8 @@ const authStyles: Styles = {
     gap: 14,
     margin: '28px 0',
     color: 'var(--ui-text-muted)',
-    fontSize: 14,
-    fontWeight: 350,
+    fontSize: uiTypographyTokens.hierarchy.t3,
+    fontWeight: uiTypographyTokens.weight.regular,
   },
   dividerLine: {
     flex: 1,
@@ -270,8 +271,8 @@ const authStyles: Styles = {
     border: `1px solid ${BORDER}`,
     background: 'var(--ui-surface-card)',
     color: NAVY,
-    fontSize: 15,
-    fontWeight: 520,
+    fontSize: uiTypographyTokens.hierarchy.t3,
+    fontWeight: uiTypographyTokens.weight.medium,
     cursor: 'pointer',
   },
   textButton: {
@@ -283,8 +284,8 @@ const authStyles: Styles = {
     padding: '0 12px',
     background: 'var(--ui-surface-card)',
     color: BLUE,
-    fontSize: 14,
-    fontWeight: 560,
+    fontSize: uiTypographyTokens.hierarchy.t3,
+    fontWeight: uiTypographyTokens.weight.medium,
     cursor: 'pointer',
   },
   secureText: {
@@ -294,8 +295,8 @@ const authStyles: Styles = {
     gap: 9,
     marginTop: 28,
     color: 'var(--ui-text-secondary)',
-    fontSize: 13,
-    fontWeight: 420,
+    fontSize: uiTypographyTokens.role.label,
+    fontWeight: uiTypographyTokens.weight.regular,
   },
   infoBox: {
     marginBottom: 18,
@@ -304,9 +305,9 @@ const authStyles: Styles = {
     border: '1px solid var(--ui-border-active)',
     background: 'var(--ui-status-info-soft)',
     color: 'var(--ui-text-primary)',
-    fontSize: 14,
-    lineHeight: 1.5,
-    fontWeight: 500,
+    fontSize: uiTypographyTokens.hierarchy.t3,
+    lineHeight: uiTypographyTokens.lineHeight.body,
+    fontWeight: uiTypographyTokens.weight.medium,
   },
   compactPage: {
     minHeight: '100vh',
@@ -331,17 +332,17 @@ const authStyles: Styles = {
   compactTitle: {
     margin: 0,
     color: NAVY,
-    fontSize: 26,
-    lineHeight: 1.15,
-    fontWeight: 620,
-    letterSpacing: '-0.04em',
+    fontSize: uiTypographyTokens.role.dashboardValue,
+    lineHeight: uiTypographyTokens.lineHeight.compact,
+    fontWeight: uiTypographyTokens.weight.semibold,
+    letterSpacing: 0,
   },
   compactSubtitle: {
     marginTop: 10,
     marginBottom: 22,
     color: SOFT_TEXT,
-    fontSize: 15,
-    lineHeight: 1.5,
+    fontSize: uiTypographyTokens.hierarchy.t3,
+    lineHeight: uiTypographyTokens.lineHeight.body,
   },
   actions: {
     display: 'flex',
@@ -354,8 +355,8 @@ const authStyles: Styles = {
     border: '1px solid var(--ui-status-warning)',
     background: 'var(--ui-status-warning-soft)',
     color: 'var(--ui-status-warning)',
-    fontSize: 14,
-    lineHeight: 1.45,
+    fontSize: uiTypographyTokens.hierarchy.t3,
+    lineHeight: uiTypographyTokens.lineHeight.body,
   },
 }
 
@@ -899,7 +900,7 @@ export function InvitationAcceptScreen({
 
         {invitationWarningText && (
           <div style={{ ...authStyles.dangerBox, marginTop: 14, marginBottom: 14 }}>
-            <div style={{ fontWeight: 620, marginBottom: 8 }}>Uwaga przed dołączeniem</div>
+            <div style={{ fontWeight: uiTypographyTokens.weight.semibold, marginBottom: 8 }}>Uwaga przed dołączeniem</div>
             <div>{invitationWarningText}</div>
             <label
               style={{
@@ -907,7 +908,7 @@ export function InvitationAcceptScreen({
                 gap: 8,
                 alignItems: 'flex-start',
                 marginTop: 12,
-                fontWeight: 560,
+                fontWeight: uiTypographyTokens.weight.medium,
               }}
             >
               <input

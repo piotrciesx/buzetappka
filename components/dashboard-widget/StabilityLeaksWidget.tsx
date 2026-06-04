@@ -1,6 +1,7 @@
 'use client'
 
 import type { CSSProperties } from 'react'
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 import { GREEN, MUTED, RED, SOFT_TEXT } from './dashboardWidgetTileStyles'
 import { clampPercent, formatMoney } from './dashboardWidgetTileUtils'
 
@@ -65,9 +66,9 @@ const panelHeaderStyle: CSSProperties = {
 const titleStyle: CSSProperties = {
   minWidth: 0,
   color: 'var(--ui-text-primary)',
-  fontSize: 11,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -76,9 +77,9 @@ const titleStyle: CSSProperties = {
 const metaStyle: CSSProperties = {
   flexShrink: 0,
   color: MUTED,
-  fontSize: 9.8,
-  lineHeight: 1.2,
-  fontWeight: 500,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.medium,
   whiteSpace: 'nowrap',
 }
 
@@ -109,10 +110,10 @@ const statusTextStyle: CSSProperties = {
 
 const statusLabelStyle: CSSProperties = {
   minWidth: 0,
-  fontSize: 24,
-  lineHeight: 1.2,
-  fontWeight: 600,
-  letterSpacing: -0.45,
+  fontSize: uiTypographyTokens.role.financialValue,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
+  letterSpacing: 0,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -120,15 +121,15 @@ const statusLabelStyle: CSSProperties = {
 
 const compactStatusLabelStyle: CSSProperties = {
   ...statusLabelStyle,
-  fontSize: 20,
+  fontSize: uiTypographyTokens.hierarchy.t1,
 }
 
 const statusDescriptionStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
-  fontSize: 10.8,
-  lineHeight: 1.3,
-  fontWeight: 400,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.body,
+  fontWeight: uiTypographyTokens.weight.regular,
   overflow: 'visible',
   display: '-webkit-box',
   WebkitLineClamp: 2,
@@ -150,10 +151,10 @@ const compactCountBlockStyle: CSSProperties = {
 
 const countValueStyle: CSSProperties = {
   minWidth: 0,
-  fontSize: 27,
-  lineHeight: 1.2,
-  fontWeight: 600,
-  letterSpacing: -0.5,
+  fontSize: uiTypographyTokens.role.dashboardValue,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
+  letterSpacing: 0,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -161,15 +162,15 @@ const countValueStyle: CSSProperties = {
 
 const compactCountValueStyle: CSSProperties = {
   ...countValueStyle,
-  fontSize: 21,
+  fontSize: uiTypographyTokens.hierarchy.t1,
 }
 
 const countLabelStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
-  fontSize: 10,
-  lineHeight: 1.2,
-  fontWeight: 400,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.regular,
   overflow: 'visible',
   display: '-webkit-box',
   WebkitLineClamp: 2,
@@ -195,9 +196,9 @@ const numberRowStyle: CSSProperties = {
 const numberLabelStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
-  fontSize: 10.4,
-  lineHeight: 1.2,
-  fontWeight: 400,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.regular,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -206,9 +207,9 @@ const numberLabelStyle: CSSProperties = {
 const numberValueStyle: CSSProperties = {
   minWidth: 0,
   color: 'var(--ui-text-primary)',
-  fontSize: 13,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.label,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   textAlign: 'right',
   whiteSpace: 'nowrap',
   overflow: 'visible',
@@ -261,9 +262,9 @@ const leakTextStyle: CSSProperties = {
 const leakNameStyle: CSSProperties = {
   minWidth: 0,
   color: 'var(--ui-text-primary)',
-  fontSize: 11,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -272,9 +273,9 @@ const leakNameStyle: CSSProperties = {
 const leakMetaStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
-  fontSize: 10,
-  lineHeight: 1.2,
-  fontWeight: 400,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.regular,
   overflow: 'visible',
   display: '-webkit-box',
   WebkitLineClamp: 1,
@@ -283,9 +284,9 @@ const leakMetaStyle: CSSProperties = {
 
 const leakValueStyle: CSSProperties = {
   minWidth: 0,
-  fontSize: 12,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.metadata,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   textAlign: 'right',
   whiteSpace: 'nowrap',
   overflow: 'visible',
@@ -318,9 +319,9 @@ const barHeaderStyle: CSSProperties = {
 const barLabelStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
-  fontSize: 9.8,
-  lineHeight: 1.2,
-  fontWeight: 400,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.regular,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -329,9 +330,9 @@ const barLabelStyle: CSSProperties = {
 const barValueStyle: CSSProperties = {
   flexShrink: 0,
   color: MUTED,
-  fontSize: 9.8,
-  lineHeight: 1.2,
-  fontWeight: 500,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.medium,
   whiteSpace: 'nowrap',
 }
 
@@ -356,8 +357,8 @@ const emptyStyle: CSSProperties = {
   display: 'grid',
   placeItems: 'center',
   color: SOFT_TEXT,
-  fontSize: 12,
-  lineHeight: 1.35,
+  fontSize: uiTypographyTokens.role.metadata,
+  lineHeight: uiTypographyTokens.lineHeight.body,
   textAlign: 'center',
   padding: 12,
   fontFamily: FONT,

@@ -1,5 +1,5 @@
 import { useState, type CSSProperties, type HTMLAttributes, type PointerEvent, type ReactNode } from 'react'
-import { uiZIndex } from '../../lib/uiFoundation'
+import { uiZIndex, uiTypographyTokens } from '../../lib/uiFoundation'
 import { BLUE, tileStyle } from './dashboardWidgetTileStyles'
 import { DashboardWidgetShell } from './dashboardWidgetPrimitives'
 

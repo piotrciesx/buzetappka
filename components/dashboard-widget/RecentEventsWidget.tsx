@@ -1,6 +1,7 @@
 'use client'
 
 import type { CSSProperties } from 'react'
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
 import { getUniqueCategoryLabel } from '../../lib/categoryUtils'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
@@ -94,9 +95,9 @@ const compactEventRowStyle: CSSProperties = {
 const dateStyle: CSSProperties = {
   minWidth: 0,
   color: MUTED,
-  fontSize: 10.8,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -105,9 +106,9 @@ const dateStyle: CSSProperties = {
 const descriptionStyle: CSSProperties = {
   minWidth: 0,
   color: 'var(--ui-text-primary)',
-  fontSize: 11,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -116,9 +117,9 @@ const descriptionStyle: CSSProperties = {
 const categoryStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
-  fontSize: 10.5,
-  lineHeight: 1.2,
-  fontWeight: 500,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.medium,
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -126,9 +127,9 @@ const categoryStyle: CSSProperties = {
 
 const amountStyle: CSSProperties = {
   minWidth: 0,
-  fontSize: 10.9,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   textAlign: 'right',
   whiteSpace: 'nowrap',
   overflow: 'visible',
@@ -149,9 +150,9 @@ const chartPanelStyle: CSSProperties = {
 const chartTitleStyle: CSSProperties = {
   minWidth: 0,
   color: 'var(--ui-text-primary)',
-  fontSize: 12,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.metadata,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -160,9 +161,9 @@ const chartTitleStyle: CSSProperties = {
 const chartSubtitleStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
-  fontSize: 10.4,
-  lineHeight: 1.2,
-  fontWeight: 500,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.medium,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -192,9 +193,9 @@ const verticalBarItemStyle: CSSProperties = {
 
 const verticalBarLabelStyle: CSSProperties = {
   minWidth: 0,
-  fontSize: 11.2,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -202,9 +203,9 @@ const verticalBarLabelStyle: CSSProperties = {
 
 const verticalBarCountStyle: CSSProperties = {
   minWidth: 0,
-  fontSize: 18,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.hierarchy.t2,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -233,8 +234,8 @@ const emptyStyle: CSSProperties = {
   display: 'grid',
   placeItems: 'center',
   color: SOFT_TEXT,
-  fontSize: 12,
-  lineHeight: 1.35,
+  fontSize: uiTypographyTokens.role.metadata,
+  lineHeight: uiTypographyTokens.lineHeight.body,
   textAlign: 'center',
   padding: 12,
   fontFamily: FONT,

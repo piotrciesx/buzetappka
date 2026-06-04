@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 import { DASHBOARD_MODULE_LABELS, getDashboardDefinition } from '../../lib/dashboardWidgetConfig'
 import type {
   DashboardModuleId,
@@ -85,8 +86,8 @@ export default function DashboardTileConfigPanel({ widget, onChange }: Props) {
             padding: '7px 10px',
             background: widget.mode === 'auto' ? 'var(--ui-text-primary)' : 'var(--ui-surface-card)',
             color: widget.mode === 'auto' ? 'var(--ui-surface-card)' : 'var(--ui-text-secondary)',
-            fontSize: 12,
-            fontWeight: 600,
+            fontSize: uiTypographyTokens.role.metadata,
+            fontWeight: uiTypographyTokens.weight.semibold,
           }}
         >
           Auto
@@ -101,8 +102,8 @@ export default function DashboardTileConfigPanel({ widget, onChange }: Props) {
             padding: '7px 10px',
             background: widget.mode === 'custom' ? 'var(--ui-text-primary)' : 'var(--ui-surface-card)',
             color: widget.mode === 'custom' ? 'var(--ui-surface-card)' : 'var(--ui-text-secondary)',
-            fontSize: 12,
-            fontWeight: 600,
+            fontSize: uiTypographyTokens.role.metadata,
+            fontWeight: uiTypographyTokens.weight.semibold,
           }}
         >
           Własne
@@ -115,7 +116,7 @@ export default function DashboardTileConfigPanel({ widget, onChange }: Props) {
 
           return (
             <div key={moduleId} style={rowStyle}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12 }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: uiTypographyTokens.role.metadata }}>
                 <input
                   type="checkbox"
                   checked={checked}

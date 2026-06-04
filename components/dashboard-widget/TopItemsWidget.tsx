@@ -1,6 +1,7 @@
 'use client'
 
 import type { CSSProperties } from 'react'
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 import { getExistingDaysInMonth } from '../../lib/dateUtils'
 import { GREEN, MUTED, RED, SOFT_BORDER, SOFT_TEXT } from './dashboardWidgetTileStyles'
 import { formatMoney } from './dashboardWidgetTileUtils'
@@ -79,9 +80,9 @@ const sectionHeaderStyle: CSSProperties = {
 
 const sectionTitleStyle: CSSProperties = {
   minWidth: 0,
-  fontSize: 11.4,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -90,9 +91,9 @@ const sectionTitleStyle: CSSProperties = {
 const sectionMetaStyle: CSSProperties = {
   flexShrink: 0,
   color: MUTED,
-  fontSize: 10,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
 }
 
@@ -155,9 +156,9 @@ const sideRowStyle: CSSProperties = {
 const dateStyle: CSSProperties = {
   minWidth: 0,
   color: MUTED,
-  fontSize: 10.2,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -166,9 +167,9 @@ const dateStyle: CSSProperties = {
 const indexStyle: CSSProperties = {
   minWidth: 0,
   color: MUTED,
-  fontSize: 10,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   textAlign: 'right',
   whiteSpace: 'nowrap',
   paddingTop: 1,
@@ -177,9 +178,9 @@ const indexStyle: CSSProperties = {
 const descriptionStyle: CSSProperties = {
   minWidth: 0,
   color: 'var(--ui-text-primary)',
-  fontSize: 10.8,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'normal',
   overflow: 'hidden',
   display: '-webkit-box',
@@ -190,9 +191,9 @@ const descriptionStyle: CSSProperties = {
 const categoryStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
-  fontSize: 10.2,
-  lineHeight: 1.2,
-  fontWeight: 500,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.medium,
   whiteSpace: 'normal',
   overflow: 'hidden',
   display: '-webkit-box',
@@ -209,9 +210,9 @@ const compactMiddleStyle: CSSProperties = {
 
 const amountStyle: CSSProperties = {
   minWidth: 0,
-  fontSize: 10.7,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   textAlign: 'right',
   whiteSpace: 'nowrap',
   overflow: 'visible',
@@ -221,9 +222,9 @@ const amountStyle: CSSProperties = {
 const rankingAmountLineStyle: CSSProperties = {
   minWidth: 0,
   marginTop: 2,
-  fontSize: 10.5,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   textAlign: 'left',
   whiteSpace: 'nowrap',
   overflow: 'visible',
@@ -262,18 +263,18 @@ const highlightAmountStyle: CSSProperties = {
   overflow: 'visible',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
-  fontSize: 22,
-  lineHeight: 1.2,
-  fontWeight: 600,
-  letterSpacing: -0.45,
+  fontSize: uiTypographyTokens.role.dashboardValue,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
+  letterSpacing: 0,
 }
 
 const highlightDateStyle: CSSProperties = {
   flexShrink: 0,
   color: MUTED,
-  fontSize: 10.5,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
 }
 
@@ -282,9 +283,9 @@ const highlightDescriptionStyle: CSSProperties = {
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
-  fontSize: 12,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.metadata,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   color: 'var(--ui-text-primary)',
 }
 
@@ -293,10 +294,10 @@ const highlightCategoryStyle: CSSProperties = {
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
-  fontSize: 10.5,
-  lineHeight: 1.2,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
   color: SOFT_TEXT,
-  fontWeight: 500,
+  fontWeight: uiTypographyTokens.weight.medium,
 }
 
 const secondaryListStyle: CSSProperties = {
@@ -316,8 +317,8 @@ const emptySectionStyle: CSSProperties = {
   display: 'grid',
   placeItems: 'center',
   color: SOFT_TEXT,
-  fontSize: 11,
-  lineHeight: 1.25,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
   textAlign: 'center',
   padding: 8,
 }
@@ -328,8 +329,8 @@ const emptyStyle: CSSProperties = {
   display: 'grid',
   placeItems: 'center',
   color: SOFT_TEXT,
-  fontSize: 12,
-  lineHeight: 1.35,
+  fontSize: uiTypographyTokens.role.metadata,
+  lineHeight: uiTypographyTokens.lineHeight.body,
   textAlign: 'center',
   padding: 12,
   fontFamily: FONT,

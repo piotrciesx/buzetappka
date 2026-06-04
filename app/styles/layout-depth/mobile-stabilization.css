@@ -480,7 +480,7 @@
 
 @media (max-width: 340px) {
   [data-budget-mobile-nav="true"] button {
-    font-size: 9px !important;
+    font-size: var(--ui-type-widget-meta) !important;
   }
 
   [data-budget-mobile-nav="true"] svg {
@@ -489,6 +489,6 @@
   }
 
   [data-level1-summary="true"] strong {
-    font-size: 18px !important;
+    font-size: var(--ui-type-t2) !important;
   }
 }

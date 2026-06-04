@@ -1,5 +1,6 @@
 'use client'
 
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 import type { ReactNode } from 'react'
 import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'

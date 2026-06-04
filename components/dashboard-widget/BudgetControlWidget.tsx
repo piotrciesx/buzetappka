@@ -1,6 +1,7 @@
 'use client'
 
 import type { CSSProperties } from 'react'
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 import { getExistingDaysInMonth } from '../../lib/dateUtils'
 import { BLUE, GREEN, MUTED, RED, SOFT_TEXT } from './dashboardWidgetTileStyles'
 import { clampPercent, formatMoney, formatPercent } from './dashboardWidgetTileUtils'
@@ -66,9 +67,9 @@ const panelHeaderStyle: CSSProperties = {
 const titleStyle: CSSProperties = {
   minWidth: 0,
   color: 'var(--ui-text-primary)',
-  fontSize: 11,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -77,9 +78,9 @@ const titleStyle: CSSProperties = {
 const metaStyle: CSSProperties = {
   flexShrink: 0,
   color: MUTED,
-  fontSize: 9.8,
-  lineHeight: 1.2,
-  fontWeight: 500,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.medium,
   whiteSpace: 'nowrap',
 }
 
@@ -111,10 +112,10 @@ const statusLineStyle: CSSProperties = {
 
 const statusLabelStyle: CSSProperties = {
   minWidth: 0,
-  fontSize: 25,
-  lineHeight: 1.2,
-  fontWeight: 600,
-  letterSpacing: -0.45,
+  fontSize: uiTypographyTokens.role.financialValue,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
+  letterSpacing: 0,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -122,15 +123,15 @@ const statusLabelStyle: CSSProperties = {
 
 const compactStatusLabelStyle: CSSProperties = {
   ...statusLabelStyle,
-  fontSize: 20,
+  fontSize: uiTypographyTokens.hierarchy.t1,
 }
 
 const statusDescriptionStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
-  fontSize: 10.8,
-  lineHeight: 1.3,
-  fontWeight: 400,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.body,
+  fontWeight: uiTypographyTokens.weight.regular,
   overflow: 'visible',
   display: '-webkit-box',
   WebkitLineClamp: 2,
@@ -152,10 +153,10 @@ const compactPercentBlockStyle: CSSProperties = {
 
 const percentValueStyle: CSSProperties = {
   minWidth: 0,
-  fontSize: 28,
-  lineHeight: 1.2,
-  fontWeight: 600,
-  letterSpacing: -0.5,
+  fontSize: uiTypographyTokens.role.dashboardValue,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
+  letterSpacing: 0,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -163,15 +164,15 @@ const percentValueStyle: CSSProperties = {
 
 const compactPercentValueStyle: CSSProperties = {
   ...percentValueStyle,
-  fontSize: 22,
+  fontSize: uiTypographyTokens.role.dashboardValue,
 }
 
 const percentLabelStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
-  fontSize: 10,
-  lineHeight: 1.2,
-  fontWeight: 400,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.regular,
   overflow: 'visible',
   display: '-webkit-box',
   WebkitLineClamp: 2,
@@ -212,9 +213,9 @@ const progressHeaderStyle: CSSProperties = {
 const progressLabelStyle: CSSProperties = {
   minWidth: 0,
   color: 'var(--ui-text-primary)',
-  fontSize: 10.5,
-  lineHeight: 1.2,
-  fontWeight: 500,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.medium,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -223,9 +224,9 @@ const progressLabelStyle: CSSProperties = {
 const progressValueStyle: CSSProperties = {
   flexShrink: 0,
   color: MUTED,
-  fontSize: 10.4,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
 }
 
@@ -248,9 +249,9 @@ const progressFillStyle: CSSProperties = {
 const paceTextStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
-  fontSize: 10.5,
-  lineHeight: 1.3,
-  fontWeight: 400,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.body,
+  fontWeight: uiTypographyTokens.weight.regular,
   overflow: 'hidden',
   display: '-webkit-box',
   WebkitLineClamp: 2,
@@ -259,9 +260,9 @@ const paceTextStyle: CSSProperties = {
 
 const paceValueStyle: CSSProperties = {
   minWidth: 0,
-  fontSize: 14,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.hierarchy.t3,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -296,9 +297,9 @@ const comparisonRowStyle: CSSProperties = {
 const comparisonLabelStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
-  fontSize: 10.4,
-  lineHeight: 1.2,
-  fontWeight: 400,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.regular,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -307,9 +308,9 @@ const comparisonLabelStyle: CSSProperties = {
 const comparisonValueStyle: CSSProperties = {
   minWidth: 0,
   color: 'var(--ui-text-primary)',
-  fontSize: 13,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.label,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   textAlign: 'right',
   whiteSpace: 'nowrap',
   overflow: 'visible',
@@ -319,9 +320,9 @@ const comparisonValueStyle: CSSProperties = {
 const comparisonNoteStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
-  fontSize: 10.2,
-  lineHeight: 1.3,
-  fontWeight: 400,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.body,
+  fontWeight: uiTypographyTokens.weight.regular,
   overflow: 'hidden',
   display: '-webkit-box',
   WebkitLineClamp: 2,
@@ -335,8 +336,8 @@ const emptyStyle: CSSProperties = {
   display: 'grid',
   placeItems: 'center',
   color: SOFT_TEXT,
-  fontSize: 12,
-  lineHeight: 1.35,
+  fontSize: uiTypographyTokens.role.metadata,
+  lineHeight: uiTypographyTokens.lineHeight.body,
   textAlign: 'center',
   padding: 12,
   fontFamily: FONT,

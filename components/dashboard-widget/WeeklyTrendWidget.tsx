@@ -1,6 +1,7 @@
 'use client'
 
 import type { CSSProperties } from 'react'
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
 import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
@@ -85,9 +86,9 @@ const summaryCardStyle: CSSProperties = {
 const summaryLabelStyle: CSSProperties = {
   minWidth: 0,
   color: SOFT_TEXT,
-  fontSize: 10.5,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -96,9 +97,9 @@ const summaryLabelStyle: CSSProperties = {
 const summaryValueStyle: CSSProperties = {
   minWidth: 0,
   color: 'var(--ui-text-primary)',
-  fontSize: 15,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.hierarchy.t3,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -159,9 +160,9 @@ const barBaseStyle: CSSProperties = {
 const weekLabelStyle: CSSProperties = {
   minWidth: 0,
   color: MUTED,
-  fontSize: 10.5,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   textAlign: 'center',
   whiteSpace: 'nowrap',
   overflow: 'visible',
@@ -175,9 +176,9 @@ const legendStyle: CSSProperties = {
   alignItems: 'center',
   gap: 10,
   color: SOFT_TEXT,
-  fontSize: 10.5,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   overflow: 'hidden',
 }
 
@@ -209,9 +210,9 @@ const weekMiniCardStyle: CSSProperties = {
 const weekMiniTitleStyle: CSSProperties = {
   minWidth: 0,
   color: MUTED,
-  fontSize: 10,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -220,9 +221,9 @@ const weekMiniTitleStyle: CSSProperties = {
 const weekMiniValueStyle: CSSProperties = {
   minWidth: 0,
   color: 'var(--ui-text-primary)',
-  fontSize: 11.5,
-  lineHeight: 1.2,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
+  fontWeight: uiTypographyTokens.weight.semibold,
   whiteSpace: 'nowrap',
   overflow: 'visible',
   textOverflow: 'ellipsis',
@@ -234,8 +235,8 @@ const emptyStyle: CSSProperties = {
   display: 'grid',
   placeItems: 'center',
   color: SOFT_TEXT,
-  fontSize: 12,
-  lineHeight: 1.35,
+  fontSize: uiTypographyTokens.role.metadata,
+  lineHeight: uiTypographyTokens.lineHeight.body,
   textAlign: 'center',
   padding: 12,
   fontFamily: FONT_FAMILY,
@@ -467,7 +468,7 @@ export default function WeeklyTrendWidget({
               <div style={{ ...weekMiniValueStyle, color: week.balance >= 0 ? GREEN : RED }}>
                 {formatMoney(week.balance)}
               </div>
-              <div style={{ ...weekMiniTitleStyle, fontWeight: 600 }}>{week.count} wpisów</div>
+              <div style={{ ...weekMiniTitleStyle, fontWeight: uiTypographyTokens.weight.semibold }}>{week.count} wpisów</div>
             </div>
           ))}
         </div>

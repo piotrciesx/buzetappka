@@ -138,28 +138,28 @@
 }
 
 [data-budget-tree-workspace="true"] [data-category-row-name="true"] {
-  font-size: var(--ui-font-size-body) !important;
-  font-weight: 700 !important;
+  font-size: var(--ui-type-t3) !important;
+  font-weight: var(--ui-font-weight-bold) !important;
   letter-spacing: 0 !important;
 }
 
 [data-budget-tree-workspace="true"]
   [data-category-drag-row="true"][data-category-level="2"]
   [data-category-row-name="true"] {
-  font-size: 14.5px !important;
+  font-size: var(--ui-type-t3) !important;
 }
 
 [data-budget-tree-workspace="true"]
   [data-category-drag-row="true"][data-category-level="3"]
   [data-category-row-name="true"] {
-  font-size: 13.5px !important;
-  font-weight: 660 !important;
+  font-size: var(--ui-type-label) !important;
+  font-weight: var(--ui-font-weight-semibold) !important;
 }
 
 [data-budget-tree-workspace="true"] [data-category-row-amount="true"] {
   max-width: 152px !important;
-  font-size: 13px !important;
-  font-weight: 740 !important;
+  font-size: var(--ui-type-label) !important;
+  font-weight: var(--ui-font-weight-bold) !important;
 }
 
 [data-category-actions="true"] button,

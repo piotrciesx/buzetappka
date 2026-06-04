@@ -3,6 +3,7 @@ import type {
   DashboardMonthlyTrendPoint,
   DashboardMonthOverMonthMetric,
 } from '../../lib/dashboardStats'
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 import type { DayMetric, LineSeries } from './dashboardWidgetTileTypes'
 import {
   SERIES_COLORS,
@@ -195,7 +196,7 @@ export function SimpleBars({
             <span style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
               {item.label}
             </span>
-            <strong style={{ fontWeight: 600 }}>{formatMoney(item.value)}</strong>
+            <strong style={{ fontWeight: uiTypographyTokens.weight.semibold }}>{formatMoney(item.value)}</strong>
           </RankingRow>
           <ProgressBarPrimitive
             value={clampPercent((item.value / maxValue) * 100)}
@@ -246,7 +247,7 @@ export function Heatmap({ days, dense }: { days: DayMetric[]; dense: boolean }) 
             justifyContent: 'center',
             color: Math.abs(day.balance) > maxAbsBalance * 0.6 ? 'var(--ui-surface-card)' : 'var(--ui-text-primary)',
             fontSize: dense ? 0 : 9,
-            fontWeight: 600,
+            fontWeight: uiTypographyTokens.weight.semibold,
           }}
         >
           {!dense ? day.day : null}
@@ -360,7 +361,7 @@ export function MonthOverMonthTable({
                 gap: 5,
               }}
             >
-              <div style={{ ...listRowStyle, fontWeight: 600 }}>
+              <div style={{ ...listRowStyle, fontWeight: uiTypographyTokens.weight.semibold }}>
                 <span>{metric.label}</span>
                 <strong style={{ color }}>{formatChange(metric.change.percent)}</strong>
               </div>

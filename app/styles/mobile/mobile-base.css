@@ -187,8 +187,8 @@
     gap: 2px;
     background: transparent;
     color: var(--ui-color-secondary-text);
-    font-size: 10px;
-    font-weight: 650;
+    font-size: var(--ui-type-widget-meta);
+    font-weight: var(--ui-font-weight-semibold);
   }
 
   [data-budget-mobile-nav="true"] svg {
@@ -229,8 +229,8 @@
     padding: 0 10px;
     background: var(--ui-color-card-background);
     color: var(--ui-color-secondary-text);
-    font-size: 12px;
-    font-weight: 650;
+    font-size: var(--ui-type-metadata);
+    font-weight: var(--ui-font-weight-semibold);
   }
 
   [data-budget-app="true"] [style*="position: fixed"][style*="bottom"] {

@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 
 export const GREEN = 'var(--ui-financial-income)'
 export const RED = 'var(--ui-financial-expense)'
@@ -49,17 +50,17 @@ export const selectStyle: CSSProperties = {
   borderColor: 'var(--ui-border-active)',
   borderRadius: 'var(--ui-input-radius)',
   padding: '6px 8px',
-  fontSize: 12,
-  fontWeight: 720,
+  fontSize: uiTypographyTokens.role.metadata,
+  fontWeight: uiTypographyTokens.weight.bold,
   background: 'var(--ui-surface-card)',
   color: 'var(--ui-text-primary)',
 }
 
 export const tileTitleStyle: CSSProperties = {
   color: 'var(--ui-text-primary)',
-  fontSize: 'var(--ui-font-size-body-sm)',
-  fontWeight: 760,
-  lineHeight: 1.2,
+  fontSize: uiTypographyTokens.role.widgetTitle,
+  fontWeight: uiTypographyTokens.weight.bold,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
   letterSpacing: 0,
   display: '-webkit-box',
   WebkitLineClamp: 2,
@@ -70,8 +71,8 @@ export const tileTitleStyle: CSSProperties = {
 
 export const metaStyle: CSSProperties = {
   marginTop: 4,
-  fontSize: 10,
-  lineHeight: 1.25,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
   color: 'var(--ui-text-muted)',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
@@ -138,27 +139,27 @@ export const dashboardMetricCard: CSSProperties = {
 }
 
 export const valueStyle: CSSProperties = {
-  fontSize: 22,
-  fontWeight: 780,
-  lineHeight: 1.2,
+  fontSize: uiTypographyTokens.role.dashboardValue,
+  fontWeight: uiTypographyTokens.weight.bold,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
   letterSpacing: 0,
 }
 
 export const compactValueStyle: CSSProperties = {
   ...valueStyle,
-  fontSize: 18,
+  fontSize: uiTypographyTokens.hierarchy.t2,
 }
 
 export const smallTextStyle: CSSProperties = {
   color: SOFT_TEXT,
-  fontSize: 11.5,
-  lineHeight: 1.35,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.body,
 }
 
 export const labelStyle: CSSProperties = {
   color: MUTED,
-  fontSize: 10.5,
-  lineHeight: 1.25,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
 }
 
 export const listStyle: CSSProperties = {
@@ -172,8 +173,8 @@ export const listRowStyle: CSSProperties = {
   justifyContent: 'space-between',
   alignItems: 'baseline',
   gap: 10,
-  fontSize: 12,
-  lineHeight: 1.25,
+  fontSize: uiTypographyTokens.role.metadata,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
 }
 
 export const metricGridStyle: CSSProperties = {
@@ -223,8 +224,8 @@ export const dragHandleStyle: CSSProperties = {
   color: 'var(--ui-text-primary)',
   cursor: 'grab',
   touchAction: 'none',
-  fontWeight: 600,
-  lineHeight: 1.2,
+  fontWeight: uiTypographyTokens.weight.semibold,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
   boxShadow:
     'inset 1px 1px 0 var(--ui-glass-surface-strong), 0 6px 14px var(--ui-shadow-medium-color)',
 }
@@ -232,5 +233,5 @@ export const dragHandleStyle: CSSProperties = {
 export const iconButtonStyle: CSSProperties = {
   ...dragHandleStyle,
   cursor: 'pointer',
-  fontSize: 13,
+  fontSize: uiTypographyTokens.role.label,
 }

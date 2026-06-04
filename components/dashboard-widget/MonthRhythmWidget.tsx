@@ -1,5 +1,6 @@
 'use client'
 
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 import type { Category, Transaction } from '../../lib/budgetPageTypes'
 import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
 import { GREEN, MUTED, RED } from './dashboardWidgetTileStyles'
@@ -60,8 +61,8 @@ function MonthCalendarHeatmap({
               gridTemplateColumns: `repeat(7, ${cellSize}px)`,
               gap,
               color: MUTED,
-              fontSize: 10.5,
-              fontWeight: 600,
+              fontSize: uiTypographyTokens.role.widgetMeta,
+              fontWeight: uiTypographyTokens.weight.semibold,
               textAlign: 'center',
             }}
           >
@@ -112,8 +113,8 @@ function MonthCalendarHeatmap({
                   display: 'grid',
                   placeItems: 'center',
                   color: isInactive ? MUTED : visual.textColor,
-                  fontSize: compact ? 10 : 10.5,
-                  fontWeight: 600,
+                  fontSize: uiTypographyTokens.role.widgetMeta,
+                  fontWeight: uiTypographyTokens.weight.semibold,
                   boxSizing: 'border-box',
                   overflow: 'hidden',
                   opacity: isInactive ? 0.62 : 1,
@@ -175,7 +176,7 @@ function CashflowChart({ days }: { days: DayPoint[] }) {
         overflow: 'hidden',
       }}
     >
-      <div style={{ color: 'var(--ui-text-primary)', fontSize: 14, fontWeight: 600 }}>
+      <div style={{ color: 'var(--ui-text-primary)', fontSize: uiTypographyTokens.hierarchy.t3, fontWeight: uiTypographyTokens.weight.semibold }}>
         Trend
       </div>
 
@@ -211,9 +212,9 @@ function CashflowChart({ days }: { days: DayPoint[] }) {
               bottom: 28,
               width: 90,
               color: MUTED,
-              fontSize: 12,
-              fontWeight: 600,
-              lineHeight: 1.2,
+              fontSize: uiTypographyTokens.role.metadata,
+              fontWeight: uiTypographyTokens.weight.semibold,
+              lineHeight: uiTypographyTokens.lineHeight.compact,
             }}
           >
             {hasRange ? (
@@ -281,8 +282,8 @@ function CashflowChart({ days }: { days: DayPoint[] }) {
               right: 40,
               top: hasRange ? `calc(${finalLabelTop}% - 32px)` : `calc(${finalLabelTop}% - 28px)`,
               color: finalLabelColor,
-              fontSize: 14,
-              fontWeight: 600,
+              fontSize: uiTypographyTokens.hierarchy.t3,
+              fontWeight: uiTypographyTokens.weight.semibold,
               letterSpacing: 0,
               whiteSpace: 'nowrap',
               maxWidth: 146,
@@ -340,7 +341,7 @@ export default function MonthRhythmWidget({
         }}
       >
         <div style={{ minWidth: 0 }}>
-          <div style={{ color: 'var(--ui-text-primary)', fontSize: 13, fontWeight: 600, lineHeight: 1.2 }}>
+          <div style={{ color: 'var(--ui-text-primary)', fontSize: uiTypographyTokens.role.label, fontWeight: uiTypographyTokens.weight.semibold, lineHeight: uiTypographyTokens.lineHeight.compact }}>
             Rytm dni
           </div>
         </div>
@@ -376,7 +377,7 @@ export default function MonthRhythmWidget({
         }}
       >
         <div>
-          <div style={{ color: 'var(--ui-text-primary)', fontSize: 13, fontWeight: 600, lineHeight: 1.2 }}>
+          <div style={{ color: 'var(--ui-text-primary)', fontSize: uiTypographyTokens.role.label, fontWeight: uiTypographyTokens.weight.semibold, lineHeight: uiTypographyTokens.lineHeight.compact }}>
             Rytm dni
           </div>
         </div>

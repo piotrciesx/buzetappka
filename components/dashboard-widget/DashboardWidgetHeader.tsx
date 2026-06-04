@@ -1,6 +1,6 @@
 import { useState, type ButtonHTMLAttributes } from 'react'
 import type { DashboardWidgetDefinition, DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
-import { uiZIndex } from '../../lib/uiFoundation'
+import { uiZIndex, uiTypographyTokens } from '../../lib/uiFoundation'
 import {
   dragHandleStyle,
   iconButtonStyle,
@@ -62,8 +62,8 @@ export default function DashboardWidgetHeader({
               width: 'auto',
               minWidth: 34,
               padding: '0 8px',
-              fontSize: 14,
-              fontWeight: 600,
+              fontSize: uiTypographyTokens.hierarchy.t3,
+              fontWeight: uiTypographyTokens.weight.semibold,
             }}
             aria-label={`Przełącz kafel ${safeDefinition.title} na tryb ${sizeButtonLabel}`}
             onClick={onToggleSize}

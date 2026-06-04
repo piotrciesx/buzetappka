@@ -186,8 +186,8 @@
 [data-budget-pinned-category="true"] span {
   width: 100% !important;
   color: inherit !important;
-  font-size: 11px !important;
-  font-weight: 700 !important;
+  font-size: var(--ui-type-widget-meta) !important;
+  font-weight: var(--ui-font-weight-bold) !important;
   text-align: center !important;
 }
 
@@ -233,8 +233,8 @@
 [data-budget-sort-trigger="true"] {
   width: auto !important;
   padding: 0 var(--ui-space-7) !important;
-  font-size: 12px !important;
-  font-weight: 720 !important;
+  font-size: var(--ui-type-metadata) !important;
+  font-weight: var(--ui-font-weight-bold) !important;
 }
 
 [data-budget-notice-badge="true"] {
@@ -249,9 +249,9 @@
   border-radius: 999px !important;
   background: var(--ui-financial-expense) !important;
   color: var(--ui-surface-card) !important;
-  font-size: 10px !important;
-  font-weight: 800 !important;
-  line-height: 1 !important;
+  font-size: var(--ui-type-widget-meta) !important;
+  font-weight: var(--ui-font-weight-bold) !important;
+  line-height: var(--ui-line-height-compact) !important;
 }
 
 [data-budget-notice-panel],
@@ -284,9 +284,9 @@
   place-items: center !important;
   border-radius: 999px !important;
   padding: 0 var(--ui-spacing-lg) !important;
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  line-height: 1 !important;
+  font-size: var(--ui-type-metadata) !important;
+  font-weight: var(--ui-font-weight-bold) !important;
+  line-height: var(--ui-line-height-compact) !important;
   box-shadow: none !important;
 }
 
@@ -334,8 +334,8 @@
 [data-month-note-item="true"] p {
   margin: 0 !important;
   color: var(--ui-text-secondary) !important;
-  font-size: 12px !important;
-  line-height: 1.45 !important;
+  font-size: var(--ui-type-metadata) !important;
+  line-height: var(--ui-line-height-body) !important;
   white-space: pre-wrap !important;
 }
 
@@ -352,8 +352,8 @@
   padding: 0 var(--ui-spacing-md) !important;
   background: var(--ui-surface-card) !important;
   color: var(--ui-text-secondary) !important;
-  font-size: 11px !important;
-  font-weight: 650 !important;
+  font-size: var(--ui-type-widget-meta) !important;
+  font-weight: var(--ui-font-weight-semibold) !important;
 }
 
 /*

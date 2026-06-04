@@ -1,3 +1,4 @@
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 import { NEUTRAL, labelStyle, listRowStyle, metricBoxStyle, progressTrackStyle } from './dashboardWidgetTileStyles'
 import { clampPercent, formatPercent } from './dashboardWidgetTileUtils'
 import { MetricCard, ProgressBar as ProgressBarPrimitive } from './dashboardWidgetPrimitives'
@@ -14,7 +15,7 @@ export function MetricBox({
   return (
     <MetricCard style={metricBoxStyle}>
       <div style={labelStyle}>{label}</div>
-      <div style={{ marginTop: 3, fontSize: 14, fontWeight: 600, color, lineHeight: 1.2 }}>
+      <div style={{ marginTop: 3, fontSize: uiTypographyTokens.hierarchy.t3, fontWeight: uiTypographyTokens.weight.semibold, color, lineHeight: uiTypographyTokens.lineHeight.compact }}>
         {value}
       </div>
     </MetricCard>
@@ -34,7 +35,7 @@ export function ProgressBar({
     <div>
       <div style={listRowStyle}>
         <span style={labelStyle}>{label}</span>
-        <strong style={{ color, fontWeight: 600 }}>{formatPercent(value)}</strong>
+        <strong style={{ color, fontWeight: uiTypographyTokens.weight.semibold }}>{formatPercent(value)}</strong>
       </div>
       <ProgressBarPrimitive value={clampPercent(value)} color={color} style={progressTrackStyle} />
     </div>

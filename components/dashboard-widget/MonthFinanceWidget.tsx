@@ -1,5 +1,6 @@
 'use client'
 
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 import { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
 import { DashboardStats } from '../../lib/dashboardStats'
 import { BLUE, GREEN, RED, dashboardMetricCard } from './dashboardWidgetTileStyles'
@@ -59,9 +60,11 @@ function BalanceBlock({
     <div style={{ minWidth: 0, textAlign: compact ? 'center' : 'left' }}>
       <div
         style={{
-          fontSize: compact ? 9.5 : 11.5,
+          fontSize: compact
+            ? uiTypographyTokens.role.widgetMeta
+            : uiTypographyTokens.role.metadata,
           color: 'var(--ui-text-secondary)',
-          fontWeight: 600,
+          fontWeight: uiTypographyTokens.weight.semibold,
           marginBottom: 2,
         }}
       >
@@ -69,10 +72,12 @@ function BalanceBlock({
       </div>
       <div
         style={{
-          fontSize: compact ? 16 : 26,
-          lineHeight: 1.2,
-          fontWeight: 600,
-          letterSpacing: '-0.04em',
+          fontSize: compact
+            ? uiTypographyTokens.hierarchy.t2
+            : uiTypographyTokens.role.dashboardValue,
+          lineHeight: uiTypographyTokens.lineHeight.compact,
+          fontWeight: uiTypographyTokens.weight.semibold,
+          letterSpacing: 0,
           color: getColorForMoney(balance),
           whiteSpace: 'nowrap',
           overflow: 'hidden',
@@ -136,8 +141,8 @@ function MetricCard({
             placeItems: 'center',
             background: tint,
             color,
-            fontWeight: 600,
-            fontSize: 12,
+            fontWeight: uiTypographyTokens.weight.semibold,
+            fontSize: uiTypographyTokens.role.metadata,
           }}
         >
           {icon}
@@ -147,9 +152,9 @@ function MetricCard({
           <div
             style={{
               color: 'var(--ui-text-secondary)',
-              fontSize: 9.5,
-              lineHeight: 1.2,
-              fontWeight: 600,
+              fontSize: uiTypographyTokens.role.widgetMeta,
+              lineHeight: uiTypographyTokens.lineHeight.compact,
+              fontWeight: uiTypographyTokens.weight.semibold,
               whiteSpace: 'nowrap',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
@@ -161,9 +166,9 @@ function MetricCard({
           <div
             style={{
               color,
-              fontSize: 12.5,
-              lineHeight: 1.2,
-              fontWeight: 600,
+              fontSize: uiTypographyTokens.role.label,
+              lineHeight: uiTypographyTokens.lineHeight.compact,
+              fontWeight: uiTypographyTokens.weight.semibold,
               whiteSpace: 'nowrap',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
@@ -200,8 +205,8 @@ function MetricCard({
           placeItems: 'center',
           background: tint,
           color,
-          fontWeight: 600,
-          fontSize: 13,
+          fontWeight: uiTypographyTokens.weight.semibold,
+          fontSize: uiTypographyTokens.role.label,
         }}
       >
         {icon}
@@ -211,9 +216,9 @@ function MetricCard({
         style={{
           minWidth: 0,
           color,
-          fontSize: 14,
-          lineHeight: 1.2,
-          fontWeight: 600,
+          fontSize: uiTypographyTokens.hierarchy.t3,
+          lineHeight: uiTypographyTokens.lineHeight.compact,
+          fontWeight: uiTypographyTokens.weight.semibold,
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
