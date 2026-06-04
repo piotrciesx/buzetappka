@@ -106,9 +106,14 @@ export const uiColorRoleTokens = {
   surface: {
     app: 'var(--ui-surface-app)',
     card: 'var(--ui-surface-card)',
+    panel: 'var(--ui-surface-panel)',
+    widget: 'var(--ui-surface-widget)',
+    modal: 'var(--ui-surface-modal)',
+    dropdown: 'var(--ui-surface-dropdown)',
     soft: 'var(--ui-surface-soft)',
     hover: 'var(--ui-surface-hover)',
     active: 'var(--ui-surface-active)',
+    empty: 'var(--ui-surface-empty)',
     disabled: 'var(--ui-surface-disabled)',
   },
   text: {
@@ -149,6 +154,7 @@ export const uiColorRoleTokens = {
     backdropStrong: 'var(--ui-overlay-backdrop-strong)',
   },
   shadow: {
+    none: 'var(--ui-shadow-none)',
     light: 'var(--ui-shadow-light)',
     medium: 'var(--ui-shadow-medium)',
     strong: 'var(--ui-shadow-strong)',
@@ -222,6 +228,9 @@ export const uiPrimitiveContracts = {
   segmentedControl: ['default', 'compact'],
   card: ['default', 'elevated', 'interactive'],
   panel: ['workspace', 'utility', 'side', 'rail'],
+  surface: ['card', 'panel', 'widget', 'modal', 'dropdown', 'empty'],
+  surfaceLevel: ['flat', 'raised', 'floating'],
+  surfaceDensity: ['compact', 'normal'],
   modal: ['s', 'm', 'l', 'xl'],
   overlay: ['popover', 'drawer', 'workspace'],
   dropdown: ['action', 'select', 'searchable', 'autocomplete', 'context', 'utilityPopover'],
@@ -232,7 +241,88 @@ export const uiPrimitiveContracts = {
   typographyRole: ['financialValue', 'label', 'metadata', 'helper', 'placeholder', 'widgetTitle', 'widgetMeta', 'dashboardValue'],
 } as const
 
+export const uiSurfaceApi = {
+  classNames: {
+    surface: 'ui-surface',
+    card: 'ui-surface--card',
+    panel: 'ui-surface--panel',
+    widget: 'ui-surface--widget',
+    modal: 'ui-surface--modal',
+    dropdown: 'ui-surface--dropdown',
+    empty: 'ui-surface--empty',
+  },
+  attributes: {
+    level: 'data-surface-level',
+    density: 'data-surface-density',
+  },
+  level: {
+    flat: 'flat',
+    raised: 'raised',
+    floating: 'floating',
+  },
+  density: {
+    compact: 'compact',
+    normal: 'normal',
+  },
+} as const
+
 export const uiSurfacePrimitives = {
+  base: {
+    className: uiSurfaceApi.classNames.surface,
+    border: '1px solid var(--ui-border-soft)',
+    radius: 'var(--ui-radius-lg)',
+    background: 'var(--ui-surface-card)',
+    color: 'var(--ui-text-primary)',
+    shadow: 'var(--ui-shadow-none)',
+  },
+  surfaceCard: {
+    className: `${uiSurfaceApi.classNames.surface} ${uiSurfaceApi.classNames.card}`,
+    border: '1px solid var(--ui-border-soft)',
+    radius: 'var(--ui-card-radius)',
+    background: 'var(--ui-surface-card)',
+    shadow: 'var(--ui-shadow-light)',
+    padding: 'var(--ui-surface-card-padding)',
+  },
+  surfacePanel: {
+    className: `${uiSurfaceApi.classNames.surface} ${uiSurfaceApi.classNames.panel}`,
+    border: '1px solid var(--ui-border-soft)',
+    radius: 'var(--ui-panel-radius)',
+    background: 'var(--ui-surface-panel)',
+    shadow: 'var(--ui-shadow-medium)',
+    padding: 'var(--ui-surface-panel-padding)',
+  },
+  surfaceWidget: {
+    className: `${uiSurfaceApi.classNames.surface} ${uiSurfaceApi.classNames.widget}`,
+    border: '1px solid var(--ui-border-soft)',
+    radius: 'var(--ui-card-radius)',
+    background: 'var(--ui-surface-widget)',
+    shadow: 'var(--ui-shadow-light)',
+    padding: 'var(--ui-surface-card-padding)',
+  },
+  surfaceModal: {
+    className: `${uiSurfaceApi.classNames.surface} ${uiSurfaceApi.classNames.modal}`,
+    border: '1px solid var(--ui-surface-border-default)',
+    radius: 'var(--ui-modal-radius)',
+    background: 'var(--ui-surface-modal)',
+    shadow: 'var(--ui-shadow-strong)',
+    padding: 'var(--ui-surface-modal-padding)',
+  },
+  surfaceDropdown: {
+    className: `${uiSurfaceApi.classNames.surface} ${uiSurfaceApi.classNames.dropdown}`,
+    border: '1px solid var(--ui-surface-border-control)',
+    radius: 'var(--ui-dropdown-radius)',
+    background: 'var(--ui-surface-dropdown)',
+    shadow: 'var(--ui-shadow-medium)',
+    padding: 'var(--ui-surface-dropdown-padding)',
+  },
+  surfaceEmpty: {
+    className: `${uiSurfaceApi.classNames.surface} ${uiSurfaceApi.classNames.empty}`,
+    border: '1px dashed var(--ui-surface-empty-border)',
+    radius: 'var(--ui-panel-radius)',
+    background: 'var(--ui-surface-empty)',
+    shadow: 'var(--ui-shadow-none)',
+    padding: 'var(--ui-surface-empty-padding)',
+  },
   card: {
     border: '1px solid var(--ui-surface-border-default)',
     radius: 'var(--ui-card-radius)',
@@ -1095,6 +1185,9 @@ export const uiOverlayPrimitives = {
 
 export type UiZIndexToken = keyof typeof uiZIndex
 export type UiLayoutPrimitive = keyof typeof uiLayoutPrimitives
+export type UiSurfacePrimitive = keyof typeof uiSurfacePrimitives
+export type UiSurfaceLevel = keyof typeof uiSurfaceApi.level
+export type UiSurfaceDensity = keyof typeof uiSurfaceApi.density
 export type UiModalSize = keyof typeof uiModalSizePrimitives
 export type UiBackdropTone = keyof typeof uiBackdropPrimitives
 export type UiDropdownPrimitive = keyof typeof uiDropdownPrimitives
