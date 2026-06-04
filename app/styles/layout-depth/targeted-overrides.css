@@ -696,10 +696,10 @@
 }
 
 [data-transaction-row="true"] {
-  min-height: 42px !important;
+  min-height: var(--ui-row-height-sm) !important;
   grid-template-columns: minmax(0, 1fr) 30px !important;
-  gap: 6px !important;
-  padding: 6px 7px !important;
+  gap: var(--ui-row-section-gap) !important;
+  padding: var(--ui-spacing-sm) var(--ui-row-padding-x) !important;
   border-color: rgba(226, 232, 240, 0.58) !important;
   border-radius: 10px !important;
   background: rgba(255, 255, 255, 0.62) !important;
@@ -715,7 +715,7 @@
 
 [data-transaction-row-main="true"] {
   grid-template-columns: 18px 24px minmax(0, 1fr) !important;
-  gap: 8px !important;
+  gap: var(--ui-row-gap) !important;
 }
 
 [data-transaction-payment-symbol="true"] {

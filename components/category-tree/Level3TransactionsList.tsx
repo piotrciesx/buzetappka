@@ -10,6 +10,7 @@ import type {
 import type { Tag, TransactionPaymentSplit } from '../../lib/budgetPageTypes'
 import type { PaymentSplitInput } from '../../lib/paymentSplitUtils'
 import type { DescriptionSuggestion } from '../../lib/suggestionUtils'
+import { uiListRowApi } from '../../lib/uiFoundation'
 import Level3TransactionRow from './Level3TransactionRow'
 import {
   getTransactionDayGroupLabel,
@@ -148,7 +149,7 @@ export default function Level3TransactionsList({
   styles,
 }: Level3TransactionsListProps) {
   return (
-    <>
+    <div className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listCompact}`}>
       {transactions.length === 0 && <div style={styles.emptyText}>Brak wpisów w tym miesiącu</div>}
 
       {transactions.map((transaction, index) => {
@@ -221,6 +222,6 @@ export default function Level3TransactionsList({
           </div>
         )
       })}
-    </>
+    </div>
   )
 }

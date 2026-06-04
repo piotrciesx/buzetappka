@@ -1,4 +1,5 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react'
+import { uiListRowApi } from '../../lib/uiFoundation'
 
 type PrimitiveProps<T extends HTMLElement = HTMLDivElement> = HTMLAttributes<T> & {
   children?: ReactNode
@@ -75,9 +76,19 @@ export function ProgressBar({
   )
 }
 
-export function RankingRow({ children, style, ...props }: PrimitiveProps) {
+const joinClassNames = (...classNames: Array<string | undefined>) =>
+  classNames.filter(Boolean).join(' ')
+
+export function RankingRow({ children, className, style, ...props }: PrimitiveProps) {
   return (
-    <div data-dashboard-widget-ranking-row="true" style={style} {...props}>
+    <div
+      className={joinClassNames(uiListRowApi.classNames.row, uiListRowApi.classNames.rowXs, className)}
+      data-dashboard-widget-ranking-row="true"
+      data-row-density={uiListRowApi.density.compact}
+      data-row-kind={uiListRowApi.kind.ranking}
+      style={style}
+      {...props}
+    >
       {children}
     </div>
   )

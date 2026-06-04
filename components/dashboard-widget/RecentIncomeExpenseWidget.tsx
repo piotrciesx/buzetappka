@@ -1,7 +1,7 @@
 'use client'
 
 import type { CSSProperties } from 'react'
-import { uiTypographyTokens } from '../../lib/uiFoundation'
+import { uiListRowApi, uiTypographyTokens } from '../../lib/uiFoundation'
 import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
 import { getUniqueCategoryLabel } from '../../lib/categoryUtils'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
@@ -126,6 +126,9 @@ const rowStyle: CSSProperties = {
   gridTemplateColumns: '43px minmax(0, 1fr) minmax(0, 0.72fr) 82px',
   alignItems: 'center',
   gap: 8,
+  padding: 0,
+  borderBottom: 0,
+  background: 'transparent',
   overflow: 'hidden',
 }
 
@@ -251,7 +254,12 @@ function EntryRow({
 }) {
   if (isCompact) {
     return (
-      <div style={compactRowStyle}>
+      <div
+        className={`${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowXs}`}
+        data-row-density={uiListRowApi.density.compact}
+        data-row-kind={uiListRowApi.kind.transaction}
+        style={compactRowStyle}
+      >
         <div style={dateStyle}>{formatDate(entry.date)}</div>
 
         <div style={compactMiddleStyle}>
@@ -265,7 +273,12 @@ function EntryRow({
   }
 
   return (
-    <div style={rowStyle}>
+    <div
+      className={`${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowXs}`}
+      data-row-density={uiListRowApi.density.compact}
+      data-row-kind={uiListRowApi.kind.transaction}
+      style={rowStyle}
+    >
       <div style={dateStyle}>{formatDate(entry.date)}</div>
       <div style={descriptionStyle}>{entry.description}</div>
       <div style={categoryStyle}>{entry.categoryName}</div>
@@ -294,7 +307,10 @@ function EntrySection({
       {entries.length === 0 ? (
         <div style={emptySectionStyle}>Brak wpisów.</div>
       ) : (
-        <div style={isCompact ? compactListStyle : wideListStyle}>
+        <div
+          className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listCompact}`}
+          style={isCompact ? compactListStyle : wideListStyle}
+        >
           {entries.map((entry) => (
             <EntryRow key={entry.id} entry={entry} color={color} isCompact={isCompact} />
           ))}

@@ -1,7 +1,7 @@
 'use client'
 
 import type { CSSProperties } from 'react'
-import { uiTypographyTokens } from '../../lib/uiFoundation'
+import { uiListRowApi, uiTypographyTokens } from '../../lib/uiFoundation'
 import { getExistingDaysInMonth } from '../../lib/dateUtils'
 import { GREEN, MUTED, RED, SOFT_BORDER, SOFT_TEXT } from './dashboardWidgetTileStyles'
 import { formatMoney } from './dashboardWidgetTileUtils'
@@ -124,6 +124,9 @@ const rowStyle: CSSProperties = {
   gridTemplateColumns: '43px minmax(0, 1fr) minmax(0, 0.72fr) 82px',
   alignItems: 'center',
   gap: 8,
+  padding: 0,
+  borderBottom: 0,
+  background: 'transparent',
   overflow: 'hidden',
 }
 
@@ -140,6 +143,9 @@ const rankingRowStyle: CSSProperties = {
   gridTemplateColumns: '18px minmax(0, 1fr)',
   alignItems: 'start',
   gap: 8,
+  padding: 0,
+  borderBottom: 0,
+  background: 'transparent',
   overflow: 'hidden',
 }
 
@@ -150,6 +156,9 @@ const sideRowStyle: CSSProperties = {
   gridTemplateColumns: '18px minmax(0, 1fr)',
   alignItems: 'start',
   gap: 8,
+  padding: 0,
+  borderBottom: 0,
+  background: 'transparent',
   overflow: 'hidden',
 }
 
@@ -348,7 +357,12 @@ function EntryRow({
 }) {
   if (isCompact) {
     return (
-      <div style={compactRowStyle}>
+      <div
+        className={`${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowXs}`}
+        data-row-density={uiListRowApi.density.compact}
+        data-row-kind={uiListRowApi.kind.transaction}
+        style={compactRowStyle}
+      >
         <div style={dateStyle}>{formatShortDate(entry.date)}</div>
 
         <div style={compactMiddleStyle}>
@@ -362,7 +376,12 @@ function EntryRow({
   }
 
   return (
-    <div style={rowStyle}>
+    <div
+      className={`${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowXs}`}
+      data-row-density={uiListRowApi.density.compact}
+      data-row-kind={uiListRowApi.kind.transaction}
+      style={rowStyle}
+    >
       <div style={dateStyle}>{formatShortDate(entry.date)}</div>
       <div style={descriptionStyle}>{entry.description}</div>
       <div style={categoryStyle}>{entry.categoryName}</div>
@@ -391,7 +410,7 @@ function EntrySection({
       {entries.length === 0 ? (
         <div style={emptySectionStyle}>Brak wpisów.</div>
       ) : (
-        <div style={compactListStyle}>
+        <div className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listCompact}`} style={compactListStyle}>
           {entries.map((entry) => (
             <EntryRow key={entry.id} entry={entry} color={color} isCompact={isCompact} />
           ))}
@@ -411,7 +430,12 @@ function RankingRow({
   color: string
 }) {
   return (
-    <div style={rankingRowStyle}>
+    <div
+      className={`${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowXs}`}
+      data-row-density={uiListRowApi.density.compact}
+      data-row-kind={uiListRowApi.kind.ranking}
+      style={rankingRowStyle}
+    >
       <div style={indexStyle}>{index + 2}</div>
 
       <div style={compactMiddleStyle}>
@@ -454,7 +478,7 @@ function HighlightCard({
       {secondaryEntries.length === 0 ? (
         <div style={emptySectionStyle}>Brak kolejnych pozycji.</div>
       ) : (
-        <div style={secondaryListStyle}>
+        <div className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listCompact}`} style={secondaryListStyle}>
           {secondaryEntries.map((entry, index) => (
             <RankingRow key={entry.id} entry={entry} index={index} color={color} />
           ))}
@@ -468,7 +492,12 @@ function MixedRankingRow({ entry, index }: { entry: TopEntry; index: number }) {
   const color = entry.amount >= 0 ? GREEN : RED
 
   return (
-    <div style={sideRowStyle}>
+    <div
+      className={`${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowXs}`}
+      data-row-density={uiListRowApi.density.compact}
+      data-row-kind={uiListRowApi.kind.ranking}
+      style={sideRowStyle}
+    >
       <div style={indexStyle}>{index + 1}</div>
 
       <div style={compactMiddleStyle}>
@@ -592,7 +621,7 @@ export default function TopItemsWidget({
           {mixedEntries.length === 0 ? (
             <div style={emptySectionStyle}>Brak pozycji do pokazania.</div>
           ) : (
-            <div style={sideListStyle}>
+            <div className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listCompact}`} style={sideListStyle}>
               {mixedEntries.slice(0, 5).map((entry, index) => (
                 <MixedRankingRow key={entry.id} entry={entry} index={index} />
               ))}

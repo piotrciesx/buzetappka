@@ -6,8 +6,8 @@
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) auto !important;
   align-items: center !important;
-  gap: var(--ui-space-5) !important;
-  padding: var(--ui-spacing-list-row-y) var(--ui-space-5) !important;
+  gap: var(--ui-row-gap) !important;
+  padding: var(--ui-row-padding-y) var(--ui-row-padding-x) !important;
   border: 1px solid var(--ui-border-soft) !important;
   border-radius: var(--ui-radius-md) !important;
   background: var(--ui-surface-card) !important;
@@ -36,7 +36,7 @@
 
 [data-category-drag-row="true"][data-category-level="2"] {
   min-height: 58px !important;
-  padding: var(--ui-spacing-md) var(--ui-spacing-lg) !important;
+  padding: var(--ui-row-padding-y) var(--ui-row-padding-x) !important;
   border-radius: var(--ui-radius-md) !important;
   border-color: var(--ui-border-soft) !important;
   background: var(--ui-surface-card) !important;
@@ -62,7 +62,7 @@
   min-width: 0 !important;
   display: flex !important;
   align-items: center !important;
-  gap: var(--ui-spacing-list-row-x) !important;
+  gap: var(--ui-row-gap) !important;
   flex-wrap: nowrap !important;
 }
 
@@ -414,7 +414,7 @@
 
 [data-transaction-day-entry="true"] {
   display: grid !important;
-  gap: var(--ui-space-1) !important;
+  gap: var(--ui-row-section-gap) !important;
 }
 
 [data-transaction-day-header="true"] {
@@ -429,13 +429,13 @@
 
 [data-transaction-row="true"] {
   width: 100% !important;
-  min-height: 34px !important;
+  min-height: var(--ui-row-height-xs) !important;
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) 30px !important;
   align-items: center !important;
-  gap: var(--ui-spacing-list-gap) !important;
-  padding: var(--ui-spacing-xs) var(--ui-spacing-list-row-y) !important;
-  border: 1px solid var(--ui-border-divider) !important;
+  gap: var(--ui-row-section-gap) !important;
+  padding: var(--ui-spacing-xs) var(--ui-row-padding-x) !important;
+  border: 1px solid var(--ui-row-divider) !important;
   border-radius: 7px !important;
   background: var(--ui-surface-card) !important;
   box-shadow: var(--ui-shadow-none) !important;
@@ -449,7 +449,7 @@
 
 [data-transaction-row="true"][data-transaction-selected="true"] {
   border-color: var(--ui-border-active) !important;
-  background: var(--ui-status-info-soft) !important;
+  background: var(--ui-row-selected-bg) !important;
 }
 
 [data-transaction-row-main="true"] {
@@ -457,7 +457,7 @@
   display: grid !important;
   grid-template-columns: 18px minmax(0, 1fr) !important;
   align-items: center !important;
-  gap: var(--ui-spacing-sm) !important;
+  gap: var(--ui-row-gap) !important;
 }
 
 [data-transaction-checkbox="true"] {

@@ -70,7 +70,8 @@
 [data-dashboard-widget-ranking-row="true"] {
   min-width: 0 !important;
   align-items: baseline !important;
-  gap: var(--ui-space-5) !important;
+  gap: var(--ui-row-gap) !important;
+  border-bottom: 0 !important;
 }
 
 [data-dashboard-widget-ranking-row="true"] span,

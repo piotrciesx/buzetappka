@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import { uiTypographyTokens } from '../../lib/uiFoundation'
+import { uiListRowApi, uiTypographyTokens } from '../../lib/uiFoundation'
 
 export const GREEN = 'var(--ui-financial-income)'
 export const RED = 'var(--ui-financial-expense)'
@@ -165,17 +165,20 @@ export const labelStyle: CSSProperties = {
 export const listStyle: CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
-  gap: 5,
+  gap: 'var(--ui-row-section-gap)',
 }
 
 export const listRowStyle: CSSProperties = {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'baseline',
-  gap: 10,
+  gap: 'var(--ui-row-gap)',
   fontSize: uiTypographyTokens.role.metadata,
   lineHeight: uiTypographyTokens.lineHeight.compact,
 }
+
+export const listClassName = `${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listCompact}`
+export const rankingRowClassName = `${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowXs}`
 
 export const metricGridStyle: CSSProperties = {
   display: 'grid',

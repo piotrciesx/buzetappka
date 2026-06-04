@@ -1,7 +1,7 @@
 'use client'
 
 import type { CSSProperties } from 'react'
-import { uiTypographyTokens } from '../../lib/uiFoundation'
+import { uiListRowApi, uiTypographyTokens } from '../../lib/uiFoundation'
 import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
 import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
@@ -138,8 +138,11 @@ const rowStyle: CSSProperties = {
   minWidth: 0,
   display: 'grid',
   gridTemplateColumns: '166px minmax(0, 1fr) 82px',
-  gap: 8,
+  gap: 'var(--ui-row-gap)',
   alignItems: 'center',
+  padding: 0,
+  borderBottom: 0,
+  background: 'transparent',
 }
 
 const compactRowStyle: CSSProperties = {
@@ -410,7 +413,13 @@ export default function DailyAveragesWidget({
           const percent = clampPercent((Math.abs(row.value) / maxRowValue) * 100)
 
           return (
-            <div key={row.label} style={isCompact ? compactRowStyle : rowStyle}>
+            <div
+              key={row.label}
+              className={`${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowXs}`}
+              data-row-density={uiListRowApi.density.compact}
+              data-row-kind={uiListRowApi.kind.table}
+              style={isCompact ? compactRowStyle : rowStyle}
+            >
               <div style={rowLabelStyle} title={row.helper}>
                 {row.label}
               </div>

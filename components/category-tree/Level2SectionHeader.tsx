@@ -1,4 +1,5 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react'
+import { uiListRowApi } from '../../lib/uiFoundation'
 import BudgetLimitIndicator, { type BudgetLimitView } from '../BudgetLimitIndicator'
 import CategoryIcon from '../CategoryIcon'
 import CategoryIconPicker from '../CategoryIconPicker'
@@ -127,10 +128,16 @@ export default function Level2SectionHeader({
 
   return (
     <div
+      {...headerDragProps}
+      className={`${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowMd} ${headerDragProps?.className ?? ''}`.trim()}
       data-category-drag-row="true"
       data-category-level="2"
       data-category-open={isOpen ? 'true' : 'false'}
+      data-row-density={uiListRowApi.density.normal}
+      data-row-kind={uiListRowApi.kind.category}
+      data-row-state={isDragging ? uiListRowApi.state.dragging : isOpen ? uiListRowApi.state.open : uiListRowApi.state.default}
       style={{
+        ...headerDragProps?.style,
         ...styles.l2Header,
         boxShadow: isDragging ? 'var(--ui-shadow-medium)' : styles.l2Header.boxShadow,
       }}
@@ -139,9 +146,8 @@ export default function Level2SectionHeader({
           onOpenEntries()
         }
       }}
-      {...headerDragProps}
     >
-      <div style={styles.l2Left} data-category-row-main="true">
+      <div className={uiListRowApi.classNames.main} style={styles.l2Left} data-category-row-main="true">
         {dragHandle}
 
         {hasChildren && (
@@ -185,7 +191,12 @@ export default function Level2SectionHeader({
         </div>
       </div>
 
-      <div data-category-actions="true" style={styles.actions} onClick={(event) => event.stopPropagation()}>
+      <div
+        className={uiListRowApi.classNames.actions}
+        data-category-actions="true"
+        style={styles.actions}
+        onClick={(event) => event.stopPropagation()}
+      >
         {canUseMonthCalendar && (
           <button
             type="button"

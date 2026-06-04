@@ -1,6 +1,6 @@
 [data-budget-tree-workspace="true"],
 [data-category-entries-popup="true"] {
-  --tree-row-gap: var(--ui-space-3);
+  --tree-row-gap: var(--ui-row-section-gap);
   --tree-section-gap: var(--ui-space-6);
   --tree-row-radius: var(--ui-radius-md);
   --tree-row-border: var(--ui-border-soft);
@@ -8,7 +8,7 @@
   --tree-row-border-open: var(--ui-border-active);
   --tree-row-bg: var(--ui-surface-card);
   --tree-row-bg-soft: var(--ui-surface-soft);
-  --tree-row-bg-hover: var(--ui-surface-soft);
+  --tree-row-bg-hover: var(--ui-row-hover-bg);
   --tree-row-shadow-hover: var(--ui-shadow-subtle);
   --tree-control-size: 30px;
   --tree-control-size-mobile: 36px;
@@ -91,8 +91,8 @@
   min-height: var(--tree-l2-min-height) !important;
   grid-template-columns: minmax(0, 1fr) auto !important;
   align-items: center !important;
-  gap: var(--ui-space-5) !important;
-  padding: var(--ui-space-4) var(--ui-space-5) !important;
+  gap: var(--ui-row-gap) !important;
+  padding: var(--ui-row-padding-y) var(--ui-row-padding-x) !important;
   border-color: var(--tree-row-border) !important;
   border-radius: var(--tree-row-radius) !important;
   background: var(--tree-row-bg) !important;
@@ -130,7 +130,7 @@
 }
 
 [data-budget-tree-workspace="true"] [data-category-row-main="true"] {
-  gap: var(--ui-space-4) !important;
+  gap: var(--ui-row-gap) !important;
 }
 
 [data-budget-tree-workspace="true"] [data-category-row-copy="true"] {

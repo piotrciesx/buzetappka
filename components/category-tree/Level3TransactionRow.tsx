@@ -14,7 +14,7 @@ import { getTransactionPaymentSourceDisplayLines } from '../../lib/paymentSplitU
 import type { DescriptionSuggestion } from '../../lib/suggestionUtils'
 import { normalizeDayInput } from '../../lib/dateUtils'
 import { splitTagInput } from '../../lib/tagUtils'
-import { uiInputApi } from '../../lib/uiFoundation'
+import { uiInputApi, uiListRowApi } from '../../lib/uiFoundation'
 import {
   activeSuggestionButtonStyle,
   clickableTagBadgeStyle,
@@ -178,12 +178,22 @@ export default function Level3TransactionRow({
 
   return (
     <div
+      className={`${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowSm}`}
       style={styles.transactionRow}
       data-transaction-row="true"
       data-transaction-kind={transactionKind}
       data-transaction-selected={isSelected ? 'true' : 'false'}
+      data-row-density={uiListRowApi.density.compact}
+      data-row-kind={uiListRowApi.kind.transaction}
+      data-row-state={
+        isSelected
+          ? uiListRowApi.state.selected
+          : isEditing || isMovingCurrent
+            ? uiListRowApi.state.active
+            : uiListRowApi.state.default
+      }
     >
-      <div data-transaction-row-main="true">
+      <div className={uiListRowApi.classNames.main} data-transaction-row-main="true">
         <input
           type="checkbox"
           checked={isSelected}
@@ -412,7 +422,7 @@ export default function Level3TransactionRow({
         )}
       </div>
 
-      <div style={styles.actions} data-transaction-actions="true">
+      <div className={uiListRowApi.classNames.actions} style={styles.actions} data-transaction-actions="true">
         {isEditing && !isSelectedMonthLocked ? (
           <>
             <button

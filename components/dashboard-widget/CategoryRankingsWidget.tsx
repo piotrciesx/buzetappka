@@ -1,7 +1,7 @@
 'use client'
 
 import type { CSSProperties } from 'react'
-import { uiTypographyTokens } from '../../lib/uiFoundation'
+import { uiListRowApi, uiTypographyTokens } from '../../lib/uiFoundation'
 import type { Category, Tag, Transaction } from '../../lib/budgetPageTypes'
 import type { DashboardStats, TopCategory } from '../../lib/dashboardStats'
 import type { DashboardWidgetLayoutItem } from '../../lib/dashboardTypes'
@@ -84,6 +84,9 @@ const rowStyle: CSSProperties = {
   gridTemplateColumns: '24px minmax(0, 1fr) 92px',
   alignItems: 'center',
   gap: 9,
+  padding: 0,
+  borderBottom: 0,
+  background: 'transparent',
   overflow: 'hidden',
 }
 
@@ -335,7 +338,12 @@ function RankingRow({
   const fillWidth = Math.max(6, percent)
 
   return (
-    <div style={isCompact ? compactRowStyle : rowStyle}>
+    <div
+      className={`${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowXs}`}
+      data-row-density={uiListRowApi.density.compact}
+      data-row-kind={uiListRowApi.kind.ranking}
+      style={isCompact ? compactRowStyle : rowStyle}
+    >
       <div style={rankStyle}>{String(index + 1).padStart(2, '0')}</div>
 
       <div style={middleStyle}>
@@ -425,7 +433,7 @@ export default function CategoryRankingsWidget({
   return (
     <div style={rootStyle}>
       {isCompact ? (
-        <div style={compactListStyle}>
+        <div className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listCompact}`} style={compactListStyle}>
           {visibleItems.map((item, index) => (
             <RankingRow
               key={item.categoryId}
@@ -438,7 +446,7 @@ export default function CategoryRankingsWidget({
         </div>
       ) : (
         <div style={wideLayoutStyle}>
-          <div style={wideListStyle}>
+          <div className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listCompact}`} style={wideListStyle}>
             {visibleItems.map((item, index) => (
               <RankingRow
                 key={item.categoryId}

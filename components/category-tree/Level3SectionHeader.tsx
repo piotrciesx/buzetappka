@@ -1,4 +1,5 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react'
+import { uiListRowApi } from '../../lib/uiFoundation'
 import BudgetLimitIndicator, { BudgetLimitView } from '../BudgetLimitIndicator'
 import CategoryIcon from '../CategoryIcon'
 import CategoryIconPicker from '../CategoryIconPicker'
@@ -127,10 +128,16 @@ export default function Level3SectionHeader({
 
   return (
     <div
+      {...headerDragProps}
+      className={`${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowSm} ${headerDragProps?.className ?? ''}`.trim()}
       data-category-drag-row="true"
       data-category-level="3"
       data-category-open={isOpen ? 'true' : 'false'}
+      data-row-density={uiListRowApi.density.compact}
+      data-row-kind={uiListRowApi.kind.category}
+      data-row-state={isDragging ? uiListRowApi.state.dragging : isOpen ? uiListRowApi.state.open : uiListRowApi.state.default}
       style={{
+        ...headerDragProps?.style,
         ...styles.l3Header,
         boxShadow: isDragging ? 'var(--ui-shadow-medium)' : styles.l3Header.boxShadow,
       }}
@@ -144,9 +151,8 @@ export default function Level3SectionHeader({
           onToggle()
         }
       }}
-      {...headerDragProps}
     >
-      <div style={styles.l2Left} data-category-row-main="true">
+      <div className={uiListRowApi.classNames.main} style={styles.l2Left} data-category-row-main="true">
         {dragHandle}
 
         <button
@@ -188,7 +194,12 @@ export default function Level3SectionHeader({
         </div>
       </div>
 
-      <div data-category-actions="true" style={styles.actions} onClick={(event) => event.stopPropagation()}>
+      <div
+        className={uiListRowApi.classNames.actions}
+        data-category-actions="true"
+        style={styles.actions}
+        onClick={(event) => event.stopPropagation()}
+      >
         {canUseMonthCalendar && (
           <button
             type="button"
