@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import { getCategoryPathLabel } from '../lib/budgetPageHelpers'
 import { Category, Transaction } from '../lib/budgetPageTypes'
-import { uiSurfacePrimitives, uiTypographyTokens } from '../lib/uiFoundation'
+import { uiListRowApi, uiSurfacePrimitives, uiTypographyTokens } from '../lib/uiFoundation'
 import {
   ActionRow,
   EmptyState,
@@ -51,26 +51,7 @@ const hintStyle: CSSProperties = {
   lineHeight: uiTypographyTokens.lineHeight.body,
 }
 
-const listStyle: CSSProperties = {
-  display: 'grid',
-  gap: 8,
-}
-
-const rowStyle: CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: 'minmax(0, 1fr) auto',
-  alignItems: 'center',
-  gap: 12,
-  minHeight: 74,
-  border: '1px solid var(--ui-border-divider)',
-  borderRadius: 'var(--ui-radius-lg)',
-  padding: '10px 12px',
-  background: 'var(--ui-surface-soft)',
-}
-
 const mainStyle: CSSProperties = {
-  minWidth: 0,
-  display: 'grid',
   gap: 7,
 }
 
@@ -130,8 +111,6 @@ const valueStyle: CSSProperties = {
 }
 
 const actionsStyle: CSSProperties = {
-  display: 'flex',
-  justifyContent: 'flex-end',
   gap: 6,
   flexWrap: 'wrap',
 }
@@ -188,7 +167,7 @@ export default function TrashPanel(props: Props) {
       {transactions.length === 0 ? (
         <EmptyState style={hintStyle}>Kosz jest pusty.</EmptyState>
       ) : (
-        <div style={listStyle}>
+        <div className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}>
           {transactions.map((transaction) => {
             const categoryLabel = categoriesById[transaction.category_id]
               ? getCategoryPathLabel(transaction.category_id, categoriesById)
@@ -196,8 +175,8 @@ export default function TrashPanel(props: Props) {
             const deletedAtLabel = transaction.deleted_at ? transaction.deleted_at.slice(0, 16) : '-'
 
             return (
-              <ListRow key={transaction.id} style={rowStyle}>
-                <div style={mainStyle}>
+              <ListRow key={transaction.id}>
+                <div className={uiListRowApi.classNames.main} style={mainStyle}>
                   <div style={topLineStyle}>
                     <strong style={amountStyle}>{getAmountNumber(transaction.amount)} zł</strong>
                     <span style={descriptionStyle}>{transaction.description || 'Bez opisu'}</span>
@@ -219,7 +198,7 @@ export default function TrashPanel(props: Props) {
                   </MetadataGrid>
                 </div>
 
-                <ActionRow style={actionsStyle}>
+                <ActionRow className={uiListRowApi.classNames.actions} style={actionsStyle}>
                   <button
                     type="button"
                     style={{ ...styles.secondaryButton, ...lightButtonStyle }}

@@ -11,8 +11,6 @@ export const panelStyle = {
 } as const
 
 export const cardsWrapStyle = {
-  display: 'grid',
-  gap: 12,
   marginTop: 12,
 } as const
 

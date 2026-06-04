@@ -58,7 +58,7 @@ export const gridStyle: CSSProperties = {
 
 export const itemStyle: CSSProperties = {
   padding: '10px 0',
-  borderTop: '1px solid var(--ui-surface-soft)',
+  borderTop: '1px solid var(--ui-row-divider)',
 }
 
 export const cardStyle: CSSProperties = {
@@ -121,10 +121,11 @@ export const detailGridStyle: CSSProperties = {
 export const linkedTransactionRowStyle: CSSProperties = {
   display: 'grid',
   gridTemplateColumns: '110px 1fr 100px 160px',
-  gap: 8,
+  gap: 'var(--ui-row-gap)',
   alignItems: 'center',
-  padding: '8px 0',
-  borderTop: '1px solid var(--ui-surface-soft)',
+  minHeight: 'var(--ui-row-height-sm)',
+  padding: 'var(--ui-spacing-xs) 0',
+  borderTop: '1px solid var(--ui-row-divider)',
   fontSize: uiTypographyTokens.role.label,
 }
 

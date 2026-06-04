@@ -42,12 +42,10 @@
 }
 
 [data-utility-list-row="true"] {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: var(--ui-spacing-lg);
-  min-height: 72px;
-  padding: var(--ui-space-5) var(--ui-space-6);
+  gap: var(--ui-row-gap);
+  min-height: var(--ui-row-height-lg);
+  padding: var(--ui-row-padding-y) var(--ui-row-padding-x);
+  border-bottom: 0;
 }
 
 [data-utility-list-row="true"][data-utility-tone="danger"],
@@ -117,8 +115,16 @@
 
 [data-payment-source-settings-grid="true"],
 [data-payment-source-list="true"] {
+  gap: var(--ui-row-section-gap);
+}
+
+[data-payment-source-settings-grid="true"] {
   display: grid;
-  gap: var(--ui-space-5);
+}
+
+[data-payment-source-list="true"] {
+  display: flex;
+  flex-direction: column;
 }
 
 [data-payment-source-settings-grid="true"] {

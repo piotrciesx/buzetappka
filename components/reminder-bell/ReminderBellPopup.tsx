@@ -1,7 +1,7 @@
 import { CSSProperties } from 'react'
 import { Category, RecurringTransaction } from '../../lib/budgetPageTypes'
 import { getInstallmentNumberForMonth, getRecurringReminderDay } from '../../lib/recurringTransactions'
-import { uiTypographyTokens } from '../../lib/uiFoundation'
+import { uiListRowApi, uiTypographyTokens } from '../../lib/uiFoundation'
 import { itemStyle, popoverStyle } from './reminderBellStyles'
 import {
   ReminderActionRow,
@@ -39,7 +39,8 @@ export default function ReminderBellPopup({
       {pendingReminders.length === 0 ? (
         <div style={styles.emptyText}>Brak przypomnień do decyzji w tym miesiącu.</div>
       ) : (
-        pendingReminders.map((reminder) => {
+        <div className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listCompact}`}>
+          {pendingReminders.map((reminder) => {
           const installment = getInstallmentNumberForMonth(reminder, selectedMonth)
           const category = categoriesById[reminder.category_id]
           const hasDuplicate = hasLinkedTransactionInSelectedMonth(reminder.id)
@@ -90,7 +91,8 @@ export default function ReminderBellPopup({
               </ReminderActionRow>
             </ReminderCard>
           )
-        })
+          })}
+        </div>
       )}
     </div>
   )

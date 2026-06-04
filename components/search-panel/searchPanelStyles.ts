@@ -1,4 +1,4 @@
-import { uiSurfacePrimitives, uiTypographyTokens } from '../../lib/uiFoundation'
+import { uiListRowApi, uiSurfacePrimitives, uiTypographyTokens } from '../../lib/uiFoundation'
 
 export const panelStyle = {
   border: 0,
@@ -126,8 +126,9 @@ export const historyWrapStyle = {
 export const historyHeaderStyle = {
   display: 'grid',
   gridTemplateColumns: '120px minmax(180px, 1.2fr) minmax(220px, 2fr) 130px',
-  gap: 12,
-  padding: '10px 12px',
+  gap: 'var(--ui-row-gap)',
+  minHeight: 'var(--ui-row-height-sm)',
+  padding: 'var(--ui-row-padding-y) var(--ui-row-padding-x)',
   background: 'var(--ui-surface-soft)',
   color: 'var(--ui-text-secondary)',
   fontWeight: uiTypographyTokens.weight.bold,
@@ -138,12 +139,16 @@ export const historyHeaderStyle = {
 export const historyRowStyle = {
   display: 'grid',
   gridTemplateColumns: '120px minmax(180px, 1.2fr) minmax(220px, 2fr) 130px',
-  gap: 12,
-  padding: '11px 12px',
-  borderBottom: '1px solid var(--ui-border-divider)',
+  gap: 'var(--ui-row-gap)',
+  minHeight: 'var(--ui-row-height-md)',
+  padding: 'var(--ui-row-padding-y) var(--ui-row-padding-x)',
+  borderBottom: '1px solid var(--ui-row-divider)',
   alignItems: 'start',
   fontSize: uiTypographyTokens.role.label,
 } as const
+
+export const historyHeaderClassName = `${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowSm}`
+export const historyRowClassName = `${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowMd}`
 
 export const responsiveSearchStyle = `
   [data-search-filter-field="wide"],

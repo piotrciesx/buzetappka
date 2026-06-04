@@ -1,5 +1,5 @@
 import type { HTMLAttributes, ReactNode } from 'react'
-import { uiSurfaceApi } from '../../lib/uiFoundation'
+import { uiListRowApi, uiSurfaceApi } from '../../lib/uiFoundation'
 
 type UtilityPanelTone = 'default' | 'danger' | 'info' | 'success'
 
@@ -73,7 +73,16 @@ type ListRowProps = UtilityPrimitiveProps<HTMLDivElement> & {
 export function ListRow({ children, className, tone = 'default', ...props }: ListRowProps) {
   return (
     <div
-      className={joinClassNames(uiSurfaceApi.classNames.surface, uiSurfaceApi.classNames.card, className)}
+      className={joinClassNames(
+        uiListRowApi.classNames.row,
+        uiListRowApi.classNames.rowLg,
+        uiSurfaceApi.classNames.surface,
+        uiSurfaceApi.classNames.card,
+        className
+      )}
+      data-row-density={uiListRowApi.density.normal}
+      data-row-kind={uiListRowApi.kind.utility}
+      data-row-state={uiListRowApi.state.default}
       data-surface-density={uiSurfaceApi.density.compact}
       data-surface-level={uiSurfaceApi.level.flat}
       data-utility-list-row="true"

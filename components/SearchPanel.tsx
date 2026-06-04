@@ -3,7 +3,7 @@
 import { CSSProperties, forwardRef } from 'react'
 import { Category, Tag, TransactionPaymentSplit } from '../lib/budgetPageTypes'
 import { getCategoryPathLabel } from '../lib/budgetPageHelpers'
-import { uiInputApi, uiTypographyTokens } from '../lib/uiFoundation'
+import { uiInputApi, uiListRowApi, uiTypographyTokens } from '../lib/uiFoundation'
 import { getTransactionPaymentSourceDisplayLines } from '../lib/paymentSplitUtils'
 import { getTransactionMonth, isDaylessTransaction } from '../lib/transactionDomain'
 import {
@@ -57,7 +57,9 @@ import {
   tagsWrapStyle,
   tagButtonBaseStyle,
   historyWrapStyle,
+  historyHeaderClassName,
   historyHeaderStyle,
+  historyRowClassName,
   historyRowStyle,
   responsiveSearchStyle,
   categoryNameStyle,
@@ -303,7 +305,13 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
           </div>
 
           <div data-bank-search-history="true" style={historyWrapStyle}>
-            <div data-bank-search-history-header="true" style={historyHeaderStyle}>
+            <div
+              className={historyHeaderClassName}
+              data-bank-search-history-header="true"
+              data-row-density={uiListRowApi.density.compact}
+              data-row-kind={uiListRowApi.kind.table}
+              style={historyHeaderStyle}
+            >
               <div>Data</div>
               <div>Kwota</div>
               <div>Kategoria / opis</div>
@@ -333,7 +341,14 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                 })
 
                 return (
-                  <div key={transaction.id} data-bank-search-history-row="true" style={historyRowStyle}>
+                  <div
+                    key={transaction.id}
+                    className={historyRowClassName}
+                    data-bank-search-history-row="true"
+                    data-row-density={uiListRowApi.density.normal}
+                    data-row-kind={uiListRowApi.kind.table}
+                    style={historyRowStyle}
+                  >
                     <div>{getTransactionDateLabel(isDaylessTransaction(transaction), transaction.date)}</div>
                     <div
                       style={{

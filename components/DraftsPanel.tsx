@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 import type { TransactionDraft } from '../lib/draftUtils'
-import { uiSurfacePrimitives, uiTypographyTokens } from '../lib/uiFoundation'
+import { uiListRowApi, uiSurfacePrimitives, uiTypographyTokens } from '../lib/uiFoundation'
 import {
   ActionRow,
   EmptyState,
@@ -32,26 +32,7 @@ const draftsHeaderStyle = {
   borderBottom: '1px solid var(--ui-border-divider)',
 } as const
 
-const draftsListStyle = {
-  display: 'grid',
-  gap: 8,
-} as const
-
-const draftRowStyle = {
-  display: 'grid',
-  gridTemplateColumns: 'minmax(0, 1fr) auto',
-  alignItems: 'center',
-  gap: 12,
-  minHeight: 72,
-  border: '1px solid var(--ui-border-divider)',
-  borderRadius: 'var(--ui-radius-lg)',
-  padding: '10px 12px',
-  background: 'var(--ui-surface-soft)',
-} as const
-
 const draftMainStyle = {
-  minWidth: 0,
-  display: 'grid',
   gap: 7,
 } as const
 
@@ -110,9 +91,6 @@ const draftValueStyle = {
 } as const
 
 const draftActionsStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
   gap: 6,
   flexWrap: 'wrap' as const,
 } as const
@@ -193,7 +171,7 @@ export default function DraftsPanel(props: Props) {
       ) : drafts.length === 0 ? (
         <EmptyState style={compactStatusStyle}>Nie ma zapisanych szkiców.</EmptyState>
       ) : (
-        <div style={draftsListStyle}>
+        <div className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}>
           {drafts.map((draft) => {
             const draftLevel1Id = getDraftLevel1Id(draft)
             const typeLabel = draft.type === 'income' ? 'Przychód' : 'Wydatek'
@@ -203,8 +181,8 @@ export default function DraftsPanel(props: Props) {
             const updatedLabel = formatDraftUpdatedAt(draft.updated_at)
 
             return (
-              <ListRow key={draft.id} style={draftRowStyle}>
-                <div style={draftMainStyle}>
+              <ListRow key={draft.id}>
+                <div className={uiListRowApi.classNames.main} style={draftMainStyle}>
                   <div style={draftTopLineStyle}>
                     <strong style={draftTypeStyle}>{typeLabel}</strong>
                     <span style={draftCategoryStyle}>{getDraftLocationLabel(draft)}</span>
@@ -230,7 +208,7 @@ export default function DraftsPanel(props: Props) {
                   </MetadataGrid>
                 </div>
 
-                <ActionRow style={draftActionsStyle}>
+                <ActionRow className={uiListRowApi.classNames.actions} style={draftActionsStyle}>
                   <button
                     type="button"
                     style={{ ...styles.primaryButton, ...lightButtonStyle }}

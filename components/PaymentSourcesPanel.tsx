@@ -2,7 +2,7 @@
 
 import { CSSProperties, useMemo, useState } from 'react'
 import { PaymentSource, PaymentSourceType } from '../lib/budgetPageTypes'
-import { uiInputApi, uiSurfacePrimitives, uiTypographyTokens } from '../lib/uiFoundation'
+import { uiInputApi, uiListRowApi, uiSurfacePrimitives, uiTypographyTokens } from '../lib/uiFoundation'
 import {
   DEFAULT_PAYMENT_SOURCE_COLOR,
   DEFAULT_PAYMENT_SOURCE_EMOJI,
@@ -134,11 +134,6 @@ const sourceFormStyle = {
   border: '1px solid var(--ui-border-divider)',
   borderRadius: 'var(--ui-radius-lg)',
   background: 'var(--ui-surface-soft)',
-} as const
-
-const listStyle = {
-  display: 'grid',
-  gap: 10,
 } as const
 
 const sourceHeaderStyle = {
@@ -551,7 +546,10 @@ export default function PaymentSourcesPanel(props: Props) {
         )}
       </SettingsSection>
 
-      <div data-payment-source-list="true" style={listStyle}>
+      <div
+        className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}
+        data-payment-source-list="true"
+      >
         {paymentSources.length === 0 ? (
           <EmptyState style={styles.emptyStateCard}>Brak zapisanych źródeł płatności.</EmptyState>
         ) : (

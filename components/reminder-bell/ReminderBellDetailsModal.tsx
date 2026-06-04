@@ -1,5 +1,6 @@
 import { CSSProperties } from 'react'
 import { Category, RecurringTransaction, Transaction } from '../../lib/budgetPageTypes'
+import { uiListRowApi } from '../../lib/uiFoundation'
 import {
   getMonthCycleDate,
   getRecurringFrequencyLabel,
@@ -244,9 +245,18 @@ export default function ReminderBellDetailsModal({
                   Brak powiązanych wpisów.
                 </div>
               ) : (
-                <div style={{ marginTop: 8 }}>
+                <div
+                  className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listCompact}`}
+                  style={{ marginTop: 8 }}
+                >
                   {selectedDetailsLinkedTransactions.map((transaction) => (
-                    <CalendarEntryRow key={transaction.id} style={linkedTransactionRowStyle}>
+                    <CalendarEntryRow
+                      key={transaction.id}
+                      className={`${uiListRowApi.classNames.row} ${uiListRowApi.classNames.rowSm}`}
+                      data-row-density={uiListRowApi.density.compact}
+                      data-row-kind={uiListRowApi.kind.table}
+                      style={linkedTransactionRowStyle}
+                    >
                       <div>{transaction.date}</div>
                       <div>{transaction.description || 'bez opisu'}</div>
                       <div>{formatAmount(transaction.amount)}</div>

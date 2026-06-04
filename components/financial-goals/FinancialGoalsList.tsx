@@ -2,6 +2,7 @@ import { CSSProperties } from 'react'
 import { closestCenter, DndContext, DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { FinancialGoal, FinancialGoalAllocationMode } from '../../lib/budgetPageTypes'
+import { uiListRowApi } from '../../lib/uiFoundation'
 import { SortableGoalCard, StaticGoalCard } from './FinancialGoalCard'
 import { cardsWrapStyle } from './financialGoalsPanelUtils'
 
@@ -85,7 +86,10 @@ export default function FinancialGoalsList({
         ) : effectiveMode === 'priority' ? (
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={activeGoals.map((goal) => goal.id)} strategy={verticalListSortingStrategy}>
-              <div style={cardsWrapStyle}>
+              <div
+                className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}
+                style={cardsWrapStyle}
+              >
                 {activeGoals.map((goal) => (
                   <SortableGoalCard
                     key={goal.id}
@@ -102,7 +106,10 @@ export default function FinancialGoalsList({
             </SortableContext>
           </DndContext>
         ) : (
-          <div style={cardsWrapStyle}>
+          <div
+            className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}
+            style={cardsWrapStyle}
+          >
             {activeGoals.map((goal) => (
               <StaticGoalCard
                 key={goal.id}
@@ -131,7 +138,10 @@ export default function FinancialGoalsList({
         {archivedGoals.length === 0 ? (
           <div style={{ ...styles.emptyStateCard, marginTop: 12 }}>Brak celów archiwalnych.</div>
         ) : (
-          <div style={cardsWrapStyle}>
+          <div
+            className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}
+            style={cardsWrapStyle}
+          >
             {archivedGoals.map((goal) => (
               <StaticGoalCard
                 key={goal.id}
