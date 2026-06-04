@@ -4,7 +4,7 @@ import { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import UserAvatar from './UserAvatar'
 import { USER_AVATARS, getUserDisplayName, type UserPublicProfile } from '../lib/userAppearance'
-import { uiInputApi, uiTypographyTokens } from '../lib/uiFoundation'
+import { uiInputApi, uiSurfacePrimitives, uiTypographyTokens } from '../lib/uiFoundation'
 import {
   ActionRow,
   DangerZone,
@@ -477,8 +477,8 @@ export default function ProfileMembersPanel({
                 justifyContent: 'space-between',
                 gap: 12,
                 alignItems: 'center',
-                border: '1px solid var(--ui-border-divider)',
-                borderRadius: 8,
+                border: uiSurfacePrimitives.surfaceCard.border,
+                borderRadius: uiSurfacePrimitives.surfaceCard.radius,
                 padding: '8px 10px',
                 flexWrap: 'wrap',
               }}
@@ -645,7 +645,7 @@ export default function ProfileMembersPanel({
           <div
             style={{
               border: '1px solid var(--ui-financial-expense-soft)',
-              borderRadius: 8,
+              borderRadius: 'var(--ui-radius-sm)',
               padding: 12,
               background: 'var(--ui-financial-expense-soft)',
               display: 'grid',

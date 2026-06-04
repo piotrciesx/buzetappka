@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import { getCategoryPathLabel } from '../lib/budgetPageHelpers'
 import { Category, Transaction } from '../lib/budgetPageTypes'
-import { uiTypographyTokens } from '../lib/uiFoundation'
+import { uiSurfacePrimitives, uiTypographyTokens } from '../lib/uiFoundation'
 import {
   ActionRow,
   EmptyState,
@@ -24,11 +24,11 @@ type Props = {
 const panelStyle: CSSProperties = {
   display: 'grid',
   gap: 12,
-  border: '1px solid var(--ui-border-soft)',
-  borderRadius: 16,
+  border: uiSurfacePrimitives.surfacePanel.border,
+  borderRadius: uiSurfacePrimitives.surfacePanel.radius,
   padding: 12,
-  background: 'var(--ui-glass-surface-soft)',
-  boxShadow: 'var(--ui-shadow-card)',
+  background: uiSurfacePrimitives.surfacePanel.background,
+  boxShadow: uiSurfacePrimitives.surfacePanel.shadow,
 }
 
 const headerStyle: CSSProperties = {
@@ -43,7 +43,7 @@ const headerStyle: CSSProperties = {
 
 const hintStyle: CSSProperties = {
   border: '1px solid var(--ui-border-divider)',
-  borderRadius: 12,
+  borderRadius: 'var(--ui-radius-lg)',
   padding: '9px 11px',
   background: 'var(--ui-surface-soft)',
   color: 'var(--ui-text-secondary)',
@@ -63,7 +63,7 @@ const rowStyle: CSSProperties = {
   gap: 12,
   minHeight: 74,
   border: '1px solid var(--ui-border-divider)',
-  borderRadius: 12,
+  borderRadius: 'var(--ui-radius-lg)',
   padding: '10px 12px',
   background: 'var(--ui-surface-soft)',
 }

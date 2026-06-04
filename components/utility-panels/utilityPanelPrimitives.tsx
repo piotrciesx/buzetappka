@@ -1,4 +1,5 @@
 import type { HTMLAttributes, ReactNode } from 'react'
+import { uiSurfaceApi } from '../../lib/uiFoundation'
 
 type UtilityPanelTone = 'default' | 'danger' | 'info' | 'success'
 
@@ -10,13 +11,24 @@ type UtilityPanelProps = UtilityPrimitiveProps<HTMLElement> & {
   variant?: 'default' | 'compact'
 }
 
+const joinClassNames = (...classNames: Array<string | undefined>) =>
+  classNames.filter(Boolean).join(' ')
+
 export function UtilityPanel({
   children,
+  className,
   variant = 'default',
   ...props
 }: UtilityPanelProps) {
   return (
-    <section data-utility-panel="true" data-utility-variant={variant} {...props}>
+    <section
+      className={joinClassNames(uiSurfaceApi.classNames.surface, uiSurfaceApi.classNames.panel, className)}
+      data-surface-density={variant === 'compact' ? uiSurfaceApi.density.compact : uiSurfaceApi.density.normal}
+      data-surface-level={uiSurfaceApi.level.raised}
+      data-utility-panel="true"
+      data-utility-variant={variant}
+      {...props}
+    >
       {children}
     </section>
   )
@@ -28,11 +40,19 @@ type SettingsSectionProps = UtilityPrimitiveProps<HTMLElement> & {
 
 export function SettingsSection({
   children,
+  className,
   tone = 'default',
   ...props
 }: SettingsSectionProps) {
   return (
-    <section data-utility-settings-section="true" data-utility-tone={tone} {...props}>
+    <section
+      className={joinClassNames(uiSurfaceApi.classNames.surface, uiSurfaceApi.classNames.card, className)}
+      data-surface-density={uiSurfaceApi.density.compact}
+      data-surface-level={uiSurfaceApi.level.flat}
+      data-utility-settings-section="true"
+      data-utility-tone={tone}
+      {...props}
+    >
       {children}
     </section>
   )
@@ -50,17 +70,31 @@ type ListRowProps = UtilityPrimitiveProps<HTMLDivElement> & {
   tone?: UtilityPanelTone
 }
 
-export function ListRow({ children, tone = 'default', ...props }: ListRowProps) {
+export function ListRow({ children, className, tone = 'default', ...props }: ListRowProps) {
   return (
-    <div data-utility-list-row="true" data-utility-tone={tone} {...props}>
+    <div
+      className={joinClassNames(uiSurfaceApi.classNames.surface, uiSurfaceApi.classNames.card, className)}
+      data-surface-density={uiSurfaceApi.density.compact}
+      data-surface-level={uiSurfaceApi.level.flat}
+      data-utility-list-row="true"
+      data-utility-tone={tone}
+      {...props}
+    >
       {children}
     </div>
   )
 }
 
-export function DangerZone({ children, ...props }: UtilityPrimitiveProps<HTMLElement>) {
+export function DangerZone({ children, className, ...props }: UtilityPrimitiveProps<HTMLElement>) {
   return (
-    <section data-utility-danger-zone="true" data-utility-tone="danger" {...props}>
+    <section
+      className={joinClassNames(uiSurfaceApi.classNames.surface, uiSurfaceApi.classNames.card, className)}
+      data-surface-density={uiSurfaceApi.density.compact}
+      data-surface-level={uiSurfaceApi.level.flat}
+      data-utility-danger-zone="true"
+      data-utility-tone="danger"
+      {...props}
+    >
       {children}
     </section>
   )
@@ -70,17 +104,30 @@ type StatusBoxProps = UtilityPrimitiveProps<HTMLDivElement> & {
   tone?: UtilityPanelTone
 }
 
-export function StatusBox({ children, tone = 'info', ...props }: StatusBoxProps) {
+export function StatusBox({ children, className, tone = 'info', ...props }: StatusBoxProps) {
   return (
-    <div data-utility-status-box="true" data-utility-tone={tone} {...props}>
+    <div
+      className={joinClassNames(uiSurfaceApi.classNames.surface, uiSurfaceApi.classNames.card, className)}
+      data-surface-density={uiSurfaceApi.density.compact}
+      data-surface-level={uiSurfaceApi.level.flat}
+      data-utility-status-box="true"
+      data-utility-tone={tone}
+      {...props}
+    >
       {children}
     </div>
   )
 }
 
-export function EmptyState({ children, ...props }: UtilityPrimitiveProps<HTMLDivElement>) {
+export function EmptyState({ children, className, ...props }: UtilityPrimitiveProps<HTMLDivElement>) {
   return (
-    <div data-utility-empty-state="true" {...props}>
+    <div
+      className={joinClassNames(uiSurfaceApi.classNames.surface, uiSurfaceApi.classNames.empty, className)}
+      data-surface-density={uiSurfaceApi.density.compact}
+      data-surface-level={uiSurfaceApi.level.flat}
+      data-utility-empty-state="true"
+      {...props}
+    >
       {children}
     </div>
   )

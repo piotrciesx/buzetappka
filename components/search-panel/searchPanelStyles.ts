@@ -1,4 +1,4 @@
-import { uiTypographyTokens } from '../../lib/uiFoundation'
+import { uiSurfacePrimitives, uiTypographyTokens } from '../../lib/uiFoundation'
 
 export const panelStyle = {
   border: 0,
@@ -65,10 +65,10 @@ export const statsGridStyle = {
 } as const
 
 export const statCardStyle = {
-  border: '1px solid var(--ui-border-divider)',
-  borderRadius: 12,
+  border: uiSurfacePrimitives.surfaceCard.border,
+  borderRadius: uiSurfacePrimitives.surfaceCard.radius,
   padding: '10px 11px',
-  background: 'var(--ui-glass-surface-soft)',
+  background: uiSurfacePrimitives.surfaceCard.background,
 } as const
 
 export const incomeStatCardStyle = {
@@ -117,10 +117,10 @@ export const tagButtonBaseStyle = {
 } as const
 
 export const historyWrapStyle = {
-  border: '1px solid var(--ui-border-divider)',
-  borderRadius: 12,
+  border: uiSurfacePrimitives.surfaceCard.border,
+  borderRadius: uiSurfacePrimitives.surfaceCard.radius,
   overflow: 'hidden',
-  background: 'var(--ui-glass-surface-soft)',
+  background: uiSurfacePrimitives.surfaceCard.background,
 } as const
 
 export const historyHeaderStyle = {

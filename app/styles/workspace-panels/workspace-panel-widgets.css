@@ -11,8 +11,8 @@
   overflow: visible;
   min-width: 0;
   border: 1px solid var(--ui-border-soft);
-  border-radius: 16px;
-  background: linear-gradient(145deg, var(--ui-glass-surface), var(--ui-surface-soft));
+  border-radius: var(--ui-radius-2xl);
+  background: var(--ui-surface-card);
 }
 
 [data-pinned-category-card="true"][data-pinned-category-kind="income"],
@@ -102,8 +102,8 @@
   display: grid;
   place-items: center;
   border: 1px solid var(--ui-border-soft);
-  border-radius: 9px;
-  background: var(--ui-glass-surface);
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-surface-card);
   color: var(--ui-text-secondary);
   cursor: pointer;
   list-style: none;
@@ -168,7 +168,7 @@
   border-radius: 999px !important;
   padding: 0 !important;
   border: 1px solid var(--ui-border-soft);
-  background: var(--ui-glass-surface-soft);
+  background: var(--ui-surface-card);
   color: var(--ui-text-secondary);
   cursor: pointer;
 }
@@ -249,7 +249,7 @@
   border-radius: 999px !important;
   padding: 0 10px !important;
   border: 1px solid var(--ui-border-soft) !important;
-  background: var(--ui-glass-surface-soft) !important;
+  background: var(--ui-surface-card) !important;
   color: var(--ui-text-secondary) !important;
   font-size: 11px !important;
   font-weight: 680 !important;
@@ -280,8 +280,8 @@
   gap: 6px;
   padding: 0 8px;
   border: 1px solid var(--ui-border-soft);
-  border-radius: 10px;
-  background: var(--ui-glass-surface-soft);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface-card);
   color: var(--ui-text-secondary);
   cursor: pointer;
 }

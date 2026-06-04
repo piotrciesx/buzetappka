@@ -2,7 +2,7 @@
 
 import { CSSProperties, useMemo, useState } from 'react'
 import { PaymentSource, PaymentSourceType } from '../lib/budgetPageTypes'
-import { uiInputApi, uiTypographyTokens } from '../lib/uiFoundation'
+import { uiInputApi, uiSurfacePrimitives, uiTypographyTokens } from '../lib/uiFoundation'
 import {
   DEFAULT_PAYMENT_SOURCE_COLOR,
   DEFAULT_PAYMENT_SOURCE_EMOJI,
@@ -32,10 +32,10 @@ const panelStyle = {
 } as const
 
 const cardStyle = {
-  border: '1px solid var(--ui-border-divider)',
-  borderRadius: 12,
+  border: uiSurfacePrimitives.surfaceCard.border,
+  borderRadius: uiSurfacePrimitives.surfaceCard.radius,
   padding: 12,
-  background: 'var(--ui-glass-surface-soft)',
+  background: uiSurfacePrimitives.surfaceCard.background,
 } as const
 
 const settingsGridStyle = {
@@ -62,9 +62,9 @@ const settingsCardStyle = {
   minWidth: 0,
   minHeight: 174,
   padding: 12,
-  border: '1px solid var(--ui-border-divider)',
-  borderRadius: 12,
-  background: 'var(--ui-glass-surface-soft)',
+  border: uiSurfacePrimitives.surfaceCard.border,
+  borderRadius: uiSurfacePrimitives.surfaceCard.radius,
+  background: uiSurfacePrimitives.surfaceCard.background,
 } as const
 
 const settingsTitleStyle = {
@@ -132,7 +132,7 @@ const sourceFormStyle = {
   minWidth: 0,
   padding: 12,
   border: '1px solid var(--ui-border-divider)',
-  borderRadius: 12,
+  borderRadius: 'var(--ui-radius-lg)',
   background: 'var(--ui-surface-soft)',
 } as const
 
@@ -171,7 +171,7 @@ const sourceStatsGridStyle = {
 const sourceStatStyle = {
   padding: '8px 9px',
   border: '1px solid var(--ui-border-divider)',
-  borderRadius: 10,
+  borderRadius: 'var(--ui-radius-md)',
   background: 'var(--ui-surface-soft)',
   color: 'var(--ui-text-secondary)',
   fontSize: uiTypographyTokens.role.metadata,

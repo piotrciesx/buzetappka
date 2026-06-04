@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 import type { TransactionDraft } from '../lib/draftUtils'
-import { uiTypographyTokens } from '../lib/uiFoundation'
+import { uiSurfacePrimitives, uiTypographyTokens } from '../lib/uiFoundation'
 import {
   ActionRow,
   EmptyState,
@@ -14,11 +14,11 @@ const draftsPanelStyle = {
   display: 'grid',
   gap: 12,
   marginBottom: 20,
-  border: '1px solid var(--ui-border-soft)',
-  borderRadius: 16,
+  border: uiSurfacePrimitives.surfacePanel.border,
+  borderRadius: uiSurfacePrimitives.surfacePanel.radius,
   padding: 12,
-  background: 'var(--ui-glass-surface-soft)',
-  boxShadow: 'var(--ui-shadow-card)',
+  background: uiSurfacePrimitives.surfacePanel.background,
+  boxShadow: uiSurfacePrimitives.surfacePanel.shadow,
 } as const
 
 const draftsHeaderStyle = {
@@ -44,7 +44,7 @@ const draftRowStyle = {
   gap: 12,
   minHeight: 72,
   border: '1px solid var(--ui-border-divider)',
-  borderRadius: 12,
+  borderRadius: 'var(--ui-radius-lg)',
   padding: '10px 12px',
   background: 'var(--ui-surface-soft)',
 } as const
@@ -135,7 +135,7 @@ const lightDangerButtonStyle = {
 
 const compactStatusStyle = {
   border: '1px solid var(--ui-border-divider)',
-  borderRadius: 12,
+  borderRadius: 'var(--ui-radius-lg)',
   padding: '10px 12px',
   background: 'var(--ui-surface-soft)',
   color: 'var(--ui-text-secondary)',

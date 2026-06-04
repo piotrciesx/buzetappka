@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react'
-import { uiControlPrimitives, uiTypographyTokens, uiZIndex } from './uiFoundation'
+import { uiControlPrimitives, uiSurfacePrimitives, uiTypographyTokens, uiZIndex } from './uiFoundation'
 
 export const budgetPageStyles: Record<string, CSSProperties> = {
   page: {
@@ -30,23 +30,23 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   topPanel: {
-    background: 'linear-gradient(145deg, var(--ui-glass-surface-strong), var(--ui-glass-surface-soft))',
-    border: '1px solid var(--ui-glass-border-soft)',
-    borderRadius: 12,
+    background: uiSurfacePrimitives.surfacePanel.background,
+    border: uiSurfacePrimitives.surfacePanel.border,
+    borderRadius: uiSurfacePrimitives.surfacePanel.radius,
     padding: 'var(--ui-spacing-sm)',
     marginBottom: 0,
-    boxShadow: 'var(--ui-shadow-card)',
+    boxShadow: uiSurfacePrimitives.surfacePanel.shadow,
     maxWidth: '100%',
     boxSizing: 'border-box',
   } as const,
 
   card: {
-    background: 'var(--ui-glass-surface)',
-    border: '1px solid var(--ui-glass-border-strong)',
-    borderRadius: 14,
+    background: uiSurfacePrimitives.surfaceCard.background,
+    border: uiSurfacePrimitives.surfaceCard.border,
+    borderRadius: uiSurfacePrimitives.surfaceCard.radius,
     padding: 'var(--ui-spacing-card-padding)',
     marginBottom: 'var(--ui-space-5)',
-    boxShadow: 'var(--ui-shadow-card)',
+    boxShadow: uiSurfacePrimitives.surfaceCard.shadow,
     maxWidth: '100%',
     boxSizing: 'border-box',
   } as const,
@@ -78,7 +78,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     padding: 'var(--ui-space-7)',
     background: 'var(--ui-surface-soft)',
     border: '1px solid var(--ui-border-divider)',
-    borderRadius: 12,
+    borderRadius: 'var(--ui-radius-lg)',
   } as const,
 
   monthNavigationSettingsTitle: {
@@ -130,7 +130,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   infoBox: {
     background: 'var(--ui-surface-soft)',
     border: '1px solid var(--ui-border-divider)',
-    borderRadius: 12,
+    borderRadius: 'var(--ui-radius-lg)',
     padding: 'var(--ui-spacing-md) var(--ui-space-5)',
     fontSize: uiTypographyTokens.role.metadata,
     maxWidth: '100%',
@@ -153,9 +153,9 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   emptyStateCard: {
-    background: 'var(--ui-surface-card)',
-    border: '1px solid var(--ui-border-divider)',
-    borderRadius: 14,
+    background: uiSurfacePrimitives.surfaceEmpty.background,
+    border: uiSurfacePrimitives.surfaceEmpty.border,
+    borderRadius: uiSurfacePrimitives.surfaceEmpty.radius,
     padding: 'var(--ui-spacing-xl)',
     color: 'var(--ui-text-secondary)',
     fontStyle: 'italic',
@@ -434,7 +434,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     background: 'var(--ui-financial-expense-soft)',
     border: '1px solid var(--ui-financial-expense-soft)',
     padding: 'var(--ui-spacing-lg)',
-    borderRadius: 10,
+    borderRadius: 'var(--ui-radius-md)',
   } as const,
 
   sortBar: {

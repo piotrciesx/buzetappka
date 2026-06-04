@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react'
-import { uiTypographyTokens, uiZIndex } from '../../lib/uiFoundation'
+import { uiSurfacePrimitives, uiTypographyTokens, uiZIndex } from '../../lib/uiFoundation'
 
 export const containerStyle: CSSProperties = {
   width: '100%',
@@ -35,17 +35,17 @@ export const popoverStyle: CSSProperties = {
   width: 400,
   maxWidth: 'calc(100vw - 32px)',
   padding: 12,
-  border: '1px solid var(--ui-border-divider)',
-  borderRadius: 8,
-  background: 'var(--ui-surface-card)',
-  boxShadow: 'var(--ui-shadow-dropdown)',
+  border: uiSurfacePrimitives.surfaceDropdown.border,
+  borderRadius: uiSurfacePrimitives.surfaceDropdown.radius,
+  background: uiSurfacePrimitives.surfaceDropdown.background,
+  boxShadow: uiSurfacePrimitives.surfaceDropdown.shadow,
   zIndex: uiZIndex.mobileCritical,
 }
 
 export const panelStyle: CSSProperties = {
-  border: '1px solid var(--ui-border-divider)',
-  borderRadius: 8,
-  background: 'var(--ui-surface-card)',
+  border: uiSurfacePrimitives.surfaceCard.border,
+  borderRadius: uiSurfacePrimitives.surfaceCard.radius,
+  background: uiSurfacePrimitives.surfaceCard.background,
   padding: 12,
 }
 
@@ -62,8 +62,8 @@ export const itemStyle: CSSProperties = {
 }
 
 export const cardStyle: CSSProperties = {
-  border: '1px solid var(--ui-border-divider)',
-  borderRadius: 8,
+  border: uiSurfacePrimitives.surfaceCard.border,
+  borderRadius: uiSurfacePrimitives.surfaceCard.radius,
   padding: 12,
   background: 'var(--ui-surface-soft)',
 }
