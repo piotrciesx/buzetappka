@@ -2,6 +2,7 @@
 
 import { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import { uiTypographyTokens } from '../lib/uiFoundation'
 import { ActionRow, StatusBox } from './utility-panels/utilityPanelPrimitives'
 
 type ProfileMonthNoteRow = {
@@ -278,7 +279,7 @@ export default function ProfileMonthNotePanel({
           border: '1px solid var(--ui-color-soft-border)',
           borderRadius: 10,
           padding: 10,
-          fontSize: 13,
+          fontSize: uiTypographyTokens.role.label,
           fontFamily: 'inherit',
           outline: 'none',
           background: 'var(--ui-color-card-background)',

@@ -3,7 +3,7 @@
 import { CSSProperties, forwardRef } from 'react'
 import { Category, Tag, TransactionPaymentSplit } from '../lib/budgetPageTypes'
 import { getCategoryPathLabel } from '../lib/budgetPageHelpers'
-import { uiInputApi } from '../lib/uiFoundation'
+import { uiInputApi, uiTypographyTokens } from '../lib/uiFoundation'
 import { getTransactionPaymentSourceDisplayLines } from '../lib/paymentSplitUtils'
 import { getTransactionMonth, isDaylessTransaction } from '../lib/transactionDomain'
 import {
@@ -263,7 +263,9 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                         background: isActive ? 'var(--ui-color-soft-blue)' : 'var(--ui-color-card-background)',
                         borderColor: isActive ? 'var(--ui-color-light-blue-border)' : 'var(--ui-color-soft-border)',
                         color: isActive ? 'var(--ui-color-primary-blue)' : 'var(--ui-color-primary-text)',
-                        fontWeight: isActive ? 700 : 500,
+                        fontWeight: isActive
+                          ? uiTypographyTokens.weight.bold
+                          : uiTypographyTokens.weight.medium,
                       }}
                     >
                       #{tag.label}
@@ -335,7 +337,7 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                     <div>{getTransactionDateLabel(isDaylessTransaction(transaction), transaction.date)}</div>
                     <div
                       style={{
-                        fontWeight: 600,
+                        fontWeight: uiTypographyTokens.weight.semibold,
                         color:
                           effectiveSignedAmount > 0
                             ? 'var(--ui-color-income)'

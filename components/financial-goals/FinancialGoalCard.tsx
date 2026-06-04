@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { getGoalProgressBarColor } from '../../lib/financialGoals'
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 import type { GoalCardBaseProps } from './financialGoalsPanelTypes'
 
 const cardStyle = {
@@ -61,7 +62,14 @@ function GoalCardContent(props: GoalCardBaseProps & { dragHandle?: ReactNode }) 
           {dragHandle}
 
           <div>
-            <div style={{ fontWeight: 600, fontSize: 16 }}>{goal.name}</div>
+            <div
+              style={{
+                fontWeight: uiTypographyTokens.weight.semibold,
+                fontSize: uiTypographyTokens.hierarchy.t2,
+              }}
+            >
+              {goal.name}
+            </div>
             <div style={{ ...styles.pageSubtitle, margin: '4px 0 0' }}>
               Start: {goal.start_month}
               {deadlineMonth ? ` • deadline: ${deadlineMonth}` : ' • bez deadline’u'}
@@ -110,7 +118,7 @@ function GoalCardContent(props: GoalCardBaseProps & { dragHandle?: ReactNode }) 
       {isAllocationMode && typeof sliderValue === 'number' && onAllocationChange && (
         <div style={sliderWrapStyle}>
           <div style={sliderRowStyle}>
-            <div style={{ fontWeight: 600 }}>{goal.name}</div>
+            <div style={{ fontWeight: uiTypographyTokens.weight.semibold }}>{goal.name}</div>
             <input
               type="range"
               min={0}
@@ -125,7 +133,14 @@ function GoalCardContent(props: GoalCardBaseProps & { dragHandle?: ReactNode }) 
               onKeyUp={onAllocationCommit}
               onChange={(event) => onAllocationChange(goal.id, Number(event.target.value))}
             />
-            <div style={{ fontWeight: 600, textAlign: 'right' }}>{sliderValue}%</div>
+            <div
+              style={{
+                fontWeight: uiTypographyTokens.weight.semibold,
+                textAlign: 'right',
+              }}
+            >
+              {sliderValue}%
+            </div>
             {onToggleAllocationLock && (
               <button
                 type="button"
@@ -204,7 +219,7 @@ export function SortableGoalCard(props: GoalCardBaseProps) {
               borderRadius: 10,
               padding: '6px 10px',
               cursor: 'grab',
-              fontWeight: 600,
+              fontWeight: uiTypographyTokens.weight.semibold,
               color: 'var(--ui-color-secondary-text)',
             }}
             title="Przeciągnij, aby zmienić priorytet"

@@ -1,4 +1,5 @@
 import { CSSProperties } from 'react'
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 
 export const panelStyle: CSSProperties = {
   display: 'grid',
@@ -21,16 +22,16 @@ export const introRowStyle: CSSProperties = {
 export const mutedTextStyle: CSSProperties = {
   margin: 0,
   color: 'var(--ui-color-secondary-text)',
-  fontSize: 12,
-  lineHeight: 1.45,
+  fontSize: uiTypographyTokens.role.helper,
+  lineHeight: uiTypographyTokens.lineHeight.body,
 }
 
 export const lightButtonStyle: CSSProperties = {
   minHeight: 28,
   borderRadius: 999,
   padding: '0 10px',
-  fontSize: 11,
-  fontWeight: 620,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  fontWeight: uiTypographyTokens.weight.semibold,
   boxShadow: 'none',
 }
 
@@ -55,8 +56,8 @@ export const fieldStyle: CSSProperties = {
   display: 'grid',
   gap: 5,
   color: 'var(--ui-color-secondary-text)',
-  fontSize: 12,
-  fontWeight: 620,
+  fontSize: uiTypographyTokens.role.metadata,
+  fontWeight: uiTypographyTokens.weight.semibold,
 }
 
 export const inlineCheckStyle: CSSProperties = {
@@ -65,14 +66,14 @@ export const inlineCheckStyle: CSSProperties = {
   alignItems: 'center',
   gap: 8,
   color: 'var(--ui-color-secondary-text)',
-  fontSize: 12,
-  fontWeight: 560,
+  fontSize: uiTypographyTokens.role.metadata,
+  fontWeight: uiTypographyTokens.weight.medium,
 }
 
 export const sectionTitleStyle: CSSProperties = {
   color: 'var(--ui-color-primary-text)',
-  fontSize: 13,
-  fontWeight: 720,
+  fontSize: uiTypographyTokens.role.label,
+  fontWeight: uiTypographyTokens.weight.bold,
 }
 
 export const listStyle: CSSProperties = {
@@ -99,8 +100,8 @@ export const cardHeaderStyle: CSSProperties = {
 
 export const cardNameStyle: CSSProperties = {
   color: 'var(--ui-color-primary-text)',
-  fontSize: 13,
-  fontWeight: 700,
+  fontSize: uiTypographyTokens.role.label,
+  fontWeight: uiTypographyTokens.weight.bold,
 }
 
 export const metaGridStyle: CSSProperties = {
@@ -115,8 +116,8 @@ export const infoPillStyle: CSSProperties = {
   borderRadius: 9,
   background: 'rgba(248, 250, 252, 0.54)',
   color: 'var(--ui-color-secondary-text)',
-  fontSize: 11,
-  lineHeight: 1.35,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  lineHeight: uiTypographyTokens.lineHeight.body,
 }
 
 export const progressOuterStyle: CSSProperties = {
@@ -138,7 +139,7 @@ export const warningStyle: CSSProperties = {
   borderRadius: 12,
   background: 'rgba(255, 251, 235, 0.78)',
   color: 'var(--ui-color-warning)',
-  fontSize: 12,
+  fontSize: uiTypographyTokens.role.metadata,
 }
 
 export const responsiveStyle = `

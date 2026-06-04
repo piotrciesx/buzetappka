@@ -2,6 +2,7 @@
 
 import type { CSSProperties } from 'react'
 import type { BudgetLimit, BudgetLimitAlertState } from '../lib/budgetPageTypes'
+import { uiTypographyTokens } from '../lib/uiFoundation'
 
 export type BudgetLimitView = {
   limit: BudgetLimit
@@ -44,8 +45,8 @@ const wrapStyle: CSSProperties = {
   gap: 8,
   flexWrap: 'wrap',
   color: 'var(--ui-color-secondary-text)',
-  fontSize: 12,
-  lineHeight: 1.25,
+  fontSize: uiTypographyTokens.role.metadata,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
 }
 
 const barStyle: CSSProperties = {
@@ -57,8 +58,8 @@ const barStyle: CSSProperties = {
 }
 
 const iconStyle: CSSProperties = {
-  fontSize: 12,
-  lineHeight: 1,
+  fontSize: uiTypographyTokens.role.metadata,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
 }
 
 export default function BudgetLimitIndicator({ view, variant = 'default' }: Props) {
@@ -91,7 +92,10 @@ export default function BudgetLimitIndicator({ view, variant = 'default' }: Prop
               }}
             />
           </span>
-          <strong style={{ color, fontWeight: 700 }} data-budget-limit-percent="true">
+          <strong
+            style={{ color, fontWeight: uiTypographyTokens.weight.bold }}
+            data-budget-limit-percent="true"
+          >
             {formatMoney(view.usageAmount)} ({view.usagePercent.toFixed(0)}%)
           </strong>
         </div>
@@ -109,7 +113,10 @@ export default function BudgetLimitIndicator({ view, variant = 'default' }: Prop
       <span data-budget-limit-text="true">
         {formatMoney(view.usageAmount)} / {formatMoney(view.limit.amount)}
       </span>
-      <strong style={{ color, fontWeight: 600 }} data-budget-limit-percent="true">
+      <strong
+        style={{ color, fontWeight: uiTypographyTokens.weight.semibold }}
+        data-budget-limit-percent="true"
+      >
         {view.usagePercent.toFixed(1)}%
       </strong>
       <span style={barStyle} data-budget-limit-bar="true">

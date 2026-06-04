@@ -4,7 +4,7 @@ import { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import UserAvatar from './UserAvatar'
 import { USER_AVATARS, getUserDisplayName, type UserPublicProfile } from '../lib/userAppearance'
-import { uiInputApi } from '../lib/uiFoundation'
+import { uiInputApi, uiTypographyTokens } from '../lib/uiFoundation'
 import {
   ActionRow,
   DangerZone,
@@ -490,7 +490,9 @@ export default function ProfileMembersPanel({
                   size="md"
                 />
                 <div>
-                  <div style={{ fontWeight: 600 }}>{getMemberLabel(member)}</div>
+                  <div style={{ fontWeight: uiTypographyTokens.weight.semibold }}>
+                    {getMemberLabel(member)}
+                  </div>
                   <div style={styles.smallMutedText}>
                     {member.user_id === userId ? userEmail : 'członek profilu'}
                   </div>

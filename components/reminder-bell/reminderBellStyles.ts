@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react'
-import { uiZIndex } from '../../lib/uiFoundation'
+import { uiTypographyTokens, uiZIndex } from '../../lib/uiFoundation'
 
 export const containerStyle: CSSProperties = {
   width: '100%',
@@ -24,8 +24,8 @@ export const countStyle: CSSProperties = {
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: 12,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.metadata,
+  fontWeight: uiTypographyTokens.weight.semibold,
 }
 
 export const popoverStyle: CSSProperties = {
@@ -72,8 +72,8 @@ export const fieldLabelStyle: CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   gap: 5,
-  fontSize: 13,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.label,
+  fontWeight: uiTypographyTokens.weight.semibold,
   color: 'var(--ui-text-primary)',
 }
 
@@ -125,7 +125,7 @@ export const linkedTransactionRowStyle: CSSProperties = {
   alignItems: 'center',
   padding: '8px 0',
   borderTop: '1px solid var(--ui-surface-soft)',
-  fontSize: 13,
+  fontSize: uiTypographyTokens.role.label,
 }
 
 export const detailSectionStyle: CSSProperties = {
@@ -135,7 +135,7 @@ export const detailSectionStyle: CSSProperties = {
 }
 
 export const detailSectionTitleStyle: CSSProperties = {
-  fontSize: 15,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.hierarchy.t3,
+  fontWeight: uiTypographyTokens.weight.semibold,
   color: 'var(--ui-text-primary)',
 }

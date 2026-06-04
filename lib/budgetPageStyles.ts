@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react'
-import { uiControlPrimitives, uiZIndex } from './uiFoundation'
+import { uiControlPrimitives, uiTypographyTokens, uiZIndex } from './uiFoundation'
 
 export const budgetPageStyles: Record<string, CSSProperties> = {
   page: {
@@ -17,14 +17,14 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   pageTitle: {
-    fontSize: 21,
-    fontWeight: 640,
+    fontSize: uiTypographyTokens.hierarchy.t1,
+    fontWeight: uiTypographyTokens.weight.bold,
     marginBottom: 0,
     letterSpacing: 0,
   } as const,
 
   pageSubtitle: {
-    fontSize: 12,
+    fontSize: uiTypographyTokens.role.metadata,
     color: 'var(--ui-text-secondary)',
     marginBottom: 'var(--ui-spacing-card-section-gap)',
   } as const,
@@ -62,8 +62,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   monthLabel: {
     minWidth: 116,
     textAlign: 'center' as const,
-    fontWeight: 620,
-    fontSize: 15,
+    fontWeight: uiTypographyTokens.weight.semibold,
+    fontSize: uiTypographyTokens.hierarchy.t3,
     padding: 'var(--ui-spacing-sm) var(--ui-spacing-lg)',
     background: 'linear-gradient(145deg, var(--ui-surface-card), var(--ui-surface-active))',
     border: '1px solid var(--ui-border-active)',
@@ -82,8 +82,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   monthNavigationSettingsTitle: {
-    fontSize: 15,
-    fontWeight: 600,
+    fontSize: uiTypographyTokens.hierarchy.t3,
+    fontWeight: uiTypographyTokens.weight.semibold,
     marginBottom: 'var(--ui-space-5)',
   } as const,
 
@@ -101,8 +101,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   monthNavigationFieldLabel: {
-    fontSize: 13,
-    fontWeight: 600,
+    fontSize: uiTypographyTokens.role.label,
+    fontWeight: uiTypographyTokens.weight.semibold,
     color: 'var(--ui-text-primary)',
   } as const,
 
@@ -110,14 +110,14 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     gap: 'var(--ui-spacing-form-field-gap)',
-    fontSize: 14,
-    fontWeight: 600,
+    fontSize: uiTypographyTokens.hierarchy.t3,
+    fontWeight: uiTypographyTokens.weight.semibold,
     color: 'var(--ui-text-primary)',
   } as const,
 
   monthNavigationHint: {
     marginTop: 'var(--ui-space-5)',
-    fontSize: 13,
+    fontSize: uiTypographyTokens.role.helper,
     color: 'var(--ui-text-secondary)',
   } as const,
 
@@ -132,22 +132,22 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     border: '1px solid var(--ui-border-divider)',
     borderRadius: 12,
     padding: 'var(--ui-spacing-md) var(--ui-space-5)',
-    fontSize: 12,
+    fontSize: uiTypographyTokens.role.metadata,
     maxWidth: '100%',
     boxSizing: 'border-box',
     overflowWrap: 'anywhere' as const,
   } as const,
 
   smallMutedText: {
-    fontSize: 12,
+    fontSize: uiTypographyTokens.role.helper,
     color: 'var(--ui-text-secondary)',
-    lineHeight: 1.4,
+    lineHeight: uiTypographyTokens.lineHeight.body,
     overflowWrap: 'anywhere' as const,
   } as const,
 
   sectionTitle: {
-    fontSize: 17,
-    fontWeight: 760,
+    fontSize: uiTypographyTokens.hierarchy.t2,
+    fontWeight: uiTypographyTokens.weight.bold,
     marginBottom: 'var(--ui-spacing-sm)',
     color: 'var(--ui-text-primary)',
   } as const,
@@ -177,8 +177,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     border: '1px solid var(--ui-border-active)',
     borderRadius: 9,
     padding: 'var(--ui-spacing-xs) var(--ui-spacing-sm)',
-    fontWeight: 560,
-    fontSize: 13,
+    fontWeight: uiTypographyTokens.weight.medium,
+    fontSize: uiTypographyTokens.role.label,
     marginBottom: 'var(--ui-spacing-xs)',
     display: 'flex',
     alignItems: 'center',
@@ -214,20 +214,20 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   arrow: {
-    fontSize: 14,
+    fontSize: uiTypographyTokens.hierarchy.t3,
     width: 18,
     textAlign: 'center' as const,
   } as const,
 
   l2Name: {
-    fontWeight: 560,
-    fontSize: 13,
+    fontWeight: uiTypographyTokens.weight.medium,
+    fontSize: uiTypographyTokens.role.label,
     color: 'var(--ui-text-primary)',
     overflowWrap: 'anywhere' as const,
   } as const,
 
   l2Meta: {
-    fontSize: 10.5,
+    fontSize: uiTypographyTokens.role.widgetMeta,
     color: 'var(--ui-text-secondary)',
     overflowWrap: 'anywhere' as const,
   } as const,
@@ -240,8 +240,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     background: 'var(--ui-status-warning-soft)',
     border: '1px solid var(--ui-status-warning-soft)',
     color: 'var(--ui-status-warning)',
-    fontSize: 12,
-    fontWeight: 600,
+    fontSize: uiTypographyTokens.role.metadata,
+    fontWeight: uiTypographyTokens.weight.semibold,
   } as const,
 
   l3Wrap: {
@@ -264,8 +264,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   l3Name: {
-    fontWeight: 540,
-    fontSize: 12.5,
+    fontWeight: uiTypographyTokens.weight.medium,
+    fontSize: uiTypographyTokens.role.metadata,
     color: 'var(--ui-text-primary)',
     overflowWrap: 'anywhere' as const,
   } as const,
@@ -283,8 +283,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     justifyContent: 'center',
     cursor: 'grab',
     touchAction: 'none',
-    fontSize: 15,
-    fontWeight: 600,
+    fontSize: uiTypographyTokens.hierarchy.t3,
+    fontWeight: uiTypographyTokens.weight.semibold,
     padding: 0,
   } as const,
 
@@ -361,7 +361,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     borderRadius: 11,
     border: '1px solid var(--ui-border-soft)',
     background: 'var(--ui-surface-card)',
-    fontSize: 13,
+    fontSize: uiTypographyTokens.role.label,
     minWidth: 180,
     maxWidth: '100%',
     boxSizing: 'border-box',
@@ -374,7 +374,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     borderRadius: 10,
     border: '1px solid var(--ui-border-soft)',
     background: 'var(--ui-surface-card)',
-    fontSize: 13,
+    fontSize: uiTypographyTokens.role.label,
     width: 120,
     maxWidth: '100%',
     boxSizing: 'border-box',
@@ -397,7 +397,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     background: 'var(--ui-glass-surface-soft)',
     border: '1px solid var(--ui-glass-border-strong)',
     borderRadius: 8,
-    fontSize: 12,
+    fontSize: uiTypographyTokens.role.metadata,
     maxWidth: '100%',
     boxSizing: 'border-box',
     minWidth: 0,
@@ -412,18 +412,18 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   amountText: {
-    fontWeight: 620,
-    fontSize: 12.5,
+    fontWeight: uiTypographyTokens.weight.semibold,
+    fontSize: uiTypographyTokens.role.metadata,
   } as const,
 
   dateText: {
-    fontSize: 11,
+    fontSize: uiTypographyTokens.role.widgetMeta,
     color: 'var(--ui-text-secondary)',
   } as const,
 
   emptyText: {
     marginTop: 'var(--ui-spacing-md)',
-    fontSize: 12,
+    fontSize: uiTypographyTokens.role.metadata,
     color: 'var(--ui-text-secondary)',
     fontStyle: 'italic',
   } as const,
@@ -454,8 +454,8 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
   } as const,
 
   sortLabel: {
-    fontSize: 14,
-    fontWeight: 600,
+    fontSize: uiTypographyTokens.hierarchy.t3,
+    fontWeight: uiTypographyTokens.weight.semibold,
     color: 'var(--ui-text-primary)',
   } as const,
 
@@ -479,9 +479,9 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     border: uiControlPrimitives.button.icon.border,
     background: uiControlPrimitives.button.icon.background,
     color: uiControlPrimitives.button.icon.color,
-    fontSize: 20,
-    lineHeight: 1,
-    fontWeight: 600,
+    fontSize: uiTypographyTokens.role.financialValue,
+    lineHeight: uiTypographyTokens.lineHeight.compact,
+    fontWeight: uiTypographyTokens.weight.semibold,
     cursor: uiControlPrimitives.button.icon.cursor,
     boxShadow: 'none',
     padding: uiControlPrimitives.button.icon.padding,

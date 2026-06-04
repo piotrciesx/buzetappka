@@ -2,7 +2,7 @@
 
 import { CSSProperties, useMemo, useState } from 'react'
 import { PaymentSource, PaymentSourceType } from '../lib/budgetPageTypes'
-import { uiInputApi } from '../lib/uiFoundation'
+import { uiInputApi, uiTypographyTokens } from '../lib/uiFoundation'
 import {
   DEFAULT_PAYMENT_SOURCE_COLOR,
   DEFAULT_PAYMENT_SOURCE_EMOJI,
@@ -51,8 +51,8 @@ const badgeStyle = {
   gap: 6,
   padding: '3px 8px',
   borderRadius: 999,
-  fontSize: 11,
-  fontWeight: 620,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  fontWeight: uiTypographyTokens.weight.semibold,
 } as const
 
 const settingsCardStyle = {
@@ -69,8 +69,8 @@ const settingsCardStyle = {
 
 const settingsTitleStyle = {
   color: 'var(--ui-text-primary)',
-  fontSize: 13,
-  fontWeight: 680,
+  fontSize: uiTypographyTokens.role.label,
+  fontWeight: uiTypographyTokens.weight.bold,
 } as const
 
 const checkboxLabelStyle = {
@@ -78,9 +78,9 @@ const checkboxLabelStyle = {
   alignItems: 'center',
   gap: 8,
   color: 'var(--ui-text-secondary)',
-  fontSize: 12,
-  fontWeight: 560,
-  lineHeight: 1.35,
+  fontSize: uiTypographyTokens.role.metadata,
+  fontWeight: uiTypographyTokens.weight.medium,
+  lineHeight: uiTypographyTokens.lineHeight.body,
 } as const
 
 const checkboxStyle = {
@@ -102,8 +102,8 @@ const lightButtonStyle = {
   border: '1px solid var(--ui-border-soft)',
   background: 'var(--ui-glass-surface-soft)',
   color: 'var(--ui-text-secondary)',
-  fontSize: 12,
-  fontWeight: 580,
+  fontSize: uiTypographyTokens.role.metadata,
+  fontWeight: uiTypographyTokens.weight.medium,
   boxShadow: 'none',
   whiteSpace: 'normal' as const,
 } as const
@@ -119,8 +119,8 @@ const primaryActionStyle = {
   minHeight: 32,
   borderRadius: 999,
   padding: '0 12px',
-  fontSize: 12,
-  fontWeight: 640,
+  fontSize: uiTypographyTokens.role.metadata,
+  fontWeight: uiTypographyTokens.weight.semibold,
 } as const
 
 const sourceFormStyle = {
@@ -151,14 +151,14 @@ const sourceHeaderStyle = {
 
 const sourceNameStyle = {
   color: 'var(--ui-text-primary)',
-  fontSize: 14,
-  fontWeight: 680,
+  fontSize: uiTypographyTokens.hierarchy.t3,
+  fontWeight: uiTypographyTokens.weight.bold,
 } as const
 
 const sourceMetaStyle = {
   marginTop: 3,
   color: 'var(--ui-text-secondary)',
-  fontSize: 12,
+  fontSize: uiTypographyTokens.role.metadata,
 } as const
 
 const sourceStatsGridStyle = {
@@ -174,7 +174,7 @@ const sourceStatStyle = {
   borderRadius: 10,
   background: 'var(--ui-surface-soft)',
   color: 'var(--ui-text-secondary)',
-  fontSize: 12,
+  fontSize: uiTypographyTokens.role.metadata,
 } as const
 
 const responsivePaymentSourcesStyle = `

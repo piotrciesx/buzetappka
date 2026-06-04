@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react'
 import type { TransactionDraft } from '../lib/draftUtils'
+import { uiTypographyTokens } from '../lib/uiFoundation'
 import {
   ActionRow,
   EmptyState,
@@ -64,15 +65,15 @@ const draftTopLineStyle = {
 
 const draftTypeStyle = {
   color: 'var(--ui-text-primary)',
-  fontSize: 13,
-  fontWeight: 760,
+  fontSize: uiTypographyTokens.role.label,
+  fontWeight: uiTypographyTokens.weight.bold,
 } as const
 
 const draftCategoryStyle = {
   minWidth: 0,
   color: 'var(--ui-text-secondary)',
-  fontSize: 12,
-  fontWeight: 650,
+  fontSize: uiTypographyTokens.role.metadata,
+  fontWeight: uiTypographyTokens.weight.semibold,
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap' as const,
@@ -90,13 +91,13 @@ const draftFieldStyle = {
   display: 'grid',
   gap: 2,
   color: 'var(--ui-text-secondary)',
-  fontSize: 12,
+  fontSize: uiTypographyTokens.role.metadata,
 } as const
 
 const draftLabelStyle = {
   color: 'var(--ui-text-muted)',
-  fontSize: 10,
-  fontWeight: 720,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  fontWeight: uiTypographyTokens.weight.bold,
   textTransform: 'uppercase' as const,
   letterSpacing: 0,
 } as const
@@ -120,8 +121,8 @@ const lightButtonStyle = {
   minHeight: 30,
   borderRadius: 999,
   padding: '0 11px',
-  fontSize: 12,
-  fontWeight: 680,
+  fontSize: uiTypographyTokens.role.metadata,
+  fontWeight: uiTypographyTokens.weight.bold,
   boxShadow: 'none',
 } as const
 
@@ -138,7 +139,7 @@ const compactStatusStyle = {
   padding: '10px 12px',
   background: 'var(--ui-surface-soft)',
   color: 'var(--ui-text-secondary)',
-  fontSize: 12,
+  fontSize: uiTypographyTokens.role.metadata,
 } as const
 
 type Props = {

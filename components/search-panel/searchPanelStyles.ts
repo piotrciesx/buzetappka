@@ -1,3 +1,5 @@
+import { uiTypographyTokens } from '../../lib/uiFoundation'
+
 export const panelStyle = {
   border: 0,
   borderRadius: 0,
@@ -51,8 +53,8 @@ export const resetButtonStyle = {
   background: 'var(--ui-glass-surface-soft)',
   color: 'var(--ui-text-secondary)',
   cursor: 'pointer',
-  fontSize: 12,
-  fontWeight: 560,
+  fontSize: uiTypographyTokens.role.metadata,
+  fontWeight: uiTypographyTokens.weight.medium,
 } as const
 
 export const statsGridStyle = {
@@ -88,14 +90,14 @@ export const balanceStatCardStyle = {
 } as const
 
 export const statLabelStyle = {
-  fontSize: 12,
+  fontSize: uiTypographyTokens.role.metadata,
   opacity: 0.7,
   marginBottom: 4,
 } as const
 
 export const statValueStyle = {
-  fontSize: 18,
-  fontWeight: 680,
+  fontSize: uiTypographyTokens.hierarchy.t2,
+  fontWeight: uiTypographyTokens.weight.bold,
 } as const
 
 export const tagsWrapStyle = {
@@ -111,7 +113,7 @@ export const tagButtonBaseStyle = {
   border: '1px solid var(--ui-border-soft)',
   background: 'var(--ui-surface-card)',
   cursor: 'pointer',
-  fontSize: 13,
+  fontSize: uiTypographyTokens.role.label,
 } as const
 
 export const historyWrapStyle = {
@@ -128,8 +130,8 @@ export const historyHeaderStyle = {
   padding: '10px 12px',
   background: 'var(--ui-surface-soft)',
   color: 'var(--ui-text-secondary)',
-  fontWeight: 680,
-  fontSize: 12,
+  fontWeight: uiTypographyTokens.weight.bold,
+  fontSize: uiTypographyTokens.role.metadata,
   borderBottom: '1px solid var(--ui-border-divider)',
 } as const
 
@@ -140,7 +142,7 @@ export const historyRowStyle = {
   padding: '11px 12px',
   borderBottom: '1px solid var(--ui-border-divider)',
   alignItems: 'start',
-  fontSize: 13,
+  fontSize: uiTypographyTokens.role.label,
 } as const
 
 export const responsiveSearchStyle = `
@@ -186,7 +188,7 @@ export const responsiveSearchStyle = `
 `
 
 export const categoryNameStyle = {
-  fontWeight: 600,
+  fontWeight: uiTypographyTokens.weight.semibold,
   marginBottom: 4,
 } as const
 
@@ -202,7 +204,7 @@ export const transactionTagsStyle = {
 } as const
 
 export const transactionTagBadgeStyle = {
-  fontSize: 12,
+  fontSize: uiTypographyTokens.role.metadata,
   padding: '4px 8px',
   borderRadius: 999,
   background: 'var(--ui-surface-active)',
@@ -213,6 +215,6 @@ export const transactionTagBadgeStyle = {
 
 export const emptyStateStyle = {
   padding: 16,
-  fontSize: 14,
+  fontSize: uiTypographyTokens.hierarchy.t3,
   opacity: 0.75,
 } as const

@@ -1,6 +1,7 @@
 import { CSSProperties } from 'react'
 import { Category, RecurringTransaction } from '../../lib/budgetPageTypes'
 import { getInstallmentNumberForMonth, getRecurringReminderDay } from '../../lib/recurringTransactions'
+import { uiTypographyTokens } from '../../lib/uiFoundation'
 import { itemStyle, popoverStyle } from './reminderBellStyles'
 import {
   ReminderActionRow,
@@ -45,7 +46,9 @@ export default function ReminderBellPopup({
 
           return (
             <ReminderCard key={reminder.id} style={itemStyle}>
-              <div style={{ fontWeight: 600 }}>{reminder.name}</div>
+              <div style={{ fontWeight: uiTypographyTokens.weight.semibold }}>
+                {reminder.name}
+              </div>
               <div style={styles.emptyText}>
                 {category?.name || 'Kategoria usunięta'} · dzień {getRecurringReminderDay(reminder)}
                 {installment ? ` · ${installment.current} / ${installment.total || '?'}` : ''}

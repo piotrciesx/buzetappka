@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 import { getCategoryPathLabel } from '../lib/budgetPageHelpers'
 import { Category, Transaction } from '../lib/budgetPageTypes'
+import { uiTypographyTokens } from '../lib/uiFoundation'
 import {
   ActionRow,
   EmptyState,
@@ -46,8 +47,8 @@ const hintStyle: CSSProperties = {
   padding: '9px 11px',
   background: 'var(--ui-surface-soft)',
   color: 'var(--ui-text-secondary)',
-  fontSize: 12,
-  lineHeight: 1.4,
+  fontSize: uiTypographyTokens.role.helper,
+  lineHeight: uiTypographyTokens.lineHeight.body,
 }
 
 const listStyle: CSSProperties = {
@@ -83,8 +84,8 @@ const topLineStyle: CSSProperties = {
 const amountStyle: CSSProperties = {
   flex: '0 0 auto',
   color: 'var(--ui-financial-expense)',
-  fontSize: 14,
-  fontWeight: 780,
+  fontSize: uiTypographyTokens.hierarchy.t3,
+  fontWeight: uiTypographyTokens.weight.bold,
   fontVariantNumeric: 'tabular-nums',
 }
 
@@ -92,8 +93,8 @@ const descriptionStyle: CSSProperties = {
   minWidth: 0,
   overflow: 'hidden',
   color: 'var(--ui-text-primary)',
-  fontSize: 13,
-  fontWeight: 680,
+  fontSize: uiTypographyTokens.role.label,
+  fontWeight: uiTypographyTokens.weight.bold,
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
 }
@@ -110,13 +111,13 @@ const fieldStyle: CSSProperties = {
   display: 'grid',
   gap: 2,
   color: 'var(--ui-text-secondary)',
-  fontSize: 12,
+  fontSize: uiTypographyTokens.role.metadata,
 }
 
 const labelStyle: CSSProperties = {
   color: 'var(--ui-text-muted)',
-  fontSize: 10,
-  fontWeight: 720,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  fontWeight: uiTypographyTokens.weight.bold,
   textTransform: 'uppercase',
   letterSpacing: 0,
 }
@@ -139,8 +140,8 @@ const lightButtonStyle: CSSProperties = {
   minHeight: 30,
   borderRadius: 999,
   padding: '0 11px',
-  fontSize: 12,
-  fontWeight: 680,
+  fontSize: uiTypographyTokens.role.metadata,
+  fontWeight: uiTypographyTokens.weight.bold,
   boxShadow: 'none',
 }
 

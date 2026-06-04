@@ -2,7 +2,12 @@
 
 import { CSSProperties, useMemo, useState } from 'react'
 import type { Category } from '../lib/budgetPageTypes'
-import { uiControlPrimitives, uiOverlayPrimitives, uiSurfacePrimitives } from '../lib/uiFoundation'
+import {
+  uiControlPrimitives,
+  uiOverlayPrimitives,
+  uiSurfacePrimitives,
+  uiTypographyTokens,
+} from '../lib/uiFoundation'
 import type { BudgetLimitUsageState } from '../lib/useBudgetLimits'
 import {
   ReminderCard,
@@ -30,8 +35,8 @@ const countStyle: CSSProperties = {
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: 12,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.metadata,
+  fontWeight: uiTypographyTokens.weight.semibold,
 }
 
 const popoverStyle: CSSProperties = {
@@ -63,8 +68,8 @@ const itemButtonStyle: CSSProperties = {
 const metaStyle: CSSProperties = {
   marginTop: 3,
   color: 'var(--ui-color-secondary-text)',
-  fontSize: 13,
-  lineHeight: 1.35,
+  fontSize: uiTypographyTokens.role.helper,
+  lineHeight: uiTypographyTokens.lineHeight.body,
 }
 
 const formatMoney = (value: number) => `${value.toFixed(2)} zł`
@@ -145,7 +150,9 @@ export default function BudgetLimitAlertsPanel({
                   }}
                 >
                   <ReminderCard style={{ padding: 0, border: 0, background: 'transparent' }}>
-                    <div style={{ fontWeight: 600 }}>{categoryLabel}</div>
+                    <div style={{ fontWeight: uiTypographyTokens.weight.semibold }}>
+                      {categoryLabel}
+                    </div>
                     <div style={metaStyle}>
                     {formatMoney(alert.usageAmount)} / {formatMoney(alert.limit.amount)} ·{' '}
                     {alert.usagePercent.toFixed(1)}%

@@ -6,7 +6,7 @@ import {
   Transaction,
 } from '../lib/budgetPageTypes'
 import { getUniqueCategoryLabel } from '../lib/categoryUtils'
-import { uiInputApi } from '../lib/uiFoundation'
+import { uiInputApi, uiTypographyTokens } from '../lib/uiFoundation'
 import {
   getInstallmentNumberForMonth,
   getInstallmentLifecycleSummary,
@@ -307,7 +307,13 @@ export default function ReminderBellPanel({
               ))}
             </select>
             {shouldHighlightCategory && (
-              <span style={{ color: 'var(--ui-color-expense)', fontSize: 12, fontWeight: 600 }}>
+              <span
+                style={{
+                  color: 'var(--ui-color-expense)',
+                  fontSize: uiTypographyTokens.role.metadata,
+                  fontWeight: uiTypographyTokens.weight.semibold,
+                }}
+              >
                 Wybierz kategorię końcową.
               </span>
             )}
@@ -471,7 +477,9 @@ export default function ReminderBellPanel({
 
               return (
                 <ReminderCard key={reminder.id} style={cardStyle}>
-                  <div style={{ fontWeight: 600 }}>{reminder.name}</div>
+                  <div style={{ fontWeight: uiTypographyTokens.weight.semibold }}>
+                    {reminder.name}
+                  </div>
                   <div style={styles.emptyText}>
                     Kategoria: {category?.name || 'Kategoria usunięta'}
                   </div>

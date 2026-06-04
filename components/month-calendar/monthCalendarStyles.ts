@@ -1,4 +1,4 @@
-import { uiControlPrimitives, uiZIndex } from '../../lib/uiFoundation'
+import { uiControlPrimitives, uiTypographyTokens, uiZIndex } from '../../lib/uiFoundation'
 
 export const calendarPanelStyle = {
   marginBottom: 'var(--ui-spacing-xl)',
@@ -18,8 +18,8 @@ export const calendarWeekdaysStyle = {
 
 export const calendarWeekdayStyle = {
   padding: 'var(--ui-spacing-xs) var(--ui-spacing-sm)',
-  fontSize: 10,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  fontWeight: uiTypographyTokens.weight.semibold,
   textTransform: 'uppercase' as const,
   color: 'var(--ui-color-secondary-text)',
 } as const
@@ -55,13 +55,13 @@ export const calendarExpandBadgeStyle = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: 10,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.widgetMeta,
+  fontWeight: uiTypographyTokens.weight.semibold,
   color: 'var(--ui-color-secondary-text)',
   border: '1px solid rgba(203, 213, 225, 0.72)',
   borderRadius: 999,
   background: 'rgba(255, 255, 255, 0.76)',
-  lineHeight: 1.2,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
   pointerEvents: 'none' as const,
 } as const
 
@@ -74,15 +74,15 @@ export const calendarEmptyCellStyle = {
 } as const
 
 export const calendarDayNumberStyle = {
-  fontSize: 13,
-  fontWeight: 700,
+  fontSize: uiTypographyTokens.role.label,
+  fontWeight: uiTypographyTokens.weight.bold,
   color: 'var(--ui-color-primary-text)',
 } as const
 
 export const calendarDayMetaStyle = {
-  fontSize: 11,
+  fontSize: uiTypographyTokens.role.widgetMeta,
   color: 'var(--ui-color-secondary-text)',
-  lineHeight: 1.2,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
   minWidth: 0,
   overflow: 'hidden' as const,
   textOverflow: 'ellipsis',
@@ -90,9 +90,9 @@ export const calendarDayMetaStyle = {
 } as const
 
 export const calendarDayCountStyle = {
-  fontSize: 10,
+  fontSize: uiTypographyTokens.role.widgetMeta,
   color: 'var(--ui-color-secondary-text)',
-  lineHeight: 1.2,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
   whiteSpace: 'nowrap' as const,
 } as const
 
@@ -127,14 +127,14 @@ export const modalHeaderStyle = {
 } as const
 
 export const modalTitleStyle = {
-  fontSize: 18,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.hierarchy.t2,
+  fontWeight: uiTypographyTokens.weight.semibold,
   color: 'var(--ui-color-primary-text)',
   marginBottom: 4,
 } as const
 
 export const modalSubtitleStyle = {
-  fontSize: 13,
+  fontSize: uiTypographyTokens.role.helper,
   color: 'var(--ui-color-secondary-text)',
 } as const
 
@@ -145,7 +145,7 @@ export const closeButtonStyle = {
   borderRadius: uiControlPrimitives.button.utility.radius,
   padding: uiControlPrimitives.button.utility.padding,
   cursor: uiControlPrimitives.button.utility.cursor,
-  fontSize: 13,
+  fontSize: uiTypographyTokens.role.label,
   fontWeight: uiControlPrimitives.button.utility.fontWeight,
 } as const
 
@@ -179,13 +179,13 @@ export const transactionTopRowStyle = {
 } as const
 
 export const transactionAmountStyle = {
-  fontSize: 15,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.hierarchy.t3,
+  fontWeight: uiTypographyTokens.weight.semibold,
   color: 'var(--ui-color-primary-text)',
 } as const
 
 export const transactionDescriptionStyle = {
-  fontSize: 14,
+  fontSize: uiTypographyTokens.hierarchy.t3,
   color: 'var(--ui-color-primary-text)',
 } as const
 
@@ -197,7 +197,7 @@ export const transactionTagsStyle = {
 } as const
 
 export const transactionTagBadgeStyle = {
-  fontSize: 12,
+  fontSize: uiTypographyTokens.role.metadata,
   padding: 'var(--ui-spacing-xs) var(--ui-spacing-md)',
   borderRadius: 999,
   background: 'var(--ui-color-soft-blue)',
@@ -212,7 +212,7 @@ export const emptyDayStyle = {
   padding: 'var(--ui-space-7)',
   background: 'var(--ui-color-soft-section-background)',
   color: 'var(--ui-color-secondary-text)',
-  fontSize: 14,
+  fontSize: uiTypographyTokens.hierarchy.t3,
 } as const
 
 export const transactionActionsStyle = {
@@ -259,7 +259,7 @@ export const suggestionButtonBaseStyle = {
   background: 'var(--ui-color-card-background)',
   padding: '10px 12px',
   cursor: 'pointer',
-  fontSize: 13,
+  fontSize: uiTypographyTokens.role.label,
   color: 'var(--ui-color-primary-text)',
 } as const
 
@@ -285,8 +285,8 @@ export const tagBadgeStyle = {
   background: 'var(--ui-color-soft-blue)',
   border: '1px solid var(--ui-color-light-blue-border)',
   color: 'var(--ui-color-primary-blue)',
-  fontSize: 12,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.metadata,
+  fontWeight: uiTypographyTokens.weight.semibold,
 } as const
 
 export const tagRemoveButtonStyle = {
@@ -299,8 +299,8 @@ export const tagRemoveButtonStyle = {
   background: uiControlPrimitives.button.icon.background,
   color: uiControlPrimitives.button.icon.color,
   cursor: uiControlPrimitives.button.icon.cursor,
-  fontSize: 14,
-  lineHeight: 1.2,
+  fontSize: uiTypographyTokens.hierarchy.t3,
+  lineHeight: uiTypographyTokens.lineHeight.compact,
   padding: uiControlPrimitives.button.icon.padding,
 } as const
 
@@ -312,7 +312,7 @@ export const primaryButtonStyle = {
   borderRadius: uiControlPrimitives.button.standard.radius,
   padding: uiControlPrimitives.button.standard.padding,
   cursor: uiControlPrimitives.button.standard.cursor,
-  fontSize: 13,
+  fontSize: uiTypographyTokens.role.label,
   fontWeight: uiControlPrimitives.button.standard.fontWeight,
 } as const
 
@@ -324,7 +324,7 @@ export const secondaryButtonStyle = {
   borderRadius: uiControlPrimitives.button.utility.radius,
   padding: uiControlPrimitives.button.utility.padding,
   cursor: uiControlPrimitives.button.utility.cursor,
-  fontSize: 13,
+  fontSize: uiTypographyTokens.role.label,
   fontWeight: uiControlPrimitives.button.utility.fontWeight,
 } as const
 
@@ -336,7 +336,7 @@ export const dangerButtonStyle = {
   borderRadius: uiControlPrimitives.button.utility.radius,
   padding: uiControlPrimitives.button.utility.padding,
   cursor: uiControlPrimitives.button.utility.cursor,
-  fontSize: 13,
+  fontSize: uiTypographyTokens.role.label,
   fontWeight: uiControlPrimitives.button.utility.fontWeight,
 } as const
 
@@ -353,7 +353,7 @@ export const heatmapLegendStyle = {
   flexDirection: 'column' as const,
   gap: 'var(--ui-spacing-card-section-gap)',
   marginBottom: 'var(--ui-spacing-md)',
-  fontSize: 12,
+  fontSize: uiTypographyTokens.role.metadata,
   color: 'var(--ui-color-secondary-text)',
 } as const
 
@@ -362,8 +362,8 @@ export const heatmapLegendLabelsStyle = {
   alignItems: 'center',
   justifyContent: 'space-between',
   gap: 'var(--ui-spacing-card-section-gap)',
-  fontSize: 12,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.metadata,
+  fontWeight: uiTypographyTokens.weight.semibold,
   color: 'var(--ui-color-secondary-text)',
 } as const
 
@@ -383,7 +383,7 @@ export const heatmapSwitchRowStyle = {
   gap: 'var(--ui-spacing-form-field-gap)',
   flexWrap: 'wrap' as const,
   marginBottom: 'var(--ui-spacing-md)',
-  fontSize: 12,
+  fontSize: uiTypographyTokens.role.metadata,
   color: 'var(--ui-color-secondary-text)',
 } as const
 
@@ -403,10 +403,10 @@ export const noDaySummaryStyle = {
 } as const
 
 export const noDayHintStyle = {
-  fontSize: 12,
+  fontSize: uiTypographyTokens.role.helper,
   color: 'var(--ui-color-secondary-text)',
   marginTop: 'var(--ui-spacing-sm)',
-  lineHeight: 1.4,
+  lineHeight: uiTypographyTokens.lineHeight.body,
 } as const
 
 export const badgeStyle = {
@@ -418,8 +418,8 @@ export const badgeStyle = {
   color: 'var(--ui-color-secondary-text)',
   borderRadius: 999,
   padding: 'var(--ui-spacing-xs) var(--ui-spacing-md)',
-  fontSize: 12,
-  fontWeight: 600,
+  fontSize: uiTypographyTokens.role.metadata,
+  fontWeight: uiTypographyTokens.weight.semibold,
 } as const
 
 export const weekdayLabels = ['pon', 'wt', 'śr', 'czw', 'pt', 'sob', 'ndz']

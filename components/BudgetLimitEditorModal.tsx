@@ -3,7 +3,13 @@
 import type { CSSProperties } from 'react'
 import { useEffect, useState } from 'react'
 import type { BudgetLimit, BudgetLimitMode } from '../lib/budgetPageTypes'
-import { uiControlPrimitives, uiInputApi, uiOverlayPrimitives, uiSurfacePrimitives } from '../lib/uiFoundation'
+import {
+  uiControlPrimitives,
+  uiInputApi,
+  uiOverlayPrimitives,
+  uiSurfacePrimitives,
+  uiTypographyTokens,
+} from '../lib/uiFoundation'
 import type { SaveBudgetLimitInput } from '../lib/useBudgetLimits'
 
 type Props = {
@@ -41,16 +47,16 @@ const modalStyle: CSSProperties = {
 const titleStyle: CSSProperties = {
   margin: 0,
   color: 'var(--ui-color-primary-text)',
-  fontSize: 18,
-  fontWeight: 600,
-  lineHeight: 1.25,
+  fontSize: uiTypographyTokens.hierarchy.t2,
+  fontWeight: uiTypographyTokens.weight.semibold,
+  lineHeight: uiTypographyTokens.lineHeight.heading,
 }
 
 const subtitleStyle: CSSProperties = {
   marginTop: 6,
   color: 'var(--ui-color-secondary-text)',
-  fontSize: 13,
-  lineHeight: 1.35,
+  fontSize: uiTypographyTokens.role.helper,
+  lineHeight: uiTypographyTokens.lineHeight.body,
 }
 
 const formStyle: CSSProperties = {
@@ -63,15 +69,15 @@ const labelStyle: CSSProperties = {
   display: 'grid',
   gap: 6,
   color: 'var(--ui-color-secondary-text)',
-  fontSize: 13,
-  fontWeight: 500,
+  fontSize: uiTypographyTokens.role.label,
+  fontWeight: uiTypographyTokens.weight.medium,
 }
 
 const helpTextStyle: CSSProperties = {
   color: 'var(--ui-color-secondary-text)',
-  fontSize: 12,
-  fontWeight: 400,
-  lineHeight: 1.35,
+  fontSize: uiTypographyTokens.role.helper,
+  fontWeight: uiTypographyTokens.weight.regular,
+  lineHeight: uiTypographyTokens.lineHeight.body,
 }
 
 const errorTextStyle: CSSProperties = {
@@ -80,8 +86,8 @@ const errorTextStyle: CSSProperties = {
   border: uiSurfacePrimitives.statusBox.danger.border,
   background: uiSurfacePrimitives.statusBox.danger.background,
   color: 'var(--ui-color-expense)',
-  fontSize: 13,
-  lineHeight: 1.35,
+  fontSize: uiTypographyTokens.role.helper,
+  lineHeight: uiTypographyTokens.lineHeight.body,
 }
 
 const actionsStyle: CSSProperties = {

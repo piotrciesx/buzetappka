@@ -21,6 +21,7 @@ import {
 } from '../lib/importExportUtils'
 import { getCategoryPathLabel } from '../lib/budgetPageHelpers'
 import { splitTagInput } from '../lib/tagUtils'
+import { uiTypographyTokens } from '../lib/uiFoundation'
 import {
   ActionRow,
   ListRow,
@@ -77,8 +78,8 @@ const lightButtonStyle: CSSProperties = {
   minHeight: 32,
   borderRadius: 999,
   padding: '0 12px',
-  fontSize: 12,
-  fontWeight: 680,
+  fontSize: uiTypographyTokens.role.metadata,
+  fontWeight: uiTypographyTokens.weight.bold,
   boxShadow: 'none',
 }
 
@@ -97,8 +98,8 @@ const compactInfoStyle: CSSProperties = {
   padding: '9px 11px',
   background: 'rgba(248, 250, 252, 0.74)',
   color: 'var(--ui-color-secondary-text)',
-  fontSize: 12,
-  lineHeight: 1.4,
+  fontSize: uiTypographyTokens.role.helper,
+  lineHeight: uiTypographyTokens.lineHeight.body,
 }
 
 export default function ImportExportPanel({
@@ -550,7 +551,7 @@ export default function ImportExportPanel({
                         marginBottom: 10,
                       }}
                     >
-                      <label style={{ fontWeight: 600 }}>
+                      <label style={{ fontWeight: uiTypographyTokens.weight.semibold }}>
                         <input
                           type="checkbox"
                           checked={row.isApproved}
@@ -565,9 +566,21 @@ export default function ImportExportPanel({
                       </label>
 
                       {row.errors.length === 0 ? (
-                        <span style={{ color: 'var(--ui-color-income)', fontWeight: 600 }}>OK</span>
+                        <span
+                          style={{
+                            color: 'var(--ui-color-income)',
+                            fontWeight: uiTypographyTokens.weight.semibold,
+                          }}
+                        >
+                          OK
+                        </span>
                       ) : (
-                        <span style={{ color: 'var(--ui-color-expense)', fontWeight: 600 }}>
+                        <span
+                          style={{
+                            color: 'var(--ui-color-expense)',
+                            fontWeight: uiTypographyTokens.weight.semibold,
+                          }}
+                        >
                           {row.errors.join(' | ')}
                         </span>
                       )}
