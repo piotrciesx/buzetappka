@@ -176,6 +176,37 @@ export const uiColorRoleTokens = {
   },
 } as const
 
+export const uiTypographyTokens = {
+  hierarchy: {
+    t1: 'var(--ui-type-t1)',
+    t2: 'var(--ui-type-t2)',
+    t3: 'var(--ui-type-t3)',
+    t4: 'var(--ui-type-t4)',
+    t5: 'var(--ui-type-t5)',
+  },
+  role: {
+    financialValue: 'var(--ui-type-financial-value)',
+    label: 'var(--ui-type-label)',
+    metadata: 'var(--ui-type-metadata)',
+    helper: 'var(--ui-type-helper)',
+    placeholder: 'var(--ui-type-placeholder)',
+    widgetTitle: 'var(--ui-type-widget-title)',
+    widgetMeta: 'var(--ui-type-widget-meta)',
+    dashboardValue: 'var(--ui-type-dashboard-value)',
+  },
+  weight: {
+    regular: 'var(--ui-font-weight-regular)',
+    medium: 'var(--ui-font-weight-medium)',
+    semibold: 'var(--ui-font-weight-semibold)',
+    bold: 'var(--ui-font-weight-bold)',
+  },
+  lineHeight: {
+    compact: 'var(--ui-line-height-compact)',
+    body: 'var(--ui-line-height-body)',
+    heading: 'var(--ui-line-height-heading)',
+  },
+} as const
+
 export const uiPrimitiveContracts = {
   button: ['hero', 'standard', 'utility', 'icon'],
   buttonState: ['active'],
@@ -197,6 +228,8 @@ export const uiPrimitiveContracts = {
   dropdownPlacement: ['bottom', 'top', 'context'],
   dropdownAlign: ['start', 'center', 'end'],
   toolbar: ['default', 'compact', 'sticky'],
+  typography: ['t1', 't2', 't3', 't4', 't5'],
+  typographyRole: ['financialValue', 'label', 'metadata', 'helper', 'placeholder', 'widgetTitle', 'widgetMeta', 'dashboardValue'],
 } as const
 
 export const uiSurfacePrimitives = {

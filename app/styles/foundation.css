@@ -154,6 +154,28 @@
   --ui-line-height-tight: 1.2;
   --ui-line-height-normal: 1.4;
 
+  /* Typography Foundation role tokens */
+  --ui-type-t1: var(--ui-font-size-title);
+  --ui-type-t2: var(--ui-font-size-section);
+  --ui-type-t3: var(--ui-font-size-body);
+  --ui-type-t4: var(--ui-font-size-body-sm);
+  --ui-type-t5: var(--ui-font-size-meta);
+  --ui-type-financial-value: var(--ui-font-size-value);
+  --ui-type-label: var(--ui-font-size-body-sm);
+  --ui-type-metadata: var(--ui-font-size-meta);
+  --ui-type-helper: var(--ui-font-size-meta);
+  --ui-type-placeholder: var(--ui-font-size-body-sm);
+  --ui-type-widget-title: var(--ui-font-size-body);
+  --ui-type-widget-meta: var(--ui-font-size-caption);
+  --ui-type-dashboard-value: var(--ui-font-size-value);
+  --ui-font-weight-regular: 400;
+  --ui-font-weight-medium: 560;
+  --ui-font-weight-semibold: 600;
+  --ui-font-weight-bold: 700;
+  --ui-line-height-compact: var(--ui-line-height-tight);
+  --ui-line-height-body: var(--ui-line-height-normal);
+  --ui-line-height-heading: var(--ui-line-height-tight);
+
   /* Semantic color aliases */
   --ui-color-danger: var(--ui-color-error);
   --ui-color-info: var(--ui-color-primary-blue);
