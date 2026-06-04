@@ -19,6 +19,7 @@ type UseBudgetWorkspaceSummaryInput = {
   addableTransactionCategoryIds: Set<string>
   categories: Category[]
   categoriesById: Record<string, Category>
+  incomeLevel1Id: string | null
   expenseLevel1Id: string | null
   transactionCategoryPathLabels: Record<string, string>
   getSignedAmountForTransaction: (transaction: Transaction) => number
@@ -35,6 +36,7 @@ export function useBudgetWorkspaceSummary({
   addableTransactionCategoryIds,
   categories,
   categoriesById,
+  incomeLevel1Id,
   expenseLevel1Id,
   transactionCategoryPathLabels,
   getSignedAmountForTransaction,
@@ -77,6 +79,7 @@ export function useBudgetWorkspaceSummary({
       addableTransactionCategoryIds,
       categories,
       categoriesById,
+      incomeLevel1Id,
       expenseLevel1Id,
       transactionCategoryPathLabels,
       getRootLevel1IdForCategory,
@@ -87,6 +90,7 @@ export function useBudgetWorkspaceSummary({
     addableTransactionCategoryIds,
     categories,
     categoriesById,
+    incomeLevel1Id,
     expenseLevel1Id,
     getCategoryCountForSelectedMonth,
     getRootLevel1IdForCategory,

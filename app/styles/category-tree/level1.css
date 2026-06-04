@@ -27,6 +27,41 @@
   margin: 0 !important;
 }
 
+[data-level1-card-shell="true"] {
+  display: grid !important;
+  align-content: start !important;
+  gap: 14px !important;
+  outline: 1px solid transparent !important;
+  outline-offset: 0 !important;
+  transition:
+    outline-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease !important;
+}
+
+[data-level1-block="true"] {
+  display: grid !important;
+  gap: 14px !important;
+  min-width: 0 !important;
+  transform-origin: center !important;
+}
+
+[data-level1-card-shell="true"][data-drag-state="dragging"] {
+  border-radius: var(--ui-radius-3xl) !important;
+  outline-color: rgba(8, 44, 122, 0.28) !important;
+  background: var(--ui-surface-hover) !important;
+}
+
+[data-level1-card-shell="true"][data-drag-state="dragging"] > [data-level1-block="true"] {
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.12) !important;
+}
+
+[data-level1-card-shell="true"][data-drag-state="over"] {
+  border-radius: var(--ui-radius-3xl) !important;
+  outline-color: rgba(8, 44, 122, 0.18) !important;
+  background: var(--ui-surface-hover) !important;
+}
+
 [data-level1-header-grid="true"] [data-level1-card="true"] {
   position: relative !important;
   min-height: 136px !important;
@@ -48,12 +83,14 @@
   content: none !important;
 }
 
-[data-level1-header-grid="true"] [data-level1-card="true"][data-level1-kind="income"] {
+[data-level1-header-grid="true"] [data-level1-card="true"][data-level1-kind="income"],
+[data-level1-header-grid="true"] [data-level1-card="true"][data-level1-type="income"] {
   border-color: var(--ui-financial-income-soft) !important;
   color: var(--ui-financial-income) !important;
 }
 
-[data-level1-header-grid="true"] [data-level1-card="true"][data-level1-kind="expense"] {
+[data-level1-header-grid="true"] [data-level1-card="true"][data-level1-kind="expense"],
+[data-level1-header-grid="true"] [data-level1-card="true"][data-level1-type="expense"] {
   border-color: var(--ui-financial-expense-soft) !important;
   color: var(--ui-financial-expense) !important;
 }
@@ -120,19 +157,23 @@
   opacity: 0.16;
 }
 
-[data-level1-card="true"][data-level1-kind="income"] [data-level1-card-wave="true"]::before {
+[data-level1-card="true"][data-level1-kind="income"] [data-level1-card-wave="true"]::before,
+[data-level1-card="true"][data-level1-type="income"] [data-level1-card-wave="true"]::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 180' preserveAspectRatio='none'%3E%3Cpath d='M0 72 C 150 92 260 52 405 66 C 540 79 630 48 770 58 C 920 69 1035 96 1200 66 L1200 180 L0 180 Z' fill='%23dcfce7' fill-opacity='.72'/%3E%3Cpath d='M0 72 C 150 92 260 52 405 66 C 540 79 630 48 770 58 C 920 69 1035 96 1200 66' fill='none' stroke='%2322c55e' stroke-width='3' stroke-linecap='round' opacity='.58'/%3E%3C/svg%3E");
 }
 
-[data-level1-card="true"][data-level1-kind="income"] [data-level1-card-wave="true"]::after {
+[data-level1-card="true"][data-level1-kind="income"] [data-level1-card-wave="true"]::after,
+[data-level1-card="true"][data-level1-type="income"] [data-level1-card-wave="true"]::after {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 90' preserveAspectRatio='none'%3E%3Cpath d='M0 54 C 165 72 300 38 455 50 C 610 62 720 42 880 48 C 1035 54 1115 70 1200 58' fill='none' stroke='%2386efac' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
-[data-level1-card="true"][data-level1-kind="expense"] [data-level1-card-wave="true"]::before {
+[data-level1-card="true"][data-level1-kind="expense"] [data-level1-card-wave="true"]::before,
+[data-level1-card="true"][data-level1-type="expense"] [data-level1-card-wave="true"]::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 180' preserveAspectRatio='none'%3E%3Cpath d='M0 72 C 155 48 275 84 420 68 C 575 51 670 86 815 78 C 970 70 1060 48 1200 66 L1200 180 L0 180 Z' fill='%23ffe4d5' fill-opacity='.78'/%3E%3Cpath d='M0 72 C 155 48 275 84 420 68 C 575 51 670 86 815 78 C 970 70 1060 48 1200 66' fill='none' stroke='%23fb7185' stroke-width='3' stroke-linecap='round' opacity='.52'/%3E%3C/svg%3E");
 }
 
-[data-level1-card="true"][data-level1-kind="expense"] [data-level1-card-wave="true"]::after {
+[data-level1-card="true"][data-level1-kind="expense"] [data-level1-card-wave="true"]::after,
+[data-level1-card="true"][data-level1-type="expense"] [data-level1-card-wave="true"]::after {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 90' preserveAspectRatio='none'%3E%3Cpath d='M0 54 C 165 40 310 66 455 54 C 615 41 720 62 875 56 C 1025 50 1110 38 1200 50' fill='none' stroke='%23fed7aa' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
@@ -215,11 +256,13 @@
   font-variant-numeric: tabular-nums;
 }
 
-[data-level1-card="true"][data-level1-kind="income"] [data-level1-summary="true"] strong {
+[data-level1-card="true"][data-level1-kind="income"] [data-level1-summary="true"] strong,
+[data-level1-card="true"][data-level1-type="income"] [data-level1-summary="true"] strong {
   color: var(--ui-financial-income) !important;
 }
 
-[data-level1-card="true"][data-level1-kind="expense"] [data-level1-summary="true"] strong {
+[data-level1-card="true"][data-level1-kind="expense"] [data-level1-summary="true"] strong,
+[data-level1-card="true"][data-level1-type="expense"] [data-level1-summary="true"] strong {
   color: var(--ui-financial-expense) !important;
 }
 
@@ -271,13 +314,15 @@
   box-shadow: var(--ui-shadow-none) !important;
 }
 
-[data-level1-card="true"][data-level1-kind="income"] [data-level1-trend-icon="true"] {
+[data-level1-card="true"][data-level1-kind="income"] [data-level1-trend-icon="true"],
+[data-level1-card="true"][data-level1-type="income"] [data-level1-trend-icon="true"] {
   border: 1px solid var(--ui-financial-income-soft) !important;
   background: var(--ui-financial-income-soft) !important;
   color: var(--ui-financial-income) !important;
 }
 
-[data-level1-card="true"][data-level1-kind="expense"] [data-level1-trend-icon="true"] {
+[data-level1-card="true"][data-level1-kind="expense"] [data-level1-trend-icon="true"],
+[data-level1-card="true"][data-level1-type="expense"] [data-level1-trend-icon="true"] {
   border: 1px solid var(--ui-financial-expense-soft) !important;
   background: var(--ui-financial-expense-soft) !important;
   color: var(--ui-financial-expense) !important;
@@ -411,11 +456,13 @@
     0 8px 20px var(--ui-shadow-light-color) !important;
 }
 
-[data-level1-expanded-content="true"][data-level1-kind="income"] {
+[data-level1-expanded-content="true"][data-level1-kind="income"],
+[data-level1-expanded-content="true"][data-level1-type="income"] {
   border-color: var(--ui-financial-income-soft) !important;
 }
 
-[data-level1-expanded-content="true"][data-level1-kind="expense"] {
+[data-level1-expanded-content="true"][data-level1-kind="expense"],
+[data-level1-expanded-content="true"][data-level1-type="expense"] {
   border-color: var(--ui-financial-expense-soft) !important;
 }
 

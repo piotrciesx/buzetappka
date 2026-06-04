@@ -36,6 +36,7 @@ export const buildPinnedWorkspaceCategories = ({
   addableTransactionCategoryIds,
   categories,
   categoriesById,
+  incomeLevel1Id,
   expenseLevel1Id,
   transactionCategoryPathLabels,
   getRootLevel1IdForCategory,
@@ -46,6 +47,7 @@ export const buildPinnedWorkspaceCategories = ({
   addableTransactionCategoryIds: Set<string>
   categories: Category[]
   categoriesById: Record<string, Category>
+  incomeLevel1Id: string | null
   expenseLevel1Id: string | null
   transactionCategoryPathLabels: Record<string, string>
   getRootLevel1IdForCategory?: (categoryId: string) => string | null
@@ -92,7 +94,7 @@ export const buildPinnedWorkspaceCategories = ({
       return {
         id: categoryId,
         label,
-        kind: rootId === expenseLevel1Id ? 'expense' : 'income',
+        kind: rootId === expenseLevel1Id ? 'expense' : rootId === incomeLevel1Id ? 'income' : 'income',
         amount,
         transactionCount,
       }

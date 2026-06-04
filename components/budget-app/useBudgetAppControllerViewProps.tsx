@@ -214,6 +214,7 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     addableTransactionCategoryIds: ctx.addableTransactionCategoryIds,
     categories: ctx.categories,
     categoriesById,
+    incomeLevel1Id: ctx.incomeLevel1Id,
     expenseLevel1Id: ctx.expenseLevel1Id,
     transactionCategoryPathLabels: ctx.transactionCategoryPathLabels,
     getSignedAmountForTransaction,

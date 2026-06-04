@@ -32,6 +32,7 @@ export type BudgetCategoryTreeProps = {
   isReorderingLevel1: boolean
   reorderingLevel1Id: string | null
   reorderingLevel2Id: string | null
+  incomeLevel1Id: string | null
   expenseLevel1Id: string | null
   styles: Record<string, CSSProperties>
   toggleLevel1: (id: string) => void

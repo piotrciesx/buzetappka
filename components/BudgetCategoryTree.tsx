@@ -42,6 +42,7 @@ export default function BudgetCategoryTree(props: Props) {
     isReorderingLevel1,
     reorderingLevel1Id,
     reorderingLevel2Id,
+    incomeLevel1Id,
     expenseLevel1Id,
     styles,
     toggleLevel1,
@@ -170,6 +171,12 @@ export default function BudgetCategoryTree(props: Props) {
     isLevel2DndBlocked: boolean
   ) => {
     const calendarHeatmapVariant = getCalendarHeatmapVariantForLevel1Id(level1Category.id)
+    const level1Kind =
+      level1Category.id === incomeLevel1Id
+        ? 'income'
+        : level1Category.id === expenseLevel1Id
+          ? 'expense'
+          : 'income'
     const canUseBudgetLimit =
       level1Category.id === expenseLevel1Id && Boolean(getBudgetLimitView && onEditBudgetLimit)
     const budgetLimitView = canUseBudgetLimit ? getBudgetLimitView?.(level2Category.id) ?? null : null
@@ -214,7 +221,7 @@ export default function BudgetCategoryTree(props: Props) {
         handleInlineSaveTransaction={handleInlineSaveTransaction}
         saveDraft={saveDraft}
         deleteDraft={deleteDraft}
-        inlineDraftType={level1Category.id === expenseLevel1Id ? 'expense' : 'income'}
+        inlineDraftType={level1Kind}
         inlineDraftLevel1Id={level1Category.id}
         handleHideCategory={handleHideCategory}
         handleRestoreCategory={handleRestoreCategory}
@@ -450,8 +457,17 @@ export default function BudgetCategoryTree(props: Props) {
     transactionCount: getTransactionsForLevel1AndMonth(level1Category.id).length,
     childCount: getSortedLevel2Children(level1Category.id).length,
   })
-  const getLevel1Kind = (level1Category: Category) =>
-    level1Category.id === expenseLevel1Id ? 'expense' : 'income'
+  const getLevel1Kind = (level1Category: Category) => {
+    if (level1Category.id === incomeLevel1Id) {
+      return 'income'
+    }
+
+    if (level1Category.id === expenseLevel1Id) {
+      return 'expense'
+    }
+
+    return 'income'
+  }
 
   const getLevel1TreeSum = (level1Id: string) =>
     getTransactionsForLevel1AndMonth(level1Id).reduce(
@@ -478,6 +494,7 @@ export default function BudgetCategoryTree(props: Props) {
         key={`content-${level1Category.id}`}
         data-level1-expanded-content="true"
         data-level1-kind={level1Kind}
+        data-level1-type={level1Kind}
       >
         <div data-level1-tree-body="true">
           {canUseMonthCalendar && isLevel1CalendarOpen && renderLevel1CalendarPanel(level1Category)}

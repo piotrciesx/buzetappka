@@ -528,6 +528,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
           isReorderingLevel1,
           reorderingLevel1Id,
           reorderingLevel2Id,
+          incomeLevel1Id,
           expenseLevel1Id,
           styles,
           level2SortMode,

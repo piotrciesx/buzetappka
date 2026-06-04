@@ -70,6 +70,7 @@ function Level1CardBase(props: BaseProps) {
         data-category-drag-row="true"
         data-level1-card="true"
         data-level1-kind={kind}
+        data-level1-type={kind}
         data-level1-has-limit={limitIndicator ? 'true' : 'false'}
         data-level1-open={isOpen ? 'true' : 'false'}
         style={styles.l1Header}
@@ -135,8 +136,15 @@ function Level1CardBase(props: BaseProps) {
 
 export function StaticLevel1Card(props: BaseProps) {
   return (
-    <div style={props.styles.l1Card} data-level1-card-shell="true">
-      <Level1CardBase {...props} />
+    <div
+      style={props.styles.l1Card}
+      data-level1-card-shell="true"
+      data-level1-type={props.kind}
+      data-drag-state="idle"
+    >
+      <div data-level1-block="true">
+        <Level1CardBase {...props} />
+      </div>
     </div>
   )
 }
@@ -155,7 +163,16 @@ export function SortableLevel1Card(props: SortableProps) {
     summary,
   } = props
 
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+    isOver,
+    isSorting,
+  } = useSortable({
     id: level1Category.id,
     disabled: !isSortable,
   })
@@ -176,13 +193,23 @@ export function SortableLevel1Card(props: SortableProps) {
     return () => window.clearTimeout(timer)
   }, [isDragging])
 
+  const dragState = isDragging ? 'dragging' : isOver ? 'over' : isSorting ? 'dropping' : 'idle'
+  const transformValue = CSS.Transform.toString(transform)
+  const blockTransform = isDragging
+    ? `${transformValue || 'translate3d(0, 0, 0)'} scale(1.012)`
+    : transformValue
+
   const wrapStyle: CSSProperties = {
     ...styles.l1Card,
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.7 : 1,
     position: 'relative',
-    zIndex: isDragging ? 1 : 'auto',
+  }
+
+  const blockStyle: CSSProperties = {
+    transform: blockTransform,
+    transition: transition || 'transform 200ms ease, box-shadow 200ms ease',
+    opacity: isDragging ? 0.94 : 1,
+    position: 'relative',
+    zIndex: isDragging ? 3 : 'auto',
   }
 
   const dragHandleStyle: CSSProperties = {
@@ -195,9 +222,12 @@ export function SortableLevel1Card(props: SortableProps) {
       ref={setNodeRef}
       style={wrapStyle}
       data-level1-card-shell="true"
+      data-level1-type={kind}
       data-level1-mobile-block={isMobileViewport ? 'true' : undefined}
       data-category-dragging={isDragging ? 'true' : 'false'}
+      data-drag-state={dragState}
     >
+      <div data-level1-block="true" style={blockStyle}>
       <Level1CardBase
         level1Category={level1Category}
         isOpen={isOpen}
@@ -251,6 +281,7 @@ export function SortableLevel1Card(props: SortableProps) {
       >
         {children}
       </Level1CardBase>
+      </div>
     </div>
   )
 }

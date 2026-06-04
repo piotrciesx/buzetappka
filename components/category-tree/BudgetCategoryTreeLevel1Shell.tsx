@@ -130,11 +130,12 @@ export default function BudgetCategoryTreeLevel1Shell({
                 dragHandle={renderBlockedLevel1DragHandle(level1Category, isLevel1Sortable)}
                 extraActions={renderLevel1Actions(level1Category, isLevel1CalendarOpen)}
                 limitIndicator={renderLimitIndicator(level1Category)}
-              />
+              >
+                {renderLevel1Content(level1Category)}
+              </StaticLevel1Card>
             )
           })}
         </div>
-        <div data-level1-content-stack="true">{sortedLevel1.map(renderLevel1Content)}</div>
       </div>
     )
   }
@@ -168,13 +169,14 @@ export default function BudgetCategoryTreeLevel1Shell({
                   summary={getLevel1Summary(level1Category)}
                   extraActions={renderLevel1Actions(level1Category, isLevel1CalendarOpen)}
                   limitIndicator={renderLimitIndicator(level1Category)}
-                />
+                >
+                  {renderLevel1Content(level1Category)}
+                </SortableLevel1Card>
               )
             })}
           </div>
         </SortableContext>
       </DndContext>
-      <div data-level1-content-stack="true">{sortedLevel1.map(renderLevel1Content)}</div>
     </div>
   )
 }

@@ -45,6 +45,7 @@ type Props = {
   isReorderingLevel1: boolean
   reorderingLevel1Id: string | null
   reorderingLevel2Id: string | null
+  incomeLevel1Id: string | null
   expenseLevel1Id: string | null
   styles: Record<string, CSSProperties>
 
@@ -162,6 +163,7 @@ export default function BudgetTreeSection({
   isReorderingLevel1,
   reorderingLevel1Id,
   reorderingLevel2Id,
+  incomeLevel1Id,
   expenseLevel1Id,
   styles,
   level2SortMode,
@@ -333,6 +335,7 @@ export default function BudgetTreeSection({
           isReorderingLevel1={isReorderingLevel1}
           reorderingLevel1Id={reorderingLevel1Id}
           reorderingLevel2Id={reorderingLevel2Id}
+          incomeLevel1Id={incomeLevel1Id}
           expenseLevel1Id={expenseLevel1Id}
           styles={styles}
           toggleLevel1={toggleLevel1}

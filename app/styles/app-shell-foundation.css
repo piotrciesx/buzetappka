@@ -417,7 +417,7 @@ body {
 
 [data-level1-tree-shell="true"] {
   display: grid !important;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto;
   gap: var(--ui-spacing-workspace-gap);
 }
 
@@ -454,6 +454,49 @@ body {
   min-width: 0;
   max-width: 100%;
   margin: 0;
+}
+
+[data-level1-card-shell="true"] {
+  display: grid;
+  align-content: start;
+  gap: var(--ui-spacing-workspace-gap);
+  outline: 1px solid transparent;
+  outline-offset: 0;
+  transition:
+    outline-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+[data-level1-block="true"] {
+  display: grid;
+  gap: var(--ui-spacing-workspace-gap);
+  min-width: 0;
+  transform-origin: center;
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease,
+    opacity 180ms ease;
+}
+
+[data-level1-card-shell="true"][data-drag-state="dragging"] {
+  outline-color: rgba(8, 44, 122, 0.28);
+  border-radius: var(--ui-radius-xl);
+  background: var(--ui-surface-hover);
+}
+
+[data-level1-card-shell="true"][data-drag-state="dragging"] > [data-level1-block="true"] {
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.12);
+}
+
+[data-level1-card-shell="true"][data-drag-state="over"] {
+  outline-color: rgba(8, 44, 122, 0.18);
+  border-radius: var(--ui-radius-xl);
+  background: var(--ui-surface-hover);
+}
+
+[data-level1-card-shell="true"][data-drag-state="dropping"] > [data-level1-block="true"] {
+  transition: transform 200ms ease;
 }
 
 [data-level1-card="true"] {
@@ -531,11 +574,13 @@ body {
   line-height: var(--ui-line-height-heading);
 }
 
-[data-level1-card="true"][data-level1-kind="income"] [data-level1-summary="true"] strong {
+[data-level1-card="true"][data-level1-kind="income"] [data-level1-summary="true"] strong,
+[data-level1-card="true"][data-level1-type="income"] [data-level1-summary="true"] strong {
   color: var(--ui-financial-income);
 }
 
-[data-level1-card="true"][data-level1-kind="expense"] [data-level1-summary="true"] strong {
+[data-level1-card="true"][data-level1-kind="expense"] [data-level1-summary="true"] strong,
+[data-level1-card="true"][data-level1-type="expense"] [data-level1-summary="true"] strong {
   color: var(--ui-financial-expense);
 }
 
@@ -633,8 +678,7 @@ body {
 
 [data-level1-expanded-content="true"] {
   display: grid !important;
-  grid-row: span 3;
-  grid-template-rows: subgrid;
+  grid-template-rows: auto;
   align-content: stretch;
   column-gap: 0;
   row-gap: inherit;

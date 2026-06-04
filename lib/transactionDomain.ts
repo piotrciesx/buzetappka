@@ -22,6 +22,13 @@ type CategoryRootContract = Category & {
   category_type?: string | null
 }
 
+const normalizeRootCategoryName = (name: string) =>
+  name
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+
 const readRootCategoryTypeContract = (category: Category): Exclude<RootCategoryType, 'unknown'> | null => {
   const source = category as CategoryRootContract
   const rawType = String(
@@ -33,6 +40,16 @@ const readRootCategoryTypeContract = (category: Category): Exclude<RootCategoryT
   }
 
   if (rawType === 'expense' || rawType === 'expenses') {
+    return 'expense'
+  }
+
+  const normalizedName = normalizeRootCategoryName(category.name)
+
+  if (normalizedName === 'przychody' || normalizedName === 'przychod') {
+    return 'income'
+  }
+
+  if (normalizedName === 'wydatki' || normalizedName === 'wydatek') {
     return 'expense'
   }
 
@@ -199,11 +216,11 @@ export const getBudgetRootCategoryIds = (categories: Category[]): BudgetRootCate
   const metadataExpenseRoot = level1.find((category) => readRootCategoryTypeContract(category) === 'expense')
   const incomeLevel1Id =
     metadataIncomeRoot?.id ??
-    orderedRoots.find((category) => category.id !== metadataExpenseRoot?.id)?.id ??
+    (metadataExpenseRoot ? orderedRoots.find((category) => category.id !== metadataExpenseRoot.id)?.id : null) ??
     null
   const expenseLevel1Id =
     metadataExpenseRoot?.id ??
-    orderedRoots.find((category) => category.id !== incomeLevel1Id)?.id ??
+    (metadataIncomeRoot ? orderedRoots.find((category) => category.id !== metadataIncomeRoot.id)?.id : null) ??
     null
 
   return {
