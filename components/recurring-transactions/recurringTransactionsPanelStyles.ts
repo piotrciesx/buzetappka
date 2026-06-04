@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react'
-import { uiTypographyTokens } from '../../lib/uiFoundation'
+import { uiSurfacePrimitives, uiTypographyTokens } from '../../lib/uiFoundation'
 
 export const panelStyle: CSSProperties = {
   display: 'grid',
@@ -21,14 +21,14 @@ export const introRowStyle: CSSProperties = {
 
 export const mutedTextStyle: CSSProperties = {
   margin: 0,
-  color: 'var(--ui-color-secondary-text)',
+  color: 'var(--ui-text-secondary)',
   fontSize: uiTypographyTokens.role.helper,
   lineHeight: uiTypographyTokens.lineHeight.body,
 }
 
 export const lightButtonStyle: CSSProperties = {
   minHeight: 28,
-  borderRadius: 999,
+  borderRadius: 'var(--ui-radius-pill)',
   padding: '0 10px',
   fontSize: uiTypographyTokens.role.widgetMeta,
   fontWeight: uiTypographyTokens.weight.semibold,
@@ -39,9 +39,9 @@ export const formStyle: CSSProperties = {
   display: 'grid',
   gap: 12,
   padding: 12,
-  border: '1px solid rgba(226, 232, 240, 0.92)',
-  borderRadius: 14,
-  background: 'rgba(255, 255, 255, 0.68)',
+  border: uiSurfacePrimitives.surfaceCard.border,
+  borderRadius: uiSurfacePrimitives.surfaceCard.radius,
+  background: uiSurfacePrimitives.surfaceCard.background,
 }
 
 export const formGridStyle: CSSProperties = {
@@ -55,7 +55,7 @@ export const fieldStyle: CSSProperties = {
   minWidth: 0,
   display: 'grid',
   gap: 5,
-  color: 'var(--ui-color-secondary-text)',
+  color: 'var(--ui-text-secondary)',
   fontSize: uiTypographyTokens.role.metadata,
   fontWeight: uiTypographyTokens.weight.semibold,
 }
@@ -65,13 +65,13 @@ export const inlineCheckStyle: CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   gap: 8,
-  color: 'var(--ui-color-secondary-text)',
+  color: 'var(--ui-text-secondary)',
   fontSize: uiTypographyTokens.role.metadata,
   fontWeight: uiTypographyTokens.weight.medium,
 }
 
 export const sectionTitleStyle: CSSProperties = {
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: uiTypographyTokens.role.label,
   fontWeight: uiTypographyTokens.weight.bold,
 }
@@ -85,9 +85,9 @@ export const cardStyle: CSSProperties = {
   display: 'grid',
   gap: 8,
   padding: 10,
-  border: '1px solid rgba(226, 232, 240, 0.78)',
-  borderRadius: 12,
-  background: 'rgba(255, 255, 255, 0.62)',
+  border: uiSurfacePrimitives.surfaceCard.border,
+  borderRadius: uiSurfacePrimitives.surfaceCard.radius,
+  background: uiSurfacePrimitives.surfaceCard.background,
 }
 
 export const cardHeaderStyle: CSSProperties = {
@@ -99,7 +99,7 @@ export const cardHeaderStyle: CSSProperties = {
 }
 
 export const cardNameStyle: CSSProperties = {
-  color: 'var(--ui-color-primary-text)',
+  color: 'var(--ui-text-primary)',
   fontSize: uiTypographyTokens.role.label,
   fontWeight: uiTypographyTokens.weight.bold,
 }
@@ -112,10 +112,10 @@ export const metaGridStyle: CSSProperties = {
 
 export const infoPillStyle: CSSProperties = {
   padding: '6px 8px',
-  border: '1px solid rgba(226, 232, 240, 0.74)',
-  borderRadius: 9,
-  background: 'rgba(248, 250, 252, 0.54)',
-  color: 'var(--ui-color-secondary-text)',
+  border: '1px solid var(--ui-border-divider)',
+  borderRadius: 'var(--ui-radius-sm)',
+  background: 'var(--ui-surface-soft)',
+  color: 'var(--ui-text-secondary)',
   fontSize: uiTypographyTokens.role.widgetMeta,
   lineHeight: uiTypographyTokens.lineHeight.body,
 }
@@ -123,22 +123,22 @@ export const infoPillStyle: CSSProperties = {
 export const progressOuterStyle: CSSProperties = {
   height: 8,
   overflow: 'hidden',
-  borderRadius: 999,
-  background: 'rgba(226, 232, 240, 0.86)',
+  borderRadius: 'var(--ui-radius-pill)',
+  background: 'var(--ui-border-divider)',
 }
 
 export const progressInnerStyle: CSSProperties = {
   height: '100%',
-  borderRadius: 999,
-  background: 'linear-gradient(90deg, var(--ui-color-primary-blue), var(--ui-color-income))',
+  borderRadius: 'var(--ui-radius-pill)',
+  background: 'var(--ui-chart-positive)',
 }
 
 export const warningStyle: CSSProperties = {
   padding: '8px 10px',
-  border: '1px solid rgba(251, 191, 36, 0.5)',
-  borderRadius: 12,
-  background: 'rgba(255, 251, 235, 0.78)',
-  color: 'var(--ui-color-warning)',
+  border: '1px solid var(--ui-status-warning)',
+  borderRadius: 'var(--ui-radius-md)',
+  background: 'var(--ui-status-warning-soft)',
+  color: 'var(--ui-status-warning)',
   fontSize: uiTypographyTokens.role.metadata,
 }
 

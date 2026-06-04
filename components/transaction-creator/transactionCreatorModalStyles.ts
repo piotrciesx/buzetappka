@@ -88,9 +88,9 @@ export const serialToggleStyle = {
   alignItems: 'center',
   gap: 'var(--ui-spacing-form-field-gap)',
   marginTop: 'var(--ui-space-6)',
-  fontSize: 'var(--ui-font-size-body)',
-  fontWeight: 600,
-  color: 'var(--ui-color-control-text)',
+  fontSize: 'var(--ui-type-t3)',
+  fontWeight: 'var(--ui-font-weight-semibold)',
+  color: 'var(--ui-text-primary)',
 } as const
 
 export const dateFieldStyle = {
@@ -100,9 +100,9 @@ export const dateFieldStyle = {
 } as const
 
 export const dateLabelStyle = {
-  fontSize: 'var(--ui-font-size-body-sm)',
-  fontWeight: 600,
-  color: 'var(--ui-color-control-text)',
+  fontSize: 'var(--ui-type-label)',
+  fontWeight: 'var(--ui-font-weight-semibold)',
+  color: 'var(--ui-text-primary)',
 } as const
 
 export const descriptionFieldWrapStyle = {
@@ -137,22 +137,22 @@ export const suggestionButtonStyle = {
   textAlign: 'left' as const,
   background: 'var(--ui-surface-dropdown)',
   border: 'none',
-  borderBottom: '1px solid var(--ui-color-soft-section-background)',
+  borderBottom: '1px solid var(--ui-border-divider)',
   padding: 'var(--ui-space-5) var(--ui-space-6)',
   cursor: 'pointer',
-  fontSize: 'var(--ui-font-size-body)',
-  color: 'var(--ui-color-control-text)',
+  fontSize: 'var(--ui-type-t3)',
+  color: 'var(--ui-text-primary)',
 } as const
 
 export const activeSuggestionButtonStyle = {
   ...suggestionButtonStyle,
-  background: 'rgba(239, 246, 255, 0.92)',
+  background: 'var(--ui-surface-active)',
 } as const
 
 export const helperTextStyle = {
-  fontSize: 'var(--ui-font-size-body-sm)',
-  color: 'var(--ui-color-text-muted)',
-  lineHeight: 1.45,
+  fontSize: 'var(--ui-type-helper)',
+  color: 'var(--ui-text-muted)',
+  lineHeight: 'var(--ui-line-height-body)',
 } as const
 
 export const finalCategoryInfoStyle = {
@@ -164,18 +164,18 @@ export const finalCategoryInfoStyle = {
 } as const
 
 export const finalCategoryInfoTitleStyle = {
-  fontSize: 12,
-  fontWeight: 600,
-  color: 'var(--ui-color-primary-blue)',
+  fontSize: 'var(--ui-type-metadata)',
+  fontWeight: 'var(--ui-font-weight-semibold)',
+  color: 'var(--ui-text-link)',
   letterSpacing: 0.3,
   textTransform: 'uppercase' as const,
   marginBottom: 'var(--ui-spacing-xs)',
 } as const
 
 export const finalCategoryInfoValueStyle = {
-  fontSize: 14,
-  fontWeight: 600,
-  color: 'var(--ui-color-primary-text)',
+  fontSize: 'var(--ui-type-t3)',
+  fontWeight: 'var(--ui-font-weight-semibold)',
+  color: 'var(--ui-text-primary)',
 } as const
 
 export const tagInputWrapStyle = {
@@ -197,11 +197,11 @@ export const tagBadgeStyle = {
   gap: 'var(--ui-spacing-action-gap)',
   padding: uiControlPrimitives.tag.default.padding,
   borderRadius: uiControlPrimitives.tag.default.radius,
-  border: '1px solid var(--ui-color-light-blue-border)',
-  background: 'rgba(239, 246, 255, 0.92)',
-  color: 'var(--ui-color-primary-blue)',
-  fontSize: 'var(--ui-font-size-body-sm)',
-  fontWeight: 600,
+  border: '1px solid var(--ui-border-active)',
+  background: 'var(--ui-surface-active)',
+  color: 'var(--ui-text-link)',
+  fontSize: 'var(--ui-type-label)',
+  fontWeight: 'var(--ui-font-weight-semibold)',
 } as const
 
 export const tagRemoveButtonStyle = {
@@ -214,7 +214,7 @@ export const tagRemoveButtonStyle = {
   background: uiControlPrimitives.button.icon.background,
   color: uiControlPrimitives.button.icon.color,
   cursor: uiControlPrimitives.button.icon.cursor,
-  fontSize: 14,
-  lineHeight: 1.2,
+  fontSize: 'var(--ui-type-t3)',
+  lineHeight: 'var(--ui-line-height-compact)',
   padding: uiControlPrimitives.button.icon.padding,
 } as const

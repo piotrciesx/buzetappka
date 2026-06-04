@@ -9,7 +9,7 @@
   min-width: 26px !important;
   height: 26px !important;
   min-height: 26px !important;
-  border-radius: 7px !important;
+  border-radius: var(--ui-radius-sm) !important;
   font-size: var(--ui-type-label) !important;
 }
 
@@ -19,9 +19,9 @@
   top: calc(100% + 6px) !important;
   right: 0 !important;
   left: auto !important;
-  width: 190px !important;
-  border-radius: var(--ui-radius-sm) !important;
-  box-shadow: var(--ui-shadow-popover) !important;
+  width: var(--ui-dropdown-width-action) !important;
+  border-radius: var(--ui-dropdown-radius) !important;
+  box-shadow: var(--ui-dropdown-shadow) !important;
 }
 
 
@@ -72,7 +72,7 @@
   justify-content: flex-start;
   width: 100%;
   min-height: 30px;
-  border-radius: var(--ui-radius-sm) !important;
+  border-radius: var(--ui-radius-md) !important;
   text-align: left;
 }
 
@@ -119,8 +119,8 @@
   top: calc(100% + 6px) !important;
   right: 0 !important;
   left: auto !important;
-  width: 190px !important;
-  z-index: var(--ui-z-dashboard-overlay) !important;
+  width: var(--ui-dropdown-width-action) !important;
+  z-index: var(--ui-z-dropdown-raised) !important;
 }
 
 

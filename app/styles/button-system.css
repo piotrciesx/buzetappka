@@ -289,3 +289,129 @@
 [data-budget-app="true"] summary svg {
   stroke: currentColor;
 }
+
+/* Public button API wins over legacy fallback selectors inside the app shell. */
+[data-budget-app="true"] .ui-button,
+[data-budget-app="true"] .ui-button--hero,
+[data-budget-app="true"] .ui-button--standard,
+[data-budget-app="true"] .ui-button--utility,
+[data-budget-app="true"] .ui-button--icon,
+[data-budget-app="true"] .ui-button-hero,
+[data-budget-app="true"] .ui-button-standard,
+[data-budget-app="true"] .ui-button-utility,
+[data-budget-app="true"] .ui-button-icon {
+  border-color: var(--ui-button-border) !important;
+  border-radius: var(--ui-button-radius) !important;
+  background: var(--ui-button-bg) !important;
+  color: var(--ui-button-text) !important;
+  box-shadow: none !important;
+}
+
+[data-budget-app="true"] .ui-button--hero,
+[data-budget-app="true"] .ui-button-hero {
+  min-height: var(--ui-button-height-hero) !important;
+  padding: var(--ui-button-padding-hero) !important;
+  border: 2px solid var(--ui-button-border-strong) !important;
+  color: var(--ui-button-text-strong) !important;
+  font-weight: var(--ui-button-font-weight-hero) !important;
+}
+
+[data-budget-app="true"] .ui-button--standard,
+[data-budget-app="true"] .ui-button-standard {
+  min-height: var(--ui-button-height-standard) !important;
+  padding: var(--ui-button-padding-standard) !important;
+  border-color: var(--ui-button-border-strong) !important;
+  color: var(--ui-button-text-strong) !important;
+  font-weight: var(--ui-button-font-weight-standard) !important;
+}
+
+[data-budget-app="true"] .ui-button--utility,
+[data-budget-app="true"] .ui-button-utility {
+  min-height: var(--ui-button-height-utility) !important;
+  padding: var(--ui-button-padding-utility) !important;
+  font-weight: var(--ui-button-font-weight-utility) !important;
+}
+
+[data-budget-app="true"] .ui-button--icon,
+[data-budget-app="true"] .ui-button-icon {
+  width: var(--ui-button-height-icon) !important;
+  min-width: var(--ui-button-height-icon) !important;
+  height: var(--ui-button-height-icon) !important;
+  min-height: var(--ui-button-height-icon) !important;
+  padding: 0 !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  background: var(--ui-button-bg-tint) !important;
+}
+
+[data-budget-app="true"] .ui-button:hover,
+[data-budget-app="true"] .ui-button--hero:hover,
+[data-budget-app="true"] .ui-button--standard:hover,
+[data-budget-app="true"] .ui-button--utility:hover,
+[data-budget-app="true"] .ui-button--icon:hover,
+[data-budget-app="true"] .ui-button-hero:hover,
+[data-budget-app="true"] .ui-button-standard:hover,
+[data-budget-app="true"] .ui-button-utility:hover,
+[data-budget-app="true"] .ui-button-icon:hover {
+  border-color: var(--ui-button-border-strong) !important;
+  background: var(--ui-button-bg-hover) !important;
+  color: var(--ui-button-text-strong) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+[data-budget-app="true"] .ui-button:active,
+[data-budget-app="true"] .ui-button--hero:active,
+[data-budget-app="true"] .ui-button--standard:active,
+[data-budget-app="true"] .ui-button--utility:active,
+[data-budget-app="true"] .ui-button--icon:active,
+[data-budget-app="true"] .ui-button-hero:active,
+[data-budget-app="true"] .ui-button-standard:active,
+[data-budget-app="true"] .ui-button-utility:active,
+[data-budget-app="true"] .ui-button-icon:active {
+  background: var(--ui-color-soft-blue, var(--ui-button-bg-hover)) !important;
+  transform: translateY(0) !important;
+}
+
+[data-budget-app="true"] .ui-button:disabled,
+[data-budget-app="true"] .ui-button--hero:disabled,
+[data-budget-app="true"] .ui-button--standard:disabled,
+[data-budget-app="true"] .ui-button--utility:disabled,
+[data-budget-app="true"] .ui-button--icon:disabled,
+[data-budget-app="true"] .ui-button-hero:disabled,
+[data-budget-app="true"] .ui-button-standard:disabled,
+[data-budget-app="true"] .ui-button-utility:disabled,
+[data-budget-app="true"] .ui-button-icon:disabled {
+  border-color: var(--ui-button-disabled-border) !important;
+  background: var(--ui-button-disabled-bg) !important;
+  color: var(--ui-button-disabled-text) !important;
+  cursor: not-allowed !important;
+  opacity: 1 !important;
+}
+
+[data-budget-app="true"] .ui-button[data-button-state="active"],
+[data-budget-app="true"] .ui-button--standard[data-button-state="active"],
+[data-budget-app="true"] .ui-button--utility[data-button-state="active"],
+[data-budget-app="true"] .ui-button-standard[data-button-state="active"],
+[data-budget-app="true"] .ui-button-utility[data-button-state="active"] {
+  border-color: var(--ui-button-border-strong) !important;
+  color: var(--ui-button-text-strong) !important;
+}
+
+[data-budget-app="true"] .ui-button[data-button-tone="danger"],
+[data-budget-app="true"] .ui-button--hero[data-button-tone="danger"],
+[data-budget-app="true"] .ui-button--standard[data-button-tone="danger"],
+[data-budget-app="true"] .ui-button--utility[data-button-tone="danger"],
+[data-budget-app="true"] .ui-button--icon[data-button-tone="danger"] {
+  border-color: var(--ui-button-tone-danger-border) !important;
+  color: var(--ui-button-tone-danger-text) !important;
+}
+
+[data-budget-app="true"] .ui-button[data-button-tone="success"],
+[data-budget-app="true"] .ui-button--hero[data-button-tone="success"],
+[data-budget-app="true"] .ui-button--standard[data-button-tone="success"],
+[data-budget-app="true"] .ui-button--utility[data-button-tone="success"],
+[data-budget-app="true"] .ui-button--icon[data-button-tone="success"] {
+  border-color: var(--ui-button-tone-success-border) !important;
+  color: var(--ui-button-tone-success-text) !important;
+}

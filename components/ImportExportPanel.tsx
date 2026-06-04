@@ -21,7 +21,7 @@ import {
 } from '../lib/importExportUtils'
 import { getCategoryPathLabel } from '../lib/budgetPageHelpers'
 import { splitTagInput } from '../lib/tagUtils'
-import { uiTypographyTokens } from '../lib/uiFoundation'
+import { uiSurfacePrimitives, uiTypographyTokens } from '../lib/uiFoundation'
 import {
   ActionRow,
   ListRow,
@@ -60,11 +60,11 @@ const normalizeFileNameMonth = (month: string) => month.replace('-', '_')
 const panelStyle: CSSProperties = {
   display: 'grid',
   gap: 14,
-  border: '1px solid rgba(203, 213, 225, 0.78)',
-  borderRadius: 16,
+  border: uiSurfacePrimitives.surfaceCard.border,
+  borderRadius: uiSurfacePrimitives.surfaceCard.radius,
   padding: 14,
-  background: 'rgba(255, 255, 255, 0.72)',
-  boxShadow: '0 10px 28px rgba(15, 23, 42, 0.045)',
+  background: uiSurfacePrimitives.surfaceCard.background,
+  boxShadow: uiSurfacePrimitives.surfaceCard.shadow,
 }
 
 const actionRowStyle: CSSProperties = {
@@ -76,7 +76,7 @@ const actionRowStyle: CSSProperties = {
 
 const lightButtonStyle: CSSProperties = {
   minHeight: 32,
-  borderRadius: 999,
+  borderRadius: 'var(--ui-radius-pill)',
   padding: '0 12px',
   fontSize: uiTypographyTokens.role.metadata,
   fontWeight: uiTypographyTokens.weight.bold,
@@ -87,17 +87,17 @@ const importSectionStyle: CSSProperties = {
   display: 'grid',
   gap: 10,
   padding: 12,
-  border: '1px solid rgba(226, 232, 240, 0.9)',
-  borderRadius: 14,
-  background: 'rgba(248, 250, 252, 0.64)',
+  border: uiSurfacePrimitives.surfacePanel.border,
+  borderRadius: uiSurfacePrimitives.surfacePanel.radius,
+  background: uiSurfacePrimitives.surfacePanel.background,
 }
 
 const compactInfoStyle: CSSProperties = {
-  border: '1px solid rgba(226, 232, 240, 0.86)',
-  borderRadius: 12,
+  border: uiSurfacePrimitives.infoBox.border,
+  borderRadius: uiSurfacePrimitives.infoBox.radius,
   padding: '9px 11px',
-  background: 'rgba(248, 250, 252, 0.74)',
-  color: 'var(--ui-color-secondary-text)',
+  background: uiSurfacePrimitives.infoBox.background,
+  color: 'var(--ui-text-secondary)',
   fontSize: uiTypographyTokens.role.helper,
   lineHeight: uiTypographyTokens.lineHeight.body,
 }
@@ -534,10 +534,10 @@ export default function ImportExportPanel({
                     key={row.id}
                     tone={row.errors.length === 0 ? 'default' : 'danger'}
                     style={{
-                      border: '1px solid var(--ui-color-soft-border)',
-                      borderRadius: 12,
+                      border: '1px solid var(--ui-border-soft)',
+                      borderRadius: 'var(--ui-radius-lg)',
                       padding: 12,
-                      background: row.errors.length === 0 ? 'var(--ui-color-soft-section-background)' : 'var(--ui-color-expense-soft)',
+                      background: row.errors.length === 0 ? 'var(--ui-surface-soft)' : 'var(--ui-financial-expense-soft)',
                       display: 'grid',
                       gridTemplateColumns: 'minmax(0, 1fr)',
                     }}
@@ -568,7 +568,7 @@ export default function ImportExportPanel({
                       {row.errors.length === 0 ? (
                         <span
                           style={{
-                            color: 'var(--ui-color-income)',
+                            color: 'var(--ui-financial-income)',
                             fontWeight: uiTypographyTokens.weight.semibold,
                           }}
                         >
@@ -577,7 +577,7 @@ export default function ImportExportPanel({
                       ) : (
                         <span
                           style={{
-                            color: 'var(--ui-color-expense)',
+                            color: 'var(--ui-financial-expense)',
                             fontWeight: uiTypographyTokens.weight.semibold,
                           }}
                         >
@@ -698,8 +698,8 @@ export default function ImportExportPanel({
           tone={importStatusText.includes('Zaimportowano') ? 'success' : 'danger'}
           style={{
             ...styles.infoBox,
-            borderColor: importStatusText.includes('Zaimportowano') ? 'var(--ui-color-income-soft)' : 'var(--ui-color-expense-soft)',
-            background: importStatusText.includes('Zaimportowano') ? 'var(--ui-color-income-soft)' : 'var(--ui-color-expense-soft)',
+            borderColor: importStatusText.includes('Zaimportowano') ? 'var(--ui-financial-income-soft)' : 'var(--ui-financial-expense-soft)',
+            background: importStatusText.includes('Zaimportowano') ? 'var(--ui-financial-income-soft)' : 'var(--ui-financial-expense-soft)',
           }}
         >
           {importStatusText}
