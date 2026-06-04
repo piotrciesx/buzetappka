@@ -14,12 +14,9 @@
   padding: var(--ui-topbar-padding) !important;
   overflow: visible !important;
   isolation: isolate !important;
-  border: 1px solid var(--ui-border-active) !important;
+  border: 1px solid var(--ui-border-soft) !important;
   border-radius: var(--ui-topbar-radius) !important;
-  background:
-    radial-gradient(circle at 0% 50%, var(--ui-status-info-soft), transparent 22%),
-    radial-gradient(circle at 100% 0%, var(--ui-surface-active), transparent 28%),
-    linear-gradient(180deg, var(--ui-glass-surface-strong), var(--ui-status-info-soft)) !important;
+  background: var(--ui-surface-card) !important;
   box-shadow:
     var(--ui-shadow-card) !important;
   backdrop-filter: blur(12px);

@@ -64,21 +64,21 @@
   /* Color Token System */
   --ui-color-primary-navy: #082c7a;
   --ui-color-primary-blue: #215dff;
-  --ui-color-soft-blue: #eaf1ff;
-  --ui-color-light-blue-border: #d6e4ff;
-  --ui-color-extra-light-blue: #f7faff;
+  --ui-color-soft-blue: #f7f8fa;
+  --ui-color-light-blue-border: #e5e7eb;
+  --ui-color-extra-light-blue: #fafafa;
   --ui-color-primary-text: #13203a;
   --ui-color-secondary-text: #5f6b85;
   --ui-color-muted-text: #98a2b3;
   --ui-color-white-text: #ffffff;
-  --ui-color-main-background: #f8fafd;
+  --ui-color-main-background: #f7f8fa;
   --ui-color-card-background: #ffffff;
-  --ui-color-soft-section-background: #f4f7fc;
-  --ui-color-hover-background: #f2f6ff;
-  --ui-color-primary-border: #215dff;
-  --ui-color-soft-border: #dce6f7;
-  --ui-color-divider-border: #e8eef8;
-  --ui-color-disabled-border: #e2e8f3;
+  --ui-color-soft-section-background: #f8fafc;
+  --ui-color-hover-background: #f8fafc;
+  --ui-color-primary-border: #082c7a;
+  --ui-color-soft-border: #e5e7eb;
+  --ui-color-divider-border: #edf0f3;
+  --ui-color-disabled-border: #e5e7eb;
   --ui-color-income: #11884f;
   --ui-color-income-soft: #e9f8f1;
   --ui-color-expense: #d7263d;
@@ -96,7 +96,7 @@
   --ui-shadow-light-color: rgba(15, 23, 42, 0.04);
   --ui-shadow-medium-color: rgba(15, 23, 42, 0.08);
   --ui-shadow-strong-color: rgba(15, 23, 42, 0.14);
-  --ui-gradient-soft-blue: linear-gradient(180deg, var(--ui-color-card-background) 0%, var(--ui-color-extra-light-blue) 100%);
+  --ui-gradient-soft-blue: linear-gradient(180deg, var(--ui-color-card-background) 0%, var(--ui-color-soft-section-background) 100%);
   --ui-gradient-income: linear-gradient(180deg, #f2fff8 0%, #e7f9ef 100%);
   --ui-gradient-expense: linear-gradient(180deg, #fff6f6 0%, #fff0f0 100%);
 
@@ -178,19 +178,19 @@
 
   /* Semantic color aliases */
   --ui-color-danger: var(--ui-color-error);
-  --ui-color-info: var(--ui-color-primary-blue);
+  --ui-color-info: var(--ui-color-primary-navy);
   --ui-color-text: var(--ui-color-primary-text);
   --ui-color-text-strong: var(--ui-color-primary-text);
   --ui-color-text-muted: var(--ui-color-secondary-text);
   --ui-color-text-disabled: var(--ui-color-muted-text);
   --ui-color-border: var(--ui-color-soft-border);
-  --ui-color-focus-border: var(--ui-color-primary-blue);
-  --ui-color-focus-ring: 0 0 0 3px rgba(33, 93, 255, 0.10);
-  --ui-color-control-primary: var(--ui-color-primary-blue);
+  --ui-color-focus-border: var(--ui-color-primary-navy);
+  --ui-color-focus-ring: 0 0 0 3px rgba(8, 44, 122, 0.10);
+  --ui-color-control-primary: var(--ui-color-primary-navy);
   --ui-color-control-danger: var(--ui-color-expense);
-  --ui-color-control-danger-border: var(--ui-color-light-blue-border);
+  --ui-color-control-danger-border: var(--ui-color-soft-border);
   --ui-color-control-danger-surface: var(--ui-color-card-background);
-  --ui-color-control-border: var(--ui-color-light-blue-border);
+  --ui-color-control-border: var(--ui-color-soft-border);
   --ui-color-control-text: var(--ui-color-primary-navy);
   --ui-color-control-muted: var(--ui-color-muted-text);
 
@@ -199,11 +199,11 @@
   --ui-text-secondary: var(--ui-color-secondary-text);
   --ui-text-muted: var(--ui-color-muted-text);
   --ui-text-inverse: var(--ui-color-white-text);
-  --ui-text-link: var(--ui-color-primary-blue);
+  --ui-text-link: var(--ui-color-primary-navy);
 
   --ui-border-soft: var(--ui-color-soft-border);
   --ui-border-strong: var(--ui-color-primary-border);
-  --ui-border-active: var(--ui-color-primary-blue);
+  --ui-border-active: var(--ui-color-primary-navy);
   --ui-border-divider: var(--ui-color-divider-border);
   --ui-border-disabled: var(--ui-color-disabled-border);
 
@@ -246,26 +246,26 @@
   --ui-surface-card: var(--ui-color-card-background);
   --ui-surface-soft: var(--ui-color-soft-section-background);
   --ui-surface-hover: var(--ui-color-hover-background);
-  --ui-surface-active: var(--ui-color-soft-blue);
+  --ui-surface-active: var(--ui-color-hover-background);
   --ui-surface-disabled: var(--ui-color-soft-section-background);
   --ui-surface-app-background: var(--ui-color-main-background);
-  --ui-surface-workspace: rgba(255, 255, 255, 0.84);
+  --ui-surface-workspace: var(--ui-color-card-background);
   --ui-surface-panel: var(--ui-surface-workspace);
-  --ui-surface-sidebar: rgba(242, 248, 255, 0.95);
-  --ui-surface-rail: rgba(251, 253, 255, 0.90);
-  --ui-surface-widget: rgba(248, 250, 252, 0.70);
+  --ui-surface-sidebar: var(--ui-color-card-background);
+  --ui-surface-rail: var(--ui-color-card-background);
+  --ui-surface-widget: var(--ui-color-card-background);
   --ui-surface-modal: var(--ui-color-card-background);
   --ui-surface-overlay: rgba(15, 23, 42, 0.35);
   --ui-surface-floating: rgba(255, 255, 255, 0.98);
   --ui-surface-dropdown: var(--ui-color-card-background);
   --ui-surface-empty: rgba(255, 255, 255, 0.42);
-  --ui-surface-info: var(--ui-color-extra-light-blue);
+  --ui-surface-info: var(--ui-color-soft-section-background);
   --ui-surface-status-danger: var(--ui-color-expense-soft);
   --ui-surface-border-default: var(--ui-color-soft-border);
-  --ui-surface-border-control: var(--ui-color-light-blue-border);
-  --ui-surface-border-info: var(--ui-color-light-blue-border);
-  --ui-surface-border-danger: var(--ui-color-light-blue-border);
-  --ui-surface-empty-border: rgba(167, 192, 224, 0.88);
+  --ui-surface-border-control: var(--ui-color-soft-border);
+  --ui-surface-border-info: var(--ui-color-soft-border);
+  --ui-surface-border-danger: var(--ui-color-soft-border);
+  --ui-surface-empty-border: var(--ui-color-disabled-border);
 
   /* Stacking system: semantic layers for new UI. */
   --ui-z-base: 0;
@@ -393,12 +393,12 @@
   --ui-button-font-weight-standard: 600;
   --ui-button-font-weight-utility: 560;
   --ui-button-bg: var(--ui-color-card-background);
-  --ui-button-bg-tint: var(--ui-color-extra-light-blue);
-  --ui-button-bg-hover: var(--ui-color-soft-blue);
-  --ui-button-border: var(--ui-color-light-blue-border);
-  --ui-button-border-strong: var(--ui-color-primary-blue);
+  --ui-button-bg-tint: var(--ui-color-card-background);
+  --ui-button-bg-hover: var(--ui-color-hover-background);
+  --ui-button-border: var(--ui-color-soft-border);
+  --ui-button-border-strong: var(--ui-color-primary-border);
   --ui-button-text: var(--ui-color-primary-navy);
-  --ui-button-text-strong: var(--ui-color-primary-blue);
+  --ui-button-text-strong: var(--ui-color-primary-navy);
   --ui-button-tone-default-border: var(--ui-button-border);
   --ui-button-tone-default-text: var(--ui-button-text);
   --ui-button-tone-danger-border: var(--ui-button-border);
