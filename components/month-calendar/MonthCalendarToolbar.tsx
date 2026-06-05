@@ -1,7 +1,8 @@
-import type { CSSProperties } from 'react'
+import { useState, type CSSProperties } from 'react'
 import type { HeatmapMode, HeatmapVariant } from './monthCalendarTypes'
 import MonthCalendarHeader from './MonthCalendarHeader'
 import MonthCalendarHeatmapControls from './MonthCalendarHeatmapControls'
+import DropdownShell from '../dropdown/DropdownShell'
 
 type MonthCalendarToolbarProps = {
   title: string
@@ -30,27 +31,26 @@ export default function MonthCalendarToolbar({
   onHeatmapInvertedChange,
   onResetHeatmapSettings,
 }: MonthCalendarToolbarProps) {
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+
   return (
     <>
       <MonthCalendarHeader title={title} subtitle={subtitle} styles={styles} />
       {showHeatmapControls && (
-        <details
-          data-month-calendar-settings-menu="true"
-          data-floating-dropdown="true"
-          data-dropdown-placement="bottom"
-          data-dropdown-align="end"
+        <DropdownShell
+          open={isSettingsOpen}
+          onOpenChange={setIsSettingsOpen}
+          size="utility"
+          trigger={(triggerProps) => (
+            <button type="button" aria-label="Ustawienia heatmapy" title="Ustawienia heatmapy" {...triggerProps}>
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                <circle cx="5" cy="12" r="1.8" fill="currentColor" />
+                <circle cx="12" cy="12" r="1.8" fill="currentColor" />
+                <circle cx="19" cy="12" r="1.8" fill="currentColor" />
+              </svg>
+            </button>
+          )}
         >
-          <summary aria-label="Ustawienia heatmapy" title="Ustawienia heatmapy">
-            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-              <circle cx="5" cy="12" r="1.8" fill="currentColor" />
-              <circle cx="12" cy="12" r="1.8" fill="currentColor" />
-              <circle cx="19" cy="12" r="1.8" fill="currentColor" />
-            </svg>
-          </summary>
-          <div
-            className="ui-popover ui-popover--utility"
-            data-month-calendar-settings-panel="true"
-          >
             <MonthCalendarHeatmapControls
               heatmapMode={heatmapMode}
               heatmapInverted={heatmapInverted}
@@ -78,8 +78,7 @@ export default function MonthCalendarToolbar({
                 Reset
               </button>
             )}
-          </div>
-        </details>
+        </DropdownShell>
       )}
     </>
   )

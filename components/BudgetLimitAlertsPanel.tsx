@@ -4,8 +4,6 @@ import { CSSProperties, useMemo, useState } from 'react'
 import type { Category } from '../lib/budgetPageTypes'
 import {
   uiControlPrimitives,
-  uiOverlayPrimitives,
-  uiSurfacePrimitives,
   uiTypographyTokens,
 } from '../lib/uiFoundation'
 import type { BudgetLimitUsageState } from '../lib/useBudgetLimits'
@@ -13,6 +11,7 @@ import {
   ReminderCard,
   ReminderStatusBadge,
 } from './reminder-calendar/reminderCalendarPrimitives'
+import DropdownShell from './dropdown/DropdownShell'
 
 type Props = {
   alerts: BudgetLimitUsageState[]
@@ -37,20 +36,6 @@ const countStyle: CSSProperties = {
   justifyContent: 'center',
   fontSize: uiTypographyTokens.role.metadata,
   fontWeight: uiTypographyTokens.weight.semibold,
-}
-
-const popoverStyle: CSSProperties = {
-  position: 'absolute',
-  right: 0,
-  top: 'calc(100% + 8px)',
-  width: 400,
-  maxWidth: 'calc(100vw - 32px)',
-  padding: uiSurfacePrimitives.popoverSurface.padding,
-  border: uiSurfacePrimitives.popoverSurface.border,
-  borderRadius: uiSurfacePrimitives.popoverSurface.radius,
-  background: uiSurfacePrimitives.popoverSurface.background,
-  boxShadow: uiSurfacePrimitives.popoverSurface.shadow,
-  zIndex: uiOverlayPrimitives.inlinePopover.layer,
 }
 
 const itemButtonStyle: CSSProperties = {
@@ -124,14 +109,18 @@ export default function BudgetLimitAlertsPanel({
 
   return (
     <div style={containerStyle}>
-      <button type="button" style={styles.secondaryButton} onClick={() => setIsOpen((prev) => !prev)}>
-        Alerty limitów
-        {alerts.length > 0 && <span style={countStyle}>{alerts.length}</span>}
-      </button>
-
-      {isOpen && (
-        <div data-reminder-popover="true" style={popoverStyle}>
-          <div style={styles.l2Name}>Alerty limitów</div>
+      <DropdownShell
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        size="utility"
+        trigger={(triggerProps) => (
+          <button type="button" style={styles.secondaryButton} {...triggerProps}>
+            Alerty limitów
+            {alerts.length > 0 && <span style={countStyle}>{alerts.length}</span>}
+          </button>
+        )}
+      >
+        <div style={styles.l2Name}>Alerty limitów</div>
 
           {sortedAlerts.length === 0 ? (
             <div style={styles.emptyText}>Brak aktywnych alertów limitów w tym miesiącu.</div>
@@ -168,8 +157,7 @@ export default function BudgetLimitAlertsPanel({
               )
             })
           )}
-        </div>
-      )}
+      </DropdownShell>
     </div>
   )
 }

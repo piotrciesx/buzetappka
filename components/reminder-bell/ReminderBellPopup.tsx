@@ -2,7 +2,7 @@ import { CSSProperties } from 'react'
 import { Category, RecurringTransaction } from '../../lib/budgetPageTypes'
 import { getInstallmentNumberForMonth, getRecurringReminderDay } from '../../lib/recurringTransactions'
 import { uiListRowApi, uiTypographyTokens } from '../../lib/uiFoundation'
-import { itemStyle, popoverStyle } from './reminderBellStyles'
+import { itemStyle } from './reminderBellStyles'
 import {
   ReminderActionRow,
   ReminderCard,
@@ -33,7 +33,7 @@ export default function ReminderBellPopup({
   setIsOpen,
 }: Props) {
   return (
-    <div data-reminder-popover="true" style={popoverStyle}>
+    <>
       <div style={styles.l2Name}>Przypomnienia wymagające decyzji</div>
 
       {pendingReminders.length === 0 ? (
@@ -94,6 +94,6 @@ export default function ReminderBellPopup({
           })}
         </div>
       )}
-    </div>
+    </>
   )
 }

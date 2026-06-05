@@ -237,26 +237,6 @@ details {
   display: none;
 }
 
-[data-topbar-dropdown],
-[data-floating-dropdown="true"],
-[data-mobile-category-menu-panel="true"],
-[data-transaction-menu="true"],
-[data-profile-menu-dropdown="true"],
-[data-rail-notification-popover="true"],
-[data-rail-quick-search="true"],
-[data-reminder-popover="true"],
-[data-entries-menu-panel="true"] {
-  position: static;
-  width: 100%;
-  max-width: none;
-  margin: 8px 0;
-  padding: 8px;
-  overflow: visible;
-  border: 1px solid var(--ui-color-soft-border);
-  background: var(--ui-color-card-background);
-  box-shadow: none;
-}
-
 [data-category-drag-handle="true"],
 [data-dashboard-drag-handle="true"],
 [data-dnd-handle="true"],
@@ -318,11 +298,6 @@ details {
   display: block;
   height: 8px;
   background: var(--ui-color-primary-blue);
-}
-
-[data-budget-mobile-more-menu="true"] {
-  display: block;
-  width: 100%;
 }
 
 @media (max-width: 720px) {

@@ -633,6 +633,7 @@
 .ui-dropdown {
   z-index: var(--ui-z-dropdown);
   display: grid;
+  width: max-content;
   gap: var(--ui-dropdown-gap);
   overflow-y: var(--ui-dropdown-scroll-behavior);
   border: var(--ui-dropdown-border);
@@ -644,6 +645,26 @@
   font-size: var(--ui-dropdown-item-font-size);
   font-weight: var(--ui-dropdown-item-font-weight);
   line-height: var(--ui-dropdown-item-line-height);
+}
+
+.ui-dropdown--action {
+  min-width: var(--ui-dropdown-width-action);
+  max-width: var(--ui-dropdown-max-width-action);
+}
+
+.ui-dropdown--utility {
+  min-width: var(--ui-popover-min-width);
+  max-width: var(--ui-dropdown-max-width-utility);
+}
+
+.ui-dropdown--search {
+  min-width: var(--ui-dropdown-width-searchable);
+  max-width: var(--ui-dropdown-max-width-searchable);
+}
+
+.ui-dropdown--content {
+  min-width: max-content;
+  max-width: var(--ui-dropdown-max-width);
 }
 
 .ui-dropdown__item {

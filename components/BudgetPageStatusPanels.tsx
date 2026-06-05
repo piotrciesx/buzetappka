@@ -6,6 +6,7 @@ import BudgetHeaderPanel from './BudgetHeaderPanel'
 import ProfileMonthNotePanel from './ProfileMonthNotePanel'
 import UserProfileMenu from './UserProfileMenu'
 import UserAvatar from './UserAvatar'
+import DropdownShell from './dropdown/DropdownShell'
 import type { BudgetUtilityPanel } from './BudgetPageMainPanels'
 import type { AppModuleVisibility } from '../lib/useAppModuleVisibility'
 import { uiInputApi } from '../lib/uiFoundation'
@@ -266,50 +267,6 @@ export default function BudgetPageStatusPanels({
   }, [activeSidebarPrimaryPanel, onClosePrimaryPanel])
 
   useEffect(() => {
-    if (!openedTopbarPanel) {
-      return
-    }
-
-    const closeTopbarPanel = () => setOpenedTopbarPanel(null)
-
-    const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target instanceof Element ? event.target : null
-
-      if (!target) {
-        closeTopbarPanel()
-        return
-      }
-
-      const clickedDropdown = target.closest('[data-topbar-dropdown]')
-      const clickedCurrentTrigger = target.closest(
-        `[data-topbar-action="${openedTopbarPanel === 'add' ? 'primary-add' : openedTopbarPanel}"]`
-      )
-
-      if (clickedDropdown || clickedCurrentTrigger) {
-        return
-      }
-
-      closeTopbarPanel()
-    }
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        closeTopbarPanel()
-      }
-    }
-
-    window.addEventListener('pointerdown', handlePointerDown)
-    window.addEventListener('keydown', handleKeyDown)
-    window.addEventListener('budget-close-floating-ui', closeTopbarPanel)
-
-    return () => {
-      window.removeEventListener('pointerdown', handlePointerDown)
-      window.removeEventListener('keydown', handleKeyDown)
-      window.removeEventListener('budget-close-floating-ui', closeTopbarPanel)
-    }
-  }, [openedTopbarPanel])
-
-  useEffect(() => {
     if (openedTopbarPanel === 'search') {
       topbarSearchInputRef.current?.focus()
     }
@@ -323,20 +280,6 @@ export default function BudgetPageStatusPanels({
   const runTopbarAction = (action: () => void) => {
     window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
     action()
-  }
-
-  const toggleTopbarPanel = (panel: 'alert' | 'add' | 'note' | 'pinned' | 'search') => {
-    if (openedTopbarPanel === panel) {
-      setOpenedTopbarPanel(null)
-      return
-    }
-
-    window.dispatchEvent(
-      new CustomEvent('budget-close-floating-ui', {
-        detail: { source: 'topbar' },
-      })
-    )
-    setOpenedTopbarPanel(panel)
   }
 
   const getPinnedCategoryDisplay = (category: TopbarPinnedCategory) => {
@@ -532,24 +475,16 @@ export default function BudgetPageStatusPanels({
             <Icon name="calendar" />
             <span>Kalendarz</span>
           </button>
-          <button
-            type="button"
-            aria-label="Więcej"
-            title="Więcej"
-            aria-expanded={isMobileMoreOpen}
-            onClick={() => setIsMobileMoreOpen((value) => !value)}
-          >
-            <Icon name="more" />
-            <span>Więcej</span>
-          </button>
-        </nav>
-
-        {isMobileMoreOpen && (
-          <div
-            className="ui-dropdown ui-dropdown--action"
-            data-budget-mobile-more-menu="true"
-            data-dropdown-placement="top"
-            data-dropdown-align="end"
+          <DropdownShell
+            open={isMobileMoreOpen}
+            onOpenChange={setIsMobileMoreOpen}
+            size="action"
+            trigger={(triggerProps) => (
+              <button type="button" aria-label="Więcej" title="Więcej" {...triggerProps}>
+                <Icon name="more" />
+                <span>Więcej</span>
+              </button>
+            )}
           >
             {sidebarItems
               .filter((item) => !['calendar', 'search'].includes(item.id))
@@ -568,8 +503,8 @@ export default function BudgetPageStatusPanels({
                   <span>{item.label}</span>
                 </button>
               ))}
-          </div>
-        )}
+          </DropdownShell>
+        </nav>
       </aside>
 
       <div data-budget-shell-content="true">
@@ -604,217 +539,197 @@ export default function BudgetPageStatusPanels({
             ref={topbarActionsRef}
           >
             <div data-topbar-floating-action="true">
-              <button
-                type="button"
-                data-topbar-action="pinned"
-                aria-expanded={openedTopbarPanel === 'pinned'}
-                onClick={() => toggleTopbarPanel('pinned')}
-              >
-                <Icon name="star" />
-                <span>Przypięte kategorie</span>
-                <span data-topbar-chevron="true" aria-hidden="true" />
-              </button>
-              {openedTopbarPanel === 'pinned' && (
-                <div
-                  className="ui-popover ui-popover--utility"
-                  data-topbar-dropdown="pinned"
-                  data-dropdown-placement="bottom"
-                  data-dropdown-align="end"
-                >
-                  {pinnedCategories.length > 0 ? (
-                    <div data-topbar-pinned-list="true">
-                      {pinnedCategories.map((category) => {
-                        const display = getPinnedCategoryDisplay(category)
-
-                        return (
-                          <button
-                            key={category.id}
-                            type="button"
-                            className="ui-dropdown__item"
-                            data-topbar-pinned-item="true"
-                            data-pinned-category-kind={category.kind}
-                            title={category.label}
-                            onClick={() => {
-                              runTopbarAction(() => onOpenPinnedCategory(category.id))
-                              setOpenedTopbarPanel(null)
-                            }}
-                          >
-                            <span data-topbar-pinned-dot="true" />
-                            <span data-topbar-pinned-copy="true">
-                              <strong>{display.title}</strong>
-                              {display.path && <small>{display.path}</small>}
-                            </span>
-                          </button>
-                        )
-                      })}
-                    </div>
-                  ) : (
-                    <p>Brak przypiętych kategorii.</p>
-                  )}
-                </div>
-              )}
-            </div>
-
-            <div data-topbar-floating-action="true">
-              <button
-                type="button"
-                data-topbar-action="primary-add"
-                aria-expanded={openedTopbarPanel === 'add'}
-                onClick={() => toggleTopbarPanel('add')}
-              >
-                <span>Dodaj wpis</span>
-                <span data-topbar-chevron="true" aria-hidden="true" />
-              </button>
-              {openedTopbarPanel === 'add' && (
-                <div
-                  className="ui-dropdown ui-dropdown--action"
-                  data-topbar-dropdown="add"
-                  data-dropdown-placement="bottom"
-                  data-dropdown-align="end"
-                >
-                  <button
-                    type="button"
-                    className="ui-dropdown__item"
-                    onClick={() => {
-                      runTopbarAction(onQuickAddIncome || onQuickAdd)
-                      setOpenedTopbarPanel(null)
-                    }}
-                  >
-                    Przychód
+              <DropdownShell
+                open={openedTopbarPanel === 'pinned'}
+                onOpenChange={(open) => setOpenedTopbarPanel(open ? 'pinned' : null)}
+                size="utility"
+                trigger={(triggerProps) => (
+                  <button type="button" data-topbar-action="pinned" {...triggerProps}>
+                    <Icon name="star" />
+                    <span>Przypięte kategorie</span>
+                    <span data-topbar-chevron="true" aria-hidden="true" />
                   </button>
-                  <button
-                    type="button"
-                    className="ui-dropdown__item"
-                    onClick={() => {
-                      runTopbarAction(onQuickAddExpense || onQuickAdd)
-                      setOpenedTopbarPanel(null)
-                    }}
-                  >
-                    Wydatek
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <div data-topbar-floating-action="true">
-              <button
-                type="button"
-                data-topbar-action="search"
-                aria-label="Wyszukiwarka"
-                title="Wyszukiwarka"
-                aria-expanded={openedTopbarPanel === 'search'}
-                data-active={openedTopbarPanel === 'search' ? 'true' : 'false'}
-                onClick={() => toggleTopbarPanel('search')}
+                )}
               >
-                <Icon name="search" />
-                <span>Szukaj...</span>
-              </button>
-              {openedTopbarPanel === 'search' && (
-                <div
-                  className="ui-popover ui-popover--utility"
-                  data-topbar-dropdown="search"
-                  data-dropdown-placement="bottom"
-                  data-dropdown-align="end"
-                >
-                  <input
-                    ref={topbarSearchInputRef}
-                    className={uiInputApi.classNames.searchField}
-                    data-input-width={uiInputApi.width.full}
-                    data-input-density={uiInputApi.density.compact}
-                    value={topbarSearchText}
-                    onChange={(event) => setTopbarSearchText(event.target.value)}
-                    onKeyDown={(event) => {
-                      if (event.key === 'Enter') {
-                        submitTopbarSearch()
-                      }
-                    }}
-                    placeholder="Szukaj wpisu..."
-                    aria-label="Szukaj wpisu"
-                  />
-                </div>
-              )}
-            </div>
+                {pinnedCategories.length > 0 ? (
+                  <div data-topbar-pinned-list="true">
+                    {pinnedCategories.map((category) => {
+                      const display = getPinnedCategoryDisplay(category)
 
-            <div data-topbar-floating-action="true">
-              <button
-                type="button"
-                data-topbar-action="month-alert"
-                aria-label="Alerty miesiąca"
-                title="Alerty miesiąca"
-                aria-expanded={openedTopbarPanel === 'alert'}
-                onClick={() => toggleTopbarPanel('alert')}
-              >
-                <Icon name="alert" />
-                {previousMonthCloseReminder && <span data-topbar-action-badge="true">1</span>}
-              </button>
-              {openedTopbarPanel === 'alert' && (
-                <div
-                  className="ui-popover ui-popover--utility"
-                  data-topbar-dropdown="alert"
-                  data-dropdown-placement="bottom"
-                  data-dropdown-align="end"
-                >
-                  {previousMonthCloseReminder ? (
-                    <>
-                      <p>Poprzedni miesiąc {previousMonthCloseReminder} nie jest jeszcze zamknięty.</p>
-                      <div data-topbar-dropdown-actions="true">
+                      return (
                         <button
+                          key={category.id}
                           type="button"
                           className="ui-dropdown__item"
-                          onClick={async () => {
-                            await onLockPreviousMonth(previousMonthCloseReminder)
-                            setOpenedTopbarPanel(null)
-                          }}
-                        >
-                          Zamknij
-                        </button>
-                        <button
-                          type="button"
-                          className="ui-dropdown__item"
+                          data-topbar-pinned-item="true"
+                          data-pinned-category-kind={category.kind}
+                          title={category.label}
                           onClick={() => {
-                            onHidePreviousMonthCloseReminder()
+                            runTopbarAction(() => onOpenPinnedCategory(category.id))
                             setOpenedTopbarPanel(null)
                           }}
                         >
-                          Później
+                          <span data-topbar-pinned-dot="true" />
+                          <span data-topbar-pinned-copy="true">
+                            <strong>{display.title}</strong>
+                            {display.path && <small>{display.path}</small>}
+                          </span>
                         </button>
-                      </div>
-                    </>
-                  ) : (
-                    <p>Brak alertów miesiąca.</p>
-                  )}
-                </div>
-              )}
+                      )
+                    })}
+                  </div>
+                ) : (
+                  <p>Brak przypiętych kategorii.</p>
+                )}
+              </DropdownShell>
             </div>
 
             <div data-topbar-floating-action="true">
-              <button
-                type="button"
-                data-topbar-action="month-note"
-                aria-label="Notatka miesiąca"
-                title="Notatka miesiąca"
-                aria-expanded={openedTopbarPanel === 'note'}
-                onClick={() => toggleTopbarPanel('note')}
+              <DropdownShell
+                open={openedTopbarPanel === 'add'}
+                onOpenChange={(open) => setOpenedTopbarPanel(open ? 'add' : null)}
+                size="action"
+                trigger={(triggerProps) => (
+                  <button type="button" data-topbar-action="primary-add" {...triggerProps}>
+                    <span>Dodaj wpis</span>
+                    <span data-topbar-chevron="true" aria-hidden="true" />
+                  </button>
+                )}
               >
-                <Icon name="drafts" />
-              </button>
-              {openedTopbarPanel === 'note' && (
-                <div
-                  className="ui-popover ui-popover--utility"
-                  data-topbar-dropdown="note"
-                  data-dropdown-placement="bottom"
-                  data-dropdown-align="end"
+                <button
+                  type="button"
+                  className="ui-dropdown__item"
+                  onClick={() => {
+                    runTopbarAction(onQuickAddIncome || onQuickAdd)
+                    setOpenedTopbarPanel(null)
+                  }}
                 >
-                  <ProfileMonthNotePanel
-                    profileId={profileId}
-                    userId={userId}
-                    selectedMonth={selectedMonth}
-                    styles={styles}
-                  />
-                </div>
-              )}
+                  Przychód
+                </button>
+                <button
+                  type="button"
+                  className="ui-dropdown__item"
+                  onClick={() => {
+                    runTopbarAction(onQuickAddExpense || onQuickAdd)
+                    setOpenedTopbarPanel(null)
+                  }}
+                >
+                  Wydatek
+                </button>
+              </DropdownShell>
             </div>
 
+            <div data-topbar-floating-action="true">
+              <DropdownShell
+                open={openedTopbarPanel === 'search'}
+                onOpenChange={(open) => setOpenedTopbarPanel(open ? 'search' : null)}
+                size="search"
+                trigger={(triggerProps) => (
+                  <button
+                    type="button"
+                    data-topbar-action="search"
+                    aria-label="Wyszukiwarka"
+                    title="Wyszukiwarka"
+                    {...triggerProps}
+                  >
+                    <Icon name="search" />
+                    <span>Szukaj...</span>
+                  </button>
+                )}
+              >
+                <input
+                  ref={topbarSearchInputRef}
+                  className={uiInputApi.classNames.searchField}
+                  data-input-width={uiInputApi.width.full}
+                  data-input-density={uiInputApi.density.compact}
+                  value={topbarSearchText}
+                  onChange={(event) => setTopbarSearchText(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      submitTopbarSearch()
+                    }
+                  }}
+                  placeholder="Szukaj wpisu..."
+                  aria-label="Szukaj wpisu"
+                />
+              </DropdownShell>
+            </div>
+
+            <div data-topbar-floating-action="true">
+              <DropdownShell
+                open={openedTopbarPanel === 'alert'}
+                onOpenChange={(open) => setOpenedTopbarPanel(open ? 'alert' : null)}
+                size="utility"
+                trigger={(triggerProps) => (
+                  <button
+                    type="button"
+                    data-topbar-action="month-alert"
+                    aria-label="Alerty miesiąca"
+                    title="Alerty miesiąca"
+                    {...triggerProps}
+                  >
+                    <Icon name="alert" />
+                    {previousMonthCloseReminder && <span data-topbar-action-badge="true">1</span>}
+                  </button>
+                )}
+              >
+                {previousMonthCloseReminder ? (
+                  <>
+                    <p>Poprzedni miesiąc {previousMonthCloseReminder} nie jest jeszcze zamknięty.</p>
+                    <div data-topbar-dropdown-actions="true">
+                      <button
+                        type="button"
+                        className="ui-dropdown__item"
+                        onClick={async () => {
+                          await onLockPreviousMonth(previousMonthCloseReminder)
+                          setOpenedTopbarPanel(null)
+                        }}
+                      >
+                        Zamknij
+                      </button>
+                      <button
+                        type="button"
+                        className="ui-dropdown__item"
+                        onClick={() => {
+                          onHidePreviousMonthCloseReminder()
+                          setOpenedTopbarPanel(null)
+                        }}
+                      >
+                        Później
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <p>Brak alertów miesiąca.</p>
+                )}
+              </DropdownShell>
+            </div>
+
+            <div data-topbar-floating-action="true">
+              <DropdownShell
+                open={openedTopbarPanel === 'note'}
+                onOpenChange={(open) => setOpenedTopbarPanel(open ? 'note' : null)}
+                size="utility"
+                trigger={(triggerProps) => (
+                  <button
+                    type="button"
+                    data-topbar-action="month-note"
+                    aria-label="Notatka miesiąca"
+                    title="Notatka miesiąca"
+                    {...triggerProps}
+                  >
+                    <Icon name="drafts" />
+                  </button>
+                )}
+              >
+                <ProfileMonthNotePanel
+                  profileId={profileId}
+                  userId={userId}
+                  selectedMonth={selectedMonth}
+                  styles={styles}
+                />
+              </DropdownShell>
+            </div>
             <button
               type="button"
               data-topbar-action="notifications"

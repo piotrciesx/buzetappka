@@ -7,6 +7,7 @@ import type {
   RefObject,
   SetStateAction,
 } from 'react'
+import { useState } from 'react'
 import PaymentSplitEditor from '../PaymentSplitEditor'
 import type { Tag, TransactionPaymentSplit } from '../../lib/budgetPageTypes'
 import type { PaymentSplitInput } from '../../lib/paymentSplitUtils'
@@ -34,6 +35,7 @@ import {
   type MoveTarget,
   type Transaction,
 } from './Level3SectionUtils'
+import DropdownShell from '../dropdown/DropdownShell'
 
 type PaymentSourceOption = {
   id: string
@@ -165,6 +167,7 @@ export default function Level3TransactionRow({
   handleDuplicateTransaction,
   styles,
 }: Level3TransactionRowProps) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const paymentSourceLabels = getTransactionPaymentSourceDisplayLines({
     transaction,
     splitItems: transactionPaymentSplitsMap[transaction.id] || [],
@@ -466,64 +469,67 @@ export default function Level3TransactionRow({
             </button>
           </>
         ) : !isSelectedMonthLocked ? (
-          <details
-            data-transaction-menu="true"
-            data-floating-dropdown="true"
-            data-dropdown-placement="bottom"
-            data-dropdown-align="end"
+          <DropdownShell
+            open={isMenuOpen}
+            onOpenChange={setIsMenuOpen}
+            size="action"
+            trigger={(triggerProps) => (
+              <button type="button" aria-label="Menu wpisu" title="Menu wpisu" {...triggerProps}>
+                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                  <circle cx="5" cy="12" r="1.8" fill="currentColor" />
+                  <circle cx="12" cy="12" r="1.8" fill="currentColor" />
+                  <circle cx="19" cy="12" r="1.8" fill="currentColor" />
+                </svg>
+              </button>
+            )}
           >
-            <summary aria-label="Menu wpisu" title="Menu wpisu">
-              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-                <circle cx="5" cy="12" r="1.8" fill="currentColor" />
-                <circle cx="12" cy="12" r="1.8" fill="currentColor" />
-                <circle cx="19" cy="12" r="1.8" fill="currentColor" />
-              </svg>
-            </summary>
-            <div className="ui-dropdown ui-dropdown--action">
+            <button
+              type="button"
+              className="ui-dropdown__item"
+              onClick={() => {
+                startEditingTransaction(transaction)
+                setIsMenuOpen(false)
+              }}
+            >
+              Edytuj
+            </button>
+
+            <button
+              type="button"
+              className="ui-dropdown__item"
+              onClick={() => {
+                startMovingTransaction(transaction)
+                setIsMenuOpen(false)
+              }}
+            >
+              Przenieś
+            </button>
+
+            {handleDuplicateTransaction && (
               <button
                 type="button"
                 className="ui-dropdown__item"
                 onClick={() => {
-                  startEditingTransaction(transaction)
+                  handleDuplicateTransaction(transaction)
+                  setIsMenuOpen(false)
                 }}
               >
-                Edytuj
+                Powiel
               </button>
+            )}
 
-              <button
-                type="button"
-                className="ui-dropdown__item"
-                onClick={() => {
-                  startMovingTransaction(transaction)
-                }}
-              >
-                Przenieś
-              </button>
-
-              {handleDuplicateTransaction && (
-                <button
-                  type="button"
-                  className="ui-dropdown__item"
-                  onClick={() => {
-                    handleDuplicateTransaction(transaction)
-                  }}
-                >
-                  Powiel
-                </button>
-              )}
-
-              <button
-                type="button"
-                className="ui-dropdown__item"
-                data-button-tone="danger"
-                onClick={async () => {
-                  await handleDeleteTransaction(transaction.id)
-                }}
-              >
-                Usuń
-              </button>
-            </div>
-          </details>
+            <button
+              type="button"
+              className="ui-dropdown__item"
+              data-button-tone="danger"
+              onClick={async () => {
+                await handleDeleteTransaction(transaction.id)
+                setIsMenuOpen(false)
+              }}
+            >
+              Usuń
+            </button>
+          </DropdownShell>
         ) : null}
       </div>
     </div>

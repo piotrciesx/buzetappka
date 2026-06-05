@@ -1,6 +1,7 @@
-import { CSSProperties } from 'react'
+import { CSSProperties, useState } from 'react'
 import BudgetLimitIndicator, { BudgetLimitView } from '../BudgetLimitIndicator'
 import { Category } from '../../lib/budgetPageTypes'
+import DropdownShell from '../dropdown/DropdownShell'
 
 type Props = {
   level1Category: Category
@@ -26,21 +27,22 @@ export default function BudgetCategoryTreeLevel1Actions({
   toggleLevel1Calendar,
   onEditBudgetLimit,
 }: Props) {
+  const [isActionsOpen, setIsActionsOpen] = useState(false)
+
   return (
     <>
       {canUseBudgetLimit && budgetLimitView && <BudgetLimitIndicator view={budgetLimitView} />}
 
-      <details
-        data-mobile-category-menu="true"
-        data-floating-dropdown="true"
-        data-dropdown-placement="bottom"
-        data-dropdown-align="end"
+      <DropdownShell
+        open={isActionsOpen}
+        onOpenChange={setIsActionsOpen}
+        size="action"
+        trigger={(triggerProps) => (
+          <button type="button" style={styles.secondaryButton} {...triggerProps}>
+            akcje
+          </button>
+        )}
       >
-        <summary style={styles.secondaryButton}>akcje</summary>
-        <div
-          className="ui-dropdown ui-dropdown--action"
-          data-mobile-category-menu-panel="true"
-        >
           {canUseMonthCalendar && (
             <button
               type="button"
@@ -48,6 +50,7 @@ export default function BudgetCategoryTreeLevel1Actions({
               onClick={(event) => {
                 event.stopPropagation()
                 toggleLevel1Calendar(level1Category.id)
+                setIsActionsOpen(false)
               }}
             >
               {isLevel1CalendarOpen ? 'Zamknij kalendarz' : 'Kalendarz'}
@@ -61,13 +64,13 @@ export default function BudgetCategoryTreeLevel1Actions({
               onClick={(event) => {
                 event.stopPropagation()
                 onEditBudgetLimit(null)
+                setIsActionsOpen(false)
               }}
             >
               {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
             </button>
           )}
-        </div>
-      </details>
+      </DropdownShell>
     </>
   )
 }

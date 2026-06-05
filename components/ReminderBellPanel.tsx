@@ -19,6 +19,7 @@ import { isTransactionInMonth } from '../lib/transactionDomain'
 
 import ReminderBellDetailsModal from './reminder-bell/ReminderBellDetailsModal'
 import ReminderBellPopup from './reminder-bell/ReminderBellPopup'
+import DropdownShell from './dropdown/DropdownShell'
 import { ReminderBellPanelProps } from './reminder-bell/reminderBellTypes'
 import {
   bellRowStyle,
@@ -236,12 +237,17 @@ export default function ReminderBellPanel({
   return (
     <div style={containerStyle}>
       <div style={bellRowStyle}>
-        <button type="button" style={styles.secondaryButton} onClick={() => setIsOpen((prev) => !prev)}>
-          Dzwonek
-          {pendingReminders.length > 0 && <span style={countStyle}>{pendingReminders.length}</span>}
-        </button>
-
-        {isOpen && (
+        <DropdownShell
+          open={isOpen}
+          onOpenChange={setIsOpen}
+          size="utility"
+          trigger={(triggerProps) => (
+            <button type="button" style={styles.secondaryButton} {...triggerProps}>
+              Dzwonek
+              {pendingReminders.length > 0 && <span style={countStyle}>{pendingReminders.length}</span>}
+            </button>
+          )}
+        >
           <ReminderBellPopup
             selectedMonth={selectedMonth}
             pendingReminders={pendingReminders}
@@ -253,7 +259,7 @@ export default function ReminderBellPanel({
             hideLocally={hideLocally}
             setIsOpen={setIsOpen}
           />
-        )}
+        </DropdownShell>
       </div>
 
       <CalendarSurface data-reminder-panel="true" style={panelStyle}>

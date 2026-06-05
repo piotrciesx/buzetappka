@@ -1,8 +1,9 @@
-import type { CSSProperties, HTMLAttributes, ReactNode } from 'react'
+import { useState, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react'
 import { uiListRowApi } from '../../lib/uiFoundation'
 import BudgetLimitIndicator, { BudgetLimitView } from '../BudgetLimitIndicator'
 import CategoryIcon from '../CategoryIcon'
 import CategoryIconPicker from '../CategoryIconPicker'
+import DropdownShell from '../dropdown/DropdownShell'
 
 type Level3SectionHeaderProps = {
   name: string
@@ -125,6 +126,7 @@ export default function Level3SectionHeader({
   onEditBudgetLimit,
 }: Level3SectionHeaderProps) {
   const formattedSum = categorySum.toLocaleString('pl-PL')
+  const [isActionsOpen, setIsActionsOpen] = useState(false)
 
   return (
     <div
@@ -256,68 +258,73 @@ export default function Level3SectionHeader({
         )}
 
         {showCategoryActions && (
-          <details
-            data-mobile-category-menu="true"
-            data-floating-dropdown="true"
-            data-dropdown-placement="bottom"
-            data-dropdown-align="end"
-            onClick={(event) => event.stopPropagation()}
+          <DropdownShell
+            open={isActionsOpen}
+            onOpenChange={setIsActionsOpen}
+            size="action"
+            trigger={(triggerProps) => (
+              <button
+                type="button"
+                style={styles.secondaryButton}
+                aria-label={`Menu kategorii ${name}`}
+                title="Menu"
+                {...triggerProps}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  triggerProps.onClick(event)
+                }}
+              >
+                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                  <circle cx="5" cy="12" r="1.8" fill="currentColor" />
+                  <circle cx="12" cy="12" r="1.8" fill="currentColor" />
+                  <circle cx="19" cy="12" r="1.8" fill="currentColor" />
+                </svg>
+              </button>
+            )}
           >
-            <summary style={styles.secondaryButton} aria-label={`Menu kategorii ${name}`} title="Menu">
-              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-                <circle cx="5" cy="12" r="1.8" fill="currentColor" />
-                <circle cx="12" cy="12" r="1.8" fill="currentColor" />
-                <circle cx="19" cy="12" r="1.8" fill="currentColor" />
-              </svg>
-            </summary>
-            <div
-              className="ui-dropdown ui-dropdown--action"
-              data-mobile-category-menu-panel="true"
-            >
-              {canUseMonthCalendar && (
-                <button type="button" className="ui-dropdown__item" onClick={onToggleCalendar}>
-                  {isCalendarOpen ? 'Zamknij kalendarz' : 'Otwórz kalendarz'}
-                </button>
-              )}
+            {canUseMonthCalendar && (
+              <button type="button" className="ui-dropdown__item" onClick={onToggleCalendar}>
+                {isCalendarOpen ? 'Zamknij kalendarz' : 'Otwórz kalendarz'}
+              </button>
+            )}
 
-              {canUseBudgetLimit && onEditBudgetLimit && (
-                <button type="button" className="ui-dropdown__item" onClick={onEditBudgetLimit}>
-                  {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
-                </button>
-              )}
+            {canUseBudgetLimit && onEditBudgetLimit && (
+              <button type="button" className="ui-dropdown__item" onClick={onEditBudgetLimit}>
+                {budgetLimitView ? 'Edytuj limit' : 'Ustaw limit'}
+              </button>
+            )}
 
-              {isClosingAfterSelectedMonth ? (
-                <button className="ui-dropdown__item" onClick={async () => onUndoScheduledHide()}>
-                  Cofnij zamknięcie
+            {isClosingAfterSelectedMonth ? (
+              <button type="button" className="ui-dropdown__item" onClick={onUndoScheduledHide}>
+                Cofnij zamknięcie
+              </button>
+            ) : (
+              <>
+                <button type="button" className="ui-dropdown__item" onClick={onRenameCategory}>
+                  Zmień nazwę
                 </button>
-              ) : (
-                <>
-                  <button className="ui-dropdown__item" onClick={async () => onRenameCategory()}>
-                    Zmień nazwę
-                  </button>
-                  <details data-category-icon-picker-menu="true">
-                    <summary style={styles.secondaryButton} data-category-icon-picker-trigger="true">
-                      <span>{iconKey ? 'Zmień ikonę' : 'Ikona'}</span>
-                      <strong>{iconKey ? 'Wybrana' : 'Bez ikony'}</strong>
-                    </summary>
-                    <CategoryIconPicker
-                      value={iconKey}
-                      onChange={(nextIconKey) => void onIconChange(nextIconKey)}
-                    />
-                  </details>
-                  <button className="ui-dropdown__item" data-button-tone="danger" onClick={async () => onHideNow()}>
-                    Ukryj teraz
-                  </button>
-                  <button className="ui-dropdown__item" data-button-tone="danger" onClick={async () => onHideNext()}>
-                    Ukryj od następnego
-                  </button>
-                  <button className="ui-dropdown__item" data-button-tone="danger" onClick={async () => onDeleteCategory()}>
-                    Usuń
-                  </button>
-                </>
-              )}
-            </div>
-          </details>
+                <details data-category-icon-picker-menu="true">
+                  <summary style={styles.secondaryButton} data-category-icon-picker-trigger="true">
+                    <span>{iconKey ? 'Zmień ikonę' : 'Ikona'}</span>
+                    <strong>{iconKey ? 'Wybrana' : 'Bez ikony'}</strong>
+                  </summary>
+                  <CategoryIconPicker
+                    value={iconKey}
+                    onChange={(nextIconKey) => void onIconChange(nextIconKey)}
+                  />
+                </details>
+                <button type="button" className="ui-dropdown__item" data-button-tone="danger" onClick={onHideNow}>
+                  Ukryj teraz
+                </button>
+                <button type="button" className="ui-dropdown__item" data-button-tone="danger" onClick={onHideNext}>
+                  Ukryj od następnego
+                </button>
+                <button type="button" className="ui-dropdown__item" data-button-tone="danger" onClick={onDeleteCategory}>
+                  Usuń
+                </button>
+              </>
+            )}
+          </DropdownShell>
         )}
       </div>
     </div>

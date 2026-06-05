@@ -11,7 +11,6 @@ import {
   isModuleEnabledForLogic,
 } from '../../lib/modulePolicy'
 import { getEffectiveTransactionScope } from '../../lib/transactionScope'
-import { useFloatingDropdownDismissal } from './useFloatingDropdownDismissal'
 import type { SidebarPrimaryPanel } from './useBudgetAppCoreState'
 
 type Params = {
@@ -54,8 +53,6 @@ export function useBudgetAppShellState({
 
   const moduleVisibility = useAppModuleVisibility({ profileId, userId })
   const monthNavigation = useBudgetMonthNavigation({ profileId })
-
-  useFloatingDropdownDismissal()
 
   const effectiveVisibleModules = useMemo(
     () =>

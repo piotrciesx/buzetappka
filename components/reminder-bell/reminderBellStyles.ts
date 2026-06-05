@@ -28,20 +28,6 @@ export const countStyle: CSSProperties = {
   fontWeight: uiTypographyTokens.weight.semibold,
 }
 
-export const popoverStyle: CSSProperties = {
-  position: 'fixed',
-  right: 18,
-  top: 82,
-  width: 400,
-  maxWidth: 'calc(100vw - 32px)',
-  padding: 12,
-  border: uiSurfacePrimitives.surfaceDropdown.border,
-  borderRadius: uiSurfacePrimitives.surfaceDropdown.radius,
-  background: uiSurfacePrimitives.surfaceDropdown.background,
-  boxShadow: uiSurfacePrimitives.surfaceDropdown.shadow,
-  zIndex: uiZIndex.mobileCritical,
-}
-
 export const panelStyle: CSSProperties = {
   border: uiSurfacePrimitives.surfaceCard.border,
   borderRadius: uiSurfacePrimitives.surfaceCard.radius,
