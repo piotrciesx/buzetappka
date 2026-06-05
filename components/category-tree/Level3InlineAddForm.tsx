@@ -13,7 +13,7 @@ import { normalizeDayInput } from '../../lib/dateUtils'
 import type { DescriptionSuggestion } from '../../lib/suggestionUtils'
 import { splitTagInput } from '../../lib/tagUtils'
 import type { PaymentSplitInput } from '../../lib/paymentSplitUtils'
-import { uiInputApi, uiZIndex } from '../../lib/uiFoundation'
+import { uiButtonApi, uiInputApi, uiZIndex } from '../../lib/uiFoundation'
 
 const inlineDescriptionFieldWrapStyle = {
   position: 'relative' as const,
@@ -329,6 +329,8 @@ export default function Level3InlineAddForm({
         />
 
         <button
+          type="button"
+          className={uiButtonApi.classNames.standard}
           style={{ ...styles.primaryButton, ...compactPrimaryButtonStyle }}
           disabled={isInlineSaving}
           onClick={async () => {
@@ -339,6 +341,8 @@ export default function Level3InlineAddForm({
         </button>
 
         <button
+          type="button"
+          className={uiButtonApi.classNames.utility}
           style={{ ...styles.secondaryButton, ...compactSecondaryButtonStyle }}
           onClick={() => {
             cancelInlineAdd()
@@ -351,6 +355,7 @@ export default function Level3InlineAddForm({
       <div data-inline-entry-options="true">
         <button
           type="button"
+          className={uiButtonApi.classNames.utility}
           style={styles.secondaryButton}
           data-inline-option-active={isTagsOpen || inlineTagNames.length > 0 ? 'true' : 'false'}
           onClick={() => setIsTagsOpen((value) => !value)}
@@ -361,6 +366,7 @@ export default function Level3InlineAddForm({
         {getPaymentSourceOptionsForCategoryId && (
           <button
             type="button"
+            className={uiButtonApi.classNames.utility}
             style={styles.secondaryButton}
             data-inline-option-active={isPaymentOpen || Boolean(inlinePaymentSourceId) || inlinePaymentSplitItems.length > 0 ? 'true' : 'false'}
             onClick={() => setIsPaymentOpen((value) => !value)}
@@ -372,6 +378,7 @@ export default function Level3InlineAddForm({
         {recurringOptions.length > 0 && (
           <button
             type="button"
+            className={uiButtonApi.classNames.utility}
             style={styles.secondaryButton}
             data-inline-option-active={isRecurringOpen || Boolean(selectedRecurringTransactionId) ? 'true' : 'false'}
             onClick={() => setIsRecurringOpen((value) => !value)}

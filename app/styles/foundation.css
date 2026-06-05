@@ -779,6 +779,81 @@
   padding: var(--ui-row-padding-y) var(--ui-row-padding-x);
 }
 
+.ui-button--hero,
+.ui-button--standard,
+.ui-button--utility,
+.ui-button--icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  box-sizing: border-box;
+  border-radius: var(--ui-button-radius);
+  font: inherit;
+  line-height: var(--ui-line-height-compact);
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.ui-button--hero {
+  min-height: var(--ui-button-height-hero);
+  padding: var(--ui-button-padding-hero);
+  border: 2px solid var(--ui-button-border-strong);
+  background: var(--ui-button-bg);
+  color: var(--ui-button-text-strong);
+  font-weight: var(--ui-button-font-weight-hero);
+}
+
+.ui-button--standard {
+  min-height: var(--ui-button-height-standard);
+  padding: var(--ui-button-padding-standard);
+  border: 1px solid var(--ui-button-border-strong);
+  background: var(--ui-button-bg);
+  color: var(--ui-button-text);
+  font-weight: var(--ui-button-font-weight-standard);
+}
+
+.ui-button--utility {
+  min-height: var(--ui-button-height-utility);
+  padding: var(--ui-button-padding-utility);
+  border: 1px solid var(--ui-button-border);
+  background: var(--ui-button-bg);
+  color: var(--ui-button-text);
+  font-weight: var(--ui-button-font-weight-utility);
+}
+
+.ui-button--icon {
+  width: var(--ui-button-height-icon);
+  min-width: var(--ui-button-height-icon);
+  height: var(--ui-button-height-icon);
+  min-height: var(--ui-button-height-icon);
+  padding: 0;
+  border: 1px solid var(--ui-button-border);
+  background: var(--ui-button-bg-tint);
+  color: var(--ui-button-text);
+}
+
+.ui-button--hero[data-button-tone="danger"],
+.ui-button--standard[data-button-tone="danger"],
+.ui-button--utility[data-button-tone="danger"],
+.ui-button--icon[data-button-tone="danger"] {
+  color: var(--ui-button-tone-danger-text);
+}
+
+.ui-button--hero:disabled,
+.ui-button--standard:disabled,
+.ui-button--utility:disabled,
+.ui-button--icon:disabled,
+.ui-button--hero[data-button-state="disabled"],
+.ui-button--standard[data-button-state="disabled"],
+.ui-button--utility[data-button-state="disabled"],
+.ui-button--icon[data-button-state="disabled"] {
+  cursor: not-allowed;
+  opacity: var(--ui-opacity-disabled);
+}
+
 .ui-input,
 .ui-search-field,
 .ui-amount-field,

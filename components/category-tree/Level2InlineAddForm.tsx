@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import { uiInputApi } from '../../lib/uiFoundation'
+import { uiButtonApi, uiInputApi } from '../../lib/uiFoundation'
 import CategoryIconPicker from '../CategoryIconPicker'
 
 type Level2InlineAddFormProps = {
@@ -44,7 +44,11 @@ export default function Level2InlineAddForm({
       />
 
       <details data-category-icon-picker-menu="true" data-category-icon-picker-inline="true">
-        <summary style={styles.secondaryButton} data-category-icon-picker-trigger="true">
+        <summary
+          className={uiButtonApi.classNames.utility}
+          style={styles.secondaryButton}
+          data-category-icon-picker-trigger="true"
+        >
           <span>Ikona</span>
           <strong>{iconValue ? 'Wybrana' : 'Bez ikony'}</strong>
         </summary>
@@ -53,6 +57,7 @@ export default function Level2InlineAddForm({
 
       <button
         type="button"
+        className={uiButtonApi.classNames.standard}
         style={styles.primaryButton}
         onClick={async () => {
           await onSave()
@@ -61,7 +66,12 @@ export default function Level2InlineAddForm({
         zapisz
       </button>
 
-      <button type="button" style={styles.secondaryButton} onClick={onCancel}>
+      <button
+        type="button"
+        className={uiButtonApi.classNames.utility}
+        style={styles.secondaryButton}
+        onClick={onCancel}
+      >
         anuluj
       </button>
     </div>

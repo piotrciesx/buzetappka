@@ -23,6 +23,7 @@ import {
 } from '../lib/budgetPageTypes'
 import { isCategoryClosingAfterSelectedMonth } from '../lib/categoryUtils'
 import type { TransactionDraft } from '../lib/draftUtils'
+import { uiInputApi } from '../lib/uiFoundation'
 
 type BudgetCategoryTreeProps = ComponentProps<typeof BudgetCategoryTree>
 
@@ -244,6 +245,8 @@ export default function BudgetTreeSection({
           </label>
           <select
             id="level2-sort-mode"
+            className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
+            data-input-width={uiInputApi.width.compact}
             value={level2SortMode}
             onChange={(event) => setLevel2SortMode(event.target.value as SortMode)}
             style={styles.input}
@@ -259,6 +262,8 @@ export default function BudgetTreeSection({
           </label>
           <select
             id="level2-sort-direction"
+            className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
+            data-input-width={uiInputApi.width.compact}
             value={level2SortDirection}
             onChange={(event) => setLevel2SortDirection(event.target.value as SortDirection)}
             style={styles.input}
@@ -275,6 +280,8 @@ export default function BudgetTreeSection({
           </label>
           <select
             id="level3-sort-mode"
+            className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
+            data-input-width={uiInputApi.width.compact}
             value={level3SortMode}
             onChange={(event) => setLevel3SortMode(event.target.value as SortMode)}
             style={styles.input}
@@ -290,6 +297,8 @@ export default function BudgetTreeSection({
           </label>
           <select
             id="level3-sort-direction"
+            className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
+            data-input-width={uiInputApi.width.compact}
             value={level3SortDirection}
             onChange={(event) => setLevel3SortDirection(event.target.value as SortDirection)}
             style={styles.input}

@@ -1,4 +1,5 @@
 import { CSSProperties } from 'react'
+import { uiButtonApi, uiInputApi } from '../../lib/uiFoundation'
 import CategoryIconPicker from '../CategoryIconPicker'
 
 type Props = {
@@ -33,6 +34,8 @@ export default function BudgetCategoryTreeAddSubcategoryForm({
   return (
     <div style={styles.formRow} data-level1-add-form="true">
       <input
+        className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+        data-input-width={uiInputApi.width.full}
         style={styles.input}
         placeholder={placeholder}
         value={newSubcategoryName}
@@ -53,7 +56,11 @@ export default function BudgetCategoryTreeAddSubcategoryForm({
         }}
       />
       <details data-category-icon-picker-menu="true" data-category-icon-picker-inline="true">
-        <summary style={styles.secondaryButton} data-category-icon-picker-trigger="true">
+        <summary
+          className={uiButtonApi.classNames.utility}
+          style={styles.secondaryButton}
+          data-category-icon-picker-trigger="true"
+        >
           <span>Ikona</span>
           <strong>{newSubcategoryIconKey ? 'Wybrana' : 'Bez ikony'}</strong>
         </summary>
@@ -61,6 +68,7 @@ export default function BudgetCategoryTreeAddSubcategoryForm({
       </details>
       <button
         type="button"
+        className={uiButtonApi.classNames.standard}
         style={styles.primaryButton}
         onClick={async () => {
           await handleAddSubcategory(parentId, newSubcategoryIconKey)
@@ -70,6 +78,7 @@ export default function BudgetCategoryTreeAddSubcategoryForm({
       </button>
       <button
         type="button"
+        className={uiButtonApi.classNames.utility}
         style={styles.secondaryButton}
         onClick={() => {
           setOpenAddSubcategoryFor(null)
