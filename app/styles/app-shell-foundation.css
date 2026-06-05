@@ -810,8 +810,9 @@ body {
   min-width: 0;
   overflow: hidden;
   color: var(--app-shell-navy);
-  font-size: var(--ui-type-label);
-  font-weight: var(--ui-font-weight-bold);
+  font-size: var(--ui-type-body-sm);
+  font-weight: var(--ui-font-weight-semibold);
+  letter-spacing: -0.01em;
   line-height: var(--ui-line-height-body);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -919,8 +920,9 @@ body {
 }
 
 [data-level1-expanded-content="true"] [data-category-drag-row="true"][data-category-level="3"] [data-category-row-name="true"] span {
-  font-size: var(--ui-type-widget-meta);
-  font-weight: var(--ui-font-weight-semibold);
+  font-size: var(--ui-type-metadata);
+  font-weight: var(--ui-font-weight-medium);
+  letter-spacing: -0.005em;
 }
 
 [data-level1-expanded-content="true"] [data-category-drag-row="true"][data-category-level="3"] [data-category-row-amount="true"] {
