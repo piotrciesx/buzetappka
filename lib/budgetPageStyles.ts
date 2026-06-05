@@ -8,8 +8,7 @@ export const budgetPageStyles: Record<string, CSSProperties> = {
     boxSizing: 'border-box',
     padding: '0 var(--ui-space-7) calc(var(--ui-space-10) + var(--ui-space-1)) 184px',
     margin: 0,
-    fontFamily:
-      'var(--font-app-sans), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    fontFamily: 'var(--font-app-sans)',
     background: 'var(--ui-surface-app)',
     minHeight: '100vh',
     color: 'var(--ui-text-primary)',
