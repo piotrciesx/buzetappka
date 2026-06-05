@@ -84,7 +84,7 @@ export const buildMonthCalendarDayCells = ({
         ? {
             ...calendarDayCellStyle,
             background: 'var(--ui-color-extra-light-blue)',
-            border: '1px solid var(--ui-color-light-blue-border)',
+            border: '1px solid var(--ui-border-divider)',
           }
         : calendarDayCellStyle
     } else {

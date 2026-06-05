@@ -15,7 +15,7 @@ const draftPromptOverlayStyle = {
 
 const draftPromptCardStyle = {
   width: '100%',
-  maxWidth: 380,
+  maxWidth: 'var(--ui-modal-max-width-m)',
   background: uiSurfacePrimitives.modalSurfacePrompt.background,
   border: uiSurfacePrimitives.modalSurfacePrompt.border,
   borderRadius: uiSurfacePrimitives.modalSurfacePrompt.radius,

@@ -14,8 +14,8 @@ export const overlayStyle = {
 
 export const modalStyle = {
   width: '100%',
-  maxWidth: 820,
-  maxHeight: 'min(760px, calc(100dvh - 40px))',
+  maxWidth: 'var(--ui-modal-max-width-xl)',
+  maxHeight: 'var(--ui-modal-max-height-xl)',
   overflowY: 'auto' as const,
   background: uiSurfacePrimitives.modalSurface.background,
   border: uiSurfacePrimitives.modalSurface.border,

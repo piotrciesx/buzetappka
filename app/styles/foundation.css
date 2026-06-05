@@ -61,6 +61,13 @@
   --ui-radius-3xl: 18px;
   --ui-radius-pill: 999px;
 
+  /* Banking frame system */
+  --ui-frame-border-color: rgba(8, 44, 122, 0.34);
+  --ui-frame-border: 1px solid var(--ui-frame-border-color);
+  --ui-frame-ring: inset 0 0 0 1px var(--ui-frame-border-color);
+  --ui-frame-shadow: var(--ui-frame-ring);
+  --ui-frame-radius: var(--ui-radius-xl);
+
   /* Color Token System */
   --ui-color-primary-navy: #082c7a;
   --ui-color-primary-blue: #215dff;
@@ -106,7 +113,7 @@
   --ui-shadow-card: 0 10px 28px var(--ui-shadow-light-color);
   --ui-shadow-panel: 0 22px 60px var(--ui-shadow-strong-color);
   --ui-shadow-popover: 0 18px 42px var(--ui-shadow-strong-color);
-  --ui-shadow-modal: 0 20px 40px var(--ui-shadow-strong-color);
+  --ui-shadow-modal: 0 20px 40px rgba(8, 44, 122, 0.16);
   --ui-shadow-floating: 0 18px 34px var(--ui-shadow-strong-color);
   --ui-shadow-dropdown: 0 16px 36px var(--ui-shadow-strong-color);
 
@@ -442,9 +449,9 @@
   --ui-badge-radius: var(--ui-radius-pill);
   --ui-badge-height-sm: 20px;
   --ui-badge-min-width-sm: 20px;
-  --ui-card-radius: var(--ui-radius-xl);
-  --ui-panel-radius: var(--ui-radius-2xl);
-  --ui-modal-radius: var(--ui-radius-2xl);
+  --ui-card-radius: var(--ui-frame-radius);
+  --ui-panel-radius: var(--ui-frame-radius);
+  --ui-modal-radius: var(--ui-frame-radius);
   --ui-dropdown-radius: var(--ui-radius-lg);
   --ui-toolbar-gap: var(--ui-space-4);
 
@@ -484,10 +491,10 @@
   --ui-shadow-strong: var(--ui-shadow-panel);
 
   /* Modal / overlay public API */
-  --ui-modal-width-s: 380px;
-  --ui-modal-width-m: 560px;
-  --ui-modal-width-l: 720px;
-  --ui-modal-width-xl: 860px;
+  --ui-modal-width-s: 640px;
+  --ui-modal-width-m: 640px;
+  --ui-modal-width-l: 1040px;
+  --ui-modal-width-xl: 1040px;
   --ui-modal-max-width: calc(100vw - var(--ui-overlay-modal-padding) - var(--ui-overlay-modal-padding));
   --ui-modal-max-width-s: min(var(--ui-modal-width-s), var(--ui-modal-max-width));
   --ui-modal-max-width-m: min(var(--ui-modal-width-m), var(--ui-modal-max-width));

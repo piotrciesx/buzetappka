@@ -99,23 +99,24 @@ export const calendarDayCountStyle = {
 export const overlayStyle = {
   position: 'fixed' as const,
   inset: 0,
-  background: 'rgba(15, 23, 42, 0.35)',
+  background: 'var(--ui-overlay-backdrop)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  padding: 16,
+  padding: 'var(--ui-overlay-modal-padding)',
   zIndex: uiZIndex.modalBase,
 } as const
 
 export const modalStyle = {
-  width: 'min(860px, 100%)',
-  maxHeight: '85vh',
+  width: '100%',
+  maxWidth: 'var(--ui-modal-max-width-xl)',
+  maxHeight: 'var(--ui-modal-max-height-xl)',
   overflowY: 'auto' as const,
-  background: 'var(--ui-color-card-background)',
-  borderRadius: 16,
-  border: '1px solid var(--ui-color-light-blue-border)',
-  boxShadow: '0 20px 40px rgba(15, 23, 42, 0.18)',
-  padding: 18,
+  background: 'var(--ui-surface-modal)',
+  borderRadius: 'var(--ui-modal-radius)',
+  border: 'var(--ui-frame-border)',
+  boxShadow: 'var(--ui-shadow-modal), var(--ui-frame-ring)',
+  padding: 'var(--ui-surface-modal-padding)',
 } as const
 
 export const modalHeaderStyle = {
@@ -200,9 +201,9 @@ export const transactionTagBadgeStyle = {
   fontSize: uiTypographyTokens.role.metadata,
   padding: 'var(--ui-spacing-xs) var(--ui-spacing-md)',
   borderRadius: 999,
-  background: 'var(--ui-color-soft-blue)',
-  border: '1px solid var(--ui-color-light-blue-border)',
-  color: 'var(--ui-color-primary-blue)',
+  background: 'var(--ui-surface-hover)',
+  border: '1px solid var(--ui-border-divider)',
+  color: 'var(--ui-color-primary-navy)',
   cursor: 'pointer',
 } as const
 
@@ -282,9 +283,9 @@ export const tagBadgeStyle = {
   gap: 'var(--ui-spacing-action-gap)',
   padding: 'var(--ui-spacing-xs) var(--ui-spacing-md)',
   borderRadius: 999,
-  background: 'var(--ui-color-soft-blue)',
-  border: '1px solid var(--ui-color-light-blue-border)',
-  color: 'var(--ui-color-primary-blue)',
+  background: 'var(--ui-surface-hover)',
+  border: '1px solid var(--ui-border-divider)',
+  color: 'var(--ui-color-primary-navy)',
   fontSize: uiTypographyTokens.role.metadata,
   fontWeight: uiTypographyTokens.weight.semibold,
 } as const

@@ -36,7 +36,8 @@ const overlayStyle: CSSProperties = {
 }
 
 const modalStyle: CSSProperties = {
-  width: 'min(520px, 100%)',
+  width: '100%',
+  maxWidth: 'var(--ui-modal-max-width-m)',
   borderRadius: uiSurfacePrimitives.modalSurfaceStrong.radius,
   border: uiSurfacePrimitives.modalSurfaceStrong.border,
   background: uiSurfacePrimitives.modalSurfaceStrong.background,

@@ -96,19 +96,20 @@ export const modalOverlayStyle: CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  padding: 20,
-  background: 'var(--ui-overlay-backdrop-strong)',
+  padding: 'var(--ui-overlay-modal-padding)',
+  background: 'var(--ui-overlay-backdrop)',
 }
 
 export const modalStyle: CSSProperties = {
-  width: 'min(760px, 100%)',
-  maxHeight: '86vh',
+  width: '100%',
+  maxWidth: 'var(--ui-modal-max-width-m)',
+  maxHeight: 'var(--ui-modal-max-height-m)',
   overflowY: 'auto',
-  border: '1px solid var(--ui-border-divider)',
-  borderRadius: 8,
-  background: 'var(--ui-surface-card)',
-  padding: 16,
-  boxShadow: 'var(--ui-shadow-modal)',
+  border: 'var(--ui-frame-border)',
+  borderRadius: 'var(--ui-modal-radius)',
+  background: 'var(--ui-surface-modal)',
+  padding: 'var(--ui-surface-modal-padding)',
+  boxShadow: 'var(--ui-shadow-modal), var(--ui-frame-ring)',
 }
 
 export const detailGridStyle: CSSProperties = {

@@ -124,7 +124,11 @@ function Level1CardBase(props: BaseProps) {
           </div>
 
           <div data-level1-bottom-area="true">
-            {limitIndicator && <div data-level1-limit="true">{limitIndicator}</div>}
+            {limitIndicator ? (
+              <div data-level1-limit="true">{limitIndicator}</div>
+            ) : (
+              <div data-level1-limit-placeholder="true" aria-hidden="true" />
+            )}
           </div>
         </div>
       </div>
@@ -140,6 +144,7 @@ export function StaticLevel1Card(props: BaseProps) {
       style={props.styles.l1Card}
       data-level1-card-shell="true"
       data-level1-type={props.kind}
+      data-level1-open={props.isOpen ? 'true' : 'false'}
       data-drag-state="idle"
     >
       <div data-level1-block="true">
@@ -206,7 +211,7 @@ export function SortableLevel1Card(props: SortableProps) {
 
   const blockStyle: CSSProperties = {
     transform: blockTransform,
-    transition: transition || 'transform 200ms ease, box-shadow 200ms ease',
+    transition: transition || 'transform 160ms ease, box-shadow 160ms ease',
     opacity: isDragging ? 0.94 : 1,
     position: 'relative',
     zIndex: isDragging ? 3 : 'auto',
@@ -223,6 +228,7 @@ export function SortableLevel1Card(props: SortableProps) {
       style={wrapStyle}
       data-level1-card-shell="true"
       data-level1-type={kind}
+      data-level1-open={isOpen ? 'true' : 'false'}
       data-level1-mobile-block={isMobileViewport ? 'true' : undefined}
       data-category-dragging={isDragging ? 'true' : 'false'}
       data-drag-state={dragState}

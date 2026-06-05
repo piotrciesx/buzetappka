@@ -259,8 +259,8 @@ export default function MonthCalendarTransactionCard({
                       type="button"
                       style={{
                         ...suggestionButtonBaseStyle,
-                        background: isActive ? 'var(--ui-color-soft-blue)' : 'var(--ui-color-card-background)',
-                        color: isActive ? 'var(--ui-color-primary-blue)' : 'var(--ui-color-primary-text)',
+                        background: isActive ? 'var(--ui-surface-hover)' : 'var(--ui-color-card-background)',
+                        color: isActive ? 'var(--ui-color-primary-navy)' : 'var(--ui-color-primary-text)',
                         borderTop: index === 0 ? 'none' : '1px solid var(--ui-color-divider-border)',
                       }}
                       onMouseDown={(event) => event.preventDefault()}
