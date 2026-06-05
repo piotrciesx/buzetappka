@@ -425,10 +425,10 @@ body {
 
 [data-level1-tree-shell="true"] {
   --level1-card-height: 168px;
-  --level1-module-gap: var(--ui-space-3);
+  --level1-module-gap: var(--ui-space-2);
   display: grid !important;
   grid-template-rows: auto;
-  gap: var(--ui-spacing-workspace-gap);
+  gap: var(--level1-module-gap);
 }
 
 [data-level1-header-grid="true"],
@@ -522,7 +522,7 @@ body {
   height: var(--level1-card-height);
   overflow: hidden;
   border: var(--app-shell-frame-border);
-  border-radius: var(--ui-radius-xl);
+  border-radius: var(--ui-radius-xl) var(--ui-radius-xl) var(--ui-radius-lg) var(--ui-radius-lg);
   background: var(--app-shell-panel);
   box-shadow: var(--app-shell-frame-shadow);
 }
@@ -709,7 +709,7 @@ body {
   padding: 14px 12px 12px;
   overflow: visible;
   border: var(--app-shell-frame-border) !important;
-  border-radius: var(--ui-radius-xl) !important;
+  border-radius: var(--ui-radius-lg) var(--ui-radius-lg) var(--ui-radius-xl) var(--ui-radius-xl) !important;
   background: var(--app-shell-panel) !important;
   box-shadow: var(--app-shell-frame-shadow) !important;
 }
