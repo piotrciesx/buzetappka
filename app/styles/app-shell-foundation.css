@@ -397,11 +397,13 @@ body {
 
 [data-budget-workspace-main="true"] > [data-budget-tree-workspace="true"] {
   display: grid !important;
-  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  grid-template-rows: none;
+  grid-auto-rows: auto;
+  align-content: start;
   gap: var(--ui-spacing-workspace-gap);
   width: 100%;
   min-width: 0;
-  min-height: 100%;
+  min-height: auto;
   margin: 0;
   padding: 0;
   overflow: visible;
@@ -462,12 +464,11 @@ body {
 
 [data-level1-card-shell="true"] {
   display: grid;
-  grid-template-rows: var(--level1-card-height) minmax(0, 1fr);
-  align-content: stretch;
+  grid-template-rows: var(--level1-card-height) auto;
+  align-content: start;
   gap: var(--ui-spacing-workspace-gap);
   outline: 1px solid transparent;
   outline-offset: 0;
-  height: 100%;
   transition:
     outline-color 150ms ease,
     background-color 150ms ease,
@@ -476,10 +477,9 @@ body {
 
 [data-level1-block="true"] {
   display: grid;
-  grid-template-rows: var(--level1-card-height) minmax(0, 1fr);
+  grid-template-rows: var(--level1-card-height) auto;
   gap: var(--ui-spacing-workspace-gap);
   min-width: 0;
-  height: 100%;
   transform-origin: center;
   transition:
     transform 160ms ease,
@@ -696,13 +696,12 @@ body {
 }
 
 [data-level1-expanded-content="true"] {
-  display: grid !important;
-  grid-template-rows: minmax(0, 1fr) auto auto;
-  align-content: stretch;
+  display: flex !important;
+  flex-direction: column;
   column-gap: 0;
   row-gap: inherit;
   min-height: 0;
-  height: 100%;
+  height: auto;
   padding: 14px 12px 12px;
   overflow: visible;
   border: var(--app-shell-frame-border) !important;
@@ -717,7 +716,8 @@ body {
 
 [data-level1-tree-body="true"] {
   display: grid;
-  grid-row: 1;
+  grid-row: auto;
+  flex: 1 1 auto;
   align-content: start;
   align-self: stretch;
   gap: calc(var(--ui-space-3, 12px));
@@ -1007,8 +1007,7 @@ body {
 
 [data-level1-add-category-button="true"] {
   display: inline-flex;
-  grid-row: 3;
-  align-self: end;
+  align-self: stretch;
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -1038,7 +1037,7 @@ body {
 }
 
 [data-budget-tree-bottom-deck="true"] {
-  margin-top: var(--ui-space-7);
+  margin-top: 0;
 }
 
 [data-budget-context-rail="true"] {
