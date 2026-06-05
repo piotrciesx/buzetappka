@@ -315,12 +315,15 @@ body {
   justify-content: flex-start;
   gap: var(--ui-spacing-lg);
   width: 100%;
-  min-height: 42px;
+  min-height: 40px;
   padding: 0 var(--ui-spacing-lg);
   border: 1px solid transparent;
   border-radius: var(--ui-radius-md);
   background: transparent;
   color: var(--app-shell-navy);
+  font-size: var(--ui-type-metadata);
+  font-weight: var(--ui-font-weight-semibold);
+  letter-spacing: 0;
   box-shadow: var(--ui-shadow-none);
 }
 
