@@ -150,7 +150,8 @@
   --ui-glass-surface-strong: rgba(255, 255, 255, 0.96);
 
   /* Typography scale */
-  --ui-font-family-app: var(--font-app-sans), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-app-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --ui-font-family-app: var(--font-app-sans);
   --ui-font-size-caption: 10.5px;
   --ui-font-size-meta: 12px;
   --ui-font-size-body-sm: 13px;
