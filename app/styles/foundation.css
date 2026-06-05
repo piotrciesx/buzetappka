@@ -176,9 +176,9 @@
   --ui-type-widget-meta: var(--ui-font-size-caption);
   --ui-type-dashboard-value: var(--ui-font-size-value);
   --ui-font-weight-regular: 400;
-  --ui-font-weight-medium: 560;
-  --ui-font-weight-semibold: 600;
-  --ui-font-weight-bold: 700;
+  --ui-font-weight-medium: 500;
+  --ui-font-weight-semibold: 560;
+  --ui-font-weight-bold: 620;
   --ui-line-height-compact: var(--ui-line-height-tight);
   --ui-line-height-body: var(--ui-line-height-normal);
   --ui-line-height-heading: var(--ui-line-height-tight);
