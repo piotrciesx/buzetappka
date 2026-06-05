@@ -14,6 +14,9 @@
   --app-shell-panel-border: var(--ui-frame-border-color);
   --app-shell-frame-border: var(--ui-frame-border);
   --app-shell-frame-shadow: var(--ui-frame-shadow);
+  --app-shell-support-border: 1px solid rgba(8, 44, 122, 0.16);
+  --app-shell-support-background: color-mix(in srgb, var(--ui-surface-card) 68%, transparent);
+  --app-shell-support-shadow: var(--ui-shadow-none);
   --app-shell-background: var(--ui-surface-app);
   --app-shell-panel: var(--ui-surface-card);
   --app-shell-panel-soft: var(--ui-surface-soft);
@@ -385,10 +388,10 @@ body {
   margin: 0;
   overscroll-behavior: contain;
   overflow: auto;
-  border: var(--app-shell-frame-border);
+  border: 0;
   border-radius: var(--app-shell-panel-radius);
-  background: var(--app-shell-panel);
-  box-shadow: var(--app-shell-frame-shadow);
+  background: transparent;
+  box-shadow: var(--ui-shadow-none);
 }
 
 [data-budget-workspace-main="true"] {
@@ -422,6 +425,7 @@ body {
 
 [data-level1-tree-shell="true"] {
   --level1-card-height: 168px;
+  --level1-module-gap: var(--ui-space-3);
   display: grid !important;
   grid-template-rows: auto;
   gap: var(--ui-spacing-workspace-gap);
@@ -466,7 +470,7 @@ body {
   display: grid;
   grid-template-rows: var(--level1-card-height) auto;
   align-content: start;
-  gap: var(--ui-spacing-workspace-gap);
+  gap: var(--level1-module-gap);
   outline: 1px solid transparent;
   outline-offset: 0;
   transition:
@@ -478,7 +482,7 @@ body {
 [data-level1-block="true"] {
   display: grid;
   grid-template-rows: var(--level1-card-height) auto;
-  gap: var(--ui-spacing-workspace-gap);
+  gap: var(--level1-module-gap);
   min-width: 0;
   transform-origin: center;
   transition:
@@ -1071,10 +1075,10 @@ body {
   min-height: 0;
   padding: var(--ui-spacing-xl);
   overflow: hidden;
-  border: var(--app-shell-frame-border);
+  border: var(--app-shell-support-border);
   border-radius: var(--ui-radius-xl);
-  background: var(--app-shell-panel);
-  box-shadow: var(--app-shell-frame-shadow);
+  background: var(--app-shell-support-background);
+  box-shadow: var(--app-shell-support-shadow);
 }
 
 [data-static-widget-area="right"] {
