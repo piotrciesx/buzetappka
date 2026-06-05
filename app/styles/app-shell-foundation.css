@@ -1353,18 +1353,71 @@ body {
 [data-reminder-popover="true"],
 [data-rail-notification-popover="true"],
 [data-entries-menu-panel="true"] {
-  border: var(--app-shell-frame-border) !important;
+  border: var(--ui-dropdown-border) !important;
   border-radius: var(--ui-dropdown-radius) !important;
   background: var(--ui-surface-dropdown) !important;
-  box-shadow: var(--ui-overlay-dropdown-shadow-tight), var(--ui-frame-ring) !important;
+  color: var(--ui-dropdown-text) !important;
+  box-shadow: var(--ui-dropdown-shadow), var(--ui-frame-ring) !important;
+  font-size: var(--ui-dropdown-item-font-size) !important;
+  font-weight: var(--ui-dropdown-item-font-weight) !important;
+  line-height: var(--ui-dropdown-item-line-height) !important;
+}
+
+[data-topbar-dropdown] button,
+[data-floating-dropdown="true"] > [data-mobile-category-menu-panel="true"] button,
+[data-floating-dropdown="true"][data-transaction-menu="true"] > div button,
+[data-entries-menu-panel="true"] button,
+[data-profile-menu-dropdown="true"] button,
+[data-reminder-popover="true"] button,
+[data-rail-notification-popover="true"] button,
+[data-floating-dropdown="true"] [data-category-icon-picker-trigger="true"] {
+  min-height: var(--ui-dropdown-item-height-action) !important;
+  padding: var(--ui-dropdown-item-padding) !important;
+  border-radius: var(--ui-radius-sm) !important;
+  color: var(--ui-dropdown-text) !important;
+  font-size: var(--ui-dropdown-item-font-size) !important;
+  font-weight: var(--ui-dropdown-item-font-weight) !important;
+  line-height: var(--ui-dropdown-item-line-height) !important;
 }
 
 [data-topbar-dropdown] button:hover,
 [data-floating-dropdown="true"] > [data-mobile-category-menu-panel="true"] button:hover,
 [data-floating-dropdown="true"][data-transaction-menu="true"] > div button:hover,
-[data-profile-menu-dropdown="true"] button:hover {
-  background: var(--ui-surface-hover) !important;
-  color: var(--app-shell-navy) !important;
+[data-entries-menu-panel="true"] button:hover,
+[data-profile-menu-dropdown="true"] button:hover,
+[data-reminder-popover="true"] button:hover,
+[data-rail-notification-popover="true"] button:hover,
+[data-floating-dropdown="true"] [data-category-icon-picker-trigger="true"]:hover {
+  background: var(--ui-dropdown-item-hover-background) !important;
+  color: var(--ui-dropdown-text) !important;
+}
+
+[data-topbar-dropdown] button:active,
+[data-topbar-dropdown] button[aria-selected="true"],
+[data-topbar-dropdown] button[data-active="true"],
+[data-floating-dropdown="true"] > [data-mobile-category-menu-panel="true"] button:active,
+[data-floating-dropdown="true"] > [data-mobile-category-menu-panel="true"] button[aria-selected="true"],
+[data-floating-dropdown="true"] > [data-mobile-category-menu-panel="true"] button[data-active="true"],
+[data-floating-dropdown="true"][data-transaction-menu="true"] > div button:active,
+[data-floating-dropdown="true"][data-transaction-menu="true"] > div button[aria-selected="true"],
+[data-floating-dropdown="true"][data-transaction-menu="true"] > div button[data-active="true"],
+[data-entries-menu-panel="true"] button:active,
+[data-entries-menu-panel="true"] button[aria-selected="true"],
+[data-entries-menu-panel="true"] button[data-active="true"],
+[data-profile-menu-dropdown="true"] button:active,
+[data-profile-menu-dropdown="true"] button[aria-selected="true"],
+[data-profile-menu-dropdown="true"] button[data-active="true"],
+[data-reminder-popover="true"] button:active,
+[data-reminder-popover="true"] button[aria-selected="true"],
+[data-reminder-popover="true"] button[data-active="true"],
+[data-rail-notification-popover="true"] button:active,
+[data-rail-notification-popover="true"] button[aria-selected="true"],
+[data-rail-notification-popover="true"] button[data-active="true"],
+[data-floating-dropdown="true"] [data-category-icon-picker-trigger="true"]:active,
+[data-floating-dropdown="true"] [data-category-icon-picker-trigger="true"][aria-selected="true"],
+[data-floating-dropdown="true"] [data-category-icon-picker-trigger="true"][data-active="true"] {
+  background: var(--ui-dropdown-item-active-background) !important;
+  color: var(--ui-dropdown-text) !important;
 }
 
 @media (max-width: 1100px) {

@@ -479,13 +479,13 @@
   --ui-overlay-modal-padding: var(--ui-space-10);
   --ui-overlay-modal-padding-compact: var(--ui-space-8);
   --ui-overlay-modal-padding-relaxed: var(--ui-space-9);
-  --ui-overlay-dropdown-padding: var(--ui-space-4);
+  --ui-overlay-dropdown-padding: var(--ui-space-3);
   --ui-overlay-popover-padding: var(--ui-space-6);
   --ui-overlay-drawer-padding: var(--ui-space-10);
   --ui-overlay-workspace-padding: var(--ui-space-10);
   --ui-overlay-modal-shadow-neutral: 0 20px 40px rgba(0, 0, 0, 0.16);
   --ui-overlay-modal-shadow-strong: 0 24px 60px rgba(15, 23, 42, 0.22);
-  --ui-overlay-dropdown-shadow-tight: 0 16px 32px rgba(15, 23, 42, 0.18);
+  --ui-overlay-dropdown-shadow-tight: 0 12px 28px rgba(8, 44, 122, 0.12);
   --ui-shadow-light: var(--ui-shadow-subtle);
   --ui-shadow-medium: var(--ui-shadow-card);
   --ui-shadow-strong: var(--ui-shadow-panel);
@@ -531,18 +531,24 @@
   --ui-dropdown-max-height-autocomplete: min(240px, calc(100dvh - 24px));
   --ui-dropdown-max-height-context: min(220px, calc(100dvh - 24px));
   --ui-dropdown-max-height-utility: min(420px, calc(100dvh - 24px));
-  --ui-dropdown-item-height-action: 34px;
-  --ui-dropdown-item-height-select: 34px;
-  --ui-dropdown-item-height-searchable: 34px;
-  --ui-dropdown-item-height-autocomplete: 36px;
-  --ui-dropdown-item-height-context: 34px;
-  --ui-dropdown-item-height-utility: 36px;
+  --ui-dropdown-item-height-action: 40px;
+  --ui-dropdown-item-height-select: 40px;
+  --ui-dropdown-item-height-searchable: 40px;
+  --ui-dropdown-item-height-autocomplete: 40px;
+  --ui-dropdown-item-height-context: 40px;
+  --ui-dropdown-item-height-utility: 40px;
   --ui-dropdown-padding: var(--ui-spacing-dropdown-padding);
-  --ui-dropdown-item-padding: var(--ui-spacing-dropdown-item-y) var(--ui-spacing-dropdown-item-x);
+  --ui-dropdown-item-padding: 0 var(--ui-space-5);
   --ui-dropdown-search-padding: var(--ui-spacing-sm);
   --ui-dropdown-gap: var(--ui-spacing-xs);
-  --ui-dropdown-border: 1px solid var(--ui-surface-border-control);
+  --ui-dropdown-border: 1px solid rgba(8, 44, 122, 0.12);
   --ui-dropdown-shadow: var(--ui-overlay-dropdown-shadow-tight);
+  --ui-dropdown-text: var(--ui-color-primary-navy);
+  --ui-dropdown-item-font-size: var(--ui-font-size-body-sm);
+  --ui-dropdown-item-font-weight: var(--ui-font-weight-semibold);
+  --ui-dropdown-item-line-height: var(--ui-line-height-compact);
+  --ui-dropdown-item-hover-background: var(--ui-color-soft-blue);
+  --ui-dropdown-item-active-background: #eef6ff;
   --ui-dropdown-scroll-behavior: auto;
   --ui-dropdown-placement-offset: var(--ui-spacing-sm);
   --ui-popover-width: auto;
@@ -621,7 +627,50 @@
   border-color: var(--ui-surface-border-control);
   border-radius: var(--ui-dropdown-radius);
   background: var(--ui-surface-dropdown);
-  box-shadow: var(--ui-shadow-medium);
+  box-shadow: var(--ui-dropdown-shadow);
+}
+
+.ui-dropdown {
+  z-index: var(--ui-z-dropdown);
+  display: grid;
+  gap: var(--ui-dropdown-gap);
+  overflow-y: var(--ui-dropdown-scroll-behavior);
+  border: var(--ui-dropdown-border);
+  border-radius: var(--ui-dropdown-radius);
+  background: var(--ui-surface-dropdown);
+  color: var(--ui-dropdown-text);
+  box-shadow: var(--ui-dropdown-shadow);
+  padding: var(--ui-dropdown-padding);
+  font-size: var(--ui-dropdown-item-font-size);
+  font-weight: var(--ui-dropdown-item-font-weight);
+  line-height: var(--ui-dropdown-item-line-height);
+}
+
+.ui-dropdown__item {
+  min-height: var(--ui-dropdown-item-height-action);
+  display: flex;
+  align-items: center;
+  gap: var(--ui-dropdown-gap);
+  padding: var(--ui-dropdown-item-padding);
+  border: 0;
+  border-radius: var(--ui-radius-sm);
+  background: transparent;
+  color: var(--ui-dropdown-text);
+  font-size: var(--ui-dropdown-item-font-size);
+  font-weight: var(--ui-dropdown-item-font-weight);
+  line-height: var(--ui-dropdown-item-line-height);
+  text-align: left;
+}
+
+.ui-dropdown__item:hover {
+  background: var(--ui-dropdown-item-hover-background);
+}
+
+.ui-dropdown__item:active,
+.ui-dropdown__item[aria-selected="true"],
+.ui-dropdown__item[data-active="true"],
+.ui-dropdown__item[data-state="active"] {
+  background: var(--ui-dropdown-item-active-background);
 }
 
 .ui-surface--empty {
