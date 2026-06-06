@@ -1,14 +1,17 @@
-import { getCategoryIcon, type CategoryIconKey } from '../lib/userAppearance'
+import { getUiIcon, type UiIconKey } from '../lib/userAppearance'
 
 type CategoryIconProps = {
   iconKey?: string | null
   level?: 2 | 3
 }
 
-const iconPaths: Record<CategoryIconKey, string[]> = {
+const iconPaths: Record<UiIconKey, string[]> = {
+  note: ['M7 4h8l3 3v13H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z', 'M15 4v4h4M8.5 12h7M8.5 16h5'],
+  exchange: ['M7 7h10l-3-3', 'M17 17H7l3 3', 'M17 7l-3 3M7 17l3-3'],
   home: ['M3 11.5 12 4l9 7.5', 'M5.5 10.5V20h13v-9.5', 'M9.5 20v-5h5v5'],
   food: ['M7 3v18', 'M4 3v5a3 3 0 0 0 6 0V3', 'M16 3v18', 'M16 3c2.2 1.3 3.5 3.4 3.5 6v2.5H16'],
   shopping: ['M6.5 8h11l-1 12h-9z', 'M9 8a3 3 0 0 1 6 0'],
+  basket: ['M6 9h12l-1.2 10H7.2z', 'M9 9a3 3 0 0 1 6 0', 'M9 13h6M10 16h4'],
   car: ['M5 16h14', 'M6.5 16 8 9h8l1.5 7', 'M7 19h.01M17 19h.01', 'M4 13h16'],
   transport: ['M6 17h12', 'M7 17V6h10v11', 'M9 20h.01M15 20h.01', 'M8 10h8M8 14h8'],
   plane: ['M3 12h18', 'M12 3l4 9-4 9', 'M8 12 5 8M8 12l-3 4'],
@@ -20,6 +23,7 @@ const iconPaths: Record<CategoryIconKey, string[]> = {
   work: ['M4 8h16v11H4z', 'M9 8V5h6v3', 'M4 12h16', 'M10 12v2h4v-2'],
   salary: ['M4 7h16v12H4z', 'M7 10h4', 'M16 16h.01', 'M12 13a3 3 0 1 0 0 .01'],
   bills: ['M6 3h12v18l-3-2-3 2-3-2-3 2z', 'M9 8h6M9 12h6M9 16h4'],
+  bill: ['M7 3h10v18l-2-1.2-2 1.2-2-1.2-2 1.2-2-1.2z', 'M9.5 8h5M9.5 12h5M9.5 16h3'],
   electricity: ['M13 2 6 13h5l-1 9 8-13h-5z'],
   internet: ['M4 8a12 12 0 0 1 16 0', 'M7 12a7 7 0 0 1 10 0', 'M10 16a3 3 0 0 1 4 0', 'M12 20h.01'],
   phone: ['M8 3h8v18H8z', 'M11 18h2'],
@@ -43,10 +47,21 @@ const iconPaths: Record<CategoryIconKey, string[]> = {
   coffee: ['M5 8h12v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z', 'M17 10h1a3 3 0 0 1 0 6h-1', 'M8 4v1M12 4v1'],
   fuel: ['M6 4h9v17H6z', 'M8 8h5', 'M15 9l4 4v5a2 2 0 0 1-4 0v-3h2'],
   travel: ['M4 7h16v12H4z', 'M9 7V5h6v2', 'M8 19V7M16 19V7', 'M4 12h16'],
+  warning: ['M12 3 3 20h18z', 'M12 9v5M12 17h.01'],
+  idea: ['M9 18h6M10 21h4', 'M8 11a4 4 0 1 1 8 0c0 2-1.2 3-2.2 4H10.2C9.2 14 8 13 8 11Z'],
+  heart: ['M20 8.5c0 5-8 10.5-8 10.5S4 13.5 4 8.5A4.2 4.2 0 0 1 12 6a4.2 4.2 0 0 1 8 2.5Z'],
+  calendar: ['M4 5h16v15H4z', 'M8 3v4M16 3v4M4 10h16'],
+  more: ['M6 12h.01M12 12h.01M18 12h.01'],
+  plus: ['M12 5v14M5 12h14'],
+  edit: ['M4 20h4l11-11a2.8 2.8 0 0 0-4-4L4 16z', 'M13 6l5 5'],
+  trash: ['M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14', 'M10 11v6M14 11v6'],
+  close: ['M6 6l12 12M18 6 6 18'],
+  expand: ['M8 9l4 4 4-4'],
+  info: ['M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z', 'M12 11v5M12 8h.01'],
 }
 
 export default function CategoryIcon({ iconKey, level = 2 }: CategoryIconProps) {
-  const icon = getCategoryIcon(iconKey)
+  const icon = getUiIcon(iconKey)
 
   if (!icon) {
     return null

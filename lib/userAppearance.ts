@@ -23,10 +23,38 @@ export const USER_AVATARS = [
   { key: 'graphite', label: 'Grafit', color: 'var(--ui-color-secondary-text)' },
 ]
 
-export type CategoryIconKey =
+export type UiColorKey =
+  | 'blue'
+  | 'sky'
+  | 'yellow'
+  | 'orange'
+  | 'green'
+  | 'mint'
+  | 'violet'
+  | 'pink'
+  | 'red'
+  | 'neutral'
+
+export const UI_COLOR_OPTIONS: Array<{ tone: UiColorKey; label: string }> = [
+  { tone: 'blue', label: 'Niebieski' },
+  { tone: 'sky', label: 'Błękitny' },
+  { tone: 'yellow', label: 'Żółty' },
+  { tone: 'orange', label: 'Pomarańczowy' },
+  { tone: 'green', label: 'Zielony' },
+  { tone: 'mint', label: 'Miętowy' },
+  { tone: 'violet', label: 'Fioletowy' },
+  { tone: 'pink', label: 'Różowy' },
+  { tone: 'red', label: 'Czerwony' },
+  { tone: 'neutral', label: 'Szary' },
+]
+
+export type UiIconKey =
+  | 'note'
+  | 'exchange'
   | 'home'
   | 'food'
   | 'shopping'
+  | 'basket'
   | 'car'
   | 'transport'
   | 'plane'
@@ -38,6 +66,7 @@ export type CategoryIconKey =
   | 'work'
   | 'salary'
   | 'bills'
+  | 'bill'
   | 'electricity'
   | 'internet'
   | 'phone'
@@ -61,11 +90,25 @@ export type CategoryIconKey =
   | 'coffee'
   | 'fuel'
   | 'travel'
+  | 'warning'
+  | 'idea'
+  | 'heart'
+  | 'calendar'
+  | 'more'
+  | 'plus'
+  | 'edit'
+  | 'trash'
+  | 'close'
+  | 'expand'
+  | 'info'
 
-export const CATEGORY_ICONS: Array<{ key: CategoryIconKey; label: string }> = [
+export const APP_ICONS: Array<{ key: UiIconKey; label: string }> = [
+  { key: 'note', label: 'Notatka' },
+  { key: 'exchange', label: 'Wymiana' },
   { key: 'home', label: 'Dom' },
   { key: 'food', label: 'Jedzenie' },
   { key: 'shopping', label: 'Zakupy' },
+  { key: 'basket', label: 'Koszyk' },
   { key: 'car', label: 'Auto' },
   { key: 'transport', label: 'Transport' },
   { key: 'plane', label: 'Samolot' },
@@ -77,6 +120,7 @@ export const CATEGORY_ICONS: Array<{ key: CategoryIconKey; label: string }> = [
   { key: 'work', label: 'Praca' },
   { key: 'salary', label: 'Pensja' },
   { key: 'bills', label: 'Rachunki' },
+  { key: 'bill', label: 'Paragon' },
   { key: 'electricity', label: 'Prąd' },
   { key: 'internet', label: 'Internet' },
   { key: 'phone', label: 'Telefon' },
@@ -100,13 +144,33 @@ export const CATEGORY_ICONS: Array<{ key: CategoryIconKey; label: string }> = [
   { key: 'coffee', label: 'Kawa' },
   { key: 'fuel', label: 'Paliwo' },
   { key: 'travel', label: 'Podróże' },
+  { key: 'warning', label: 'Ważne' },
+  { key: 'idea', label: 'Pomysł' },
+  { key: 'heart', label: 'Osobiste' },
+  { key: 'calendar', label: 'Termin' },
+  { key: 'more', label: 'Inne' },
 ]
+
+export type CategoryIconKey = UiIconKey
+
+export const CATEGORY_ICONS = APP_ICONS
 
 export const getAvatar = (avatarKey?: string | null) =>
   USER_AVATARS.find((avatar) => avatar.key === avatarKey) || USER_AVATARS[0]
 
-export const getCategoryIcon = (iconKey?: string | null) =>
-  CATEGORY_ICONS.find((icon) => icon.key === iconKey) || null
+export const getUiIcon = (iconKey?: string | null) =>
+  APP_ICONS.find((icon) => icon.key === iconKey) || null
+
+export const getCategoryIcon = getUiIcon
+
+export const getUiColor = (tone?: string | null) =>
+  UI_COLOR_OPTIONS.find((color) => color.tone === tone) || UI_COLOR_OPTIONS[0]
+
+export const isUiIconKey = (value: string | null | undefined): value is UiIconKey =>
+  Boolean(value && APP_ICONS.some((icon) => icon.key === value))
+
+export const isUiColorKey = (value: string | null | undefined): value is UiColorKey =>
+  Boolean(value && UI_COLOR_OPTIONS.some((color) => color.tone === value))
 
 export const getUserDisplayName = (
   profile: UserPublicProfile | null | undefined,

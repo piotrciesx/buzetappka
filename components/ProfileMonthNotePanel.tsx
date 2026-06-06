@@ -9,6 +9,15 @@ import {
   type MouseEvent as ReactMouseEvent,
 } from "react";
 import { createPortal } from "react-dom";
+import CategoryIcon from "./CategoryIcon";
+import {
+  APP_ICONS,
+  UI_COLOR_OPTIONS,
+  getUiColor,
+  getUiIcon,
+  type UiColorKey,
+  type UiIconKey,
+} from "../lib/userAppearance";
 import { supabase } from "../lib/supabaseClient";
 import { StatusBox } from "./utility-panels/utilityPanelPrimitives";
 
@@ -17,37 +26,8 @@ type ProfileMonthNoteRow = {
   note: string | null;
 };
 
-type MonthNoteTone =
-  | "blue"
-  | "sky"
-  | "yellow"
-  | "orange"
-  | "green"
-  | "mint"
-  | "violet"
-  | "pink"
-  | "red"
-  | "neutral";
-type MonthNoteIcon =
-  | "exchange"
-  | "car"
-  | "health"
-  | "basket"
-  | "food"
-  | "home"
-  | "work"
-  | "travel"
-  | "card"
-  | "cash"
-  | "gift"
-  | "phone"
-  | "bill"
-  | "warning"
-  | "idea"
-  | "heart"
-  | "calendar"
-  | "more"
-  | "note";
+type MonthNoteTone = UiColorKey;
+type MonthNoteIcon = UiIconKey;
 type MonthNoteCategory = "Notatka" | "Przypomnienie" | "Informacja";
 
 type MonthNoteItem = {
@@ -67,60 +47,15 @@ type ProfileMonthNotePanelProps = {
   styles: Record<string, CSSProperties>;
 };
 
-type NoteIconName =
-  | MonthNoteIcon
-  | "plus"
-  | "edit"
-  | "trash"
-  | "close"
-  | "expand"
-  | "info";
+type NoteIconName = "plus" | "edit" | "trash" | "close" | "expand" | "info";
 
 const NOTE_LIST_FORMAT = "budget-month-notes:v1";
 const NOTE_PREVIEW_LIMIT = 4;
 const NOTE_TEXT_LIMIT = 150;
 const NOTE_DRAFT_LIMIT = 1000;
 
-const NOTE_COLOR_OPTIONS: Array<{
-  tone: MonthNoteTone;
-  label: string;
-}> = [
-    { tone: "blue", label: "Niebieski" },
-    { tone: "sky", label: "Błękitny" },
-    { tone: "yellow", label: "Żółty" },
-    { tone: "orange", label: "Pomarańczowy" },
-    { tone: "green", label: "Zielony" },
-    { tone: "mint", label: "Miętowy" },
-    { tone: "violet", label: "Fioletowy" },
-    { tone: "pink", label: "Różowy" },
-    { tone: "red", label: "Czerwony" },
-    { tone: "neutral", label: "Szary" },
-  ];
-
-const NOTE_ICON_OPTIONS: Array<{
-  icon: MonthNoteIcon;
-  label: string;
-}> = [
-    { icon: "note", label: "Notatka" },
-    { icon: "exchange", label: "Wymiana" },
-    { icon: "car", label: "Auto" },
-    { icon: "health", label: "Zdrowie" },
-    { icon: "basket", label: "Zakupy" },
-    { icon: "food", label: "Jedzenie" },
-    { icon: "home", label: "Dom" },
-    { icon: "work", label: "Praca" },
-    { icon: "travel", label: "Podróż" },
-    { icon: "card", label: "Karta" },
-    { icon: "cash", label: "Gotówka" },
-    { icon: "gift", label: "Prezent" },
-    { icon: "phone", label: "Telefon" },
-    { icon: "bill", label: "Rachunek" },
-    { icon: "warning", label: "Ważne" },
-    { icon: "idea", label: "Pomysł" },
-    { icon: "heart", label: "Osobiste" },
-    { icon: "calendar", label: "Termin" },
-    { icon: "more", label: "Inne" },
-  ];
+const NOTE_COLOR_OPTIONS = UI_COLOR_OPTIONS;
+const NOTE_ICON_OPTIONS = APP_ICONS;
 
 const CATEGORY_OPTIONS: MonthNoteCategory[] = [
   "Notatka",
@@ -139,133 +74,6 @@ const NoteIcon = ({ name }: { name: NoteIconName }) => {
 
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
-      {name === "note" && (
-        <>
-          <path
-            d="M7 4h8l3 3v13H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"
-            {...common}
-          />
-          <path d="M15 4v4h4M8.5 12h7M8.5 16h5" {...common} />
-        </>
-      )}
-      {name === "exchange" && (
-        <>
-          <path d="M7 7h10l-3-3" {...common} />
-          <path d="M17 17H7l3 3" {...common} />
-          <path d="M17 7l-3 3M7 17l3-3" {...common} />
-        </>
-      )}
-      {name === "car" && (
-        <>
-          <path d="M5 12l2-5h10l2 5" {...common} />
-          <path d="M4 12h16v6H4z" {...common} />
-          <path d="M7 18v2M17 18v2" {...common} />
-          <circle cx="8" cy="15" r="1" {...common} />
-          <circle cx="16" cy="15" r="1" {...common} />
-        </>
-      )}
-      {name === "health" && (
-        <>
-          <path d="M8 4v6a4 4 0 0 0 8 0V4" {...common} />
-          <path d="M6 4h4M14 4h4" {...common} />
-          <path d="M12 14v2a4 4 0 0 0 8 0v-1" {...common} />
-          <circle cx="20" cy="13" r="1.6" {...common} />
-        </>
-      )}
-      {name === "basket" && (
-        <>
-          <path d="M6 9h12l-1.2 10H7.2z" {...common} />
-          <path d="M9 9a3 3 0 0 1 6 0" {...common} />
-          <path d="M9 13h6M10 16h4" {...common} />
-        </>
-      )}
-      {name === "food" && (
-        <>
-          <path d="M7 3v8M10 3v8M7 7h3M8.5 11v10" {...common} />
-          <path d="M16 3c2 2.4 2 6.6 0 9v9" {...common} />
-        </>
-      )}
-      {name === "home" && (
-        <>
-          <path d="M4 11 12 4l8 7" {...common} />
-          <path d="M6.5 10.5V20h11v-9.5" {...common} />
-          <path d="M10 20v-5h4v5" {...common} />
-        </>
-      )}
-      {name === "work" && (
-        <>
-          <rect x="4" y="7" width="16" height="12" rx="2" {...common} />
-          <path d="M9 7V5h6v2M4 12h16" {...common} />
-        </>
-      )}
-      {name === "travel" && (
-        <>
-          <path d="M4 16l16-8" {...common} />
-          <path d="m14 5 6 3-4 2" {...common} />
-          <path d="M8 14 5 9l3-1 4 4" {...common} />
-          <path d="M6 19h12" {...common} />
-        </>
-      )}
-      {name === "card" && (
-        <>
-          <rect x="3.5" y="6" width="17" height="12" rx="2" {...common} />
-          <path d="M3.5 10h17M7 15h4" {...common} />
-        </>
-      )}
-      {name === "cash" && (
-        <>
-          <rect x="3" y="7" width="18" height="10" rx="2" {...common} />
-          <circle cx="12" cy="12" r="2.2" {...common} />
-          <path d="M6 10v4M18 10v4" {...common} />
-        </>
-      )}
-      {name === "gift" && (
-        <>
-          <path d="M4 10h16v10H4zM4 10h16V7H4zM12 7v13" {...common} />
-          <path d="M12 7c-3 0-4-1-4-2.2C8 3.8 9 3 10 3c1.2 0 2 1.2 2 4Z" {...common} />
-          <path d="M12 7c3 0 4-1 4-2.2C16 3.8 15 3 14 3c-1.2 0-2 1.2-2 4Z" {...common} />
-        </>
-      )}
-      {name === "phone" && (
-        <>
-          <rect x="7" y="3" width="10" height="18" rx="2" {...common} />
-          <path d="M11 17h2" {...common} />
-        </>
-      )}
-      {name === "bill" && (
-        <>
-          <path d="M7 3h10v18l-2-1.2-2 1.2-2-1.2-2 1.2-2-1.2z" {...common} />
-          <path d="M9.5 8h5M9.5 12h5M9.5 16h3" {...common} />
-        </>
-      )}
-      {name === "warning" && (
-        <>
-          <path d="M12 3 3 20h18z" {...common} />
-          <path d="M12 9v5M12 17h.01" {...common} />
-        </>
-      )}
-      {name === "idea" && (
-        <>
-          <path d="M9 18h6M10 21h4" {...common} />
-          <path d="M8 11a4 4 0 1 1 8 0c0 2-1.2 3-2.2 4H10.2C9.2 14 8 13 8 11Z" {...common} />
-        </>
-      )}
-      {name === "heart" && (
-        <path d="M20 8.5c0 5-8 10.5-8 10.5S4 13.5 4 8.5A4.2 4.2 0 0 1 12 6a4.2 4.2 0 0 1 8 2.5Z" {...common} />
-      )}
-      {name === "calendar" && (
-        <>
-          <rect x="4" y="5" width="16" height="15" rx="2" {...common} />
-          <path d="M8 3v4M16 3v4M4 10h16" {...common} />
-        </>
-      )}
-      {name === "more" && (
-        <>
-          <circle cx="6" cy="12" r="1.2" {...common} />
-          <circle cx="12" cy="12" r="1.2" {...common} />
-          <circle cx="18" cy="12" r="1.2" {...common} />
-        </>
-      )}
       {name === "plus" && <path d="M12 5v14M5 12h14" {...common} />}
       {name === "edit" && (
         <>
@@ -313,7 +121,7 @@ const resolveToneOption = (tone?: string) =>
   NOTE_COLOR_OPTIONS[0];
 
 const resolveIconOption = (icon?: string) =>
-  NOTE_ICON_OPTIONS.find((option) => option.icon === icon) ||
+  NOTE_ICON_OPTIONS.find((option) => option.key === icon) ||
   NOTE_ICON_OPTIONS[0];
 
 const parseSavedNotes = (rawNote: string): MonthNoteItem[] => {
@@ -350,7 +158,7 @@ const parseSavedNotes = (rawNote: string): MonthNoteItem[] => {
                 ? note.updatedAt
                 : new Date().toISOString(),
             tone: toneOption.tone,
-            icon: resolveIconOption(note.icon).icon,
+            icon: resolveIconOption(note.icon).key,
             category: CATEGORY_OPTIONS.includes(
               note.category as MonthNoteCategory,
             )
@@ -563,7 +371,7 @@ export default function ProfileMonthNotePanel({
     const iconOption = resolveIconOption(icon);
     setDraft((previousValue) => ({
       ...previousValue,
-      icon: iconOption.icon,
+      icon: iconOption.key,
     }));
   };
 
@@ -695,7 +503,7 @@ export default function ProfileMonthNotePanel({
         }}
       >
         <span data-ui-icon-tile="true">
-          <NoteIcon name={note.icon} />
+          <CategoryIcon iconKey={note.icon} />
         </span>
         <div data-ui-note-copy="true">
           <strong>{displayedText}</strong>
@@ -703,6 +511,8 @@ export default function ProfileMonthNotePanel({
             {variant === "preview"
               ? formatNoteDate(note.updatedAt)
               : note.createdAt === note.updatedAt
+                ? `Dodano: ${formatNoteDate(note.createdAt)}`
+                : note.createdAt === note.updatedAt
                 ? `Dodano: ${formatNoteDate(note.createdAt)}`
                 : `Dodano: ${formatNoteDate(note.createdAt)} · Edytowano: ${formatNoteDate(note.updatedAt)}`}
           </small>
@@ -757,7 +567,7 @@ export default function ProfileMonthNotePanel({
         <header data-ui-modal-header="true">
           <div data-ui-title-row="true">
             <span data-ui-icon-tile="true" data-ui-tone={selectedNote.tone}>
-              <NoteIcon name={selectedNote.icon} />
+              <CategoryIcon iconKey={selectedNote.icon} />
             </span>
             <div data-ui-title-copy="true">
               <strong>Podgląd notatki</strong>
@@ -815,7 +625,7 @@ export default function ProfileMonthNotePanel({
         <header data-ui-modal-header="true">
           <div data-ui-title-row="true">
             <span data-ui-icon-tile="true" data-ui-tone="blue">
-              <NoteIcon name="note" />
+              <CategoryIcon iconKey="note" />
             </span>
             <div data-ui-title-copy="true">
               <strong>Notatki miesiąca {selectedMonth}</strong>
@@ -866,7 +676,7 @@ export default function ProfileMonthNotePanel({
         {!isLoading && savedNotes.length === 0 && (
           <div data-ui-empty-block="true">
             <span data-ui-icon-tile="true" data-ui-tone="neutral">
-              <NoteIcon name="note" />
+              <CategoryIcon iconKey="note" />
             </span>
             <strong>Brak notatek dla tego miesiąca.</strong>
             <span>
@@ -912,7 +722,7 @@ export default function ProfileMonthNotePanel({
         <header data-ui-modal-header="true">
           <div data-ui-title-row="true">
             <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
-              <NoteIcon name={draft.icon} />
+              <CategoryIcon iconKey={draft.icon} />
             </span>
             <div data-ui-title-copy="true">
               <strong>{editingNote ? "Edytuj notatkę" : "Nowa notatka"}</strong>
@@ -1003,7 +813,7 @@ export default function ProfileMonthNotePanel({
               <span>Ikona</span>
               <span data-ui-picker-preview="true">
                 <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
-                  <NoteIcon name={draft.icon} />
+                  <CategoryIcon iconKey={draft.icon} />
                 </span>
                 {resolveIconOption(draft.icon).label}
               </span>
@@ -1011,16 +821,16 @@ export default function ProfileMonthNotePanel({
             <div data-ui-icon-picker="true">
               {NOTE_ICON_OPTIONS.map((option) => (
                 <button
-                  key={option.icon}
+                  key={option.key}
                   type="button"
                   data-ui-icon-option="true"
-                  data-active={draft.icon === option.icon}
+                  data-active={draft.icon === option.key}
                   aria-label={`Wybierz ikonę: ${option.label}`}
                   title={option.label}
-                  onClick={() => updateDraftIcon(option.icon)}
+                  onClick={() => updateDraftIcon(option.key)}
                 >
                   <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
-                    <NoteIcon name={option.icon} />
+                    <CategoryIcon iconKey={option.key} />
                   </span>
                   <span>{option.label}</span>
                 </button>
@@ -1063,7 +873,7 @@ export default function ProfileMonthNotePanel({
         <header data-ui-popup-header="true">
           <div data-ui-title-row="true">
             <span data-ui-icon-tile="true" data-ui-tone="blue">
-              <NoteIcon name="note" />
+              <CategoryIcon iconKey="note" />
             </span>
             <div data-ui-title-copy="true">
               <strong>Notatki miesiąca</strong>
@@ -1085,7 +895,7 @@ export default function ProfileMonthNotePanel({
         {!isLoading && previewNotes.length === 0 && (
           <div data-ui-empty-block="true">
             <span data-ui-icon-tile="true" data-ui-tone="neutral">
-              <NoteIcon name="note" />
+              <CategoryIcon iconKey="note" />
             </span>
             <strong>Brak notatek</strong>
             <span>Dodaj krótką informację do zapamiętania w tym miesiącu.</span>

@@ -4,6 +4,12 @@ import {
   Transaction,
   TransactionPaymentSplit,
 } from './budgetPageTypes'
+import {
+  isUiColorKey,
+  isUiIconKey,
+  type UiColorKey,
+  type UiIconKey,
+} from './userAppearance'
 
 export const PAYMENT_SOURCE_TYPE_LABELS = {
   cash: 'Gotówka',
@@ -12,18 +18,20 @@ export const PAYMENT_SOURCE_TYPE_LABELS = {
   other: 'Inne',
 } as const
 
-export const DEFAULT_PAYMENT_SOURCE_EMOJI: Record<PaymentSource['type'], string> = {
-  cash: '💵',
-  card: '💳',
-  account: '🏦',
-  other: '🔹',
+export const DEFAULT_PAYMENT_SOURCE_ICON: Record<PaymentSource['type'], UiIconKey> = {
+  cash: 'cash',
+  card: 'card',
+  account: 'bank',
+  other: 'more',
 }
 
-export const DEFAULT_PAYMENT_SOURCE_COLOR: Record<PaymentSource['type'], string> = {
-  cash: 'var(--ui-color-income)',
-  card: 'var(--ui-color-primary-blue)',
-  account: 'var(--ui-color-primary-navy)',
-  other: 'var(--ui-color-secondary-text)',
+export const DEFAULT_PAYMENT_SOURCE_EMOJI = DEFAULT_PAYMENT_SOURCE_ICON
+
+export const DEFAULT_PAYMENT_SOURCE_COLOR: Record<PaymentSource['type'], UiColorKey> = {
+  cash: 'green',
+  card: 'blue',
+  account: 'violet',
+  other: 'neutral',
 }
 
 export type PaymentSourceStats = {
@@ -62,34 +70,42 @@ export const getPaymentSourceTypeLabel = (type: PaymentSource['type']) => {
   return PAYMENT_SOURCE_TYPE_LABELS[type]
 }
 
-export const getPaymentSourceEmoji = (source: PaymentSource) => {
-  return source.emoji?.trim() || DEFAULT_PAYMENT_SOURCE_EMOJI[source.type]
+export const getPaymentSourceIconKey = (source: PaymentSource): UiIconKey => {
+  return isUiIconKey(source.emoji) ? source.emoji : DEFAULT_PAYMENT_SOURCE_ICON[source.type]
 }
 
-export const getPaymentSourceColor = (source: PaymentSource) => {
-  return source.color?.trim() || DEFAULT_PAYMENT_SOURCE_COLOR[source.type]
+export const getPaymentSourceColorTone = (source: PaymentSource): UiColorKey => {
+  return isUiColorKey(source.color) ? source.color : DEFAULT_PAYMENT_SOURCE_COLOR[source.type]
 }
+
+export const getPaymentSourceEmoji = getPaymentSourceIconKey
+
+export const getPaymentSourceColor = getPaymentSourceColorTone
 
 export const getPaymentSourceBadgeLabel = (source: PaymentSource) => {
-  return `${getPaymentSourceEmoji(source)} ${source.name}`
+  return source.name
 }
 
 export const getPaymentSourceOptionLabel = (source: PaymentSource) => {
-  return `${getPaymentSourceBadgeLabel(source)} • ${getPaymentSourceTypeLabel(source.type)}`
+  return `${source.name} • ${getPaymentSourceTypeLabel(source.type)}`
 }
 
 export const normalizePaymentSourceEmoji = (value: string, type: PaymentSource['type']) => {
-  return value.trim() || DEFAULT_PAYMENT_SOURCE_EMOJI[type]
+  return isUiIconKey(value.trim()) ? value.trim() : DEFAULT_PAYMENT_SOURCE_ICON[type]
 }
 
 export const normalizePaymentSourceColor = (value: string, type: PaymentSource['type']) => {
-  return value.trim() || DEFAULT_PAYMENT_SOURCE_COLOR[type]
+  return isUiColorKey(value.trim()) ? value.trim() : DEFAULT_PAYMENT_SOURCE_COLOR[type]
 }
 
 export const isPaymentSourceVisibleForKind = (
   source: PaymentSource,
   kind: PaymentSourceListKind | null
 ) => {
+  if (source.archived_at) {
+    return false
+  }
+
   if (kind === 'income') {
     return source.is_income_source !== false
   }

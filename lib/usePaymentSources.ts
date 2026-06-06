@@ -113,6 +113,7 @@ export function usePaymentSources({
         is_expense_source: source.is_expense_source !== false,
         emoji: source.emoji || null,
         color: source.color || null,
+        archived_at: source.archived_at || null,
       }
     })
 
@@ -162,6 +163,21 @@ export function usePaymentSources({
         return
       }
 
+      const normalizedName = trimmedName.toLocaleLowerCase('pl-PL')
+      const duplicateSource = paymentSources.find((source) => {
+        if (input.id && source.id === input.id) {
+          return false
+        }
+
+        return source.name.trim().toLocaleLowerCase('pl-PL') === normalizedName
+      })
+
+      if (duplicateSource) {
+        throw new Error(
+          `Źródło „${trimmedName}” już istnieje. Edytuj istniejące źródło i zaznacz, czy ma być dostępne dla przychodów, wydatków albo obu.`
+        )
+      }
+
       const payload = {
         profile_id: profileId,
         name: trimmedName,
@@ -184,7 +200,7 @@ export function usePaymentSources({
 
       await loadPaymentSources()
     },
-    [isPaymentSourcesEnabled, loadPaymentSources, profileId]
+    [isPaymentSourcesEnabled, loadPaymentSources, paymentSources, profileId]
   )
 
   const deletePaymentSource = useCallback(
@@ -193,14 +209,38 @@ export function usePaymentSources({
         return
       }
 
-      const { error } = await supabase
-        .from('payment_sources')
-        .delete()
-        .eq('id', paymentSourceId)
-        .eq('profile_id', profileId)
+      const hasTransactionHistory = transactions.some(
+        (transaction) => transaction.payment_source_id === paymentSourceId
+      )
+      const hasSplitHistory = Object.values(transactionPaymentSplitsMap).some((splits) =>
+        splits.some((split) => split.payment_source_id === paymentSourceId)
+      )
+      const hasHistory = hasTransactionHistory || hasSplitHistory
 
-      if (error) {
-        throw new Error(error.message)
+      if (hasHistory) {
+        const { error } = await supabase
+          .from('payment_sources')
+          .update({
+            is_income_source: false,
+            is_expense_source: false,
+            archived_at: new Date().toISOString(),
+          })
+          .eq('id', paymentSourceId)
+          .eq('profile_id', profileId)
+
+        if (error) {
+          throw new Error(error.message)
+        }
+      } else {
+        const { error } = await supabase
+          .from('payment_sources')
+          .delete()
+          .eq('id', paymentSourceId)
+          .eq('profile_id', profileId)
+
+        if (error) {
+          throw new Error(error.message)
+        }
       }
 
       if (
@@ -232,6 +272,8 @@ export function usePaymentSources({
       onDeletedSelectedPaymentSource,
       paymentSourceSettings,
       profileId,
+      transactionPaymentSplitsMap,
+      transactions,
     ]
   )
 

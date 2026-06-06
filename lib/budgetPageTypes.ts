@@ -69,6 +69,7 @@ export type PaymentSource = {
   is_expense_source?: boolean
   emoji?: string | null
   color?: string | null
+  archived_at?: string | null
   created_at?: string
 }
 
