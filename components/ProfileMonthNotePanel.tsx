@@ -16,8 +16,37 @@ type ProfileMonthNoteRow = {
   note: string | null;
 };
 
-type MonthNoteTone = "blue" | "yellow" | "green" | "violet" | "neutral";
-type MonthNoteIcon = "exchange" | "car" | "health" | "basket" | "more" | "note";
+type MonthNoteTone =
+  | "blue"
+  | "sky"
+  | "yellow"
+  | "orange"
+  | "green"
+  | "mint"
+  | "violet"
+  | "pink"
+  | "red"
+  | "neutral";
+type MonthNoteIcon =
+  | "exchange"
+  | "car"
+  | "health"
+  | "basket"
+  | "food"
+  | "home"
+  | "work"
+  | "travel"
+  | "card"
+  | "cash"
+  | "gift"
+  | "phone"
+  | "bill"
+  | "warning"
+  | "idea"
+  | "heart"
+  | "calendar"
+  | "more"
+  | "note";
 type MonthNoteCategory = "Notatka" | "Przypomnienie" | "Informacja";
 
 type MonthNoteItem = {
@@ -51,16 +80,45 @@ const NOTE_PREVIEW_LIMIT = 4;
 const NOTE_TEXT_LIMIT = 150;
 const NOTE_DRAFT_LIMIT = 1000;
 
-const NOTE_TONE_OPTIONS: Array<{
+const NOTE_COLOR_OPTIONS: Array<{
   tone: MonthNoteTone;
   label: string;
-  icon: MonthNoteIcon;
 }> = [
-  { tone: "blue", label: "Wymiana", icon: "exchange" },
-  { tone: "yellow", label: "Auto", icon: "car" },
-  { tone: "green", label: "Zdrowie", icon: "health" },
-  { tone: "violet", label: "Zakupy", icon: "basket" },
-  { tone: "neutral", label: "Inne", icon: "more" },
+  { tone: "blue", label: "Niebieski" },
+  { tone: "sky", label: "Błękitny" },
+  { tone: "yellow", label: "Żółty" },
+  { tone: "orange", label: "Pomarańczowy" },
+  { tone: "green", label: "Zielony" },
+  { tone: "mint", label: "Miętowy" },
+  { tone: "violet", label: "Fioletowy" },
+  { tone: "pink", label: "Różowy" },
+  { tone: "red", label: "Czerwony" },
+  { tone: "neutral", label: "Szary" },
+];
+
+const NOTE_ICON_OPTIONS: Array<{
+  icon: MonthNoteIcon;
+  label: string;
+}> = [
+  { icon: "note", label: "Notatka" },
+  { icon: "exchange", label: "Wymiana" },
+  { icon: "car", label: "Auto" },
+  { icon: "health", label: "Zdrowie" },
+  { icon: "basket", label: "Zakupy" },
+  { icon: "food", label: "Jedzenie" },
+  { icon: "home", label: "Dom" },
+  { icon: "work", label: "Praca" },
+  { icon: "travel", label: "Podróż" },
+  { icon: "card", label: "Karta" },
+  { icon: "cash", label: "Gotówka" },
+  { icon: "gift", label: "Prezent" },
+  { icon: "phone", label: "Telefon" },
+  { icon: "bill", label: "Rachunek" },
+  { icon: "warning", label: "Ważne" },
+  { icon: "idea", label: "Pomysł" },
+  { icon: "heart", label: "Osobiste" },
+  { icon: "calendar", label: "Termin" },
+  { icon: "more", label: "Inne" },
 ];
 
 const CATEGORY_OPTIONS: MonthNoteCategory[] = [
@@ -120,6 +178,86 @@ const NoteIcon = ({ name }: { name: NoteIconName }) => {
           <path d="M9 13h6M10 16h4" {...common} />
         </>
       )}
+      {name === "food" && (
+        <>
+          <path d="M7 3v8M10 3v8M7 7h3M8.5 11v10" {...common} />
+          <path d="M16 3c2 2.4 2 6.6 0 9v9" {...common} />
+        </>
+      )}
+      {name === "home" && (
+        <>
+          <path d="M4 11 12 4l8 7" {...common} />
+          <path d="M6.5 10.5V20h11v-9.5" {...common} />
+          <path d="M10 20v-5h4v5" {...common} />
+        </>
+      )}
+      {name === "work" && (
+        <>
+          <rect x="4" y="7" width="16" height="12" rx="2" {...common} />
+          <path d="M9 7V5h6v2M4 12h16" {...common} />
+        </>
+      )}
+      {name === "travel" && (
+        <>
+          <path d="M4 16l16-8" {...common} />
+          <path d="m14 5 6 3-4 2" {...common} />
+          <path d="M8 14 5 9l3-1 4 4" {...common} />
+          <path d="M6 19h12" {...common} />
+        </>
+      )}
+      {name === "card" && (
+        <>
+          <rect x="3.5" y="6" width="17" height="12" rx="2" {...common} />
+          <path d="M3.5 10h17M7 15h4" {...common} />
+        </>
+      )}
+      {name === "cash" && (
+        <>
+          <rect x="3" y="7" width="18" height="10" rx="2" {...common} />
+          <circle cx="12" cy="12" r="2.2" {...common} />
+          <path d="M6 10v4M18 10v4" {...common} />
+        </>
+      )}
+      {name === "gift" && (
+        <>
+          <path d="M4 10h16v10H4zM4 10h16V7H4zM12 7v13" {...common} />
+          <path d="M12 7c-3 0-4-1-4-2.2C8 3.8 9 3 10 3c1.2 0 2 1.2 2 4Z" {...common} />
+          <path d="M12 7c3 0 4-1 4-2.2C16 3.8 15 3 14 3c-1.2 0-2 1.2-2 4Z" {...common} />
+        </>
+      )}
+      {name === "phone" && (
+        <>
+          <rect x="7" y="3" width="10" height="18" rx="2" {...common} />
+          <path d="M11 17h2" {...common} />
+        </>
+      )}
+      {name === "bill" && (
+        <>
+          <path d="M7 3h10v18l-2-1.2-2 1.2-2-1.2-2 1.2-2-1.2z" {...common} />
+          <path d="M9.5 8h5M9.5 12h5M9.5 16h3" {...common} />
+        </>
+      )}
+      {name === "warning" && (
+        <>
+          <path d="M12 3 3 20h18z" {...common} />
+          <path d="M12 9v5M12 17h.01" {...common} />
+        </>
+      )}
+      {name === "idea" && (
+        <>
+          <path d="M9 18h6M10 21h4" {...common} />
+          <path d="M8 11a4 4 0 1 1 8 0c0 2-1.2 3-2.2 4H10.2C9.2 14 8 13 8 11Z" {...common} />
+        </>
+      )}
+      {name === "heart" && (
+        <path d="M20 8.5c0 5-8 10.5-8 10.5S4 13.5 4 8.5A4.2 4.2 0 0 1 12 6a4.2 4.2 0 0 1 8 2.5Z" {...common} />
+      )}
+      {name === "calendar" && (
+        <>
+          <rect x="4" y="5" width="16" height="15" rx="2" {...common} />
+          <path d="M8 3v4M16 3v4M4 10h16" {...common} />
+        </>
+      )}
       {name === "more" && (
         <>
           <circle cx="6" cy="12" r="1.2" {...common} />
@@ -170,8 +308,12 @@ const formatNoteDate = (value: string) =>
   }).format(new Date(value));
 
 const resolveToneOption = (tone?: string) =>
-  NOTE_TONE_OPTIONS.find((option) => option.tone === tone) ||
-  NOTE_TONE_OPTIONS[0];
+  NOTE_COLOR_OPTIONS.find((option) => option.tone === tone) ||
+  NOTE_COLOR_OPTIONS[0];
+
+const resolveIconOption = (icon?: string) =>
+  NOTE_ICON_OPTIONS.find((option) => option.icon === icon) ||
+  NOTE_ICON_OPTIONS[0];
 
 const parseSavedNotes = (rawNote: string): MonthNoteItem[] => {
   const trimmedNote = rawNote.trim();
@@ -207,9 +349,7 @@ const parseSavedNotes = (rawNote: string): MonthNoteItem[] => {
                 ? note.updatedAt
                 : new Date().toISOString(),
             tone: toneOption.tone,
-            icon: NOTE_TONE_OPTIONS.some((option) => option.icon === note.icon)
-              ? (note.icon as MonthNoteIcon)
-              : toneOption.icon,
+            icon: resolveIconOption(note.icon).icon,
             category: CATEGORY_OPTIONS.includes(
               note.category as MonthNoteCategory,
             )
@@ -249,7 +389,7 @@ const serializeNotes = (notes: MonthNoteItem[]) => {
 const createEmptyDraft = () => ({
   text: "",
   tone: "blue" as MonthNoteTone,
-  icon: "exchange" as MonthNoteIcon,
+  icon: "note" as MonthNoteIcon,
   category: "Notatka" as MonthNoteCategory,
 });
 
@@ -408,7 +548,14 @@ export default function ProfileMonthNotePanel({
     setDraft((previousValue) => ({
       ...previousValue,
       tone: toneOption.tone,
-      icon: toneOption.icon,
+    }));
+  };
+
+  const updateDraftIcon = (icon: MonthNoteIcon) => {
+    const iconOption = resolveIconOption(icon);
+    setDraft((previousValue) => ({
+      ...previousValue,
+      icon: iconOption.icon,
     }));
   };
 
@@ -736,25 +883,54 @@ export default function ProfileMonthNotePanel({
           </label>
 
           <div data-ui-field="true">
-            Kolor i ikona
-            <div data-ui-tone-picker="true">
-              {NOTE_TONE_OPTIONS.map((option) => (
+            Kolor ikonki
+            <div data-ui-color-picker="true">
+              {NOTE_COLOR_OPTIONS.map((option) => (
                 <button
                   key={option.tone}
                   type="button"
-                  data-ui-tone-option="true"
+                  data-ui-color-dot="true"
                   data-ui-tone={option.tone}
                   data-active={draft.tone === option.tone}
+                  aria-label={`Wybierz kolor: ${option.label}`}
+                  title={option.label}
                   onClick={() => updateDraftTone(option.tone)}
                 >
-                  <span data-ui-icon-tile="true" data-ui-tone={option.tone}>
-                    <NoteIcon name={option.icon} />
-                  </span>
-                  {option.label}
+                  <span />
                 </button>
               ))}
             </div>
           </div>
+
+          <details data-ui-compact-picker="true">
+            <summary>
+              <span>Ikona</span>
+              <span data-ui-picker-preview="true">
+                <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
+                  <NoteIcon name={draft.icon} />
+                </span>
+                {resolveIconOption(draft.icon).label}
+              </span>
+            </summary>
+            <div data-ui-icon-picker="true">
+              {NOTE_ICON_OPTIONS.map((option) => (
+                <button
+                  key={option.icon}
+                  type="button"
+                  data-ui-icon-option="true"
+                  data-active={draft.icon === option.icon}
+                  aria-label={`Wybierz ikonę: ${option.label}`}
+                  title={option.label}
+                  onClick={() => updateDraftIcon(option.icon)}
+                >
+                  <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
+                    <NoteIcon name={option.icon} />
+                  </span>
+                  <span>{option.label}</span>
+                </button>
+              ))}
+            </div>
+          </details>
 
           <footer data-ui-form-actions="true">
             <button

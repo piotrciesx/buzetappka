@@ -1148,10 +1148,22 @@
   --ui-tone-text: #0646b4;
 }
 
+[data-ui-tone="sky"] {
+  --ui-tone-surface: #e6f7ff;
+  --ui-tone-border: #bae7ff;
+  --ui-tone-text: #0369a1;
+}
+
 [data-ui-tone="yellow"] {
   --ui-tone-surface: #fff3cf;
   --ui-tone-border: #ffe3a3;
   --ui-tone-text: #775000;
+}
+
+[data-ui-tone="orange"] {
+  --ui-tone-surface: #fff0df;
+  --ui-tone-border: #ffd5ae;
+  --ui-tone-text: #b45309;
 }
 
 [data-ui-tone="green"] {
@@ -1160,10 +1172,28 @@
   --ui-tone-text: #08784b;
 }
 
+[data-ui-tone="mint"] {
+  --ui-tone-surface: #ddf7f2;
+  --ui-tone-border: #b6efe5;
+  --ui-tone-text: #0f766e;
+}
+
 [data-ui-tone="violet"] {
   --ui-tone-surface: #efe6ff;
   --ui-tone-border: #dcc8ff;
   --ui-tone-text: #5b21b6;
+}
+
+[data-ui-tone="pink"] {
+  --ui-tone-surface: #ffe8f1;
+  --ui-tone-border: #ffc9de;
+  --ui-tone-text: #be185d;
+}
+
+[data-ui-tone="red"] {
+  --ui-tone-surface: #ffe8e8;
+  --ui-tone-border: #ffc7c7;
+  --ui-tone-text: #b91c1c;
 }
 
 [data-ui-tone="neutral"] {
@@ -1362,27 +1392,122 @@
   font-weight: var(--ui-font-weight-semibold);
 }
 
-[data-ui-tone-picker="true"] {
+[data-ui-color-picker="true"] {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--ui-space-5);
 }
 
-[data-ui-tone-option="true"] {
-  min-height: 40px;
+[data-ui-color-dot="true"] {
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  min-height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--ui-tone-border, rgba(8, 44, 122, 0.12));
+  border-radius: 999px;
+  padding: 0;
+  background: #ffffff;
+  color: var(--ui-tone-text, var(--ui-color-primary-navy));
+}
+
+[data-ui-color-dot="true"] span {
+  width: 16px;
+  height: 16px;
+  display: block;
+  border-radius: 999px;
+  background: var(--ui-tone-surface, #eef5ff);
+  box-shadow: inset 0 0 0 1px var(--ui-tone-border, rgba(8, 44, 122, 0.12));
+}
+
+[data-ui-color-dot="true"][data-active="true"] {
+  border-color: var(--ui-tone-text, var(--ui-color-primary-navy));
+  box-shadow: 0 0 0 3px var(--ui-tone-surface, #eef5ff);
+}
+
+[data-ui-compact-picker="true"] {
+  min-width: 0;
+  display: grid;
+  gap: var(--ui-space-5);
+  border: 1px solid rgba(8, 44, 122, 0.12);
+  border-radius: 14px;
+  background: #ffffff;
+  padding: var(--ui-space-5) var(--ui-space-6);
+}
+
+[data-ui-compact-picker="true"] summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-6);
+  color: var(--ui-text-secondary);
+  font-size: var(--ui-type-t4);
+  font-weight: var(--ui-font-weight-semibold);
+  list-style: none;
+  cursor: pointer;
+}
+
+[data-ui-compact-picker="true"] summary::-webkit-details-marker {
+  display: none;
+}
+
+[data-ui-picker-preview="true"] {
   display: inline-flex;
   align-items: center;
   gap: var(--ui-space-4);
-  border: 1px solid var(--ui-tone-border, rgba(8, 44, 122, 0.12));
-  border-radius: 12px;
-  padding: 0 var(--ui-space-7);
-  background: #ffffff;
   color: var(--ui-color-primary-navy);
+  font-size: var(--ui-type-t4);
+  font-weight: var(--ui-font-weight-semibold);
 }
 
-[data-ui-tone-option="true"][data-active="true"] {
+[data-ui-picker-preview="true"] [data-ui-icon-tile="true"],
+[data-ui-icon-option="true"] [data-ui-icon-tile="true"] {
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+}
+
+[data-ui-picker-preview="true"] [data-ui-icon-tile="true"] svg,
+[data-ui-icon-option="true"] [data-ui-icon-tile="true"] svg {
+  width: 15px;
+  height: 15px;
+}
+
+[data-ui-icon-picker="true"] {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+  gap: var(--ui-space-5);
+  padding-top: var(--ui-space-4);
+}
+
+[data-ui-icon-option="true"] {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-4);
+  border: 1px solid rgba(8, 44, 122, 0.10);
+  border-radius: 12px;
+  padding: 0 var(--ui-space-5);
+  background: #ffffff;
+  color: var(--ui-color-primary-navy);
+  font-size: var(--ui-type-t5);
+  font-weight: var(--ui-font-weight-semibold);
+  text-align: left;
+}
+
+[data-ui-icon-option="true"][data-active="true"] {
+  border-color: var(--ui-tone-border, rgba(8, 44, 122, 0.26));
   background: var(--ui-tone-surface, #eef5ff);
   color: var(--ui-tone-text, var(--ui-color-primary-navy));
+}
+
+[data-ui-icon-option="true"] span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 [data-ui-inline-info="true"] {
