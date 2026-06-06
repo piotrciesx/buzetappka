@@ -154,6 +154,13 @@ export default function DropdownShell({
         return
       }
 
+      if (
+        target instanceof Element &&
+        target.closest('[data-ui-overlay="true"], [data-ui-modal-shell="true"]')
+      ) {
+        return
+      }
+
       close()
     }
     const handleKeyDown = (event: KeyboardEvent) => {

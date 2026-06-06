@@ -787,11 +787,7 @@ export default function ProfileMonthNotePanel({
 
   return (
     <>
-      <section
-  data-ui-popup-shell="true"
-  onClick={(event) => event.stopPropagation()}
-  onMouseDown={(event) => event.stopPropagation()}
->
+      <section data-ui-popup-shell="true">
         <header data-ui-popup-header="true">
           <div data-ui-title-row="true">
             <span data-ui-icon-tile="true" data-ui-tone="blue">

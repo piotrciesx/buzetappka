@@ -709,7 +709,8 @@ export default function BudgetPageStatusPanels({
               <DropdownShell
                 open={openedTopbarPanel === 'note'}
                 onOpenChange={(open) => setOpenedTopbarPanel(open ? 'note' : null)}
-                size="utility"
+                size="content"
+                panelAttributes={{ 'data-topbar-dropdown': 'note' }}
                 trigger={(triggerProps) => (
                   <button
                     type="button"
