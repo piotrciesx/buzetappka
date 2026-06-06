@@ -2,8 +2,7 @@
 
 import { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
-import { uiTypographyTokens } from '../lib/uiFoundation'
-import { ActionRow, StatusBox } from './utility-panels/utilityPanelPrimitives'
+import { StatusBox } from './utility-panels/utilityPanelPrimitives'
 
 type ProfileMonthNoteRow = {
   id: string
@@ -24,7 +23,47 @@ type ProfileMonthNotePanelProps = {
   styles: Record<string, CSSProperties>
 }
 
+type NoteIconName = 'note' | 'plus' | 'edit' | 'trash' | 'close' | 'expand'
+
 const NOTE_LIST_FORMAT = 'budget-month-notes:v1'
+const NOTE_PREVIEW_LIMIT = 3
+const NOTE_TEXT_LIMIT = 130
+
+const NoteIcon = ({ name }: { name: NoteIconName }) => {
+  const common = {
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 1.8,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
+      {name === 'note' && (
+        <>
+          <path d="M6 3h9l3 3v15H6z" {...common} />
+          <path d="M14 3v4h4M9 12h6M9 16h4" {...common} />
+        </>
+      )}
+      {name === 'plus' && <path d="M12 5v14M5 12h14" {...common} />}
+      {name === 'edit' && (
+        <>
+          <path d="M4 20h4l11-11a2.8 2.8 0 0 0-4-4L4 16z" {...common} />
+          <path d="M13 6l5 5" {...common} />
+        </>
+      )}
+      {name === 'trash' && (
+        <>
+          <path d="M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14" {...common} />
+          <path d="M10 11v6M14 11v6" {...common} />
+        </>
+      )}
+      {name === 'close' && <path d="M6 6l12 12M18 6 6 18" {...common} />}
+      {name === 'expand' && <path d="M8 9l4 4 4-4" {...common} />}
+    </svg>
+  )
+}
 
 const createNoteId = () => {
   if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
@@ -33,6 +72,13 @@ const createNoteId = () => {
 
   return `${Date.now()}-${Math.random().toString(36).slice(2)}`
 }
+
+const formatNoteDate = (value: string) =>
+  new Intl.DateTimeFormat('pl-PL', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).format(new Date(value))
 
 const parseSavedNotes = (rawNote: string): MonthNoteItem[] => {
   const trimmedNote = rawNote.trim()
@@ -43,7 +89,6 @@ const parseSavedNotes = (rawNote: string): MonthNoteItem[] => {
 
   try {
     const parsed = JSON.parse(trimmedNote) as unknown
-
     const parsedObject = parsed as { format?: unknown; notes?: unknown }
 
     if (
@@ -97,6 +142,8 @@ export default function ProfileMonthNotePanel({
   const [savedNotes, setSavedNotes] = useState<MonthNoteItem[]>([])
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null)
   const [expandedNoteIds, setExpandedNoteIds] = useState<string[]>([])
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false)
+  const [isFormOpen, setIsFormOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [statusText, setStatusText] = useState('')
@@ -133,12 +180,13 @@ export default function ProfileMonthNotePanel({
       setSavedNotes(parseSavedNotes(noteRow?.note || ''))
       setEditingNoteId(null)
       setExpandedNoteIds([])
+      setIsFormOpen(false)
     } catch (error) {
       setNoteId(null)
       setDraftText('')
       setSavedNotes([])
       setErrorText(
-        error instanceof Error ? error.message : 'Nie udało się wczytać notatki miesiąca.'
+        error instanceof Error ? error.message : 'Nie udało się wczytać notatek miesiąca.'
       )
     } finally {
       setIsLoading(false)
@@ -200,6 +248,7 @@ export default function ProfileMonthNotePanel({
         setSavedNotes(nextNotes)
         setDraftText('')
         setEditingNoteId(null)
+        setIsFormOpen(false)
         setStatusText(successText)
       } catch (error) {
         setErrorText(
@@ -216,6 +265,34 @@ export default function ProfileMonthNotePanel({
     () => savedNotes.find((note) => note.id === editingNoteId) || null,
     [editingNoteId, savedNotes]
   )
+
+  const previewNotes = savedNotes.slice(0, NOTE_PREVIEW_LIMIT)
+
+  const startAddingNote = () => {
+    setEditingNoteId(null)
+    setDraftText('')
+    setIsFormOpen(true)
+    setIsDetailsOpen(true)
+    setStatusText('')
+    setErrorText('')
+  }
+
+  const editNote = (note: MonthNoteItem) => {
+    setEditingNoteId(note.id)
+    setDraftText(note.text)
+    setIsFormOpen(true)
+    setIsDetailsOpen(true)
+    setStatusText('')
+    setErrorText('')
+  }
+
+  const cancelForm = () => {
+    setEditingNoteId(null)
+    setDraftText('')
+    setIsFormOpen(false)
+    setStatusText('')
+    setErrorText('')
+  }
 
   const saveDraft = () => {
     const nextText = draftText.trim()
@@ -243,113 +320,237 @@ export default function ProfileMonthNotePanel({
     void persistNotes(nextNotes, editingNote ? 'Zapisano zmiany notatki.' : 'Dodano notatkę.')
   }
 
-  const editNote = (note: MonthNoteItem) => {
-    setEditingNoteId(note.id)
-    setDraftText(note.text)
-    setStatusText('')
-    setErrorText('')
-  }
-
   const deleteNote = (noteIdToDelete: string) => {
     const nextNotes = savedNotes.filter((note) => note.id !== noteIdToDelete)
     void persistNotes(nextNotes, 'Usunięto notatkę.')
   }
 
+  const toggleExpandedNote = (noteIdToToggle: string) => {
+    setExpandedNoteIds((previousValue) =>
+      previousValue.includes(noteIdToToggle)
+        ? previousValue.filter((id) => id !== noteIdToToggle)
+        : [...previousValue, noteIdToToggle]
+    )
+  }
+
+  const renderNoteCard = (note: MonthNoteItem, variant: 'preview' | 'detail') => {
+    const isExpanded = expandedNoteIds.includes(note.id)
+    const shouldTruncate = note.text.length > NOTE_TEXT_LIMIT
+    const displayedText =
+      variant === 'detail' && (isExpanded || !shouldTruncate)
+        ? note.text
+        : shouldTruncate
+          ? `${note.text.slice(0, NOTE_TEXT_LIMIT)}...`
+          : note.text
+
+    return (
+      <article key={note.id} data-ui-utility-list-card="true" data-month-note-item="true">
+        <div data-ui-utility-list-card-main="true">
+          <span data-ui-utility-list-card-icon="true">
+            <NoteIcon name="note" />
+          </span>
+          <div data-ui-utility-list-card-copy="true">
+            <p>{displayedText}</p>
+            <small>Aktualizacja: {formatNoteDate(note.updatedAt)}</small>
+          </div>
+        </div>
+
+        {variant === 'detail' && (
+          <div data-ui-utility-list-card-actions="true">
+            {shouldTruncate && (
+              <button
+                type="button"
+                data-ui-utility-ghost-action="true"
+                onClick={() => toggleExpandedNote(note.id)}
+              >
+                {isExpanded ? 'Zwiń' : 'Pokaż więcej'}
+              </button>
+            )}
+            <button
+              type="button"
+              data-ui-icon-button="true"
+              aria-label="Edytuj notatkę"
+              title="Edytuj"
+              onClick={() => editNote(note)}
+            >
+              <NoteIcon name="edit" />
+            </button>
+            <button
+              type="button"
+              data-ui-icon-button="true"
+              data-ui-icon-button-tone="danger"
+              aria-label="Usuń notatkę"
+              title="Usuń"
+              disabled={isSaving}
+              onClick={() => deleteNote(note.id)}
+            >
+              <NoteIcon name="trash" />
+            </button>
+          </div>
+        )}
+      </article>
+    )
+  }
+
   return (
-    <section data-month-note-panel="true" style={{ ...styles.topPanel, display: 'grid', gap: 10 }}>
-      <div>
-        <div style={styles.sectionTitle}>Notatka miesiąca</div>
-        <div style={styles.smallMutedText}>Wspólne notatki profilu dla miesiąca {selectedMonth}.</div>
-      </div>
-
-      <textarea
-        value={draftText}
-        onChange={(event) => {
-          setDraftText(event.target.value)
-          setStatusText('')
-          setErrorText('')
-        }}
-        placeholder="Dodaj krótką notatkę do tego miesiąca..."
-        disabled={isLoading || isSaving}
-        rows={3}
-        style={{
-          width: '100%',
-          minHeight: 78,
-          resize: 'vertical',
-          border: '1px solid var(--ui-color-soft-border)',
-          borderRadius: 10,
-          padding: 10,
-          fontSize: uiTypographyTokens.role.label,
-          fontFamily: 'inherit',
-          outline: 'none',
-          background: 'var(--ui-color-card-background)',
-        }}
-      />
-
-      <ActionRow style={styles.actions}>
-        <button
-          type="button"
-          style={styles.primaryButton}
-          disabled={isLoading || isSaving || !draftText.trim()}
-          onClick={saveDraft}
-        >
-          {isSaving ? 'Zapisywanie...' : editingNote ? 'Zapisz notatkę' : 'Dodaj notatkę'}
-        </button>
-        {editingNote && (
+    <>
+      <section data-month-note-panel="true" data-ui-mini-popup="true">
+        <header data-ui-mini-popup-header="true">
+          <div data-ui-panel-title="true">
+            <span data-ui-panel-title-icon="true">
+              <NoteIcon name="note" />
+            </span>
+            <div>
+              <strong>Notatki miesiąca</strong>
+              <small>{selectedMonth}</small>
+            </div>
+          </div>
           <button
             type="button"
-            style={styles.secondaryButton}
-            disabled={isLoading || isSaving}
-            onClick={() => {
-              setEditingNoteId(null)
-              setDraftText('')
-            }}
+            data-ui-icon-button="true"
+            aria-label="Dodaj notatkę"
+            title="Dodaj notatkę"
+            onClick={startAddingNote}
           >
-            Anuluj
+            <NoteIcon name="plus" />
           </button>
+        </header>
+
+        {isLoading && <StatusBox style={styles.smallMutedText}>Ładowanie notatek...</StatusBox>}
+
+        {!isLoading && previewNotes.length === 0 && (
+          <div data-ui-empty-compact="true">
+            <strong>Brak notatek</strong>
+            <span>Dodaj krótką informację do zapamiętania w tym miesiącu.</span>
+          </div>
         )}
-      </ActionRow>
 
-      {savedNotes.length > 0 && (
-        <div data-month-note-list="true">
-          {savedNotes.map((note) => {
-            const isExpanded = expandedNoteIds.includes(note.id)
-            const shouldTruncate = note.text.length > 130
+        {previewNotes.length > 0 && (
+          <div data-ui-utility-list="true" data-month-note-list="true">
+            {previewNotes.map((note) => renderNoteCard(note, 'preview'))}
+          </div>
+        )}
 
-            return (
-              <article key={note.id} data-month-note-item="true">
-                <p>{isExpanded || !shouldTruncate ? note.text : `${note.text.slice(0, 130)}...`}</p>
-                <div data-month-note-actions="true">
-                  {shouldTruncate && (
+        <footer data-ui-mini-popup-footer="true">
+          <button
+            type="button"
+            data-ui-utility-ghost-action="true"
+            onClick={() => setIsDetailsOpen(true)}
+          >
+            Pokaż wszystkie notatki
+            <NoteIcon name="expand" />
+          </button>
+        </footer>
+
+        {statusText && <StatusBox tone="success" style={styles.smallMutedText}>{statusText}</StatusBox>}
+        {errorText && <StatusBox tone="danger" style={styles.infoBox}>{errorText}</StatusBox>}
+      </section>
+
+      {isDetailsOpen && (
+        <div data-ui-utility-modal-backdrop="true" onClick={() => setIsDetailsOpen(false)}>
+          <section
+            data-ui-utility-modal="true"
+            data-month-note-details="true"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <header data-ui-utility-modal-header="true">
+              <div data-ui-panel-title="true">
+                <span data-ui-panel-title-icon="true">
+                  <NoteIcon name="note" />
+                </span>
+                <div>
+                  <strong>Notatki miesiąca</strong>
+                  <small>{selectedMonth}</small>
+                </div>
+              </div>
+              <button
+                type="button"
+                data-ui-icon-button="true"
+                aria-label="Zamknij"
+                title="Zamknij"
+                onClick={() => setIsDetailsOpen(false)}
+              >
+                <NoteIcon name="close" />
+              </button>
+            </header>
+
+            <div data-ui-utility-modal-toolbar="true">
+              <button
+                type="button"
+                className="ui-button--standard"
+                onClick={startAddingNote}
+              >
+                <NoteIcon name="plus" />
+                Dodaj notatkę
+              </button>
+            </div>
+
+            {isFormOpen && (
+              <div data-ui-form-card="true" data-month-note-form="true">
+                <div data-ui-form-card-header="true">
+                  <strong>{editingNote ? 'Edytuj notatkę' : 'Dodaj krótką notatkę'}</strong>
+                  <small>Notatka będzie widoczna tylko w miesiącu {selectedMonth}.</small>
+                </div>
+
+                <textarea
+                  value={draftText}
+                  onChange={(event) => {
+                    setDraftText(event.target.value)
+                    setStatusText('')
+                    setErrorText('')
+                  }}
+                  placeholder="Np. Euro wymienione po 4,60 zł, zakup gotówką, ważna informacja do rozliczenia..."
+                  disabled={isLoading || isSaving}
+                  rows={4}
+                  className="ui-textarea"
+                  data-input-width="full"
+                />
+
+                <div data-ui-form-card-footer="true">
+                  <span>{draftText.trim().length} znaków</span>
+                  <div>
                     <button
                       type="button"
-                      onClick={() =>
-                        setExpandedNoteIds((previousValue) =>
-                          previousValue.includes(note.id)
-                            ? previousValue.filter((id) => id !== note.id)
-                            : [...previousValue, note.id]
-                        )
-                      }
+                      className="ui-button--utility"
+                      disabled={isLoading || isSaving}
+                      onClick={cancelForm}
                     >
-                      {isExpanded ? 'Zwiń' : 'Rozwiń'}
+                      Anuluj
                     </button>
-                  )}
-                  <button type="button" onClick={() => editNote(note)}>
-                    Edytuj
-                  </button>
-                  <button type="button" onClick={() => deleteNote(note.id)} disabled={isSaving}>
-                    Usuń
-                  </button>
+                    <button
+                      type="button"
+                      className="ui-button--standard"
+                      disabled={isLoading || isSaving || !draftText.trim()}
+                      onClick={saveDraft}
+                    >
+                      {isSaving ? 'Zapisywanie...' : editingNote ? 'Zapisz zmiany' : 'Dodaj notatkę'}
+                    </button>
+                  </div>
                 </div>
-              </article>
-            )
-          })}
+              </div>
+            )}
+
+            {!isLoading && savedNotes.length === 0 && (
+              <div data-ui-empty-state="true">
+                <span data-ui-panel-title-icon="true">
+                  <NoteIcon name="note" />
+                </span>
+                <strong>Brak notatek w tym miesiącu</strong>
+                <p>Dodaj krótką informację, do której chcesz wrócić przy rozliczaniu miesiąca.</p>
+              </div>
+            )}
+
+            {savedNotes.length > 0 && (
+              <div data-ui-utility-list="true" data-month-note-list="true">
+                {savedNotes.map((note) => renderNoteCard(note, 'detail'))}
+              </div>
+            )}
+
+            {statusText && <StatusBox tone="success" style={styles.smallMutedText}>{statusText}</StatusBox>}
+            {errorText && <StatusBox tone="danger" style={styles.infoBox}>{errorText}</StatusBox>}
+          </section>
         </div>
       )}
-
-      {isLoading && <StatusBox style={styles.smallMutedText}>Ładowanie notatek...</StatusBox>}
-      {statusText && <StatusBox tone="success" style={styles.smallMutedText}>{statusText}</StatusBox>}
-      {errorText && <StatusBox tone="danger" style={styles.infoBox}>{errorText}</StatusBox>}
-    </section>
+    </>
   )
 }
