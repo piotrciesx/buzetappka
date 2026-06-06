@@ -6,6 +6,7 @@ import {
   useEffect,
   useMemo,
   useState,
+  type MouseEvent as ReactMouseEvent,
 } from "react";
 import { createPortal } from "react-dom";
 import { supabase } from "../lib/supabaseClient";
@@ -407,6 +408,7 @@ export default function ProfileMonthNotePanel({
   const [savedNotes, setSavedNotes] = useState<MonthNoteItem[]>([]);
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
   const [expandedNoteIds, setExpandedNoteIds] = useState<string[]>([]);
+  const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -449,6 +451,7 @@ export default function ProfileMonthNotePanel({
       setSavedNotes(parseSavedNotes(noteRow?.note || ""));
       setEditingNoteId(null);
       setExpandedNoteIds([]);
+      setSelectedNoteId(null);
       setIsFormOpen(false);
     } catch (error) {
       setNoteId(null);
@@ -541,6 +544,11 @@ export default function ProfileMonthNotePanel({
     [editingNoteId, savedNotes],
   );
 
+  const selectedNote = useMemo(
+    () => savedNotes.find((note) => note.id === selectedNoteId) || null,
+    [savedNotes, selectedNoteId],
+  );
+
   const previewNotes = savedNotes.slice(0, NOTE_PREVIEW_LIMIT);
 
   const updateDraftTone = (tone: MonthNoteTone) => {
@@ -568,6 +576,7 @@ export default function ProfileMonthNotePanel({
   };
 
   const editNote = (note: MonthNoteItem) => {
+    setSelectedNoteId(null);
     setEditingNoteId(note.id);
     setDraft({
       text: note.text,
@@ -630,6 +639,10 @@ export default function ProfileMonthNotePanel({
   };
 
   const deleteNote = (noteIdToDelete: string) => {
+    if (selectedNoteId === noteIdToDelete) {
+      setSelectedNoteId(null);
+    }
+
     const nextNotes = savedNotes.filter((note) => note.id !== noteIdToDelete);
     void persistNotes(nextNotes, "Usunięto notatkę.");
   };
@@ -642,27 +655,50 @@ export default function ProfileMonthNotePanel({
     );
   };
 
+  const openNotePreview = (note: MonthNoteItem) => {
+    setSelectedNoteId(note.id);
+    setStatusText("");
+    setErrorText("");
+  };
+
+  const handleNoteActionClick = (
+    event: ReactMouseEvent<HTMLButtonElement>,
+    action: () => void,
+  ) => {
+    event.stopPropagation();
+    action();
+  };
+
   const renderNoteCard = (
     note: MonthNoteItem,
     variant: "preview" | "detail",
   ) => {
-    const isExpanded = expandedNoteIds.includes(note.id);
     const shouldTruncate = note.text.length > NOTE_TEXT_LIMIT;
-    const displayedText =
-      variant === "detail" && (isExpanded || !shouldTruncate)
-        ? note.text
-        : shouldTruncate
-          ? `${note.text.slice(0, NOTE_TEXT_LIMIT)}...`
-          : note.text;
+    const displayedText = shouldTruncate
+      ? `${note.text.slice(0, NOTE_TEXT_LIMIT)}...`
+      : note.text;
 
     return (
-      <article key={note.id} data-ui-note-card="true" data-ui-tone={note.tone}>
+      <article
+        key={note.id}
+        data-ui-note-card="true"
+        data-ui-tone={note.tone}
+        data-ui-clickable="true"
+        role="button"
+        tabIndex={0}
+        onClick={() => openNotePreview(note)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openNotePreview(note);
+          }
+        }}
+      >
         <span data-ui-icon-tile="true">
           <NoteIcon name={note.icon} />
         </span>
         <div data-ui-note-copy="true">
           <strong>{displayedText}</strong>
-          {variant === "detail" && <p>{note.text}</p>}
           <small>
             {variant === "preview"
               ? formatNoteDate(note.updatedAt)
@@ -675,9 +711,9 @@ export default function ProfileMonthNotePanel({
               <button
                 type="button"
                 className="ui-button--utility"
-                onClick={() => toggleExpandedNote(note.id)}
+                onClick={(event) => handleNoteActionClick(event, () => openNotePreview(note))}
               >
-                {isExpanded ? "Zwiń" : "Pokaż więcej"}
+                Pokaż całość
               </button>
             )}
             <button
@@ -685,7 +721,7 @@ export default function ProfileMonthNotePanel({
               className="ui-button--icon"
               aria-label="Edytuj notatkę"
               title="Edytuj"
-              onClick={() => editNote(note)}
+              onClick={(event) => handleNoteActionClick(event, () => editNote(note))}
             >
               <NoteIcon name="edit" />
             </button>
@@ -696,7 +732,7 @@ export default function ProfileMonthNotePanel({
               aria-label="Usuń notatkę"
               title="Usuń"
               disabled={isSaving}
-              onClick={() => deleteNote(note.id)}
+              onClick={(event) => handleNoteActionClick(event, () => deleteNote(note.id))}
             >
               <NoteIcon name="trash" />
             </button>
@@ -708,6 +744,63 @@ export default function ProfileMonthNotePanel({
 
   const noteCountLabel = `${savedNotes.length} ${savedNotes.length === 1 ? "notatka" : "notatki"}`;
   const draftLength = draft.text.trim().length;
+
+  const notePreviewModal = selectedNote ? (
+    <div data-ui-overlay="true" onClick={() => setSelectedNoteId(null)}>
+      <section
+        data-ui-modal-shell="true"
+        data-ui-size="note"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <header data-ui-modal-header="true">
+          <div data-ui-title-row="true">
+            <span data-ui-icon-tile="true" data-ui-tone={selectedNote.tone}>
+              <NoteIcon name={selectedNote.icon} />
+            </span>
+            <div data-ui-title-copy="true">
+              <strong>Podgląd notatki</strong>
+              <span>
+                Dodano: {formatNoteDate(selectedNote.createdAt)} · Edytowano:{" "}
+                {formatNoteDate(selectedNote.updatedAt)}
+              </span>
+            </div>
+          </div>
+          <div data-ui-note-actions="true">
+            <button
+              type="button"
+              className="ui-button--icon"
+              aria-label="Edytuj notatkę"
+              title="Edytuj"
+              onClick={() => editNote(selectedNote)}
+            >
+              <NoteIcon name="edit" />
+            </button>
+            <button
+              type="button"
+              className="ui-button--icon"
+              data-button-tone="danger"
+              aria-label="Usuń notatkę"
+              title="Usuń"
+              disabled={isSaving}
+              onClick={() => deleteNote(selectedNote.id)}
+            >
+              <NoteIcon name="trash" />
+            </button>
+            <button
+              type="button"
+              className="ui-button--icon"
+              aria-label="Zamknij"
+              onClick={() => setSelectedNoteId(null)}
+            >
+              <NoteIcon name="close" />
+            </button>
+          </div>
+        </header>
+
+        <div data-ui-note-full="true">{selectedNote.text}</div>
+      </section>
+    </div>
+  ) : null;
 
   const detailsModal = isDetailsOpen ? (
     <div data-ui-overlay="true" onClick={() => setIsDetailsOpen(false)}>
@@ -1017,6 +1110,9 @@ export default function ProfileMonthNotePanel({
         {errorText && <StatusBox tone="danger">{errorText}</StatusBox>}
       </section>
 
+      {hasMounted && notePreviewModal
+        ? createPortal(notePreviewModal, document.body)
+        : null}
       {hasMounted && detailsModal
         ? createPortal(detailsModal, document.body)
         : null}

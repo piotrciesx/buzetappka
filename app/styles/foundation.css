@@ -1538,3 +1538,37 @@
     justify-content: flex-start;
   }
 }
+
+[data-ui-note-card="true"][data-ui-clickable="true"] {
+  cursor: pointer;
+}
+
+[data-ui-note-card="true"][data-ui-clickable="true"]:hover {
+  border-color: rgba(8, 44, 122, 0.22);
+  background: #fbfdff;
+}
+
+[data-ui-note-card="true"][data-ui-clickable="true"]:focus-visible {
+  outline: none;
+  border-color: var(--ui-control-focus-border);
+  box-shadow: var(--ui-control-focus-ring);
+}
+
+[data-ui-modal-shell="true"][data-ui-size="note"] {
+  --ui-modal-width: 720px;
+}
+
+[data-ui-note-full="true"] {
+  min-width: 0;
+  max-height: min(58dvh, 520px);
+  overflow: auto;
+  padding: var(--ui-space-8);
+  border: 1px solid rgba(8, 44, 122, 0.12);
+  border-radius: 16px;
+  background: #ffffff;
+  color: var(--ui-text-primary);
+  font-size: var(--ui-type-t3);
+  font-weight: var(--ui-font-weight-medium);
+  line-height: 1.62;
+  white-space: pre-wrap;
+}
