@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from './supabaseClient'
 import {
+  RecurringInstallment,
   RecurringReminderMonthStatus,
   RecurringTransaction,
   RecurringTransactionExecution,
@@ -62,7 +63,7 @@ export function useRecurringTransactions({
       throw recurringError
     }
 
-    const mappedRecurring = (recurringData || []).map((row) =>
+    let mappedRecurring = (recurringData || []).map((row) =>
       mapRecurringTransactionRow(row as Record<string, unknown>)
     )
 
@@ -73,6 +74,42 @@ export function useRecurringTransactions({
       setRecurringExecutions([])
       setRecurringReminderMonthStatuses([])
       return
+    }
+
+    const { data: scheduleData, error: scheduleError } = await supabase
+      .from('recurring_installment_schedule')
+      .select('*')
+      .in('recurring_transaction_id', recurringIds)
+      .order('installment_number', { ascending: true })
+
+    if (!scheduleError) {
+      const scheduleByRecurringId = (scheduleData || []).reduce<Record<string, RecurringInstallment[]>>(
+        (acc, row) => {
+          const item = row as Record<string, unknown>
+          const recurringId = String(item.recurring_transaction_id || '')
+          if (!recurringId) return acc
+          acc[recurringId] = [
+            ...(acc[recurringId] || []),
+            {
+              id: typeof item.id === 'string' ? item.id : undefined,
+              profile_id: typeof item.profile_id === 'string' ? item.profile_id : undefined,
+              recurring_transaction_id: recurringId,
+              installment_number: Number(item.installment_number || 0),
+              due_date: String(item.due_date || ''),
+              amount: Number(item.amount || 0),
+              created_at: typeof item.created_at === 'string' ? item.created_at : undefined,
+              updated_at: typeof item.updated_at === 'string' ? item.updated_at : undefined,
+            },
+          ]
+          return acc
+        },
+        {}
+      )
+
+      mappedRecurring = mappedRecurring.map((recurring) => ({
+        ...recurring,
+        installment_schedule: scheduleByRecurringId[recurring.id] || [],
+      }))
     }
 
     const { data: executionsData, error: executionsError } = await supabase
@@ -153,10 +190,46 @@ export function useRecurringTransactions({
             .single()
         : supabase.from('recurring_transactions').insert(payload).select('*').single()
 
-      const { error } = await query
+      const { data, error } = await query
 
       if (error) {
         throw new Error(error.message)
+      }
+
+      const recurringId = String((data as Record<string, unknown> | null)?.id || input.id || '')
+
+      if (recurringId) {
+        const scheduleRows =
+          input.kind === 'installment'
+            ? (input.installment_schedule || []).map((installment, index) => ({
+                profile_id: profileId,
+                recurring_transaction_id: recurringId,
+                installment_number: installment.installment_number || index + 1,
+                due_date: installment.due_date,
+                amount: installment.amount,
+                updated_at: new Date().toISOString(),
+              }))
+            : []
+
+        try {
+          await supabase
+            .from('recurring_installment_schedule')
+            .delete()
+            .eq('recurring_transaction_id', recurringId)
+            .eq('profile_id', profileId)
+
+          if (scheduleRows.length > 0) {
+            const { error: scheduleError } = await supabase
+              .from('recurring_installment_schedule')
+              .insert(scheduleRows)
+
+            if (scheduleError) {
+              throw scheduleError
+            }
+          }
+        } catch (scheduleError) {
+          console.warn('Nie udało się zapisać harmonogramu rat.', scheduleError)
+        }
       }
 
       await loadRecurringTransactions()

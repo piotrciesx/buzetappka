@@ -93,7 +93,19 @@ export type RecurringTransaction = {
   installment_total_count?: number | null
   kind: RecurringTransactionKind
   status: RecurringTransactionStatus
+  installment_schedule?: RecurringInstallment[]
   created_at?: string
+}
+
+export type RecurringInstallment = {
+  id?: string
+  profile_id?: string
+  recurring_transaction_id?: string
+  installment_number: number
+  due_date: string
+  amount: number
+  created_at?: string
+  updated_at?: string
 }
 
 export type RecurringTransactionExecution = {

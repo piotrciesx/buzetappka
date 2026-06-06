@@ -2,11 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { RecurringTransaction, Transaction } from '../lib/budgetPageTypes'
-import {
-  getRecurringLifecycleEffectiveStatus,
-  getReminderMonthStatus,
-  isReminderMonthHandled,
-} from '../lib/recurringTransactions'
+import { getRecurringLifecycleEffectiveStatus } from '../lib/recurringTransactions'
 import { isTransactionInMonth } from '../lib/transactionDomain'
 import RecurringTransactionCard from './recurring-transactions/RecurringTransactionCard'
 import RecurringTransactionForm from './recurring-transactions/RecurringTransactionForm'
@@ -77,15 +73,6 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
       )
     )
 
-  const getReminderStateForSelectedMonth = (recurring: RecurringTransaction) =>
-    getReminderMonthStatus({
-      recurring,
-      monthText: selectedMonth,
-      monthStatuses: recurringReminderMonthStatuses,
-      executions: recurringExecutions,
-      transactions,
-    })
-
   const activeRecurring = useMemo(() => {
     return recurringTransactions.filter(
       (item) =>
@@ -95,8 +82,7 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
           monthStatuses: recurringReminderMonthStatuses,
           transactions,
           referenceMonth: selectedMonth,
-        }) === 'active' &&
-        !isReminderMonthHandled(getReminderStateForSelectedMonth(item))
+        }) === 'active'
     )
   }, [recurringExecutions, recurringReminderMonthStatuses, recurringTransactions, selectedMonth, transactions])
 
@@ -109,8 +95,7 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
           monthStatuses: recurringReminderMonthStatuses,
           transactions,
           referenceMonth: selectedMonth,
-        }) !== 'active' ||
-        isReminderMonthHandled(getReminderStateForSelectedMonth(item))
+        }) !== 'active'
     )
   }, [recurringExecutions, recurringReminderMonthStatuses, recurringTransactions, selectedMonth, transactions])
 
@@ -126,7 +111,7 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
 
   const saveForm = async () => {
     const amount = normalizeAmount(formState.amount)
-    const initialPaymentAmount = normalizeAmount(formState.initialPaymentAmount)
+    const installmentTotalAmount = normalizeAmount(formState.installmentTotalAmount)
     const reminderDay = formState.reminderDay || '1'
     const startDate =
       formState.kind === 'installment'
@@ -151,7 +136,7 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
         payment_source_id: formState.usePaymentSource ? formState.paymentSourceId || null : null,
         amount,
         use_amount_when_creating: amount !== null,
-        initial_payment_amount: formState.kind === 'installment' ? initialPaymentAmount : null,
+        initial_payment_amount: formState.kind === 'installment' ? installmentTotalAmount : null,
         description: formState.description.trim() || null,
         frequency: formState.frequency,
         custom_interval_months:
@@ -161,6 +146,8 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
         start_date: startDate,
         end_date: formState.endDate || computedEndDate,
         installment_total_count: formState.kind === 'installment' ? installmentCount : null,
+        installment_schedule:
+          formState.kind === 'installment' ? formState.installmentSchedule : [],
         kind: formState.kind,
         status: 'active',
         createPastExecutions: false,
@@ -212,8 +199,8 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
 
       <ReminderActionRow style={introRowStyle}>
         <p style={mutedTextStyle}>
-          Przypomnienie nie jest wpisem. Pomaga podjąć decyzję w danym miesiącu: dodać wpis albo
-          zamknąć przypomnienie jako przeczytane.
+          Stałe przypomnienia i plany ratalne są konfiguracją. Dzwonek pokazuje tylko aktywne terminy
+          wymagające obsługi.
         </p>
         <button
           type="button"
@@ -237,6 +224,7 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
           setFormState={setFormState}
           categoryOptions={categoryOptions}
           paymentSources={paymentSources}
+          selectedMonth={selectedMonth}
           isSaving={isSaving}
           onSave={() => void saveForm()}
           onCancel={resetForm}
@@ -247,7 +235,7 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
       <section style={listStyle}>
         <div style={sectionTitleStyle}>Aktywne przypomnienia</div>
         {activeRecurring.length === 0 ? (
-          <div style={styles.emptyStateCard}>Brak przypomnień wymagających decyzji w tym miesiącu.</div>
+          <div style={styles.emptyStateCard}>Brak aktywnych przypomnień i planów.</div>
         ) : (
           activeRecurring.map((recurring) => renderReminderCard(recurring, 'active'))
         )}

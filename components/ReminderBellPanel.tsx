@@ -207,19 +207,21 @@ export default function ReminderBellPanel({
       : 0
   const selectedDetailsPlanTotal =
     selectedDetailsReminder?.kind === 'installment' &&
-    selectedDetailsReminder.amount !== null &&
-    selectedDetailsReminder.installment_total_count
-      ? selectedDetailsReminder.amount * selectedDetailsReminder.installment_total_count +
-        (selectedDetailsReminder.initial_payment_amount || 0)
-      : null
+    selectedDetailsReminder.initial_payment_amount !== null &&
+    selectedDetailsReminder.initial_payment_amount !== undefined
+      ? selectedDetailsReminder.initial_payment_amount
+      : selectedDetailsReminder?.kind === 'installment' &&
+          selectedDetailsReminder.amount !== null &&
+          selectedDetailsReminder.installment_total_count
+        ? selectedDetailsReminder.amount * selectedDetailsReminder.installment_total_count
+        : null
   const selectedDetailsPlannedToDate =
-    selectedDetailsReminder?.kind === 'installment' && selectedDetailsReminder.amount !== null
-      ? selectedDetailsCompletedInstallments * selectedDetailsReminder.amount +
-        (selectedDetailsReminder.initial_payment_amount || 0)
+    selectedDetailsReminder?.kind === 'installment'
+      ? selectedDetailsLinkedSum
       : null
   const selectedDetailsRemainingAmount =
-    selectedDetailsReminder?.kind === 'installment' && selectedDetailsReminder.amount !== null
-      ? (selectedDetailsRemainingInstallments ?? 0) * selectedDetailsReminder.amount
+    selectedDetailsReminder?.kind === 'installment' && selectedDetailsPlanTotal !== null
+      ? Math.max(selectedDetailsPlanTotal - selectedDetailsLinkedSum, 0)
       : null
 
   const formatAmount = (value: number | string | null | undefined) => {

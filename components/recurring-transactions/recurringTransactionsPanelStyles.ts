@@ -51,6 +51,13 @@ export const formGridStyle: CSSProperties = {
   alignItems: 'end',
 }
 
+export const scheduleGridStyle: CSSProperties = {
+  display: 'grid',
+  gap: 6,
+  maxHeight: 280,
+  overflow: 'auto',
+}
+
 export const fieldStyle: CSSProperties = {
   minWidth: 0,
   display: 'grid',

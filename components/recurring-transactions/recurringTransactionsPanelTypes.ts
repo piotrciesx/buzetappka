@@ -2,6 +2,7 @@ import { CSSProperties } from 'react'
 import {
   Category,
   PaymentSource,
+  RecurringInstallment,
   RecurringReminderMonthStatus,
   RecurringTransaction,
   RecurringTransactionExecution,
@@ -22,6 +23,8 @@ export type RecurringTransactionFormState = {
   startDate: string
   endDate: string
   installmentTotalCount: string
+  installmentTotalAmount: string
+  installmentSchedule: RecurringInstallment[]
   initialPaymentAmount: string
   kind: RecurringTransaction['kind']
 }

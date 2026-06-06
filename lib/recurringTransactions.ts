@@ -610,15 +610,21 @@ export const getPendingRecurringTransactions = (
   const today = new Date()
   const todayText = options.todayText || today.toISOString().slice(0, 10)
   const currentMonthText = todayText.slice(0, 7)
-  const todayDay = Number(todayText.slice(8, 10))
 
   return recurringTransactions.filter((recurring) => {
     if (!isRecurringExpectedInMonth(recurring, monthText)) {
       return false
     }
 
-    if (monthText === currentMonthText && todayDay < getRecurringReminderDay(recurring)) {
-      return false
+    if (monthText === currentMonthText) {
+      const dueDate = getMonthCycleDate(recurring, monthText)
+      const daysUntilDue = Math.floor(
+        (toUtcDate(dueDate).getTime() - toUtcDate(todayText).getTime()) / MS_PER_DAY
+      )
+
+      if (daysUntilDue > 3) {
+        return false
+      }
     }
 
     const state = getReminderMonthStatus({

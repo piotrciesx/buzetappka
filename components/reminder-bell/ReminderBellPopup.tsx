@@ -1,6 +1,9 @@
 import { CSSProperties } from 'react'
 import { Category, RecurringTransaction } from '../../lib/budgetPageTypes'
-import { getInstallmentNumberForMonth, getRecurringReminderDay } from '../../lib/recurringTransactions'
+import {
+  getInstallmentNumberForMonth,
+  getMonthCycleDate,
+} from '../../lib/recurringTransactions'
 import { uiListRowApi, uiTypographyTokens } from '../../lib/uiFoundation'
 import { itemStyle } from './reminderBellStyles'
 import {
@@ -44,15 +47,17 @@ export default function ReminderBellPopup({
           const installment = getInstallmentNumberForMonth(reminder, selectedMonth)
           const category = categoriesById[reminder.category_id]
           const hasDuplicate = hasLinkedTransactionInSelectedMonth(reminder.id)
+          const dueDate = getMonthCycleDate(reminder, selectedMonth)
 
           return (
             <ReminderCard key={reminder.id} style={itemStyle}>
               <div style={{ fontWeight: uiTypographyTokens.weight.semibold }}>
                 {reminder.name}
+                {installment ? ` - rata nr ${installment.current}` : ''}
               </div>
               <div style={styles.emptyText}>
-                {category?.name || 'Kategoria usunięta'} · dzień {getRecurringReminderDay(reminder)}
-                {installment ? ` · ${installment.current} / ${installment.total || '?'}` : ''}
+                {category?.name || 'Kategoria usunięta'} · termin {dueDate}
+                {installment ? ` · ${installment.current}/${installment.total || '?'}` : ''}
               </div>
               {hasDuplicate && (
                 <ReminderStatusBadge
