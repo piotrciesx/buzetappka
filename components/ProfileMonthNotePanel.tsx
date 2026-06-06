@@ -85,42 +85,42 @@ const NOTE_COLOR_OPTIONS: Array<{
   tone: MonthNoteTone;
   label: string;
 }> = [
-  { tone: "blue", label: "Niebieski" },
-  { tone: "sky", label: "Błękitny" },
-  { tone: "yellow", label: "Żółty" },
-  { tone: "orange", label: "Pomarańczowy" },
-  { tone: "green", label: "Zielony" },
-  { tone: "mint", label: "Miętowy" },
-  { tone: "violet", label: "Fioletowy" },
-  { tone: "pink", label: "Różowy" },
-  { tone: "red", label: "Czerwony" },
-  { tone: "neutral", label: "Szary" },
-];
+    { tone: "blue", label: "Niebieski" },
+    { tone: "sky", label: "Błękitny" },
+    { tone: "yellow", label: "Żółty" },
+    { tone: "orange", label: "Pomarańczowy" },
+    { tone: "green", label: "Zielony" },
+    { tone: "mint", label: "Miętowy" },
+    { tone: "violet", label: "Fioletowy" },
+    { tone: "pink", label: "Różowy" },
+    { tone: "red", label: "Czerwony" },
+    { tone: "neutral", label: "Szary" },
+  ];
 
 const NOTE_ICON_OPTIONS: Array<{
   icon: MonthNoteIcon;
   label: string;
 }> = [
-  { icon: "note", label: "Notatka" },
-  { icon: "exchange", label: "Wymiana" },
-  { icon: "car", label: "Auto" },
-  { icon: "health", label: "Zdrowie" },
-  { icon: "basket", label: "Zakupy" },
-  { icon: "food", label: "Jedzenie" },
-  { icon: "home", label: "Dom" },
-  { icon: "work", label: "Praca" },
-  { icon: "travel", label: "Podróż" },
-  { icon: "card", label: "Karta" },
-  { icon: "cash", label: "Gotówka" },
-  { icon: "gift", label: "Prezent" },
-  { icon: "phone", label: "Telefon" },
-  { icon: "bill", label: "Rachunek" },
-  { icon: "warning", label: "Ważne" },
-  { icon: "idea", label: "Pomysł" },
-  { icon: "heart", label: "Osobiste" },
-  { icon: "calendar", label: "Termin" },
-  { icon: "more", label: "Inne" },
-];
+    { icon: "note", label: "Notatka" },
+    { icon: "exchange", label: "Wymiana" },
+    { icon: "car", label: "Auto" },
+    { icon: "health", label: "Zdrowie" },
+    { icon: "basket", label: "Zakupy" },
+    { icon: "food", label: "Jedzenie" },
+    { icon: "home", label: "Dom" },
+    { icon: "work", label: "Praca" },
+    { icon: "travel", label: "Podróż" },
+    { icon: "card", label: "Karta" },
+    { icon: "cash", label: "Gotówka" },
+    { icon: "gift", label: "Prezent" },
+    { icon: "phone", label: "Telefon" },
+    { icon: "bill", label: "Rachunek" },
+    { icon: "warning", label: "Ważne" },
+    { icon: "idea", label: "Pomysł" },
+    { icon: "heart", label: "Osobiste" },
+    { icon: "calendar", label: "Termin" },
+    { icon: "more", label: "Inne" },
+  ];
 
 const CATEGORY_OPTIONS: MonthNoteCategory[] = [
   "Notatka",
@@ -608,29 +608,29 @@ export default function ProfileMonthNotePanel({
     const now = new Date().toISOString();
     const nextNotes = editingNote
       ? savedNotes.map((note) =>
-          note.id === editingNote.id
-            ? {
-                ...note,
-                text: nextText,
-                tone: draft.tone,
-                icon: draft.icon,
-                category: draft.category,
-                updatedAt: now,
-              }
-            : note,
-        )
-      : [
-          {
-            id: createNoteId(),
+        note.id === editingNote.id
+          ? {
+            ...note,
             text: nextText,
             tone: draft.tone,
             icon: draft.icon,
             category: draft.category,
-            createdAt: now,
             updatedAt: now,
-          },
-          ...savedNotes,
-        ];
+          }
+          : note,
+      )
+      : [
+        {
+          id: createNoteId(),
+          text: nextText,
+          tone: draft.tone,
+          icon: draft.icon,
+          category: draft.category,
+          createdAt: now,
+          updatedAt: now,
+        },
+        ...savedNotes,
+      ];
 
     void persistNotes(
       nextNotes,
@@ -702,7 +702,9 @@ export default function ProfileMonthNotePanel({
           <small>
             {variant === "preview"
               ? formatNoteDate(note.updatedAt)
-              : `Dodano: ${formatNoteDate(note.createdAt)} · Edytowano: ${formatNoteDate(note.updatedAt)}`}
+              : note.createdAt === note.updatedAt
+                ? `Dodano: ${formatNoteDate(note.createdAt)}`
+                : `Dodano: ${formatNoteDate(note.createdAt)} · Edytowano: ${formatNoteDate(note.updatedAt)}`}
           </small>
         </div>
         {variant === "detail" && (
@@ -760,8 +762,9 @@ export default function ProfileMonthNotePanel({
             <div data-ui-title-copy="true">
               <strong>Podgląd notatki</strong>
               <span>
-                Dodano: {formatNoteDate(selectedNote.createdAt)} · Edytowano:{" "}
-                {formatNoteDate(selectedNote.updatedAt)}
+                {selectedNote.createdAt === selectedNote.updatedAt
+                  ? `Dodano: ${formatNoteDate(selectedNote.createdAt)}`
+                  : `Dodano: ${formatNoteDate(selectedNote.createdAt)} · Edytowano: ${formatNoteDate(selectedNote.updatedAt)}`}
               </span>
             </div>
           </div>
