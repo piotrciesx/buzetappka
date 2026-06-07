@@ -123,6 +123,7 @@ export default function PaymentSourcesPanel({
   const [isConfigSaving, setIsConfigSaving] = useState(false)
   const [statusText, setStatusText] = useState('')
   const [errorText, setErrorText] = useState('')
+  const [duplicateSourceId, setDuplicateSourceId] = useState<string | null>(null)
 
   useEffect(() => {
     setSettingsDraft(paymentSourceSettings)
@@ -146,18 +147,23 @@ export default function PaymentSourcesPanel({
 
   const incomeSources = activeSources.filter((source) => source.is_income_source !== false)
   const expenseSources = activeSources.filter((source) => source.is_expense_source !== false)
+  const duplicateSource = duplicateSourceId
+    ? paymentSources.find((source) => source.id === duplicateSourceId) || null
+    : null
 
   const closeForm = () => {
     setDraft(DEFAULT_DRAFT)
     setIsIconPickerExpanded(false)
     setIsFormOpen(false)
     setErrorText('')
+    setDuplicateSourceId(null)
   }
 
   const openNewForm = () => {
     setDraft(DEFAULT_DRAFT)
     setStatusText('')
     setErrorText('')
+    setDuplicateSourceId(null)
     setIsIconPickerExpanded(false)
     setIsFormOpen(true)
   }
@@ -174,6 +180,7 @@ export default function PaymentSourcesPanel({
     })
     setStatusText('')
     setErrorText('')
+    setDuplicateSourceId(null)
     setIsIconPickerExpanded(false)
     setIsFormOpen(true)
   }
@@ -224,12 +231,12 @@ export default function PaymentSourcesPanel({
     })
 
     if (duplicate) {
-      setErrorText(
-        `Źródło „${trimmedName}” już istnieje. Edytuj istniejące źródło i zaznacz, czy ma być dostępne dla przychodów, wydatków albo obu.`
-      )
+      setDuplicateSourceId(duplicate.id)
+      setErrorText('')
       return
     }
 
+    setDuplicateSourceId(null)
     setIsSaving(true)
     setErrorText('')
 
@@ -582,10 +589,30 @@ export default function PaymentSourcesPanel({
                   className="ui-input"
                   data-input-width="full"
                   value={draft.name}
-                  onChange={(event) => setDraft((currentDraft) => ({ ...currentDraft, name: event.target.value }))}
+                  onChange={(event) => {
+                    setDraft((currentDraft) => ({ ...currentDraft, name: event.target.value }))
+                    setDuplicateSourceId(null)
+                    setErrorText('')
+                  }}
                   placeholder="np. Gotówka, Karta kredytowa, Konto główne"
                 />
               </label>
+
+              {duplicateSource && (
+                <div data-ui-empty-block="true">
+                  <strong>Źródło „{duplicateSource.name}” już istnieje.</strong>
+                  <span>
+                    Edytuj istniejące źródło, żeby zmienić dostępność dla przychodów lub wydatków.
+                  </span>
+                  <button
+                    type="button"
+                    className="ui-button--standard"
+                    onClick={() => openEditForm(duplicateSource)}
+                  >
+                    Edytuj istniejące źródło
+                  </button>
+                </div>
+              )}
 
               <div data-ui-picker-row="true">
                 <div data-ui-field="true">
