@@ -170,7 +170,7 @@ export const APP_ICONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'idea', label: 'Pomysł' },
   { key: 'heart', label: 'Osobiste' },
   { key: 'calendar', label: 'Termin' },
-  { key: 'more', label: 'Pozostałe' },
+  { key: 'more', label: 'Inne' },
 ]
 
 export type CategoryIconKey = UiIconKey

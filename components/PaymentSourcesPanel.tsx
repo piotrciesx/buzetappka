@@ -106,12 +106,6 @@ const formatCurrency = (value: number) =>
 
 const normalizeName = (value: string) => value.trim().toLocaleLowerCase('pl-PL')
 
-const HelpHint = ({ label }: { label: string }) => (
-  <span data-ui-help="true" tabIndex={0} aria-label={label} data-tooltip={label}>
-    i
-  </span>
-)
-
 export default function PaymentSourcesPanel({
   paymentSources,
   paymentSourceStats,
@@ -125,8 +119,7 @@ export default function PaymentSourcesPanel({
   const [settingsDraft, setSettingsDraft] = useState(paymentSourceSettings)
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [isIconPickerExpanded, setIsIconPickerExpanded] = useState(false)
-  const [activePicker, setActivePicker] = useState<'color' | 'icon' | null>(null)
-  const [iconSearch, setIconSearch] = useState('')
+  const [iconSearchTerm, setIconSearchTerm] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const [isConfigSaving, setIsConfigSaving] = useState(false)
   const [statusText, setStatusText] = useState('')
@@ -136,6 +129,25 @@ export default function PaymentSourcesPanel({
   useEffect(() => {
     setSettingsDraft(paymentSourceSettings)
   }, [paymentSourceSettings])
+
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null
+
+      if (!target || typeof document === 'undefined') {
+        return
+      }
+
+      document.querySelectorAll<HTMLDetailsElement>('[data-ui-picker-control="true"][open]').forEach((picker) => {
+        if (!picker.contains(target)) {
+          picker.open = false
+        }
+      })
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+    return () => document.removeEventListener('pointerdown', handlePointerDown)
+  }, [])
 
   const statsById = useMemo(() => {
     return paymentSourceStats.reduce<Record<string, PaymentSourceStats>>((acc, item) => {
@@ -162,8 +174,7 @@ export default function PaymentSourcesPanel({
   const closeForm = () => {
     setDraft(DEFAULT_DRAFT)
     setIsIconPickerExpanded(false)
-    setActivePicker(null)
-    setIconSearch('')
+    setIconSearchTerm('')
     setIsFormOpen(false)
     setErrorText('')
     setDuplicateSourceId(null)
@@ -175,8 +186,7 @@ export default function PaymentSourcesPanel({
     setErrorText('')
     setDuplicateSourceId(null)
     setIsIconPickerExpanded(false)
-    setActivePicker(null)
-    setIconSearch('')
+    setIconSearchTerm('')
     setIsFormOpen(true)
   }
 
@@ -194,8 +204,7 @@ export default function PaymentSourcesPanel({
     setErrorText('')
     setDuplicateSourceId(null)
     setIsIconPickerExpanded(false)
-    setActivePicker(null)
-    setIconSearch('')
+    setIconSearchTerm('')
     setIsFormOpen(true)
   }
 
@@ -304,51 +313,48 @@ export default function PaymentSourcesPanel({
 
   const renderColorPicker = () => {
     const selectedColor = getUiColor(draft.color)
-    const isOpen = activePicker === 'color'
 
     return (
-      <div data-ui-picker-control="true" data-open={isOpen ? 'true' : 'false'} onClick={(event) => event.stopPropagation()}>
-        <button
-          type="button"
-          data-ui-picker-trigger="true"
-          aria-expanded={isOpen}
-          onClick={() => setActivePicker(isOpen ? null : 'color')}
-        >
+      <details
+        data-ui-picker-control="true"
+        onToggle={(event) => {
+          if (event.currentTarget.open && typeof document !== 'undefined') {
+            document.querySelectorAll<HTMLDetailsElement>('[data-ui-picker-control=\"true\"][open]').forEach((picker) => {
+              if (picker !== event.currentTarget) {
+                picker.open = false
+              }
+            })
+          }
+        }}
+      >
+        <summary>
           <span data-ui-picker-value="true">
             <span data-ui-color-swatch="true" data-ui-tone={selectedColor.tone} />
             {selectedColor.label}
           </span>
           <span data-ui-picker-chevron="true">⌄</span>
-        </button>
-        {isOpen && (
-          <div data-ui-picker-menu="true" data-layout="colors">
-            {UI_COLOR_OPTIONS.map((option) => (
-              <button
-                key={option.tone}
-                type="button"
-                data-ui-color-option="true"
-                data-ui-tone={option.tone}
-                data-active={draft.color === option.tone}
-                aria-label={`Wybierz kolor: ${option.label}`}
-                title={option.label}
-                onClick={() => {
-                  setDraft((currentDraft) => ({ ...currentDraft, color: option.tone }))
-                  setActivePicker(null)
-                }}
-              >
-                <span data-ui-color-swatch="true" data-ui-tone={option.tone} />
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+        </summary>
+        <div data-ui-picker-menu="true" data-layout="colors">
+          {UI_COLOR_OPTIONS.map((option) => (
+            <button
+              key={option.tone}
+              type="button"
+              data-ui-color-option="true"
+              data-ui-tone={option.tone}
+              data-active={draft.color === option.tone}
+              onClick={() => setDraft((currentDraft) => ({ ...currentDraft, color: option.tone }))}
+            >
+              <span data-ui-color-swatch="true" data-ui-tone={option.tone} />
+            </button>
+          ))}
+        </div>
+      </details>
     )
   }
 
   const renderIconPicker = () => {
     const selectedIcon = getUiIcon(draft.icon)
-    const isOpen = activePicker === 'icon'
-    const normalizedSearch = iconSearch.trim().toLocaleLowerCase('pl-PL')
+    const normalizedSearch = iconSearchTerm.trim().toLocaleLowerCase('pl-PL')
     const baseIcons = isIconPickerExpanded
       ? APP_ICONS
       : APP_ICONS.filter((option) => SUGGESTED_PAYMENT_SOURCE_ICONS.includes(option.key))
@@ -357,13 +363,19 @@ export default function PaymentSourcesPanel({
       : baseIcons
 
     return (
-      <div data-ui-picker-control="true" data-open={isOpen ? 'true' : 'false'} onClick={(event) => event.stopPropagation()}>
-        <button
-          type="button"
-          data-ui-picker-trigger="true"
-          aria-expanded={isOpen}
-          onClick={() => setActivePicker(isOpen ? null : 'icon')}
-        >
+      <details
+        data-ui-picker-control="true"
+        onToggle={(event) => {
+          if (event.currentTarget.open && typeof document !== 'undefined') {
+            document.querySelectorAll<HTMLDetailsElement>('[data-ui-picker-control="true"][open]').forEach((picker) => {
+              if (picker !== event.currentTarget) {
+                picker.open = false
+              }
+            })
+          }
+        }}
+      >
+        <summary>
           <span data-ui-picker-value="true">
             <span data-ui-icon-tile="true" data-ui-tone={draft.color}>
               <CategoryIcon iconKey={draft.icon} />
@@ -371,58 +383,50 @@ export default function PaymentSourcesPanel({
             {selectedIcon?.label || 'Ikona'}
           </span>
           <span data-ui-picker-chevron="true">⌄</span>
-        </button>
-        {isOpen && (
-          <div data-ui-picker-menu="true" data-layout="icons">
-            <label data-ui-picker-search="true">
-              <input
-                type="search"
-                value={iconSearch}
-                onChange={(event) => setIconSearch(event.target.value)}
-                placeholder="Szukaj ikony..."
-                autoFocus
-              />
-            </label>
-            <div data-ui-picker-menu-grid="true">
-              {visibleIcons.map((option) => (
-                <button
-                  key={option.key}
-                  type="button"
-                  data-ui-icon-select-option="true"
-                  data-ui-tone={draft.color}
-                  data-active={draft.icon === option.key}
-                  onClick={() => {
-                    setDraft((currentDraft) => ({
-                      ...currentDraft,
-                      icon: option.key,
-                      type: inferPaymentSourceTypeFromIcon(option.key),
-                    }))
-                    setActivePicker(null)
-                    setIconSearch('')
-                  }}
-                >
-                  <span data-ui-icon-tile="true" data-ui-tone={draft.color}>
-                    <CategoryIcon iconKey={option.key} />
-                  </span>
-                  <span>{option.label}</span>
-                </button>
-              ))}
-            </div>
-            {!isIconPickerExpanded && !normalizedSearch && (
+        </summary>
+        <div data-ui-picker-menu="true" data-layout="icons">
+          <input
+            data-ui-picker-search="true"
+            type="search"
+            value={iconSearchTerm}
+            onChange={(event) => setIconSearchTerm(event.target.value)}
+            placeholder="Szukaj ikony..."
+          />
+          <div data-ui-picker-menu-grid="true">
+            {visibleIcons.map((option) => (
               <button
+                key={option.key}
                 type="button"
-                data-ui-picker-more="true"
-                onClick={() => setIsIconPickerExpanded(true)}
+                data-ui-icon-select-option="true"
+                data-ui-tone={draft.color}
+                data-active={draft.icon === option.key}
+                onClick={() =>
+                  setDraft((currentDraft) => ({
+                    ...currentDraft,
+                    icon: option.key,
+                    type: inferPaymentSourceTypeFromIcon(option.key),
+                  }))
+                }
               >
-                Wybierz więcej ikon
+                <span data-ui-icon-tile="true" data-ui-tone={draft.color}>
+                  <CategoryIcon iconKey={option.key} />
+                </span>
+                <span>{option.label}</span>
               </button>
-            )}
-            {visibleIcons.length === 0 && (
-              <div data-ui-picker-empty="true">Brak ikon dla tej nazwy.</div>
-            )}
+            ))}
           </div>
-        )}
-      </div>
+          {visibleIcons.length === 0 && <div data-ui-picker-empty="true">Brak ikon pasujących do wyszukiwania.</div>}
+          {!normalizedSearch && !isIconPickerExpanded && (
+            <button
+              type="button"
+              data-ui-picker-more="true"
+              onClick={() => setIsIconPickerExpanded(true)}
+            >
+              Wybierz więcej ikon
+            </button>
+          )}
+        </div>
+      </details>
     )
   }
 
@@ -493,10 +497,8 @@ export default function PaymentSourcesPanel({
     <UtilityPanel data-payment-sources-panel="true">
       <section data-payment-source-hero="true">
         <div>
-          <span data-ui-title-with-help="true">
-            <strong>Źródła płatności</strong>
-            <HelpHint label="Jedno źródło może działać dla przychodów, wydatków albo obu naraz." />
-          </span>
+          <strong>Źródła płatności</strong>
+          <span>Jedno źródło może działać dla przychodów, wydatków albo obu naraz.</span>
         </div>
         <button type="button" className="ui-button--utility" onClick={openNewForm}>
           + Dodaj źródło
@@ -620,12 +622,7 @@ export default function PaymentSourcesPanel({
           <section
             data-ui-modal-shell="true"
             data-ui-size="form"
-            onClick={(event) => {
-              event.stopPropagation()
-              if (activePicker) {
-                setActivePicker(null)
-              }
-            }}
+            onClick={(event) => event.stopPropagation()}
           >
             <header data-ui-modal-header="true">
               <div data-ui-title-row="true">
@@ -633,10 +630,8 @@ export default function PaymentSourcesPanel({
                   <CategoryIcon iconKey={draft.icon} />
                 </span>
                 <div data-ui-title-copy="true">
-                  <span data-ui-title-with-help="true">
-                    <strong>{draft.id ? 'Edytuj źródło' : 'Nowe źródło'}</strong>
-                    <HelpHint label="Zdecyduj, czy źródło ma być dostępne przy przychodach, wydatkach albo obu." />
-                  </span>
+                  <strong>{draft.id ? 'Edytuj źródło' : 'Nowe źródło'}</strong>
+                  <span>Zdecyduj, czy źródło ma być dostępne przy przychodach, wydatkach albo obu.</span>
                 </div>
               </div>
               <button type="button" className="ui-button--icon" aria-label="Zamknij" onClick={closeForm}>
