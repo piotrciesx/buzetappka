@@ -1,6 +1,6 @@
 'use client'
 
-import { CSSProperties, useMemo, useState } from 'react'
+import { CSSProperties, useEffect, useMemo, useState } from 'react'
 import { PaymentSource, PaymentSourceType } from '../lib/budgetPageTypes'
 import {
   APP_ICONS,
@@ -72,18 +72,13 @@ const DEFAULT_DRAFT: PaymentSourceDraft = {
   isExpenseSource: true,
 }
 
-const QUICK_PAYMENT_SOURCE_OPTIONS: Array<{
-  label: string
-  type: PaymentSourceType
-  icon: UiIconKey
-  color: UiColorKey
-}> = [
-  { label: 'Karta', type: 'card', icon: 'card', color: 'blue' },
-  { label: 'Gotówka', type: 'cash', icon: 'cash', color: 'green' },
-  { label: 'Konto', type: 'account', icon: 'bank', color: 'violet' },
-  { label: 'Oszczędności', type: 'account', icon: 'savings', color: 'mint' },
-  { label: 'Kupon / prezent', type: 'other', icon: 'gift', color: 'amber' },
-  { label: 'Inne', type: 'other', icon: 'more', color: 'neutral' },
+const SUGGESTED_PAYMENT_SOURCE_ICONS: UiIconKey[] = [
+  'card',
+  'cash',
+  'bank',
+  'savings',
+  'gift',
+  'more',
 ]
 
 const inferPaymentSourceTypeFromIcon = (icon: UiIconKey): PaymentSourceType => {
@@ -121,11 +116,17 @@ export default function PaymentSourcesPanel({
   onSetFieldVisibility,
 }: Props) {
   const [draft, setDraft] = useState<PaymentSourceDraft>(DEFAULT_DRAFT)
+  const [settingsDraft, setSettingsDraft] = useState(paymentSourceSettings)
   const [isFormOpen, setIsFormOpen] = useState(false)
+  const [isIconPickerExpanded, setIsIconPickerExpanded] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [isConfigSaving, setIsConfigSaving] = useState(false)
   const [statusText, setStatusText] = useState('')
   const [errorText, setErrorText] = useState('')
+
+  useEffect(() => {
+    setSettingsDraft(paymentSourceSettings)
+  }, [paymentSourceSettings])
 
   const statsById = useMemo(() => {
     return paymentSourceStats.reduce<Record<string, PaymentSourceStats>>((acc, item) => {
@@ -148,6 +149,7 @@ export default function PaymentSourcesPanel({
 
   const closeForm = () => {
     setDraft(DEFAULT_DRAFT)
+    setIsIconPickerExpanded(false)
     setIsFormOpen(false)
     setErrorText('')
   }
@@ -156,6 +158,7 @@ export default function PaymentSourcesPanel({
     setDraft(DEFAULT_DRAFT)
     setStatusText('')
     setErrorText('')
+    setIsIconPickerExpanded(false)
     setIsFormOpen(true)
   }
 
@@ -171,16 +174,32 @@ export default function PaymentSourcesPanel({
     })
     setStatusText('')
     setErrorText('')
+    setIsIconPickerExpanded(false)
     setIsFormOpen(true)
   }
 
-  const applyQuickSourceOption = (option: (typeof QUICK_PAYMENT_SOURCE_OPTIONS)[number]) => {
-    setDraft((currentDraft) => ({
-      ...currentDraft,
-      type: option.type,
-      icon: option.icon,
-      color: option.color,
-    }))
+  const isSettingsDirty =
+    settingsDraft.defaultIncomePaymentSourceId !== paymentSourceSettings.defaultIncomePaymentSourceId ||
+    settingsDraft.defaultExpensePaymentSourceId !== paymentSourceSettings.defaultExpensePaymentSourceId ||
+    settingsDraft.showIncomePaymentSource !== paymentSourceSettings.showIncomePaymentSource ||
+    settingsDraft.showExpensePaymentSource !== paymentSourceSettings.showExpensePaymentSource
+
+  const saveSettingsDraft = async () => {
+    setIsConfigSaving(true)
+    setStatusText('')
+    setErrorText('')
+
+    try {
+      await onSetFieldVisibility('income', settingsDraft.showIncomePaymentSource)
+      await onSetFieldVisibility('expense', settingsDraft.showExpensePaymentSource)
+      await onSetDefault('income', settingsDraft.defaultIncomePaymentSourceId)
+      await onSetDefault('expense', settingsDraft.defaultExpensePaymentSourceId)
+      setStatusText('Zapisano ustawienia źródeł płatności.')
+    } catch (error) {
+      setErrorText(error instanceof Error ? error.message : 'Nie udało się zapisać ustawień źródeł płatności.')
+    } finally {
+      setIsConfigSaving(false)
+    }
   }
 
   const saveDraft = async () => {
@@ -285,7 +304,6 @@ export default function PaymentSourcesPanel({
               onClick={() => setDraft((currentDraft) => ({ ...currentDraft, color: option.tone }))}
             >
               <span data-ui-color-swatch="true" data-ui-tone={option.tone} />
-              <span>{option.label}</span>
             </button>
           ))}
         </div>
@@ -295,6 +313,9 @@ export default function PaymentSourcesPanel({
 
   const renderIconPicker = () => {
     const selectedIcon = getUiIcon(draft.icon)
+    const visibleIcons = isIconPickerExpanded
+      ? APP_ICONS
+      : APP_ICONS.filter((option) => SUGGESTED_PAYMENT_SOURCE_ICONS.includes(option.key))
 
     return (
       <details data-ui-picker-control="true">
@@ -308,27 +329,38 @@ export default function PaymentSourcesPanel({
           <span data-ui-picker-chevron="true">⌄</span>
         </summary>
         <div data-ui-picker-menu="true" data-layout="icons">
-          {APP_ICONS.map((option) => (
+          <div data-ui-picker-menu-grid="true">
+            {visibleIcons.map((option) => (
+              <button
+                key={option.key}
+                type="button"
+                data-ui-icon-select-option="true"
+                data-ui-tone={draft.color}
+                data-active={draft.icon === option.key}
+                onClick={() =>
+                  setDraft((currentDraft) => ({
+                    ...currentDraft,
+                    icon: option.key,
+                    type: inferPaymentSourceTypeFromIcon(option.key),
+                  }))
+                }
+              >
+                <span data-ui-icon-tile="true" data-ui-tone={draft.color}>
+                  <CategoryIcon iconKey={option.key} />
+                </span>
+                <span>{option.label}</span>
+              </button>
+            ))}
+          </div>
+          {!isIconPickerExpanded && (
             <button
-              key={option.key}
               type="button"
-              data-ui-icon-select-option="true"
-              data-ui-tone={draft.color}
-              data-active={draft.icon === option.key}
-              onClick={() =>
-                setDraft((currentDraft) => ({
-                  ...currentDraft,
-                  icon: option.key,
-                  type: inferPaymentSourceTypeFromIcon(option.key),
-                }))
-              }
+              data-ui-picker-more="true"
+              onClick={() => setIsIconPickerExpanded(true)}
             >
-              <span data-ui-icon-tile="true" data-ui-tone={draft.color}>
-                <CategoryIcon iconKey={option.key} />
-              </span>
-              <span>{option.label}</span>
+              Wybierz więcej ikon
             </button>
-          ))}
+          )}
         </div>
       </details>
     )
@@ -414,16 +446,14 @@ export default function PaymentSourcesPanel({
           Pokaż pole źródła przy przychodach
           <input
             type="checkbox"
-            checked={paymentSourceSettings.showIncomePaymentSource}
+            checked={settingsDraft.showIncomePaymentSource}
             disabled={isConfigSaving}
-            onChange={async (event) => {
-              setIsConfigSaving(true)
-              try {
-                await onSetFieldVisibility('income', event.target.checked)
-              } finally {
-                setIsConfigSaving(false)
-              }
-            }}
+            onChange={(event) =>
+              setSettingsDraft((currentDraft) => ({
+                ...currentDraft,
+                showIncomePaymentSource: event.target.checked,
+              }))
+            }
           />
         </label>
         <label data-ui-field="true">
@@ -431,16 +461,14 @@ export default function PaymentSourcesPanel({
           <select
             className="ui-select"
             data-input-width="full"
-            value={paymentSourceSettings.defaultIncomePaymentSourceId || ''}
+            value={settingsDraft.defaultIncomePaymentSourceId || ''}
             disabled={isConfigSaving}
-            onChange={async (event) => {
-              setIsConfigSaving(true)
-              try {
-                await onSetDefault('income', event.target.value || null)
-              } finally {
-                setIsConfigSaving(false)
-              }
-            }}
+            onChange={(event) =>
+              setSettingsDraft((currentDraft) => ({
+                ...currentDraft,
+                defaultIncomePaymentSourceId: event.target.value || null,
+              }))
+            }
           >
             <option value="">Brak domyślnego źródła</option>
             {incomeSources.map((source) => (
@@ -454,16 +482,14 @@ export default function PaymentSourcesPanel({
           Pokaż pole źródła przy wydatkach
           <input
             type="checkbox"
-            checked={paymentSourceSettings.showExpensePaymentSource}
+            checked={settingsDraft.showExpensePaymentSource}
             disabled={isConfigSaving}
-            onChange={async (event) => {
-              setIsConfigSaving(true)
-              try {
-                await onSetFieldVisibility('expense', event.target.checked)
-              } finally {
-                setIsConfigSaving(false)
-              }
-            }}
+            onChange={(event) =>
+              setSettingsDraft((currentDraft) => ({
+                ...currentDraft,
+                showExpensePaymentSource: event.target.checked,
+              }))
+            }
           />
         </label>
         <label data-ui-field="true">
@@ -471,16 +497,14 @@ export default function PaymentSourcesPanel({
           <select
             className="ui-select"
             data-input-width="full"
-            value={paymentSourceSettings.defaultExpensePaymentSourceId || ''}
+            value={settingsDraft.defaultExpensePaymentSourceId || ''}
             disabled={isConfigSaving}
-            onChange={async (event) => {
-              setIsConfigSaving(true)
-              try {
-                await onSetDefault('expense', event.target.value || null)
-              } finally {
-                setIsConfigSaving(false)
-              }
-            }}
+            onChange={(event) =>
+              setSettingsDraft((currentDraft) => ({
+                ...currentDraft,
+                defaultExpensePaymentSourceId: event.target.value || null,
+              }))
+            }
           >
             <option value="">Brak domyślnego źródła</option>
             {expenseSources.map((source) => (
@@ -490,6 +514,16 @@ export default function PaymentSourcesPanel({
             ))}
           </select>
         </label>
+        <div data-payment-source-settings-actions="true">
+          <button
+            type="button"
+            className="ui-button--utility"
+            disabled={isConfigSaving || !isSettingsDirty}
+            onClick={() => void saveSettingsDraft()}
+          >
+            {isConfigSaving ? 'Zapisywanie...' : 'Zapisz ustawienia'}
+          </button>
+        </div>
       </section>
 
       {statusText && <StatusBox tone="success">{statusText}</StatusBox>}
@@ -552,26 +586,6 @@ export default function PaymentSourcesPanel({
                   placeholder="np. Gotówka, Karta kredytowa, Konto główne"
                 />
               </label>
-
-              <div data-ui-field="true">
-                Szybki wybór źródła
-                <div data-payment-source-quick-grid="true">
-                  {QUICK_PAYMENT_SOURCE_OPTIONS.map((option) => (
-                    <button
-                      key={option.label}
-                      type="button"
-                      data-payment-source-quick-option="true"
-                      data-active={draft.icon === option.icon}
-                      onClick={() => applyQuickSourceOption(option)}
-                    >
-                      <span data-ui-icon-tile="true" data-ui-tone={option.color}>
-                        <CategoryIcon iconKey={option.icon} />
-                      </span>
-                      <span>{option.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
 
               <div data-ui-picker-row="true">
                 <div data-ui-field="true">

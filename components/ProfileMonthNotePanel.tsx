@@ -56,6 +56,14 @@ const NOTE_DRAFT_LIMIT = 1000;
 
 const NOTE_COLOR_OPTIONS = UI_COLOR_OPTIONS;
 const NOTE_ICON_OPTIONS = APP_ICONS;
+const SUGGESTED_NOTE_ICONS: MonthNoteIcon[] = [
+  "note",
+  "exchange",
+  "calendar",
+  "warning",
+  "idea",
+  "heart",
+];
 
 const CATEGORY_OPTIONS: MonthNoteCategory[] = [
   "Notatka",
@@ -219,6 +227,7 @@ export default function ProfileMonthNotePanel({
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isIconPickerExpanded, setIsIconPickerExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [statusText, setStatusText] = useState("");
@@ -260,6 +269,7 @@ export default function ProfileMonthNotePanel({
       setEditingNoteId(null);
       setExpandedNoteIds([]);
       setSelectedNoteId(null);
+      setIsIconPickerExpanded(false);
       setIsFormOpen(false);
     } catch (error) {
       setNoteId(null);
@@ -378,6 +388,8 @@ export default function ProfileMonthNotePanel({
   const startAddingNote = () => {
     setEditingNoteId(null);
     setDraft(createEmptyDraft());
+    setIsIconPickerExpanded(false);
+    setIsIconPickerExpanded(false);
     setIsFormOpen(true);
     setStatusText("");
     setErrorText("");
@@ -400,6 +412,7 @@ export default function ProfileMonthNotePanel({
   const cancelForm = () => {
     setEditingNoteId(null);
     setDraft(createEmptyDraft());
+    setIsIconPickerExpanded(false);
     setIsFormOpen(false);
     setStatusText("");
     setErrorText("");
@@ -477,72 +490,6 @@ export default function ProfileMonthNotePanel({
     action();
   };
 
-  const renderColorPicker = () => {
-    const selectedColor = getUiColor(draft.tone);
-
-    return (
-      <details data-ui-picker-control="true">
-        <summary>
-          <span data-ui-picker-value="true">
-            <span data-ui-color-swatch="true" data-ui-tone={selectedColor.tone} />
-            {selectedColor.label}
-          </span>
-          <span data-ui-picker-chevron="true">⌄</span>
-        </summary>
-        <div data-ui-picker-menu="true" data-layout="colors">
-          {NOTE_COLOR_OPTIONS.map((option) => (
-            <button
-              key={option.tone}
-              type="button"
-              data-ui-color-option="true"
-              data-ui-tone={option.tone}
-              data-active={draft.tone === option.tone}
-              onClick={() => updateDraftTone(option.tone)}
-            >
-              <span data-ui-color-swatch="true" data-ui-tone={option.tone} />
-              <span>{option.label}</span>
-            </button>
-          ))}
-        </div>
-      </details>
-    );
-  };
-
-  const renderIconPicker = () => {
-    const selectedIcon = resolveIconOption(draft.icon);
-
-    return (
-      <details data-ui-picker-control="true">
-        <summary>
-          <span data-ui-picker-value="true">
-            <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
-              <CategoryIcon iconKey={selectedIcon.key} />
-            </span>
-            {selectedIcon.label}
-          </span>
-          <span data-ui-picker-chevron="true">⌄</span>
-        </summary>
-        <div data-ui-picker-menu="true" data-layout="icons">
-          {NOTE_ICON_OPTIONS.map((option) => (
-            <button
-              key={option.key}
-              type="button"
-              data-ui-icon-select-option="true"
-              data-ui-tone={draft.tone}
-              data-active={draft.icon === option.key}
-              onClick={() => updateDraftIcon(option.key)}
-            >
-              <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
-                <CategoryIcon iconKey={option.key} />
-              </span>
-              <span>{option.label}</span>
-            </button>
-          ))}
-        </div>
-      </details>
-    );
-  };
-
   const renderNoteCard = (
     note: MonthNoteItem,
     variant: "preview" | "detail",
@@ -577,8 +524,6 @@ export default function ProfileMonthNotePanel({
             {variant === "preview"
               ? formatNoteDate(note.updatedAt)
               : note.createdAt === note.updatedAt
-                ? `Dodano: ${formatNoteDate(note.createdAt)}`
-                : note.createdAt === note.updatedAt
                 ? `Dodano: ${formatNoteDate(note.createdAt)}`
                 : `Dodano: ${formatNoteDate(note.createdAt)} · Edytowano: ${formatNoteDate(note.updatedAt)}`}
           </small>
@@ -622,6 +567,89 @@ export default function ProfileMonthNotePanel({
 
   const noteCountLabel = `${savedNotes.length} ${savedNotes.length === 1 ? "notatka" : "notatki"}`;
   const draftLength = draft.text.trim().length;
+
+  const renderColorPicker = () => {
+    const selectedTone = resolveToneOption(draft.tone);
+
+    return (
+      <details data-ui-picker-control="true">
+        <summary>
+          <span data-ui-picker-value="true">
+            <span data-ui-color-swatch="true" data-ui-tone={selectedTone.tone} />
+            {selectedTone.label}
+          </span>
+          <span data-ui-picker-chevron="true">⌄</span>
+        </summary>
+        <div data-ui-picker-menu="true" data-layout="colors">
+          {NOTE_COLOR_OPTIONS.map((option) => (
+            <button
+              key={option.tone}
+              type="button"
+              data-ui-color-option="true"
+              data-ui-tone={option.tone}
+              data-active={draft.tone === option.tone}
+              aria-label={`Wybierz kolor: ${option.label}`}
+              title={option.label}
+              onClick={() => updateDraftTone(option.tone)}
+            >
+              <span data-ui-color-swatch="true" data-ui-tone={option.tone} />
+            </button>
+          ))}
+        </div>
+      </details>
+    );
+  };
+
+  const renderIconPicker = () => {
+    const selectedIcon = resolveIconOption(draft.icon);
+    const visibleIcons = isIconPickerExpanded
+      ? NOTE_ICON_OPTIONS
+      : NOTE_ICON_OPTIONS.filter((option) => SUGGESTED_NOTE_ICONS.includes(option.key));
+
+    return (
+      <details data-ui-picker-control="true">
+        <summary>
+          <span data-ui-picker-value="true">
+            <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
+              <CategoryIcon iconKey={draft.icon} />
+            </span>
+            {selectedIcon.label}
+          </span>
+          <span data-ui-picker-chevron="true">⌄</span>
+        </summary>
+        <div data-ui-picker-menu="true" data-layout="icons">
+          <div data-ui-picker-menu-grid="true">
+            {visibleIcons.map((option) => (
+              <button
+                key={option.key}
+                type="button"
+                data-ui-icon-select-option="true"
+                data-ui-tone={draft.tone}
+                data-active={draft.icon === option.key}
+                aria-label={`Wybierz ikonę: ${option.label}`}
+                title={option.label}
+                onClick={() => updateDraftIcon(option.key)}
+              >
+                <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
+                  <CategoryIcon iconKey={option.key} />
+                </span>
+                <span>{option.label}</span>
+              </button>
+            ))}
+          </div>
+          {!isIconPickerExpanded && (
+            <button
+              type="button"
+              data-ui-picker-more="true"
+              onClick={() => setIsIconPickerExpanded(true)}
+            >
+              Wybierz więcej ikon
+            </button>
+          )}
+        </div>
+      </details>
+    );
+  };
 
   const notePreviewModal = selectedNote ? (
     <div data-ui-overlay="true" onClick={() => setSelectedNoteId(null)}>
