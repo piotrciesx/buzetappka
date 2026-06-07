@@ -589,7 +589,12 @@ export default function ProfileMonthNotePanel({
     const isOpen = activePicker === "color";
 
     return (
-      <div data-ui-picker-control="true" data-open={isOpen ? "true" : "false"} onClick={(event) => event.stopPropagation()}>
+      <div
+        data-ui-picker-control="true"
+        data-ui-picker-variant="rich"
+        data-open={isOpen ? "true" : "false"}
+        onClick={(event) => event.stopPropagation()}
+      >
         <button
           type="button"
           data-ui-picker-trigger="true"
@@ -631,21 +636,20 @@ export default function ProfileMonthNotePanel({
     const selectedIcon = resolveIconOption(draft.icon);
     const isOpen = activePicker === "icon";
     const normalizedSearch = iconSearch.trim().toLocaleLowerCase("pl-PL");
-    const orderedIcons = [
-      ...SUGGESTED_NOTE_ICONS
-        .map((iconKey) => NOTE_ICON_OPTIONS.find((option) => option.key === iconKey))
-        .filter((option): option is (typeof NOTE_ICON_OPTIONS)[number] => Boolean(option)),
-      ...NOTE_ICON_OPTIONS.filter((option) => !SUGGESTED_NOTE_ICONS.includes(option.key)),
-    ];
     const baseIcons = isIconPickerExpanded
-      ? orderedIcons
-      : orderedIcons.filter((option) => SUGGESTED_NOTE_ICONS.includes(option.key));
+      ? NOTE_ICON_OPTIONS
+      : NOTE_ICON_OPTIONS.filter((option) => SUGGESTED_NOTE_ICONS.includes(option.key));
     const visibleIcons = normalizedSearch
-      ? orderedIcons.filter((option) => option.label.toLocaleLowerCase("pl-PL").includes(normalizedSearch))
+      ? NOTE_ICON_OPTIONS.filter((option) => option.label.toLocaleLowerCase("pl-PL").includes(normalizedSearch))
       : baseIcons;
 
     return (
-      <div data-ui-picker-control="true" data-open={isOpen ? "true" : "false"} onClick={(event) => event.stopPropagation()}>
+      <div
+        data-ui-picker-control="true"
+        data-ui-picker-variant="rich"
+        data-open={isOpen ? "true" : "false"}
+        onClick={(event) => event.stopPropagation()}
+      >
         <button
           type="button"
           data-ui-picker-trigger="true"
@@ -785,7 +789,7 @@ export default function ProfileMonthNotePanel({
             <div data-ui-title-copy="true">
               <span data-ui-title-with-help="true">
                 <strong>Notatki miesiąca {selectedMonth}</strong>
-                <HelpHint label="Wspólne notatki profilu dla bieżącego miesiąca." />
+                <HelpHint label="Wspólne notatki dla tego miesiąca. Widoczne są tylko dla Ciebie i tylko w tym miesiącu." />
               </span>
             </div>
           </div>
@@ -835,10 +839,7 @@ export default function ProfileMonthNotePanel({
             <span data-ui-icon-tile="true" data-ui-tone="neutral">
               <CategoryIcon iconKey="note" />
             </span>
-            <span data-ui-title-with-help="true">
-              <strong>Brak notatek dla tego miesiąca.</strong>
-              <HelpHint label="Dodaj krótką informację, do której chcesz wrócić przy rozliczaniu miesiąca." />
-            </span>
+            <strong data-ui-empty-title="true">Brak notatek dla tego miesiąca.</strong>
             <button
               type="button"
               className="ui-button--standard"
@@ -855,9 +856,6 @@ export default function ProfileMonthNotePanel({
           </div>
         )}
 
-        <footer data-ui-modal-footer="true">
-          <HelpHint label="Notatki są widoczne tylko dla Ciebie i zapisywane dla tego miesiąca." />
-        </footer>
 
         {statusText && <StatusBox tone="success">{statusText}</StatusBox>}
         {errorText && <StatusBox tone="danger">{errorText}</StatusBox>}
@@ -885,7 +883,7 @@ export default function ProfileMonthNotePanel({
             <div data-ui-title-copy="true">
               <span data-ui-title-with-help="true">
                 <strong>{editingNote ? "Edytuj notatkę" : "Nowa notatka"}</strong>
-                <HelpHint label={`Notatka będzie widoczna tylko w miesiącu ${selectedMonth}.`} />
+                <HelpHint label={`Notatka będzie widoczna tylko dla Ciebie i tylko w miesiącu ${selectedMonth}.`} />
               </span>
             </div>
           </div>
@@ -930,6 +928,7 @@ export default function ProfileMonthNotePanel({
             <select
               className="ui-select"
               data-input-width="full"
+              data-ui-rich-select="true"
               value={draft.category}
               onChange={(event) =>
                 setDraft((previousValue) => ({
@@ -1016,10 +1015,7 @@ export default function ProfileMonthNotePanel({
             <span data-ui-icon-tile="true" data-ui-tone="neutral">
               <CategoryIcon iconKey="note" />
             </span>
-            <span data-ui-title-with-help="true">
-              <strong>Brak notatek</strong>
-              <HelpHint label="Dodaj krótką informację do zapamiętania w tym miesiącu." />
-            </span>
+            <strong data-ui-empty-title="true">Brak notatek</strong>
           </div>
         )}
 
