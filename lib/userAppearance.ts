@@ -31,6 +31,7 @@ export type UiColorKey =
   | 'yellow'
   | 'amber'
   | 'orange'
+  | 'peach'
   | 'green'
   | 'mint'
   | 'lime'
@@ -49,10 +50,11 @@ export const UI_COLOR_OPTIONS: Array<{ tone: UiColorKey; label: string }> = [
   { tone: 'blue', label: 'Niebieski' },
   { tone: 'sky', label: 'Błękitny' },
   { tone: 'navy', label: 'Granatowy' },
-  { tone: 'cyan', label: 'Cyjan' },
+  { tone: 'cyan', label: 'Turkusowy' },
   { tone: 'yellow', label: 'Żółty' },
   { tone: 'amber', label: 'Bursztynowy' },
   { tone: 'orange', label: 'Pomarańczowy' },
+  { tone: 'peach', label: 'Brzoskwiniowy' },
   { tone: 'green', label: 'Zielony' },
   { tone: 'mint', label: 'Miętowy' },
   { tone: 'lime', label: 'Limonkowy' },

@@ -477,6 +477,72 @@ export default function ProfileMonthNotePanel({
     action();
   };
 
+  const renderColorPicker = () => {
+    const selectedColor = getUiColor(draft.tone);
+
+    return (
+      <details data-ui-picker-control="true">
+        <summary>
+          <span data-ui-picker-value="true">
+            <span data-ui-color-swatch="true" data-ui-tone={selectedColor.tone} />
+            {selectedColor.label}
+          </span>
+          <span data-ui-picker-chevron="true">⌄</span>
+        </summary>
+        <div data-ui-picker-menu="true" data-layout="colors">
+          {NOTE_COLOR_OPTIONS.map((option) => (
+            <button
+              key={option.tone}
+              type="button"
+              data-ui-color-option="true"
+              data-ui-tone={option.tone}
+              data-active={draft.tone === option.tone}
+              onClick={() => updateDraftTone(option.tone)}
+            >
+              <span data-ui-color-swatch="true" data-ui-tone={option.tone} />
+              <span>{option.label}</span>
+            </button>
+          ))}
+        </div>
+      </details>
+    );
+  };
+
+  const renderIconPicker = () => {
+    const selectedIcon = resolveIconOption(draft.icon);
+
+    return (
+      <details data-ui-picker-control="true">
+        <summary>
+          <span data-ui-picker-value="true">
+            <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
+              <CategoryIcon iconKey={selectedIcon.key} />
+            </span>
+            {selectedIcon.label}
+          </span>
+          <span data-ui-picker-chevron="true">⌄</span>
+        </summary>
+        <div data-ui-picker-menu="true" data-layout="icons">
+          {NOTE_ICON_OPTIONS.map((option) => (
+            <button
+              key={option.key}
+              type="button"
+              data-ui-icon-select-option="true"
+              data-ui-tone={draft.tone}
+              data-active={draft.icon === option.key}
+              onClick={() => updateDraftIcon(option.key)}
+            >
+              <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
+                <CategoryIcon iconKey={option.key} />
+              </span>
+              <span>{option.label}</span>
+            </button>
+          ))}
+        </div>
+      </details>
+    );
+  };
+
   const renderNoteCard = (
     note: MonthNoteItem,
     variant: "preview" | "detail",
@@ -788,55 +854,16 @@ export default function ProfileMonthNotePanel({
             </select>
           </label>
 
-          <div data-ui-field="true">
-            Kolor ikonki
-            <div data-ui-color-picker="true">
-              {NOTE_COLOR_OPTIONS.map((option) => (
-                <button
-                  key={option.tone}
-                  type="button"
-                  data-ui-color-dot="true"
-                  data-ui-tone={option.tone}
-                  data-active={draft.tone === option.tone}
-                  aria-label={`Wybierz kolor: ${option.label}`}
-                  title={option.label}
-                  onClick={() => updateDraftTone(option.tone)}
-                >
-                  <span />
-                </button>
-              ))}
+          <div data-ui-picker-row="true">
+            <div data-ui-field="true">
+              Kolor
+              {renderColorPicker()}
+            </div>
+            <div data-ui-field="true">
+              Ikona
+              {renderIconPicker()}
             </div>
           </div>
-
-          <details data-ui-compact-picker="true">
-            <summary>
-              <span>Ikona</span>
-              <span data-ui-picker-preview="true">
-                <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
-                  <CategoryIcon iconKey={draft.icon} />
-                </span>
-                {resolveIconOption(draft.icon).label}
-              </span>
-            </summary>
-            <div data-ui-icon-picker="true">
-              {NOTE_ICON_OPTIONS.map((option) => (
-                <button
-                  key={option.key}
-                  type="button"
-                  data-ui-icon-option="true"
-                  data-active={draft.icon === option.key}
-                  aria-label={`Wybierz ikonę: ${option.label}`}
-                  title={option.label}
-                  onClick={() => updateDraftIcon(option.key)}
-                >
-                  <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
-                    <CategoryIcon iconKey={option.key} />
-                  </span>
-                  <span>{option.label}</span>
-                </button>
-              ))}
-            </div>
-          </details>
 
           <footer data-ui-form-actions="true">
             <button
