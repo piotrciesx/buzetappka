@@ -1,15 +1,15 @@
-'use client'
+"use client";
 
-import { KeyboardEvent, useEffect, useRef, useState } from 'react'
-import DescriptionSuggestionDeleteMenu from './DescriptionSuggestionDeleteMenu'
-import PaymentSplitEditor from './PaymentSplitEditor'
-import TransactionCreatorCategorySection from './transaction-creator/TransactionCreatorCategorySection'
-import TransactionCreatorHeader from './transaction-creator/TransactionCreatorHeader'
-import TransactionCreatorModeToggles from './transaction-creator/TransactionCreatorModeToggles'
-import { getDayInputFromDate, normalizeDayInput } from '../lib/dateUtils'
-import { uiInputApi } from '../lib/uiFoundation'
-import { useDescriptionSuggestions } from '../lib/useDescriptionSuggestions'
-import { splitTagInput } from '../lib/tagUtils'
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
+import DescriptionSuggestionDeleteMenu from "./DescriptionSuggestionDeleteMenu";
+import PaymentSplitEditor from "./PaymentSplitEditor";
+import TransactionCreatorCategorySection from "./transaction-creator/TransactionCreatorCategorySection";
+import TransactionCreatorHeader from "./transaction-creator/TransactionCreatorHeader";
+import TransactionCreatorModeToggles from "./transaction-creator/TransactionCreatorModeToggles";
+import { getDayInputFromDate, normalizeDayInput } from "../lib/dateUtils";
+import { uiInputApi } from "../lib/uiFoundation";
+import { useDescriptionSuggestions } from "../lib/useDescriptionSuggestions";
+import { splitTagInput } from "../lib/tagUtils";
 import {
   activeSuggestionButtonStyle,
   dateFieldStyle,
@@ -25,11 +25,19 @@ import {
   tagBadgesWrapStyle,
   tagInputWrapStyle,
   tagRemoveButtonStyle,
-} from './transaction-creator/transactionCreatorModalStyles'
-import { Category, TransactionCreatorModalProps } from './transaction-creator/transactionCreatorTypes'
-import { getCategoryPathLabel, normalizeAmountInput } from './transaction-creator/transactionCreatorUtils'
+} from "./transaction-creator/transactionCreatorModalStyles";
+import {
+  Category,
+  TransactionCreatorModalProps,
+} from "./transaction-creator/transactionCreatorTypes";
+import {
+  getCategoryPathLabel,
+  normalizeAmountInput,
+} from "./transaction-creator/transactionCreatorUtils";
 
-export default function TransactionCreatorModal(props: TransactionCreatorModalProps) {
+export default function TransactionCreatorModal(
+  props: TransactionCreatorModalProps,
+) {
   const {
     isOpen,
     selectedMonth,
@@ -54,9 +62,6 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
     setSelectedCategoryId,
     isSerialModeEnabled,
     setIsSerialModeEnabled,
-    isQuickDayModeEnabled,
-    setIsQuickDayModeEnabled,
-    setQuickDayDate,
     amount,
     setAmount,
     description,
@@ -83,109 +88,126 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
     descriptionInputRef,
     styles,
     onDeleteDescriptionSuggestion,
-  } = props
+  } = props;
 
-  const [tagInputValue, setTagInputValue] = useState('')
-  const [isDescriptionFocused, setIsDescriptionFocused] = useState(false)
-  const tagInputRef = useRef<HTMLInputElement | null>(null)
-  const dayInputRef = useRef<HTMLInputElement | null>(null)
-  const saveButtonRef = useRef<HTMLButtonElement | null>(null)
+  const [tagInputValue, setTagInputValue] = useState("");
+  const [isDescriptionFocused, setIsDescriptionFocused] = useState(false);
+  const tagInputRef = useRef<HTMLInputElement | null>(null);
+  const dayInputRef = useRef<HTMLInputElement | null>(null);
+  const saveButtonRef = useRef<HTMLButtonElement | null>(null);
 
-  const availableLevel2Categories = selectedLevel1Id ? level2ByParentId[selectedLevel1Id] || [] : []
-  const availableLevel3Categories = selectedLevel2Id ? level3ByParentId[selectedLevel2Id] || [] : []
+  const availableLevel2Categories = selectedLevel1Id
+    ? level2ByParentId[selectedLevel1Id] || []
+    : [];
+  const availableLevel3Categories = selectedLevel2Id
+    ? level3ByParentId[selectedLevel2Id] || []
+    : [];
 
-  const canSaveOnLevel1 = Boolean(selectedLevel1Id) && availableLevel2Categories.length === 0
-  const canSaveOnLevel2 = Boolean(selectedLevel2Id) && availableLevel3Categories.length === 0
+  const canSaveOnLevel1 =
+    Boolean(selectedLevel1Id) && availableLevel2Categories.length === 0;
+  const canSaveOnLevel2 =
+    Boolean(selectedLevel2Id) && availableLevel3Categories.length === 0;
 
   const effectiveCategoryId =
     selectedCategoryId ||
     (canSaveOnLevel2 ? selectedLevel2Id : null) ||
-    (canSaveOnLevel1 ? selectedLevel1Id : null)
+    (canSaveOnLevel1 ? selectedLevel1Id : null);
 
   const effectiveCategoryLabel = effectiveCategoryId
     ? getCategoryPathLabel(effectiveCategoryId, categoriesById)
-    : ''
+    : "";
 
   const focusAmountInput = () => {
     window.setTimeout(() => {
-      amountInputRef.current?.focus()
-    }, 0)
-  }
+      amountInputRef.current?.focus();
+    }, 0);
+  };
 
   const handleShortcutClick = (categoryId: string) => {
-    onSelectShortcutCategory(categoryId)
-    focusAmountInput()
-  }
+    onSelectShortcutCategory(categoryId);
+    focusAmountInput();
+  };
 
   const handleLevel1Click = (category: Category) => {
-    const level2Children = level2ByParentId[category.id] || []
-    const isFinalHere = level2Children.length === 0
+    const level2Children = level2ByParentId[category.id] || [];
+    const isFinalHere = level2Children.length === 0;
 
-    setSelectedLevel1Id(category.id)
-    setSelectedLevel2Id(null)
-    setSelectedCategoryId(isFinalHere ? category.id : null)
+    setSelectedLevel1Id(category.id);
+    setSelectedLevel2Id(null);
+    setSelectedCategoryId(isFinalHere ? category.id : null);
 
     if (isFinalHere) {
-      focusAmountInput()
+      focusAmountInput();
     }
-  }
+  };
 
   const handleLevel2Click = (level2Category: Category) => {
-    const level3Children = level3ByParentId[level2Category.id] || []
-    const isFinalHere = level3Children.length === 0
+    const level3Children = level3ByParentId[level2Category.id] || [];
+    const isFinalHere = level3Children.length === 0;
 
-    setSelectedLevel2Id(level2Category.id)
-    setSelectedCategoryId(isFinalHere ? level2Category.id : null)
+    setSelectedLevel2Id(level2Category.id);
+    setSelectedCategoryId(isFinalHere ? level2Category.id : null);
 
     if (isFinalHere) {
-      focusAmountInput()
+      focusAmountInput();
     }
-  }
+  };
 
   const handleLevel3Click = (level3Category: Category) => {
-    setSelectedCategoryId(level3Category.id)
-    focusAmountInput()
-  }
+    setSelectedCategoryId(level3Category.id);
+    focusAmountInput();
+  };
 
   const applyRecurringLink = (itemId: string) => {
-    setSelectedRecurringTransactionId(itemId)
+    setSelectedRecurringTransactionId(itemId);
 
     const item = [...recurringOptions, ...recurringSuggestions].find(
-      (option) => option.id === itemId
-    )
+      (option) => option.id === itemId,
+    );
 
     if (!item) {
-      return
+      return;
     }
 
     if (item.description) {
-      setDescription(item.description)
+      setDescription(item.description);
     }
 
-    if (item.useAmountWhenCreating && item.amount !== null && item.amount !== undefined) {
-      setAmount(String(item.amount))
+    if (
+      item.useAmountWhenCreating &&
+      item.amount !== null &&
+      item.amount !== undefined
+    ) {
+      setAmount(String(item.amount));
     }
-  }
+  };
 
   const handleTagInputChange = (value: string) => {
-    setTagInputValue(value)
-    setSelectedTagNames(splitTagInput(value))
-  }
+    setTagInputValue(value);
+    setSelectedTagNames(splitTagInput(value));
+  };
 
   const handleRemoveTag = (tagName: string) => {
-    const nextTagNames = selectedTagNames.filter((item) => item !== tagName)
-    setSelectedTagNames(nextTagNames)
-    setTagInputValue(nextTagNames.join(', '))
-  }
+    const nextTagNames = selectedTagNames.filter((item) => item !== tagName);
+    setSelectedTagNames(nextTagNames);
+    setTagInputValue(nextTagNames.join(", "));
+  };
 
   useEffect(() => {
-    setTagInputValue(selectedTagNames.join(', '))
-  }, [selectedTagNames])
+    setTagInputValue(selectedTagNames.join(", "));
+  }, [selectedTagNames]);
 
-  const dayInputValue = getDayInputFromDate(transactionDate, selectedMonth)
-  const selectedRecurringOption = [...recurringOptions, ...recurringSuggestions].find(
-    (item) => item.id === selectedRecurringTransactionId
-  )
+  const dayInputValue = getDayInputFromDate(transactionDate, selectedMonth);
+  const today = new Date();
+  const todayMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
+  const todayDay = String(today.getDate()).padStart(2, "0");
+  const todayDate = `${todayMonth}-${todayDay}`;
+  const isTodayAvailable = selectedMonth === todayMonth;
+  const isTodaySelected = transactionDate === todayDate;
+  const selectedRecurringOption = [
+    ...recurringOptions,
+    ...recurringSuggestions,
+  ].find((item) => item.id === selectedRecurringTransactionId);
   const {
     filteredSuggestions,
     activeSuggestionIndex,
@@ -207,59 +229,69 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
     descriptionSuggestions,
     inputRef: descriptionInputRef,
     onDeleteSuggestion: onDeleteDescriptionSuggestion,
-  })
+  });
 
   const handleSaveFromKeyboard = async () => {
     if (isSaving || !selectedLevel1Id || !effectiveCategoryId) {
-      return
+      return;
     }
 
-    await onSave()
-  }
+    await onSave();
+  };
 
-  const handleDescriptionKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
+  const handleDescriptionKeyDown = async (
+    event: KeyboardEvent<HTMLInputElement>,
+  ) => {
     if (handleKeyDown(event)) {
-      return
+      return;
     }
 
-    if (event.key === 'Tab' && !event.shiftKey) {
-      event.preventDefault()
-      amountInputRef.current?.focus()
-      return
+    if (event.key === "Tab" && !event.shiftKey) {
+      event.preventDefault();
+      amountInputRef.current?.focus();
+      return;
     }
 
-    if (event.key === 'Enter') {
-      event.preventDefault()
-      await handleSaveFromKeyboard()
+    if (event.key === "Enter") {
+      event.preventDefault();
+      await handleSaveFromKeyboard();
     }
-  }
+  };
 
   const handleTagsKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Tab') {
-      event.preventDefault()
+    if (event.key === "Tab") {
+      event.preventDefault();
 
       if (event.shiftKey) {
-        dayInputRef.current?.focus()
+        dayInputRef.current?.focus();
       } else {
-        saveButtonRef.current?.focus()
+        saveButtonRef.current?.focus();
       }
 
-      return
+      return;
     }
 
-    if (event.key === 'Enter') {
-      event.preventDefault()
-      await handleSaveFromKeyboard()
+    if (event.key === "Enter") {
+      event.preventDefault();
+      await handleSaveFromKeyboard();
     }
-  }
+  };
 
   if (!isOpen) {
-    return null
+    return null;
   }
 
   return (
-    <div data-transaction-modal-overlay="true" style={overlayStyle} onClick={onClose}>
-      <div data-transaction-modal="true" style={modalStyle} onClick={(event) => event.stopPropagation()}>
+    <div
+      data-transaction-modal-overlay="true"
+      style={overlayStyle}
+      onClick={onClose}
+    >
+      <div
+        data-transaction-modal="true"
+        style={modalStyle}
+        onClick={(event) => event.stopPropagation()}
+      >
         <TransactionCreatorHeader
           selectedMonth={selectedMonth}
           suggestedCategoryId={suggestedCategoryId}
@@ -286,8 +318,10 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
           pinnedCategoryIds={pinnedCategoryIds}
           recentShortcutCategories={recentShortcutCategories}
           styles={styles}
-          handleShortcutClick={handleShortcutClick} handleLevel1Click={handleLevel1Click}
-          handleLevel2Click={handleLevel2Click} handleLevel3Click={handleLevel3Click}
+          handleShortcutClick={handleShortcutClick}
+          handleLevel1Click={handleLevel1Click}
+          handleLevel2Click={handleLevel2Click}
+          handleLevel3Click={handleLevel3Click}
           onTogglePinnedCategory={onTogglePinnedCategory}
         />
 
@@ -295,7 +329,7 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
           <div style={styles.l2Name}>Dane wpisu</div>
 
           <div
-            style={{ ...styles.formRow, marginTop: 10, alignItems: 'center' }}
+            style={{ ...styles.formRow, marginTop: 10, alignItems: "center" }}
             data-transaction-entry-form="true"
           >
             <div style={{ ...descriptionFieldWrapStyle, order: 2 }}>
@@ -317,37 +351,49 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
                 />
 
                 {filteredSuggestions.length > 0 && (
-                  <div style={suggestionsDropdownStyle} data-transaction-suggestions="true">
+                  <div
+                    style={suggestionsDropdownStyle}
+                    data-transaction-suggestions="true"
+                  >
                     {filteredSuggestions.map((suggestion, index) => {
-                      const isActive = index === activeSuggestionIndex
-                      const isLast = index === filteredSuggestions.length - 1
+                      const isActive = index === activeSuggestionIndex;
+                      const isLast = index === filteredSuggestions.length - 1;
 
                       return (
                         <button
                           key={suggestion.text}
                           type="button"
                           data-transaction-suggestion-item="true"
-                          data-transaction-suggestion-active={isActive ? 'true' : 'false'}
+                          data-transaction-suggestion-active={
+                            isActive ? "true" : "false"
+                          }
                           style={{
-                            ...(isActive ? activeSuggestionButtonStyle : suggestionButtonStyle),
-                            borderBottom: isLast ? 'none' : suggestionButtonStyle.borderBottom,
+                            ...(isActive
+                              ? activeSuggestionButtonStyle
+                              : suggestionButtonStyle),
+                            borderBottom: isLast
+                              ? "none"
+                              : suggestionButtonStyle.borderBottom,
                           }}
                           onMouseDown={(event) => event.preventDefault()}
                           onClick={() => applySuggestion(suggestion.text)}
-                          onContextMenu={(event) => handleSuggestionContextMenu(event, suggestion)}
-                          onPointerDown={(event) => handleSuggestionPointerDown(suggestion, event)}
+                          onContextMenu={(event) =>
+                            handleSuggestionContextMenu(event, suggestion)
+                          }
+                          onPointerDown={(event) =>
+                            handleSuggestionPointerDown(suggestion, event)
+                          }
                           onPointerUp={handleSuggestionPointerUp}
                           onPointerLeave={handleSuggestionPointerLeave}
                           onPointerCancel={handleSuggestionPointerLeave}
                         >
                           {suggestion.text}
                         </button>
-                      )
+                      );
                     })}
                   </div>
                 )}
               </div>
-
             </div>
 
             <input
@@ -359,16 +405,18 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
               placeholder="kwota"
               inputMode="decimal"
               value={amount}
-              onChange={(event) => setAmount(normalizeAmountInput(event.target.value))}
+              onChange={(event) =>
+                setAmount(normalizeAmountInput(event.target.value))
+              }
               onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  event.preventDefault()
-                  void handleSaveFromKeyboard()
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  void handleSaveFromKeyboard();
                 }
               }}
             />
 
-            <label style={{ ...dateFieldStyle, order: 1 }}>
+            <div style={{ ...dateFieldStyle, order: 1 }}>
               <input
                 ref={dayInputRef}
                 data-transaction-day-input="true"
@@ -378,29 +426,55 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
                 placeholder="dzień"
                 inputMode="numeric"
                 onChange={(event) => {
-                  const nextDay = normalizeDayInput(event.target.value, selectedMonth)
-                  const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : ''
-                  setTransactionDate(nextDate)
-                  if (isQuickDayModeEnabled) {
-                    setQuickDayDate(nextDate)
-                  }
+                  const nextDay = normalizeDayInput(
+                    event.target.value,
+                    selectedMonth,
+                  );
+                  const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : "";
+                  setTransactionDate(nextDate);
                 }}
                 onBlur={(event) => {
-                  const nextDay = normalizeDayInput(event.target.value, selectedMonth)
-                  const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : ''
-                  setTransactionDate(nextDate)
-                  if (isQuickDayModeEnabled) {
-                    setQuickDayDate(nextDate)
-                  }
+                  const nextDay = normalizeDayInput(
+                    event.target.value,
+                    selectedMonth,
+                  );
+                  const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : "";
+                  setTransactionDate(nextDate);
                 }}
                 onKeyDown={(event) => {
-                  if (event.key === 'Enter') {
-                    event.preventDefault()
-                    descriptionInputRef.current?.focus()
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    descriptionInputRef.current?.focus();
                   }
                 }}
               />
-            </label>
+              <label
+                data-transaction-today-toggle="true"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  marginTop: 6,
+                  color: isTodayAvailable
+                    ? "var(--ui-text-secondary)"
+                    : "var(--ui-text-muted)",
+                  fontSize: "var(--ui-type-helper)",
+                  fontWeight: "var(--ui-font-weight-semibold)",
+                  lineHeight: "var(--ui-line-height-compact)",
+                  cursor: isTodayAvailable ? "pointer" : "not-allowed",
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={isTodaySelected}
+                  disabled={!isTodayAvailable}
+                  onChange={(event) => {
+                    setTransactionDate(event.target.checked ? todayDate : "");
+                  }}
+                />
+                dziś
+              </label>
+            </div>
 
             <button
               ref={saveButtonRef}
@@ -408,17 +482,22 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
               style={{
                 ...styles.primaryButton,
                 order: 4,
-                marginLeft: 'auto',
-                opacity: isSaving || !selectedLevel1Id || !effectiveCategoryId ? 0.6 : 1,
+                marginLeft: "auto",
+                opacity:
+                  isSaving || !selectedLevel1Id || !effectiveCategoryId
+                    ? 0.6
+                    : 1,
                 cursor:
-                  isSaving || !selectedLevel1Id || !effectiveCategoryId ? 'not-allowed' : 'pointer',
+                  isSaving || !selectedLevel1Id || !effectiveCategoryId
+                    ? "not-allowed"
+                    : "pointer",
               }}
               disabled={isSaving || !selectedLevel1Id || !effectiveCategoryId}
               onClick={async () => {
-                await onSave()
+                await onSave();
               }}
             >
-              {isSaving ? 'zapisywanie...' : 'zapisz'}
+              {isSaving ? "zapisywanie..." : "zapisz"}
             </button>
 
             {isSerialModeEnabled ? (
@@ -426,12 +505,14 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
                 <button
                   data-transaction-save-close-action="true"
                   style={{ ...styles.secondaryButton, order: 5 }}
-                  disabled={isSaving || !selectedLevel1Id || !effectiveCategoryId}
+                  disabled={
+                    isSaving || !selectedLevel1Id || !effectiveCategoryId
+                  }
                   onClick={async () => {
-                    await onSaveAndClose()
+                    await onSaveAndClose();
                   }}
                 >
-                  {isSaving ? 'zapisywanie...' : 'zapisz i zakończ'}
+                  {isSaving ? "zapisywanie..." : "zapisz i zakończ"}
                 </button>
 
                 <button
@@ -454,6 +535,27 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
           </div>
 
           <div style={tagInputWrapStyle} data-transaction-entry-extra="true">
+            {isPaymentSourceVisible && (
+              <>
+                <label
+                  style={dateLabelStyle}
+                  data-transaction-field-label="true"
+                >
+                  Źródło płatności
+                </label>
+                <PaymentSplitEditor
+                  amount={amount}
+                  isVisible={isPaymentSourceVisible}
+                  selectedPaymentSourceId={selectedPaymentSourceId}
+                  setSelectedPaymentSourceId={setSelectedPaymentSourceId}
+                  paymentSourceOptions={paymentSourceOptions}
+                  paymentSplitItems={paymentSplitItems}
+                  setPaymentSplitItems={setPaymentSplitItems}
+                  styles={styles}
+                />
+              </>
+            )}
+
             <label
               style={dateLabelStyle}
               htmlFor="transaction-tags-input"
@@ -474,7 +576,7 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
               autoCorrect="off"
               spellCheck={false}
               onChange={(event) => {
-                handleTagInputChange(event.target.value)
+                handleTagInputChange(event.target.value);
               }}
               onKeyDown={handleTagsKeyDown}
             />
@@ -482,7 +584,11 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
             {selectedTagNames.length > 0 && (
               <div style={tagBadgesWrapStyle} data-transaction-tag-list="true">
                 {selectedTagNames.map((tagName) => (
-                  <span key={tagName} style={tagBadgeStyle} data-transaction-tag-badge="true">
+                  <span
+                    key={tagName}
+                    style={tagBadgeStyle}
+                    data-transaction-tag-badge="true"
+                  >
                     #{tagName}
                     <button
                       type="button"
@@ -497,29 +603,10 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
               </div>
             )}
 
-            {isPaymentSourceVisible && (
-              <>
-                <label style={dateLabelStyle} data-transaction-field-label="true">
-                  Źródło płatności
-                </label>
-                <PaymentSplitEditor
-                  amount={amount}
-                  isVisible={isPaymentSourceVisible}
-                  selectedPaymentSourceId={selectedPaymentSourceId}
-                  setSelectedPaymentSourceId={setSelectedPaymentSourceId}
-                  paymentSourceOptions={paymentSourceOptions}
-                  paymentSplitItems={paymentSplitItems}
-                  setPaymentSplitItems={setPaymentSplitItems}
-                  styles={styles}
-                />
-
-              </>
-            )}
-
-
-            {(recurringOptions.length > 0 || recurringSuggestions.length > 0) && (
+            {(recurringOptions.length > 0 ||
+              recurringSuggestions.length > 0) && (
               <div
-                style={{ display: 'flex', flexDirection: 'column', gap: 8 }}
+                style={{ display: "flex", flexDirection: "column", gap: 8 }}
                 data-transaction-recurring-field="true"
               >
                 <label
@@ -553,10 +640,14 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
 
                 {selectedRecurringOption?.hasTransactionInMonth && (
                   <div
-                    style={{ ...styles.emptyText, color: 'var(--ui-color-warning)' }}
+                    style={{
+                      ...styles.emptyText,
+                      color: "var(--ui-color-warning)",
+                    }}
                     data-transaction-recurring-warning="true"
                   >
-                    To przypomnienie ma już wpis w tym miesiącu. Możesz dodać kolejny, jeśli to celowe.
+                    To przypomnienie ma już wpis w tym miesiącu. Możesz dodać
+                    kolejny, jeśli to celowe.
                   </div>
                 )}
               </div>
@@ -568,9 +659,7 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
             effectiveCategoryId={effectiveCategoryId}
             isSerialModeEnabled={isSerialModeEnabled}
             setIsSerialModeEnabled={setIsSerialModeEnabled}
-            isQuickDayModeEnabled={isQuickDayModeEnabled}
-            setIsQuickDayModeEnabled={setIsQuickDayModeEnabled}
-            transactionDate={transactionDate} setQuickDayDate={setQuickDayDate} styles={styles}
+            styles={styles}
           />
         </div>
       </div>
@@ -583,6 +672,5 @@ export default function TransactionCreatorModal(props: TransactionCreatorModalPr
         onCancel={closeDeletePrompt}
       />
     </div>
-  )
+  );
 }
-

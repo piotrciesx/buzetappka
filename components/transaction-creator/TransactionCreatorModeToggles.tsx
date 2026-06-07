@@ -1,31 +1,32 @@
-import { CSSProperties } from 'react'
-import { serialToggleStyle } from './transactionCreatorModalStyles'
+import { CSSProperties } from "react";
+import { serialToggleStyle } from "./transactionCreatorModalStyles";
 
 type Props = {
-  selectedLevel1Id: string | null
-  effectiveCategoryId: string | null
-  isSerialModeEnabled: boolean
-  setIsSerialModeEnabled: (value: boolean) => void
-  isQuickDayModeEnabled: boolean
-  setIsQuickDayModeEnabled: (value: boolean) => void
-  transactionDate: string
-  setQuickDayDate: (value: string) => void
-  styles: Record<string, CSSProperties>
-}
+  selectedLevel1Id: string | null;
+  effectiveCategoryId: string | null;
+  isSerialModeEnabled: boolean;
+  setIsSerialModeEnabled: (value: boolean) => void;
+  styles: Record<string, CSSProperties>;
+};
+
+const HelpHint = ({ label }: { label: string }) => (
+  <span
+    data-ui-help="true"
+    tabIndex={0}
+    aria-label={label}
+    data-tooltip={label}
+  />
+);
 
 export default function TransactionCreatorModeToggles({
   selectedLevel1Id,
   effectiveCategoryId,
   isSerialModeEnabled,
   setIsSerialModeEnabled,
-  isQuickDayModeEnabled,
-  setIsQuickDayModeEnabled,
-  transactionDate,
-  setQuickDayDate,
   styles,
 }: Props) {
   return (
-    <>
+    <div data-transaction-mode-panel="true">
       <label style={serialToggleStyle} data-transaction-entry-toggle="true">
         <input
           type="checkbox"
@@ -33,20 +34,7 @@ export default function TransactionCreatorModeToggles({
           onChange={(event) => setIsSerialModeEnabled(event.target.checked)}
         />
         dodawaj seryjnie
-      </label>
-
-      <label style={serialToggleStyle} data-transaction-entry-toggle="true">
-        <input
-          type="checkbox"
-          checked={isQuickDayModeEnabled}
-          onChange={(event) => {
-            setIsQuickDayModeEnabled(event.target.checked)
-            if (event.target.checked) {
-              setQuickDayDate(transactionDate)
-            }
-          }}
-        />
-        tryb szybkiego dnia
+        <HelpHint label="Po zapisie kreator zostanie otwarty, żeby szybko dodać kolejny wpis w tej samej kategorii." />
       </label>
 
       {(!selectedLevel1Id || !effectiveCategoryId) && (
@@ -54,6 +42,6 @@ export default function TransactionCreatorModeToggles({
           Aby zapisać wpis, wybierz typ oraz najniższą dostępną kategorię.
         </div>
       )}
-    </>
-  )
+    </div>
+  );
 }

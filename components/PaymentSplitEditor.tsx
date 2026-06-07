@@ -1,51 +1,62 @@
-'use client'
+"use client";
 
-import { CSSProperties } from 'react'
-import { uiInputApi } from '../lib/uiFoundation'
+import { CSSProperties } from "react";
+import { uiInputApi } from "../lib/uiFoundation";
 import {
   buildPaymentSplitPayload,
   createPaymentSplitItemsFromSingleSource,
   PaymentSplitInput,
   rebalancePaymentSplitAmounts,
-} from '../lib/paymentSplitUtils'
+} from "../lib/paymentSplitUtils";
 
 type PaymentSourceOption = {
-  id: string
-  name: string
-  type: string
-  optionLabel?: string
-}
+  id: string;
+  name: string;
+  type: string;
+  optionLabel?: string;
+};
 
 type Props = {
-  amount: string
-  isVisible: boolean
-  selectedPaymentSourceId: string
-  setSelectedPaymentSourceId: (value: string) => void
-  paymentSourceOptions: PaymentSourceOption[]
-  paymentSplitItems: PaymentSplitInput[]
+  amount: string;
+  isVisible: boolean;
+  selectedPaymentSourceId: string;
+  setSelectedPaymentSourceId: (value: string) => void;
+  paymentSourceOptions: PaymentSourceOption[];
+  paymentSplitItems: PaymentSplitInput[];
   setPaymentSplitItems: (
-    value: PaymentSplitInput[] | ((prev: PaymentSplitInput[]) => PaymentSplitInput[])
-  ) => void
-  styles: Record<string, CSSProperties>
-}
+    value:
+      | PaymentSplitInput[]
+      | ((prev: PaymentSplitInput[]) => PaymentSplitInput[]),
+  ) => void;
+  styles: Record<string, CSSProperties>;
+};
 
 const splitWrapStyle: CSSProperties = {
-  display: 'grid',
+  display: "grid",
   gap: 8,
-}
+};
 
 const splitRowStyle: CSSProperties = {
-  display: 'flex',
+  display: "flex",
   gap: 8,
-  flexWrap: 'wrap',
-  alignItems: 'center',
-}
+  flexWrap: "wrap",
+  alignItems: "center",
+};
 
 const splitHelpStyle: CSSProperties = {
   fontSize: 12,
-  color: 'var(--ui-color-secondary-text)',
+  color: "var(--ui-color-secondary-text)",
   lineHeight: 1.45,
-}
+};
+
+const HelpHint = ({ label }: { label: string }) => (
+  <span
+    data-ui-help="true"
+    tabIndex={0}
+    aria-label={label}
+    data-tooltip={label}
+  />
+);
 
 export default function PaymentSplitEditor({
   amount,
@@ -58,61 +69,77 @@ export default function PaymentSplitEditor({
   styles,
 }: Props) {
   if (!isVisible) {
-    return null
+    return null;
   }
 
   const splitState = buildPaymentSplitPayload({
     totalAmountText: amount,
     selectedPaymentSourceId,
     splitItems: paymentSplitItems,
-  })
-  const isSplitActive = paymentSplitItems.length > 1
+  });
+  const isSplitActive = paymentSplitItems.length > 1;
 
   const handleAddPaymentSource = () => {
     if (isSplitActive) {
-      setPaymentSplitItems((prev) => [...prev, { paymentSourceId: '', amount: '' }])
-      return
+      setPaymentSplitItems((prev) => [
+        ...prev,
+        { paymentSourceId: "", amount: "" },
+      ]);
+      return;
     }
 
-    setPaymentSplitItems(createPaymentSplitItemsFromSingleSource(selectedPaymentSourceId, amount))
-  }
+    setPaymentSplitItems(
+      createPaymentSplitItemsFromSingleSource(selectedPaymentSourceId, amount),
+    );
+  };
 
-  const handleSplitSourceChange = (index: number, nextPaymentSourceId: string) => {
+  const handleSplitSourceChange = (
+    index: number,
+    nextPaymentSourceId: string,
+  ) => {
     setPaymentSplitItems((prev) =>
       prev.map((item, itemIndex) =>
-        itemIndex === index ? { ...item, paymentSourceId: nextPaymentSourceId } : item
-      )
-    )
+        itemIndex === index
+          ? { ...item, paymentSourceId: nextPaymentSourceId }
+          : item,
+      ),
+    );
 
     if (index === 0) {
-      setSelectedPaymentSourceId(nextPaymentSourceId)
+      setSelectedPaymentSourceId(nextPaymentSourceId);
     }
-  }
+  };
 
   const handleSplitAmountChange = (index: number, nextAmount: string) => {
-    setPaymentSplitItems((prev) => rebalancePaymentSplitAmounts(prev, index, nextAmount, amount))
-  }
+    setPaymentSplitItems((prev) =>
+      rebalancePaymentSplitAmounts(prev, index, nextAmount, amount),
+    );
+  };
 
   const handleRemoveSplitRow = (index: number) => {
-    const nextItems = paymentSplitItems.filter((_, itemIndex) => itemIndex !== index)
+    const nextItems = paymentSplitItems.filter(
+      (_, itemIndex) => itemIndex !== index,
+    );
 
     if (nextItems.length <= 1) {
-      setSelectedPaymentSourceId(nextItems[0]?.paymentSourceId || selectedPaymentSourceId)
-      setPaymentSplitItems([])
-      return
+      setSelectedPaymentSourceId(
+        nextItems[0]?.paymentSourceId || selectedPaymentSourceId,
+      );
+      setPaymentSplitItems([]);
+      return;
     }
 
-    const rebalanceIndex = Math.max(0, Math.min(index, nextItems.length - 1))
-    setSelectedPaymentSourceId(nextItems[0]?.paymentSourceId || '')
+    const rebalanceIndex = Math.max(0, Math.min(index, nextItems.length - 1));
+    setSelectedPaymentSourceId(nextItems[0]?.paymentSourceId || "");
     setPaymentSplitItems(
       rebalancePaymentSplitAmounts(
         nextItems,
         rebalanceIndex,
-        nextItems[rebalanceIndex]?.amount || '',
-        amount
-      )
-    )
-  }
+        nextItems[rebalanceIndex]?.amount || "",
+        amount,
+      ),
+    );
+  };
 
   return (
     <div style={splitWrapStyle} data-payment-split-editor="true">
@@ -147,15 +174,21 @@ export default function PaymentSplitEditor({
       ) : (
         <>
           {paymentSplitItems.map((item, index) => (
-            <div key={`split-item-${index}`} style={splitRowStyle} data-payment-split-row="true">
+            <div
+              key={`split-item-${index}`}
+              style={splitRowStyle}
+              data-payment-split-row="true"
+            >
               <select
                 data-payment-source-select="true"
                 data-payment-split-source="true"
                 className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputL}`}
                 data-input-width={uiInputApi.width.full}
-                style={{ flex: '1 1 220px', minWidth: 220 }}
+                style={{ flex: "1 1 220px", minWidth: 220 }}
                 value={item.paymentSourceId}
-                onChange={(event) => handleSplitSourceChange(index, event.target.value)}
+                onChange={(event) =>
+                  handleSplitSourceChange(index, event.target.value)
+                }
               >
                 <option value="">Wybierz źródło</option>
                 {paymentSourceOptions.map((source) => (
@@ -173,7 +206,9 @@ export default function PaymentSplitEditor({
                 placeholder="kwota"
                 inputMode="decimal"
                 value={item.amount}
-                onChange={(event) => handleSplitAmountChange(index, event.target.value)}
+                onChange={(event) =>
+                  handleSplitAmountChange(index, event.target.value)
+                }
               />
 
               <button
@@ -200,16 +235,24 @@ export default function PaymentSplitEditor({
         </>
       )}
 
-      <div style={splitHelpStyle} data-payment-split-help="true">
-        Przy kilku źródłach kwoty przeliczają się automatycznie. Zapis jest blokowany, jeśli suma
-        nie zgadza się z kwotą transakcji albo któreś pole jest puste.
-      </div>
+      {isSplitActive && (
+        <div
+          data-payment-split-help="true"
+          style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
+        >
+          <span style={splitHelpStyle}>Podział kwoty</span>
+          <HelpHint label="Przy kilku źródłach kwoty przeliczają się automatycznie. Zapis jest blokowany, jeśli suma nie zgadza się z kwotą transakcji albo któreś pole jest puste." />
+        </div>
+      )}
 
       {splitState.errors.length > 0 && (
-        <div style={{ ...splitHelpStyle, color: 'var(--ui-color-expense)' }} data-payment-split-errors="true">
-          {splitState.errors.join(' • ')}
+        <div
+          style={{ ...splitHelpStyle, color: "var(--ui-color-expense)" }}
+          data-payment-split-errors="true"
+        >
+          {splitState.errors.join(" • ")}
         </div>
       )}
     </div>
-  )
+  );
 }
