@@ -107,6 +107,13 @@ const NoteIcon = ({ name }: { name: NoteIconName }) => {
   );
 };
 
+
+const HelpHint = ({ label }: { label: string }) => (
+  <span data-ui-help="true" tabIndex={0} aria-label={label} data-tooltip={label}>
+    i
+  </span>
+)
+
 const createNoteId = () => {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID();
@@ -721,8 +728,10 @@ export default function ProfileMonthNotePanel({
               <CategoryIcon iconKey="note" />
             </span>
             <div data-ui-title-copy="true">
-              <strong>Notatki miesiąca {selectedMonth}</strong>
-              <span>Wspólne notatki profilu dla bieżącego miesiąca.</span>
+              <span data-ui-title-with-help="true">
+                <strong>Notatki miesiąca {selectedMonth}</strong>
+                <HelpHint label="Wspólne notatki profilu dla bieżącego miesiąca." />
+              </span>
             </div>
           </div>
           <div data-ui-note-actions="true">
@@ -771,10 +780,9 @@ export default function ProfileMonthNotePanel({
             <span data-ui-icon-tile="true" data-ui-tone="neutral">
               <CategoryIcon iconKey="note" />
             </span>
-            <strong>Brak notatek dla tego miesiąca.</strong>
-            <span>
-              Dodaj krótką informację, do której chcesz wrócić przy rozliczaniu
-              miesiąca.
+            <span data-ui-title-with-help="true">
+              <strong>Brak notatek dla tego miesiąca.</strong>
+              <HelpHint label="Dodaj krótką informację, do której chcesz wrócić przy rozliczaniu miesiąca." />
             </span>
             <button
               type="button"
@@ -793,10 +801,7 @@ export default function ProfileMonthNotePanel({
         )}
 
         <footer data-ui-modal-footer="true">
-          <span data-ui-inline-info="true">
-            <NoteIcon name="info" />
-            Notatki są widoczne tylko dla Ciebie i zapisywane dla tego miesiąca.
-          </span>
+          <HelpHint label="Notatki są widoczne tylko dla Ciebie i zapisywane dla tego miesiąca." />
         </footer>
 
         {statusText && <StatusBox tone="success">{statusText}</StatusBox>}
@@ -818,9 +823,9 @@ export default function ProfileMonthNotePanel({
               <CategoryIcon iconKey={draft.icon} />
             </span>
             <div data-ui-title-copy="true">
-              <strong>{editingNote ? "Edytuj notatkę" : "Nowa notatka"}</strong>
-              <span>
-                Notatka będzie widoczna tylko w miesiącu {selectedMonth}.
+              <span data-ui-title-with-help="true">
+                <strong>{editingNote ? "Edytuj notatkę" : "Nowa notatka"}</strong>
+                <HelpHint label={`Notatka będzie widoczna tylko w miesiącu ${selectedMonth}.`} />
               </span>
             </div>
           </div>
@@ -951,8 +956,10 @@ export default function ProfileMonthNotePanel({
             <span data-ui-icon-tile="true" data-ui-tone="neutral">
               <CategoryIcon iconKey="note" />
             </span>
-            <strong>Brak notatek</strong>
-            <span>Dodaj krótką informację do zapamiętania w tym miesiącu.</span>
+            <span data-ui-title-with-help="true">
+              <strong>Brak notatek</strong>
+              <HelpHint label="Dodaj krótką informację do zapamiętania w tym miesiącu." />
+            </span>
           </div>
         )}
 

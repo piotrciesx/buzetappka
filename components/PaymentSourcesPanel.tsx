@@ -106,12 +106,9 @@ const formatCurrency = (value: number) =>
 
 const normalizeName = (value: string) => value.trim().toLocaleLowerCase('pl-PL')
 
-const InfoHint = ({ text }: { text: string }) => (
-  <span data-ui-info-hint="true">
-    <span data-ui-info-trigger="true" aria-label={text} tabIndex={0}>
-      i
-    </span>
-    <span data-ui-info-bubble="true">{text}</span>
+const HelpHint = ({ label }: { label: string }) => (
+  <span data-ui-help="true" tabIndex={0} aria-label={label} data-tooltip={label}>
+    i
   </span>
 )
 
@@ -449,8 +446,10 @@ export default function PaymentSourcesPanel({
     <UtilityPanel data-payment-sources-panel="true">
       <section data-payment-source-hero="true">
         <div>
-          <strong>Źródła płatności</strong>
-          <InfoHint text="Jedno źródło może działać dla przychodów, wydatków albo obu naraz. Zaznaczenia przy źródle decydują tylko o tym, gdzie będzie dostępne przy nowych wpisach." />
+          <span data-ui-title-with-help="true">
+            <strong>Źródła płatności</strong>
+            <HelpHint label="Jedno źródło może działać dla przychodów, wydatków albo obu naraz." />
+          </span>
         </div>
         <button type="button" className="ui-button--utility" onClick={openNewForm}>
           + Dodaj źródło
@@ -582,8 +581,10 @@ export default function PaymentSourcesPanel({
                   <CategoryIcon iconKey={draft.icon} />
                 </span>
                 <div data-ui-title-copy="true">
-                  <strong>{draft.id ? 'Edytuj źródło' : 'Nowe źródło'}</strong>
-                  <span>Zdecyduj, czy źródło ma być dostępne przy przychodach, wydatkach albo obu.</span>
+                  <span data-ui-title-with-help="true">
+                    <strong>{draft.id ? 'Edytuj źródło' : 'Nowe źródło'}</strong>
+                    <HelpHint label="Zdecyduj, czy źródło ma być dostępne przy przychodach, wydatkach albo obu." />
+                  </span>
                 </div>
               </div>
               <button type="button" className="ui-button--icon" aria-label="Zamknij" onClick={closeForm}>
