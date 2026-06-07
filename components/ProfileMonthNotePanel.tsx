@@ -631,11 +631,17 @@ export default function ProfileMonthNotePanel({
     const selectedIcon = resolveIconOption(draft.icon);
     const isOpen = activePicker === "icon";
     const normalizedSearch = iconSearch.trim().toLocaleLowerCase("pl-PL");
+    const orderedIcons = [
+      ...SUGGESTED_NOTE_ICONS
+        .map((iconKey) => NOTE_ICON_OPTIONS.find((option) => option.key === iconKey))
+        .filter((option): option is (typeof NOTE_ICON_OPTIONS)[number] => Boolean(option)),
+      ...NOTE_ICON_OPTIONS.filter((option) => !SUGGESTED_NOTE_ICONS.includes(option.key)),
+    ];
     const baseIcons = isIconPickerExpanded
-      ? NOTE_ICON_OPTIONS
-      : NOTE_ICON_OPTIONS.filter((option) => SUGGESTED_NOTE_ICONS.includes(option.key));
+      ? orderedIcons
+      : orderedIcons.filter((option) => SUGGESTED_NOTE_ICONS.includes(option.key));
     const visibleIcons = normalizedSearch
-      ? NOTE_ICON_OPTIONS.filter((option) => option.label.toLocaleLowerCase("pl-PL").includes(normalizedSearch))
+      ? orderedIcons.filter((option) => option.label.toLocaleLowerCase("pl-PL").includes(normalizedSearch))
       : baseIcons;
 
     return (

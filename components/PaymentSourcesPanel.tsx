@@ -349,11 +349,17 @@ export default function PaymentSourcesPanel({
     const selectedIcon = getUiIcon(draft.icon)
     const isOpen = activePicker === 'icon'
     const normalizedSearch = iconSearch.trim().toLocaleLowerCase('pl-PL')
+    const orderedIcons = [
+      ...SUGGESTED_PAYMENT_SOURCE_ICONS
+        .map((iconKey) => APP_ICONS.find((option) => option.key === iconKey))
+        .filter((option): option is (typeof APP_ICONS)[number] => Boolean(option)),
+      ...APP_ICONS.filter((option) => !SUGGESTED_PAYMENT_SOURCE_ICONS.includes(option.key)),
+    ]
     const baseIcons = isIconPickerExpanded
-      ? APP_ICONS
-      : APP_ICONS.filter((option) => SUGGESTED_PAYMENT_SOURCE_ICONS.includes(option.key))
+      ? orderedIcons
+      : orderedIcons.filter((option) => SUGGESTED_PAYMENT_SOURCE_ICONS.includes(option.key))
     const visibleIcons = normalizedSearch
-      ? APP_ICONS.filter((option) => option.label.toLocaleLowerCase('pl-PL').includes(normalizedSearch))
+      ? orderedIcons.filter((option) => option.label.toLocaleLowerCase('pl-PL').includes(normalizedSearch))
       : baseIcons
 
     return (
