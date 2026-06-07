@@ -107,6 +107,13 @@ const NoteIcon = ({ name }: { name: NoteIconName }) => {
   );
 };
 
+
+const HelpHint = ({ label }: { label: string }) => (
+  <span data-ui-help="true" tabIndex={0} aria-label={label} data-tooltip={label}>
+    i
+  </span>
+)
+
 const createNoteId = () => {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID();
@@ -228,7 +235,8 @@ export default function ProfileMonthNotePanel({
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isIconPickerExpanded, setIsIconPickerExpanded] = useState(false);
-  const [iconSearchTerm, setIconSearchTerm] = useState('');
+  const [activePicker, setActivePicker] = useState<'color' | 'icon' | null>(null);
+  const [iconSearch, setIconSearch] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [statusText, setStatusText] = useState("");
@@ -236,25 +244,6 @@ export default function ProfileMonthNotePanel({
 
   useEffect(() => {
     setHasMounted(true);
-  }, []);
-
-  useEffect(() => {
-    const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target as Node | null;
-
-      if (!target || typeof document === 'undefined') {
-        return;
-      }
-
-      document.querySelectorAll<HTMLDetailsElement>('[data-ui-picker-control="true"][open]').forEach((picker) => {
-        if (!picker.contains(target)) {
-          picker.open = false;
-        }
-      });
-    };
-
-    document.addEventListener('pointerdown', handlePointerDown);
-    return () => document.removeEventListener('pointerdown', handlePointerDown);
   }, []);
 
   const loadNote = useCallback(async () => {
@@ -290,6 +279,8 @@ export default function ProfileMonthNotePanel({
       setExpandedNoteIds([]);
       setSelectedNoteId(null);
       setIsIconPickerExpanded(false);
+      setActivePicker(null);
+      setIconSearch('');
       setIsFormOpen(false);
     } catch (error) {
       setNoteId(null);
@@ -409,7 +400,8 @@ export default function ProfileMonthNotePanel({
     setEditingNoteId(null);
     setDraft(createEmptyDraft());
     setIsIconPickerExpanded(false);
-    setIconSearchTerm('');
+    setActivePicker(null);
+    setIconSearch('');
     setIsFormOpen(true);
     setStatusText("");
     setErrorText("");
@@ -424,6 +416,8 @@ export default function ProfileMonthNotePanel({
       icon: note.icon,
       category: note.category,
     });
+    setActivePicker(null);
+    setIconSearch('');
     setIsFormOpen(true);
     setStatusText("");
     setErrorText("");
@@ -433,7 +427,8 @@ export default function ProfileMonthNotePanel({
     setEditingNoteId(null);
     setDraft(createEmptyDraft());
     setIsIconPickerExpanded(false);
-      setIconSearchTerm('');
+    setActivePicker(null);
+    setIconSearch('');
     setIsFormOpen(false);
     setStatusText("");
     setErrorText("");
@@ -591,71 +586,66 @@ export default function ProfileMonthNotePanel({
 
   const renderColorPicker = () => {
     const selectedTone = resolveToneOption(draft.tone);
+    const isOpen = activePicker === "color";
 
     return (
-      <details
-        data-ui-picker-control="true"
-        onToggle={(event) => {
-          if (event.currentTarget.open && typeof document !== 'undefined') {
-            document.querySelectorAll<HTMLDetailsElement>('[data-ui-picker-control=\"true\"][open]').forEach((picker) => {
-              if (picker !== event.currentTarget) {
-                picker.open = false;
-              }
-            });
-          }
-        }}
-      >
-        <summary>
+      <div data-ui-picker-control="true" data-open={isOpen ? "true" : "false"} onClick={(event) => event.stopPropagation()}>
+        <button
+          type="button"
+          data-ui-picker-trigger="true"
+          aria-expanded={isOpen}
+          onClick={() => setActivePicker(isOpen ? null : "color")}
+        >
           <span data-ui-picker-value="true">
             <span data-ui-color-swatch="true" data-ui-tone={selectedTone.tone} />
             {selectedTone.label}
           </span>
           <span data-ui-picker-chevron="true">⌄</span>
-        </summary>
-        <div data-ui-picker-menu="true" data-layout="colors">
-          {NOTE_COLOR_OPTIONS.map((option) => (
-            <button
-              key={option.tone}
-              type="button"
-              data-ui-color-option="true"
-              data-ui-tone={option.tone}
-              data-active={draft.tone === option.tone}
-              aria-label={`Wybierz kolor: ${option.label}`}
-              title={option.label}
-              onClick={() => updateDraftTone(option.tone)}
-            >
-              <span data-ui-color-swatch="true" data-ui-tone={option.tone} />
-            </button>
-          ))}
-        </div>
-      </details>
+        </button>
+        {isOpen && (
+          <div data-ui-picker-menu="true" data-layout="colors">
+            {NOTE_COLOR_OPTIONS.map((option) => (
+              <button
+                key={option.tone}
+                type="button"
+                data-ui-color-option="true"
+                data-ui-tone={option.tone}
+                data-active={draft.tone === option.tone}
+                aria-label={`Wybierz kolor: ${option.label}`}
+                title={option.label}
+                onClick={() => {
+                  updateDraftTone(option.tone);
+                  setActivePicker(null);
+                }}
+              >
+                <span data-ui-color-swatch="true" data-ui-tone={option.tone} />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     );
   };
 
   const renderIconPicker = () => {
     const selectedIcon = resolveIconOption(draft.icon);
-    const normalizedSearch = iconSearchTerm.trim().toLocaleLowerCase('pl-PL');
+    const isOpen = activePicker === "icon";
+    const normalizedSearch = iconSearch.trim().toLocaleLowerCase("pl-PL");
     const baseIcons = isIconPickerExpanded
       ? NOTE_ICON_OPTIONS
       : NOTE_ICON_OPTIONS.filter((option) => SUGGESTED_NOTE_ICONS.includes(option.key));
     const visibleIcons = normalizedSearch
-      ? NOTE_ICON_OPTIONS.filter((option) => option.label.toLocaleLowerCase('pl-PL').includes(normalizedSearch))
+      ? NOTE_ICON_OPTIONS.filter((option) => option.label.toLocaleLowerCase("pl-PL").includes(normalizedSearch))
       : baseIcons;
 
     return (
-      <details
-        data-ui-picker-control="true"
-        onToggle={(event) => {
-          if (event.currentTarget.open && typeof document !== 'undefined') {
-            document.querySelectorAll<HTMLDetailsElement>('[data-ui-picker-control="true"][open]').forEach((picker) => {
-              if (picker !== event.currentTarget) {
-                picker.open = false;
-              }
-            });
-          }
-        }}
-      >
-        <summary>
+      <div data-ui-picker-control="true" data-open={isOpen ? "true" : "false"} onClick={(event) => event.stopPropagation()}>
+        <button
+          type="button"
+          data-ui-picker-trigger="true"
+          aria-expanded={isOpen}
+          onClick={() => setActivePicker(isOpen ? null : "icon")}
+        >
           <span data-ui-picker-value="true">
             <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
               <CategoryIcon iconKey={draft.icon} />
@@ -663,46 +653,56 @@ export default function ProfileMonthNotePanel({
             {selectedIcon.label}
           </span>
           <span data-ui-picker-chevron="true">⌄</span>
-        </summary>
-        <div data-ui-picker-menu="true" data-layout="icons">
-          <input
-            data-ui-picker-search="true"
-            type="search"
-            value={iconSearchTerm}
-            onChange={(event) => setIconSearchTerm(event.target.value)}
-            placeholder="Szukaj ikony..."
-          />
-          <div data-ui-picker-menu-grid="true">
-            {visibleIcons.map((option) => (
+        </button>
+        {isOpen && (
+          <div data-ui-picker-menu="true" data-layout="icons">
+            <label data-ui-picker-search="true">
+              <input
+                type="search"
+                value={iconSearch}
+                onChange={(event) => setIconSearch(event.target.value)}
+                placeholder="Szukaj ikony..."
+                autoFocus
+              />
+            </label>
+            <div data-ui-picker-menu-grid="true">
+              {visibleIcons.map((option) => (
+                <button
+                  key={option.key}
+                  type="button"
+                  data-ui-icon-select-option="true"
+                  data-ui-tone={draft.tone}
+                  data-active={draft.icon === option.key}
+                  aria-label={`Wybierz ikonę: ${option.label}`}
+                  title={option.label}
+                  onClick={() => {
+                    updateDraftIcon(option.key);
+                    setActivePicker(null);
+                    setIconSearch("");
+                  }}
+                >
+                  <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
+                    <CategoryIcon iconKey={option.key} />
+                  </span>
+                  <span>{option.label}</span>
+                </button>
+              ))}
+            </div>
+            {!isIconPickerExpanded && !normalizedSearch && (
               <button
-                key={option.key}
                 type="button"
-                data-ui-icon-select-option="true"
-                data-ui-tone={draft.tone}
-                data-active={draft.icon === option.key}
-                aria-label={`Wybierz ikonę: ${option.label}`}
-                title={option.label}
-                onClick={() => updateDraftIcon(option.key)}
+                data-ui-picker-more="true"
+                onClick={() => setIsIconPickerExpanded(true)}
               >
-                <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
-                  <CategoryIcon iconKey={option.key} />
-                </span>
-                <span>{option.label}</span>
+                Wybierz więcej ikon
               </button>
-            ))}
+            )}
+            {visibleIcons.length === 0 && (
+              <div data-ui-picker-empty="true">Brak ikon dla tej nazwy.</div>
+            )}
           </div>
-          {visibleIcons.length === 0 && <div data-ui-picker-empty="true">Brak ikon pasujących do wyszukiwania.</div>}
-          {!normalizedSearch && !isIconPickerExpanded && (
-            <button
-              type="button"
-              data-ui-picker-more="true"
-              onClick={() => setIsIconPickerExpanded(true)}
-            >
-              Wybierz więcej ikon
-            </button>
-          )}
-        </div>
-      </details>
+        )}
+      </div>
     );
   };
 
@@ -777,8 +777,10 @@ export default function ProfileMonthNotePanel({
               <CategoryIcon iconKey="note" />
             </span>
             <div data-ui-title-copy="true">
-              <strong>Notatki miesiąca {selectedMonth}</strong>
-              <span>Wspólne notatki profilu dla bieżącego miesiąca.</span>
+              <span data-ui-title-with-help="true">
+                <strong>Notatki miesiąca {selectedMonth}</strong>
+                <HelpHint label="Wspólne notatki profilu dla bieżącego miesiąca." />
+              </span>
             </div>
           </div>
           <div data-ui-note-actions="true">
@@ -827,10 +829,9 @@ export default function ProfileMonthNotePanel({
             <span data-ui-icon-tile="true" data-ui-tone="neutral">
               <CategoryIcon iconKey="note" />
             </span>
-            <strong>Brak notatek dla tego miesiąca.</strong>
-            <span>
-              Dodaj krótką informację, do której chcesz wrócić przy rozliczaniu
-              miesiąca.
+            <span data-ui-title-with-help="true">
+              <strong>Brak notatek dla tego miesiąca.</strong>
+              <HelpHint label="Dodaj krótką informację, do której chcesz wrócić przy rozliczaniu miesiąca." />
             </span>
             <button
               type="button"
@@ -849,10 +850,7 @@ export default function ProfileMonthNotePanel({
         )}
 
         <footer data-ui-modal-footer="true">
-          <span data-ui-inline-info="true">
-            <NoteIcon name="info" />
-            Notatki są widoczne tylko dla Ciebie i zapisywane dla tego miesiąca.
-          </span>
+          <HelpHint label="Notatki są widoczne tylko dla Ciebie i zapisywane dla tego miesiąca." />
         </footer>
 
         {statusText && <StatusBox tone="success">{statusText}</StatusBox>}
@@ -866,7 +864,12 @@ export default function ProfileMonthNotePanel({
       <section
         data-ui-modal-shell="true"
         data-ui-size="form"
-        onClick={(event) => event.stopPropagation()}
+        onClick={(event) => {
+          event.stopPropagation();
+          if (activePicker) {
+            setActivePicker(null);
+          }
+        }}
       >
         <header data-ui-modal-header="true">
           <div data-ui-title-row="true">
@@ -874,9 +877,9 @@ export default function ProfileMonthNotePanel({
               <CategoryIcon iconKey={draft.icon} />
             </span>
             <div data-ui-title-copy="true">
-              <strong>{editingNote ? "Edytuj notatkę" : "Nowa notatka"}</strong>
-              <span>
-                Notatka będzie widoczna tylko w miesiącu {selectedMonth}.
+              <span data-ui-title-with-help="true">
+                <strong>{editingNote ? "Edytuj notatkę" : "Nowa notatka"}</strong>
+                <HelpHint label={`Notatka będzie widoczna tylko w miesiącu ${selectedMonth}.`} />
               </span>
             </div>
           </div>
@@ -1007,8 +1010,10 @@ export default function ProfileMonthNotePanel({
             <span data-ui-icon-tile="true" data-ui-tone="neutral">
               <CategoryIcon iconKey="note" />
             </span>
-            <strong>Brak notatek</strong>
-            <span>Dodaj krótką informację do zapamiętania w tym miesiącu.</span>
+            <span data-ui-title-with-help="true">
+              <strong>Brak notatek</strong>
+              <HelpHint label="Dodaj krótką informację do zapamiętania w tym miesiącu." />
+            </span>
           </div>
         )}
 

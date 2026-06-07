@@ -20,7 +20,7 @@ const iconShapes: Record<UiIconKey, IconShape> = {
   car: { paths: ['M5 16h14', 'M6.5 16 8 10h8l1.5 6', 'M8 19h.01', 'M16 19h.01', 'M4.5 13h15'] },
   transport: { paths: ['M7 17V6h10v11', 'M8.5 10h7', 'M8.5 14h7', 'M9 20h.01', 'M15 20h.01'] },
   plane: { paths: ['M3.5 12h17', 'M12 4l4 8-4 8', 'M8 12 5.5 8.5', 'M8 12l-2.5 3.5'] },
-  holiday: { paths: ['M7 7h10v12H7z', 'M9 7V5h6v2', 'M7 12h10', 'M10 19v-7', 'M14 19v-7'] },
+  holiday: { paths: ['M5 10.5c2.6-3.8 11.4-3.8 14 0', 'M5 10.5c2.2-.8 4.6-.8 7 0', 'M12 10.5v8', 'M9 19h6', 'M7.5 14.5 12 10.5l4.5 4'] },
   sun: { paths: ['M12 5V3', 'M12 21v-2', 'M5 12H3', 'M21 12h-2', 'M6.3 6.3 4.9 4.9', 'M19.1 19.1l-1.4-1.4', 'M17.7 6.3l1.4-1.4', 'M4.9 19.1l1.4-1.4'], circles: [{cx:12, cy:12, r:4}] },
   health: { paths: ['M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z'] },
   doctor: { paths: ['M8 5h8v4H8z', 'M6 9h12v11H6z', 'M12 12v5', 'M9.5 14.5h5'] },
@@ -56,7 +56,7 @@ const iconShapes: Record<UiIconKey, IconShape> = {
   idea: { paths: ['M9 18h6', 'M10 21h4', 'M8 11a4 4 0 1 1 8 0c0 2-1.2 3-2.4 4h-3.2C9.2 14 8 13 8 11Z'] },
   heart: { paths: ['M20 8.7c0 5-8 10.3-8 10.3S4 13.7 4 8.7A4.1 4.1 0 0 1 12 6a4.1 4.1 0 0 1 8 2.7Z'] },
   calendar: { paths: ['M4.5 5.5h15v14h-15z', 'M8 3.5v4', 'M16 3.5v4', 'M4.5 10h15'] },
-  more: { paths: ['M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Z', 'M8.5 12h.01', 'M12 12h.01', 'M15.5 12h.01'] },
+  more: { paths: ['M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Z', 'M8.8 12h.01', 'M12 12h.01', 'M15.2 12h.01'] },
   plus: { paths: ['M12 5v14', 'M5 12h14'] },
   edit: { paths: ['M4 20h4l11-11a2.8 2.8 0 0 0-4-4L4 16z', 'M13 6l5 5'] },
   trash: { paths: ['M4 7h16', 'M9 7V4h6v3', 'M7 7l1 14h8l1-14', 'M10 11v6', 'M14 11v6'] },
@@ -85,7 +85,7 @@ export default function CategoryIcon({ iconKey, level = 2 }: CategoryIconProps) 
       aria-hidden="true"
       title={icon?.label || resolvedIconKey}
     >
-      <svg viewBox="0 0 24 24" width="20" height="20" focusable="false">
+      <svg viewBox="0 0 24 24" width="16" height="16" focusable="false">
         {shape.paths?.map((path) => (
           <path
             key={path}
