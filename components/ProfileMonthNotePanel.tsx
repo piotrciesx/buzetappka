@@ -107,6 +107,19 @@ const NoteIcon = ({ name }: { name: NoteIconName }) => {
   );
 };
 
+const ChevronIcon = () => (
+  <svg viewBox="0 0 20 20" aria-hidden="true" width="16" height="16">
+    <path
+      d="M5.5 7.5L10 12l4.5-4.5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 
 const HelpHint = ({ label }: { label: string }) => (
   <span data-ui-help="true" tabIndex={0} aria-label={label} data-tooltip={label} />
@@ -233,7 +246,7 @@ export default function ProfileMonthNotePanel({
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isIconPickerExpanded, setIsIconPickerExpanded] = useState(false);
-  const [activePicker, setActivePicker] = useState<'color' | 'icon' | null>(null);
+  const [activePicker, setActivePicker] = useState<'category' | 'color' | 'icon' | null>(null);
   const [iconSearch, setIconSearch] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -582,6 +595,50 @@ export default function ProfileMonthNotePanel({
   const noteCountLabel = `${savedNotes.length} ${savedNotes.length === 1 ? "notatka" : "notatki"}`;
   const draftLength = draft.text.trim().length;
 
+  const renderCategoryPicker = () => {
+    const isOpen = activePicker === "category";
+
+    return (
+      <div
+        data-ui-picker-control="true"
+        data-ui-picker-variant="rich"
+        data-open={isOpen ? "true" : "false"}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button
+          type="button"
+          data-ui-picker-trigger="true"
+          aria-expanded={isOpen}
+          onClick={() => setActivePicker(isOpen ? null : "category")}
+        >
+          <span data-ui-picker-value="true">{draft.category}</span>
+          <span data-ui-picker-chevron="true"><ChevronIcon /></span>
+        </button>
+        {isOpen && (
+          <div data-ui-picker-menu="true" data-layout="simple">
+            {CATEGORY_OPTIONS.map((category) => (
+              <button
+                key={category}
+                type="button"
+                data-ui-picker-list-option="true"
+                data-active={draft.category === category}
+                onClick={() => {
+                  setDraft((previousValue) => ({
+                    ...previousValue,
+                    category,
+                  }));
+                  setActivePicker(null);
+                }}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const renderColorPicker = () => {
     const selectedTone = resolveToneOption(draft.tone);
     const isOpen = activePicker === "color";
@@ -603,7 +660,7 @@ export default function ProfileMonthNotePanel({
             <span data-ui-color-swatch="true" data-ui-tone={selectedTone.tone} />
             {selectedTone.label}
           </span>
-          <span data-ui-picker-chevron="true">⌄</span>
+          <span data-ui-picker-chevron="true"><ChevronIcon /></span>
         </button>
         {isOpen && (
           <div data-ui-picker-menu="true" data-layout="colors">
@@ -660,7 +717,7 @@ export default function ProfileMonthNotePanel({
             </span>
             {selectedIcon.label}
           </span>
-          <span data-ui-picker-chevron="true">⌄</span>
+          <span data-ui-picker-chevron="true"><ChevronIcon /></span>
         </button>
         {isOpen && (
           <div data-ui-picker-menu="true" data-layout="icons">
@@ -921,27 +978,10 @@ export default function ProfileMonthNotePanel({
             </span>
           </div>
 
-          <label data-ui-field="true">
+          <div data-ui-field="true">
             Kategoria notatki
-            <select
-              className="ui-select"
-              data-input-width="full"
-              data-ui-rich-select="true"
-              value={draft.category}
-              onChange={(event) =>
-                setDraft((previousValue) => ({
-                  ...previousValue,
-                  category: event.target.value as MonthNoteCategory,
-                }))
-              }
-            >
-              {CATEGORY_OPTIONS.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-          </label>
+            {renderCategoryPicker()}
+          </div>
 
           <div data-ui-picker-row="true">
             <div data-ui-field="true">

@@ -3081,3 +3081,65 @@
   width: 19px;
   height: 19px;
 }
+
+
+/* Month notes final dropdown chevron alignment */
+[data-ui-picker-chevron="true"] {
+  width: 22px;
+  min-width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ui-color-primary-navy);
+  line-height: 0;
+  transform: none;
+}
+
+[data-ui-picker-chevron="true"]::before {
+  content: none;
+}
+
+[data-ui-picker-chevron="true"] svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+  transform: translateY(0.5px);
+}
+
+[data-ui-picker-control="true"][data-open="true"] [data-ui-picker-chevron="true"] svg {
+  transform: rotate(180deg) translateY(-0.5px);
+}
+
+[data-ui-picker-menu="true"][data-layout="simple"] {
+  display: grid;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+[data-ui-picker-list-option="true"] {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--ui-space-7);
+  border: 0;
+  border-bottom: 1px solid var(--ui-border-divider);
+  background: #ffffff;
+  color: var(--ui-color-primary-navy);
+  font: inherit;
+  font-size: var(--ui-font-size-body-sm);
+  font-weight: var(--ui-font-weight-semibold);
+  text-align: left;
+  cursor: pointer;
+}
+
+[data-ui-picker-list-option="true"]:last-child {
+  border-bottom: 0;
+}
+
+[data-ui-picker-list-option="true"]:hover,
+[data-ui-picker-list-option="true"][data-active="true"] {
+  background: var(--ui-color-soft-blue);
+}
