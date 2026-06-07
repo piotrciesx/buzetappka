@@ -107,9 +107,7 @@ const formatCurrency = (value: number) =>
 const normalizeName = (value: string) => value.trim().toLocaleLowerCase('pl-PL')
 
 const HelpHint = ({ label }: { label: string }) => (
-  <span data-ui-help="true" tabIndex={0} aria-label={label} data-tooltip={label}>
-    i
-  </span>
+  <span data-ui-help="true" tabIndex={0} aria-label={label} data-tooltip={label} />
 )
 
 export default function PaymentSourcesPanel({
@@ -307,7 +305,12 @@ export default function PaymentSourcesPanel({
     const isOpen = activePicker === 'color'
 
     return (
-      <div data-ui-picker-control="true" data-open={isOpen ? 'true' : 'false'} onClick={(event) => event.stopPropagation()}>
+      <div
+        data-ui-picker-control="true"
+        data-ui-picker-variant="rich"
+        data-open={isOpen ? 'true' : 'false'}
+        onClick={(event) => event.stopPropagation()}
+      >
         <button
           type="button"
           data-ui-picker-trigger="true"
@@ -318,7 +321,7 @@ export default function PaymentSourcesPanel({
             <span data-ui-color-swatch="true" data-ui-tone={selectedColor.tone} />
             {selectedColor.label}
           </span>
-          <span data-ui-picker-chevron="true">⌄</span>
+          <span data-ui-picker-chevron="true" aria-hidden="true" />
         </button>
         {isOpen && (
           <div data-ui-picker-menu="true" data-layout="colors">
@@ -363,7 +366,12 @@ export default function PaymentSourcesPanel({
       : baseIcons
 
     return (
-      <div data-ui-picker-control="true" data-open={isOpen ? 'true' : 'false'} onClick={(event) => event.stopPropagation()}>
+      <div
+        data-ui-picker-control="true"
+        data-ui-picker-variant="rich"
+        data-open={isOpen ? 'true' : 'false'}
+        onClick={(event) => event.stopPropagation()}
+      >
         <button
           type="button"
           data-ui-picker-trigger="true"
@@ -376,7 +384,7 @@ export default function PaymentSourcesPanel({
             </span>
             {selectedIcon?.label || 'Ikona'}
           </span>
-          <span data-ui-picker-chevron="true">⌄</span>
+          <span data-ui-picker-chevron="true" aria-hidden="true" />
         </button>
         {isOpen && (
           <div data-ui-picker-menu="true" data-layout="icons">
@@ -656,6 +664,7 @@ export default function PaymentSourcesPanel({
                 <input
                   className="ui-input"
                   data-input-width="full"
+                  data-input-variant="rich"
                   value={draft.name}
                   onChange={(event) => {
                     setDraft((currentDraft) => ({ ...currentDraft, name: event.target.value }))
