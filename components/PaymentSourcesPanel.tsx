@@ -106,6 +106,15 @@ const formatCurrency = (value: number) =>
 
 const normalizeName = (value: string) => value.trim().toLocaleLowerCase('pl-PL')
 
+const InfoHint = ({ text }: { text: string }) => (
+  <span data-ui-info-hint="true">
+    <span data-ui-info-trigger="true" aria-label={text} tabIndex={0}>
+      i
+    </span>
+    <span data-ui-info-bubble="true">{text}</span>
+  </span>
+)
+
 export default function PaymentSourcesPanel({
   paymentSources,
   paymentSourceStats,
@@ -441,7 +450,7 @@ export default function PaymentSourcesPanel({
       <section data-payment-source-hero="true">
         <div>
           <strong>Źródła płatności</strong>
-          <span>Jedno źródło może działać dla przychodów, wydatków albo obu naraz.</span>
+          <InfoHint text="Jedno źródło może działać dla przychodów, wydatków albo obu naraz. Zaznaczenia przy źródle decydują tylko o tym, gdzie będzie dostępne przy nowych wpisach." />
         </div>
         <button type="button" className="ui-button--utility" onClick={openNewForm}>
           + Dodaj źródło

@@ -389,7 +389,6 @@ export default function ProfileMonthNotePanel({
     setEditingNoteId(null);
     setDraft(createEmptyDraft());
     setIsIconPickerExpanded(false);
-    setIsIconPickerExpanded(false);
     setIsFormOpen(true);
     setStatusText("");
     setErrorText("");
