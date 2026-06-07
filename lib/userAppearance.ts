@@ -26,25 +26,45 @@ export const USER_AVATARS = [
 export type UiColorKey =
   | 'blue'
   | 'sky'
+  | 'navy'
+  | 'cyan'
   | 'yellow'
+  | 'amber'
   | 'orange'
   | 'green'
   | 'mint'
+  | 'lime'
+  | 'olive'
   | 'violet'
+  | 'purple'
+  | 'indigo'
   | 'pink'
+  | 'rose'
   | 'red'
+  | 'brown'
+  | 'graphite'
   | 'neutral'
 
 export const UI_COLOR_OPTIONS: Array<{ tone: UiColorKey; label: string }> = [
   { tone: 'blue', label: 'Niebieski' },
   { tone: 'sky', label: 'Błękitny' },
+  { tone: 'navy', label: 'Granatowy' },
+  { tone: 'cyan', label: 'Cyjan' },
   { tone: 'yellow', label: 'Żółty' },
+  { tone: 'amber', label: 'Bursztynowy' },
   { tone: 'orange', label: 'Pomarańczowy' },
   { tone: 'green', label: 'Zielony' },
   { tone: 'mint', label: 'Miętowy' },
+  { tone: 'lime', label: 'Limonkowy' },
+  { tone: 'olive', label: 'Oliwkowy' },
   { tone: 'violet', label: 'Fioletowy' },
+  { tone: 'purple', label: 'Purpurowy' },
+  { tone: 'indigo', label: 'Indygo' },
   { tone: 'pink', label: 'Różowy' },
+  { tone: 'rose', label: 'Różany' },
   { tone: 'red', label: 'Czerwony' },
+  { tone: 'brown', label: 'Brązowy' },
+  { tone: 'graphite', label: 'Grafitowy' },
   { tone: 'neutral', label: 'Szary' },
 ]
 

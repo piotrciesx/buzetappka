@@ -1154,10 +1154,28 @@
   --ui-tone-text: #0369a1;
 }
 
+[data-ui-tone="navy"] {
+  --ui-tone-surface: #e8eefc;
+  --ui-tone-border: #c9d7f5;
+  --ui-tone-text: #082c7a;
+}
+
+[data-ui-tone="cyan"] {
+  --ui-tone-surface: #e1fbff;
+  --ui-tone-border: #a8f0ff;
+  --ui-tone-text: #087085;
+}
+
 [data-ui-tone="yellow"] {
   --ui-tone-surface: #fff3cf;
   --ui-tone-border: #ffe3a3;
   --ui-tone-text: #775000;
+}
+
+[data-ui-tone="amber"] {
+  --ui-tone-surface: #fff7d6;
+  --ui-tone-border: #fde68a;
+  --ui-tone-text: #92400e;
 }
 
 [data-ui-tone="orange"] {
@@ -1178,10 +1196,34 @@
   --ui-tone-text: #0f766e;
 }
 
+[data-ui-tone="lime"] {
+  --ui-tone-surface: #efffd7;
+  --ui-tone-border: #d9f99d;
+  --ui-tone-text: #4d7c0f;
+}
+
+[data-ui-tone="olive"] {
+  --ui-tone-surface: #f2f5dc;
+  --ui-tone-border: #dce4a7;
+  --ui-tone-text: #5f6f1b;
+}
+
 [data-ui-tone="violet"] {
   --ui-tone-surface: #efe6ff;
   --ui-tone-border: #dcc8ff;
   --ui-tone-text: #5b21b6;
+}
+
+[data-ui-tone="purple"] {
+  --ui-tone-surface: #f3e8ff;
+  --ui-tone-border: #e9d5ff;
+  --ui-tone-text: #7e22ce;
+}
+
+[data-ui-tone="indigo"] {
+  --ui-tone-surface: #e9edff;
+  --ui-tone-border: #c7d2fe;
+  --ui-tone-text: #4338ca;
 }
 
 [data-ui-tone="pink"] {
@@ -1190,10 +1232,28 @@
   --ui-tone-text: #be185d;
 }
 
+[data-ui-tone="rose"] {
+  --ui-tone-surface: #ffe4ec;
+  --ui-tone-border: #fecdd3;
+  --ui-tone-text: #be123c;
+}
+
 [data-ui-tone="red"] {
   --ui-tone-surface: #ffe8e8;
   --ui-tone-border: #ffc7c7;
   --ui-tone-text: #b91c1c;
+}
+
+[data-ui-tone="brown"] {
+  --ui-tone-surface: #f6eadf;
+  --ui-tone-border: #e7d0bd;
+  --ui-tone-text: #8b4a1f;
+}
+
+[data-ui-tone="graphite"] {
+  --ui-tone-surface: #edf0f5;
+  --ui-tone-border: #d3dae6;
+  --ui-tone-text: #334155;
 }
 
 [data-ui-tone="neutral"] {
@@ -1296,6 +1356,8 @@
 [data-ui-empty-block="true"] strong {
   color: var(--ui-color-primary-navy);
   font-size: var(--ui-type-t4);
+  font-weight: var(--ui-font-weight-semibold);
+  line-height: var(--ui-line-height-heading);
 }
 
 [data-ui-overlay="true"] {
@@ -1742,6 +1804,41 @@
   justify-content: flex-end;
   flex-wrap: wrap;
   gap: var(--ui-space-5);
+}
+
+
+[data-payment-source-hero="true"] .ui-button--utility {
+  min-height: 36px;
+  padding: 0 var(--ui-space-7);
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+[data-payment-source-preset-grid="true"] {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  gap: var(--ui-space-5);
+}
+
+[data-payment-source-preset="true"] {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-5);
+  padding: 0 var(--ui-space-6);
+  border: 1px solid rgba(8, 44, 122, 0.12);
+  border-radius: 14px;
+  background: #ffffff;
+  color: var(--ui-color-primary-navy);
+  font-size: var(--ui-type-t5);
+  font-weight: var(--ui-font-weight-semibold);
+  cursor: pointer;
+}
+
+[data-payment-source-preset="true"][data-active="true"] {
+  border-color: rgba(8, 44, 122, 0.34);
+  background: #f7fbff;
+  box-shadow: var(--ui-color-focus-ring);
 }
 
 [data-payment-source-scope-picker="true"] {

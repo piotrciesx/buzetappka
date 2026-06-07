@@ -61,21 +61,26 @@ const iconPaths: Record<UiIconKey, string[]> = {
 }
 
 export default function CategoryIcon({ iconKey, level = 2 }: CategoryIconProps) {
-  const icon = getUiIcon(iconKey)
+  const resolvedIconKey =
+    iconKey && Object.prototype.hasOwnProperty.call(iconPaths, iconKey)
+      ? (iconKey as UiIconKey)
+      : null
 
-  if (!icon) {
+  if (!resolvedIconKey) {
     return null
   }
+
+  const icon = getUiIcon(resolvedIconKey)
 
   return (
     <span
       data-category-icon="true"
       data-category-icon-level={level}
       aria-hidden="true"
-      title={icon.label}
+      title={icon?.label || resolvedIconKey}
     >
       <svg viewBox="0 0 24 24" width="16" height="16" focusable="false">
-        {iconPaths[icon.key].map((path) => (
+        {iconPaths[resolvedIconKey].map((path) => (
           <path
             key={path}
             d={path}

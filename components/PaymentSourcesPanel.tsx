@@ -13,7 +13,6 @@ import {
 import {
   getPaymentSourceColorTone,
   getPaymentSourceIconKey,
-  getPaymentSourceTypeLabel,
   PaymentSourceListKind,
 } from '../lib/paymentSources'
 import CategoryIcon from './CategoryIcon'
@@ -72,11 +71,34 @@ const DEFAULT_DRAFT: PaymentSourceDraft = {
   isExpenseSource: true,
 }
 
-const TYPE_DEFAULTS: Record<PaymentSourceType, Pick<PaymentSourceDraft, 'icon' | 'color'>> = {
-  cash: { icon: 'cash', color: 'green' },
-  card: { icon: 'card', color: 'blue' },
-  account: { icon: 'bank', color: 'violet' },
-  other: { icon: 'more', color: 'neutral' },
+const PAYMENT_SOURCE_ICON_PRESETS: Array<{
+  icon: UiIconKey
+  color: UiColorKey
+  label: string
+  type: PaymentSourceType
+}> = [
+  { icon: 'card', color: 'blue', label: 'Karta', type: 'card' },
+  { icon: 'cash', color: 'green', label: 'Gotówka', type: 'cash' },
+  { icon: 'bank', color: 'violet', label: 'Konto', type: 'account' },
+  { icon: 'savings', color: 'mint', label: 'Oszczędności', type: 'account' },
+  { icon: 'gift', color: 'amber', label: 'Kupon / prezent', type: 'other' },
+  { icon: 'more', color: 'neutral', label: 'Inne', type: 'other' },
+]
+
+const resolvePaymentSourceTypeFromIcon = (icon: UiIconKey): PaymentSourceType => {
+  if (icon === 'cash') {
+    return 'cash'
+  }
+
+  if (icon === 'card') {
+    return 'card'
+  }
+
+  if (icon === 'bank' || icon === 'savings' || icon === 'investments') {
+    return 'account'
+  }
+
+  return 'other'
 }
 
 const formatCurrency = (value: number) =>
@@ -151,14 +173,12 @@ export default function PaymentSourcesPanel({
     setIsFormOpen(true)
   }
 
-  const updateDraftType = (nextType: PaymentSourceType) => {
-    const defaults = TYPE_DEFAULTS[nextType]
-
+  const updateDraftIcon = (nextIcon: UiIconKey, nextColor?: UiColorKey) => {
     setDraft((currentDraft) => ({
       ...currentDraft,
-      type: nextType,
-      icon: defaults.icon,
-      color: defaults.color,
+      icon: nextIcon,
+      color: nextColor || currentDraft.color,
+      type: resolvePaymentSourceTypeFromIcon(nextIcon),
     }))
   }
 
@@ -268,7 +288,7 @@ export default function PaymentSourcesPanel({
           <div data-payment-source-copy="true">
             <strong>{source.name}</strong>
             <span>
-              {getPaymentSourceTypeLabel(source.type)} · {icon?.label || 'Ikona'} · {color.label}
+              {icon?.label || 'Ikona'} · {color.label}
             </span>
           </div>
         </div>
@@ -311,8 +331,8 @@ export default function PaymentSourcesPanel({
           <strong>Źródła płatności</strong>
           <span>Jedno źródło może działać dla przychodów, wydatków albo obu naraz.</span>
         </div>
-        <button type="button" className="ui-button--standard" onClick={openNewForm}>
-          Dodaj źródło
+        <button type="button" className="ui-button--utility" onClick={openNewForm}>
+          + Dodaj źródło
         </button>
       </section>
 
@@ -460,20 +480,25 @@ export default function PaymentSourcesPanel({
                 />
               </label>
 
-              <label data-ui-field="true">
-                Typ
-                <select
-                  className="ui-select"
-                  data-input-width="full"
-                  value={draft.type}
-                  onChange={(event) => updateDraftType(event.target.value as PaymentSourceType)}
-                >
-                  <option value="cash">Gotówka</option>
-                  <option value="card">Karta</option>
-                  <option value="account">Konto</option>
-                  <option value="other">Inne</option>
-                </select>
-              </label>
+              <div data-ui-field="true">
+                Szybki wybór źródła
+                <div data-payment-source-preset-grid="true">
+                  {PAYMENT_SOURCE_ICON_PRESETS.map((option) => (
+                    <button
+                      key={option.icon}
+                      type="button"
+                      data-payment-source-preset="true"
+                      data-active={draft.icon === option.icon}
+                      onClick={() => updateDraftIcon(option.icon, option.color)}
+                    >
+                      <span data-ui-icon-tile="true" data-ui-tone={option.color}>
+                        <CategoryIcon iconKey={option.icon} />
+                      </span>
+                      <span>{option.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
 
               <div data-ui-field="true">
                 Kolor ikonki
@@ -514,7 +539,7 @@ export default function PaymentSourcesPanel({
                       data-active={draft.icon === option.key}
                       aria-label={`Wybierz ikonę: ${option.label}`}
                       title={option.label}
-                      onClick={() => setDraft((currentDraft) => ({ ...currentDraft, icon: option.key }))}
+                      onClick={() => updateDraftIcon(option.key)}
                     >
                       <span data-ui-icon-tile="true" data-ui-tone={draft.color}>
                         <CategoryIcon iconKey={option.key} />
