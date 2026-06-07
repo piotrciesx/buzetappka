@@ -109,9 +109,7 @@ const NoteIcon = ({ name }: { name: NoteIconName }) => {
 
 
 const HelpHint = ({ label }: { label: string }) => (
-  <span data-ui-help="true" tabIndex={0} aria-label={label} data-tooltip={label}>
-    i
-  </span>
+  <span data-ui-help="true" tabIndex={0} aria-label={label} data-tooltip={label} />
 )
 
 const createNoteId = () => {
