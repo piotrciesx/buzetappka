@@ -3401,3 +3401,80 @@
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+/* BudżAppka — overlay-safe help hints.
+   When a modal overlay is open, help icons from the blurred/background layer
+   must not punch through above the active window. The active overlay keeps its
+   own help icons visible. */
+body:has([data-ui-overlay="true"]) [data-ui-help="true"] {
+  visibility: hidden;
+}
+
+body:has([data-ui-overlay="true"]) [data-ui-overlay="true"] [data-ui-help="true"] {
+  visibility: visible;
+}
+
+body:has([data-ui-overlay="true"]) [data-ui-overlay="true"] [data-ui-help="true"]::after {
+  visibility: visible;
+}
+
+/* BudżAppka — final overlay and chevron guard.
+   This is intentionally placed at the end of foundation.css to normalize the
+   shared primitives without touching module logic. */
+body:has([data-ui-modal-shell="true"]) [data-ui-help="true"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-help="true"] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-help="true"]::before,
+body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-help="true"]::after {
+  visibility: visible;
+}
+
+[data-ui-picker-chevron="true"] {
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  display: inline-grid;
+  place-items: center;
+  color: var(--ui-color-primary-navy);
+  font-size: 0;
+  line-height: 0;
+  transform: none;
+}
+
+[data-ui-picker-chevron="true"]::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-right: 1.7px solid currentColor;
+  border-bottom: 1.7px solid currentColor;
+  transform: rotate(45deg) translate(-1px, -1px);
+  transform-origin: center;
+}
+
+[data-ui-picker-chevron="true"]:has(svg)::before {
+  content: none;
+}
+
+[data-ui-picker-chevron="true"] svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+  transform: translateY(0.5px);
+}
+
+[data-ui-picker-control="true"][data-open="true"] [data-ui-picker-chevron="true"]::before {
+  transform: rotate(225deg) translate(-1px, -1px);
+}
+
+[data-ui-picker-control="true"][data-open="true"] [data-ui-picker-chevron="true"] svg {
+  transform: rotate(180deg) translateY(-0.5px);
+}
