@@ -235,6 +235,8 @@ export default function ProfileMonthNotePanel({
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isIconPickerExpanded, setIsIconPickerExpanded] = useState(false);
+  const [activePicker, setActivePicker] = useState<'color' | 'icon' | null>(null);
+  const [iconSearch, setIconSearch] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [statusText, setStatusText] = useState("");
@@ -277,6 +279,8 @@ export default function ProfileMonthNotePanel({
       setExpandedNoteIds([]);
       setSelectedNoteId(null);
       setIsIconPickerExpanded(false);
+      setActivePicker(null);
+      setIconSearch('');
       setIsFormOpen(false);
     } catch (error) {
       setNoteId(null);
@@ -396,6 +400,8 @@ export default function ProfileMonthNotePanel({
     setEditingNoteId(null);
     setDraft(createEmptyDraft());
     setIsIconPickerExpanded(false);
+    setActivePicker(null);
+    setIconSearch('');
     setIsFormOpen(true);
     setStatusText("");
     setErrorText("");
@@ -410,6 +416,8 @@ export default function ProfileMonthNotePanel({
       icon: note.icon,
       category: note.category,
     });
+    setActivePicker(null);
+    setIconSearch('');
     setIsFormOpen(true);
     setStatusText("");
     setErrorText("");
@@ -419,6 +427,8 @@ export default function ProfileMonthNotePanel({
     setEditingNoteId(null);
     setDraft(createEmptyDraft());
     setIsIconPickerExpanded(false);
+    setActivePicker(null);
+    setIconSearch('');
     setIsFormOpen(false);
     setStatusText("");
     setErrorText("");
@@ -576,45 +586,66 @@ export default function ProfileMonthNotePanel({
 
   const renderColorPicker = () => {
     const selectedTone = resolveToneOption(draft.tone);
+    const isOpen = activePicker === "color";
 
     return (
-      <details data-ui-picker-control="true">
-        <summary>
+      <div data-ui-picker-control="true" data-open={isOpen ? "true" : "false"} onClick={(event) => event.stopPropagation()}>
+        <button
+          type="button"
+          data-ui-picker-trigger="true"
+          aria-expanded={isOpen}
+          onClick={() => setActivePicker(isOpen ? null : "color")}
+        >
           <span data-ui-picker-value="true">
             <span data-ui-color-swatch="true" data-ui-tone={selectedTone.tone} />
             {selectedTone.label}
           </span>
           <span data-ui-picker-chevron="true">⌄</span>
-        </summary>
-        <div data-ui-picker-menu="true" data-layout="colors">
-          {NOTE_COLOR_OPTIONS.map((option) => (
-            <button
-              key={option.tone}
-              type="button"
-              data-ui-color-option="true"
-              data-ui-tone={option.tone}
-              data-active={draft.tone === option.tone}
-              aria-label={`Wybierz kolor: ${option.label}`}
-              title={option.label}
-              onClick={() => updateDraftTone(option.tone)}
-            >
-              <span data-ui-color-swatch="true" data-ui-tone={option.tone} />
-            </button>
-          ))}
-        </div>
-      </details>
+        </button>
+        {isOpen && (
+          <div data-ui-picker-menu="true" data-layout="colors">
+            {NOTE_COLOR_OPTIONS.map((option) => (
+              <button
+                key={option.tone}
+                type="button"
+                data-ui-color-option="true"
+                data-ui-tone={option.tone}
+                data-active={draft.tone === option.tone}
+                aria-label={`Wybierz kolor: ${option.label}`}
+                title={option.label}
+                onClick={() => {
+                  updateDraftTone(option.tone);
+                  setActivePicker(null);
+                }}
+              >
+                <span data-ui-color-swatch="true" data-ui-tone={option.tone} />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     );
   };
 
   const renderIconPicker = () => {
     const selectedIcon = resolveIconOption(draft.icon);
-    const visibleIcons = isIconPickerExpanded
+    const isOpen = activePicker === "icon";
+    const normalizedSearch = iconSearch.trim().toLocaleLowerCase("pl-PL");
+    const baseIcons = isIconPickerExpanded
       ? NOTE_ICON_OPTIONS
       : NOTE_ICON_OPTIONS.filter((option) => SUGGESTED_NOTE_ICONS.includes(option.key));
+    const visibleIcons = normalizedSearch
+      ? NOTE_ICON_OPTIONS.filter((option) => option.label.toLocaleLowerCase("pl-PL").includes(normalizedSearch))
+      : baseIcons;
 
     return (
-      <details data-ui-picker-control="true">
-        <summary>
+      <div data-ui-picker-control="true" data-open={isOpen ? "true" : "false"} onClick={(event) => event.stopPropagation()}>
+        <button
+          type="button"
+          data-ui-picker-trigger="true"
+          aria-expanded={isOpen}
+          onClick={() => setActivePicker(isOpen ? null : "icon")}
+        >
           <span data-ui-picker-value="true">
             <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
               <CategoryIcon iconKey={draft.icon} />
@@ -622,38 +653,56 @@ export default function ProfileMonthNotePanel({
             {selectedIcon.label}
           </span>
           <span data-ui-picker-chevron="true">⌄</span>
-        </summary>
-        <div data-ui-picker-menu="true" data-layout="icons">
-          <div data-ui-picker-menu-grid="true">
-            {visibleIcons.map((option) => (
+        </button>
+        {isOpen && (
+          <div data-ui-picker-menu="true" data-layout="icons">
+            <label data-ui-picker-search="true">
+              <input
+                type="search"
+                value={iconSearch}
+                onChange={(event) => setIconSearch(event.target.value)}
+                placeholder="Szukaj ikony..."
+                autoFocus
+              />
+            </label>
+            <div data-ui-picker-menu-grid="true">
+              {visibleIcons.map((option) => (
+                <button
+                  key={option.key}
+                  type="button"
+                  data-ui-icon-select-option="true"
+                  data-ui-tone={draft.tone}
+                  data-active={draft.icon === option.key}
+                  aria-label={`Wybierz ikonę: ${option.label}`}
+                  title={option.label}
+                  onClick={() => {
+                    updateDraftIcon(option.key);
+                    setActivePicker(null);
+                    setIconSearch("");
+                  }}
+                >
+                  <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
+                    <CategoryIcon iconKey={option.key} />
+                  </span>
+                  <span>{option.label}</span>
+                </button>
+              ))}
+            </div>
+            {!isIconPickerExpanded && !normalizedSearch && (
               <button
-                key={option.key}
                 type="button"
-                data-ui-icon-select-option="true"
-                data-ui-tone={draft.tone}
-                data-active={draft.icon === option.key}
-                aria-label={`Wybierz ikonę: ${option.label}`}
-                title={option.label}
-                onClick={() => updateDraftIcon(option.key)}
+                data-ui-picker-more="true"
+                onClick={() => setIsIconPickerExpanded(true)}
               >
-                <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
-                  <CategoryIcon iconKey={option.key} />
-                </span>
-                <span>{option.label}</span>
+                Wybierz więcej ikon
               </button>
-            ))}
+            )}
+            {visibleIcons.length === 0 && (
+              <div data-ui-picker-empty="true">Brak ikon dla tej nazwy.</div>
+            )}
           </div>
-          {!isIconPickerExpanded && (
-            <button
-              type="button"
-              data-ui-picker-more="true"
-              onClick={() => setIsIconPickerExpanded(true)}
-            >
-              Wybierz więcej ikon
-            </button>
-          )}
-        </div>
-      </details>
+        )}
+      </div>
     );
   };
 
@@ -815,7 +864,12 @@ export default function ProfileMonthNotePanel({
       <section
         data-ui-modal-shell="true"
         data-ui-size="form"
-        onClick={(event) => event.stopPropagation()}
+        onClick={(event) => {
+          event.stopPropagation();
+          if (activePicker) {
+            setActivePicker(null);
+          }
+        }}
       >
         <header data-ui-modal-header="true">
           <div data-ui-title-row="true">
