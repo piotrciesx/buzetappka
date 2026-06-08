@@ -1,5 +1,6 @@
-import { CSSProperties } from "react";
+import { CSSProperties, useMemo, useState } from "react";
 import { getUniqueCategoryLabel } from "../../lib/categoryUtils";
+import CategoryIcon from "../CategoryIcon";
 import { Category, TransactionShortcut } from "./transactionCreatorTypes";
 
 type Props = {
@@ -26,22 +27,33 @@ type Props = {
   onTogglePinnedCategory: (categoryId: string) => void;
 };
 
-const creatorShellStyle: CSSProperties = {
+type ShortcutMenuKey = "recent" | "frequent" | "pinned" | null;
+
+type CategoryWithAppearance = Category & {
+  icon?: string | null;
+  icon_key?: string | null;
+  category_icon?: string | null;
+  color?: string | null;
+  color_tone?: string | null;
+};
+
+const flowShellStyle: CSSProperties = {
   display: "grid",
-  gap: "var(--ui-space-7)",
+  gap: "var(--ui-space-6)",
   marginTop: "var(--ui-space-7)",
 };
 
-const creatorPanelStyle: CSSProperties = {
+const panelStyle: CSSProperties = {
   display: "grid",
-  gap: "var(--ui-space-6)",
+  gap: "var(--ui-space-5)",
   padding: "var(--ui-space-7)",
   border: "1px solid var(--ui-border-divider)",
-  borderRadius: "var(--ui-radius-xl)",
-  background: "var(--ui-surface-card)",
+  borderRadius: "var(--ui-radius-2xl)",
+  background: "linear-gradient(180deg, #ffffff 0%, var(--ui-color-extra-light-blue) 100%)",
+  boxShadow: "inset 0 0 0 1px rgba(8, 44, 122, 0.03)",
 };
 
-const creatorHeaderStyle: CSSProperties = {
+const compactHeaderStyle: CSSProperties = {
   minWidth: 0,
   display: "flex",
   alignItems: "center",
@@ -49,40 +61,82 @@ const creatorHeaderStyle: CSSProperties = {
   gap: "var(--ui-space-6)",
 };
 
-const creatorTitleStyle: CSSProperties = {
+const titleWrapStyle: CSSProperties = {
   minWidth: 0,
   display: "grid",
   gap: "var(--ui-space-2)",
 };
 
-const creatorTitleStrongStyle: CSSProperties = {
+const titleStyle: CSSProperties = {
   color: "var(--ui-color-primary-navy)",
   fontSize: "var(--ui-type-t3)",
   fontWeight: "var(--ui-font-weight-bold)",
   lineHeight: "var(--ui-line-height-heading)",
 };
 
-const creatorTitleMetaStyle: CSSProperties = {
+const metaStyle: CSSProperties = {
   color: "var(--ui-text-secondary)",
   fontSize: "var(--ui-type-helper)",
   fontWeight: "var(--ui-font-weight-medium)",
   lineHeight: "var(--ui-line-height-body)",
 };
 
-const shortcutGridStyle: CSSProperties = {
+const shortcutBarStyle: CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+  gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+  gap: "var(--ui-space-4)",
+};
+
+const shortcutMenuWrapStyle: CSSProperties = {
+  position: "relative",
+  minWidth: 0,
+};
+
+const shortcutTriggerStyle: CSSProperties = {
+  width: "100%",
+  minHeight: 34,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "var(--ui-space-3)",
+  padding: "0 var(--ui-space-5)",
+  border: "1px solid var(--ui-border-divider)",
+  borderRadius: "var(--ui-radius-lg)",
+  background: "var(--ui-surface-card)",
+  color: "var(--ui-color-primary-navy)",
+  fontSize: "var(--ui-type-helper)",
+  fontWeight: "var(--ui-font-weight-bold)",
+  cursor: "pointer",
+};
+
+const shortcutMenuStyle: CSSProperties = {
+  position: "absolute",
+  top: "calc(100% + var(--ui-space-3))",
+  left: 0,
+  right: 0,
+  zIndex: 2200,
+  display: "grid",
+  gap: "var(--ui-space-2)",
+  padding: "var(--ui-space-3)",
+  border: "1px solid var(--ui-border-divider)",
+  borderRadius: "var(--ui-radius-xl)",
+  background: "var(--ui-surface-dropdown)",
+  boxShadow: "var(--ui-shadow-dropdown)",
+};
+
+const categoryGridStyle: CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
   gap: "var(--ui-space-5)",
 };
 
-const shortcutChipStyle: CSSProperties = {
+const categoryButtonStyle: CSSProperties = {
   minWidth: 0,
   width: "100%",
-  display: "grid",
-  gridTemplateColumns: "32px minmax(0, 1fr)",
+  display: "flex",
   alignItems: "center",
   gap: "var(--ui-space-5)",
-  minHeight: 46,
+  minHeight: 42,
   padding: "var(--ui-space-4) var(--ui-space-5)",
   border: "1px solid var(--ui-border-divider)",
   borderRadius: "var(--ui-radius-lg)",
@@ -92,25 +146,23 @@ const shortcutChipStyle: CSSProperties = {
   cursor: "pointer",
 };
 
-const selectedShortcutChipStyle: CSSProperties = {
+const selectedCategoryButtonStyle: CSSProperties = {
   borderColor: "rgba(8, 44, 122, 0.32)",
   background: "var(--ui-color-soft-blue)",
 };
 
-const categoryIconStyle: CSSProperties = {
-  width: 32,
-  minWidth: 32,
-  height: 32,
+const iconTileStyle: CSSProperties = {
+  width: 30,
+  minWidth: 30,
+  height: 30,
   display: "grid",
   placeItems: "center",
   borderRadius: 999,
   background: "var(--ui-tone-surface, #eaf2ff)",
   color: "var(--ui-tone-text, var(--ui-color-primary-navy))",
-  fontSize: "var(--ui-type-helper)",
-  fontWeight: "var(--ui-font-weight-bold)",
 };
 
-const chipCopyStyle: CSSProperties = {
+const copyStyle: CSSProperties = {
   minWidth: 0,
   display: "grid",
   gap: 2,
@@ -151,33 +203,55 @@ const backButtonStyle: CSSProperties = {
 };
 
 const finalCardStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "42px minmax(0, 1fr) auto",
+  display: "flex",
   alignItems: "center",
+  justifyContent: "space-between",
   gap: "var(--ui-space-6)",
   padding: "var(--ui-space-6)",
   border: "1px solid rgba(8, 44, 122, 0.18)",
-  borderRadius: "var(--ui-radius-xl)",
-  background:
-    "linear-gradient(180deg, #ffffff 0%, var(--ui-color-soft-blue) 100%)",
+  borderRadius: "var(--ui-radius-2xl)",
+  background: "linear-gradient(180deg, #ffffff 0%, var(--ui-color-soft-blue) 100%)",
 };
 
-const finalIconStyle: CSSProperties = {
-  ...categoryIconStyle,
-  width: 42,
-  minWidth: 42,
-  height: 42,
-  fontSize: "var(--ui-type-t3)",
+const finalMainStyle: CSSProperties = {
+  minWidth: 0,
+  display: "flex",
+  alignItems: "center",
+  gap: "var(--ui-space-5)",
 };
 
-const helperStyle: CSSProperties = {
+const emptyMenuStyle: CSSProperties = {
+  padding: "var(--ui-space-4)",
   color: "var(--ui-text-secondary)",
   fontSize: "var(--ui-type-helper)",
   lineHeight: "var(--ui-line-height-body)",
 };
 
-const getInitial = (label: string) =>
-  label.trim().slice(0, 1).toLocaleUpperCase("pl-PL") || "•";
+const getCategoryIconKey = (category?: Category | null) => {
+  if (!category) {
+    return null;
+  }
+
+  const categoryWithAppearance = category as CategoryWithAppearance;
+  return (
+    categoryWithAppearance.icon_key ||
+    categoryWithAppearance.category_icon ||
+    categoryWithAppearance.icon ||
+    null
+  );
+};
+
+const getCategoryTone = (category?: Category | null) => {
+  if (!category) {
+    return undefined;
+  }
+
+  const categoryWithAppearance = category as CategoryWithAppearance;
+  return categoryWithAppearance.color_tone || categoryWithAppearance.color || undefined;
+};
+
+const hasChildrenLabel = (hasChildren: boolean) =>
+  hasChildren ? "wybierz podkategorię" : "kategoria końcowa";
 
 export default function TransactionCreatorCategorySection({
   level1Categories,
@@ -201,21 +275,40 @@ export default function TransactionCreatorCategorySection({
   handleLevel3Click,
   onTogglePinnedCategory,
 }: Props) {
-  const selectedLevel1 = selectedLevel1Id
-    ? categoriesById[selectedLevel1Id] || null
-    : null;
-  const selectedLevel2 = selectedLevel2Id
-    ? categoriesById[selectedLevel2Id] || null
-    : null;
-  const effectiveCategory = effectiveCategoryId
-    ? categoriesById[effectiveCategoryId] || null
-    : null;
+  const [activeShortcutMenu, setActiveShortcutMenu] = useState<ShortcutMenuKey>(null);
+
+  const selectedLevel1 = selectedLevel1Id ? categoriesById[selectedLevel1Id] || null : null;
+  const selectedLevel2 = selectedLevel2Id ? categoriesById[selectedLevel2Id] || null : null;
+  const effectiveCategory = effectiveCategoryId ? categoriesById[effectiveCategoryId] || null : null;
+
+  const shortcutMenus = useMemo(
+    () => [
+      { key: "recent" as const, label: "Ostatnie", items: recentShortcutCategories, empty: "Brak ostatnich kategorii." },
+      { key: "frequent" as const, label: "Najczęstsze", items: topShortcutCategories, empty: "Brak najczęstszych kategorii." },
+      { key: "pinned" as const, label: "Przypięte", items: pinnedShortcutCategories, empty: "Brak przypiętych kategorii." },
+    ],
+    [pinnedShortcutCategories, recentShortcutCategories, topShortcutCategories],
+  );
 
   const getLevel3ButtonLabel = (category: Category) => {
     return getUniqueCategoryLabel(
       category.id,
       categoriesById,
       availableLevel3Categories.map((item) => item.id),
+    );
+  };
+
+  const renderCategoryIcon = (category?: Category | null) => {
+    const iconKey = getCategoryIconKey(category);
+
+    if (!iconKey) {
+      return null;
+    }
+
+    return (
+      <span data-ui-icon-tile="true" data-ui-tone={getCategoryTone(category)} style={iconTileStyle}>
+        <CategoryIcon iconKey={iconKey} level={category?.level === 3 ? 3 : 2} />
+      </span>
     );
   };
 
@@ -226,7 +319,7 @@ export default function TransactionCreatorCategorySection({
     isSelected,
     onClick,
   }: {
-    category?: Category;
+    category?: Category | null;
     label: string;
     meta?: string;
     isSelected?: boolean;
@@ -238,79 +331,81 @@ export default function TransactionCreatorCategorySection({
       data-transaction-category-selected={isSelected ? "true" : "false"}
       data-transaction-category-tile="true"
       style={{
-        ...shortcutChipStyle,
-        ...(isSelected ? selectedShortcutChipStyle : {}),
+        ...categoryButtonStyle,
+        ...(isSelected ? selectedCategoryButtonStyle : {}),
       }}
       onClick={onClick}
     >
-      <span data-transaction-category-icon="true" style={categoryIconStyle}>
-        {getInitial(category?.name || label)}
-      </span>
-      <span style={chipCopyStyle}>
+      {renderCategoryIcon(category)}
+      <span style={copyStyle}>
         <strong style={chipTitleStyle}>{label}</strong>
         {meta && <small style={chipMetaStyle}>{meta}</small>}
       </span>
     </button>
   );
 
-  const renderShortcutList = (
-    title: string,
-    meta: string,
-    shortcuts: TransactionShortcut[],
-    isPriority = false,
-  ) => {
-    if (shortcuts.length === 0 || effectiveCategoryId || selectedLevel1Id) {
-      return null;
-    }
+  const renderShortcutMenu = ({
+    key,
+    label,
+    items,
+    empty,
+  }: {
+    key: Exclude<ShortcutMenuKey, null>;
+    label: string;
+    items: TransactionShortcut[];
+    empty: string;
+  }) => {
+    const isOpen = activeShortcutMenu === key;
 
     return (
-      <section
-        style={creatorPanelStyle}
-        data-transaction-shortcut-section="true"
-      >
-        <header style={creatorHeaderStyle}>
-          <span style={creatorTitleStyle}>
-            <strong style={creatorTitleStrongStyle}>{title}</strong>
-            <small style={creatorTitleMetaStyle}>{meta}</small>
-          </span>
-        </header>
-        <div style={shortcutGridStyle} data-transaction-shortcut-list="true">
-          {shortcuts.map((shortcut) =>
-            renderCategoryButton({
-              label: shortcut.label,
-              meta: isPriority ? "przypięta kategoria" : "szybki wybór",
-              isSelected: effectiveCategoryId === shortcut.id,
-              onClick: () => handleShortcutClick(shortcut.id),
-            }),
-          )}
-        </div>
-      </section>
+      <div key={key} style={shortcutMenuWrapStyle} data-transaction-shortcut-menu="true">
+        <button
+          type="button"
+          style={shortcutTriggerStyle}
+          aria-expanded={isOpen}
+          onClick={() => setActiveShortcutMenu(isOpen ? null : key)}
+        >
+          {label} ▾
+        </button>
+        {isOpen && (
+          <div style={shortcutMenuStyle} data-transaction-shortcut-dropdown="true">
+            {items.length === 0 ? (
+              <div style={emptyMenuStyle}>{empty}</div>
+            ) : (
+              items.map((shortcut) => {
+                const shortcutCategory = categoriesById[shortcut.id] || null;
+
+                return renderCategoryButton({
+                  category: shortcutCategory,
+                  label: shortcut.label,
+                  meta: "otwórz formularz",
+                  isSelected: effectiveCategoryId === shortcut.id,
+                  onClick: () => {
+                    setActiveShortcutMenu(null);
+                    handleShortcutClick(shortcut.id);
+                  },
+                });
+              })
+            )}
+          </div>
+        )}
+      </div>
     );
   };
 
   if (effectiveCategoryId) {
-    const canGoBackToLevel3 =
-      selectedLevel2 && availableLevel3Categories.length > 0;
-    const canGoBackToLevel2 =
-      selectedLevel1 && availableLevel2Categories.length > 0;
+    const canGoBackToLevel3 = Boolean(selectedLevel2 && availableLevel3Categories.length > 0);
+    const canGoBackToLevel2 = Boolean(selectedLevel1 && availableLevel2Categories.length > 0);
 
     return (
-      <section
-        style={creatorShellStyle}
-        data-transaction-category-flow="true"
-        data-flow-step="final"
-      >
+      <section style={flowShellStyle} data-transaction-category-flow="true" data-flow-step="final">
         <div style={finalCardStyle} data-transaction-final-category="true">
-          <span style={finalIconStyle}>
-            {getInitial(effectiveCategory?.name || effectiveCategoryLabel)}
-          </span>
-          <span style={chipCopyStyle}>
-            <strong style={creatorTitleStrongStyle}>
-              {effectiveCategory?.name || effectiveCategoryLabel}
-            </strong>
-            <small style={creatorTitleMetaStyle}>
-              {effectiveCategoryLabel}
-            </small>
+          <span style={finalMainStyle}>
+            {renderCategoryIcon(effectiveCategory)}
+            <span style={copyStyle}>
+              <strong style={titleStyle}>{effectiveCategory?.name || effectiveCategoryLabel}</strong>
+              <small style={metaStyle}>{effectiveCategoryLabel}</small>
+            </span>
           </span>
           <button
             type="button"
@@ -326,68 +421,49 @@ export default function TransactionCreatorCategorySection({
               }
             }}
           >
-            zmień
+            ← zmień
           </button>
         </div>
 
         <button
           type="button"
           data-transaction-pin-button="true"
-          data-transaction-pinned={
-            pinnedCategoryIds.includes(effectiveCategoryId) ? "true" : "false"
-          }
-          aria-label={
-            pinnedCategoryIds.includes(effectiveCategoryId)
-              ? "Odepnij kategorię"
-              : "Przypnij kategorię"
-          }
-          title={
-            pinnedCategoryIds.includes(effectiveCategoryId)
-              ? "Odepnij kategorię"
-              : "Przypnij kategorię"
-          }
+          data-transaction-pinned={pinnedCategoryIds.includes(effectiveCategoryId) ? "true" : "false"}
+          aria-label={pinnedCategoryIds.includes(effectiveCategoryId) ? "Odepnij kategorię" : "Przypnij kategorię"}
+          title={pinnedCategoryIds.includes(effectiveCategoryId) ? "Odepnij kategorię" : "Przypnij kategorię"}
           style={{ ...backButtonStyle, justifySelf: "start" }}
           onClick={() => onTogglePinnedCategory(effectiveCategoryId)}
         >
-          {pinnedCategoryIds.includes(effectiveCategoryId)
-            ? "odepnij kategorię"
-            : "przypnij kategorię"}
+          {pinnedCategoryIds.includes(effectiveCategoryId) ? "odepnij kategorię" : "przypnij kategorię"}
         </button>
       </section>
     );
   }
 
   return (
-    <section style={creatorShellStyle} data-transaction-category-flow="true">
-      {renderShortcutList(
-        "Przypięte kategorie",
-        "Kliknięcie od razu otwiera formularz dla tej kategorii.",
-        pinnedShortcutCategories,
-        true,
-      )}
-      {renderShortcutList(
-        "Szybkie kategorie",
-        "Najczęściej używane kategorie.",
-        topShortcutCategories,
-      )}
-      {renderShortcutList(
-        "Ostatnio używane",
-        "Ostatnie kategorie wpisów.",
-        recentShortcutCategories,
-      )}
+    <section style={flowShellStyle} data-transaction-category-flow="true">
+      <section style={panelStyle} data-transaction-shortcut-section="true">
+        <header style={compactHeaderStyle}>
+          <span style={titleWrapStyle}>
+            <strong style={titleStyle}>Szybki wybór</strong>
+            <small style={metaStyle}>Rozwiń tylko wtedy, gdy chcesz pominąć drzewo kategorii.</small>
+          </span>
+        </header>
+        <div style={shortcutBarStyle} data-transaction-shortcut-bar="true">
+          {shortcutMenus.map(renderShortcutMenu)}
+        </div>
+      </section>
 
       {!lockedLevel1Id && !selectedLevel1Id && (
-        <section style={creatorPanelStyle} data-transaction-type-section="true">
-          <header style={creatorHeaderStyle}>
-            <span style={creatorTitleStyle}>
-              <strong style={creatorTitleStrongStyle}>Co dodajesz?</strong>
-              <small style={creatorTitleMetaStyle}>
-                Wybierz przychód albo wydatek.
-              </small>
+        <section style={panelStyle} data-transaction-type-section="true">
+          <header style={compactHeaderStyle}>
+            <span style={titleWrapStyle}>
+              <strong style={titleStyle}>Co dodajesz?</strong>
+              <small style={metaStyle}>Wybierz przychód albo wydatek.</small>
             </span>
           </header>
 
-          <div style={shortcutGridStyle} data-transaction-category-list="true">
+          <div style={categoryGridStyle} data-transaction-category-list="true">
             {level1Categories.map((category) => {
               const level2Children = level2ByParentId[category.id] || [];
               const isFinalHere = level2Children.length === 0;
@@ -404,97 +480,54 @@ export default function TransactionCreatorCategorySection({
         </section>
       )}
 
-      {selectedLevel1Id &&
-        availableLevel2Categories.length > 0 &&
-        !selectedLevel2Id && (
-          <section
-            style={creatorPanelStyle}
-            data-transaction-entry-section="true"
-          >
-            <header style={creatorHeaderStyle}>
-              <span style={creatorTitleStyle}>
-                <strong style={creatorTitleStrongStyle}>
-                  Wybierz kategorię
-                </strong>
-                <small style={creatorTitleMetaStyle}>
-                  {selectedLevel1?.name || "Wybrany typ"}
-                </small>
-              </span>
-              {!lockedLevel1Id && selectedLevel1 && (
-                <button
-                  type="button"
-                  style={backButtonStyle}
-                  onClick={() => handleLevel1Click(selectedLevel1)}
-                >
-                  odśwież
-                </button>
-              )}
-            </header>
+      {selectedLevel1Id && availableLevel2Categories.length > 0 && !selectedLevel2Id && (
+        <section style={panelStyle} data-transaction-entry-section="true">
+          <header style={compactHeaderStyle}>
+            <span style={titleWrapStyle}>
+              <strong style={titleStyle}>Wybierz kategorię</strong>
+              <small style={metaStyle}>{selectedLevel1?.name || "Wybrany typ"}</small>
+            </span>
+          </header>
 
-            <div
-              style={shortcutGridStyle}
-              data-transaction-category-list="true"
-            >
-              {availableLevel2Categories.map((level2Category) => {
-                const level3Children =
-                  level3ByParentId[level2Category.id] || [];
-                const isFinalHere = level3Children.length === 0;
+          <div style={categoryGridStyle} data-transaction-category-list="true">
+            {availableLevel2Categories.map((level2Category) => {
+              const level3Children = level3ByParentId[level2Category.id] || [];
+              const isFinalHere = level3Children.length === 0;
 
-                return renderCategoryButton({
-                  category: level2Category,
-                  label: level2Category.name,
-                  meta: isFinalHere
-                    ? "kategoria końcowa"
-                    : "wybierz podkategorię",
-                  isSelected: selectedLevel2Id === level2Category.id,
-                  onClick: () => handleLevel2Click(level2Category),
-                });
-              })}
-            </div>
-          </section>
-        )}
+              return renderCategoryButton({
+                category: level2Category,
+                label: level2Category.name,
+                meta: hasChildrenLabel(!isFinalHere),
+                isSelected: selectedLevel2Id === level2Category.id,
+                onClick: () => handleLevel2Click(level2Category),
+              });
+            })}
+          </div>
+        </section>
+      )}
 
       {selectedLevel1Id && availableLevel2Categories.length === 0 && (
-        <section
-          style={creatorPanelStyle}
-          data-transaction-final-category-placeholder="true"
-        >
-          <strong style={creatorTitleStrongStyle}>
-            {selectedLevel1?.name || "Wybrany typ"}
-          </strong>
-          <span style={helperStyle}>
-            Ten typ nie ma niższych kategorii — wpis zapisze się bezpośrednio
-            tutaj.
-          </span>
+        <section style={panelStyle} data-transaction-final-category-placeholder="true">
+          <strong style={titleStyle}>{selectedLevel1?.name || "Wybrany typ"}</strong>
+          <span style={metaStyle}>Ten typ nie ma niższych kategorii — wpis zapisze się bezpośrednio tutaj.</span>
         </section>
       )}
 
       {selectedLevel2Id && availableLevel3Categories.length > 0 && (
-        <section
-          style={creatorPanelStyle}
-          data-transaction-subcategory-section="true"
-        >
-          <header style={creatorHeaderStyle}>
-            <span style={creatorTitleStyle}>
-              <strong style={creatorTitleStrongStyle}>
-                Wybierz podkategorię
-              </strong>
-              <small style={creatorTitleMetaStyle}>
-                {selectedLevel2?.name || "Wybrana kategoria"}
-              </small>
+        <section style={panelStyle} data-transaction-subcategory-section="true">
+          <header style={compactHeaderStyle}>
+            <span style={titleWrapStyle}>
+              <strong style={titleStyle}>Wybierz podkategorię</strong>
+              <small style={metaStyle}>{selectedLevel2?.name || "Wybrana kategoria"}</small>
             </span>
             {selectedLevel1 && (
-              <button
-                type="button"
-                style={backButtonStyle}
-                onClick={() => handleLevel1Click(selectedLevel1)}
-              >
+              <button type="button" style={backButtonStyle} onClick={() => handleLevel1Click(selectedLevel1)}>
                 ← kategorie
               </button>
             )}
           </header>
 
-          <div style={shortcutGridStyle} data-transaction-category-list="true">
+          <div style={categoryGridStyle} data-transaction-category-list="true">
             {availableLevel3Categories.map((level3Category) =>
               renderCategoryButton({
                 category: level3Category,
@@ -509,13 +542,9 @@ export default function TransactionCreatorCategorySection({
       )}
 
       {selectedLevel2Id && availableLevel3Categories.length === 0 && (
-        <section style={creatorPanelStyle}>
-          <strong style={creatorTitleStrongStyle}>
-            {selectedLevel2?.name || "Wybrana kategoria"}
-          </strong>
-          <span style={helperStyle}>
-            Ta kategoria nie ma podkategorii — wpis zapisze się tutaj.
-          </span>
+        <section style={panelStyle}>
+          <strong style={titleStyle}>{selectedLevel2?.name || "Wybrana kategoria"}</strong>
+          <span style={metaStyle}>Ta kategoria nie ma podkategorii — wpis zapisze się tutaj.</span>
         </section>
       )}
     </section>

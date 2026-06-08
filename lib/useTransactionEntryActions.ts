@@ -24,9 +24,6 @@ export function useTransactionEntryActions({
   newDescription,
   newTransactionDate,
   selectedRecurringTransactionId,
-  isSerialTransactionCreatorEnabled,
-  isQuickDayModeEnabled = false,
-  quickDayDate = '',
   isPaymentSourcesEnabled,
   isRecurringTransactionsEnabled,
   isAllowedMoveTarget,
@@ -392,9 +389,9 @@ export function useTransactionEntryActions({
         return
       }
 
-      if (isSerialTransactionCreatorEnabled && !shouldCloseAfterSave) {
+      if (!shouldCloseAfterSave) {
         setTransactionCreatorSuggestionId(effectiveCategoryId)
-        setNewTransactionDate(isQuickDayModeEnabled && quickDayDate ? quickDayDate : '')
+        setNewTransactionDate('')
         setNewAmount('')
         setNewDescription('')
         setSelectedTagNames([])
@@ -419,10 +416,7 @@ export function useTransactionEntryActions({
       deleteDraft,
       getEffectiveTransactionCategoryId,
       getRootLevel1IdForCategory,
-      isSerialTransactionCreatorEnabled,
-      isQuickDayModeEnabled,
       isRecurringTransactionsEnabled,
-      quickDayDate,
       newAmount,
       newDescription,
       newTransactionDate,

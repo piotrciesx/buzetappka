@@ -16,39 +16,34 @@ export default function TransactionCreatorHeader({
   suggestedCategoryId,
   lockedLevel1Id,
   categoriesById,
-  styles,
   onClose,
 }: Props) {
   return (
-    <>
-      <div style={styles.sectionTitle} data-transaction-modal-title="true">
-        <span>Nowy wpis</span>
-        <button
-          type="button"
-          data-transaction-close-action="true"
-          aria-label="Zamknij kreator wpisu"
-          onPointerDown={(event) => event.stopPropagation()}
-          onClick={onClose}
-        >
-          ×
-        </button>
+    <header data-ui-modal-header="true" data-transaction-modal-header="true">
+      <div data-ui-title-row="true">
+        <div data-ui-title-copy="true">
+          <strong>Nowy wpis</strong>
+          <span>Miesiąc zapisu: {selectedMonth}</span>
+        </div>
       </div>
 
-      <div style={styles.pageSubtitle}>
-        Miesiąc zapisu: <b>{selectedMonth}</b>
-      </div>
+      <button type="button" className="ui-button--icon" aria-label="Zamknij kreator wpisu" onClick={onClose}>
+        ×
+      </button>
 
       {suggestedCategoryId && (
-        <div style={styles.infoBox}>
-          <b>Sugestia kategorii:</b> {getCategoryPathLabel(suggestedCategoryId, categoriesById)}
+        <div data-ui-empty-block="true" data-transaction-header-note="true">
+          <strong>Sugestia kategorii</strong>
+          <span>{getCategoryPathLabel(suggestedCategoryId, categoriesById)}</span>
         </div>
       )}
 
       {lockedLevel1Id && (
-        <div style={styles.infoBox}>
-          <b>Typ wpisu:</b> {categoriesById[lockedLevel1Id]?.name || ''}
+        <div data-ui-empty-block="true" data-transaction-header-note="true">
+          <strong>Typ wpisu</strong>
+          <span>{categoriesById[lockedLevel1Id]?.name || ''}</span>
         </div>
       )}
-    </>
+    </header>
   )
 }

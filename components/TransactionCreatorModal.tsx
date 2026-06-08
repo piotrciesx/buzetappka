@@ -12,18 +12,13 @@ import { useDescriptionSuggestions } from "../lib/useDescriptionSuggestions";
 import { splitTagInput } from "../lib/tagUtils";
 import {
   activeSuggestionButtonStyle,
-  dateFieldStyle,
   dateLabelStyle,
-  descriptionFieldWrapStyle,
   descriptionInputWrapStyle,
-  modalStyle,
   overlayStyle,
-  sectionStyle,
   suggestionButtonStyle,
   suggestionsDropdownStyle,
   tagBadgeStyle,
   tagBadgesWrapStyle,
-  tagInputWrapStyle,
   tagRemoveButtonStyle,
 } from "./transaction-creator/transactionCreatorModalStyles";
 import {
@@ -34,6 +29,74 @@ import {
   getCategoryPathLabel,
   normalizeAmountInput,
 } from "./transaction-creator/transactionCreatorUtils";
+
+const entrySectionStyle = {
+  display: "grid",
+  gap: "var(--ui-space-6)",
+  marginTop: "var(--ui-space-7)",
+} as const;
+
+const entryCardStyle = {
+  display: "grid",
+  gap: "var(--ui-space-5)",
+  padding: "var(--ui-space-7)",
+  border: "1px solid var(--ui-border-divider)",
+  borderRadius: "var(--ui-radius-2xl)",
+  background: "var(--ui-surface-card)",
+} as const;
+
+const entryHeaderStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: "var(--ui-space-6)",
+} as const;
+
+const entryTitleStyle = {
+  color: "var(--ui-color-primary-navy)",
+  fontSize: "var(--ui-type-t3)",
+  fontWeight: "var(--ui-font-weight-bold)",
+  lineHeight: "var(--ui-line-height-heading)",
+} as const;
+
+const entryGridStyle = {
+  display: "grid",
+  gridTemplateColumns: "86px minmax(220px, 1fr) minmax(130px, 160px)",
+  alignItems: "start",
+  gap: "var(--ui-space-5)",
+} as const;
+
+const fieldShellStyle = {
+  minWidth: 0,
+  display: "grid",
+  gap: "var(--ui-space-3)",
+} as const;
+
+const todayToggleStyle = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 6,
+  color: "var(--ui-text-secondary)",
+  fontSize: "var(--ui-type-helper)",
+  fontWeight: "var(--ui-font-weight-semibold)",
+  lineHeight: "var(--ui-line-height-compact)",
+  cursor: "pointer",
+} as const;
+
+const extraGridStyle = {
+  display: "grid",
+  gridTemplateColumns: "minmax(220px, 1fr) minmax(220px, 1fr)",
+  gap: "var(--ui-space-5)",
+} as const;
+
+const actionsStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: "var(--ui-space-5)",
+  flexWrap: "wrap",
+  marginTop: "var(--ui-space-7)",
+} as const;
 
 export default function TransactionCreatorModal(
   props: TransactionCreatorModalProps,
@@ -236,7 +299,7 @@ export default function TransactionCreatorModal(
       return;
     }
 
-    await onSave();
+    await onSaveAndClose();
   };
 
   const handleDescriptionKeyDown = async (
@@ -282,14 +345,11 @@ export default function TransactionCreatorModal(
   }
 
   return (
-    <div
-      data-transaction-modal-overlay="true"
-      style={overlayStyle}
-      onClick={onClose}
-    >
-      <div
+    <div data-ui-overlay="true" data-transaction-modal-overlay="true" style={overlayStyle} onClick={onClose}>
+      <section
+        data-ui-modal-shell="true"
+        data-ui-size="wide"
         data-transaction-modal="true"
-        style={modalStyle}
         onClick={(event) => event.stopPropagation()}
       >
         <TransactionCreatorHeader
@@ -301,368 +361,286 @@ export default function TransactionCreatorModal(
           onClose={onClose}
         />
 
-        <TransactionCreatorCategorySection
-          level1Categories={level1Categories}
-          availableLevel2Categories={availableLevel2Categories}
-          availableLevel3Categories={availableLevel3Categories}
-          level2ByParentId={level2ByParentId}
-          level3ByParentId={level3ByParentId}
-          categoriesById={categoriesById}
-          lockedLevel1Id={lockedLevel1Id}
-          selectedLevel1Id={selectedLevel1Id}
-          selectedLevel2Id={selectedLevel2Id}
-          effectiveCategoryId={effectiveCategoryId}
-          effectiveCategoryLabel={effectiveCategoryLabel}
-          topShortcutCategories={topShortcutCategories}
-          pinnedShortcutCategories={pinnedShortcutCategories}
-          pinnedCategoryIds={pinnedCategoryIds}
-          recentShortcutCategories={recentShortcutCategories}
-          styles={styles}
-          handleShortcutClick={handleShortcutClick}
-          handleLevel1Click={handleLevel1Click}
-          handleLevel2Click={handleLevel2Click}
-          handleLevel3Click={handleLevel3Click}
-          onTogglePinnedCategory={onTogglePinnedCategory}
-        />
-
-        <div style={sectionStyle} data-transaction-data-section="true">
-          <div style={styles.l2Name}>Dane wpisu</div>
-
-          <div
-            style={{ ...styles.formRow, marginTop: 10, alignItems: "center" }}
-            data-transaction-entry-form="true"
-          >
-            <div style={{ ...descriptionFieldWrapStyle, order: 2 }}>
-              <div style={descriptionInputWrapStyle}>
-                <input
-                  ref={descriptionInputRef}
-                  data-transaction-description-input="true"
-                  className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
-                  data-input-width={uiInputApi.width.full}
-                  placeholder="opis"
-                  value={description}
-                  autoComplete="off"
-                  autoCorrect="off"
-                  spellCheck={false}
-                  onFocus={() => setIsDescriptionFocused(true)}
-                  onBlur={() => setIsDescriptionFocused(false)}
-                  onChange={(event) => setDescription(event.target.value)}
-                  onKeyDown={handleDescriptionKeyDown}
-                />
-
-                {filteredSuggestions.length > 0 && (
-                  <div
-                    style={suggestionsDropdownStyle}
-                    data-transaction-suggestions="true"
-                  >
-                    {filteredSuggestions.map((suggestion, index) => {
-                      const isActive = index === activeSuggestionIndex;
-                      const isLast = index === filteredSuggestions.length - 1;
-
-                      return (
-                        <button
-                          key={suggestion.text}
-                          type="button"
-                          data-transaction-suggestion-item="true"
-                          data-transaction-suggestion-active={
-                            isActive ? "true" : "false"
-                          }
-                          style={{
-                            ...(isActive
-                              ? activeSuggestionButtonStyle
-                              : suggestionButtonStyle),
-                            borderBottom: isLast
-                              ? "none"
-                              : suggestionButtonStyle.borderBottom,
-                          }}
-                          onMouseDown={(event) => event.preventDefault()}
-                          onClick={() => applySuggestion(suggestion.text)}
-                          onContextMenu={(event) =>
-                            handleSuggestionContextMenu(event, suggestion)
-                          }
-                          onPointerDown={(event) =>
-                            handleSuggestionPointerDown(suggestion, event)
-                          }
-                          onPointerUp={handleSuggestionPointerUp}
-                          onPointerLeave={handleSuggestionPointerLeave}
-                          onPointerCancel={handleSuggestionPointerLeave}
-                        >
-                          {suggestion.text}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <input
-              ref={amountInputRef}
-              data-transaction-amount-input="true"
-              className={uiInputApi.classNames.amountField}
-              data-input-width={uiInputApi.width.full}
-              style={{ order: 3 }}
-              placeholder="kwota"
-              inputMode="decimal"
-              value={amount}
-              onChange={(event) =>
-                setAmount(normalizeAmountInput(event.target.value))
-              }
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  event.preventDefault();
-                  void handleSaveFromKeyboard();
-                }
-              }}
-            />
-
-            <div style={{ ...dateFieldStyle, order: 1 }}>
-              <input
-                ref={dayInputRef}
-                data-transaction-day-input="true"
-                className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
-                data-input-width={uiInputApi.width.full}
-                value={dayInputValue}
-                placeholder="dzień"
-                inputMode="numeric"
-                onChange={(event) => {
-                  const nextDay = normalizeDayInput(
-                    event.target.value,
-                    selectedMonth,
-                  );
-                  const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : "";
-                  setTransactionDate(nextDate);
-                }}
-                onBlur={(event) => {
-                  const nextDay = normalizeDayInput(
-                    event.target.value,
-                    selectedMonth,
-                  );
-                  const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : "";
-                  setTransactionDate(nextDate);
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    event.preventDefault();
-                    descriptionInputRef.current?.focus();
-                  }
-                }}
-              />
-              <label
-                data-transaction-today-toggle="true"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  marginTop: 6,
-                  color: isTodayAvailable
-                    ? "var(--ui-text-secondary)"
-                    : "var(--ui-text-muted)",
-                  fontSize: "var(--ui-type-helper)",
-                  fontWeight: "var(--ui-font-weight-semibold)",
-                  lineHeight: "var(--ui-line-height-compact)",
-                  cursor: isTodayAvailable ? "pointer" : "not-allowed",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={isTodaySelected}
-                  disabled={!isTodayAvailable}
-                  onChange={(event) => {
-                    setTransactionDate(event.target.checked ? todayDate : "");
-                  }}
-                />
-                dziś
-              </label>
-            </div>
-
-            <button
-              ref={saveButtonRef}
-              data-transaction-save-action="true"
-              style={{
-                ...styles.primaryButton,
-                order: 4,
-                marginLeft: "auto",
-                opacity:
-                  isSaving || !selectedLevel1Id || !effectiveCategoryId
-                    ? 0.6
-                    : 1,
-                cursor:
-                  isSaving || !selectedLevel1Id || !effectiveCategoryId
-                    ? "not-allowed"
-                    : "pointer",
-              }}
-              disabled={isSaving || !selectedLevel1Id || !effectiveCategoryId}
-              onClick={async () => {
-                await onSave();
-              }}
-            >
-              {isSaving ? "zapisywanie..." : "zapisz"}
-            </button>
-
-            {isSerialModeEnabled ? (
-              <>
-                <button
-                  data-transaction-save-close-action="true"
-                  style={{ ...styles.secondaryButton, order: 5 }}
-                  disabled={
-                    isSaving || !selectedLevel1Id || !effectiveCategoryId
-                  }
-                  onClick={async () => {
-                    await onSaveAndClose();
-                  }}
-                >
-                  {isSaving ? "zapisywanie..." : "zapisz i zakończ"}
-                </button>
-
-                <button
-                  data-transaction-cancel-action="true"
-                  style={{ ...styles.secondaryButton, order: 6 }}
-                  onClick={onClose}
-                >
-                  zakończ
-                </button>
-              </>
-            ) : (
-              <button
-                data-transaction-cancel-action="true"
-                style={{ ...styles.secondaryButton, order: 5 }}
-                onClick={onClose}
-              >
-                anuluj
-              </button>
-            )}
-          </div>
-
-          <div style={tagInputWrapStyle} data-transaction-entry-extra="true">
-            {isPaymentSourceVisible && (
-              <>
-                <label
-                  style={dateLabelStyle}
-                  data-transaction-field-label="true"
-                >
-                  Źródło płatności
-                </label>
-                <PaymentSplitEditor
-                  amount={amount}
-                  isVisible={isPaymentSourceVisible}
-                  selectedPaymentSourceId={selectedPaymentSourceId}
-                  setSelectedPaymentSourceId={setSelectedPaymentSourceId}
-                  paymentSourceOptions={paymentSourceOptions}
-                  paymentSplitItems={paymentSplitItems}
-                  setPaymentSplitItems={setPaymentSplitItems}
-                  styles={styles}
-                />
-              </>
-            )}
-
-            <label
-              style={dateLabelStyle}
-              htmlFor="transaction-tags-input"
-              data-transaction-field-label="true"
-            >
-              Tagi
-            </label>
-
-            <input
-              ref={tagInputRef}
-              id="transaction-tags-input"
-              data-transaction-tags-input="true"
-              className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
-              data-input-width={uiInputApi.width.full}
-              placeholder="np. sklep, dom, jedzenie"
-              value={tagInputValue}
-              autoComplete="off"
-              autoCorrect="off"
-              spellCheck={false}
-              onChange={(event) => {
-                handleTagInputChange(event.target.value);
-              }}
-              onKeyDown={handleTagsKeyDown}
-            />
-
-            {selectedTagNames.length > 0 && (
-              <div style={tagBadgesWrapStyle} data-transaction-tag-list="true">
-                {selectedTagNames.map((tagName) => (
-                  <span
-                    key={tagName}
-                    style={tagBadgeStyle}
-                    data-transaction-tag-badge="true"
-                  >
-                    #{tagName}
-                    <button
-                      type="button"
-                      style={tagRemoveButtonStyle}
-                      data-transaction-tag-remove="true"
-                      onClick={() => handleRemoveTag(tagName)}
-                    >
-                      ×
-                    </button>
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {(recurringOptions.length > 0 ||
-              recurringSuggestions.length > 0) && (
-              <div
-                style={{ display: "flex", flexDirection: "column", gap: 8 }}
-                data-transaction-recurring-field="true"
-              >
-                <label
-                  style={dateLabelStyle}
-                  htmlFor="transaction-recurring-link"
-                  data-transaction-field-label="true"
-                >
-                  Powiąż z przypomnieniem
-                </label>
-
-                <select
-                  id="transaction-recurring-link"
-                  data-transaction-recurring-select="true"
-                  className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputL}`}
-                  data-input-width={uiInputApi.width.full}
-                  value={selectedRecurringTransactionId}
-                  onChange={(event) => applyRecurringLink(event.target.value)}
-                >
-                  <option value="">Brak powiązania</option>
-                  {recurringOptions.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.label}
-                    </option>
-                  ))}
-                  {recurringSuggestions.map((item) => (
-                    <option key={`suggestion-${item.id}`} value={item.id}>
-                      {item.label}
-                    </option>
-                  ))}
-                </select>
-
-                {selectedRecurringOption?.hasTransactionInMonth && (
-                  <div
-                    style={{
-                      ...styles.emptyText,
-                      color: "var(--ui-color-warning)",
-                    }}
-                    data-transaction-recurring-warning="true"
-                  >
-                    To przypomnienie ma już wpis w tym miesiącu. Możesz dodać
-                    kolejny, jeśli to celowe.
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          <TransactionCreatorModeToggles
+        <div data-ui-form-shell="true" data-transaction-creator-body="true">
+          <TransactionCreatorCategorySection
+            level1Categories={level1Categories}
+            availableLevel2Categories={availableLevel2Categories}
+            availableLevel3Categories={availableLevel3Categories}
+            level2ByParentId={level2ByParentId}
+            level3ByParentId={level3ByParentId}
+            categoriesById={categoriesById}
+            lockedLevel1Id={lockedLevel1Id}
             selectedLevel1Id={selectedLevel1Id}
+            selectedLevel2Id={selectedLevel2Id}
             effectiveCategoryId={effectiveCategoryId}
-            isSerialModeEnabled={isSerialModeEnabled}
-            setIsSerialModeEnabled={setIsSerialModeEnabled}
+            effectiveCategoryLabel={effectiveCategoryLabel}
+            topShortcutCategories={topShortcutCategories}
+            pinnedShortcutCategories={pinnedShortcutCategories}
+            pinnedCategoryIds={pinnedCategoryIds}
+            recentShortcutCategories={recentShortcutCategories}
             styles={styles}
+            handleShortcutClick={handleShortcutClick}
+            handleLevel1Click={handleLevel1Click}
+            handleLevel2Click={handleLevel2Click}
+            handleLevel3Click={handleLevel3Click}
+            onTogglePinnedCategory={onTogglePinnedCategory}
           />
+
+          {effectiveCategoryId && (
+            <section style={entrySectionStyle} data-transaction-data-section="true">
+              <div style={entryCardStyle} data-transaction-entry-card="true">
+                <header style={entryHeaderStyle}>
+                  <strong style={entryTitleStyle}>Dane wpisu</strong>
+                </header>
+
+                <div style={entryGridStyle} data-transaction-entry-form="true">
+                  <div style={fieldShellStyle} data-transaction-day-field="true">
+                    <input
+                      ref={dayInputRef}
+                      data-transaction-day-input="true"
+                      className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
+                      data-input-width={uiInputApi.width.full}
+                      value={dayInputValue}
+                      placeholder="dzień"
+                      inputMode="numeric"
+                      onChange={(event) => {
+                        const nextDay = normalizeDayInput(event.target.value, selectedMonth);
+                        const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : "";
+                        setTransactionDate(nextDate);
+                      }}
+                      onBlur={(event) => {
+                        const nextDay = normalizeDayInput(event.target.value, selectedMonth);
+                        const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : "";
+                        setTransactionDate(nextDate);
+                      }}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          event.preventDefault();
+                          descriptionInputRef.current?.focus();
+                        }
+                      }}
+                    />
+                    <label
+                      data-transaction-today-toggle="true"
+                      style={{
+                        ...todayToggleStyle,
+                        color: isTodayAvailable ? todayToggleStyle.color : "var(--ui-text-muted)",
+                        cursor: isTodayAvailable ? "pointer" : "not-allowed",
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isTodaySelected}
+                        disabled={!isTodayAvailable}
+                        onChange={(event) => {
+                          setTransactionDate(event.target.checked ? todayDate : "");
+                        }}
+                      />
+                      dziś
+                    </label>
+                  </div>
+
+                  <div style={descriptionInputWrapStyle} data-transaction-description-field="true">
+                    <input
+                      ref={descriptionInputRef}
+                      data-transaction-description-input="true"
+                      className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
+                      data-input-width={uiInputApi.width.full}
+                      placeholder="opis"
+                      value={description}
+                      autoComplete="off"
+                      autoCorrect="off"
+                      spellCheck={false}
+                      onFocus={() => setIsDescriptionFocused(true)}
+                      onBlur={() => setIsDescriptionFocused(false)}
+                      onChange={(event) => setDescription(event.target.value)}
+                      onKeyDown={handleDescriptionKeyDown}
+                    />
+
+                    {filteredSuggestions.length > 0 && (
+                      <div style={suggestionsDropdownStyle} data-transaction-suggestions="true">
+                        {filteredSuggestions.map((suggestion, index) => {
+                          const isActive = index === activeSuggestionIndex;
+                          const isLast = index === filteredSuggestions.length - 1;
+
+                          return (
+                            <button
+                              key={suggestion.text}
+                              type="button"
+                              data-transaction-suggestion-item="true"
+                              data-transaction-suggestion-active={isActive ? "true" : "false"}
+                              style={{
+                                ...(isActive ? activeSuggestionButtonStyle : suggestionButtonStyle),
+                                borderBottom: isLast ? "none" : suggestionButtonStyle.borderBottom,
+                              }}
+                              onMouseDown={(event) => event.preventDefault()}
+                              onClick={() => applySuggestion(suggestion.text)}
+                              onContextMenu={(event) => handleSuggestionContextMenu(event, suggestion)}
+                              onPointerDown={(event) => handleSuggestionPointerDown(suggestion, event)}
+                              onPointerUp={handleSuggestionPointerUp}
+                              onPointerLeave={handleSuggestionPointerLeave}
+                              onPointerCancel={handleSuggestionPointerLeave}
+                            >
+                              {suggestion.text}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  <input
+                    ref={amountInputRef}
+                    data-transaction-amount-input="true"
+                    className={uiInputApi.classNames.amountField}
+                    data-input-width={uiInputApi.width.full}
+                    placeholder="kwota"
+                    inputMode="decimal"
+                    value={amount}
+                    onChange={(event) => setAmount(normalizeAmountInput(event.target.value))}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        void handleSaveFromKeyboard();
+                      }
+                    }}
+                  />
+                </div>
+
+                {isPaymentSourceVisible && (
+                  <div style={fieldShellStyle} data-transaction-payment-source-field="true">
+                    <label style={dateLabelStyle} data-transaction-field-label="true">
+                      Źródło płatności
+                    </label>
+                    <PaymentSplitEditor
+                      amount={amount}
+                      isVisible={isPaymentSourceVisible}
+                      selectedPaymentSourceId={selectedPaymentSourceId}
+                      setSelectedPaymentSourceId={setSelectedPaymentSourceId}
+                      paymentSourceOptions={paymentSourceOptions}
+                      paymentSplitItems={paymentSplitItems}
+                      setPaymentSplitItems={setPaymentSplitItems}
+                      styles={styles}
+                    />
+                  </div>
+                )}
+
+                <div style={extraGridStyle} data-transaction-entry-extra="true">
+                  <div style={fieldShellStyle}>
+                    <label style={dateLabelStyle} htmlFor="transaction-tags-input" data-transaction-field-label="true">
+                      Tagi
+                    </label>
+                    <input
+                      ref={tagInputRef}
+                      id="transaction-tags-input"
+                      data-transaction-tags-input="true"
+                      className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
+                      data-input-width={uiInputApi.width.full}
+                      placeholder="np. sklep, dom, jedzenie"
+                      value={tagInputValue}
+                      autoComplete="off"
+                      autoCorrect="off"
+                      spellCheck={false}
+                      onChange={(event) => handleTagInputChange(event.target.value)}
+                      onKeyDown={handleTagsKeyDown}
+                    />
+
+                    {selectedTagNames.length > 0 && (
+                      <div style={tagBadgesWrapStyle} data-transaction-tag-list="true">
+                        {selectedTagNames.map((tagName) => (
+                          <span key={tagName} style={tagBadgeStyle} data-transaction-tag-badge="true">
+                            #{tagName}
+                            <button
+                              type="button"
+                              style={tagRemoveButtonStyle}
+                              data-transaction-tag-remove="true"
+                              onClick={() => handleRemoveTag(tagName)}
+                            >
+                              ×
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {(recurringOptions.length > 0 || recurringSuggestions.length > 0) && (
+                    <div style={fieldShellStyle} data-transaction-recurring-field="true">
+                      <label style={dateLabelStyle} htmlFor="transaction-recurring-link" data-transaction-field-label="true">
+                        Powiąż z przypomnieniem
+                      </label>
+
+                      <select
+                        id="transaction-recurring-link"
+                        data-transaction-recurring-select="true"
+                        className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputL}`}
+                        data-input-width={uiInputApi.width.full}
+                        value={selectedRecurringTransactionId}
+                        onChange={(event) => applyRecurringLink(event.target.value)}
+                      >
+                        <option value="">Brak powiązania</option>
+                        {recurringOptions.map((item) => (
+                          <option key={item.id} value={item.id}>
+                            {item.label}
+                          </option>
+                        ))}
+                        {recurringSuggestions.map((item) => (
+                          <option key={`suggestion-${item.id}`} value={item.id}>
+                            {item.label}
+                          </option>
+                        ))}
+                      </select>
+
+                      {selectedRecurringOption?.hasTransactionInMonth && (
+                        <div style={{ ...styles.emptyText, color: "var(--ui-color-warning)" }} data-transaction-recurring-warning="true">
+                          To przypomnienie ma już wpis w tym miesiącu. Możesz dodać kolejny, jeśli to celowe.
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <TransactionCreatorModeToggles
+                selectedLevel1Id={selectedLevel1Id}
+                effectiveCategoryId={effectiveCategoryId}
+                isSerialModeEnabled={isSerialModeEnabled}
+                setIsSerialModeEnabled={setIsSerialModeEnabled}
+                styles={styles}
+              />
+
+              <footer style={actionsStyle} data-ui-form-actions="true" data-transaction-actions="true">
+                <button type="button" className="ui-button--utility" onClick={onClose} disabled={isSaving}>
+                  Anuluj
+                </button>
+                <span style={{ display: "inline-flex", gap: "var(--ui-space-4)", flexWrap: "wrap" }}>
+                  <button
+                    type="button"
+                    className="ui-button--utility"
+                    disabled={isSaving || !selectedLevel1Id || !effectiveCategoryId}
+                    onClick={async () => {
+                      await onSave();
+                    }}
+                  >
+                    {isSaving ? "zapisywanie..." : "+ dodaj kolejny wpis"}
+                  </button>
+                  <button
+                    ref={saveButtonRef}
+                    type="button"
+                    className="ui-button--standard"
+                    disabled={isSaving || !selectedLevel1Id || !effectiveCategoryId}
+                    onClick={async () => {
+                      await onSaveAndClose();
+                    }}
+                  >
+                    {isSaving ? "zapisywanie..." : "Zapisz"}
+                  </button>
+                </span>
+              </footer>
+            </section>
+          )}
         </div>
-      </div>
+      </section>
 
       <DescriptionSuggestionDeleteMenu
         isOpen={Boolean(suggestionToDelete)}
