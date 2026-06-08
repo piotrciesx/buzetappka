@@ -149,6 +149,7 @@ export default function PaymentSplitEditor({
             data-payment-source-select="true"
             className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputL}`}
             data-input-width={uiInputApi.width.full}
+            data-input-variant="entry"
             value={selectedPaymentSourceId}
             onChange={(event) => setSelectedPaymentSourceId(event.target.value)}
           >
@@ -184,6 +185,7 @@ export default function PaymentSplitEditor({
                 data-payment-split-source="true"
                 className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputL}`}
                 data-input-width={uiInputApi.width.full}
+                data-input-variant="entry"
                 style={{ flex: "1 1 220px", minWidth: 220 }}
                 value={item.paymentSourceId}
                 onChange={(event) =>
@@ -202,6 +204,7 @@ export default function PaymentSplitEditor({
                 data-payment-split-amount="true"
                 className={uiInputApi.classNames.amountField}
                 data-input-width={uiInputApi.width.compact}
+                data-input-variant="entry"
                 style={{ width: 110 }}
                 placeholder="kwota"
                 inputMode="decimal"

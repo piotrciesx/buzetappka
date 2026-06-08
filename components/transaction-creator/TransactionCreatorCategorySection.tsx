@@ -126,7 +126,7 @@ const shortcutMenuStyle: CSSProperties = {
 
 const categoryGridStyle: CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(132px, max-content))",
+  gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
   gap: "var(--ui-space-5)",
 };
 
@@ -152,9 +152,9 @@ const selectedCategoryButtonStyle: CSSProperties = {
 };
 
 const iconTileStyle: CSSProperties = {
-  width: 30,
-  minWidth: 30,
-  height: 30,
+  width: 42,
+  minWidth: 42,
+  height: 42,
   display: "grid",
   placeItems: "center",
   borderRadius: 999,
@@ -211,8 +211,9 @@ const finalCategoryRowStyle: CSSProperties = {
 
 const finalCardStyle: CSSProperties = {
   width: "auto",
-  minWidth: 220,
-  maxWidth: "min(420px, 100%)",
+  flex: "1 1 360px",
+  minWidth: 260,
+  maxWidth: "min(560px, 100%)",
   display: "inline-flex",
   alignItems: "center",
   gap: "var(--ui-space-5)",
@@ -441,18 +442,6 @@ export default function TransactionCreatorCategorySection({
 
           <button
             type="button"
-            data-transaction-pin-button="true"
-            data-transaction-pinned={pinnedCategoryIds.includes(effectiveCategoryId) ? "true" : "false"}
-            aria-label={pinnedCategoryIds.includes(effectiveCategoryId) ? "Odepnij kategorię" : "Przypnij kategorię"}
-            title={pinnedCategoryIds.includes(effectiveCategoryId) ? "Odepnij kategorię" : "Przypnij kategorię"}
-            style={finalActionStyle}
-            onClick={() => onTogglePinnedCategory(effectiveCategoryId)}
-          >
-            {pinnedCategoryIds.includes(effectiveCategoryId) ? "odepnij" : "przypnij"}
-          </button>
-
-          <button
-            type="button"
             style={finalActionStyle}
             onClick={() => {
               if (canGoBackToLevel3 && selectedLevel2) {
@@ -465,7 +454,19 @@ export default function TransactionCreatorCategorySection({
               }
             }}
           >
-            ← zmień
+            ← cofnij
+          </button>
+
+          <button
+            type="button"
+            data-transaction-pin-button="true"
+            data-transaction-pinned={pinnedCategoryIds.includes(effectiveCategoryId) ? "true" : "false"}
+            aria-label={pinnedCategoryIds.includes(effectiveCategoryId) ? "Odepnij kategorię" : "Przypnij kategorię"}
+            title={pinnedCategoryIds.includes(effectiveCategoryId) ? "Odepnij kategorię" : "Przypnij kategorię"}
+            style={finalActionStyle}
+            onClick={() => onTogglePinnedCategory(effectiveCategoryId)}
+          >
+            {pinnedCategoryIds.includes(effectiveCategoryId) ? "odepnij" : "przypnij"}
           </button>
         </div>
       </section>
@@ -488,27 +489,9 @@ export default function TransactionCreatorCategorySection({
 
       {!lockedLevel1Id && !selectedLevel1Id && (
         <section style={panelStyle} data-transaction-type-section="true">
-          <header style={compactHeaderStyle}>
-            <span style={titleWrapStyle}>
-              <strong style={titleStyle}>Co dodajesz?</strong>
-              <small style={metaStyle}>Wybierz przychód albo wydatek.</small>
-            </span>
-          </header>
-
-          <div style={categoryGridStyle} data-transaction-category-list="true">
-            {level1Categories.map((category) => {
-              const level2Children = level2ByParentId[category.id] || [];
-              const isFinalHere = level2Children.length === 0;
-
-              return renderCategoryButton({
-                category,
-                label: category.name,
-                meta: isFinalHere ? "kategoria końcowa" : "przejdź dalej",
-                isSelected: selectedLevel1Id === category.id,
-                onClick: () => handleLevel1Click(category),
-              });
-            })}
-          </div>
+          <span style={metaStyle}>
+            Wybierz przychód albo wydatek z przycisku „Dodaj wpis” w górnej belce.
+          </span>
         </section>
       )}
 

@@ -3479,49 +3479,70 @@ body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-hel
   transform: rotate(180deg) translateY(-0.5px);
 }
 
-/* Transaction creator v2 — stronger entry fields and compact day toggle. */
+/* Transaction Creator V2 — entry fields and category tiles */
 .ui-input[data-input-variant="entry"],
-.ui-amount-field[data-input-variant="entry"],
-.ui-select[data-input-variant="entry"] {
+.ui-select[data-input-variant="entry"],
+.ui-amount-field[data-input-variant="entry"] {
   height: 44px;
   min-height: 44px;
-  border-color: rgba(8, 44, 122, 0.24);
+  border-color: rgba(8, 44, 122, 0.20);
+  border-width: 1px;
   border-radius: var(--ui-radius-lg);
   background: #ffffff;
-  box-shadow: inset 0 0 0 1px rgba(8, 44, 122, 0.035);
+  color: var(--ui-color-primary-navy);
+  font-size: var(--ui-font-size-body);
   font-weight: var(--ui-font-weight-semibold);
+  box-shadow: inset 0 0 0 1px rgba(8, 44, 122, 0.02);
 }
 
-.ui-input[data-input-variant="entry"]:focus,
-.ui-amount-field[data-input-variant="entry"]:focus,
-.ui-select[data-input-variant="entry"]:focus {
-  border-color: var(--ui-color-primary-navy);
-  box-shadow: var(--ui-control-focus-ring), inset 0 0 0 1px rgba(8, 44, 122, 0.08);
+.ui-input[data-input-variant="entry"]::placeholder,
+.ui-amount-field[data-input-variant="entry"]::placeholder {
+  color: var(--ui-color-muted-text);
+  text-align: left;
+}
+
+.ui-amount-field[data-input-variant="entry"] {
+  text-align: left;
+}
+
+[data-transaction-entry-form="true"] {
+  width: 100%;
 }
 
 [data-transaction-today-toggle="true"] input[type="checkbox"] {
-  width: 15px;
-  height: 15px;
+  width: 18px;
+  height: 18px;
   margin: 0;
   accent-color: var(--ui-color-primary-navy);
 }
 
 [data-transaction-final-category-row="true"] {
-  align-items: stretch;
+  width: 100%;
 }
 
-[data-transaction-final-category="true"] [data-ui-icon-tile="true"] {
-  width: 36px;
-  min-width: 36px;
-  height: 36px;
+[data-transaction-final-category="true"] [data-ui-icon-tile="true"],
+[data-transaction-category-chip="true"] [data-ui-icon-tile="true"] {
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
 }
 
-@media (max-width: 720px) {
+[data-transaction-final-category="true"] [data-ui-icon-tile="true"] svg,
+[data-transaction-category-chip="true"] [data-ui-icon-tile="true"] svg {
+  width: 24px;
+  height: 24px;
+}
+
+[data-transaction-final-category-row="true"] > button {
+  min-width: 116px;
+}
+
+@media (max-width: 760px) {
   [data-transaction-entry-form="true"] {
     grid-template-columns: 1fr !important;
   }
 
-  [data-transaction-today-toggle="true"] {
-    justify-self: start;
+  [data-transaction-final-category-row="true"] > button {
+    flex: 1 1 140px;
   }
 }

@@ -61,7 +61,7 @@ const entryTitleStyle = {
 
 const entryGridStyle = {
   display: "grid",
-  gridTemplateColumns: "auto 86px minmax(240px, 1fr) minmax(118px, 150px)",
+  gridTemplateColumns: "auto 96px minmax(240px, 1fr) minmax(130px, 160px)",
   alignItems: "center",
   gap: "var(--ui-space-5)",
 } as const;
@@ -77,15 +77,10 @@ const todayToggleStyle = {
   alignItems: "center",
   gap: "var(--ui-space-3)",
   minHeight: "var(--ui-input-height-l)",
-  padding: "0 var(--ui-space-3)",
-  border: "1px solid var(--ui-border-divider)",
-  borderRadius: "var(--ui-radius-md)",
-  background: "var(--ui-surface-card)",
   color: "var(--ui-text-secondary)",
   fontSize: "var(--ui-type-helper)",
   fontWeight: "var(--ui-font-weight-semibold)",
   lineHeight: "var(--ui-line-height-compact)",
-  whiteSpace: "nowrap",
   cursor: "pointer",
 } as const;
 
@@ -419,34 +414,32 @@ export default function TransactionCreatorModal(
                     dziś
                   </label>
 
-                  <div style={fieldShellStyle} data-transaction-day-field="true">
-                    <input
-                      ref={dayInputRef}
-                      data-transaction-day-input="true"
-                      className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
-                      data-input-width={uiInputApi.width.full}
-                      data-input-variant="entry"
-                      value={dayInputValue}
-                      placeholder="dzień"
-                      inputMode="numeric"
-                      onChange={(event) => {
-                        const nextDay = normalizeDayInput(event.target.value, selectedMonth);
-                        const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : "";
-                        setTransactionDate(nextDate);
-                      }}
-                      onBlur={(event) => {
-                        const nextDay = normalizeDayInput(event.target.value, selectedMonth);
-                        const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : "";
-                        setTransactionDate(nextDate);
-                      }}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter") {
-                          event.preventDefault();
-                          descriptionInputRef.current?.focus();
-                        }
-                      }}
-                    />
-                  </div>
+                  <input
+                    ref={dayInputRef}
+                    data-transaction-day-input="true"
+                    className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
+                    data-input-width={uiInputApi.width.full}
+                    data-input-variant="entry"
+                    value={dayInputValue}
+                    placeholder="dzień"
+                    inputMode="numeric"
+                    onChange={(event) => {
+                      const nextDay = normalizeDayInput(event.target.value, selectedMonth);
+                      const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : "";
+                      setTransactionDate(nextDate);
+                    }}
+                    onBlur={(event) => {
+                      const nextDay = normalizeDayInput(event.target.value, selectedMonth);
+                      const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : "";
+                      setTransactionDate(nextDate);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        descriptionInputRef.current?.focus();
+                      }
+                    }}
+                  />
 
                   <div style={descriptionInputWrapStyle} data-transaction-description-field="true">
                     <input
@@ -546,6 +539,7 @@ export default function TransactionCreatorModal(
                       data-transaction-tags-input="true"
                       className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
                       data-input-width={uiInputApi.width.full}
+                      data-input-variant="entry"
                       placeholder="np. sklep, dom, jedzenie"
                       value={tagInputValue}
                       autoComplete="off"
@@ -585,6 +579,7 @@ export default function TransactionCreatorModal(
                         data-transaction-recurring-select="true"
                         className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputL}`}
                         data-input-width={uiInputApi.width.full}
+                        data-input-variant="entry"
                         value={selectedRecurringTransactionId}
                         onChange={(event) => applyRecurringLink(event.target.value)}
                       >
