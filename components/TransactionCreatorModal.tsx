@@ -61,8 +61,8 @@ const entryTitleStyle = {
 
 const entryGridStyle = {
   display: "grid",
-  gridTemplateColumns: "86px minmax(220px, 1fr) minmax(130px, 160px)",
-  alignItems: "start",
+  gridTemplateColumns: "auto 86px minmax(240px, 1fr) minmax(118px, 150px)",
+  alignItems: "center",
   gap: "var(--ui-space-5)",
 } as const;
 
@@ -75,11 +75,17 @@ const fieldShellStyle = {
 const todayToggleStyle = {
   display: "inline-flex",
   alignItems: "center",
-  gap: 6,
+  gap: "var(--ui-space-3)",
+  minHeight: "var(--ui-input-height-l)",
+  padding: "0 var(--ui-space-3)",
+  border: "1px solid var(--ui-border-divider)",
+  borderRadius: "var(--ui-radius-md)",
+  background: "var(--ui-surface-card)",
   color: "var(--ui-text-secondary)",
   fontSize: "var(--ui-type-helper)",
   fontWeight: "var(--ui-font-weight-semibold)",
   lineHeight: "var(--ui-line-height-compact)",
+  whiteSpace: "nowrap",
   cursor: "pointer",
 } as const;
 
@@ -394,12 +400,32 @@ export default function TransactionCreatorModal(
                 </header>
 
                 <div style={entryGridStyle} data-transaction-entry-form="true">
+                  <label
+                    data-transaction-today-toggle="true"
+                    style={{
+                      ...todayToggleStyle,
+                      color: isTodayAvailable ? todayToggleStyle.color : "var(--ui-text-muted)",
+                      cursor: isTodayAvailable ? "pointer" : "not-allowed",
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isTodaySelected}
+                      disabled={!isTodayAvailable}
+                      onChange={(event) => {
+                        setTransactionDate(event.target.checked ? todayDate : "");
+                      }}
+                    />
+                    dziś
+                  </label>
+
                   <div style={fieldShellStyle} data-transaction-day-field="true">
                     <input
                       ref={dayInputRef}
                       data-transaction-day-input="true"
                       className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
                       data-input-width={uiInputApi.width.full}
+                      data-input-variant="entry"
                       value={dayInputValue}
                       placeholder="dzień"
                       inputMode="numeric"
@@ -420,24 +446,6 @@ export default function TransactionCreatorModal(
                         }
                       }}
                     />
-                    <label
-                      data-transaction-today-toggle="true"
-                      style={{
-                        ...todayToggleStyle,
-                        color: isTodayAvailable ? todayToggleStyle.color : "var(--ui-text-muted)",
-                        cursor: isTodayAvailable ? "pointer" : "not-allowed",
-                      }}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={isTodaySelected}
-                        disabled={!isTodayAvailable}
-                        onChange={(event) => {
-                          setTransactionDate(event.target.checked ? todayDate : "");
-                        }}
-                      />
-                      dziś
-                    </label>
                   </div>
 
                   <div style={descriptionInputWrapStyle} data-transaction-description-field="true">
@@ -446,6 +454,7 @@ export default function TransactionCreatorModal(
                       data-transaction-description-input="true"
                       className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
                       data-input-width={uiInputApi.width.full}
+                      data-input-variant="entry"
                       placeholder="opis"
                       value={description}
                       autoComplete="off"
@@ -494,6 +503,7 @@ export default function TransactionCreatorModal(
                     data-transaction-amount-input="true"
                     className={uiInputApi.classNames.amountField}
                     data-input-width={uiInputApi.width.full}
+                    data-input-variant="entry"
                     placeholder="kwota"
                     inputMode="decimal"
                     value={amount}

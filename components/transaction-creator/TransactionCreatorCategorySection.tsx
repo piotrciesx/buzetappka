@@ -126,14 +126,14 @@ const shortcutMenuStyle: CSSProperties = {
 
 const categoryGridStyle: CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
+  gridTemplateColumns: "repeat(auto-fit, minmax(132px, max-content))",
   gap: "var(--ui-space-5)",
 };
 
 const categoryButtonStyle: CSSProperties = {
   minWidth: 0,
-  width: "100%",
-  display: "flex",
+  width: "auto",
+  display: "inline-flex",
   alignItems: "center",
   gap: "var(--ui-space-5)",
   minHeight: 42,
@@ -202,15 +202,30 @@ const backButtonStyle: CSSProperties = {
   cursor: "pointer",
 };
 
-const finalCardStyle: CSSProperties = {
+const finalCategoryRowStyle: CSSProperties = {
   display: "flex",
+  alignItems: "stretch",
+  gap: "var(--ui-space-4)",
+  flexWrap: "wrap",
+};
+
+const finalCardStyle: CSSProperties = {
+  width: "auto",
+  minWidth: 220,
+  maxWidth: "min(420px, 100%)",
+  display: "inline-flex",
   alignItems: "center",
-  justifyContent: "space-between",
-  gap: "var(--ui-space-6)",
-  padding: "var(--ui-space-6)",
+  gap: "var(--ui-space-5)",
+  padding: "var(--ui-space-5) var(--ui-space-6)",
   border: "1px solid rgba(8, 44, 122, 0.18)",
   borderRadius: "var(--ui-radius-2xl)",
   background: "linear-gradient(180deg, #ffffff 0%, var(--ui-color-soft-blue) 100%)",
+};
+
+const finalActionStyle: CSSProperties = {
+  ...backButtonStyle,
+  minHeight: 44,
+  padding: "0 var(--ui-space-6)",
 };
 
 const finalMainStyle: CSSProperties = {
@@ -253,6 +268,17 @@ const getCategoryTone = (category?: Category | null) => {
 const hasChildrenLabel = (hasChildren: boolean) =>
   hasChildren ? "wybierz podkategorię" : "kategoria końcowa";
 
+const getParentCategory = (
+  category: Category | null,
+  categoriesById: Record<string, Category>,
+) => {
+  if (!category?.parent_id) {
+    return null;
+  }
+
+  return categoriesById[category.parent_id] || null;
+};
+
 export default function TransactionCreatorCategorySection({
   level1Categories,
   availableLevel2Categories,
@@ -280,6 +306,7 @@ export default function TransactionCreatorCategorySection({
   const selectedLevel1 = selectedLevel1Id ? categoriesById[selectedLevel1Id] || null : null;
   const selectedLevel2 = selectedLevel2Id ? categoriesById[selectedLevel2Id] || null : null;
   const effectiveCategory = effectiveCategoryId ? categoriesById[effectiveCategoryId] || null : null;
+  const effectiveParentCategory = getParentCategory(effectiveCategory, categoriesById);
 
   const shortcutMenus = useMemo(
     () => [
@@ -399,17 +426,34 @@ export default function TransactionCreatorCategorySection({
 
     return (
       <section style={flowShellStyle} data-transaction-category-flow="true" data-flow-step="final">
-        <div style={finalCardStyle} data-transaction-final-category="true">
-          <span style={finalMainStyle}>
-            {renderCategoryIcon(effectiveCategory)}
-            <span style={copyStyle}>
-              <strong style={titleStyle}>{effectiveCategory?.name || effectiveCategoryLabel}</strong>
-              <small style={metaStyle}>{effectiveCategoryLabel}</small>
+        <div style={finalCategoryRowStyle} data-transaction-final-category-row="true">
+          <div style={finalCardStyle} data-transaction-final-category="true">
+            <span style={finalMainStyle}>
+              {renderCategoryIcon(effectiveCategory)}
+              <span style={copyStyle}>
+                <strong style={titleStyle}>{effectiveCategory?.name || effectiveCategoryLabel}</strong>
+                {effectiveParentCategory && (
+                  <small style={metaStyle}>{effectiveParentCategory.name}</small>
+                )}
+              </span>
             </span>
-          </span>
+          </div>
+
           <button
             type="button"
-            style={backButtonStyle}
+            data-transaction-pin-button="true"
+            data-transaction-pinned={pinnedCategoryIds.includes(effectiveCategoryId) ? "true" : "false"}
+            aria-label={pinnedCategoryIds.includes(effectiveCategoryId) ? "Odepnij kategorię" : "Przypnij kategorię"}
+            title={pinnedCategoryIds.includes(effectiveCategoryId) ? "Odepnij kategorię" : "Przypnij kategorię"}
+            style={finalActionStyle}
+            onClick={() => onTogglePinnedCategory(effectiveCategoryId)}
+          >
+            {pinnedCategoryIds.includes(effectiveCategoryId) ? "odepnij" : "przypnij"}
+          </button>
+
+          <button
+            type="button"
+            style={finalActionStyle}
             onClick={() => {
               if (canGoBackToLevel3 && selectedLevel2) {
                 handleLevel2Click(selectedLevel2);
@@ -424,18 +468,6 @@ export default function TransactionCreatorCategorySection({
             ← zmień
           </button>
         </div>
-
-        <button
-          type="button"
-          data-transaction-pin-button="true"
-          data-transaction-pinned={pinnedCategoryIds.includes(effectiveCategoryId) ? "true" : "false"}
-          aria-label={pinnedCategoryIds.includes(effectiveCategoryId) ? "Odepnij kategorię" : "Przypnij kategorię"}
-          title={pinnedCategoryIds.includes(effectiveCategoryId) ? "Odepnij kategorię" : "Przypnij kategorię"}
-          style={{ ...backButtonStyle, justifySelf: "start" }}
-          onClick={() => onTogglePinnedCategory(effectiveCategoryId)}
-        >
-          {pinnedCategoryIds.includes(effectiveCategoryId) ? "odepnij kategorię" : "przypnij kategorię"}
-        </button>
       </section>
     );
   }

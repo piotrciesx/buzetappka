@@ -3478,3 +3478,50 @@ body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-hel
 [data-ui-picker-control="true"][data-open="true"] [data-ui-picker-chevron="true"] svg {
   transform: rotate(180deg) translateY(-0.5px);
 }
+
+/* Transaction creator v2 — stronger entry fields and compact day toggle. */
+.ui-input[data-input-variant="entry"],
+.ui-amount-field[data-input-variant="entry"],
+.ui-select[data-input-variant="entry"] {
+  height: 44px;
+  min-height: 44px;
+  border-color: rgba(8, 44, 122, 0.24);
+  border-radius: var(--ui-radius-lg);
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(8, 44, 122, 0.035);
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+.ui-input[data-input-variant="entry"]:focus,
+.ui-amount-field[data-input-variant="entry"]:focus,
+.ui-select[data-input-variant="entry"]:focus {
+  border-color: var(--ui-color-primary-navy);
+  box-shadow: var(--ui-control-focus-ring), inset 0 0 0 1px rgba(8, 44, 122, 0.08);
+}
+
+[data-transaction-today-toggle="true"] input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: var(--ui-color-primary-navy);
+}
+
+[data-transaction-final-category-row="true"] {
+  align-items: stretch;
+}
+
+[data-transaction-final-category="true"] [data-ui-icon-tile="true"] {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+}
+
+@media (max-width: 720px) {
+  [data-transaction-entry-form="true"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  [data-transaction-today-toggle="true"] {
+    justify-self: start;
+  }
+}
