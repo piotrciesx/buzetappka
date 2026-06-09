@@ -61,21 +61,20 @@ const entryTitleStyle = {
 
 const entryGridStyle = {
   display: "grid",
-  gridTemplateColumns: "auto 96px minmax(240px, 1fr) minmax(130px, 160px)",
+  gridTemplateColumns: "auto 86px minmax(220px, 1fr) minmax(130px, 160px)",
   alignItems: "center",
   gap: "var(--ui-space-5)",
 } as const;
 
 const fieldShellStyle = {
   minWidth: 0,
-  display: "grid",
-  gap: "var(--ui-space-3)",
+  display: "contents",
 } as const;
 
 const todayToggleStyle = {
   display: "inline-flex",
   alignItems: "center",
-  gap: "var(--ui-space-3)",
+  gap: 6,
   minHeight: "var(--ui-input-height-l)",
   color: "var(--ui-text-secondary)",
   fontSize: "var(--ui-type-helper)",
@@ -395,51 +394,53 @@ export default function TransactionCreatorModal(
                 </header>
 
                 <div style={entryGridStyle} data-transaction-entry-form="true">
-                  <label
-                    data-transaction-today-toggle="true"
-                    style={{
-                      ...todayToggleStyle,
-                      color: isTodayAvailable ? todayToggleStyle.color : "var(--ui-text-muted)",
-                      cursor: isTodayAvailable ? "pointer" : "not-allowed",
-                    }}
-                  >
+                  <div style={fieldShellStyle} data-transaction-day-field="true">
+                    <label
+                      data-transaction-today-toggle="true"
+                      style={{
+                        ...todayToggleStyle,
+                        color: isTodayAvailable ? todayToggleStyle.color : "var(--ui-text-muted)",
+                        cursor: isTodayAvailable ? "pointer" : "not-allowed",
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isTodaySelected}
+                        disabled={!isTodayAvailable}
+                        onChange={(event) => {
+                          setTransactionDate(event.target.checked ? todayDate : "");
+                        }}
+                      />
+                      dziś
+                    </label>
+
                     <input
-                      type="checkbox"
-                      checked={isTodaySelected}
-                      disabled={!isTodayAvailable}
+                      ref={dayInputRef}
+                      data-transaction-day-input="true"
+                      className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
+                      data-input-width={uiInputApi.width.full}
+                      data-input-variant="entry"
+                      value={dayInputValue}
+                      placeholder="dzień"
+                      inputMode="numeric"
                       onChange={(event) => {
-                        setTransactionDate(event.target.checked ? todayDate : "");
+                        const nextDay = normalizeDayInput(event.target.value, selectedMonth);
+                        const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : "";
+                        setTransactionDate(nextDate);
+                      }}
+                      onBlur={(event) => {
+                        const nextDay = normalizeDayInput(event.target.value, selectedMonth);
+                        const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : "";
+                        setTransactionDate(nextDate);
+                      }}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          event.preventDefault();
+                          descriptionInputRef.current?.focus();
+                        }
                       }}
                     />
-                    dziś
-                  </label>
-
-                  <input
-                    ref={dayInputRef}
-                    data-transaction-day-input="true"
-                    className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
-                    data-input-width={uiInputApi.width.full}
-                    data-input-variant="entry"
-                    value={dayInputValue}
-                    placeholder="dzień"
-                    inputMode="numeric"
-                    onChange={(event) => {
-                      const nextDay = normalizeDayInput(event.target.value, selectedMonth);
-                      const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : "";
-                      setTransactionDate(nextDate);
-                    }}
-                    onBlur={(event) => {
-                      const nextDay = normalizeDayInput(event.target.value, selectedMonth);
-                      const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : "";
-                      setTransactionDate(nextDate);
-                    }}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter") {
-                        event.preventDefault();
-                        descriptionInputRef.current?.focus();
-                      }
-                    }}
-                  />
+                  </div>
 
                   <div style={descriptionInputWrapStyle} data-transaction-description-field="true">
                     <input
@@ -539,7 +540,6 @@ export default function TransactionCreatorModal(
                       data-transaction-tags-input="true"
                       className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
                       data-input-width={uiInputApi.width.full}
-                      data-input-variant="entry"
                       placeholder="np. sklep, dom, jedzenie"
                       value={tagInputValue}
                       autoComplete="off"
@@ -579,7 +579,6 @@ export default function TransactionCreatorModal(
                         data-transaction-recurring-select="true"
                         className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputL}`}
                         data-input-width={uiInputApi.width.full}
-                        data-input-variant="entry"
                         value={selectedRecurringTransactionId}
                         onChange={(event) => applyRecurringLink(event.target.value)}
                       >

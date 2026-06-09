@@ -402,7 +402,7 @@
   --ui-button-bg: var(--ui-color-card-background);
   --ui-button-bg-tint: var(--ui-color-card-background);
   --ui-button-bg-hover: var(--ui-color-hover-background);
-  --ui-button-border: var(--ui-color-soft-border);
+  --ui-button-border: rgba(8, 44, 122, 0.18);
   --ui-button-border-strong: var(--ui-color-primary-border);
   --ui-button-text: var(--ui-color-primary-navy);
   --ui-button-text-strong: var(--ui-color-primary-navy);
@@ -426,7 +426,7 @@
   --ui-input-padding-m: 0 var(--ui-space-6);
   --ui-input-padding-l: 0 var(--ui-space-6);
   --ui-input-padding-md: var(--ui-input-padding-m);
-  --ui-input-border: 1px solid var(--ui-color-control-border);
+  --ui-input-border: 1px solid rgba(8, 44, 122, 0.18);
   --ui-input-bg: var(--ui-color-card-background);
   --ui-input-text: var(--ui-color-control-text);
   --ui-input-placeholder: var(--ui-color-muted-text);
@@ -905,6 +905,13 @@
   color: var(--ui-button-text);
 }
 
+.ui-button--utility:hover,
+.ui-button--standard:hover,
+.ui-button--icon:hover {
+  border-color: rgba(8, 44, 122, 0.26);
+  background: var(--ui-button-bg-hover);
+}
+
 .ui-button--hero[data-button-tone="danger"],
 .ui-button--standard[data-button-tone="danger"],
 .ui-button--utility[data-button-tone="danger"],
@@ -1039,6 +1046,32 @@
 .ui-select[data-input-width="full"],
 .ui-textarea[data-input-width="full"] {
   width: 100%;
+}
+
+.ui-input[data-input-variant="entry"],
+.ui-search-field[data-input-variant="entry"],
+.ui-amount-field[data-input-variant="entry"],
+.ui-select[data-input-variant="entry"],
+.ui-textarea[data-input-variant="entry"] {
+  border-color: rgba(8, 44, 122, 0.22);
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(8, 44, 122, 0.035);
+}
+
+.ui-input[data-input-variant="entry"]::placeholder,
+.ui-search-field[data-input-variant="entry"]::placeholder,
+.ui-amount-field[data-input-variant="entry"]::placeholder,
+.ui-textarea[data-input-variant="entry"]::placeholder {
+  color: var(--ui-text-secondary);
+}
+
+.ui-input[data-input-variant="entry"]:focus,
+.ui-search-field[data-input-variant="entry"]:focus,
+.ui-amount-field[data-input-variant="entry"]:focus,
+.ui-select[data-input-variant="entry"]:focus,
+.ui-textarea[data-input-variant="entry"]:focus {
+  border-color: rgba(8, 44, 122, 0.48);
+  box-shadow: var(--ui-control-focus-ring), inset 0 0 0 1px rgba(8, 44, 122, 0.08);
 }
 
 .ui-input[data-input-density="compact"],
@@ -3477,72 +3510,4 @@ body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-hel
 
 [data-ui-picker-control="true"][data-open="true"] [data-ui-picker-chevron="true"] svg {
   transform: rotate(180deg) translateY(-0.5px);
-}
-
-/* Transaction Creator V2 — entry fields and category tiles */
-.ui-input[data-input-variant="entry"],
-.ui-select[data-input-variant="entry"],
-.ui-amount-field[data-input-variant="entry"] {
-  height: 44px;
-  min-height: 44px;
-  border-color: rgba(8, 44, 122, 0.20);
-  border-width: 1px;
-  border-radius: var(--ui-radius-lg);
-  background: #ffffff;
-  color: var(--ui-color-primary-navy);
-  font-size: var(--ui-font-size-body);
-  font-weight: var(--ui-font-weight-semibold);
-  box-shadow: inset 0 0 0 1px rgba(8, 44, 122, 0.02);
-}
-
-.ui-input[data-input-variant="entry"]::placeholder,
-.ui-amount-field[data-input-variant="entry"]::placeholder {
-  color: var(--ui-color-muted-text);
-  text-align: left;
-}
-
-.ui-amount-field[data-input-variant="entry"] {
-  text-align: left;
-}
-
-[data-transaction-entry-form="true"] {
-  width: 100%;
-}
-
-[data-transaction-today-toggle="true"] input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  margin: 0;
-  accent-color: var(--ui-color-primary-navy);
-}
-
-[data-transaction-final-category-row="true"] {
-  width: 100%;
-}
-
-[data-transaction-final-category="true"] [data-ui-icon-tile="true"],
-[data-transaction-category-chip="true"] [data-ui-icon-tile="true"] {
-  width: 42px;
-  min-width: 42px;
-  height: 42px;
-}
-
-[data-transaction-final-category="true"] [data-ui-icon-tile="true"] svg,
-[data-transaction-category-chip="true"] [data-ui-icon-tile="true"] svg {
-  width: 24px;
-  height: 24px;
-}
-
-[data-transaction-final-category-row="true"] > button {
-  min-width: 116px;
-}
-
-@media (max-width: 760px) {
-  [data-transaction-entry-form="true"] {
-    grid-template-columns: 1fr !important;
-  }
-
-  [data-transaction-final-category-row="true"] > button {
-    flex: 1 1 140px;
-  }
 }

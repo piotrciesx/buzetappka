@@ -132,7 +132,7 @@ const categoryGridStyle: CSSProperties = {
 
 const categoryButtonStyle: CSSProperties = {
   minWidth: 0,
-  width: "auto",
+  width: "100%",
   display: "inline-flex",
   alignItems: "center",
   gap: "var(--ui-space-5)",
@@ -204,16 +204,16 @@ const backButtonStyle: CSSProperties = {
 
 const finalCategoryRowStyle: CSSProperties = {
   display: "flex",
-  alignItems: "stretch",
+  alignItems: "center",
   gap: "var(--ui-space-4)",
   flexWrap: "wrap",
 };
 
 const finalCardStyle: CSSProperties = {
   width: "auto",
-  flex: "1 1 360px",
-  minWidth: 260,
-  maxWidth: "min(560px, 100%)",
+  flex: "1 1 min(520px, 100%)",
+  minWidth: 280,
+  maxWidth: "min(620px, 100%)",
   display: "inline-flex",
   alignItems: "center",
   gap: "var(--ui-space-5)",
@@ -225,8 +225,9 @@ const finalCardStyle: CSSProperties = {
 
 const finalActionStyle: CSSProperties = {
   ...backButtonStyle,
-  minHeight: 44,
+  minHeight: 36,
   padding: "0 var(--ui-space-6)",
+  border: "1px solid rgba(8, 44, 122, 0.20)",
 };
 
 const finalMainStyle: CSSProperties = {
@@ -269,6 +270,16 @@ const getCategoryTone = (category?: Category | null) => {
 const hasChildrenLabel = (hasChildren: boolean) =>
   hasChildren ? "wybierz podkategorię" : "kategoria końcowa";
 
+
+const HelpHint = ({ label }: { label: string }) => (
+  <span
+    data-ui-help="true"
+    tabIndex={0}
+    aria-label={label}
+    data-tooltip={label}
+  />
+);
+
 const getParentCategory = (
   category: Category | null,
   categoriesById: Record<string, Category>,
@@ -304,7 +315,11 @@ export default function TransactionCreatorCategorySection({
 }: Props) {
   const [activeShortcutMenu, setActiveShortcutMenu] = useState<ShortcutMenuKey>(null);
 
-  const selectedLevel1 = selectedLevel1Id ? categoriesById[selectedLevel1Id] || null : null;
+  const activeLevel1Id = selectedLevel1Id || lockedLevel1Id;
+  const activeAvailableLevel2Categories = activeLevel1Id
+    ? level2ByParentId[activeLevel1Id] || availableLevel2Categories
+    : availableLevel2Categories;
+  const selectedLevel1 = activeLevel1Id ? categoriesById[activeLevel1Id] || null : null;
   const selectedLevel2 = selectedLevel2Id ? categoriesById[selectedLevel2Id] || null : null;
   const effectiveCategory = effectiveCategoryId ? categoriesById[effectiveCategoryId] || null : null;
   const effectiveParentCategory = getParentCategory(effectiveCategory, categoriesById);
@@ -423,7 +438,7 @@ export default function TransactionCreatorCategorySection({
 
   if (effectiveCategoryId) {
     const canGoBackToLevel3 = Boolean(selectedLevel2 && availableLevel3Categories.length > 0);
-    const canGoBackToLevel2 = Boolean(selectedLevel1 && availableLevel2Categories.length > 0);
+    const canGoBackToLevel2 = Boolean(selectedLevel1 && activeAvailableLevel2Categories.length > 0);
 
     return (
       <section style={flowShellStyle} data-transaction-category-flow="true" data-flow-step="final">
@@ -477,9 +492,9 @@ export default function TransactionCreatorCategorySection({
     <section style={flowShellStyle} data-transaction-category-flow="true">
       <section style={panelStyle} data-transaction-shortcut-section="true">
         <header style={compactHeaderStyle}>
-          <span style={titleWrapStyle}>
+          <span style={{ ...titleWrapStyle, display: "inline-flex", alignItems: "center", gap: "var(--ui-space-3)" }}>
             <strong style={titleStyle}>Szybki wybór</strong>
-            <small style={metaStyle}>Rozwiń tylko wtedy, gdy chcesz pominąć drzewo kategorii.</small>
+            <HelpHint label="Rozwiń tylko wtedy, gdy chcesz pominąć drzewo kategorii i od razu otworzyć formularz dla ostatniej, najczęstszej albo przypiętej kategorii." />
           </span>
         </header>
         <div style={shortcutBarStyle} data-transaction-shortcut-bar="true">
@@ -487,15 +502,8 @@ export default function TransactionCreatorCategorySection({
         </div>
       </section>
 
-      {!lockedLevel1Id && !selectedLevel1Id && (
-        <section style={panelStyle} data-transaction-type-section="true">
-          <span style={metaStyle}>
-            Wybierz przychód albo wydatek z przycisku „Dodaj wpis” w górnej belce.
-          </span>
-        </section>
-      )}
 
-      {selectedLevel1Id && availableLevel2Categories.length > 0 && !selectedLevel2Id && (
+      {activeLevel1Id && activeAvailableLevel2Categories.length > 0 && !selectedLevel2Id && (
         <section style={panelStyle} data-transaction-entry-section="true">
           <header style={compactHeaderStyle}>
             <span style={titleWrapStyle}>
@@ -505,7 +513,7 @@ export default function TransactionCreatorCategorySection({
           </header>
 
           <div style={categoryGridStyle} data-transaction-category-list="true">
-            {availableLevel2Categories.map((level2Category) => {
+            {activeAvailableLevel2Categories.map((level2Category) => {
               const level3Children = level3ByParentId[level2Category.id] || [];
               const isFinalHere = level3Children.length === 0;
 
@@ -521,7 +529,7 @@ export default function TransactionCreatorCategorySection({
         </section>
       )}
 
-      {selectedLevel1Id && availableLevel2Categories.length === 0 && (
+      {activeLevel1Id && activeAvailableLevel2Categories.length === 0 && (
         <section style={panelStyle} data-transaction-final-category-placeholder="true">
           <strong style={titleStyle}>{selectedLevel1?.name || "Wybrany typ"}</strong>
           <span style={metaStyle}>Ten typ nie ma niższych kategorii — wpis zapisze się bezpośrednio tutaj.</span>
