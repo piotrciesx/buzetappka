@@ -600,12 +600,8 @@ export default function BudgetPageStatusPanels({
                   type="button"
                   className="ui-dropdown__item"
                   onClick={() => {
-                    if (!onQuickAddIncome) {
-                      return
-                    }
-
-                    runTopbarAction(onQuickAddIncome)
                     setOpenedTopbarPanel(null)
+                    onQuickAddIncome?.()
                   }}
                 >
                   Przychód
@@ -614,12 +610,8 @@ export default function BudgetPageStatusPanels({
                   type="button"
                   className="ui-dropdown__item"
                   onClick={() => {
-                    if (!onQuickAddExpense) {
-                      return
-                    }
-
-                    runTopbarAction(onQuickAddExpense)
                     setOpenedTopbarPanel(null)
+                    onQuickAddExpense?.()
                   }}
                 >
                   Wydatek
