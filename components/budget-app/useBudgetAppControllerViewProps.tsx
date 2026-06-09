@@ -340,6 +340,8 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     heatmapInverted: ctx.heatmapInverted,
     heatmapMode: ctx.heatmapMode,
     hiddenCategoriesInSelectedMonth: ctx.hiddenCategoriesInSelectedMonth,
+    incomeLevel1Id: ctx.incomeLevel1Id,
+    expenseLevel1Id: ctx.expenseLevel1Id,
     invitationErrorText: ctx.invitationErrorText,
     invitationStatusText: ctx.invitationStatusText,
     inviteEmail: ctx.inviteEmail,
