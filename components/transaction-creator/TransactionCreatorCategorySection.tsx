@@ -47,10 +47,10 @@ const panelStyle: CSSProperties = {
   display: "grid",
   gap: "var(--ui-space-5)",
   padding: "var(--ui-space-7)",
-  border: "1px solid var(--ui-border-divider)",
+  border: "1px solid rgba(8, 44, 122, 0.24)",
   borderRadius: "var(--ui-radius-2xl)",
   background: "linear-gradient(180deg, #ffffff 0%, var(--ui-color-extra-light-blue) 100%)",
-  boxShadow: "inset 0 0 0 1px rgba(8, 44, 122, 0.03)",
+  boxShadow: "inset 0 0 0 1px rgba(8, 44, 122, 0.05)",
 };
 
 const compactHeaderStyle: CSSProperties = {
@@ -100,7 +100,7 @@ const shortcutTriggerStyle: CSSProperties = {
   justifyContent: "center",
   gap: "var(--ui-space-3)",
   padding: "0 var(--ui-space-5)",
-  border: "1px solid var(--ui-border-divider)",
+  border: "1px solid rgba(8, 44, 122, 0.24)",
   borderRadius: "var(--ui-radius-lg)",
   background: "var(--ui-surface-card)",
   color: "var(--ui-color-primary-navy)",
@@ -118,7 +118,7 @@ const shortcutMenuStyle: CSSProperties = {
   display: "grid",
   gap: "var(--ui-space-2)",
   padding: "var(--ui-space-3)",
-  border: "1px solid var(--ui-border-divider)",
+  border: "1px solid rgba(8, 44, 122, 0.24)",
   borderRadius: "var(--ui-radius-xl)",
   background: "var(--ui-surface-dropdown)",
   boxShadow: "var(--ui-shadow-dropdown)",
@@ -138,7 +138,7 @@ const categoryButtonStyle: CSSProperties = {
   gap: "var(--ui-space-5)",
   minHeight: 42,
   padding: "var(--ui-space-4) var(--ui-space-5)",
-  border: "1px solid var(--ui-border-divider)",
+  border: "1px solid rgba(8, 44, 122, 0.24)",
   borderRadius: "var(--ui-radius-lg)",
   background: "var(--ui-surface-card)",
   color: "var(--ui-text-primary)",
@@ -193,7 +193,7 @@ const chipMetaStyle: CSSProperties = {
 const backButtonStyle: CSSProperties = {
   minHeight: 32,
   padding: "0 var(--ui-space-5)",
-  border: "1px solid var(--ui-border-divider)",
+  border: "1px solid rgba(8, 44, 122, 0.24)",
   borderRadius: "var(--ui-radius-lg)",
   background: "var(--ui-surface-card)",
   color: "var(--ui-color-primary-navy)",
@@ -207,18 +207,19 @@ const finalCategoryRowStyle: CSSProperties = {
   alignItems: "center",
   gap: "var(--ui-space-4)",
   flexWrap: "wrap",
+  justifyContent: "space-between",
 };
 
 const finalCardStyle: CSSProperties = {
   width: "auto",
-  flex: "1 1 min(520px, 100%)",
+  flex: "1 1 520px",
   minWidth: 280,
-  maxWidth: "min(620px, 100%)",
+  maxWidth: "min(640px, 100%)",
   display: "inline-flex",
   alignItems: "center",
   gap: "var(--ui-space-5)",
   padding: "var(--ui-space-5) var(--ui-space-6)",
-  border: "1px solid rgba(8, 44, 122, 0.18)",
+  border: "1px solid rgba(8, 44, 122, 0.24)",
   borderRadius: "var(--ui-radius-2xl)",
   background: "linear-gradient(180deg, #ffffff 0%, var(--ui-color-soft-blue) 100%)",
 };
@@ -227,7 +228,7 @@ const finalActionStyle: CSSProperties = {
   ...backButtonStyle,
   minHeight: 36,
   padding: "0 var(--ui-space-6)",
-  border: "1px solid rgba(8, 44, 122, 0.20)",
+  border: "1px solid rgba(8, 44, 122, 0.24)",
 };
 
 const finalMainStyle: CSSProperties = {
@@ -370,6 +371,7 @@ export default function TransactionCreatorCategorySection({
   }) => (
     <button
       type="button"
+      className="ui-button--utility"
       data-transaction-category-chip="true"
       data-transaction-category-selected={isSelected ? "true" : "false"}
       data-transaction-category-tile="true"
@@ -404,11 +406,13 @@ export default function TransactionCreatorCategorySection({
       <div key={key} style={shortcutMenuWrapStyle} data-transaction-shortcut-menu="true">
         <button
           type="button"
+          className="ui-button--utility"
           style={shortcutTriggerStyle}
           aria-expanded={isOpen}
           onClick={() => setActiveShortcutMenu(isOpen ? null : key)}
         >
-          {label} ▾
+          {label}
+          <span data-ui-picker-chevron="true" aria-hidden="true" />
         </button>
         {isOpen && (
           <div style={shortcutMenuStyle} data-transaction-shortcut-dropdown="true">
@@ -457,6 +461,7 @@ export default function TransactionCreatorCategorySection({
 
           <button
             type="button"
+            className="ui-button--utility"
             style={finalActionStyle}
             onClick={() => {
               if (canGoBackToLevel3 && selectedLevel2) {
@@ -474,6 +479,7 @@ export default function TransactionCreatorCategorySection({
 
           <button
             type="button"
+            className="ui-button--utility"
             data-transaction-pin-button="true"
             data-transaction-pinned={pinnedCategoryIds.includes(effectiveCategoryId) ? "true" : "false"}
             aria-label={pinnedCategoryIds.includes(effectiveCategoryId) ? "Odepnij kategorię" : "Przypnij kategorię"}
@@ -544,7 +550,7 @@ export default function TransactionCreatorCategorySection({
               <small style={metaStyle}>{selectedLevel2?.name || "Wybrana kategoria"}</small>
             </span>
             {selectedLevel1 && (
-              <button type="button" style={backButtonStyle} onClick={() => handleLevel1Click(selectedLevel1)}>
+              <button type="button" className="ui-button--utility" style={backButtonStyle} onClick={() => handleLevel1Click(selectedLevel1)}>
                 ← kategorie
               </button>
             )}

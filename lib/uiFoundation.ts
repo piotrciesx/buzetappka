@@ -611,6 +611,29 @@ export const uiInputApi = {
   },
 } as const
 
+
+
+export const uiCheckboxApi = {
+  classNames: {
+    root: 'ui-checkbox',
+    input: 'ui-checkbox__input',
+    label: 'ui-checkbox__label',
+  },
+  attributes: {
+    layout: 'data-checkbox-layout',
+    density: 'data-checkbox-density',
+    state: 'data-checkbox-state',
+  },
+  layout: {
+    inline: 'inline',
+    stacked: 'stacked',
+  },
+  density: {
+    compact: 'compact',
+    normal: 'normal',
+  },
+} as const
+
 export const uiListRowApi = {
   classNames: {
     list: 'ui-list',

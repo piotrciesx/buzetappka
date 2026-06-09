@@ -164,7 +164,7 @@ export default function PaymentSplitEditor({
           <div style={splitRowStyle} data-payment-split-row="true">
             <button
               type="button"
-              style={styles.secondaryButton}
+              className="ui-button--standard"
               data-payment-split-action="true"
               onClick={handleAddPaymentSource}
             >
@@ -216,7 +216,7 @@ export default function PaymentSplitEditor({
 
               <button
                 type="button"
-                style={styles.secondaryButton}
+                className="ui-button--utility"
                 data-payment-split-action="true"
                 onClick={() => handleRemoveSplitRow(index)}
               >
@@ -228,7 +228,7 @@ export default function PaymentSplitEditor({
           <div style={splitRowStyle} data-payment-split-row="true">
             <button
               type="button"
-              style={styles.secondaryButton}
+              className="ui-button--standard"
               data-payment-split-action="true"
               onClick={handleAddPaymentSource}
             >

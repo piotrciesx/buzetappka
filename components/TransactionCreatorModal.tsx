@@ -68,12 +68,19 @@ const entryGridStyle = {
 
 const fieldShellStyle = {
   minWidth: 0,
+  display: "grid",
+  gap: "var(--ui-space-3)",
+} as const;
+
+const dayFieldShellStyle = {
+  minWidth: 0,
   display: "contents",
 } as const;
 
 const todayToggleStyle = {
   display: "inline-flex",
   alignItems: "center",
+  justifyContent: "center",
   gap: 6,
   minHeight: "var(--ui-input-height-l)",
   color: "var(--ui-text-secondary)",
@@ -394,9 +401,12 @@ export default function TransactionCreatorModal(
                 </header>
 
                 <div style={entryGridStyle} data-transaction-entry-form="true">
-                  <div style={fieldShellStyle} data-transaction-day-field="true">
+                  <div style={dayFieldShellStyle} data-transaction-day-field="true">
                     <label
                       data-transaction-today-toggle="true"
+                      data-ui-checkbox="true"
+                      data-checkbox-layout="inline"
+                      data-checkbox-density="compact"
                       style={{
                         ...todayToggleStyle,
                         color: isTodayAvailable ? todayToggleStyle.color : "var(--ui-text-muted)",
@@ -404,6 +414,7 @@ export default function TransactionCreatorModal(
                       }}
                     >
                       <input
+                        className="ui-checkbox__input"
                         type="checkbox"
                         checked={isTodaySelected}
                         disabled={!isTodayAvailable}
@@ -540,6 +551,7 @@ export default function TransactionCreatorModal(
                       data-transaction-tags-input="true"
                       className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
                       data-input-width={uiInputApi.width.full}
+                      data-input-variant="entry"
                       placeholder="np. sklep, dom, jedzenie"
                       value={tagInputValue}
                       autoComplete="off"
@@ -579,6 +591,7 @@ export default function TransactionCreatorModal(
                         data-transaction-recurring-select="true"
                         className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputL}`}
                         data-input-width={uiInputApi.width.full}
+                        data-input-variant="entry"
                         value={selectedRecurringTransactionId}
                         onChange={(event) => applyRecurringLink(event.target.value)}
                       >
