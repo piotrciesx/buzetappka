@@ -599,7 +599,6 @@ export default function BudgetPageStatusPanels({
                 <button
                   type="button"
                   className="ui-dropdown__item"
-                  disabled={!onQuickAddIncome}
                   onClick={() => {
                     if (!onQuickAddIncome) {
                       return
@@ -614,7 +613,6 @@ export default function BudgetPageStatusPanels({
                 <button
                   type="button"
                   className="ui-dropdown__item"
-                  disabled={!onQuickAddExpense}
                   onClick={() => {
                     if (!onQuickAddExpense) {
                       return
