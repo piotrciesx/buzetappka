@@ -361,6 +361,7 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     monthNavigationErrorText: ctx.monthNavigationErrorText,
     onCurrentUserLeftProfile: ctx.onCurrentUserLeftProfile,
     openBlankFloatingTransactionCreator: ctx.openBlankFloatingTransactionCreator,
+    openFloatingTransactionCreator: ctx.openFloatingTransactionCreator,
     openTransactionCreator: ctx.openTransactionCreator,
     pinnedWorkspaceCategories: budgetWorkspaceSummary.pinnedWorkspaceCategories,
     previousMonthCloseReminder: ctx.previousMonthCloseReminder,

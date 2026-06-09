@@ -64,6 +64,7 @@ export default function BudgetPageStatusPanelsContainer({
     monthNavigationErrorText,
     onCurrentUserLeftProfile,
     openBlankFloatingTransactionCreator,
+    openFloatingTransactionCreator,
     openTransactionCreator,
     pinnedWorkspaceCategories = [],
     previousMonthCloseReminder,
@@ -337,10 +338,14 @@ export default function BudgetPageStatusPanelsContainer({
         onOpenUtilityPanel={handleOpenUtilityPanel}
         onQuickAdd={() => openBlankFloatingTransactionCreator(null)}
         onQuickAddIncome={
-          incomeLevel1Id ? () => openBlankFloatingTransactionCreator(incomeLevel1Id) : undefined
+          incomeLevel1Id && ctx.canCreateTransactions
+            ? () => openFloatingTransactionCreator(incomeLevel1Id)
+            : undefined
         }
         onQuickAddExpense={
-          expenseLevel1Id ? () => openBlankFloatingTransactionCreator(expenseLevel1Id) : undefined
+          expenseLevel1Id && ctx.canCreateTransactions
+            ? () => openFloatingTransactionCreator(expenseLevel1Id)
+            : undefined
         }
         profileId={profileId}
         userId={userId}

@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { Dispatch, SetStateAction } from 'react'
-import FloatingActionButtons from './FloatingActionButtons'
 import TransactionCreatorModal from './TransactionCreatorModal'
 import DraftPromptModal from './DraftPromptModal'
 
@@ -82,11 +81,6 @@ type Props = {
 
 export default function BudgetPageOverlays(props: Props) {
   const {
-    canCreateTransactions,
-    expenseLevel1Id,
-    incomeLevel1Id,
-    openFloatingTransactionCreator,
-
     isTransactionCreatorOpen,
     selectedMonth,
     level1,
@@ -148,16 +142,6 @@ export default function BudgetPageOverlays(props: Props) {
 
   return (
     <>
-      {canCreateTransactions && expenseLevel1Id && incomeLevel1Id && (
-        <FloatingActionButtons
-          expenseLevel1Id={expenseLevel1Id}
-          incomeLevel1Id={incomeLevel1Id}
-          onOpenExpense={() => openFloatingTransactionCreator(expenseLevel1Id)}
-          onOpenIncome={() => openFloatingTransactionCreator(incomeLevel1Id)}
-          styles={styles}
-        />
-      )}
-
       <TransactionCreatorModal
         isOpen={isTransactionCreatorOpen}
         selectedMonth={selectedMonth}

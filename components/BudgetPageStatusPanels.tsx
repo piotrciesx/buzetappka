@@ -599,8 +599,13 @@ export default function BudgetPageStatusPanels({
                 <button
                   type="button"
                   className="ui-dropdown__item"
+                  disabled={!onQuickAddIncome}
                   onClick={() => {
-                    runTopbarAction(onQuickAddIncome || onQuickAdd)
+                    if (!onQuickAddIncome) {
+                      return
+                    }
+
+                    runTopbarAction(onQuickAddIncome)
                     setOpenedTopbarPanel(null)
                   }}
                 >
@@ -609,8 +614,13 @@ export default function BudgetPageStatusPanels({
                 <button
                   type="button"
                   className="ui-dropdown__item"
+                  disabled={!onQuickAddExpense}
                   onClick={() => {
-                    runTopbarAction(onQuickAddExpense || onQuickAdd)
+                    if (!onQuickAddExpense) {
+                      return
+                    }
+
+                    runTopbarAction(onQuickAddExpense)
                     setOpenedTopbarPanel(null)
                   }}
                 >
