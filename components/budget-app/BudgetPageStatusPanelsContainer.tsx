@@ -338,14 +338,10 @@ export default function BudgetPageStatusPanelsContainer({
         onOpenUtilityPanel={handleOpenUtilityPanel}
         onQuickAdd={() => openBlankFloatingTransactionCreator(null)}
         onQuickAddIncome={
-          incomeLevel1Id && ctx.canCreateTransactions
-            ? () => openFloatingTransactionCreator(incomeLevel1Id)
-            : undefined
+          incomeLevel1Id ? () => openFloatingTransactionCreator(incomeLevel1Id) : undefined
         }
         onQuickAddExpense={
-          expenseLevel1Id && ctx.canCreateTransactions
-            ? () => openFloatingTransactionCreator(expenseLevel1Id)
-            : undefined
+          expenseLevel1Id ? () => openFloatingTransactionCreator(expenseLevel1Id) : undefined
         }
         profileId={profileId}
         userId={userId}
