@@ -593,7 +593,7 @@ export default function TransactionCreatorModal(
                 )}
 
                 <div style={extraGridStyle} data-transaction-entry-extra="true">
-                  <div style={fieldShellStyle}>
+                  <div style={fieldShellStyle} data-transaction-tags-field="true">
                     <label
                       style={dateLabelStyle}
                       htmlFor="transaction-tags-input"

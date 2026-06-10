@@ -3731,3 +3731,95 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
 [data-transaction-entry-extra="true"] {
   align-items: start;
 }
+
+
+/* BudżAppka — final creator polish: one clean chevron, centered inline checkbox, tighter field labels. */
+:root {
+  --ui-chevron-size: 16px;
+  --ui-chevron-stroke: 1.9px;
+  --ui-chevron-opacity: 0.82;
+  --ui-field-label-gap-compact: var(--ui-space-1);
+}
+
+[data-ui-picker-chevron="true"] {
+  width: var(--ui-chevron-size) !important;
+  min-width: var(--ui-chevron-size) !important;
+  height: var(--ui-chevron-size) !important;
+  flex: 0 0 var(--ui-chevron-size) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: currentColor !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  opacity: var(--ui-chevron-opacity) !important;
+  transform: none !important;
+}
+
+[data-ui-picker-chevron="true"]::before {
+  content: "" !important;
+  width: var(--ui-chevron-size) !important;
+  height: var(--ui-chevron-size) !important;
+  display: block !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background-color: currentColor !important;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5.75 7.75L10 12.25L14.25 7.75' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / var(--ui-chevron-size) var(--ui-chevron-size) no-repeat !important;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5.75 7.75L10 12.25L14.25 7.75' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / var(--ui-chevron-size) var(--ui-chevron-size) no-repeat !important;
+  transform: none !important;
+  transform-origin: center !important;
+}
+
+[data-ui-picker-chevron="true"] svg {
+  display: none !important;
+}
+
+[data-ui-picker-control="true"][open] [data-ui-picker-chevron="true"]::before,
+[data-ui-picker-control="true"][data-open="true"] [data-ui-picker-chevron="true"]::before,
+button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
+  transform: rotate(180deg) !important;
+}
+
+.ui-select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  padding-right: 38px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5.75 7.75L10 12.25L14.25 7.75' stroke='%23082c7a' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 12px center !important;
+  background-size: var(--ui-chevron-size) var(--ui-chevron-size) !important;
+}
+
+[data-ui-checkbox="true"][data-checkbox-layout="inline"],
+[data-transaction-today-toggle="true"] {
+  height: var(--ui-input-height-l) !important;
+  min-height: var(--ui-input-height-l) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  align-self: center !important;
+  line-height: var(--ui-line-height-compact) !important;
+  transform: translateY(1px) !important;
+}
+
+[data-ui-checkbox="true"] input[type="checkbox"],
+[data-transaction-today-toggle="true"] input[type="checkbox"],
+.ui-checkbox__input {
+  margin: 0 !important;
+  flex: 0 0 auto !important;
+  transform: translateY(0) !important;
+}
+
+[data-transaction-payment-source-field="true"],
+[data-transaction-tags-field="true"],
+[data-transaction-recurring-field="true"] {
+  gap: var(--ui-field-label-gap-compact) !important;
+}
+
+[data-transaction-field-label="true"] {
+  display: block !important;
+  margin: 0 !important;
+  line-height: var(--ui-line-height-compact) !important;
+}
