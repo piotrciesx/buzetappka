@@ -194,7 +194,7 @@
     min-width: 0 !important;
   }
 
-  [data-budget-utility-header="true"] button,
+  [data-budget-utility-header="true"] .ui-button--icon,
   [data-app-view-header="true"] button {
     flex: 0 0 auto !important;
     width: 34px !important;

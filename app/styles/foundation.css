@@ -1819,6 +1819,17 @@
   gap: var(--ui-space-5);
 }
 
+[data-ui-note-actions="true"] .ui-button--standard,
+[data-ui-note-actions="true"] .ui-button--utility {
+  width: auto;
+  min-width: max-content;
+  white-space: nowrap;
+}
+
+[data-budget-utility-header="true"][data-utility-header-kind="paymentSources"] {
+  padding-bottom: 0;
+}
+
 [data-ui-popup-footer="true"] {
   display: grid;
   gap: var(--ui-space-5);

@@ -112,7 +112,11 @@ export default function BudgetPageMainPanels({
             data-utility-panel-kind={activeUtilityPanel}
             aria-label={utilityPanelTitle}
           >
-            <header data-budget-utility-header="true" data-ui-modal-header="true">
+            <header
+              data-budget-utility-header="true"
+              data-ui-modal-header="true"
+              data-utility-header-kind={activeUtilityPanel}
+            >
               <div data-ui-title-row="true">
                 <div data-ui-title-copy="true">
                   <strong>{utilityPanelTitle}</strong>
