@@ -145,21 +145,23 @@ export default function PaymentSplitEditor({
     <div style={splitWrapStyle} data-payment-split-editor="true">
       {!isSplitActive ? (
         <>
-          <select
-            data-payment-source-select="true"
-            className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputL}`}
-            data-input-width={uiInputApi.width.full}
-            data-input-variant="entry"
-            value={selectedPaymentSourceId}
-            onChange={(event) => setSelectedPaymentSourceId(event.target.value)}
-          >
-            <option value="">Brak źródła płatności</option>
-            {paymentSourceOptions.map((source) => (
-              <option key={source.id} value={source.id}>
-                {source.optionLabel || `${source.name} (${source.type})`}
-              </option>
-            ))}
-          </select>
+          <div data-ui-select-shell="true" data-payment-source-select-shell="true">
+            <select
+              data-payment-source-select="true"
+              className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputL}`}
+              data-input-width={uiInputApi.width.full}
+              data-input-variant="entry"
+              value={selectedPaymentSourceId}
+              onChange={(event) => setSelectedPaymentSourceId(event.target.value)}
+            >
+              <option value="">Brak źródła płatności</option>
+              {paymentSourceOptions.map((source) => (
+                <option key={source.id} value={source.id}>
+                  {source.optionLabel || `${source.name} (${source.type})`}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <div style={splitRowStyle} data-payment-split-row="true">
             <button
@@ -180,25 +182,30 @@ export default function PaymentSplitEditor({
               style={splitRowStyle}
               data-payment-split-row="true"
             >
-              <select
-                data-payment-source-select="true"
-                data-payment-split-source="true"
-                className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputL}`}
-                data-input-width={uiInputApi.width.full}
-                data-input-variant="entry"
+              <div
+                data-ui-select-shell="true"
+                data-payment-source-select-shell="true"
                 style={{ flex: "1 1 220px", minWidth: 220 }}
-                value={item.paymentSourceId}
-                onChange={(event) =>
-                  handleSplitSourceChange(index, event.target.value)
-                }
               >
-                <option value="">Wybierz źródło</option>
-                {paymentSourceOptions.map((source) => (
-                  <option key={source.id} value={source.id}>
-                    {source.optionLabel || `${source.name} (${source.type})`}
-                  </option>
-                ))}
-              </select>
+                <select
+                  data-payment-source-select="true"
+                  data-payment-split-source="true"
+                  className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputL}`}
+                  data-input-width={uiInputApi.width.full}
+                  data-input-variant="entry"
+                  value={item.paymentSourceId}
+                  onChange={(event) =>
+                    handleSplitSourceChange(index, event.target.value)
+                  }
+                >
+                  <option value="">Wybierz źródło</option>
+                  {paymentSourceOptions.map((source) => (
+                    <option key={source.id} value={source.id}>
+                      {source.optionLabel || `${source.name} (${source.type})`}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
               <input
                 data-payment-split-amount="true"
