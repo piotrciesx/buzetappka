@@ -224,13 +224,8 @@
 }
 
 [data-transaction-entry-toggle="true"] {
-  min-height: 28px !important;
-  margin-top: var(--ui-space-4) !important;
-}
-
-[data-transaction-entry-toggle="true"] input {
-  width: 16px !important;
-  height: 16px !important;
+  min-height: var(--ui-input-height-l) !important;
+  align-self: center !important;
 }
 
 @media (max-width: 820px) {

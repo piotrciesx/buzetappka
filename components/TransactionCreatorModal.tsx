@@ -77,20 +77,6 @@ const dayFieldShellStyle = {
   display: "contents",
 } as const;
 
-const todayToggleStyle = {
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  alignSelf: "center",
-  gap: 6,
-  minHeight: "var(--ui-input-height-l)",
-  color: "var(--ui-text-secondary)",
-  fontSize: "var(--ui-type-helper)",
-  fontWeight: "var(--ui-font-weight-semibold)",
-  lineHeight: "var(--ui-line-height-compact)",
-  cursor: "pointer",
-} as const;
-
 const extraGridStyle = {
   display: "grid",
   gridTemplateColumns: "minmax(220px, 360px) minmax(220px, 1fr)",
@@ -422,9 +408,8 @@ export default function TransactionCreatorModal(
                       data-checkbox-density="compact"
                       data-checkbox-align="field"
                       style={{
-                        ...todayToggleStyle,
                         color: isTodayAvailable
-                          ? todayToggleStyle.color
+                          ? "var(--ui-text-secondary)"
                           : "var(--ui-text-muted)",
                         cursor: isTodayAvailable ? "pointer" : "not-allowed",
                       }}

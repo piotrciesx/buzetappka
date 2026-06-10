@@ -3555,10 +3555,12 @@ body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-hel
 
 [data-ui-checkbox="true"],
 .ui-checkbox {
+  box-sizing: border-box;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--ui-space-3);
+  gap: var(--ui-checkbox-gap);
+  min-width: max-content;
   color: var(--ui-text-secondary);
   font-size: var(--ui-type-helper);
   font-weight: var(--ui-font-weight-semibold);
@@ -3578,7 +3580,7 @@ body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-hel
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transform: translateY(1px);
+  transform: none;
 }
 
 [data-ui-checkbox="true"][data-checkbox-density="compact"],
@@ -3588,9 +3590,13 @@ body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-hel
 
 .ui-checkbox__input,
 [data-ui-checkbox="true"] input[type="checkbox"] {
-  width: 15px;
-  height: 15px;
+  flex: 0 0 16px;
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
+  min-height: 16px;
   margin: 0;
+  display: block;
   accent-color: var(--ui-color-primary-navy);
 }
 
