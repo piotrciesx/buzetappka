@@ -78,6 +78,7 @@ const dayFieldShellStyle = {
   gridTemplateColumns: "auto 86px",
   alignItems: "center",
   gap: "var(--ui-space-5)",
+  transform: "translateY(2px)",
 } as const;
 
 const extraGridStyle = {
