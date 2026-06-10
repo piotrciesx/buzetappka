@@ -516,6 +516,7 @@ export default function ProfileMonthNotePanel({
       <article
         key={note.id}
         data-ui-note-card="true"
+        data-ui-record-card="true"
         data-ui-tone={note.tone}
         data-ui-clickable="true"
         role="button"
@@ -810,7 +811,7 @@ export default function ProfileMonthNotePanel({
           </div>
         </header>
 
-        <div data-ui-note-full="true">{selectedNote.text}</div>
+        <div data-ui-section="true" data-ui-note-full="true">{selectedNote.text}</div>
       </section>
     </div>
   ) : null;
@@ -876,7 +877,7 @@ export default function ProfileMonthNotePanel({
         </div>
 
         {!isLoading && savedNotes.length === 0 && (
-          <div data-ui-empty-block="true">
+          <div data-ui-section="true" data-ui-empty-block="true">
             <span data-ui-icon-tile="true" data-ui-tone="neutral">
               <CategoryIcon iconKey="note" />
             </span>
@@ -938,7 +939,7 @@ export default function ProfileMonthNotePanel({
           </button>
         </header>
 
-        <div data-ui-form-shell="true">
+        <div data-ui-section="true" data-ui-form-shell="true">
           <textarea
             value={draft.text}
             maxLength={NOTE_DRAFT_LIMIT}
@@ -1035,7 +1036,7 @@ export default function ProfileMonthNotePanel({
         {isLoading && <StatusBox>Ładowanie notatek...</StatusBox>}
 
         {!isLoading && previewNotes.length === 0 && (
-          <div data-ui-empty-block="true">
+          <div data-ui-section="true" data-ui-empty-block="true">
             <span data-ui-icon-tile="true" data-ui-tone="neutral">
               <CategoryIcon iconKey="note" />
             </span>

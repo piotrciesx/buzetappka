@@ -4,7 +4,6 @@ import { uiInputApi } from '../../lib/uiFoundation'
 import {
   fieldStyle,
   formGridStyle,
-  formStyle,
   inlineCheckStyle,
   lightButtonStyle,
   mutedTextStyle,
@@ -27,7 +26,6 @@ import {
 import { RecurringTransactionFormState } from './recurringTransactionsPanelTypes'
 import {
   ReminderActionRow,
-  ReminderCard,
   ReminderStatusBadge,
 } from '../reminder-calendar/reminderCalendarPrimitives'
 
@@ -134,8 +132,8 @@ export default function RecurringTransactionForm({
   }
 
   return (
-    <ReminderCard style={formStyle}>
-      <div style={sectionTitleStyle}>
+    <section data-ui-section="true" data-recurring-form-section="true">
+      <div style={sectionTitleStyle} data-ui-section-title="true">
         {formState.id ? 'Edycja' : 'Nowa pozycja'}
       </div>
 
@@ -444,6 +442,6 @@ export default function RecurringTransactionForm({
           Anuluj
         </button>
       </ReminderActionRow>
-    </ReminderCard>
+    </section>
   )
 }

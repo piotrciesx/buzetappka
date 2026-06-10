@@ -33,16 +33,12 @@ import {
 const entrySectionStyle = {
   display: "grid",
   gap: "var(--ui-space-6)",
-  marginTop: "var(--ui-space-7)",
 } as const;
 
 const entryCardStyle = {
   display: "grid",
   gap: "var(--ui-space-5)",
-  padding: "var(--ui-space-7)",
-  border: "1px solid var(--ui-border-divider)",
-  borderRadius: "var(--ui-radius-2xl)",
-  background: "var(--ui-surface-card)",
+  padding: 0,
 } as const;
 
 const entryHeaderStyle = {
@@ -387,13 +383,20 @@ export default function TransactionCreatorModal(
           />
 
           {effectiveCategoryId && (
-            <section
-              style={entrySectionStyle}
-              data-transaction-data-section="true"
-            >
-              <div style={entryCardStyle} data-transaction-entry-card="true">
+            <>
+              <div data-ui-section-separator="true" />
+              <section
+                style={entrySectionStyle}
+                data-ui-section="true"
+                data-transaction-data-section="true"
+              >
+                <div
+                  style={entryCardStyle}
+                  data-ui-section="true"
+                  data-transaction-entry-card="true"
+                >
                 <header style={entryHeaderStyle}>
-                  <strong style={entryTitleStyle}>Dane wpisu</strong>
+                  <strong style={entryTitleStyle} data-ui-section-title="true">Dane wpisu</strong>
                 </header>
 
                 <div style={entryGridStyle} data-transaction-entry-form="true">
@@ -683,21 +686,21 @@ export default function TransactionCreatorModal(
                     </div>
                   )}
                 </div>
-              </div>
+                </div>
 
-              <TransactionCreatorModeToggles
-                selectedLevel1Id={selectedLevel1Id}
-                effectiveCategoryId={effectiveCategoryId}
-                isSerialModeEnabled={isSerialModeEnabled}
-                setIsSerialModeEnabled={setIsSerialModeEnabled}
-                styles={styles}
-              />
+                <TransactionCreatorModeToggles
+                  selectedLevel1Id={selectedLevel1Id}
+                  effectiveCategoryId={effectiveCategoryId}
+                  isSerialModeEnabled={isSerialModeEnabled}
+                  setIsSerialModeEnabled={setIsSerialModeEnabled}
+                  styles={styles}
+                />
 
-              <footer
-                style={actionsStyle}
-                data-ui-form-actions="true"
-                data-transaction-actions="true"
-              >
+                <footer
+                  style={actionsStyle}
+                  data-ui-form-actions="true"
+                  data-transaction-actions="true"
+                >
                 <button
                   type="button"
                   className="ui-button--utility"
@@ -739,8 +742,9 @@ export default function TransactionCreatorModal(
                     {isSaving ? "zapisywanie..." : "Zapisz"}
                   </button>
                 </span>
-              </footer>
-            </section>
+                </footer>
+              </section>
+            </>
           )}
         </div>
       </section>

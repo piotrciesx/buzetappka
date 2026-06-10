@@ -458,6 +458,7 @@ export default function PaymentSourcesPanel({
       <article
         key={source.id}
         data-payment-source-item="true"
+        data-ui-record-card="true"
         data-archived={isArchived ? 'true' : 'false'}
       >
         <div data-payment-source-main="true">
@@ -505,7 +506,7 @@ export default function PaymentSourcesPanel({
 
   return (
     <UtilityPanel data-payment-sources-panel="true">
-      <section data-payment-source-hero="true">
+      <section data-ui-section="true" data-payment-source-hero="true">
         <div>
           <span data-ui-title-with-help="true">
             <strong>Źródła płatności</strong>
@@ -517,7 +518,9 @@ export default function PaymentSourcesPanel({
         </button>
       </section>
 
-      <section data-payment-source-defaults="true">
+      <div data-ui-section-separator="true" />
+
+      <section data-ui-section="true" data-payment-source-defaults="true">
         <label data-ui-field="true">
           Pokaż pole źródła przy przychodach
           <input
@@ -608,10 +611,12 @@ export default function PaymentSourcesPanel({
         </div>
       </section>
 
+      <div data-ui-section-separator="true" />
+
       {statusText && <StatusBox tone="success">{statusText}</StatusBox>}
       {errorText && <StatusBox tone="danger">{errorText}</StatusBox>}
 
-      <section data-payment-source-list-section="true">
+      <section data-ui-section="true" data-payment-source-list-section="true">
         <header data-payment-source-section-header="true">
           <strong>Twoje źródła</strong>
           <span>{activeSources.length} aktywnych</span>
@@ -626,7 +631,7 @@ export default function PaymentSourcesPanel({
       </section>
 
       {archivedSources.length > 0 && (
-        <section data-payment-source-list-section="true">
+        <section data-ui-section="true" data-payment-source-list-section="true">
           <header data-payment-source-section-header="true">
             <strong>Archiwalne</strong>
             <span>{archivedSources.length}</span>
@@ -682,7 +687,7 @@ export default function PaymentSourcesPanel({
               </label>
 
               {duplicateSource && (
-                <div data-ui-empty-block="true">
+                <div data-ui-section="true" data-ui-empty-block="true">
                   <strong>Źródło „{duplicateSource.name}” już istnieje.</strong>
                   <span>
                     Edytuj istniejące źródło, żeby zmienić dostępność dla przychodów lub wydatków.

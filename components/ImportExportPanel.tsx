@@ -86,17 +86,11 @@ const lightButtonStyle: CSSProperties = {
 const importSectionStyle: CSSProperties = {
   display: 'grid',
   gap: 10,
-  padding: 12,
-  border: uiSurfacePrimitives.surfacePanel.border,
-  borderRadius: uiSurfacePrimitives.surfacePanel.radius,
-  background: uiSurfacePrimitives.surfacePanel.background,
+  padding: 0,
 }
 
 const compactInfoStyle: CSSProperties = {
-  border: uiSurfacePrimitives.infoBox.border,
-  borderRadius: uiSurfacePrimitives.infoBox.radius,
-  padding: '9px 11px',
-  background: uiSurfacePrimitives.infoBox.background,
+  padding: 0,
   color: 'var(--ui-text-secondary)',
   fontSize: uiTypographyTokens.role.helper,
   lineHeight: uiTypographyTokens.lineHeight.body,
@@ -336,14 +330,16 @@ export default function ImportExportPanel({
         </button>
       </ActionRow>
 
-      <StatusBox style={compactInfoStyle}>
+      <StatusBox data-ui-section="true" style={compactInfoStyle}>
         Wybierasz plik, mapujesz kolumny, sprawdzasz podgląd, poprawiasz opis i kategorię,
         zaznaczasz tylko te rekordy, które mają wejść, i dopiero wtedy importujesz.
       </StatusBox>
 
+      <div data-ui-section-separator="true" />
+
       {canCreateTransactions ? (
         <>
-          <SettingsSection style={importSectionStyle}>
+          <SettingsSection data-ui-section="true" style={importSectionStyle}>
             <ActionRow style={actionRowStyle}>
               <input
                 ref={fileInputRef}
@@ -380,7 +376,9 @@ export default function ImportExportPanel({
 
           {headers.length > 0 && (
             <>
-              <SettingsSection style={{ display: 'grid', gap: 12, marginBottom: 16 }}>
+              <div data-ui-section-separator="true" />
+
+              <SettingsSection data-ui-section="true" style={{ display: 'grid', gap: 12, marginBottom: 0 }}>
                 <div>
                   <label style={styles.sortLabel}>Kolumna kwoty</label>
                   <select
@@ -492,18 +490,18 @@ export default function ImportExportPanel({
                 </div>
               </SettingsSection>
 
-              <StatusBox style={{ ...styles.infoBox, marginBottom: 16 }}>
+              <StatusBox data-ui-section="true" style={compactInfoStyle}>
                 Wiersze w pliku: <strong>{rows.length}</strong> | zaznaczone do importu:{' '}
                 <strong>{approvedRowsCount}</strong> | poprawne i zaznaczone:{' '}
                 <strong>{validRows.length}</strong> | z błędem: <strong>{invalidRowsCount}</strong>
               </StatusBox>
 
-              <div style={{ ...styles.smallMutedText, marginBottom: 12 }}>
+              <div data-ui-section="true" style={styles.smallMutedText}>
                 Jeśli chcesz zaimportować tylko kilka wpisów, po prostu odznacz checkbox przy tych,
                 których nie chcesz wrzucać.
               </div>
 
-              <ActionRow style={{ ...actionRowStyle, marginBottom: 16 }}>
+              <ActionRow style={actionRowStyle}>
                 <button type="button" style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={handleApproveAllValid}>
                   Zaznacz wszystkie poprawne
                 </button>
@@ -532,6 +530,7 @@ export default function ImportExportPanel({
                 {editablePreviewRows.slice(0, 30).map((row) => (
                   <ListRow
                     key={row.id}
+                    data-ui-record-card="true"
                     tone={row.errors.length === 0 ? 'default' : 'danger'}
                     style={{
                       border: '1px solid var(--ui-border-soft)',
