@@ -420,6 +420,7 @@ export default function TransactionCreatorModal(
                       data-ui-checkbox="true"
                       data-checkbox-layout="inline"
                       data-checkbox-density="compact"
+                      data-checkbox-align="field"
                       style={{
                         ...todayToggleStyle,
                         color: isTodayAvailable
@@ -593,7 +594,7 @@ export default function TransactionCreatorModal(
                 )}
 
                 <div style={extraGridStyle} data-transaction-entry-extra="true">
-                  <div style={fieldShellStyle} data-transaction-tags-field="true">
+                  <div style={fieldShellStyle}>
                     <label
                       style={dateLabelStyle}
                       htmlFor="transaction-tags-input"
