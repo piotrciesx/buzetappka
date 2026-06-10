@@ -1,10 +1,8 @@
-import { CSSProperties } from 'react'
 import { closestCenter, DndContext, DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { FinancialGoal, FinancialGoalAllocationMode } from '../../lib/budgetPageTypes'
 import { uiListRowApi } from '../../lib/uiFoundation'
 import { SortableGoalCard, StaticGoalCard } from './FinancialGoalCard'
-import { cardsWrapStyle } from './financialGoalsPanelUtils'
 
 type ProgressByGoalId = Record<
   string,
@@ -27,7 +25,6 @@ type Props = {
   lockedAllocationGoalIds: Set<string>
   lockedMonthsSet: Set<string>
   sensors: Parameters<typeof DndContext>[0]['sensors']
-  styles: Record<string, CSSProperties>
   handleDragEnd: (event: DragEndEvent) => void
   handleAllocationChange: (goalId: string, nextValue: number) => void
   handleAllocationDragStart: () => void
@@ -67,7 +64,6 @@ export default function FinancialGoalsList({
   lockedAllocationGoalIds,
   lockedMonthsSet,
   sensors,
-  styles,
   handleDragEnd,
   handleAllocationChange,
   handleAllocationDragStart,
@@ -78,17 +74,17 @@ export default function FinancialGoalsList({
 }: Props) {
   return (
     <>
-      <div style={{ marginTop: 18 }} data-financial-goals-current-list="true">
-        <div style={styles.l2Name}>Cele aktualne</div>
+      <section data-ui-section="true" data-financial-goals-current-list="true">
+        <h3 data-ui-section-title="true">Cele aktualne</h3>
 
         {activeGoals.length === 0 ? (
-          <div style={{ ...styles.emptyStateCard, marginTop: 12 }}>Brak aktywnych celów.</div>
+          <div data-ui-empty-block="true">Brak aktywnych celów.</div>
         ) : effectiveMode === 'priority' ? (
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={activeGoals.map((goal) => goal.id)} strategy={verticalListSortingStrategy}>
               <div
                 className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}
-                style={cardsWrapStyle}
+                data-ui-goal-list="true"
               >
                 {activeGoals.map((goal) => (
                   <SortableGoalCard
@@ -99,7 +95,6 @@ export default function FinancialGoalsList({
                     isAllocationMode={false}
                     onEdit={openEditModal}
                     onDelete={(goalId) => void onDeleteGoal(goalId)}
-                    styles={styles}
                   />
                 ))}
               </div>
@@ -108,7 +103,7 @@ export default function FinancialGoalsList({
         ) : (
           <div
             className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}
-            style={cardsWrapStyle}
+            data-ui-goal-list="true"
           >
             {activeGoals.map((goal) => (
               <StaticGoalCard
@@ -125,22 +120,21 @@ export default function FinancialGoalsList({
                 onToggleAllocationLock={handleToggleAllocationLock}
                 onEdit={openEditModal}
                 onDelete={(goalId) => void onDeleteGoal(goalId)}
-                styles={styles}
               />
             ))}
           </div>
         )}
-      </div>
+      </section>
 
-      <div style={{ marginTop: 22 }} data-financial-goals-archived-list="true">
-        <div style={styles.l2Name}>Cele archiwalne</div>
+      <section data-ui-section="true" data-financial-goals-archived-list="true">
+        <h3 data-ui-section-title="true">Cele archiwalne</h3>
 
         {archivedGoals.length === 0 ? (
-          <div style={{ ...styles.emptyStateCard, marginTop: 12 }}>Brak celów archiwalnych.</div>
+          <div data-ui-empty-block="true">Brak celów archiwalnych.</div>
         ) : (
           <div
             className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}
-            style={cardsWrapStyle}
+            data-ui-goal-list="true"
           >
             {archivedGoals.map((goal) => (
               <StaticGoalCard
@@ -152,12 +146,11 @@ export default function FinancialGoalsList({
                 isAllocationMode={false}
                 onEdit={openEditModal}
                 onDelete={(goalId) => void onDeleteGoal(goalId)}
-                styles={styles}
               />
             ))}
           </div>
         )}
-      </div>
+      </section>
     </>
   )
 }

@@ -4,28 +4,15 @@ import type { ReactNode } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { getGoalProgressBarColor } from '../../lib/financialGoals'
-import { uiTypographyTokens } from '../../lib/uiFoundation'
 import type { GoalCardBaseProps } from './financialGoalsPanelTypes'
 
-const cardStyle = {
-  border: '1px solid var(--ui-color-divider-border)',
-  borderRadius: 12,
-  padding: 14,
-  background: 'var(--ui-color-card-background)',
-} as const
+const formatAmount = (value: number) => `${value.toFixed(2)} zł`
 
-const sliderWrapStyle = {
-  display: 'grid',
-  gap: 10,
-  marginTop: 8,
-} as const
-
-const sliderRowStyle = {
-  display: 'grid',
-  gap: 8,
-  gridTemplateColumns: 'minmax(160px, 1fr) minmax(180px, 2fr) 88px 112px',
-  alignItems: 'center',
-} as const
+const getStatusTone = (statusLabel: string) => {
+  if (statusLabel === 'zrealizowany') return 'success'
+  if (statusLabel === 'niezrealizowany') return 'danger'
+  return 'active'
+}
 
 function GoalCardContent(props: GoalCardBaseProps & { dragHandle?: ReactNode }) {
   const {
@@ -47,146 +34,119 @@ function GoalCardContent(props: GoalCardBaseProps & { dragHandle?: ReactNode }) 
     onToggleAllocationLock,
     onEdit,
     onDelete,
-    styles,
     dragHandle,
   } = props
 
   const isUnsuccessful = statusLabel === 'niezrealizowany'
   const progressWidth = isUnsuccessful ? '100%' : `${Math.min(percentage, 100)}%`
   const progressColor = isUnsuccessful ? getGoalProgressBarColor(0) : getGoalProgressBarColor(percentage)
+  const allocationLabel = allocationPercent === null ? '0%' : `${allocationPercent}%`
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-          {dragHandle}
+      <div data-ui-goal-card-main="true">
+        <div data-ui-goal-card-title-row="true">
+          <span data-ui-goal-icon="true" aria-hidden="true">
+            {goal.name.trim().slice(0, 1).toUpperCase() || '+'}
+          </span>
 
-          <div>
-            <div
-              style={{
-                fontWeight: uiTypographyTokens.weight.semibold,
-                fontSize: uiTypographyTokens.hierarchy.t2,
-              }}
-            >
-              {goal.name}
+          <div data-ui-goal-card-copy="true">
+            <div>
+              <strong>{goal.name}</strong>
+              <span data-ui-goal-status={getStatusTone(statusLabel)}>
+                <span aria-hidden="true" />
+                {statusLabel}
+              </span>
             </div>
-            <div style={{ ...styles.pageSubtitle, margin: '4px 0 0' }}>
+            <p>
               Start: {goal.start_month}
-              {deadlineMonth ? ` • deadline: ${deadlineMonth}` : ' • bez deadline’u'}
-            </div>
+              {' · '}
+              Deadline: {deadlineMonth || 'brak'}
+            </p>
           </div>
         </div>
 
-        <div style={styles.actions}>
-          <button type="button" style={styles.secondaryButton} onClick={() => onEdit(goal)}>
+        <div data-ui-goal-metrics="true">
+          <div data-ui-goal-metric="true">
+            <span>Docelowa</span>
+            <strong>{formatAmount(goal.target_amount)}</strong>
+          </div>
+          <div data-ui-goal-metric="true">
+            <span>Uzbierano</span>
+            <strong>{formatAmount(collectedAmount)}</strong>
+          </div>
+          <div data-ui-goal-metric="true">
+            <span>Brakuje</span>
+            <strong>{formatAmount(remainingAmount)}</strong>
+          </div>
+          <div data-ui-goal-metric="true">
+            <span>Alokacja</span>
+            <strong>{allocationLabel}</strong>
+          </div>
+        </div>
+
+        <div data-ui-goal-actions="true">
+          {dragHandle}
+          <button type="button" className="ui-button--utility" onClick={() => onEdit(goal)}>
             Edytuj
           </button>
-          <button type="button" style={styles.dangerButton} onClick={() => onDelete(goal.id)}>
+          <button
+            type="button"
+            className="ui-button--utility"
+            data-button-tone="danger"
+            onClick={() => onDelete(goal.id)}
+          >
             Usuń
           </button>
+          {isAllocationMode && onToggleAllocationLock && (
+            <button
+              type="button"
+              className={isAllocationLocked ? 'ui-button--standard' : 'ui-button--utility'}
+              onClick={() => onToggleAllocationLock(goal.id)}
+              title={
+                isAllocationLocked
+                  ? 'Odblokuj procent tego celu'
+                  : 'Zablokuj procent tego celu'
+              }
+            >
+              {isAllocationLocked ? 'Odblokuj' : 'Zablokuj'}
+            </button>
+          )}
         </div>
-      </div>
-
-      <div
-        style={{
-          display: 'grid',
-          gap: 8,
-          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-          marginTop: 12,
-        }}
-      >
-        <div style={styles.infoBox}>
-          <b>Kwota docelowa:</b> {goal.target_amount.toFixed(2)} zł
-        </div>
-        <div style={styles.infoBox}>
-          <b>Uzbierano:</b> {collectedAmount.toFixed(2)} zł
-        </div>
-        <div style={styles.infoBox}>
-          <b>Brakuje:</b> {remainingAmount.toFixed(2)} zł
-        </div>
-        <div style={styles.infoBox}>
-          <b>Status:</b> {statusLabel}
-        </div>
-        {isAllocationMode && (
-          <div style={styles.infoBox}>
-            <b>Alokacja:</b> {allocationPercent === null ? '0%' : `${allocationPercent}%`}
-            {isAllocationLocked ? ' • zablokowana' : ''}
-          </div>
-        )}
       </div>
 
       {isAllocationMode && typeof sliderValue === 'number' && onAllocationChange && (
-        <div style={sliderWrapStyle}>
-          <div style={sliderRowStyle}>
-            <div style={{ fontWeight: uiTypographyTokens.weight.semibold }}>{goal.name}</div>
-            <input
-              type="range"
-              min={0}
-              max={100}
-              step={1}
-              value={sliderValue}
-              disabled={isAllocationLocked}
-              onPointerDown={onAllocationDragStart}
-              onPointerUp={onAllocationCommit}
-              onMouseUp={onAllocationCommit}
-              onTouchEnd={onAllocationCommit}
-              onKeyUp={onAllocationCommit}
-              onChange={(event) => onAllocationChange(goal.id, Number(event.target.value))}
-            />
-            <div
-              style={{
-                fontWeight: uiTypographyTokens.weight.semibold,
-                textAlign: 'right',
-              }}
-            >
-              {sliderValue}%
-            </div>
-            {onToggleAllocationLock && (
-              <button
-                type="button"
-                style={{
-                  ...(isAllocationLocked ? styles.primaryButton : styles.secondaryButton),
-                  minWidth: 104,
-                  justifyContent: 'center',
-                }}
-                onClick={() => onToggleAllocationLock(goal.id)}
-                title={
-                  isAllocationLocked
-                    ? 'Odblokuj procent tego celu'
-                    : 'Zablokuj procent tego celu'
-                }
-              >
-                {isAllocationLocked ? '🔒 Blokada' : '🔓 Blokuj'}
-              </button>
-            )}
-          </div>
+        <div data-ui-goal-slider="true">
+          <input
+            type="range"
+            min={0}
+            max={100}
+            step={1}
+            value={sliderValue}
+            disabled={isAllocationLocked}
+            onPointerDown={onAllocationDragStart}
+            onPointerUp={onAllocationCommit}
+            onMouseUp={onAllocationCommit}
+            onTouchEnd={onAllocationCommit}
+            onKeyUp={onAllocationCommit}
+            onChange={(event) => onAllocationChange(goal.id, Number(event.target.value))}
+          />
+          <strong>{sliderValue}%</strong>
         </div>
       )}
 
-      <div
-        style={{
-          marginTop: 12,
-          height: 10,
-          borderRadius: 999,
-          background: 'var(--ui-color-divider-border)',
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          style={{
-            width: progressWidth,
-            height: '100%',
-            background: progressColor,
-            transition: 'width 180ms ease, background-color 180ms ease',
-          }}
-        />
+      <div data-ui-goal-progress="true">
+        <strong>{percentage.toFixed(0)}%</strong>
+        <div>
+          <span style={{ width: progressWidth, background: progressColor }} />
+        </div>
       </div>
 
-      <div style={{ ...styles.pageSubtitle, margin: '8px 0 0' }}>
-        Progres: {percentage.toFixed(1)}%
-        {completionMonth ? ` • osiągnięcie: ${completionMonth}` : ''}
-        {waitingForLockedMonth ? ' • czeka na zamknięcie miesiąca' : ''}
-      </div>
+      <p data-ui-goal-progress-caption="true">
+        Postęp: {percentage.toFixed(1)}%
+        {completionMonth ? ` · osiągnięcie: ${completionMonth}` : ''}
+        {waitingForLockedMonth ? ' · czeka na zamknięcie miesiąca' : ''}
+      </p>
     </>
   )
 }
@@ -198,14 +158,14 @@ export function SortableGoalCard(props: GoalCardBaseProps) {
   })
 
   return (
-    <div
+    <article
       ref={setNodeRef}
+      data-ui-record-card="true"
+      data-ui-goal-card="true"
+      data-dragging={isDragging ? 'true' : 'false'}
       style={{
-        ...cardStyle,
         transform: CSS.Transform.toString(transform),
         transition,
-        boxShadow: isDragging ? '0 12px 24px rgba(15, 23, 42, 0.12)' : 'none',
-        opacity: isDragging ? 0.82 : 1,
       }}
     >
       <GoalCardContent
@@ -213,31 +173,36 @@ export function SortableGoalCard(props: GoalCardBaseProps) {
         dragHandle={
           <button
             type="button"
-            style={{
-              border: '1px solid var(--ui-color-soft-border)',
-              background: 'var(--ui-color-soft-section-background)',
-              borderRadius: 10,
-              padding: '6px 10px',
-              cursor: 'grab',
-              fontWeight: uiTypographyTokens.weight.semibold,
-              color: 'var(--ui-color-secondary-text)',
-            }}
+            className="ui-button--icon"
+            data-ui-goal-menu="true"
             title="Przeciągnij, aby zmienić priorytet"
             {...attributes}
             {...listeners}
           >
-            ⋮⋮
+            ...
           </button>
         }
       />
-    </div>
+    </article>
   )
 }
 
 export function StaticGoalCard(props: GoalCardBaseProps) {
   return (
-    <div style={cardStyle}>
-      <GoalCardContent {...props} />
-    </div>
+    <article data-ui-record-card="true" data-ui-goal-card="true">
+      <GoalCardContent
+        {...props}
+        dragHandle={
+          <button
+            type="button"
+            className="ui-button--icon"
+            data-ui-goal-menu="true"
+            onClick={() => props.onEdit(props.goal)}
+          >
+            ...
+          </button>
+        }
+      />
+    </article>
   )
 }

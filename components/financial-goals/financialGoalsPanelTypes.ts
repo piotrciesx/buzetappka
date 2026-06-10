@@ -53,5 +53,4 @@ export type GoalCardBaseProps = {
   onToggleAllocationLock?: (goalId: string) => void
   onEdit: (goal: FinancialGoal) => void
   onDelete: (goalId: string) => void
-  styles: Record<string, CSSProperties>
 }

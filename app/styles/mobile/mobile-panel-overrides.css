@@ -363,74 +363,6 @@
     min-width: 0 !important;
   }
 
-  [data-financial-goals-panel="true"] {
-    padding: 10px !important;
-    border-radius: 14px !important;
-  }
-
-  [data-financial-goals-mode-controls="true"] {
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 6px !important;
-    margin-top: 0 !important;
-  }
-
-  [data-financial-goals-mode-controls="true"] button,
-  [data-financial-goal-form="true"] button {
-    min-height: 32px !important;
-    padding: 0 8px !important;
-    font-size: var(--ui-type-metadata) !important;
-  }
-
-  [data-financial-goals-summary="true"] {
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 6px !important;
-    margin-top: 8px !important;
-  }
-
-  [data-financial-goals-summary="true"] > div {
-    padding: 7px !important;
-    font-size: var(--ui-type-widget-meta) !important;
-    line-height: var(--ui-line-height-compact) !important;
-  }
-
-  [data-financial-goal-form="true"] {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) minmax(96px, 0.55fr) !important;
-    gap: 6px !important;
-    padding: 8px !important;
-    margin-top: 8px !important;
-  }
-
-  [data-financial-goal-form="true"] input,
-  [data-financial-goal-form="true"] > div {
-    min-width: 0 !important;
-    width: 100% !important;
-  }
-
-  [data-financial-goal-form="true"] > input[type="month"],
-  [data-financial-goal-form="true"] > div {
-    grid-column: span 1 !important;
-  }
-
-  [data-financial-goal-form="true"] > div:last-child {
-    grid-column: 1 / -1 !important;
-  }
-
-  [data-financial-goals-panel="true"] [style*="pageSubtitle"],
-  [data-financial-goals-panel="true"] [style*="Zmiana"] {
-    font-size: var(--ui-type-widget-meta) !important;
-  }
-
-  [data-financial-goals-current-list="true"] {
-    margin-top: 12px !important;
-  }
-
-  [data-financial-goals-archived-list="true"] {
-    margin-top: 14px !important;
-  }
-
   [data-bank-search-filters="true"] {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 7px !important;
@@ -574,12 +506,10 @@
 }
 
 @media (max-width: 380px) {
-  [data-financial-goals-summary="true"],
   [data-bank-search-stats="true"] {
     grid-template-columns: 1fr !important;
   }
 
-  [data-financial-goal-form="true"],
   [data-bank-search-filters="true"] {
     grid-template-columns: 1fr !important;
   }

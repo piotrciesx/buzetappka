@@ -1,31 +1,21 @@
-import type { CSSProperties } from 'react'
 import type { FinancialGoalAllocationMode } from '../../lib/budgetPageTypes'
-
-const modeButtonRowStyle = {
-  display: 'flex',
-  gap: 10,
-  flexWrap: 'wrap' as const,
-  marginTop: 12,
-} as const
 
 type FinancialGoalsModeControlsProps = {
   effectiveMode: FinancialGoalAllocationMode
   activeGoalsCount: number
-  styles: Record<string, CSSProperties>
   onModeChange: (mode: FinancialGoalAllocationMode) => void
 }
 
 export default function FinancialGoalsModeControls({
   effectiveMode,
   activeGoalsCount,
-  styles,
   onModeChange,
 }: FinancialGoalsModeControlsProps) {
   return (
-    <div style={modeButtonRowStyle} data-financial-goals-mode-controls="true">
+    <div data-ui-goal-tabs="true" data-financial-goals-mode-controls="true">
       <button
         type="button"
-        style={effectiveMode === 'priority' ? styles.primaryButton : styles.secondaryButton}
+        data-active={effectiveMode === 'priority' ? 'true' : 'false'}
         onClick={() => {
           onModeChange('priority')
         }}
@@ -34,7 +24,7 @@ export default function FinancialGoalsModeControls({
       </button>
       <button
         type="button"
-        style={effectiveMode === 'allocation' ? styles.primaryButton : styles.secondaryButton}
+        data-active={effectiveMode === 'allocation' ? 'true' : 'false'}
         disabled={activeGoalsCount === 0}
         onClick={() => {
           onModeChange('allocation')

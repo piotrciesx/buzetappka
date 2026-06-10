@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { DragEndEvent } from '@dnd-kit/core'
@@ -514,28 +514,12 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
   }
 
   return (
-    <section style={panelStyle} data-financial-goals-panel="true">
+    <section style={panelStyle} data-ui-section="true" data-financial-goals-panel="true">
       <FinancialGoalsHeader styles={styles} />
-
-      <FinancialGoalsModeControls
-        effectiveMode={effectiveMode}
-        activeGoalsCount={activeGoals.length}
-        styles={styles}
-        onModeChange={handleModeChange}
-      />
-
-      <FinancialGoalsSummary
-        selectedMonth={selectedMonth}
-        monthBalance={monthBalance}
-        monthSurplus={monthSurplus}
-        lockedMonthsSet={lockedMonthsSet}
-        styles={styles}
-      />
 
       <FinancialGoalForm
         formState={createFormState}
         isSaving={isSaving}
-        styles={styles}
         submitLabel="Dodaj cel"
         savingLabel="Zapisywanie..."
         onFormStateChange={setCreateFormState}
@@ -546,22 +530,39 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         }
       />
 
+      <FinancialGoalsModeControls
+        effectiveMode={effectiveMode}
+        activeGoalsCount={activeGoals.length}
+        onModeChange={handleModeChange}
+      />
+
+      <FinancialGoalsSummary
+        selectedMonth={selectedMonth}
+        monthBalance={monthBalance}
+        monthSurplus={monthSurplus}
+        lockedMonthsSet={lockedMonthsSet}
+      />
+
       {effectiveMode === 'allocation' ? (
         <>
-          <div style={{ ...styles.infoBox, marginTop: 12 }}>
-            <b>Suma alokacji:</b> {totalPercent.toFixed(0)}%
-            {totalPercent !== 100 ? ' • musi wynosić dokładnie 100%' : ' • zapis automatyczny'}
-            {isAllocationSaving ? ' • zapisywanie...' : ''}
+          <div data-ui-goal-allocation-bar="true">
+            <span>
+              <strong>Suma alokacji:</strong> {totalPercent.toFixed(0)}%
+            </span>
+            <span>
+              {totalPercent !== 100 ? 'musi wynosić dokładnie 100%' : 'zapis automatyczny'}
+              {isAllocationSaving ? ' · zapisywanie...' : ''}
+            </span>
           </div>
 
-          <div style={{ ...styles.pageSubtitle, marginTop: 12 }}>
+          <div data-ui-goal-helper="true">
             W trybie alokacji suwak działa co 1%. Zmiana zapisuje się automatycznie dla wybranego
             miesiąca i kolejnych miesięcy, dopóki w kolejnym miesiącu nie ustawisz innej alokacji.
             Zablokowany cel nie bierze udziału w automatycznym przeliczaniu procentów.
           </div>
         </>
       ) : (
-        <div style={{ ...styles.pageSubtitle, marginTop: 12 }}>
+        <div data-ui-goal-helper="true">
           Przeciągnij kafle, aby ustawić priorytet dla miesiąca {selectedMonth}.
           {isReordering ? ' Zapisywanie nowej kolejności...' : ''}
           {isModeSaving ? ' Zapisywanie trybu...' : ''}
@@ -577,7 +578,6 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         lockedAllocationGoalIds={lockedAllocationGoalIds}
         lockedMonthsSet={lockedMonthsSet}
         sensors={sensors}
-        styles={styles}
         handleDragEnd={handleDragEnd}
         handleAllocationChange={handleAllocationChange}
         handleAllocationDragStart={handleAllocationDragStart}

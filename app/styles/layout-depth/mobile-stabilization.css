@@ -407,7 +407,6 @@
     min-width: 0 !important;
   }
 
-  [data-financial-goals-panel="true"],
   [data-bank-search-history="true"],
   [data-settings-panel-content="true"] {
     width: 100% !important;
@@ -416,8 +415,6 @@
     overflow-x: hidden !important;
   }
 
-  [data-financial-goals-summary="true"],
-  [data-financial-goal-form="true"],
   [data-bank-search-filters="true"],
   [data-bank-search-stats="true"],
   [data-settings-feature-grid="true"],
@@ -425,7 +422,6 @@
     grid-template-columns: 1fr !important;
   }
 
-  [data-financial-goal-form="true"] > *,
   [data-bank-search-filters="true"] > *,
   [data-bank-search-stats="true"] > * {
     grid-column: 1 / -1 !important;

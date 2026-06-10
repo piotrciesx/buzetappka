@@ -2,16 +2,11 @@ import type { FinancialGoal } from '../../lib/budgetPageTypes'
 import type { FormState } from './financialGoalsPanelTypes'
 
 export const panelStyle = {
-  marginBottom: 20,
-  background: 'var(--ui-color-card-background)',
-  border: '1px solid var(--ui-color-divider-border)',
-  borderRadius: 14,
-  padding: 16,
-  boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+  marginBottom: 0,
 } as const
 
 export const cardsWrapStyle = {
-  marginTop: 12,
+  marginTop: 0,
 } as const
 
 export const getInitialFormState = (selectedMonth: string): FormState => ({
