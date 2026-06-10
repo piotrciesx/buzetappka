@@ -3741,6 +3741,17 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
 }
 
 [data-transaction-today-toggle="true"] {
+  height: var(--ui-input-height-l);
+  min-height: var(--ui-input-height-l);
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(2px);
+}
+
+[data-transaction-today-toggle="true"] .ui-checkbox__input,
+[data-transaction-today-toggle="true"] input[type="checkbox"] {
   align-self: center;
   transform: translateY(0);
 }
