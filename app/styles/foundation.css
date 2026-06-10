@@ -862,8 +862,8 @@
   font: inherit;
   line-height: var(--ui-line-height-compact);
   text-align: center;
-  white-space: normal;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  overflow-wrap: normal;
   cursor: pointer;
 }
 
@@ -4055,6 +4055,31 @@ body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-hel
 
 [data-transaction-modal-header="true"] .ui-button--icon {
   justify-self: end;
+}
+
+/* Global utility modal header alignment. */
+[data-budget-utility-header="true"][data-ui-modal-header="true"] {
+  border-bottom: 0;
+  box-shadow: none;
+  margin-bottom: var(--ui-space-8);
+}
+
+[data-budget-utility-header="true"][data-ui-modal-header="true"] [data-ui-note-actions="true"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+  gap: var(--ui-space-5);
+  min-width: max-content;
+}
+
+[data-budget-utility-header="true"][data-ui-modal-header="true"] .ui-button--standard {
+  flex: 0 0 auto;
+  min-width: max-content;
+}
+
+[data-budget-utility-body="true"] {
+  padding-top: var(--ui-space-8);
 }
 
 /* UI Foundation final control cleanup: one chevron system + soft back button. */
