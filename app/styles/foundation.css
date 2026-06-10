@@ -3574,13 +3574,13 @@ body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-hel
 
 [data-ui-checkbox="true"][data-checkbox-align="field"],
 .ui-checkbox[data-checkbox-align="field"] {
-  height: var(--ui-input-height-l);
   min-height: var(--ui-input-height-l);
   align-self: center;
+  justify-self: start;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  transform: none;
+  justify-content: flex-start;
+  line-height: var(--ui-line-height-body);
 }
 
 [data-ui-checkbox="true"][data-checkbox-density="compact"],
