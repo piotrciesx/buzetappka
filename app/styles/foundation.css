@@ -1485,7 +1485,7 @@
 
 [data-ui-field="true"] {
   display: grid;
-  gap: var(--ui-space-4);
+  gap: var(--ui-spacing-form-field-gap);
   color: var(--ui-text-secondary);
   font-size: var(--ui-type-t4);
   font-weight: var(--ui-font-weight-semibold);
