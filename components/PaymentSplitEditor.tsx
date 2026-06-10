@@ -145,7 +145,7 @@ export default function PaymentSplitEditor({
     <div style={splitWrapStyle} data-payment-split-editor="true">
       {!isSplitActive ? (
         <>
-          <div data-ui-select-shell="true" data-payment-source-select-shell="true">
+          <span data-ui-select-shell="true">
             <select
               data-payment-source-select="true"
               className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputL}`}
@@ -161,7 +161,8 @@ export default function PaymentSplitEditor({
                 </option>
               ))}
             </select>
-          </div>
+            <span data-ui-picker-chevron="true" aria-hidden="true" />
+          </span>
 
           <div style={splitRowStyle} data-payment-split-row="true">
             <button
@@ -182,9 +183,8 @@ export default function PaymentSplitEditor({
               style={splitRowStyle}
               data-payment-split-row="true"
             >
-              <div
+              <span
                 data-ui-select-shell="true"
-                data-payment-source-select-shell="true"
                 style={{ flex: "1 1 220px", minWidth: 220 }}
               >
                 <select
@@ -205,7 +205,8 @@ export default function PaymentSplitEditor({
                     </option>
                   ))}
                 </select>
-              </div>
+                <span data-ui-picker-chevron="true" aria-hidden="true" />
+              </span>
 
               <input
                 data-payment-split-amount="true"

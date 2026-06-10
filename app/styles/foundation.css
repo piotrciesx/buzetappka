@@ -1028,9 +1028,7 @@
 }
 
 .ui-select {
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: none;
+  appearance: auto;
 }
 
 .ui-input[data-input-width="compact"],
@@ -3643,7 +3641,7 @@ body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-hel
   justify-self: end;
 }
 
-/* UI Foundation final control cleanup: one chevron system + native select shell. */
+/* UI Foundation final control cleanup: one chevron system + soft back button. */
 [data-ui-picker-chevron="true"] {
   width: 16px;
   min-width: 16px;
@@ -3674,8 +3672,14 @@ body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-hel
   transform-origin: center;
 }
 
+[data-ui-picker-chevron="true"]:has(svg)::before {
+  content: none;
+}
+
 [data-ui-picker-chevron="true"] svg {
-  display: none;
+  display: block;
+  width: 16px;
+  height: 16px;
 }
 
 [data-ui-picker-control="true"][open] [data-ui-picker-chevron="true"]::before,
@@ -3684,36 +3688,32 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   transform: translateY(1px) rotate(225deg);
 }
 
+[data-ui-picker-control="true"][open] [data-ui-picker-chevron="true"] svg,
+[data-ui-picker-control="true"][data-open="true"] [data-ui-picker-chevron="true"] svg,
+button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
+  transform: rotate(180deg);
+}
+
 [data-ui-select-shell="true"] {
   position: relative;
-  min-width: 0;
+  display: block;
   width: 100%;
-  display: grid;
+  min-width: 0;
 }
 
 [data-ui-select-shell="true"] .ui-select {
   width: 100%;
-  padding-right: var(--ui-space-12);
   appearance: none;
-  -webkit-appearance: none;
-  background-image: none;
+  padding-right: calc(var(--ui-space-6) + 24px);
 }
 
-[data-ui-select-shell="true"]::after {
-  content: "";
+[data-ui-select-shell="true"] [data-ui-picker-chevron="true"] {
   position: absolute;
   top: 50%;
   right: var(--ui-space-6);
-  width: 7px;
-  height: 7px;
-  border-right: 1.55px solid currentColor;
-  border-bottom: 1.55px solid currentColor;
-  border-radius: 1px;
-  color: var(--ui-color-primary-navy);
-  opacity: 0.82;
   pointer-events: none;
-  transform: translateY(-65%) rotate(45deg);
-  transform-origin: center;
+  color: var(--ui-color-primary-navy);
+  transform: translateY(-50%);
 }
 
 [data-ui-chevron="left"] {
