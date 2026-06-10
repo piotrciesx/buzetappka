@@ -49,7 +49,8 @@ const panelStyle: CSSProperties = {
   padding: "var(--ui-space-7)",
   border: "1px solid rgba(8, 44, 122, 0.24)",
   borderRadius: "var(--ui-radius-2xl)",
-  background: "linear-gradient(180deg, #ffffff 0%, var(--ui-color-extra-light-blue) 100%)",
+  background:
+    "linear-gradient(180deg, #ffffff 0%, var(--ui-color-extra-light-blue) 100%)",
   boxShadow: "inset 0 0 0 1px rgba(8, 44, 122, 0.05)",
 };
 
@@ -205,23 +206,23 @@ const backButtonStyle: CSSProperties = {
 const finalCategoryRowStyle: CSSProperties = {
   display: "flex",
   alignItems: "center",
-  gap: "var(--ui-space-4)",
-  flexWrap: "wrap",
-  justifyContent: "space-between",
+  gap: "var(--ui-space-5)",
+  flexWrap: "nowrap",
 };
 
 const finalCardStyle: CSSProperties = {
   width: "auto",
-  flex: "1 1 520px",
+  flex: "1 1 auto",
   minWidth: 280,
-  maxWidth: "min(640px, 100%)",
+  maxWidth: "none",
   display: "inline-flex",
   alignItems: "center",
   gap: "var(--ui-space-5)",
   padding: "var(--ui-space-5) var(--ui-space-6)",
   border: "1px solid rgba(8, 44, 122, 0.24)",
   borderRadius: "var(--ui-radius-2xl)",
-  background: "linear-gradient(180deg, #ffffff 0%, var(--ui-color-soft-blue) 100%)",
+  background:
+    "linear-gradient(180deg, #ffffff 0%, var(--ui-color-soft-blue) 100%)",
 };
 
 const finalActionStyle: CSSProperties = {
@@ -229,6 +230,26 @@ const finalActionStyle: CSSProperties = {
   minHeight: 36,
   padding: "0 var(--ui-space-6)",
   border: "1px solid rgba(8, 44, 122, 0.24)",
+};
+
+const finalActionsStyle: CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "flex-end",
+  gap: "var(--ui-space-5)",
+  marginLeft: "auto",
+  flex: "0 0 auto",
+};
+
+const subcategoryActionRowStyle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: "var(--ui-space-5)",
+};
+
+const subcategoryListStyle: CSSProperties = {
+  ...categoryGridStyle,
+  flex: "1 1 auto",
 };
 
 const finalMainStyle: CSSProperties = {
@@ -265,12 +286,15 @@ const getCategoryTone = (category?: Category | null) => {
   }
 
   const categoryWithAppearance = category as CategoryWithAppearance;
-  return categoryWithAppearance.color_tone || categoryWithAppearance.color || undefined;
+  return (
+    categoryWithAppearance.color_tone ||
+    categoryWithAppearance.color ||
+    undefined
+  );
 };
 
 const hasChildrenLabel = (hasChildren: boolean) =>
   hasChildren ? "wybierz podkategorię" : "kategoria końcowa";
-
 
 const HelpHint = ({ label }: { label: string }) => (
   <span
@@ -314,22 +338,47 @@ export default function TransactionCreatorCategorySection({
   handleLevel3Click,
   onTogglePinnedCategory,
 }: Props) {
-  const [activeShortcutMenu, setActiveShortcutMenu] = useState<ShortcutMenuKey>(null);
+  const [activeShortcutMenu, setActiveShortcutMenu] =
+    useState<ShortcutMenuKey>(null);
 
   const activeLevel1Id = selectedLevel1Id || lockedLevel1Id;
   const activeAvailableLevel2Categories = activeLevel1Id
     ? level2ByParentId[activeLevel1Id] || availableLevel2Categories
     : availableLevel2Categories;
-  const selectedLevel1 = activeLevel1Id ? categoriesById[activeLevel1Id] || null : null;
-  const selectedLevel2 = selectedLevel2Id ? categoriesById[selectedLevel2Id] || null : null;
-  const effectiveCategory = effectiveCategoryId ? categoriesById[effectiveCategoryId] || null : null;
-  const effectiveParentCategory = getParentCategory(effectiveCategory, categoriesById);
+  const selectedLevel1 = activeLevel1Id
+    ? categoriesById[activeLevel1Id] || null
+    : null;
+  const selectedLevel2 = selectedLevel2Id
+    ? categoriesById[selectedLevel2Id] || null
+    : null;
+  const effectiveCategory = effectiveCategoryId
+    ? categoriesById[effectiveCategoryId] || null
+    : null;
+  const effectiveParentCategory = getParentCategory(
+    effectiveCategory,
+    categoriesById,
+  );
 
   const shortcutMenus = useMemo(
     () => [
-      { key: "recent" as const, label: "Ostatnie", items: recentShortcutCategories, empty: "Brak ostatnich kategorii." },
-      { key: "frequent" as const, label: "Najczęstsze", items: topShortcutCategories, empty: "Brak najczęstszych kategorii." },
-      { key: "pinned" as const, label: "Przypięte", items: pinnedShortcutCategories, empty: "Brak przypiętych kategorii." },
+      {
+        key: "recent" as const,
+        label: "Ostatnie",
+        items: recentShortcutCategories,
+        empty: "Brak ostatnich kategorii.",
+      },
+      {
+        key: "frequent" as const,
+        label: "Najczęstsze",
+        items: topShortcutCategories,
+        empty: "Brak najczęstszych kategorii.",
+      },
+      {
+        key: "pinned" as const,
+        label: "Przypięte",
+        items: pinnedShortcutCategories,
+        empty: "Brak przypiętych kategorii.",
+      },
     ],
     [pinnedShortcutCategories, recentShortcutCategories, topShortcutCategories],
   );
@@ -350,7 +399,11 @@ export default function TransactionCreatorCategorySection({
     }
 
     return (
-      <span data-ui-icon-tile="true" data-ui-tone={getCategoryTone(category)} style={iconTileStyle}>
+      <span
+        data-ui-icon-tile="true"
+        data-ui-tone={getCategoryTone(category)}
+        style={iconTileStyle}
+      >
         <CategoryIcon iconKey={iconKey} level={category?.level === 3 ? 3 : 2} />
       </span>
     );
@@ -403,7 +456,11 @@ export default function TransactionCreatorCategorySection({
     const isOpen = activeShortcutMenu === key;
 
     return (
-      <div key={key} style={shortcutMenuWrapStyle} data-transaction-shortcut-menu="true">
+      <div
+        key={key}
+        style={shortcutMenuWrapStyle}
+        data-transaction-shortcut-menu="true"
+      >
         <button
           type="button"
           className="ui-button--utility"
@@ -415,7 +472,10 @@ export default function TransactionCreatorCategorySection({
           <span data-ui-picker-chevron="true" aria-hidden="true" />
         </button>
         {isOpen && (
-          <div style={shortcutMenuStyle} data-transaction-shortcut-dropdown="true">
+          <div
+            style={shortcutMenuStyle}
+            data-transaction-shortcut-dropdown="true"
+          >
             {items.length === 0 ? (
               <div style={emptyMenuStyle}>{empty}</div>
             ) : (
@@ -441,54 +501,89 @@ export default function TransactionCreatorCategorySection({
   };
 
   if (effectiveCategoryId) {
-    const canGoBackToLevel3 = Boolean(selectedLevel2 && availableLevel3Categories.length > 0);
-    const canGoBackToLevel2 = Boolean(selectedLevel1 && activeAvailableLevel2Categories.length > 0);
+    const canGoBackToLevel3 = Boolean(
+      selectedLevel2 && availableLevel3Categories.length > 0,
+    );
+    const canGoBackToLevel2 = Boolean(
+      selectedLevel1 && activeAvailableLevel2Categories.length > 0,
+    );
 
     return (
-      <section style={flowShellStyle} data-transaction-category-flow="true" data-flow-step="final">
-        <div style={finalCategoryRowStyle} data-transaction-final-category-row="true">
+      <section
+        style={flowShellStyle}
+        data-transaction-category-flow="true"
+        data-flow-step="final"
+      >
+        <div
+          style={finalCategoryRowStyle}
+          data-transaction-final-category-row="true"
+        >
           <div style={finalCardStyle} data-transaction-final-category="true">
             <span style={finalMainStyle}>
               {renderCategoryIcon(effectiveCategory)}
               <span style={copyStyle}>
-                <strong style={titleStyle}>{effectiveCategory?.name || effectiveCategoryLabel}</strong>
+                <strong style={titleStyle}>
+                  {effectiveCategory?.name || effectiveCategoryLabel}
+                </strong>
                 {effectiveParentCategory && (
-                  <small style={metaStyle}>{effectiveParentCategory.name}</small>
+                  <small style={metaStyle}>
+                    {effectiveParentCategory.name}
+                  </small>
                 )}
               </span>
             </span>
           </div>
 
-          <button
-            type="button"
-            className="ui-button--utility"
-            style={finalActionStyle}
-            onClick={() => {
-              if (canGoBackToLevel3 && selectedLevel2) {
-                handleLevel2Click(selectedLevel2);
-                return;
-              }
-
-              if (canGoBackToLevel2 && selectedLevel1) {
-                handleLevel1Click(selectedLevel1);
-              }
-            }}
+          <span
+            style={finalActionsStyle}
+            data-transaction-category-actions="true"
           >
-            ← cofnij
-          </button>
+            <button
+              type="button"
+              className="ui-button--utility"
+              style={finalActionStyle}
+              onClick={() => {
+                if (canGoBackToLevel3 && selectedLevel2) {
+                  handleLevel2Click(selectedLevel2);
+                  return;
+                }
 
-          <button
-            type="button"
-            className="ui-button--utility"
-            data-transaction-pin-button="true"
-            data-transaction-pinned={pinnedCategoryIds.includes(effectiveCategoryId) ? "true" : "false"}
-            aria-label={pinnedCategoryIds.includes(effectiveCategoryId) ? "Odepnij kategorię" : "Przypnij kategorię"}
-            title={pinnedCategoryIds.includes(effectiveCategoryId) ? "Odepnij kategorię" : "Przypnij kategorię"}
-            style={finalActionStyle}
-            onClick={() => onTogglePinnedCategory(effectiveCategoryId)}
-          >
-            {pinnedCategoryIds.includes(effectiveCategoryId) ? "odepnij" : "przypnij"}
-          </button>
+                if (canGoBackToLevel2 && selectedLevel1) {
+                  handleLevel1Click(selectedLevel1);
+                }
+              }}
+            >
+              <span data-ui-chevron="left" aria-hidden="true" />
+              cofnij
+            </button>
+
+            <button
+              type="button"
+              className="ui-button--utility"
+              data-transaction-pin-button="true"
+              data-transaction-pinned={
+                pinnedCategoryIds.includes(effectiveCategoryId)
+                  ? "true"
+                  : "false"
+              }
+              aria-label={
+                pinnedCategoryIds.includes(effectiveCategoryId)
+                  ? "Odepnij kategorię"
+                  : "Przypnij kategorię"
+              }
+              title={
+                pinnedCategoryIds.includes(effectiveCategoryId)
+                  ? "Odepnij kategorię"
+                  : "Przypnij kategorię"
+              }
+              style={finalActionStyle}
+              onClick={() => onTogglePinnedCategory(effectiveCategoryId)}
+            >
+              {pinnedCategoryIds.includes(effectiveCategoryId)
+                ? "odepnij"
+                : "przypnij"}
+            </button>
+          </span>
         </div>
       </section>
     );
@@ -498,7 +593,14 @@ export default function TransactionCreatorCategorySection({
     <section style={flowShellStyle} data-transaction-category-flow="true">
       <section style={panelStyle} data-transaction-shortcut-section="true">
         <header style={compactHeaderStyle}>
-          <span style={{ ...titleWrapStyle, display: "inline-flex", alignItems: "center", gap: "var(--ui-space-3)" }}>
+          <span
+            style={{
+              ...titleWrapStyle,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "var(--ui-space-3)",
+            }}
+          >
             <strong style={titleStyle}>Szybki wybór</strong>
             <HelpHint label="Rozwiń tylko wtedy, gdy chcesz pominąć drzewo kategorii i od razu otworzyć formularz dla ostatniej, najczęstszej albo przypiętej kategorii." />
           </span>
@@ -508,37 +610,52 @@ export default function TransactionCreatorCategorySection({
         </div>
       </section>
 
+      {activeLevel1Id &&
+        activeAvailableLevel2Categories.length > 0 &&
+        !selectedLevel2Id && (
+          <section style={panelStyle} data-transaction-entry-section="true">
+            <header style={compactHeaderStyle}>
+              <span style={titleWrapStyle}>
+                <strong style={titleStyle}>Wybierz kategorię</strong>
+                <small style={metaStyle}>
+                  {selectedLevel1?.name || "Wybrany typ"}
+                </small>
+              </span>
+            </header>
 
-      {activeLevel1Id && activeAvailableLevel2Categories.length > 0 && !selectedLevel2Id && (
-        <section style={panelStyle} data-transaction-entry-section="true">
-          <header style={compactHeaderStyle}>
-            <span style={titleWrapStyle}>
-              <strong style={titleStyle}>Wybierz kategorię</strong>
-              <small style={metaStyle}>{selectedLevel1?.name || "Wybrany typ"}</small>
-            </span>
-          </header>
+            <div
+              style={categoryGridStyle}
+              data-transaction-category-list="true"
+            >
+              {activeAvailableLevel2Categories.map((level2Category) => {
+                const level3Children =
+                  level3ByParentId[level2Category.id] || [];
+                const isFinalHere = level3Children.length === 0;
 
-          <div style={categoryGridStyle} data-transaction-category-list="true">
-            {activeAvailableLevel2Categories.map((level2Category) => {
-              const level3Children = level3ByParentId[level2Category.id] || [];
-              const isFinalHere = level3Children.length === 0;
-
-              return renderCategoryButton({
-                category: level2Category,
-                label: level2Category.name,
-                meta: hasChildrenLabel(!isFinalHere),
-                isSelected: selectedLevel2Id === level2Category.id,
-                onClick: () => handleLevel2Click(level2Category),
-              });
-            })}
-          </div>
-        </section>
-      )}
+                return renderCategoryButton({
+                  category: level2Category,
+                  label: level2Category.name,
+                  meta: hasChildrenLabel(!isFinalHere),
+                  isSelected: selectedLevel2Id === level2Category.id,
+                  onClick: () => handleLevel2Click(level2Category),
+                });
+              })}
+            </div>
+          </section>
+        )}
 
       {activeLevel1Id && activeAvailableLevel2Categories.length === 0 && (
-        <section style={panelStyle} data-transaction-final-category-placeholder="true">
-          <strong style={titleStyle}>{selectedLevel1?.name || "Wybrany typ"}</strong>
-          <span style={metaStyle}>Ten typ nie ma niższych kategorii — wpis zapisze się bezpośrednio tutaj.</span>
+        <section
+          style={panelStyle}
+          data-transaction-final-category-placeholder="true"
+        >
+          <strong style={titleStyle}>
+            {selectedLevel1?.name || "Wybrany typ"}
+          </strong>
+          <span style={metaStyle}>
+            Ten typ nie ma niższych kategorii — wpis zapisze się bezpośrednio
+            tutaj.
+          </span>
         </section>
       )}
 
@@ -547,24 +664,41 @@ export default function TransactionCreatorCategorySection({
           <header style={compactHeaderStyle}>
             <span style={titleWrapStyle}>
               <strong style={titleStyle}>Wybierz podkategorię</strong>
-              <small style={metaStyle}>{selectedLevel2?.name || "Wybrana kategoria"}</small>
+              <small style={metaStyle}>
+                {selectedLevel2?.name || "Wybrana kategoria"}
+              </small>
             </span>
-            {selectedLevel1 && (
-              <button type="button" className="ui-button--utility" style={backButtonStyle} onClick={() => handleLevel1Click(selectedLevel1)}>
-                ← kategorie
-              </button>
-            )}
           </header>
 
-          <div style={categoryGridStyle} data-transaction-category-list="true">
-            {availableLevel3Categories.map((level3Category) =>
-              renderCategoryButton({
-                category: level3Category,
-                label: getLevel3ButtonLabel(level3Category),
-                meta: "kategoria końcowa",
-                isSelected: effectiveCategoryId === level3Category.id,
-                onClick: () => handleLevel3Click(level3Category),
-              }),
+          <div
+            style={subcategoryActionRowStyle}
+            data-transaction-category-action-row="true"
+          >
+            <div
+              style={subcategoryListStyle}
+              data-transaction-category-list="true"
+            >
+              {availableLevel3Categories.map((level3Category) =>
+                renderCategoryButton({
+                  category: level3Category,
+                  label: getLevel3ButtonLabel(level3Category),
+                  meta: "kategoria końcowa",
+                  isSelected: effectiveCategoryId === level3Category.id,
+                  onClick: () => handleLevel3Click(level3Category),
+                }),
+              )}
+            </div>
+
+            {selectedLevel1 && (
+              <button
+                type="button"
+                className="ui-button--soft-back"
+                style={{ flex: "0 0 auto" }}
+                onClick={() => handleLevel1Click(selectedLevel1)}
+              >
+                <span data-ui-chevron="left" aria-hidden="true" />
+                kategorie
+              </button>
             )}
           </div>
         </section>
@@ -572,8 +706,12 @@ export default function TransactionCreatorCategorySection({
 
       {selectedLevel2Id && availableLevel3Categories.length === 0 && (
         <section style={panelStyle}>
-          <strong style={titleStyle}>{selectedLevel2?.name || "Wybrana kategoria"}</strong>
-          <span style={metaStyle}>Ta kategoria nie ma podkategorii — wpis zapisze się tutaj.</span>
+          <strong style={titleStyle}>
+            {selectedLevel2?.name || "Wybrana kategoria"}
+          </strong>
+          <span style={metaStyle}>
+            Ta kategoria nie ma podkategorii — wpis zapisze się tutaj.
+          </span>
         </section>
       )}
     </section>

@@ -69,7 +69,7 @@ const entryGridStyle = {
 const fieldShellStyle = {
   minWidth: 0,
   display: "grid",
-  gap: "var(--ui-space-3)",
+  gap: "var(--ui-space-2)",
 } as const;
 
 const dayFieldShellStyle = {
@@ -81,6 +81,7 @@ const todayToggleStyle = {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
+  alignSelf: "center",
   gap: 6,
   minHeight: "var(--ui-input-height-l)",
   color: "var(--ui-text-secondary)",
@@ -92,7 +93,8 @@ const todayToggleStyle = {
 
 const extraGridStyle = {
   display: "grid",
-  gridTemplateColumns: "minmax(220px, 1fr) minmax(220px, 1fr)",
+  gridTemplateColumns: "minmax(220px, 360px) minmax(220px, 1fr)",
+  alignItems: "start",
   gap: "var(--ui-space-5)",
 } as const;
 
@@ -352,7 +354,12 @@ export default function TransactionCreatorModal(
   }
 
   return (
-    <div data-ui-overlay="true" data-transaction-modal-overlay="true" style={overlayStyle} onClick={onClose}>
+    <div
+      data-ui-overlay="true"
+      data-transaction-modal-overlay="true"
+      style={overlayStyle}
+      onClick={onClose}
+    >
       <section
         data-ui-modal-shell="true"
         data-ui-size="wide"
@@ -394,14 +401,20 @@ export default function TransactionCreatorModal(
           />
 
           {effectiveCategoryId && (
-            <section style={entrySectionStyle} data-transaction-data-section="true">
+            <section
+              style={entrySectionStyle}
+              data-transaction-data-section="true"
+            >
               <div style={entryCardStyle} data-transaction-entry-card="true">
                 <header style={entryHeaderStyle}>
                   <strong style={entryTitleStyle}>Dane wpisu</strong>
                 </header>
 
                 <div style={entryGridStyle} data-transaction-entry-form="true">
-                  <div style={dayFieldShellStyle} data-transaction-day-field="true">
+                  <div
+                    style={dayFieldShellStyle}
+                    data-transaction-day-field="true"
+                  >
                     <label
                       data-transaction-today-toggle="true"
                       data-ui-checkbox="true"
@@ -409,7 +422,9 @@ export default function TransactionCreatorModal(
                       data-checkbox-density="compact"
                       style={{
                         ...todayToggleStyle,
-                        color: isTodayAvailable ? todayToggleStyle.color : "var(--ui-text-muted)",
+                        color: isTodayAvailable
+                          ? todayToggleStyle.color
+                          : "var(--ui-text-muted)",
                         cursor: isTodayAvailable ? "pointer" : "not-allowed",
                       }}
                     >
@@ -419,7 +434,9 @@ export default function TransactionCreatorModal(
                         checked={isTodaySelected}
                         disabled={!isTodayAvailable}
                         onChange={(event) => {
-                          setTransactionDate(event.target.checked ? todayDate : "");
+                          setTransactionDate(
+                            event.target.checked ? todayDate : "",
+                          );
                         }}
                       />
                       dziś
@@ -435,13 +452,23 @@ export default function TransactionCreatorModal(
                       placeholder="dzień"
                       inputMode="numeric"
                       onChange={(event) => {
-                        const nextDay = normalizeDayInput(event.target.value, selectedMonth);
-                        const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : "";
+                        const nextDay = normalizeDayInput(
+                          event.target.value,
+                          selectedMonth,
+                        );
+                        const nextDate = nextDay
+                          ? `${selectedMonth}-${nextDay}`
+                          : "";
                         setTransactionDate(nextDate);
                       }}
                       onBlur={(event) => {
-                        const nextDay = normalizeDayInput(event.target.value, selectedMonth);
-                        const nextDate = nextDay ? `${selectedMonth}-${nextDay}` : "";
+                        const nextDay = normalizeDayInput(
+                          event.target.value,
+                          selectedMonth,
+                        );
+                        const nextDate = nextDay
+                          ? `${selectedMonth}-${nextDay}`
+                          : "";
                         setTransactionDate(nextDate);
                       }}
                       onKeyDown={(event) => {
@@ -453,7 +480,10 @@ export default function TransactionCreatorModal(
                     />
                   </div>
 
-                  <div style={descriptionInputWrapStyle} data-transaction-description-field="true">
+                  <div
+                    style={descriptionInputWrapStyle}
+                    data-transaction-description-field="true"
+                  >
                     <input
                       ref={descriptionInputRef}
                       data-transaction-description-input="true"
@@ -472,25 +502,39 @@ export default function TransactionCreatorModal(
                     />
 
                     {filteredSuggestions.length > 0 && (
-                      <div style={suggestionsDropdownStyle} data-transaction-suggestions="true">
+                      <div
+                        style={suggestionsDropdownStyle}
+                        data-transaction-suggestions="true"
+                      >
                         {filteredSuggestions.map((suggestion, index) => {
                           const isActive = index === activeSuggestionIndex;
-                          const isLast = index === filteredSuggestions.length - 1;
+                          const isLast =
+                            index === filteredSuggestions.length - 1;
 
                           return (
                             <button
                               key={suggestion.text}
                               type="button"
                               data-transaction-suggestion-item="true"
-                              data-transaction-suggestion-active={isActive ? "true" : "false"}
+                              data-transaction-suggestion-active={
+                                isActive ? "true" : "false"
+                              }
                               style={{
-                                ...(isActive ? activeSuggestionButtonStyle : suggestionButtonStyle),
-                                borderBottom: isLast ? "none" : suggestionButtonStyle.borderBottom,
+                                ...(isActive
+                                  ? activeSuggestionButtonStyle
+                                  : suggestionButtonStyle),
+                                borderBottom: isLast
+                                  ? "none"
+                                  : suggestionButtonStyle.borderBottom,
                               }}
                               onMouseDown={(event) => event.preventDefault()}
                               onClick={() => applySuggestion(suggestion.text)}
-                              onContextMenu={(event) => handleSuggestionContextMenu(event, suggestion)}
-                              onPointerDown={(event) => handleSuggestionPointerDown(suggestion, event)}
+                              onContextMenu={(event) =>
+                                handleSuggestionContextMenu(event, suggestion)
+                              }
+                              onPointerDown={(event) =>
+                                handleSuggestionPointerDown(suggestion, event)
+                              }
                               onPointerUp={handleSuggestionPointerUp}
                               onPointerLeave={handleSuggestionPointerLeave}
                               onPointerCancel={handleSuggestionPointerLeave}
@@ -512,7 +556,9 @@ export default function TransactionCreatorModal(
                     placeholder="kwota"
                     inputMode="decimal"
                     value={amount}
-                    onChange={(event) => setAmount(normalizeAmountInput(event.target.value))}
+                    onChange={(event) =>
+                      setAmount(normalizeAmountInput(event.target.value))
+                    }
                     onKeyDown={(event) => {
                       if (event.key === "Enter") {
                         event.preventDefault();
@@ -523,8 +569,14 @@ export default function TransactionCreatorModal(
                 </div>
 
                 {isPaymentSourceVisible && (
-                  <div style={fieldShellStyle} data-transaction-payment-source-field="true">
-                    <label style={dateLabelStyle} data-transaction-field-label="true">
+                  <div
+                    style={fieldShellStyle}
+                    data-transaction-payment-source-field="true"
+                  >
+                    <label
+                      style={dateLabelStyle}
+                      data-transaction-field-label="true"
+                    >
                       Źródło płatności
                     </label>
                     <PaymentSplitEditor
@@ -542,7 +594,11 @@ export default function TransactionCreatorModal(
 
                 <div style={extraGridStyle} data-transaction-entry-extra="true">
                   <div style={fieldShellStyle}>
-                    <label style={dateLabelStyle} htmlFor="transaction-tags-input" data-transaction-field-label="true">
+                    <label
+                      style={dateLabelStyle}
+                      htmlFor="transaction-tags-input"
+                      data-transaction-field-label="true"
+                    >
                       Tagi
                     </label>
                     <input
@@ -557,14 +613,23 @@ export default function TransactionCreatorModal(
                       autoComplete="off"
                       autoCorrect="off"
                       spellCheck={false}
-                      onChange={(event) => handleTagInputChange(event.target.value)}
+                      onChange={(event) =>
+                        handleTagInputChange(event.target.value)
+                      }
                       onKeyDown={handleTagsKeyDown}
                     />
 
                     {selectedTagNames.length > 0 && (
-                      <div style={tagBadgesWrapStyle} data-transaction-tag-list="true">
+                      <div
+                        style={tagBadgesWrapStyle}
+                        data-transaction-tag-list="true"
+                      >
                         {selectedTagNames.map((tagName) => (
-                          <span key={tagName} style={tagBadgeStyle} data-transaction-tag-badge="true">
+                          <span
+                            key={tagName}
+                            style={tagBadgeStyle}
+                            data-transaction-tag-badge="true"
+                          >
                             #{tagName}
                             <button
                               type="button"
@@ -580,9 +645,17 @@ export default function TransactionCreatorModal(
                     )}
                   </div>
 
-                  {(recurringOptions.length > 0 || recurringSuggestions.length > 0) && (
-                    <div style={fieldShellStyle} data-transaction-recurring-field="true">
-                      <label style={dateLabelStyle} htmlFor="transaction-recurring-link" data-transaction-field-label="true">
+                  {(recurringOptions.length > 0 ||
+                    recurringSuggestions.length > 0) && (
+                    <div
+                      style={fieldShellStyle}
+                      data-transaction-recurring-field="true"
+                    >
+                      <label
+                        style={dateLabelStyle}
+                        htmlFor="transaction-recurring-link"
+                        data-transaction-field-label="true"
+                      >
                         Powiąż z przypomnieniem
                       </label>
 
@@ -593,7 +666,9 @@ export default function TransactionCreatorModal(
                         data-input-width={uiInputApi.width.full}
                         data-input-variant="entry"
                         value={selectedRecurringTransactionId}
-                        onChange={(event) => applyRecurringLink(event.target.value)}
+                        onChange={(event) =>
+                          applyRecurringLink(event.target.value)
+                        }
                       >
                         <option value="">Brak powiązania</option>
                         {recurringOptions.map((item) => (
@@ -609,8 +684,15 @@ export default function TransactionCreatorModal(
                       </select>
 
                       {selectedRecurringOption?.hasTransactionInMonth && (
-                        <div style={{ ...styles.emptyText, color: "var(--ui-color-warning)" }} data-transaction-recurring-warning="true">
-                          To przypomnienie ma już wpis w tym miesiącu. Możesz dodać kolejny, jeśli to celowe.
+                        <div
+                          style={{
+                            ...styles.emptyText,
+                            color: "var(--ui-color-warning)",
+                          }}
+                          data-transaction-recurring-warning="true"
+                        >
+                          To przypomnienie ma już wpis w tym miesiącu. Możesz
+                          dodać kolejny, jeśli to celowe.
                         </div>
                       )}
                     </div>
@@ -626,15 +708,32 @@ export default function TransactionCreatorModal(
                 styles={styles}
               />
 
-              <footer style={actionsStyle} data-ui-form-actions="true" data-transaction-actions="true">
-                <button type="button" className="ui-button--utility" onClick={onClose} disabled={isSaving}>
+              <footer
+                style={actionsStyle}
+                data-ui-form-actions="true"
+                data-transaction-actions="true"
+              >
+                <button
+                  type="button"
+                  className="ui-button--utility"
+                  onClick={onClose}
+                  disabled={isSaving}
+                >
                   Anuluj
                 </button>
-                <span style={{ display: "inline-flex", gap: "var(--ui-space-4)", flexWrap: "wrap" }}>
+                <span
+                  style={{
+                    display: "inline-flex",
+                    gap: "var(--ui-space-4)",
+                    flexWrap: "wrap",
+                  }}
+                >
                   <button
                     type="button"
                     className="ui-button--utility"
-                    disabled={isSaving || !selectedLevel1Id || !effectiveCategoryId}
+                    disabled={
+                      isSaving || !selectedLevel1Id || !effectiveCategoryId
+                    }
                     onClick={async () => {
                       await onSave();
                     }}
@@ -645,7 +744,9 @@ export default function TransactionCreatorModal(
                     ref={saveButtonRef}
                     type="button"
                     className="ui-button--standard"
-                    disabled={isSaving || !selectedLevel1Id || !effectiveCategoryId}
+                    disabled={
+                      isSaving || !selectedLevel1Id || !effectiveCategoryId
+                    }
                     onClick={async () => {
                       await onSaveAndClose();
                     }}
