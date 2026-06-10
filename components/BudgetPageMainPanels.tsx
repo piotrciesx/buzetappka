@@ -1,6 +1,6 @@
 'use client'
 
-import { ComponentPropsWithRef } from 'react'
+import { ComponentPropsWithRef, useState } from 'react'
 import BudgetTreeSection from './BudgetTreeSection'
 import BulkActionsBar from './BulkActionsBar'
 import CategoryMigrationPrompt from './CategoryMigrationPrompt'
@@ -68,6 +68,8 @@ export default function BudgetPageMainPanels({
   hiddenCategoriesPanelProps,
   trashPanelProps,
 }: Props) {
+  const [paymentSourceCreateRequest, setPaymentSourceCreateRequest] = useState(0)
+
   const utilityPanelTitle =
     activeUtilityPanel === 'drafts'
       ? 'Szkice'
@@ -116,9 +118,20 @@ export default function BudgetPageMainPanels({
                   <strong>{utilityPanelTitle}</strong>
                 </div>
               </div>
-              <button type="button" className="ui-button--icon" onClick={onCloseUtilityPanel} aria-label="Zamknij panel">
-                <CategoryIcon iconKey="close" />
-              </button>
+              <div data-ui-note-actions="true">
+                {activeUtilityPanel === 'paymentSources' && (
+                  <button
+                    type="button"
+                    className="ui-button--standard"
+                    onClick={() => setPaymentSourceCreateRequest((value) => value + 1)}
+                  >
+                    + Dodaj źródło
+                  </button>
+                )}
+                <button type="button" className="ui-button--icon" onClick={onCloseUtilityPanel} aria-label="Zamknij panel">
+                  <CategoryIcon iconKey="close" />
+                </button>
+              </div>
             </header>
 
             <div data-budget-utility-body="true">
@@ -127,7 +140,10 @@ export default function BudgetPageMainPanels({
                 <ImportExportPanel {...importExportPanelProps} />
               )}
               {activeUtilityPanel === 'paymentSources' && visibleModules.paymentSources && (
-                <PaymentSourcesPanel {...paymentSourcesPanelProps} />
+                <PaymentSourcesPanel
+                  {...paymentSourcesPanelProps}
+                  openCreateRequest={paymentSourceCreateRequest}
+                />
               )}
               {activeUtilityPanel === 'financialGoals' && visibleModules.financialGoals && (
                 <FinancialGoalsContainer {...financialGoalsContainerProps} />

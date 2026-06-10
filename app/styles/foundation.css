@@ -1751,25 +1751,6 @@
   box-shadow: none;
 }
 
-[data-payment-source-hero="true"] {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--ui-space-8);
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-}
-
-[data-payment-source-hero="true"] > div {
-  display: grid;
-  gap: var(--ui-space-2);
-}
-
-[data-payment-source-hero="true"] strong,
 [data-payment-source-section-header="true"] strong {
   color: var(--ui-color-primary-navy);
   font-size: var(--ui-type-t2);
@@ -1777,7 +1758,6 @@
   line-height: var(--ui-line-height-heading);
 }
 
-[data-payment-source-hero="true"] span,
 [data-payment-source-section-header="true"] span {
   color: var(--ui-text-secondary);
   font-size: var(--ui-type-t4);
@@ -1787,7 +1767,7 @@
 [data-payment-source-defaults="true"] {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--ui-space-7);
+  gap: var(--ui-space-5) var(--ui-space-7);
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -1796,16 +1776,11 @@
 
 [data-payment-source-defaults="true"] [data-ui-field="true"] {
   align-content: start;
+  gap: var(--ui-space-3);
   padding: 0;
   border: 0;
   border-radius: 0;
   background: transparent;
-}
-
-[data-payment-source-defaults="true"] input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  accent-color: var(--ui-color-primary-navy);
 }
 
 [data-payment-source-list-section="true"] {
@@ -1944,7 +1919,6 @@
 }
 
 @media (max-width: 820px) {
-  [data-payment-source-hero="true"],
   [data-payment-source-item="true"] {
     grid-template-columns: 1fr;
   }
@@ -2094,15 +2068,6 @@
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-[data-payment-source-hero="true"] > div {
-  max-width: 300px;
-}
-
-[data-payment-source-hero="true"] .ui-button--utility {
-  min-width: 142px;
   white-space: nowrap;
 }
 
@@ -2337,20 +2302,11 @@
   cursor: pointer;
 }
 
-[data-payment-source-hero="true"] {
-  grid-template-columns: minmax(0, 1fr) auto;
-}
-
-[data-payment-source-hero="true"] > button {
-  min-width: 138px;
-  white-space: nowrap;
-  flex: 0 0 auto;
-}
-
 [data-payment-source-settings-actions="true"] {
   grid-column: 1 / -1;
   display: flex;
   justify-content: flex-end;
+  margin-top: var(--ui-space-2);
 }
 
 @media (max-width: 680px) {

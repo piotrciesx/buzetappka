@@ -1,6 +1,6 @@
 'use client'
 
-import { CSSProperties, useEffect, useMemo, useState } from 'react'
+import { CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PaymentSource, PaymentSourceType } from '../lib/budgetPageTypes'
 import {
   APP_ICONS,
@@ -50,6 +50,7 @@ type Props = {
   onSetDefault: (kind: PaymentSourceListKind, id: string | null) => Promise<void>
   onSetFieldVisibility: (kind: PaymentSourceListKind, isVisible: boolean) => Promise<void>
   onCopyList: (sourceKind: PaymentSourceListKind, targetKind: PaymentSourceListKind) => Promise<void>
+  openCreateRequest?: number
   styles: Record<string, CSSProperties>
 }
 
@@ -117,7 +118,7 @@ export default function PaymentSourcesPanel({
   onSave,
   onDelete,
   onSetDefault,
-  onSetFieldVisibility,
+  openCreateRequest,
 }: Props) {
   const [draft, setDraft] = useState<PaymentSourceDraft>(DEFAULT_DRAFT)
   const [settingsDraft, setSettingsDraft] = useState(paymentSourceSettings)
@@ -130,6 +131,7 @@ export default function PaymentSourcesPanel({
   const [statusText, setStatusText] = useState('')
   const [errorText, setErrorText] = useState('')
   const [duplicateSourceId, setDuplicateSourceId] = useState<string | null>(null)
+  const previousOpenCreateRequestRef = useRef(openCreateRequest)
 
   useEffect(() => {
     setSettingsDraft(paymentSourceSettings)
@@ -167,7 +169,7 @@ export default function PaymentSourcesPanel({
     setDuplicateSourceId(null)
   }
 
-  const openNewForm = () => {
+  const openNewForm = useCallback(() => {
     setDraft(DEFAULT_DRAFT)
     setStatusText('')
     setErrorText('')
@@ -176,7 +178,19 @@ export default function PaymentSourcesPanel({
     setActivePicker(null)
     setIconSearch('')
     setIsFormOpen(true)
-  }
+  }, [])
+
+  useEffect(() => {
+    if (
+      openCreateRequest === undefined ||
+      previousOpenCreateRequestRef.current === openCreateRequest
+    ) {
+      return
+    }
+
+    previousOpenCreateRequestRef.current = openCreateRequest
+    openNewForm()
+  }, [openCreateRequest, openNewForm])
 
   const openEditForm = (source: PaymentSource) => {
     setDraft({
@@ -199,9 +213,7 @@ export default function PaymentSourcesPanel({
 
   const isSettingsDirty =
     settingsDraft.defaultIncomePaymentSourceId !== paymentSourceSettings.defaultIncomePaymentSourceId ||
-    settingsDraft.defaultExpensePaymentSourceId !== paymentSourceSettings.defaultExpensePaymentSourceId ||
-    settingsDraft.showIncomePaymentSource !== paymentSourceSettings.showIncomePaymentSource ||
-    settingsDraft.showExpensePaymentSource !== paymentSourceSettings.showExpensePaymentSource
+    settingsDraft.defaultExpensePaymentSourceId !== paymentSourceSettings.defaultExpensePaymentSourceId
 
   const saveSettingsDraft = async () => {
     setIsConfigSaving(true)
@@ -209,8 +221,6 @@ export default function PaymentSourcesPanel({
     setErrorText('')
 
     try {
-      await onSetFieldVisibility('income', settingsDraft.showIncomePaymentSource)
-      await onSetFieldVisibility('expense', settingsDraft.showExpensePaymentSource)
       await onSetDefault('income', settingsDraft.defaultIncomePaymentSourceId)
       await onSetDefault('expense', settingsDraft.defaultExpensePaymentSourceId)
       setStatusText('Zapisano ustawienia źródeł płatności.')
@@ -506,35 +516,7 @@ export default function PaymentSourcesPanel({
 
   return (
     <UtilityPanel data-payment-sources-panel="true">
-      <section data-ui-section="true" data-payment-source-hero="true">
-        <div>
-          <span data-ui-title-with-help="true">
-            <strong>Źródła płatności</strong>
-            <HelpHint label="Jedno źródło może działać dla przychodów, wydatków albo obu naraz." />
-          </span>
-        </div>
-        <button type="button" className="ui-button--utility" onClick={openNewForm}>
-          + Dodaj źródło
-        </button>
-      </section>
-
-      <div data-ui-section-separator="true" />
-
       <section data-ui-section="true" data-payment-source-defaults="true">
-        <label data-ui-field="true">
-          Pokaż pole źródła przy przychodach
-          <input
-            type="checkbox"
-            checked={settingsDraft.showIncomePaymentSource}
-            disabled={isConfigSaving}
-            onChange={(event) =>
-              setSettingsDraft((currentDraft) => ({
-                ...currentDraft,
-                showIncomePaymentSource: event.target.checked,
-              }))
-            }
-          />
-        </label>
         <label data-ui-field="true">
           Domyślne źródło przychodów
           <span data-ui-select-shell="true">
@@ -559,20 +541,6 @@ export default function PaymentSourcesPanel({
             </select>
             <span data-ui-picker-chevron="true" aria-hidden="true" />
           </span>
-        </label>
-        <label data-ui-field="true">
-          Pokaż pole źródła przy wydatkach
-          <input
-            type="checkbox"
-            checked={settingsDraft.showExpensePaymentSource}
-            disabled={isConfigSaving}
-            onChange={(event) =>
-              setSettingsDraft((currentDraft) => ({
-                ...currentDraft,
-                showExpensePaymentSource: event.target.checked,
-              }))
-            }
-          />
         </label>
         <label data-ui-field="true">
           Domyślne źródło wydatków
