@@ -3577,7 +3577,9 @@ body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-hel
   min-height: var(--ui-input-height-l);
   align-self: center;
   justify-self: start;
-  display: inline-flex;
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
   align-items: center;
   justify-content: flex-start;
   line-height: var(--ui-line-height-body);

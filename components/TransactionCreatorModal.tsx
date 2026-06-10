@@ -404,7 +404,6 @@ export default function TransactionCreatorModal(
                     <label
                       data-transaction-today-toggle="true"
                       data-ui-checkbox="true"
-                      data-checkbox-layout="inline"
                       data-checkbox-density="compact"
                       data-checkbox-align="field"
                       style={{
