@@ -107,20 +107,6 @@ const NoteIcon = ({ name }: { name: NoteIconName }) => {
   );
 };
 
-const ChevronIcon = () => (
-  <svg viewBox="0 0 20 20" aria-hidden="true" width="16" height="16">
-    <path
-      d="M5.5 7.5L10 12l4.5-4.5"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-
 const HelpHint = ({ label }: { label: string }) => (
   <span data-ui-help="true" tabIndex={0} aria-label={label} data-tooltip={label} />
 )
@@ -612,7 +598,7 @@ export default function ProfileMonthNotePanel({
           onClick={() => setActivePicker(isOpen ? null : "category")}
         >
           <span data-ui-picker-value="true">{draft.category}</span>
-          <span data-ui-picker-chevron="true"><ChevronIcon /></span>
+          <span data-ui-picker-chevron="true" aria-hidden="true" />
         </button>
         {isOpen && (
           <div data-ui-picker-menu="true" data-layout="simple">
@@ -660,7 +646,7 @@ export default function ProfileMonthNotePanel({
             <span data-ui-color-swatch="true" data-ui-tone={selectedTone.tone} />
             {selectedTone.label}
           </span>
-          <span data-ui-picker-chevron="true"><ChevronIcon /></span>
+          <span data-ui-picker-chevron="true" aria-hidden="true" />
         </button>
         {isOpen && (
           <div data-ui-picker-menu="true" data-layout="colors">
@@ -717,7 +703,7 @@ export default function ProfileMonthNotePanel({
             </span>
             {selectedIcon.label}
           </span>
-          <span data-ui-picker-chevron="true"><ChevronIcon /></span>
+          <span data-ui-picker-chevron="true" aria-hidden="true" />
         </button>
         {isOpen && (
           <div data-ui-picker-menu="true" data-layout="icons">
@@ -819,7 +805,7 @@ export default function ProfileMonthNotePanel({
               aria-label="Zamknij"
               onClick={() => setSelectedNoteId(null)}
             >
-              <NoteIcon name="close" />
+              <CategoryIcon iconKey="close" />
             </button>
           </div>
         </header>
@@ -863,7 +849,7 @@ export default function ProfileMonthNotePanel({
               aria-label="Zamknij"
               onClick={() => setIsDetailsOpen(false)}
             >
-              <NoteIcon name="close" />
+              <CategoryIcon iconKey="close" />
             </button>
           </div>
         </header>
@@ -948,7 +934,7 @@ export default function ProfileMonthNotePanel({
             aria-label="Zamknij"
             onClick={cancelForm}
           >
-            <NoteIcon name="close" />
+            <CategoryIcon iconKey="close" />
           </button>
         </header>
 

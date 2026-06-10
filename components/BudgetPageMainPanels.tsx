@@ -4,6 +4,7 @@ import { ComponentPropsWithRef } from 'react'
 import BudgetTreeSection from './BudgetTreeSection'
 import BulkActionsBar from './BulkActionsBar'
 import CategoryMigrationPrompt from './CategoryMigrationPrompt'
+import CategoryIcon from './CategoryIcon'
 import DraftsPanel from './DraftsPanel'
 import FinancialGoalsContainer from './FinancialGoalsContainer'
 import HiddenCategoriesPanel from './HiddenCategoriesPanel'
@@ -109,12 +110,16 @@ export default function BudgetPageMainPanels({
             data-utility-panel-kind={activeUtilityPanel}
             aria-label={utilityPanelTitle}
           >
-            <div data-budget-utility-header="true">
-              <div>{utilityPanelTitle}</div>
-              <button type="button" onClick={onCloseUtilityPanel} aria-label="Zamknij panel">
-                ×
+            <header data-budget-utility-header="true" data-ui-modal-header="true">
+              <div data-ui-title-row="true">
+                <div data-ui-title-copy="true">
+                  <strong>{utilityPanelTitle}</strong>
+                </div>
+              </div>
+              <button type="button" className="ui-button--icon" onClick={onCloseUtilityPanel} aria-label="Zamknij panel">
+                <CategoryIcon iconKey="close" />
               </button>
-            </div>
+            </header>
 
             <div data-budget-utility-body="true">
               {activeUtilityPanel === 'drafts' && <DraftsPanel {...draftsPanelProps} />}
