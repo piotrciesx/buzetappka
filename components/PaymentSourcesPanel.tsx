@@ -534,25 +534,28 @@ export default function PaymentSourcesPanel({
         </label>
         <label data-ui-field="true">
           Domyślne źródło przychodów
-          <select
-            className="ui-select"
-            data-input-width="full"
-            value={settingsDraft.defaultIncomePaymentSourceId || ''}
-            disabled={isConfigSaving}
-            onChange={(event) =>
-              setSettingsDraft((currentDraft) => ({
-                ...currentDraft,
-                defaultIncomePaymentSourceId: event.target.value || null,
-              }))
-            }
-          >
-            <option value="">Brak domyślnego źródła</option>
-            {incomeSources.map((source) => (
-              <option key={source.id} value={source.id}>
-                {source.name}
-              </option>
-            ))}
-          </select>
+          <span data-ui-select-shell="true">
+            <select
+              className="ui-select"
+              data-input-width="full"
+              value={settingsDraft.defaultIncomePaymentSourceId || ''}
+              disabled={isConfigSaving}
+              onChange={(event) =>
+                setSettingsDraft((currentDraft) => ({
+                  ...currentDraft,
+                  defaultIncomePaymentSourceId: event.target.value || null,
+                }))
+              }
+            >
+              <option value="">Brak domyślnego źródła</option>
+              {incomeSources.map((source) => (
+                <option key={source.id} value={source.id}>
+                  {source.name}
+                </option>
+              ))}
+            </select>
+            <span data-ui-picker-chevron="true" aria-hidden="true" />
+          </span>
         </label>
         <label data-ui-field="true">
           Pokaż pole źródła przy wydatkach
@@ -570,25 +573,28 @@ export default function PaymentSourcesPanel({
         </label>
         <label data-ui-field="true">
           Domyślne źródło wydatków
-          <select
-            className="ui-select"
-            data-input-width="full"
-            value={settingsDraft.defaultExpensePaymentSourceId || ''}
-            disabled={isConfigSaving}
-            onChange={(event) =>
-              setSettingsDraft((currentDraft) => ({
-                ...currentDraft,
-                defaultExpensePaymentSourceId: event.target.value || null,
-              }))
-            }
-          >
-            <option value="">Brak domyślnego źródła</option>
-            {expenseSources.map((source) => (
-              <option key={source.id} value={source.id}>
-                {source.name}
-              </option>
-            ))}
-          </select>
+          <span data-ui-select-shell="true">
+            <select
+              className="ui-select"
+              data-input-width="full"
+              value={settingsDraft.defaultExpensePaymentSourceId || ''}
+              disabled={isConfigSaving}
+              onChange={(event) =>
+                setSettingsDraft((currentDraft) => ({
+                  ...currentDraft,
+                  defaultExpensePaymentSourceId: event.target.value || null,
+                }))
+              }
+            >
+              <option value="">Brak domyślnego źródła</option>
+              {expenseSources.map((source) => (
+                <option key={source.id} value={source.id}>
+                  {source.name}
+                </option>
+              ))}
+            </select>
+            <span data-ui-picker-chevron="true" aria-hidden="true" />
+          </span>
         </label>
         <div data-payment-source-settings-actions="true">
           <button
