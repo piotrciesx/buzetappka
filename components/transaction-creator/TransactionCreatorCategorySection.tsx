@@ -40,18 +40,12 @@ type CategoryWithAppearance = Category & {
 const flowShellStyle: CSSProperties = {
   display: "grid",
   gap: "var(--ui-space-6)",
-  marginTop: "var(--ui-space-7)",
 };
 
 const panelStyle: CSSProperties = {
   display: "grid",
   gap: "var(--ui-space-5)",
-  padding: "var(--ui-space-7)",
-  border: "1px solid rgba(8, 44, 122, 0.24)",
-  borderRadius: "var(--ui-radius-2xl)",
-  background:
-    "linear-gradient(180deg, #ffffff 0%, var(--ui-color-extra-light-blue) 100%)",
-  boxShadow: "inset 0 0 0 1px rgba(8, 44, 122, 0.05)",
+  padding: 0,
 };
 
 const compactHeaderStyle: CSSProperties = {
@@ -428,6 +422,7 @@ export default function TransactionCreatorCategorySection({
       data-transaction-category-chip="true"
       data-transaction-category-selected={isSelected ? "true" : "false"}
       data-transaction-category-tile="true"
+      data-ui-record-card="true"
       style={{
         ...categoryButtonStyle,
         ...(isSelected ? selectedCategoryButtonStyle : {}),
@@ -511,6 +506,7 @@ export default function TransactionCreatorCategorySection({
     return (
       <section
         style={flowShellStyle}
+        data-ui-section="true"
         data-transaction-category-flow="true"
         data-flow-step="final"
       >
@@ -518,7 +514,11 @@ export default function TransactionCreatorCategorySection({
           style={finalCategoryRowStyle}
           data-transaction-final-category-row="true"
         >
-          <div style={finalCardStyle} data-transaction-final-category="true">
+          <div
+            style={finalCardStyle}
+            data-ui-record-card="true"
+            data-transaction-final-category="true"
+          >
             <span style={finalMainStyle}>
               {renderCategoryIcon(effectiveCategory)}
               <span style={copyStyle}>
@@ -590,8 +590,16 @@ export default function TransactionCreatorCategorySection({
   }
 
   return (
-    <section style={flowShellStyle} data-transaction-category-flow="true">
-      <section style={panelStyle} data-transaction-shortcut-section="true">
+    <section
+      style={flowShellStyle}
+      data-ui-section="true"
+      data-transaction-category-flow="true"
+    >
+      <section
+        style={panelStyle}
+        data-ui-section="true"
+        data-transaction-shortcut-section="true"
+      >
         <header style={compactHeaderStyle}>
           <span
             style={{
@@ -601,7 +609,7 @@ export default function TransactionCreatorCategorySection({
               gap: "var(--ui-space-3)",
             }}
           >
-            <strong style={titleStyle}>Szybki wybór</strong>
+            <strong style={titleStyle} data-ui-section-title="true">Szybki wybór</strong>
             <HelpHint label="Rozwiń tylko wtedy, gdy chcesz pominąć drzewo kategorii i od razu otworzyć formularz dla ostatniej, najczęstszej albo przypiętej kategorii." />
           </span>
         </header>
@@ -610,13 +618,19 @@ export default function TransactionCreatorCategorySection({
         </div>
       </section>
 
+      <div data-ui-section-separator="true" />
+
       {activeLevel1Id &&
         activeAvailableLevel2Categories.length > 0 &&
         !selectedLevel2Id && (
-          <section style={panelStyle} data-transaction-entry-section="true">
+          <section
+            style={panelStyle}
+            data-ui-section="true"
+            data-transaction-entry-section="true"
+          >
             <header style={compactHeaderStyle}>
               <span style={titleWrapStyle}>
-                <strong style={titleStyle}>Wybierz kategorię</strong>
+                <strong style={titleStyle} data-ui-section-title="true">Wybierz kategorię</strong>
                 <small style={metaStyle}>
                   {selectedLevel1?.name || "Wybrany typ"}
                 </small>
@@ -647,9 +661,10 @@ export default function TransactionCreatorCategorySection({
       {activeLevel1Id && activeAvailableLevel2Categories.length === 0 && (
         <section
           style={panelStyle}
+          data-ui-section="true"
           data-transaction-final-category-placeholder="true"
         >
-          <strong style={titleStyle}>
+          <strong style={titleStyle} data-ui-section-title="true">
             {selectedLevel1?.name || "Wybrany typ"}
           </strong>
           <span style={metaStyle}>
@@ -660,10 +675,14 @@ export default function TransactionCreatorCategorySection({
       )}
 
       {selectedLevel2Id && availableLevel3Categories.length > 0 && (
-        <section style={panelStyle} data-transaction-subcategory-section="true">
+        <section
+          style={panelStyle}
+          data-ui-section="true"
+          data-transaction-subcategory-section="true"
+        >
           <header style={compactHeaderStyle}>
             <span style={titleWrapStyle}>
-              <strong style={titleStyle}>Wybierz podkategorię</strong>
+              <strong style={titleStyle} data-ui-section-title="true">Wybierz podkategorię</strong>
               <small style={metaStyle}>
                 {selectedLevel2?.name || "Wybrana kategoria"}
               </small>
@@ -705,8 +724,8 @@ export default function TransactionCreatorCategorySection({
       )}
 
       {selectedLevel2Id && availableLevel3Categories.length === 0 && (
-        <section style={panelStyle}>
-          <strong style={titleStyle}>
+        <section style={panelStyle} data-ui-section="true">
+          <strong style={titleStyle} data-ui-section-title="true">
             {selectedLevel2?.name || "Wybrana kategoria"}
           </strong>
           <span style={metaStyle}>
