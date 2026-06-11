@@ -196,9 +196,12 @@
 }
 
 [data-budget-utility-panel="true"][data-utility-panel-kind="monthCalendar"],
-[data-budget-utility-panel="true"][data-utility-panel-kind="search"],
-[data-budget-utility-panel="true"][data-utility-panel-kind="financialGoals"] {
+[data-budget-utility-panel="true"][data-utility-panel-kind="search"] {
   --side-panel-width: var(--ui-side-panel-utility-width);
+}
+
+[data-budget-utility-panel="true"][data-utility-panel-kind="financialGoals"] {
+  --side-panel-width: var(--ui-side-panel-financial-goals-width);
 }
 
 [data-budget-utility-panel="true"][data-utility-panel-kind="importExport"] {
@@ -296,4 +299,28 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
+}
+
+
+[data-budget-utility-header="true"] [data-utility-header-actions="true"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  flex: 0 0 auto !important;
+  gap: var(--ui-space-5) !important;
+  min-width: max-content !important;
+}
+
+[data-budget-utility-header="true"] [data-utility-header-actions="true"] .ui-button--standard {
+  width: auto !important;
+  min-width: max-content !important;
+  max-width: none !important;
+  white-space: nowrap !important;
+  overflow-wrap: normal !important;
+}
+
+[data-budget-utility-header="true"][data-ui-modal-header="true"] {
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+  margin-bottom: var(--ui-space-8) !important;
 }

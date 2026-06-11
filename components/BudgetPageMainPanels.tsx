@@ -122,12 +122,11 @@ export default function BudgetPageMainPanels({
                   <strong>{utilityPanelTitle}</strong>
                 </div>
               </div>
-              <div data-ui-note-actions="true">
+              <div data-utility-header-actions="true">
                 {activeUtilityPanel === 'paymentSources' && (
                   <button
                     type="button"
                     className="ui-button--standard"
-                    data-button-width="auto"
                     onClick={() => setPaymentSourceCreateRequest((value) => value + 1)}
                   >
                     + Dodaj źródło
