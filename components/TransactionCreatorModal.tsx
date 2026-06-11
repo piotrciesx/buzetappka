@@ -703,7 +703,7 @@ export default function TransactionCreatorModal(
                 >
                 <button
                   type="button"
-                  className="ui-button--utility"
+                  data-ui-button-cancel="true"
                   onClick={onClose}
                   disabled={isSaving}
                 >
@@ -718,7 +718,7 @@ export default function TransactionCreatorModal(
                 >
                   <button
                     type="button"
-                    className="ui-button--utility"
+                    data-ui-button-confirm="true"
                     disabled={
                       isSaving || !selectedLevel1Id || !effectiveCategoryId
                     }
@@ -731,7 +731,7 @@ export default function TransactionCreatorModal(
                   <button
                     ref={saveButtonRef}
                     type="button"
-                    className="ui-button--standard"
+                    data-ui-button-confirm="true"
                     disabled={
                       isSaving || !selectedLevel1Id || !effectiveCategoryId
                     }

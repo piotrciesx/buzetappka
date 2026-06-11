@@ -28,7 +28,7 @@ export default function TransactionCreatorHeader({
         </div>
       </div>
 
-      <button type="button" className="ui-button--icon" aria-label="Zamknij kreator wpisu" onClick={onClose}>
+      <button type="button" data-ui-close-action="true" aria-label="Zamknij kreator wpisu" onClick={onClose}>
         <CategoryIcon iconKey="close" />
       </button>
 

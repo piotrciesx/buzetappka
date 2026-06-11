@@ -570,7 +570,7 @@ export default function PaymentSourcesPanel({
         <div data-payment-source-settings-actions="true">
           <button
             type="button"
-            className="ui-button--utility"
+            data-ui-button-confirm="true"
             disabled={isConfigSaving || !isSettingsDirty}
             onClick={() => void saveSettingsDraft()}
           >
@@ -632,7 +632,7 @@ export default function PaymentSourcesPanel({
                   </span>
                 </div>
               </div>
-              <button type="button" className="ui-button--icon" aria-label="Zamknij" onClick={closeForm}>
+              <button type="button" data-ui-close-action="true" aria-label="Zamknij" onClick={closeForm}>
                 <CategoryIcon iconKey="close" />
               </button>
             </header>
@@ -705,12 +705,12 @@ export default function PaymentSourcesPanel({
               </div>
 
               <footer data-ui-form-actions="true">
-                <button type="button" className="ui-button--utility" onClick={closeForm} disabled={isSaving}>
+                <button type="button" data-ui-button-cancel="true" onClick={closeForm} disabled={isSaving}>
                   Anuluj
                 </button>
                 <button
                   type="button"
-                  className="ui-button--standard"
+                  data-ui-button-confirm="true"
                   onClick={() => void saveDraft()}
                   disabled={isSaving || !draft.name.trim() || (!draft.isIncomeSource && !draft.isExpenseSource)}
                 >

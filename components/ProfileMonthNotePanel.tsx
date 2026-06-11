@@ -802,7 +802,7 @@ export default function ProfileMonthNotePanel({
             </button>
             <button
               type="button"
-              className="ui-button--icon"
+              data-ui-close-action="true"
               aria-label="Zamknij"
               onClick={() => setSelectedNoteId(null)}
             >
@@ -838,7 +838,6 @@ export default function ProfileMonthNotePanel({
           <div data-ui-note-actions="true">
             <button
               type="button"
-              className="ui-button--standard"
               data-ui-header-primary-action="true"
               onClick={startAddingNote}
             >
@@ -847,7 +846,7 @@ export default function ProfileMonthNotePanel({
             </button>
             <button
               type="button"
-              className="ui-button--icon"
+              data-ui-close-action="true"
               aria-label="Zamknij"
               onClick={() => setIsDetailsOpen(false)}
             >
@@ -885,7 +884,7 @@ export default function ProfileMonthNotePanel({
             <strong data-ui-empty-title="true">Brak notatek dla tego miesiąca.</strong>
             <button
               type="button"
-              className="ui-button--standard"
+              data-ui-button-confirm="true"
               onClick={startAddingNote}
             >
               Dodaj notatkę
@@ -932,7 +931,7 @@ export default function ProfileMonthNotePanel({
           </div>
           <button
             type="button"
-            className="ui-button--icon"
+            data-ui-close-action="true"
             aria-label="Zamknij"
             onClick={cancelForm}
           >
@@ -985,7 +984,7 @@ export default function ProfileMonthNotePanel({
           <footer data-ui-form-actions="true">
             <button
               type="button"
-              className="ui-button--utility"
+              data-ui-button-cancel="true"
               disabled={isLoading || isSaving}
               onClick={cancelForm}
             >
@@ -993,7 +992,7 @@ export default function ProfileMonthNotePanel({
             </button>
             <button
               type="button"
-              className="ui-button--standard"
+              data-ui-button-confirm="true"
               disabled={isLoading || isSaving || !draft.text.trim()}
               onClick={saveDraft}
             >
@@ -1026,7 +1025,6 @@ export default function ProfileMonthNotePanel({
           </div>
           <button
             type="button"
-            className="ui-button--standard"
             data-ui-header-primary-action="true"
             aria-label="Dodaj notatkę"
             onClick={startAddingNote}

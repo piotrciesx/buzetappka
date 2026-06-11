@@ -90,13 +90,13 @@ export default function FinancialGoalEditModal({
         <div style={{ ...styles.actions, marginTop: 16 }}>
           <button
             type="button"
-            style={styles.primaryButton}
+            data-ui-button-confirm="true"
             disabled={isSaving || !formState.name.trim() || !formState.targetAmount}
             onClick={onSave}
           >
             {isSaving ? 'Zapisywanie...' : 'Zapisz zmiany'}
           </button>
-          <button type="button" style={styles.secondaryButton} onClick={onClose}>
+          <button type="button" data-ui-button-cancel="true" onClick={onClose}>
             Zamknij
           </button>
         </div>

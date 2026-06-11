@@ -59,7 +59,7 @@ export default function FinancialGoalForm({
 
       <button
         type="button"
-        className="ui-button--standard"
+        data-ui-button-confirm="true"
         disabled={isSaving || !formState.name.trim() || !formState.targetAmount}
         onClick={onSubmit}
       >

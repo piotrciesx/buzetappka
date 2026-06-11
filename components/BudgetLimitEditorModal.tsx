@@ -105,17 +105,6 @@ const groupStyle: CSSProperties = {
   flexWrap: 'wrap',
 }
 
-const primaryButtonStyle: CSSProperties = {
-  minHeight: uiControlPrimitives.button.primary.minHeight,
-  padding: uiControlPrimitives.button.primary.padding,
-  borderRadius: uiControlPrimitives.button.primary.radius,
-  border: uiControlPrimitives.button.primary.border,
-  background: uiControlPrimitives.button.primary.background,
-  color: uiControlPrimitives.button.primary.color,
-  fontWeight: uiControlPrimitives.button.primary.fontWeight,
-  cursor: uiControlPrimitives.button.primary.cursor,
-}
-
 const secondaryButtonStyle: CSSProperties = {
   minHeight: uiControlPrimitives.button.secondary.minHeight,
   padding: uiControlPrimitives.button.secondary.padding,
@@ -380,10 +369,10 @@ export default function BudgetLimitEditorModal({
           </div>
 
           <div style={groupStyle} data-budget-limit-action-group="true">
-            <button type="button" style={secondaryButtonStyle} onClick={onClose}>
+            <button type="button" data-ui-button-cancel="true" onClick={onClose}>
               Anuluj
             </button>
-            <button type="button" style={primaryButtonStyle} disabled={!canSave || isSaving} onClick={handleSave}>
+            <button type="button" data-ui-button-confirm="true" disabled={!canSave || isSaving} onClick={handleSave}>
               {isSaving ? 'Zapisywanie...' : 'Zapisz'}
             </button>
           </div>
