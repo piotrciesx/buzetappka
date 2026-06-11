@@ -432,13 +432,13 @@ export default function RecurringTransactionForm({
       <ReminderActionRow style={{ ...styles.actions, gap: 8 }}>
         <button
           type="button"
-          style={{ ...styles.primaryButton, ...lightButtonStyle }}
+          data-ui-button-confirm="true"
           disabled={!canSave}
           onClick={onSave}
         >
           {isSaving ? 'Zapisywanie...' : formState.id ? 'Zapisz zmiany' : 'Zapisz'}
         </button>
-        <button type="button" style={{ ...styles.secondaryButton, ...lightButtonStyle }} onClick={onCancel}>
+        <button type="button" data-ui-button-cancel="true" onClick={onCancel}>
           Anuluj
         </button>
       </ReminderActionRow>

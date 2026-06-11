@@ -458,18 +458,14 @@ export default function ReminderBellPanel({
         <ReminderActionRow style={{ ...styles.actions, marginTop: 12 }}>
           <button
             type="button"
-            style={{
-              ...styles.primaryButton,
-              opacity: isSaving ? 0.55 : 1,
-              cursor: isSaving ? 'not-allowed' : 'pointer',
-            }}
+            data-ui-button-confirm="true"
             disabled={isSaving}
             onClick={() => void handleSave()}
           >
             {isSaving ? 'Zapisywanie...' : form.id ? 'Zapisz zmiany' : 'Zapisz przypomnienie'}
           </button>
           {form.id && (
-            <button type="button" style={styles.secondaryButton} onClick={resetForm}>
+            <button type="button" data-ui-button-cancel="true" onClick={resetForm}>
               Anuluj
             </button>
           )}
