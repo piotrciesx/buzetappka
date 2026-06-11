@@ -1142,7 +1142,37 @@
 }
 
 [data-ui-modal-header="true"] [data-ui-title-row="true"],
-[data-ui-popup-header="true"] [data-ui-title-row="true"] {
+[data-ui-popup-header="true"] 
+[data-ui-modal-header="true"] [data-utility-header-actions="true"],
+[data-ui-popup-header="true"] [data-utility-header-actions="true"],
+[data-ui-modal-header="true"] [data-ui-note-actions="true"],
+[data-ui-popup-header="true"] [data-ui-note-actions="true"] {
+  min-width: max-content;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ui-space-5);
+  flex: 0 0 auto;
+}
+
+[data-ui-modal-header="true"] [data-utility-header-actions="true"] .ui-button--standard,
+[data-ui-popup-header="true"] [data-utility-header-actions="true"] .ui-button--standard,
+[data-ui-modal-header="true"] [data-ui-note-actions="true"] .ui-button--standard,
+[data-ui-popup-header="true"] [data-ui-note-actions="true"] .ui-button--standard {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: max-content;
+  max-width: none;
+}
+
+[data-ui-modal-header="true"] [data-utility-header-actions="true"] .ui-button--icon,
+[data-ui-popup-header="true"] [data-utility-header-actions="true"] .ui-button--icon,
+[data-ui-modal-header="true"] [data-ui-note-actions="true"] .ui-button--icon,
+[data-ui-popup-header="true"] [data-ui-note-actions="true"] .ui-button--icon {
+  flex: 0 0 var(--ui-button-height-icon);
+}
+
+[data-ui-title-row="true"] {
   align-items: center;
 }
 
@@ -1375,19 +1405,22 @@
   gap: var(--ui-space-7);
 }
 
-[data-financial-goal-form="true"] {
+[data-ui-inline-form="true"] {
   min-width: 0;
   display: grid;
-  grid-template-columns: auto minmax(160px, 1.25fr) minmax(150px, 1fr) minmax(180px, 1fr) auto;
+  grid-template-columns: auto repeat(3, minmax(0, 1fr)) auto;
   align-items: center;
   gap: var(--ui-space-5);
-  padding: var(--ui-space-6);
-  border: 1px solid rgba(8, 44, 122, 0.1);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.7);
 }
 
-[data-financial-goal-form-intro="true"] {
+[data-ui-inline-form="true"] .ui-input,
+[data-ui-inline-form="true"] .ui-amount-field,
+[data-ui-inline-form="true"] .ui-button--standard {
+  height: var(--ui-input-height-l);
+  min-height: var(--ui-input-height-l);
+}
+
+[data-ui-inline-form-intro="true"] {
   min-width: 0;
   display: inline-grid;
   grid-template-columns: auto auto;
@@ -1399,7 +1432,7 @@
   white-space: nowrap;
 }
 
-[data-financial-goal-add-icon="true"] {
+[data-ui-inline-form-add-icon="true"] {
   width: 42px;
   height: 42px;
   display: inline-grid;
@@ -1413,25 +1446,18 @@
   line-height: 1;
 }
 
-[data-financial-goal-form="true"] .ui-input,
-[data-financial-goal-form="true"] .ui-amount-field,
-[data-financial-goal-form="true"] .ui-button--standard {
-  height: var(--ui-input-height-l);
-  min-height: var(--ui-input-height-l);
-}
-
-[data-financial-goal-amount-field="true"] {
+[data-ui-amount-shell="true"] {
   min-width: 0;
   position: relative;
   display: block;
 }
 
-[data-financial-goal-amount-field="true"] .ui-amount-field {
+[data-ui-amount-shell="true"] .ui-amount-field {
   width: 100%;
   padding-right: var(--ui-space-9);
 }
 
-[data-financial-goal-amount-field="true"] > span {
+[data-ui-amount-shell="true"] > span {
   position: absolute;
   right: var(--ui-space-5);
   top: 50%;
@@ -1440,6 +1466,31 @@
   font-size: var(--ui-type-t4);
   font-weight: var(--ui-font-weight-bold);
   pointer-events: none;
+}
+
+[data-financial-goal-form="true"] {
+  min-width: 0;
+  padding: var(--ui-space-6);
+  border: 1px solid rgba(8, 44, 122, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 1180px) {
+  [data-ui-inline-form="true"] {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  [data-ui-inline-form-intro="true"],
+  [data-ui-inline-form="true"] .ui-button--standard {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 680px) {
+  [data-ui-inline-form="true"] {
+    grid-template-columns: 1fr;
+  }
 }
 
 [data-ui-goal-tabs="true"] {
@@ -1705,13 +1756,8 @@
 }
 
 @media (max-width: 980px) {
-  [data-financial-goal-form="true"],
   [data-ui-goal-card-main="true"] {
     grid-template-columns: 1fr;
-  }
-
-  [data-financial-goal-form-intro="true"] {
-    justify-content: start;
   }
 
   [data-financial-goals-summary="true"],

@@ -19,9 +19,9 @@ export default function FinancialGoalForm({
   onSubmit,
 }: FinancialGoalFormProps) {
   return (
-    <div data-financial-goal-form="true">
-      <div data-financial-goal-form-intro="true">
-        <span data-financial-goal-add-icon="true" aria-hidden="true">+</span>
+    <div data-ui-section="true" data-ui-inline-form="true" data-financial-goal-form="true">
+      <div data-ui-inline-form-intro="true">
+        <span data-ui-inline-form-add-icon="true" aria-hidden="true">+</span>
         <strong>Dodaj nowy cel</strong>
       </div>
 
@@ -33,7 +33,7 @@ export default function FinancialGoalForm({
         onChange={(event) => onFormStateChange({ ...formState, name: event.target.value })}
       />
 
-      <span data-financial-goal-amount-field="true">
+      <span data-ui-amount-shell="true">
         <input
           className={uiInputApi.classNames.amountField}
           data-input-width={uiInputApi.width.full}
