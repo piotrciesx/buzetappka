@@ -1320,7 +1320,7 @@ body {
   font-weight: var(--ui-font-weight-bold);
 }
 
-[data-budget-utility-header="true"] button {
+[data-budget-utility-header="true"] .ui-button--icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
