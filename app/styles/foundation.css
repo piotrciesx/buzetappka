@@ -376,7 +376,6 @@
   --ui-side-panel-profile-width: min(420px, calc(100vw - 372px));
   --ui-side-panel-settings-width: min(780px, calc(100vw - var(--ui-side-panel-left) - 24px));
   --ui-side-panel-utility-width: min(820px, calc(100vw - var(--ui-side-panel-left) - 24px));
-  --ui-side-panel-financial-goals-width: min(1180px, calc(100vw - var(--ui-side-panel-left) - 24px));
   --ui-side-panel-import-export-width: min(720px, calc(100vw - var(--ui-side-panel-left) - 24px));
   --ui-side-panel-radius: 0 var(--ui-radius-3xl) var(--ui-radius-3xl) 0;
   --ui-floating-layer-z: var(--ui-z-floating-action);
@@ -4092,18 +4091,15 @@ body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-hel
   min-width: max-content;
 }
 
-[data-budget-utility-header="true"] [data-utility-header-actions="true"] .ui-button--standard {
+[data-budget-utility-header="true"] [data-utility-header-action="primary"] {
   width: auto;
   min-width: max-content;
   max-width: none;
+  height: var(--ui-button-height-standard);
+  min-height: var(--ui-button-height-standard);
+  padding: var(--ui-button-padding-standard);
   white-space: nowrap;
   overflow-wrap: normal;
-}
-
-[data-budget-utility-header="true"][data-ui-modal-header="true"] {
-  border-bottom: 0;
-  box-shadow: none;
-  margin-bottom: var(--ui-space-8);
 }
 
 /* UI Foundation final control cleanup: one chevron system + soft back button. */

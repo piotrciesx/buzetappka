@@ -127,6 +127,7 @@ export default function BudgetPageMainPanels({
                   <button
                     type="button"
                     className="ui-button--standard"
+                    data-utility-header-action="primary"
                     onClick={() => setPaymentSourceCreateRequest((value) => value + 1)}
                   >
                     + Dodaj źródło
