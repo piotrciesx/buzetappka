@@ -34,7 +34,7 @@ export default function BudgetDashboardDrawer({
         aria-hidden={!isOpen}
       >
         <div data-dashboard-drawer-header="true">
-          <button type="button" aria-label="Zamknij statystyki" onClick={onClose}>
+          <button type="button" data-ui-close-action="true" aria-label="Zamknij statystyki" onClick={onClose}>
             ×
           </button>
         </div>

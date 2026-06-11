@@ -1320,22 +1320,6 @@ body {
   font-weight: var(--ui-font-weight-bold);
 }
 
-[data-budget-utility-header="true"] .ui-button--icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--ui-modal-close-size);
-  min-width: var(--ui-modal-close-size);
-  height: var(--ui-modal-close-size);
-  min-height: var(--ui-modal-close-size);
-  padding: 0;
-  border: var(--app-shell-frame-border);
-  border-radius: var(--ui-radius-sm);
-  background: var(--ui-surface-card);
-  color: var(--app-shell-navy);
-  box-shadow: var(--app-shell-frame-shadow);
-}
-
 [data-budget-utility-body="true"] {
   min-width: 0;
   min-height: 0;

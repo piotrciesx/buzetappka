@@ -105,23 +105,6 @@
   box-shadow: none !important;
 }
 
-[data-dashboard-drawer-header="true"] button {
-  width: 32px !important;
-  min-width: 32px !important;
-  height: 32px !important;
-  min-height: 32px !important;
-  display: grid !important;
-  place-items: center !important;
-  border: 1px solid rgba(148, 163, 184, 0.32) !important;
-  border-radius: 999px !important;
-  background: rgba(255, 255, 255, 0.56) !important;
-  color: var(--ui-color-secondary-text) !important;
-  font-size: 20px !important;
-  line-height: 1 !important;
-  cursor: pointer !important;
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06) !important;
-}
-
 [data-sidebar-primary-backdrop="true"],
 [data-budget-utility-backdrop="true"] {
   position: fixed !important;
