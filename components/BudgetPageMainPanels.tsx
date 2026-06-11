@@ -127,10 +127,10 @@ export default function BudgetPageMainPanels({
                   <button
                     type="button"
                     className="ui-button--standard"
-                    data-utility-header-action="primary"
                     onClick={() => setPaymentSourceCreateRequest((value) => value + 1)}
                   >
-                    + Dodaj źródło
+                    <span aria-hidden="true">+</span>
+                    Dodaj źródło
                   </button>
                 )}
                 <button type="button" className="ui-button--icon" onClick={onCloseUtilityPanel} aria-label="Zamknij panel">

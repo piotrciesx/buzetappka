@@ -201,7 +201,7 @@
 }
 
 [data-budget-utility-panel="true"][data-utility-panel-kind="financialGoals"] {
-  --side-panel-width: min(1180px, calc(100vw - var(--ui-side-panel-left) - 24px));
+  --side-panel-width: min(1480px, calc(100vw - var(--ui-side-panel-left) - 24px));
 }
 
 [data-budget-utility-panel="true"][data-utility-panel-kind="importExport"] {
@@ -312,16 +312,6 @@
   min-width: max-content !important;
 }
 
-[data-budget-utility-header="true"] [data-utility-header-action="primary"] {
-  width: auto !important;
-  min-width: max-content !important;
-  max-width: none !important;
-  height: var(--ui-button-height-standard) !important;
-  min-height: var(--ui-button-height-standard) !important;
-  padding: var(--ui-button-padding-standard) !important;
-  white-space: nowrap !important;
-  overflow-wrap: normal !important;
-}
 
 [data-budget-utility-header="true"] [data-utility-header-actions="true"] .ui-button--icon {
   flex: 0 0 var(--ui-button-height-icon) !important;
@@ -330,4 +320,26 @@
 [data-budget-utility-header="true"][data-ui-modal-header="true"] {
   border-bottom: 0 !important;
   box-shadow: none !important;
+}
+
+/* Payment sources header action sizing. */
+[data-budget-utility-panel="true"][data-utility-panel-kind="paymentSources"] [data-utility-header-actions="true"] {
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: var(--ui-space-5) !important;
+  min-width: max-content !important;
+}
+
+[data-budget-utility-panel="true"][data-utility-panel-kind="paymentSources"] [data-utility-header-actions="true"] .ui-button--standard {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  min-width: max-content !important;
+  max-width: none !important;
+  white-space: nowrap !important;
+  overflow-wrap: normal !important;
+}
+
+[data-budget-utility-panel="true"][data-utility-panel-kind="paymentSources"] [data-utility-header-actions="true"] .ui-button--icon {
+  flex: 0 0 var(--ui-button-height-icon) !important;
 }

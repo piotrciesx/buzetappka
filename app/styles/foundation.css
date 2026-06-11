@@ -4091,16 +4091,6 @@ body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-hel
   min-width: max-content;
 }
 
-[data-budget-utility-header="true"] [data-utility-header-action="primary"] {
-  width: auto;
-  min-width: max-content;
-  max-width: none;
-  height: var(--ui-button-height-standard);
-  min-height: var(--ui-button-height-standard);
-  padding: var(--ui-button-padding-standard);
-  white-space: nowrap;
-  overflow-wrap: normal;
-}
 
 /* UI Foundation final control cleanup: one chevron system + soft back button. */
 [data-ui-picker-chevron="true"] {
