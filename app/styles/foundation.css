@@ -415,6 +415,29 @@
   --ui-button-disabled-bg: var(--ui-color-soft-section-background);
   --ui-button-disabled-border: var(--ui-color-disabled-border);
   --ui-button-disabled-text: var(--ui-color-muted-text);
+
+  /* Full button primitive contracts */
+  --ui-button-confirm-bg: var(--ui-color-primary-navy);
+  --ui-button-confirm-bg-hover: #0b3b9c;
+  --ui-button-confirm-border: var(--ui-color-primary-navy);
+  --ui-button-confirm-text: var(--ui-color-white-text);
+  --ui-button-cancel-bg: var(--ui-color-card-background);
+  --ui-button-cancel-bg-hover: var(--ui-color-error-soft);
+  --ui-button-cancel-border: rgba(215, 38, 61, 0.24);
+  --ui-button-cancel-text: var(--ui-color-expense);
+  --ui-button-close-size: var(--ui-button-height-icon);
+  --ui-button-close-radius: var(--ui-button-radius);
+  --ui-button-close-bg: var(--ui-color-card-background);
+  --ui-button-close-bg-hover: var(--ui-color-hover-background);
+  --ui-button-close-border: var(--ui-button-border);
+  --ui-button-close-text: var(--ui-color-primary-navy);
+  --ui-header-primary-action-height: var(--ui-button-height-standard);
+  --ui-header-primary-action-padding: var(--ui-button-padding-standard);
+  --ui-header-primary-action-gap: var(--ui-space-5);
+  --ui-header-primary-action-icon-size: 18px;
+  --ui-header-primary-action-font-size: var(--ui-font-size-body-sm);
+  --ui-header-primary-action-font-weight: var(--ui-button-font-weight-standard);
+  --ui-header-primary-action-line-height: var(--ui-line-height-compact);
   --ui-input-radius: var(--ui-radius-md);
   --ui-input-height-s: 32px;
   --ui-input-height-m: 34px;
@@ -913,31 +936,53 @@
   width: auto;
   max-width: 100%;
   min-width: max-content;
-  height: var(--ui-button-height-standard);
-  min-height: var(--ui-button-height-standard);
+  height: var(--ui-header-primary-action-height);
+  min-height: var(--ui-header-primary-action-height);
   box-sizing: border-box;
-  gap: var(--ui-space-5);
-  padding: var(--ui-button-padding-standard);
+  gap: var(--ui-header-primary-action-gap);
+  padding: var(--ui-header-primary-action-padding);
   border: 1px solid var(--ui-button-border-strong);
   border-radius: var(--ui-button-radius);
   background: var(--ui-button-bg);
   color: var(--ui-button-text);
-  font: inherit;
-  font-size: var(--ui-font-size-body-sm);
-  font-weight: var(--ui-button-font-weight-standard);
-  line-height: var(--ui-line-height-compact);
+  font-family: var(--ui-font-family-app);
+  font-size: var(--ui-header-primary-action-font-size);
+  font-weight: var(--ui-header-primary-action-font-weight);
+  line-height: var(--ui-header-primary-action-line-height);
   text-align: center;
   white-space: nowrap;
   overflow-wrap: normal;
   cursor: pointer;
+  transition:
+    border-color var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    background var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    color var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    box-shadow var(--ui-motion-hover) var(--ui-motion-ease-standard);
+}
+
+[data-ui-header-primary-action="true"]:hover {
+  border-color: rgba(8, 44, 122, 0.26);
+  background: var(--ui-button-bg-hover);
+}
+
+[data-ui-header-primary-action="true"]:focus-visible {
+  border-color: var(--ui-control-focus-border);
+  box-shadow: var(--ui-control-focus-ring);
+  outline: none;
+}
+
+[data-ui-header-primary-action="true"]:disabled,
+[data-ui-header-primary-action="true"][data-button-state="disabled"] {
+  cursor: not-allowed;
+  opacity: var(--ui-opacity-disabled);
 }
 
 [data-ui-header-primary-action="true"] svg,
 [data-ui-header-primary-action="true"] > span[aria-hidden="true"] {
-  flex: 0 0 auto;
-  width: 18px;
-  min-width: 18px;
-  height: 18px;
+  flex: 0 0 var(--ui-header-primary-action-icon-size);
+  width: var(--ui-header-primary-action-icon-size);
+  min-width: var(--ui-header-primary-action-icon-size);
+  height: var(--ui-header-primary-action-icon-size);
 }
 
 [data-ui-header-primary-action="true"] > span[aria-hidden="true"] {
@@ -945,6 +990,143 @@
   align-items: center;
   justify-content: center;
   line-height: 1;
+}
+
+[data-ui-button-confirm="true"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+  min-height: var(--ui-button-height-standard);
+  box-sizing: border-box;
+  gap: var(--ui-space-5);
+  padding: var(--ui-button-padding-standard);
+  border: 1px solid var(--ui-button-confirm-border);
+  border-radius: var(--ui-button-radius);
+  background: var(--ui-button-confirm-bg);
+  color: var(--ui-button-confirm-text);
+  font-family: var(--ui-font-family-app);
+  font-size: var(--ui-font-size-body-sm);
+  font-weight: var(--ui-button-font-weight-standard);
+  line-height: var(--ui-line-height-compact);
+  text-align: center;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  cursor: pointer;
+  transition:
+    border-color var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    background var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    color var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    box-shadow var(--ui-motion-hover) var(--ui-motion-ease-standard);
+}
+
+[data-ui-button-confirm="true"]:hover {
+  border-color: var(--ui-button-confirm-border);
+  background: var(--ui-button-confirm-bg-hover);
+  color: var(--ui-button-confirm-text);
+}
+
+[data-ui-button-confirm="true"]:focus-visible {
+  border-color: var(--ui-control-focus-border);
+  box-shadow: var(--ui-control-focus-ring);
+  outline: none;
+}
+
+[data-ui-button-confirm="true"]:disabled,
+[data-ui-button-confirm="true"][data-button-state="disabled"] {
+  cursor: not-allowed;
+  opacity: var(--ui-opacity-disabled);
+}
+
+[data-ui-button-cancel="true"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+  min-height: var(--ui-button-height-utility);
+  box-sizing: border-box;
+  gap: var(--ui-space-5);
+  padding: var(--ui-button-padding-utility);
+  border: 1px solid var(--ui-button-cancel-border);
+  border-radius: var(--ui-button-radius);
+  background: var(--ui-button-cancel-bg);
+  color: var(--ui-button-cancel-text);
+  font-family: var(--ui-font-family-app);
+  font-size: var(--ui-font-size-body-sm);
+  font-weight: var(--ui-button-font-weight-utility);
+  line-height: var(--ui-line-height-compact);
+  text-align: center;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  cursor: pointer;
+  transition:
+    border-color var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    background var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    color var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    box-shadow var(--ui-motion-hover) var(--ui-motion-ease-standard);
+}
+
+[data-ui-button-cancel="true"]:hover {
+  border-color: rgba(215, 38, 61, 0.36);
+  background: var(--ui-button-cancel-bg-hover);
+  color: var(--ui-button-cancel-text);
+}
+
+[data-ui-button-cancel="true"]:focus-visible {
+  border-color: var(--ui-color-expense);
+  box-shadow: 0 0 0 3px rgba(215, 38, 61, 0.10);
+  outline: none;
+}
+
+[data-ui-button-cancel="true"]:disabled,
+[data-ui-button-cancel="true"][data-button-state="disabled"] {
+  cursor: not-allowed;
+  opacity: var(--ui-opacity-disabled);
+}
+
+[data-ui-close-action="true"] {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 var(--ui-button-close-size);
+  width: var(--ui-button-close-size);
+  min-width: var(--ui-button-close-size);
+  height: var(--ui-button-close-size);
+  min-height: var(--ui-button-close-size);
+  box-sizing: border-box;
+  padding: 0;
+  border: 1px solid var(--ui-button-close-border);
+  border-radius: var(--ui-button-close-radius);
+  background: var(--ui-button-close-bg);
+  color: var(--ui-button-close-text);
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    background var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    color var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    box-shadow var(--ui-motion-hover) var(--ui-motion-ease-standard);
+}
+
+[data-ui-close-action="true"]:hover {
+  border-color: rgba(8, 44, 122, 0.26);
+  background: var(--ui-button-close-bg-hover);
+  color: var(--ui-button-close-text);
+}
+
+[data-ui-close-action="true"]:focus-visible {
+  border-color: var(--ui-control-focus-border);
+  box-shadow: var(--ui-control-focus-ring);
+  outline: none;
+}
+
+[data-ui-close-action="true"] svg {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 
 .ui-button--utility:hover,
