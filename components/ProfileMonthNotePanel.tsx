@@ -839,6 +839,7 @@ export default function ProfileMonthNotePanel({
             <button
               type="button"
               className="ui-button--standard"
+              data-ui-header-primary-action="true"
               onClick={startAddingNote}
             >
               <NoteIcon name="plus" />
@@ -1025,11 +1026,13 @@ export default function ProfileMonthNotePanel({
           </div>
           <button
             type="button"
-            className="ui-button--icon"
+            className="ui-button--standard"
+            data-ui-header-primary-action="true"
             aria-label="Dodaj notatkę"
             onClick={startAddingNote}
           >
             <NoteIcon name="plus" />
+            Dodaj notatkę
           </button>
         </header>
 
