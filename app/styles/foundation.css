@@ -4548,3 +4548,95 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 [data-transaction-entry-extra="true"] {
   align-items: start;
 }
+
+/* Foundation Icon Picker v1 — light option list.
+   Global rule for icon pickers in notes, payment sources and future modules. */
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-menu="true"][data-layout="icons"] {
+  padding: var(--ui-space-3);
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-menu-grid="true"] {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"] {
+  width: 100%;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-5);
+  padding: var(--ui-space-3) var(--ui-space-5);
+  border: 0;
+  border-bottom: 1px solid rgba(8, 44, 122, 0.06);
+  border-radius: var(--ui-radius-sm);
+  background: transparent;
+  color: var(--ui-color-primary-navy);
+  font-size: var(--ui-font-size-body-sm);
+  font-weight: var(--ui-font-weight-medium);
+  line-height: var(--ui-line-height-compact);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    color var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    box-shadow var(--ui-motion-hover) var(--ui-motion-ease-standard);
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:last-child {
+  border-bottom: 0;
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:hover {
+  background: rgba(8, 44, 122, 0.035);
+  box-shadow: none;
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"][data-active="true"] {
+  background: rgba(8, 44, 122, 0.055);
+  box-shadow: inset 3px 0 0 rgba(8, 44, 122, 0.42);
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"] [data-ui-icon-tile="true"] {
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  border-radius: var(--ui-radius-pill);
+  background: rgba(8, 44, 122, 0.045);
+  color: var(--ui-tone-text, var(--ui-color-primary-navy));
+  box-shadow: none;
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:hover [data-ui-icon-tile="true"],
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"][data-active="true"] [data-ui-icon-tile="true"] {
+  background: rgba(8, 44, 122, 0.075);
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"] [data-ui-icon-tile="true"] svg {
+  width: 18px;
+  height: 18px;
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"] span:last-child {
+  color: inherit;
+  font-size: var(--ui-font-size-body-sm);
+  font-weight: var(--ui-font-weight-medium);
+  line-height: var(--ui-line-height-compact);
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-more="true"] {
+  min-height: 36px;
+  margin: var(--ui-space-4) var(--ui-space-3) var(--ui-space-3);
+  border: 1px dashed rgba(8, 44, 122, 0.16);
+  border-radius: var(--ui-radius-md);
+  background: transparent;
+  color: var(--ui-color-primary-navy);
+  font-size: var(--ui-font-size-body-sm);
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-more="true"]:hover {
+  background: rgba(8, 44, 122, 0.035);
+  border-color: rgba(8, 44, 122, 0.24);
+}
