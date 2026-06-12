@@ -510,7 +510,7 @@ export default function IncomeExpenseTrendWidget({
             onClick={() => setIsDropdownOpen((previousValue) => !previousValue)}
           >
             <span>{getVisibleModeLabel(showIncome, showExpense)}</span>
-            <span>{isDropdownOpen ? '▴' : '▾'}</span>
+            <span data-ui-picker-chevron="true" data-state={isDropdownOpen ? "open" : "closed"} aria-hidden="true" />
           </button>
 
           {isDropdownOpen && (

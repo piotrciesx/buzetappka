@@ -621,7 +621,7 @@ export default function CategoryTrendWidgetBase({
         <div ref={dropdownRef} style={dropdownWrapStyle}>
           <button type="button" style={dropdownButtonStyle} onClick={() => setIsDropdownOpen((previousValue) => !previousValue)}>
             <span>{getVisibleModeLabel(activeSelectedIds.length, selectedLevel)}</span>
-            <span>{isDropdownOpen ? '▴' : '▾'}</span>
+            <span data-ui-picker-chevron="true" data-state={isDropdownOpen ? "open" : "closed"} aria-hidden="true" />
           </button>
 
           {isDropdownOpen && (
