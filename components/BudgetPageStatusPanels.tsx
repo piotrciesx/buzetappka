@@ -547,7 +547,7 @@ export default function BudgetPageStatusPanels({
                   <button type="button" data-topbar-action="pinned" {...triggerProps}>
                     <Icon name="star" />
                     <span>Przypięte kategorie</span>
-                    <span data-topbar-chevron="true" aria-hidden="true" />
+                    <span data-ui-picker-chevron="true" aria-hidden="true" />
                   </button>
                 )}
               >
@@ -592,7 +592,7 @@ export default function BudgetPageStatusPanels({
                 trigger={(triggerProps) => (
                   <button type="button" data-topbar-action="primary-add" {...triggerProps}>
                     <span>Dodaj wpis</span>
-                    <span data-topbar-chevron="true" aria-hidden="true" />
+                    <span data-ui-picker-chevron="true" aria-hidden="true" />
                   </button>
                 )}
               >

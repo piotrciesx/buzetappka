@@ -396,19 +396,6 @@
     var(--ui-shadow-subtle) !important;
 }
 
-[data-topbar-chevron="true"] {
-  width: 0 !important;
-  height: 0 !important;
-  display: inline-block !important;
-  margin-left: 1px !important;
-  border-left: 4px solid transparent !important;
-  border-right: 4px solid transparent !important;
-  border-top: 5px solid currentColor !important;
-  font-size: 0 !important;
-  line-height: 0 !important;
-  transform: translateY(1px) !important;
-}
-
 [data-topbar-dropdown] {
   position: absolute !important;
   top: calc(100% + 10px) !important;
@@ -508,8 +495,8 @@
 
 @media (max-width: 1240px) {
 
-  [data-topbar-action="pinned"] span:not([data-topbar-chevron="true"]),
-  [data-topbar-action="primary-add"] span:not([data-topbar-chevron="true"]) {
+  [data-topbar-action="pinned"] span:not([data-ui-picker-chevron="true"]),
+  [data-topbar-action="primary-add"] span:not([data-ui-picker-chevron="true"]) {
     max-width: 108px !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
