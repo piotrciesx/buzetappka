@@ -647,6 +647,7 @@ export default function TransactionCreatorModal(
                         Powiąż z przypomnieniem
                       </label>
 
+                      <span data-ui-select-shell="true">
                       <select
                         id="transaction-recurring-link"
                         data-transaction-recurring-select="true"
@@ -670,6 +671,8 @@ export default function TransactionCreatorModal(
                           </option>
                         ))}
                       </select>
+                      <span data-ui-picker-chevron="true" aria-hidden="true" />
+                      </span>
 
                       {selectedRecurringOption?.hasTransactionInMonth && (
                         <div
