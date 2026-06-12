@@ -4564,14 +4564,14 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"] {
   position: relative;
   width: 100%;
-  min-height: 40px;
+  min-height: 38px;
   display: flex;
   align-items: center;
   gap: var(--ui-space-5);
   padding: var(--ui-space-3) var(--ui-space-5);
   border: 0;
   border-bottom: 1px solid rgba(8, 44, 122, 0.055);
-  border-radius: var(--ui-radius-sm);
+  border-radius: 0;
   background: transparent;
   color: var(--ui-color-primary-navy);
   font-size: var(--ui-font-size-body-sm);
@@ -4592,29 +4592,29 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   content: "";
   position: absolute;
   left: 0;
-  top: 8px;
-  bottom: 8px;
-  width: 2px;
+  top: 9px;
+  bottom: 9px;
+  width: 1px;
   border-radius: var(--ui-radius-pill);
   background: transparent;
 }
 
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:hover {
-  background: rgba(8, 44, 122, 0.025);
+  background: rgba(8, 44, 122, 0.018);
 }
 
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"][data-active="true"] {
-  background: rgba(8, 44, 122, 0.035);
+  background: rgba(8, 44, 122, 0.026);
 }
 
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"][data-active="true"]::before {
-  background: rgba(8, 44, 122, 0.42);
+  background: rgba(8, 44, 122, 0.26);
 }
 
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"] [data-ui-icon-tile="true"] {
-  width: 22px;
-  min-width: 22px;
-  height: 22px;
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
   display: grid;
   place-items: center;
   border-radius: 0;
@@ -4643,7 +4643,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-more="true"] {
   min-height: 36px;
   margin: var(--ui-space-4) var(--ui-space-3) var(--ui-space-3);
-  border: 1px dashed rgba(8, 44, 122, 0.14);
+  border: 1px solid rgba(8, 44, 122, 0.10);
   border-radius: var(--ui-radius-md);
   background: transparent;
   color: var(--ui-color-primary-navy);
@@ -4652,6 +4652,6 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-more="true"]:hover {
-  background: rgba(8, 44, 122, 0.025);
-  border-color: rgba(8, 44, 122, 0.20);
+  background: rgba(8, 44, 122, 0.018);
+  border-color: rgba(8, 44, 122, 0.16);
 }
