@@ -45,7 +45,7 @@ export default function BulkActionsBar(props: Props) {
       <div style={styles.formRow}>
         <button
           type="button"
-          style={styles.dangerButton}
+          data-ui-button-danger="true"
           onClick={async () => {
             await onDeleteSelected()
           }}

@@ -92,8 +92,7 @@ function GoalCardContent(props: GoalCardBaseProps & { dragHandle?: ReactNode }) 
           </button>
           <button
             type="button"
-            className="ui-button--utility"
-            data-button-tone="danger"
+            data-ui-button-danger="true"
             onClick={() => onDelete(goal.id)}
           >
             Usuń

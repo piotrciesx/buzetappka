@@ -124,13 +124,6 @@ const lightButtonStyle: CSSProperties = {
   boxShadow: 'none',
 }
 
-const lightDangerButtonStyle: CSSProperties = {
-  ...lightButtonStyle,
-  borderColor: 'var(--ui-financial-expense-soft)',
-  background: 'var(--ui-financial-expense-soft)',
-  color: 'var(--ui-financial-expense)',
-}
-
 export default function TrashPanel(props: Props) {
   const {
     transactions,
@@ -148,7 +141,7 @@ export default function TrashPanel(props: Props) {
         {transactions.length > 0 && (
           <button
             type="button"
-            style={{ ...styles.secondaryButton, ...lightDangerButtonStyle }}
+            data-ui-button-danger="true"
             onClick={async () => {
               await onEmptyTrash()
             }}
@@ -211,7 +204,7 @@ export default function TrashPanel(props: Props) {
 
                   <button
                     type="button"
-                    style={{ ...styles.secondaryButton, ...lightDangerButtonStyle }}
+                    data-ui-button-danger="true"
                     onClick={async () => {
                       await onPermanentDeleteTransaction(transaction.id)
                     }}

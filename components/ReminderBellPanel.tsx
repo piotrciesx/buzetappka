@@ -516,7 +516,7 @@ export default function ReminderBellPanel({
                     </button>
                     <button
                       type="button"
-                      style={styles.secondaryButton}
+                      data-ui-button-danger="true"
                       onClick={async () => {
                         await onDeleteReminder(reminder.id)
                       }}

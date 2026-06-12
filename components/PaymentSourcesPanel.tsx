@@ -502,8 +502,7 @@ export default function PaymentSourcesPanel({
           )}
           <button
             type="button"
-            className="ui-button--utility"
-            data-button-tone="danger"
+            data-ui-button-danger="true"
             disabled={isSaving}
             onClick={() => void deleteSource(source)}
           >

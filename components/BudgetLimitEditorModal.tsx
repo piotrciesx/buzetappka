@@ -116,17 +116,6 @@ const secondaryButtonStyle: CSSProperties = {
   cursor: uiControlPrimitives.button.secondary.cursor,
 }
 
-const dangerButtonStyle: CSSProperties = {
-  minHeight: uiControlPrimitives.button.danger.minHeight,
-  padding: uiControlPrimitives.button.danger.padding,
-  borderRadius: uiControlPrimitives.button.danger.radius,
-  border: uiControlPrimitives.button.danger.border,
-  background: uiControlPrimitives.button.danger.background,
-  color: uiControlPrimitives.button.danger.color,
-  fontWeight: uiControlPrimitives.button.danger.fontWeight,
-  cursor: uiControlPrimitives.button.danger.cursor,
-}
-
 export default function BudgetLimitEditorModal({
   isOpen,
   categoryId,
@@ -358,7 +347,7 @@ export default function BudgetLimitEditorModal({
           <div style={groupStyle} data-budget-limit-action-group="true">
             {existingLimit && (
               <>
-                <button type="button" style={dangerButtonStyle} onClick={handleDelete}>
+                <button type="button" data-ui-button-danger="true" onClick={handleDelete}>
                   Usuń
                 </button>
                 <button type="button" style={secondaryButtonStyle} onClick={handleDisable}>

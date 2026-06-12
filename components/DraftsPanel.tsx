@@ -104,13 +104,6 @@ const lightButtonStyle = {
   boxShadow: 'none',
 } as const
 
-const lightDangerButtonStyle = {
-  ...lightButtonStyle,
-  borderColor: 'var(--ui-financial-expense-soft)',
-  background: 'var(--ui-financial-expense-soft)',
-  color: 'var(--ui-financial-expense)',
-} as const
-
 const compactStatusStyle = {
   border: '1px solid var(--ui-border-divider)',
   borderRadius: 'var(--ui-radius-lg)',
@@ -154,7 +147,7 @@ export default function DraftsPanel(props: Props) {
       <ActionRow style={draftsHeaderStyle}>
         <button
           type="button"
-          style={{ ...styles.secondaryButton, ...lightButtonStyle }}
+          data-ui-button-danger="true"
           onClick={() => {
             cleanupAllDrafts()
           }}
@@ -225,7 +218,7 @@ export default function DraftsPanel(props: Props) {
                   </button>
                   <button
                     type="button"
-                    style={{ ...styles.secondaryButton, ...lightDangerButtonStyle }}
+                    data-ui-button-danger="true"
                     onClick={() => {
                       void deleteDraft(draft.type).catch(() => {})
                     }}
