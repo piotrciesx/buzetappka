@@ -124,7 +124,73 @@ export type UiIconKey =
   | 'expand'
   | 'info'
 
-export const APP_ICONS: Array<{ key: UiIconKey; label: string }> = [
+export type ModuleActionIconKey =
+  | 'user'
+  | 'settings'
+  | 'dashboard'
+  | 'bell'
+  | 'search'
+  | 'star'
+  | 'goals'
+  | 'payments'
+  | 'backup'
+  | 'import'
+  | 'drafts'
+
+const USER_ICON_REGISTRY_V1: UiIconKey[] = [
+  'note',
+  'home',
+  'shopping',
+  'basket',
+  'food',
+  'restaurant',
+  'coffee',
+  'car',
+  'transport',
+  'plane',
+  'travel',
+  'fuel',
+  'health',
+  'doctor',
+  'pharmacy',
+  'work',
+  'salary',
+  'bills',
+  'bill',
+  'electricity',
+  'internet',
+  'phone',
+  'education',
+  'books',
+  'sport',
+  'gym',
+  'gaming',
+  'cinema',
+  'gift',
+  'clothes',
+  'child',
+  'pets',
+  'savings',
+  'cash',
+  'card',
+  'bank',
+  'investments',
+  'calendar',
+  'warning',
+  'idea',
+  'heart',
+  'sun',
+  'exchange',
+  'more',
+  'plus',
+  'edit',
+  'trash',
+  'close',
+  'expand',
+  'info',
+]
+
+const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'note', label: 'Notatka' },
   { key: 'exchange', label: 'Wymiana' },
   { key: 'home', label: 'Dom' },
@@ -171,11 +237,37 @@ export const APP_ICONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'heart', label: 'Osobiste' },
   { key: 'calendar', label: 'Termin' },
   { key: 'more', label: 'Pozostałe' },
+  { key: 'plus', label: 'Dodaj' },
+  { key: 'edit', label: 'Edytuj' },
+  { key: 'trash', label: 'Usu\u0144' },
+  { key: 'close', label: 'Zamknij' },
+  { key: 'expand', label: 'Rozwi\u0144' },
+  { key: 'info', label: 'Informacja' },
 ]
 
 export type CategoryIconKey = UiIconKey
 
+// APP_ICONS = ikony wybierane przez użytkownika.
+export const APP_ICONS: Array<{ key: UiIconKey; label: string }> = USER_ICON_REGISTRY_V1.map(
+  (key) => INTERNAL_ICON_OPTIONS.find((icon) => icon.key === key)
+).filter((icon): icon is { key: UiIconKey; label: string } => Boolean(icon))
+
 export const CATEGORY_ICONS = APP_ICONS
+
+// MODULE_ACTION_ICONS = ikony systemowe/modułowe, nie do pickerów użytkownika.
+export const MODULE_ACTION_ICONS: Array<{ key: ModuleActionIconKey; label: string }> = [
+  { key: 'user', label: 'U\u017cytkownik' },
+  { key: 'settings', label: 'Ustawienia' },
+  { key: 'dashboard', label: 'Dashboard' },
+  { key: 'bell', label: 'Przypomnienia' },
+  { key: 'search', label: 'Szukaj' },
+  { key: 'star', label: 'Przypi\u0119te' },
+  { key: 'goals', label: 'Cele' },
+  { key: 'payments', label: 'P\u0142atno\u015bci' },
+  { key: 'backup', label: 'Backup' },
+  { key: 'import', label: 'Import' },
+  { key: 'drafts', label: 'Szkice' },
+]
 
 export const getAvatar = (avatarKey?: string | null) =>
   USER_AVATARS.find((avatar) => avatar.key === avatarKey) || USER_AVATARS[0]
