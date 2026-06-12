@@ -295,6 +295,7 @@ export default function ReminderBellPanel({
 
           <label style={fieldLabelStyle}>
             Kategoria
+            <span data-ui-select-shell="true">
             <select
               className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
               data-input-state={shouldHighlightCategory ? uiInputApi.state.error : uiInputApi.state.default}
@@ -314,6 +315,8 @@ export default function ReminderBellPanel({
                 </option>
               ))}
             </select>
+            <span data-ui-picker-chevron="true" aria-hidden="true" />
+            </span>
             {shouldHighlightCategory && (
               <span
                 style={{
@@ -329,6 +332,7 @@ export default function ReminderBellPanel({
 
           <label style={fieldLabelStyle}>
             Typ
+            <span data-ui-select-shell="true">
             <select
               className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
               data-input-width={uiInputApi.width.full}
@@ -338,10 +342,13 @@ export default function ReminderBellPanel({
               <option value="open">Przypomnienie stałe</option>
               <option value="installment">Plan ratalny</option>
             </select>
+            <span data-ui-picker-chevron="true" aria-hidden="true" />
+            </span>
           </label>
 
           <label style={fieldLabelStyle}>
             Częstotliwość
+            <span data-ui-select-shell="true">
             <select
               className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputM}`}
               data-input-width={uiInputApi.width.full}
@@ -354,6 +361,8 @@ export default function ReminderBellPanel({
               <option value="custom">co X miesięcy</option>
               <option value="yearly">co rok</option>
             </select>
+            <span data-ui-picker-chevron="true" aria-hidden="true" />
+            </span>
           </label>
 
           {form.frequency === 'custom' && (
