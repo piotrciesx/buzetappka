@@ -4696,3 +4696,10 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   background: var(--ui-tone-surface, #eaf2ff);
   color: var(--ui-tone-text, var(--ui-color-primary-navy));
 }
+
+/* Foundation Empty State v1 — icon tone follows module/context tone. */
+[data-ui-empty-block="true"] [data-ui-icon-tile="true"][data-ui-tone],
+[data-ui-empty-block="true"][data-ui-tone] [data-ui-icon-tile="true"] {
+  background: var(--ui-tone-surface, #eaf2ff);
+  color: var(--ui-tone-text, var(--ui-color-primary-navy));
+}

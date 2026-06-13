@@ -687,7 +687,7 @@ export default function ProfileMonthNotePanel({
       ? NOTE_ICON_OPTIONS
       : NOTE_ICON_OPTIONS.filter((option) => SUGGESTED_NOTE_ICONS.includes(option.key));
     const visibleIcons = normalizedSearch
-      ? NOTE_ICON_OPTIONS.filter((option) => option.label.toLocaleLowerCase("pl-PL").includes(normalizedSearch))
+      ? NOTE_ICON_OPTIONS.filter((option) => getUiIconSearchText(option).includes(normalizedSearch))
       : baseIcons;
 
     return (
@@ -882,8 +882,8 @@ export default function ProfileMonthNotePanel({
         </div>
 
         {!isLoading && savedNotes.length === 0 && (
-          <div data-ui-section="true" data-ui-empty-block="true">
-            <span data-ui-icon-tile="true" data-ui-tone="neutral">
+          <div data-ui-section="true" data-ui-empty-block="true" data-ui-tone="blue">
+            <span data-ui-icon-tile="true" data-ui-tone="blue">
               <CategoryIcon iconKey="note" />
             </span>
             <strong data-ui-empty-title="true">Brak notatek dla tego miesiąca.</strong>
@@ -1042,8 +1042,8 @@ export default function ProfileMonthNotePanel({
         {isLoading && <StatusBox>Ładowanie notatek...</StatusBox>}
 
         {!isLoading && previewNotes.length === 0 && (
-          <div data-ui-section="true" data-ui-empty-block="true">
-            <span data-ui-icon-tile="true" data-ui-tone="neutral">
+          <div data-ui-section="true" data-ui-empty-block="true" data-ui-tone="blue">
+            <span data-ui-icon-tile="true" data-ui-tone="blue">
               <CategoryIcon iconKey="note" />
             </span>
             <strong data-ui-empty-title="true">Brak notatek</strong>
