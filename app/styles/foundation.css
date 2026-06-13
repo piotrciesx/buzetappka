@@ -4690,3 +4690,9 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:last-child[aria-selected="true"] {
   border-bottom: 0;
 }
+
+/* Month notes final empty state icon tone. */
+[data-ui-empty-block="true"] [data-ui-icon-tile="true"] {
+  background: var(--ui-tone-surface, #eaf2ff);
+  color: var(--ui-tone-text, var(--ui-color-primary-navy));
+}

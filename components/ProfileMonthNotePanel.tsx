@@ -15,6 +15,7 @@ import {
   UI_COLOR_OPTIONS,
   getUiColor,
   getUiIcon,
+  getUiIconSearchText,
   type UiColorKey,
   type UiIconKey,
 } from "../lib/userAppearance";
@@ -58,11 +59,15 @@ const NOTE_COLOR_OPTIONS = UI_COLOR_OPTIONS;
 const NOTE_ICON_OPTIONS = APP_ICONS;
 const SUGGESTED_NOTE_ICONS: MonthNoteIcon[] = [
   "note",
-  "exchange",
   "calendar",
   "warning",
   "idea",
   "heart",
+  "exchange",
+  "cash",
+  "bank",
+  "info",
+  "more",
 ];
 
 const CATEGORY_OPTIONS: MonthNoteCategory[] = [
