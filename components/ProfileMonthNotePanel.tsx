@@ -21,6 +21,7 @@ import {
 } from "../lib/userAppearance";
 import { supabase } from "../lib/supabaseClient";
 import { StatusBox } from "./utility-panels/utilityPanelPrimitives";
+import { useScrollSelectedIconIntoView } from "./ui/useScrollSelectedIconIntoView";
 
 type ProfileMonthNoteRow = {
   id: string;
@@ -243,6 +244,11 @@ export default function ProfileMonthNotePanel({
   const [isSaving, setIsSaving] = useState(false);
   const [statusText, setStatusText] = useState("");
   const [errorText, setErrorText] = useState("");
+  const selectedIconOptionRef = useScrollSelectedIconIntoView({
+    isOpen: activePicker === 'icon',
+    selectedKey: draft.icon,
+    scrollSignal: isIconPickerExpanded,
+  });
 
   useEffect(() => {
     setHasMounted(true);
@@ -701,7 +707,14 @@ export default function ProfileMonthNotePanel({
           type="button"
           data-ui-picker-trigger="true"
           aria-expanded={isOpen}
-          onClick={() => setActivePicker(isOpen ? null : "icon")}
+          onClick={() => {
+            const nextIsOpen = !isOpen;
+            setActivePicker(nextIsOpen ? "icon" : null);
+
+            if (nextIsOpen) {
+              setIconSearch("");
+            }
+          }}
         >
           <span data-ui-picker-value="true">
             <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
@@ -726,6 +739,7 @@ export default function ProfileMonthNotePanel({
               {visibleIcons.map((option) => (
                 <button
                   key={option.key}
+                  ref={draft.icon === option.key ? selectedIconOptionRef : undefined}
                   type="button"
                   data-ui-icon-select-option="true"
                   data-ui-tone={draft.tone}

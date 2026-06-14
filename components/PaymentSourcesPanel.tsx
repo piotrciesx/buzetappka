@@ -17,6 +17,7 @@ import {
   PaymentSourceListKind,
 } from '../lib/paymentSources'
 import CategoryIcon from './CategoryIcon'
+import { useScrollSelectedIconIntoView } from './ui/useScrollSelectedIconIntoView'
 import { EmptyState, StatusBox, UtilityPanel } from './utility-panels/utilityPanelPrimitives'
 
 type PaymentSourceStats = {
@@ -132,6 +133,11 @@ export default function PaymentSourcesPanel({
   const [errorText, setErrorText] = useState('')
   const [duplicateSourceId, setDuplicateSourceId] = useState<string | null>(null)
   const previousOpenCreateRequestRef = useRef(openCreateRequest)
+  const selectedIconOptionRef = useScrollSelectedIconIntoView({
+    isOpen: activePicker === 'icon',
+    selectedKey: draft.icon,
+    scrollSignal: isIconPickerExpanded,
+  })
 
   useEffect(() => {
     setSettingsDraft(paymentSourceSettings)
@@ -386,7 +392,14 @@ export default function PaymentSourcesPanel({
           type="button"
           data-ui-picker-trigger="true"
           aria-expanded={isOpen}
-          onClick={() => setActivePicker(isOpen ? null : 'icon')}
+          onClick={() => {
+            const nextIsOpen = !isOpen
+            setActivePicker(nextIsOpen ? 'icon' : null)
+
+            if (nextIsOpen) {
+              setIconSearch('')
+            }
+          }}
         >
           <span data-ui-picker-value="true">
             <span data-ui-icon-tile="true" data-ui-tone={draft.color}>
@@ -411,6 +424,7 @@ export default function PaymentSourcesPanel({
               {visibleIcons.map((option) => (
                 <button
                   key={option.key}
+                  ref={draft.icon === option.key ? selectedIconOptionRef : undefined}
                   type="button"
                   data-ui-icon-select-option="true"
                   data-ui-tone={draft.color}
