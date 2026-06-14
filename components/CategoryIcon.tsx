@@ -54,8 +54,8 @@ const iconShapes: Record<UiIconKey, IconShape> = {
   travel: { paths: ['M4 16.5 20 7.5', 'M20 7.5l-2.2 8.2-4.1-3.4-3.4 4.1-1.6-.9 2.8-5.2-5.8-2.4z'] },
   warning: { paths: ['M12 4 3.5 19h17z', 'M12 9v5', 'M12 17h.01'] },
   idea: {
-  circles: [{ cx: 12, cy: 9, r: 4.4 }],
-  paths: ['M10.8 14.8h2.4', 'M11.2 17h1.6'],
+  circles: [{ cx: 12, cy: 10.2, r: 4.6 }],
+  paths: ['M11.2 15.5h1.6'],
 },
   heart: { paths: ['M20 8.7c0 5-8 10.3-8 10.3S4 13.7 4 8.7A4.1 4.1 0 0 1 12 6a4.1 4.1 0 0 1 8 2.7Z'] },
   calendar: { paths: ['M4.5 5.5h15v14h-15z', 'M8 3.5v4', 'M16 3.5v4', 'M4.5 10h15'] },
