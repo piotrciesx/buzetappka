@@ -88,15 +88,6 @@ export type UiIconKey =
   | 'car_9'
   | 'car_10'
   | 'transport'
-  | 'transport_2'
-  | 'transport_3'
-  | 'transport_4'
-  | 'transport_5'
-  | 'transport_6'
-  | 'transport_7'
-  | 'transport_8'
-  | 'transport_9'
-  | 'transport_10'
   | 'plane'
   | 'plane_2'
   | 'plane_3'
@@ -110,6 +101,15 @@ export type UiIconKey =
   | 'holiday'
   | 'sun'
   | 'health'
+  | 'health_2'
+  | 'health_3'
+  | 'health_4'
+  | 'health_5'
+  | 'health_6'
+  | 'health_7'
+  | 'health_8'
+  | 'health_9'
+  | 'health_10'
   | 'doctor'
   | 'pharmacy'
   | 'work'
@@ -137,16 +137,16 @@ export type UiIconKey =
   | 'investments'
   | 'restaurant'
   | 'coffee'
-  | 'coffee_2'
-  | 'coffee_3'
-  | 'coffee_4'
-  | 'coffee_5'
-  | 'coffee_6'
-  | 'coffee_7'
-  | 'coffee_8'
-  | 'coffee_9'
-  | 'coffee_10'
   | 'fuel'
+  | 'fuel_2'
+  | 'fuel_3'
+  | 'fuel_4'
+  | 'fuel_5'
+  | 'fuel_6'
+  | 'fuel_7'
+  | 'fuel_8'
+  | 'fuel_9'
+  | 'fuel_10'
   | 'travel'
   | 'warning'
   | 'idea'
@@ -179,15 +179,6 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'shopping',
   'food',
   'coffee',
-  'coffee_2',
-  'coffee_3',
-  'coffee_4',
-  'coffee_5',
-  'coffee_6',
-  'coffee_7',
-  'coffee_8',
-  'coffee_9',
-  'coffee_10',
   'car',
   'car_2',
   'car_3',
@@ -199,15 +190,6 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'car_9',
   'car_10',
   'transport',
-  'transport_2',
-  'transport_3',
-  'transport_4',
-  'transport_5',
-  'transport_6',
-  'transport_7',
-  'transport_8',
-  'transport_9',
-  'transport_10',
   'plane',
   'plane_2',
   'plane_3',
@@ -219,7 +201,26 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'plane_9',
   'plane_10',
   'fuel',
+  'fuel_2',
+  'fuel_3',
+  'fuel_4',
+  'fuel_5',
+  'fuel_6',
+  'fuel_7',
+  'fuel_8',
+  'fuel_9',
+  'fuel_10',
   'health',
+  'health_2',
+  'health_3',
+  'health_4',
+  'health_5',
+  'health_6',
+  'health_7',
+  'health_8',
+  'health_9',
+  'health_10',
+
   'pharmacy',
   'work',
   'salary',
@@ -274,15 +275,6 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'car_9', label: 'Auto 9' },
   { key: 'car_10', label: 'Auto 10' },
   { key: 'transport', label: 'Transport' },
-  { key: 'transport_2', label: 'Transport 2' },
-  { key: 'transport_3', label: 'Transport 3' },
-  { key: 'transport_4', label: 'Transport 4' },
-  { key: 'transport_5', label: 'Transport 5' },
-  { key: 'transport_6', label: 'Transport 6' },
-  { key: 'transport_7', label: 'Transport 7' },
-  { key: 'transport_8', label: 'Transport 8' },
-  { key: 'transport_9', label: 'Transport 9' },
-  { key: 'transport_10', label: 'Transport 10' },
   { key: 'plane', label: 'Samolot' },
   { key: 'plane_2', label: 'Samolot 2' },
   { key: 'plane_3', label: 'Samolot 3' },
@@ -296,6 +288,15 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'holiday', label: 'Wakacje' },
   { key: 'sun', label: 'Słońce' },
   { key: 'health', label: 'Zdrowie' },
+  { key: 'health_2', label: 'Zdrowie 2' },
+  { key: 'health_3', label: 'Zdrowie 3' },
+  { key: 'health_4', label: 'Zdrowie 4' },
+  { key: 'health_5', label: 'Zdrowie 5' },
+  { key: 'health_6', label: 'Zdrowie 6' },
+  { key: 'health_7', label: 'Zdrowie 7' },
+  { key: 'health_8', label: 'Zdrowie 8' },
+  { key: 'health_9', label: 'Zdrowie 9' },
+  { key: 'health_10', label: 'Zdrowie 10' },
   { key: 'doctor', label: 'Lekarz' },
   { key: 'pharmacy', label: 'Apteka' },
   { key: 'work', label: 'Praca' },
@@ -323,16 +324,16 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'investments', label: 'Inwestycje' },
   { key: 'restaurant', label: 'Restauracja' },
   { key: 'coffee', label: 'Kawa' },
-  { key: 'coffee_2', label: 'Kawa 2' },
-  { key: 'coffee_3', label: 'Kawa 3' },
-  { key: 'coffee_4', label: 'Kawa 4' },
-  { key: 'coffee_5', label: 'Kawa 5' },
-  { key: 'coffee_6', label: 'Kawa 6' },
-  { key: 'coffee_7', label: 'Kawa 7' },
-  { key: 'coffee_8', label: 'Kawa 8' },
-  { key: 'coffee_9', label: 'Kawa 9' },
-  { key: 'coffee_10', label: 'Kawa 10' },
   { key: 'fuel', label: 'Paliwo' },
+  { key: 'fuel_2', label: 'Paliwo 2' },
+  { key: 'fuel_3', label: 'Paliwo 3' },
+  { key: 'fuel_4', label: 'Paliwo 4' },
+  { key: 'fuel_5', label: 'Paliwo 5' },
+  { key: 'fuel_6', label: 'Paliwo 6' },
+  { key: 'fuel_7', label: 'Paliwo 7' },
+  { key: 'fuel_8', label: 'Paliwo 8' },
+  { key: 'fuel_9', label: 'Paliwo 9' },
+  { key: 'fuel_10', label: 'Paliwo 10' },
   { key: 'travel', label: 'Podróże' },
   { key: 'warning', label: 'Ważne' },
   { key: 'idea', label: 'Pomysł' },
@@ -375,15 +376,6 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   car_9: [],
   car_10: [],
   transport: ['transport', 'komunikacja', 'komunikacja miejska', 'tramwaj', 'autobus', 'metro', 'pociąg', 'kolej'],
-  transport_2: [],
-  transport_3: [],
-  transport_4: [],
-  transport_5: [],
-  transport_6: [],
-  transport_7: [],
-  transport_8: [],
-  transport_9: [],
-  transport_10: [],
   plane: ['samolot', 'lot', 'loty', 'lotnisko', 'podróż', 'podróże', 'wakacje', 'urlop', 'wyjazd', 'wyjazdy', 'lotniczy'],
   plane_2: [],
   plane_3: [],
@@ -397,6 +389,15 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   holiday: ['wakacje', 'urlop', 'podróż', 'podróże', 'samolot', 'wyjazd', 'lot'],
   sun: ['słońce', 'pogoda', 'lato', 'wakacje', 'słoneczny'],
   health: ['zdrowie', 'medycyna', 'leczenie', 'opieka zdrowotna', 'medyczne'],
+  health_2: [],
+  health_3: [],
+  health_4: [],
+  health_5: [],
+  health_6: [],
+  health_7: [],
+  health_8: [],
+  health_9: [],
+  health_10: [],
   doctor: ['lekarz', 'doktor', 'wizyta', 'medycyna', 'zdrowie', 'przychodnia', 'szpital'],
   pharmacy: ['apteka', 'leki', 'farmacja', 'lekarstwa', 'lekarz', 'doktor', 'recepta', 'przychodnia', 'szpital', 'medyczne'],
   work: ['praca', 'firma', 'biuro', 'zatrudnienie', 'etat', 'zawód'],
@@ -424,16 +425,16 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   investments: ['inwestycje', 'inwestycja', 'inwestowanie', 'giełda', 'akcje', 'etf', 'ETF', 'obligacje', 'kapitał', 'wzrost', 'zysk'],
   restaurant: ['restauracja', 'jedzenie', 'posiłek', 'gastronomia', 'widelec', 'nóż'],
   coffee: ['kawa', 'herbata', 'kawiarnia', 'napój'],
-  coffee_2: [],
-  coffee_3: [],
-  coffee_4: [],
-  coffee_5: [],
-  coffee_6: [],
-  coffee_7: [],
-  coffee_8: [],
-  coffee_9: [],
-  coffee_10: [],
   fuel: ['paliwo', 'benzyna', 'diesel', 'tankowanie', 'stacja paliw'],
+  fuel_2: [],
+  fuel_3: [],
+  fuel_4: [],
+  fuel_5: [],
+  fuel_6: [],
+  fuel_7: [],
+  fuel_8: [],
+  fuel_9: [],
+  fuel_10: [],
   travel: ['podróż', 'podróże', 'wakacje', 'urlop', 'samolot', 'wyjazd', 'lot'],
   warning: ['ważne', 'istotne', 'priorytet', 'alert', 'uwaga', 'ostrzeżenie', 'pilne'],
   idea: ['pomysł', 'idea', 'żarówka', 'inspiracja', 'projekt', 'koncepcja'],
