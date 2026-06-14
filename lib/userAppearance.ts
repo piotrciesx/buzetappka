@@ -87,6 +87,27 @@ export type UiIconKey =
   | 'car_8'
   | 'car_9'
   | 'car_10'
+  | 'car_11'
+  | 'car_12'
+  | 'car_13'
+  | 'car_14'
+  | 'car_15'
+  | 'car_16'
+  | 'car_17'
+  | 'car_18'
+  | 'car_19'
+  | 'car_20'
+  | 'car_21'
+  | 'car_22'
+  | 'car_23'
+  | 'car_24'
+  | 'car_25'
+  | 'car_26'
+  | 'car_27'
+  | 'car_28'
+  | 'car_29'
+  | 'car_30'
+  | 'car_31'
   | 'transport'
   | 'plane'
   | 'plane_2'
@@ -105,25 +126,7 @@ export type UiIconKey =
   | 'pharmacy'
   | 'work'
   | 'salary'
-  | 'salary_2'
-  | 'salary_3'
-  | 'salary_4'
-  | 'salary_5'
-  | 'salary_6'
-  | 'salary_7'
-  | 'salary_8'
-  | 'salary_9'
-  | 'salary_10'
   | 'bills'
-  | 'bills_2'
-  | 'bills_3'
-  | 'bills_4'
-  | 'bills_5'
-  | 'bills_6'
-  | 'bills_7'
-  | 'bills_8'
-  | 'bills_9'
-  | 'bills_10'
   | 'bill'
   | 'electricity'
   | 'internet'
@@ -189,6 +192,27 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'car_8',
   'car_9',
   'car_10',
+  'car_11',
+  'car_12',
+  'car_13',
+  'car_14',
+  'car_15',
+  'car_16',
+  'car_17',
+  'car_18',
+  'car_19',
+  'car_20',
+  'car_21',
+  'car_22',
+  'car_23',
+  'car_24',
+  'car_25',
+  'car_26',
+  'car_27',
+  'car_28',
+  'car_29',
+  'car_30',
+  'car_31',
   'transport',
   'plane',
   'plane_2',
@@ -206,25 +230,7 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'pharmacy',
   'work',
   'salary',
-  'salary_2',
-  'salary_3',
-  'salary_4',
-  'salary_5',
-  'salary_6',
-  'salary_7',
-  'salary_8',
-  'salary_9',
-  'salary_10',
   'bills',
-  'bills_2',
-  'bills_3',
-  'bills_4',
-  'bills_5',
-  'bills_6',
-  'bills_7',
-  'bills_8',
-  'bills_9',
-  'bills_10',
   'electricity',
   'internet',
   'phone',
@@ -274,6 +280,27 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'car_8', label: 'Auto 8' },
   { key: 'car_9', label: 'Auto 9' },
   { key: 'car_10', label: 'Auto 10' },
+  { key: 'car_11', label: 'Auto 11' },
+  { key: 'car_12', label: 'Auto 12' },
+  { key: 'car_13', label: 'Auto 13' },
+  { key: 'car_14', label: 'Auto 14' },
+  { key: 'car_15', label: 'Auto 15' },
+  { key: 'car_16', label: 'Auto 16' },
+  { key: 'car_17', label: 'Auto 17' },
+  { key: 'car_18', label: 'Auto 18' },
+  { key: 'car_19', label: 'Auto 19' },
+  { key: 'car_20', label: 'Auto 20' },
+  { key: 'car_21', label: 'Auto 21' },
+  { key: 'car_22', label: 'Auto 22' },
+  { key: 'car_23', label: 'Auto 23' },
+  { key: 'car_24', label: 'Auto 24' },
+  { key: 'car_25', label: 'Auto 25' },
+  { key: 'car_26', label: 'Auto 26' },
+  { key: 'car_27', label: 'Auto 27' },
+  { key: 'car_28', label: 'Auto 28' },
+  { key: 'car_29', label: 'Auto 29' },
+  { key: 'car_30', label: 'Auto 30' },
+  { key: 'car_31', label: 'Auto 31' },
   { key: 'transport', label: 'Transport' },
   { key: 'plane', label: 'Samolot' },
   { key: 'plane_2', label: 'Samolot 2' },
@@ -292,25 +319,7 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'pharmacy', label: 'Apteka' },
   { key: 'work', label: 'Praca' },
   { key: 'salary', label: 'Pensja' },
-  { key: 'salary_2', label: 'Pensja 2' },
-  { key: 'salary_3', label: 'Pensja 3' },
-  { key: 'salary_4', label: 'Pensja 4' },
-  { key: 'salary_5', label: 'Pensja 5' },
-  { key: 'salary_6', label: 'Pensja 6' },
-  { key: 'salary_7', label: 'Pensja 7' },
-  { key: 'salary_8', label: 'Pensja 8' },
-  { key: 'salary_9', label: 'Pensja 9' },
-  { key: 'salary_10', label: 'Pensja 10' },
   { key: 'bills', label: 'Rachunki' },
-  { key: 'bills_2', label: 'Rachunki 2' },
-  { key: 'bills_3', label: 'Rachunki 3' },
-  { key: 'bills_4', label: 'Rachunki 4' },
-  { key: 'bills_5', label: 'Rachunki 5' },
-  { key: 'bills_6', label: 'Rachunki 6' },
-  { key: 'bills_7', label: 'Rachunki 7' },
-  { key: 'bills_8', label: 'Rachunki 8' },
-  { key: 'bills_9', label: 'Rachunki 9' },
-  { key: 'bills_10', label: 'Rachunki 10' },
   { key: 'bill', label: 'Paragon' },
   { key: 'electricity', label: 'Prąd' },
   { key: 'internet', label: 'Internet' },
@@ -375,6 +384,27 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   car_8: [],
   car_9: [],
   car_10: [],
+  car_11: [],
+  car_12: [],
+  car_13: [],
+  car_14: [],
+  car_15: [],
+  car_16: [],
+  car_17: [],
+  car_18: [],
+  car_19: [],
+  car_20: [],
+  car_21: [],
+  car_22: [],
+  car_23: [],
+  car_24: [],
+  car_25: [],
+  car_26: [],
+  car_27: [],
+  car_28: [],
+  car_29: [],
+  car_30: [],
+  car_31: [],
   transport: ['transport', 'komunikacja', 'komunikacja miejska', 'tramwaj', 'autobus', 'metro', 'pociąg', 'kolej'],
   plane: ['samolot', 'lot', 'loty', 'lotnisko', 'podróż', 'podróże', 'wakacje', 'urlop', 'wyjazd', 'wyjazdy', 'lotniczy'],
   plane_2: [],
@@ -393,25 +423,7 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   pharmacy: ['apteka', 'leki', 'farmacja', 'lekarstwa', 'lekarz', 'doktor', 'recepta', 'przychodnia', 'szpital', 'medyczne'],
   work: ['praca', 'firma', 'biuro', 'zatrudnienie', 'etat', 'zawód'],
   salary: ['pensja', 'wynagrodzenie', 'płaca', 'wypłata', 'portfel', 'zarobki', 'dochód'],
-  salary_2: [],
-  salary_3: [],
-  salary_4: [],
-  salary_5: [],
-  salary_6: [],
-  salary_7: [],
-  salary_8: [],
-  salary_9: [],
-  salary_10: [],
   bills: ['rachunki', 'rachunek', 'paragon', 'faktura', 'faktury', 'opłaty', 'opłata', 'rozliczenie'],
-  bills_2: [],
-  bills_3: [],
-  bills_4: [],
-  bills_5: [],
-  bills_6: [],
-  bills_7: [],
-  bills_8: [],
-  bills_9: [],
-  bills_10: [],
   bill: ['paragon', 'rachunki', 'rachunek', 'faktura', 'opłaty'],
   electricity: ['prąd', 'energia', 'elektryczność', 'elektryka', 'rachunek za prąd'],
   internet: ['internet', 'wifi', 'wi-fi', 'sieć', 'router', 'online', 'łącze'],
