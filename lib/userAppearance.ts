@@ -78,7 +78,17 @@ export type UiIconKey =
   | 'shopping'
   | 'basket'
   | 'car'
+  | 'car_1'
+  | 'car_2'
+  | 'car_3'
+  | 'car_4'
+  | 'car_5'
   | 'transport'
+  | 'transport_1'
+  | 'transport_2'
+  | 'transport_3'
+  | 'transport_4'
+  | 'transport_5'
   | 'plane'
   | 'holiday'
   | 'sun'
@@ -95,7 +105,17 @@ export type UiIconKey =
   | 'education'
   | 'books'
   | 'sport'
+  | 'sport_1'
+  | 'sport_2'
+  | 'sport_3'
+  | 'sport_4'
+  | 'sport_5'
   | 'gym'
+  | 'gym_1'
+  | 'gym_2'
+  | 'gym_3'
+  | 'gym_4'
+  | 'gym_5'
   | 'gaming'
   | 'entertainment'
   | 'cinema'
@@ -144,7 +164,17 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'food',
   'coffee',
   'car',
+  'car_1',
+  'car_2',
+  'car_3',
+  'car_4',
+  'car_5',
   'transport',
+  'transport_1',
+  'transport_2',
+  'transport_3',
+  'transport_4',
+  'transport_5',
   'plane',
   'fuel',
   'health',
@@ -158,7 +188,17 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'education',
   'books',
   'sport',
+  'sport_1',
+  'sport_2',
+  'sport_3',
+  'sport_4',
+  'sport_5',
   'gym',
+  'gym_1',
+  'gym_2',
+  'gym_3',
+  'gym_4',
+  'gym_5',
   'gaming',
   'cinema',
   'gift',
@@ -192,7 +232,17 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'shopping', label: 'Zakupy' },
   { key: 'basket', label: 'Koszyk' },
   { key: 'car', label: 'Auto' },
+  { key: 'car_1', label: 'Auto 1' },
+  { key: 'car_2', label: 'Auto 2' },
+  { key: 'car_3', label: 'Auto 3' },
+  { key: 'car_4', label: 'Auto 4' },
+  { key: 'car_5', label: 'Auto 5' },
   { key: 'transport', label: 'Transport' },
+  { key: 'transport_1', label: 'Transport 1' },
+  { key: 'transport_2', label: 'Transport 2' },
+  { key: 'transport_3', label: 'Transport 3' },
+  { key: 'transport_4', label: 'Transport 4' },
+  { key: 'transport_5', label: 'Transport 5' },
   { key: 'plane', label: 'Samolot' },
   { key: 'holiday', label: 'Wakacje' },
   { key: 'sun', label: 'Słońce' },
@@ -209,7 +259,17 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'education', label: 'Edukacja' },
   { key: 'books', label: 'Książki' },
   { key: 'sport', label: 'Sport' },
+  { key: 'sport_1', label: 'Sport 1' },
+  { key: 'sport_2', label: 'Sport 2' },
+  { key: 'sport_3', label: 'Sport 3' },
+  { key: 'sport_4', label: 'Sport 4' },
+  { key: 'sport_5', label: 'Sport 5' },
   { key: 'gym', label: 'Siłownia' },
+  { key: 'gym_1', label: 'Siłownia 1' },
+  { key: 'gym_2', label: 'Siłownia 2' },
+  { key: 'gym_3', label: 'Siłownia 3' },
+  { key: 'gym_4', label: 'Siłownia 4' },
+  { key: 'gym_5', label: 'Siłownia 5' },
   { key: 'gaming', label: 'Gaming' },
   { key: 'entertainment', label: 'Rozrywka' },
   { key: 'cinema', label: 'Kino' },
@@ -250,52 +310,52 @@ export const CATEGORY_ICONS = APP_ICONS
 
 
 export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
-  note: ['notatka', 'notatki', 'nota', 'zapis', 'zapiski', 'uwagi', 'tekst', 'opis'],
-  exchange: ['wymiana', 'transfer', 'przelew', 'zamiana', 'kurs', 'waluty', 'przewalutowanie'],
-  home: ['dom', 'mieszkanie', 'nieruchomość', 'czynsz', 'mieszkalne', 'domowe'],
-  food: ['jedzenie', 'restauracja', 'gastronomia', 'widelec', 'nóż', 'posiłek', 'śniadanie', 'obiad', 'kolacja', 'lunch'],
-  shopping: ['zakupy', 'koszyk', 'sklep', 'market', 'supermarket', 'galeria handlowa', 'zakupy spożywcze'],
-  basket: ['koszyk', 'zakupy', 'sklep', 'market', 'supermarket'],
-  car: ['auto', 'samochód', 'samochod', 'pojazd', 'motoryzacja', 'suv'],
-  transport: ['transport', 'komunikacja', 'komunikacja miejska', 'tramwaj', 'autobus', 'metro', 'pociąg', 'kolej'],
-  plane: ['samolot', 'lot', 'loty', 'lotnisko', 'podróż', 'podróże', 'wakacje', 'urlop', 'wyjazd', 'wyjazdy', 'lotniczy'],
-  holiday: ['wakacje', 'urlop', 'podróż', 'podróże', 'samolot', 'wyjazd', 'lot'],
+  note: ['notatka', 'notatki', 'nota', 'zapis', 'tekst', 'opis'],
+  exchange: ['wymiana', 'transfer', 'przelew', 'zamiana', 'wymienić'],
+  home: ['dom', 'mieszkanie', 'domowe'],
+  food: ['jedzenie', 'posiłek', 'gastronomia', 'restauracja', 'widelec', 'nóż', 'lunch', 'obiad', 'kolacja'],
+  shopping: ['zakupy', 'koszyk', 'zakupy spożywcze', 'sklep', 'market'],
+  basket: ['koszyk', 'zakupy', 'sklep', 'market'],
+  car: ['auto', 'samochód', 'samochod', 'pojazd', 'samochód osobowy'],
+  transport: ['transport', 'komunikacja', 'komunikacja miejska', 'tramwaj', 'autobus', 'metro', 'pociąg'],
+  plane: ['samolot', 'lot', 'loty', 'podróż', 'podróże', 'wakacje', 'urlop', 'wyjazd', 'wyjazdy', 'lotniczy'],
+  holiday: ['wakacje', 'urlop', 'podróż', 'podróże', 'samolot', 'wyjazd'],
   sun: ['słońce', 'pogoda', 'lato', 'wakacje', 'słoneczny'],
-  health: ['zdrowie', 'medycyna', 'leczenie', 'opieka zdrowotna', 'medyczne'],
-  doctor: ['lekarz', 'doktor', 'wizyta', 'medycyna', 'zdrowie', 'przychodnia', 'szpital'],
-  pharmacy: ['apteka', 'leki', 'farmacja', 'lekarstwa', 'lekarz', 'doktor', 'recepta', 'przychodnia', 'szpital', 'medyczne'],
-  work: ['praca', 'firma', 'biuro', 'zatrudnienie', 'etat', 'zawód'],
-  salary: ['pensja', 'wynagrodzenie', 'płaca', 'wypłata', 'portfel', 'zarobki', 'dochód'],
-  bills: ['rachunki', 'rachunek', 'paragon', 'faktura', 'faktury', 'opłaty', 'opłata', 'rozliczenie'],
+  health: ['zdrowie', 'medyczne', 'lekarz'],
+  doctor: ['lekarz', 'doktor', 'wizyta', 'medycyna', 'zdrowie'],
+  pharmacy: ['apteka', 'leki', 'farmacja', 'lekarstwa', 'lekarz'],
+  work: ['praca', 'firma', 'biuro'],
+  salary: ['pensja', 'wynagrodzenie', 'płaca', 'wypłata', 'portfel'],
+  bills: ['rachunki', 'rachunek', 'faktura', 'faktury', 'opłaty', 'paragon', 'paragon fiskalny'],
   bill: ['paragon', 'rachunki', 'rachunek', 'faktura', 'opłaty'],
-  electricity: ['prąd', 'energia', 'elektryczność', 'elektryka', 'rachunek za prąd'],
-  internet: ['internet', 'wifi', 'wi-fi', 'sieć', 'router', 'online', 'łącze'],
-  phone: ['telefon', 'smartfon', 'komórka', 'telefon komórkowy', 'rozmowy', 'abonament'],
+  electricity: ['prąd', 'energia', 'elektryczność', 'energia elektryczna', 'rachunek za prąd'],
+  internet: ['internet', 'wifi', 'wi-fi', 'sieć', 'online', 'łącze', 'broadband'],
+  phone: ['telefon', 'telefon komórkowy', 'komórka', 'rozmowy', 'abonament'],
   education: ['edukacja', 'nauka', 'szkoła', 'studia', 'kurs', 'kursy', 'szkolenie'],
-  books: ['książka', 'książki', 'czytanie', 'biblioteka', 'księgarnia', 'lektura', 'powieść', 'podręcznik', 'literatura'],
-  sport: ['sport', 'aktywność', 'piłka', 'piłka nożna', 'koszykówka', 'piłka do kosza', 'trening', 'zawody'],
-  gym: ['siłownia', 'sztanga', 'hantle', 'fitness', 'ćwiczenia', 'trening', 'trening siłowy', 'gym'],
-  gaming: ['gaming', 'komputer', 'gry', 'gracz', 'granie', 'gra', 'pc', 'konsola', 'e-sport', 'esport'],
-  entertainment: ['rozrywka', 'kino', 'film', 'filmy', 'seriale', 'telewizja'],
-  cinema: ['kino', 'film', 'filmy', 'serial', 'seriale', 'telewizja', 'seans', 'ekran', 'projekcja'],
-  gift: ['prezent', 'upominek', 'podarunek', 'niespodzianka'],
-  clothes: ['ubrania', 'odzież', 'ciuchy', 'moda', 'garderoba'],
-  pets: ['zwierzęta', 'zwierzę', 'pupil', 'pies', 'kot', 'weterynarz', 'karma', 'łapka'],
-  child: ['dziecko', 'dzieci', 'niemowlę', 'rodzicielstwo', 'syn', 'córka'],
-  savings: ['oszczędności', 'oszczędzanie', 'bank', 'konto', 'konto oszczędnościowe', 'lokata', 'skarbonka', 'fundusz'],
-  cash: ['gotówka', 'pieniądze', 'banknot', 'banknoty', 'kasa', 'cash'],
-  card: ['karta', 'płatność', 'płatności', 'karta płatnicza', 'debetowa', 'kredytowa'],
-  bank: ['bank', 'oszczędności', 'oszczędzanie', 'konto', 'konto oszczędnościowe', 'lokata', 'skarbonka', 'fundusz'],
-  investments: ['inwestycje', 'inwestycja', 'inwestowanie', 'giełda', 'akcje', 'etf', 'ETF', 'obligacje', 'kapitał', 'wzrost', 'zysk'],
+  books: ['książki', 'książka', 'czytanie', 'lektura'],
+  sport: ['sport', 'piłka', 'aktywność', 'piłka nożna', 'koszykówka', 'piłka do kosza'],
+  gym: ['siłownia', 'sztanga', 'trening', 'trening siłowy', 'ćwiczenia', 'fitness', 'gym'],
+  gaming: ['gaming', 'komputer', 'gry', 'granie', 'gra', 'pc', 'konsola'],
+  entertainment: ['rozrywka', 'kino', 'film', 'filmy', 'seriale'],
+  cinema: ['kino', 'film', 'filmy', 'seans', 'movie', 'ekran', 'projekcja'],
+  gift: ['prezent', 'upominek', 'podarunek', 'prezent dla kogoś'],
+  clothes: ['ubrania', 'odzież', 'ciuchy', 'garderoba', 'zakupy odzieżowe'],
+  pets: ['zwierzęta', 'zwierzę', 'pies', 'kot', 'pupile', 'zwierzak', 'zwierzaki'],
+  child: ['dziecko', 'dzieci', 'potomstwo', 'syn', 'córka'],
+  savings: ['oszczędności', 'oszczędzanie', 'bank', 'konto', 'konto oszczędnościowe', 'lokata'],
+  cash: ['gotówka', 'pieniądze', 'banknot', 'cash'],
+  card: ['karta', 'płatność', 'płatności', 'karta płatnicza'],
+  bank: ['bank', 'oszczędności', 'konto', 'konto oszczędnościowe', 'oszczędzanie', 'lokata'],
+  investments: ['inwestycje', 'inwestycja', 'lokowanie', 'giełda', 'kapitał', 'akcje', 'wzrost', 'zysk'],
   restaurant: ['restauracja', 'jedzenie', 'posiłek', 'gastronomia', 'widelec', 'nóż'],
-  coffee: ['kawa', 'herbata', 'kawiarnia', 'napój'],
+  coffee: ['kawa', 'napój', 'kawiarnia'],
   fuel: ['paliwo', 'benzyna', 'diesel', 'tankowanie', 'stacja paliw'],
-  travel: ['podróż', 'podróże', 'wakacje', 'urlop', 'samolot', 'wyjazd', 'lot'],
-  warning: ['ważne', 'istotne', 'priorytet', 'alert', 'uwaga', 'ostrzeżenie', 'pilne'],
-  idea: ['pomysł', 'idea', 'żarówka', 'inspiracja', 'projekt', 'koncepcja'],
-  heart: ['osobiste', 'prywatne', 'życie prywatne', 'dla mnie', 'serce'],
-  calendar: ['kalendarz', 'termin', 'data', 'wydarzenie', 'harmonogram', 'plan'],
-  more: ['pozostałe', 'inne', 'różne', 'reszta', 'wszystko', 'nieskończoność', 'dodatkowe'],
+  travel: ['podróż', 'podróże', 'wakacje', 'urlop', 'samolot', 'wyjazd'],
+  warning: ['ważne', 'istotne', 'priorytet', 'alert', 'uwaga'],
+  idea: ['pomysł', 'idea', 'żarówka', 'inspiracja', 'koncepcja'],
+  heart: ['osobiste', 'prywatne', 'dla mnie', 'serce'],
+  calendar: ['kalendarz', 'termin', 'data', 'wydarzenie', 'plan'],
+  more: ['pozostałe', 'inne', 'różne', 'nieskończoność', 'dodatkowe', 'misc'],
   plus: ['dodaj', 'plus', 'nowe'],
   edit: ['edytuj', 'zmień', 'ołówek', 'edycja'],
   trash: ['usuń', 'kosz', 'śmieci'],
