@@ -101,18 +101,27 @@ export type UiIconKey =
   | 'holiday'
   | 'sun'
   | 'health'
-  | 'health_2'
-  | 'health_3'
-  | 'health_4'
-  | 'health_5'
-  | 'health_6'
-  | 'health_7'
-  | 'health_8'
-  | 'health_9'
-  | 'health_10'
   | 'doctor'
   | 'pharmacy'
+  | 'pharmacy_2'
+  | 'pharmacy_3'
+  | 'pharmacy_4'
+  | 'pharmacy_5'
+  | 'pharmacy_6'
+  | 'pharmacy_7'
+  | 'pharmacy_8'
+  | 'pharmacy_9'
+  | 'pharmacy_10'
   | 'work'
+  | 'work_2'
+  | 'work_3'
+  | 'work_4'
+  | 'work_5'
+  | 'work_6'
+  | 'work_7'
+  | 'work_8'
+  | 'work_9'
+  | 'work_10'
   | 'salary'
   | 'bills'
   | 'bill'
@@ -138,15 +147,6 @@ export type UiIconKey =
   | 'restaurant'
   | 'coffee'
   | 'fuel'
-  | 'fuel_2'
-  | 'fuel_3'
-  | 'fuel_4'
-  | 'fuel_5'
-  | 'fuel_6'
-  | 'fuel_7'
-  | 'fuel_8'
-  | 'fuel_9'
-  | 'fuel_10'
   | 'travel'
   | 'warning'
   | 'idea'
@@ -201,28 +201,28 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'plane_9',
   'plane_10',
   'fuel',
-  'fuel_2',
-  'fuel_3',
-  'fuel_4',
-  'fuel_5',
-  'fuel_6',
-  'fuel_7',
-  'fuel_8',
-  'fuel_9',
-  'fuel_10',
   'health',
-  'health_2',
-  'health_3',
-  'health_4',
-  'health_5',
-  'health_6',
-  'health_7',
-  'health_8',
-  'health_9',
-  'health_10',
 
   'pharmacy',
+  'pharmacy_2',
+  'pharmacy_3',
+  'pharmacy_4',
+  'pharmacy_5',
+  'pharmacy_6',
+  'pharmacy_7',
+  'pharmacy_8',
+  'pharmacy_9',
+  'pharmacy_10',
   'work',
+  'work_2',
+  'work_3',
+  'work_4',
+  'work_5',
+  'work_6',
+  'work_7',
+  'work_8',
+  'work_9',
+  'work_10',
   'salary',
   'bills',
   'electricity',
@@ -288,18 +288,27 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'holiday', label: 'Wakacje' },
   { key: 'sun', label: 'Słońce' },
   { key: 'health', label: 'Zdrowie' },
-  { key: 'health_2', label: 'Zdrowie 2' },
-  { key: 'health_3', label: 'Zdrowie 3' },
-  { key: 'health_4', label: 'Zdrowie 4' },
-  { key: 'health_5', label: 'Zdrowie 5' },
-  { key: 'health_6', label: 'Zdrowie 6' },
-  { key: 'health_7', label: 'Zdrowie 7' },
-  { key: 'health_8', label: 'Zdrowie 8' },
-  { key: 'health_9', label: 'Zdrowie 9' },
-  { key: 'health_10', label: 'Zdrowie 10' },
   { key: 'doctor', label: 'Lekarz' },
   { key: 'pharmacy', label: 'Apteka' },
+  { key: 'pharmacy_2', label: 'Apteka 2' },
+  { key: 'pharmacy_3', label: 'Apteka 3' },
+  { key: 'pharmacy_4', label: 'Apteka 4' },
+  { key: 'pharmacy_5', label: 'Apteka 5' },
+  { key: 'pharmacy_6', label: 'Apteka 6' },
+  { key: 'pharmacy_7', label: 'Apteka 7' },
+  { key: 'pharmacy_8', label: 'Apteka 8' },
+  { key: 'pharmacy_9', label: 'Apteka 9' },
+  { key: 'pharmacy_10', label: 'Apteka 10' },
   { key: 'work', label: 'Praca' },
+  { key: 'work_2', label: 'Praca 2' },
+  { key: 'work_3', label: 'Praca 3' },
+  { key: 'work_4', label: 'Praca 4' },
+  { key: 'work_5', label: 'Praca 5' },
+  { key: 'work_6', label: 'Praca 6' },
+  { key: 'work_7', label: 'Praca 7' },
+  { key: 'work_8', label: 'Praca 8' },
+  { key: 'work_9', label: 'Praca 9' },
+  { key: 'work_10', label: 'Praca 10' },
   { key: 'salary', label: 'Pensja' },
   { key: 'bills', label: 'Rachunki' },
   { key: 'bill', label: 'Paragon' },
@@ -325,15 +334,6 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'restaurant', label: 'Restauracja' },
   { key: 'coffee', label: 'Kawa' },
   { key: 'fuel', label: 'Paliwo' },
-  { key: 'fuel_2', label: 'Paliwo 2' },
-  { key: 'fuel_3', label: 'Paliwo 3' },
-  { key: 'fuel_4', label: 'Paliwo 4' },
-  { key: 'fuel_5', label: 'Paliwo 5' },
-  { key: 'fuel_6', label: 'Paliwo 6' },
-  { key: 'fuel_7', label: 'Paliwo 7' },
-  { key: 'fuel_8', label: 'Paliwo 8' },
-  { key: 'fuel_9', label: 'Paliwo 9' },
-  { key: 'fuel_10', label: 'Paliwo 10' },
   { key: 'travel', label: 'Podróże' },
   { key: 'warning', label: 'Ważne' },
   { key: 'idea', label: 'Pomysł' },
@@ -389,18 +389,27 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   holiday: ['wakacje', 'urlop', 'podróż', 'podróże', 'samolot', 'wyjazd', 'lot'],
   sun: ['słońce', 'pogoda', 'lato', 'wakacje', 'słoneczny'],
   health: ['zdrowie', 'medycyna', 'leczenie', 'opieka zdrowotna', 'medyczne'],
-  health_2: [],
-  health_3: [],
-  health_4: [],
-  health_5: [],
-  health_6: [],
-  health_7: [],
-  health_8: [],
-  health_9: [],
-  health_10: [],
   doctor: ['lekarz', 'doktor', 'wizyta', 'medycyna', 'zdrowie', 'przychodnia', 'szpital'],
   pharmacy: ['apteka', 'leki', 'farmacja', 'lekarstwa', 'lekarz', 'doktor', 'recepta', 'przychodnia', 'szpital', 'medyczne'],
+  pharmacy_2: [],
+  pharmacy_3: [],
+  pharmacy_4: [],
+  pharmacy_5: [],
+  pharmacy_6: [],
+  pharmacy_7: [],
+  pharmacy_8: [],
+  pharmacy_9: [],
+  pharmacy_10: [],
   work: ['praca', 'firma', 'biuro', 'zatrudnienie', 'etat', 'zawód'],
+  work_2: [],
+  work_3: [],
+  work_4: [],
+  work_5: [],
+  work_6: [],
+  work_7: [],
+  work_8: [],
+  work_9: [],
+  work_10: [],
   salary: ['pensja', 'wynagrodzenie', 'płaca', 'wypłata', 'portfel', 'zarobki', 'dochód'],
   bills: ['rachunki', 'rachunek', 'paragon', 'faktura', 'faktury', 'opłaty', 'opłata', 'rozliczenie'],
   bill: ['paragon', 'rachunki', 'rachunek', 'faktura', 'opłaty'],
@@ -426,15 +435,6 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   restaurant: ['restauracja', 'jedzenie', 'posiłek', 'gastronomia', 'widelec', 'nóż'],
   coffee: ['kawa', 'herbata', 'kawiarnia', 'napój'],
   fuel: ['paliwo', 'benzyna', 'diesel', 'tankowanie', 'stacja paliw'],
-  fuel_2: [],
-  fuel_3: [],
-  fuel_4: [],
-  fuel_5: [],
-  fuel_6: [],
-  fuel_7: [],
-  fuel_8: [],
-  fuel_9: [],
-  fuel_10: [],
   travel: ['podróż', 'podróże', 'wakacje', 'urlop', 'samolot', 'wyjazd', 'lot'],
   warning: ['ważne', 'istotne', 'priorytet', 'alert', 'uwaga', 'ostrzeżenie', 'pilne'],
   idea: ['pomysł', 'idea', 'żarówka', 'inspiracja', 'projekt', 'koncepcja'],
