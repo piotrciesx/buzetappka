@@ -17,7 +17,7 @@ const iconShapes: Record<UiIconKey, IconShape> = {
   food: { paths: ['M7 4v16', 'M4.5 4v5a2.5 2.5 0 0 0 5 0V4', 'M16.5 4v16', 'M16.5 4c2 1.5 3 3.5 3 6v2h-3'] },
   shopping: { paths: ['M6.5 8.5h11l-1 11h-9z', 'M9 8.5a3 3 0 0 1 6 0'] },
   basket: { paths: ['M6.5 8.5h11l-1 11h-9z', 'M9 8.5a3 3 0 0 1 6 0'] },
-  car: { paths: ['M4 15.5h1.5l1.35-3.55A2.25 2.25 0 0 1 8.95 10.5h6.1a2.25 2.25 0 0 1 2.1 1.45L18.5 15.5H20', 'M6.4 15.5h11.2', 'M8 18.5h.01', 'M16 18.5h.01', 'M8.2 12.6h7.6', 'M9.2 10.5l-1 2.1', 'M14.8 10.5l1 2.1'] },
+  car: { paths: ['M3.5 15h1.7l1.5-3.8A2.2 2.2 0 0 1 8.7 10h6.6a2.2 2.2 0 0 1 2 1.2L18.8 15h1.7', 'M6.2 15h11.6', 'M7.8 18.5h.01', 'M16.2 18.5h.01', 'M8.4 12.2h7.2', 'M9.2 10l-.8 2.2', 'M14.8 10l.8 2.2'] },
   transport: { paths: ['M6.5 5.5h11A1.5 1.5 0 0 1 19 7v10.5H5V7a1.5 1.5 0 0 1 1.5-1.5Z', 'M7.5 9h9', 'M7.5 13h9', 'M8.5 20h.01', 'M15.5 20h.01', 'M9 3.5h6'] },
   plane: { paths: ['M4 16.5 20 7.5', 'M20 7.5l-2.2 8.2-4.1-3.4-3.4 4.1-1.6-.9 2.8-5.2-5.8-2.4z'] },
   holiday: { paths: ['M4 16.5 20 7.5', 'M20 7.5l-2.2 8.2-4.1-3.4-3.4 4.1-1.6-.9 2.8-5.2-5.8-2.4z'] },
@@ -64,7 +64,6 @@ const iconShapes: Record<UiIconKey, IconShape> = {
   expand: { paths: ['M8 9l4 4 4-4'] },
   info: { paths: ['M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Z', 'M12 11v5', 'M12 8h.01'] },
 }
-
 export default function CategoryIcon({ iconKey, level = 2 }: CategoryIconProps) {
   const resolvedIconKey =
     iconKey && Object.prototype.hasOwnProperty.call(iconShapes, iconKey)
