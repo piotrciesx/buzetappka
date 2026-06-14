@@ -103,27 +103,27 @@ export type UiIconKey =
   | 'health'
   | 'doctor'
   | 'pharmacy'
-  | 'pharmacy_2'
-  | 'pharmacy_3'
-  | 'pharmacy_4'
-  | 'pharmacy_5'
-  | 'pharmacy_6'
-  | 'pharmacy_7'
-  | 'pharmacy_8'
-  | 'pharmacy_9'
-  | 'pharmacy_10'
   | 'work'
-  | 'work_2'
-  | 'work_3'
-  | 'work_4'
-  | 'work_5'
-  | 'work_6'
-  | 'work_7'
-  | 'work_8'
-  | 'work_9'
-  | 'work_10'
   | 'salary'
+  | 'salary_2'
+  | 'salary_3'
+  | 'salary_4'
+  | 'salary_5'
+  | 'salary_6'
+  | 'salary_7'
+  | 'salary_8'
+  | 'salary_9'
+  | 'salary_10'
   | 'bills'
+  | 'bills_2'
+  | 'bills_3'
+  | 'bills_4'
+  | 'bills_5'
+  | 'bills_6'
+  | 'bills_7'
+  | 'bills_8'
+  | 'bills_9'
+  | 'bills_10'
   | 'bill'
   | 'electricity'
   | 'internet'
@@ -204,27 +204,27 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'health',
 
   'pharmacy',
-  'pharmacy_2',
-  'pharmacy_3',
-  'pharmacy_4',
-  'pharmacy_5',
-  'pharmacy_6',
-  'pharmacy_7',
-  'pharmacy_8',
-  'pharmacy_9',
-  'pharmacy_10',
   'work',
-  'work_2',
-  'work_3',
-  'work_4',
-  'work_5',
-  'work_6',
-  'work_7',
-  'work_8',
-  'work_9',
-  'work_10',
   'salary',
+  'salary_2',
+  'salary_3',
+  'salary_4',
+  'salary_5',
+  'salary_6',
+  'salary_7',
+  'salary_8',
+  'salary_9',
+  'salary_10',
   'bills',
+  'bills_2',
+  'bills_3',
+  'bills_4',
+  'bills_5',
+  'bills_6',
+  'bills_7',
+  'bills_8',
+  'bills_9',
+  'bills_10',
   'electricity',
   'internet',
   'phone',
@@ -290,27 +290,27 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'health', label: 'Zdrowie' },
   { key: 'doctor', label: 'Lekarz' },
   { key: 'pharmacy', label: 'Apteka' },
-  { key: 'pharmacy_2', label: 'Apteka 2' },
-  { key: 'pharmacy_3', label: 'Apteka 3' },
-  { key: 'pharmacy_4', label: 'Apteka 4' },
-  { key: 'pharmacy_5', label: 'Apteka 5' },
-  { key: 'pharmacy_6', label: 'Apteka 6' },
-  { key: 'pharmacy_7', label: 'Apteka 7' },
-  { key: 'pharmacy_8', label: 'Apteka 8' },
-  { key: 'pharmacy_9', label: 'Apteka 9' },
-  { key: 'pharmacy_10', label: 'Apteka 10' },
   { key: 'work', label: 'Praca' },
-  { key: 'work_2', label: 'Praca 2' },
-  { key: 'work_3', label: 'Praca 3' },
-  { key: 'work_4', label: 'Praca 4' },
-  { key: 'work_5', label: 'Praca 5' },
-  { key: 'work_6', label: 'Praca 6' },
-  { key: 'work_7', label: 'Praca 7' },
-  { key: 'work_8', label: 'Praca 8' },
-  { key: 'work_9', label: 'Praca 9' },
-  { key: 'work_10', label: 'Praca 10' },
   { key: 'salary', label: 'Pensja' },
+  { key: 'salary_2', label: 'Pensja 2' },
+  { key: 'salary_3', label: 'Pensja 3' },
+  { key: 'salary_4', label: 'Pensja 4' },
+  { key: 'salary_5', label: 'Pensja 5' },
+  { key: 'salary_6', label: 'Pensja 6' },
+  { key: 'salary_7', label: 'Pensja 7' },
+  { key: 'salary_8', label: 'Pensja 8' },
+  { key: 'salary_9', label: 'Pensja 9' },
+  { key: 'salary_10', label: 'Pensja 10' },
   { key: 'bills', label: 'Rachunki' },
+  { key: 'bills_2', label: 'Rachunki 2' },
+  { key: 'bills_3', label: 'Rachunki 3' },
+  { key: 'bills_4', label: 'Rachunki 4' },
+  { key: 'bills_5', label: 'Rachunki 5' },
+  { key: 'bills_6', label: 'Rachunki 6' },
+  { key: 'bills_7', label: 'Rachunki 7' },
+  { key: 'bills_8', label: 'Rachunki 8' },
+  { key: 'bills_9', label: 'Rachunki 9' },
+  { key: 'bills_10', label: 'Rachunki 10' },
   { key: 'bill', label: 'Paragon' },
   { key: 'electricity', label: 'Prąd' },
   { key: 'internet', label: 'Internet' },
@@ -391,27 +391,27 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   health: ['zdrowie', 'medycyna', 'leczenie', 'opieka zdrowotna', 'medyczne'],
   doctor: ['lekarz', 'doktor', 'wizyta', 'medycyna', 'zdrowie', 'przychodnia', 'szpital'],
   pharmacy: ['apteka', 'leki', 'farmacja', 'lekarstwa', 'lekarz', 'doktor', 'recepta', 'przychodnia', 'szpital', 'medyczne'],
-  pharmacy_2: [],
-  pharmacy_3: [],
-  pharmacy_4: [],
-  pharmacy_5: [],
-  pharmacy_6: [],
-  pharmacy_7: [],
-  pharmacy_8: [],
-  pharmacy_9: [],
-  pharmacy_10: [],
   work: ['praca', 'firma', 'biuro', 'zatrudnienie', 'etat', 'zawód'],
-  work_2: [],
-  work_3: [],
-  work_4: [],
-  work_5: [],
-  work_6: [],
-  work_7: [],
-  work_8: [],
-  work_9: [],
-  work_10: [],
   salary: ['pensja', 'wynagrodzenie', 'płaca', 'wypłata', 'portfel', 'zarobki', 'dochód'],
+  salary_2: [],
+  salary_3: [],
+  salary_4: [],
+  salary_5: [],
+  salary_6: [],
+  salary_7: [],
+  salary_8: [],
+  salary_9: [],
+  salary_10: [],
   bills: ['rachunki', 'rachunek', 'paragon', 'faktura', 'faktury', 'opłaty', 'opłata', 'rozliczenie'],
+  bills_2: [],
+  bills_3: [],
+  bills_4: [],
+  bills_5: [],
+  bills_6: [],
+  bills_7: [],
+  bills_8: [],
+  bills_9: [],
+  bills_10: [],
   bill: ['paragon', 'rachunki', 'rachunek', 'faktura', 'opłaty'],
   electricity: ['prąd', 'energia', 'elektryczność', 'elektryka', 'rachunek za prąd'],
   internet: ['internet', 'wifi', 'wi-fi', 'sieć', 'router', 'online', 'łącze'],
