@@ -78,17 +78,7 @@ export type UiIconKey =
   | 'shopping'
   | 'basket'
   | 'car'
-  | 'car_1'
-  | 'car_2'
-  | 'car_3'
-  | 'car_4'
-  | 'car_5'
   | 'transport'
-  | 'transport_1'
-  | 'transport_2'
-  | 'transport_3'
-  | 'transport_4'
-  | 'transport_5'
   | 'plane'
   | 'holiday'
   | 'sun'
@@ -105,17 +95,7 @@ export type UiIconKey =
   | 'education'
   | 'books'
   | 'sport'
-  | 'sport_1'
-  | 'sport_2'
-  | 'sport_3'
-  | 'sport_4'
-  | 'sport_5'
   | 'gym'
-  | 'gym_1'
-  | 'gym_2'
-  | 'gym_3'
-  | 'gym_4'
-  | 'gym_5'
   | 'gaming'
   | 'entertainment'
   | 'cinema'
@@ -164,17 +144,7 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'food',
   'coffee',
   'car',
-  'car_1',
-  'car_2',
-  'car_3',
-  'car_4',
-  'car_5',
   'transport',
-  'transport_1',
-  'transport_2',
-  'transport_3',
-  'transport_4',
-  'transport_5',
   'plane',
   'fuel',
   'health',
@@ -188,17 +158,7 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'education',
   'books',
   'sport',
-  'sport_1',
-  'sport_2',
-  'sport_3',
-  'sport_4',
-  'sport_5',
   'gym',
-  'gym_1',
-  'gym_2',
-  'gym_3',
-  'gym_4',
-  'gym_5',
   'gaming',
   'cinema',
   'gift',
@@ -232,17 +192,7 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'shopping', label: 'Zakupy' },
   { key: 'basket', label: 'Koszyk' },
   { key: 'car', label: 'Auto' },
-  { key: 'car_1', label: 'Auto 1' },
-  { key: 'car_2', label: 'Auto 2' },
-  { key: 'car_3', label: 'Auto 3' },
-  { key: 'car_4', label: 'Auto 4' },
-  { key: 'car_5', label: 'Auto 5' },
   { key: 'transport', label: 'Transport' },
-  { key: 'transport_1', label: 'Transport 1' },
-  { key: 'transport_2', label: 'Transport 2' },
-  { key: 'transport_3', label: 'Transport 3' },
-  { key: 'transport_4', label: 'Transport 4' },
-  { key: 'transport_5', label: 'Transport 5' },
   { key: 'plane', label: 'Samolot' },
   { key: 'holiday', label: 'Wakacje' },
   { key: 'sun', label: 'Słońce' },
@@ -259,17 +209,7 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'education', label: 'Edukacja' },
   { key: 'books', label: 'Książki' },
   { key: 'sport', label: 'Sport' },
-  { key: 'sport_1', label: 'Sport 1' },
-  { key: 'sport_2', label: 'Sport 2' },
-  { key: 'sport_3', label: 'Sport 3' },
-  { key: 'sport_4', label: 'Sport 4' },
-  { key: 'sport_5', label: 'Sport 5' },
   { key: 'gym', label: 'Siłownia' },
-  { key: 'gym_1', label: 'Siłownia 1' },
-  { key: 'gym_2', label: 'Siłownia 2' },
-  { key: 'gym_3', label: 'Siłownia 3' },
-  { key: 'gym_4', label: 'Siłownia 4' },
-  { key: 'gym_5', label: 'Siłownia 5' },
   { key: 'gaming', label: 'Gaming' },
   { key: 'entertainment', label: 'Rozrywka' },
   { key: 'cinema', label: 'Kino' },
@@ -317,17 +257,7 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   shopping: ['zakupy', 'koszyk', 'sklep', 'market', 'supermarket', 'galeria handlowa', 'zakupy spożywcze'],
   basket: ['koszyk', 'zakupy', 'sklep', 'market', 'supermarket'],
   car: ['auto', 'samochód', 'samochod', 'pojazd', 'motoryzacja', 'suv'],
-  car_5: [],
-  car_4: [],
-  car_3: [],
-  car_2: [],
-  car_1: [],
   transport: ['transport', 'komunikacja', 'komunikacja miejska', 'tramwaj', 'autobus', 'metro', 'pociąg', 'kolej'],
-  transport_5: [],
-  transport_4: [],
-  transport_3: [],
-  transport_2: [],
-  transport_1: [],
   plane: ['samolot', 'lot', 'loty', 'lotnisko', 'podróż', 'podróże', 'wakacje', 'urlop', 'wyjazd', 'wyjazdy', 'lotniczy'],
   holiday: ['wakacje', 'urlop', 'podróż', 'podróże', 'samolot', 'wyjazd', 'lot'],
   sun: ['słońce', 'pogoda', 'lato', 'wakacje', 'słoneczny'],
@@ -344,17 +274,7 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   education: ['edukacja', 'nauka', 'szkoła', 'studia', 'kurs', 'kursy', 'szkolenie'],
   books: ['książka', 'książki', 'czytanie', 'biblioteka', 'księgarnia', 'lektura', 'powieść', 'podręcznik', 'literatura'],
   sport: ['sport', 'aktywność', 'piłka', 'piłka nożna', 'koszykówka', 'piłka do kosza', 'trening', 'zawody'],
-  sport_5: [],
-  sport_4: [],
-  sport_3: [],
-  sport_2: [],
-  sport_1: [],
   gym: ['siłownia', 'sztanga', 'hantle', 'fitness', 'ćwiczenia', 'trening', 'trening siłowy', 'gym'],
-  gym_5: [],
-  gym_4: [],
-  gym_3: [],
-  gym_2: [],
-  gym_1: [],
   gaming: ['gaming', 'komputer', 'gry', 'gracz', 'granie', 'gra', 'pc', 'konsola', 'e-sport', 'esport'],
   entertainment: ['rozrywka', 'kino', 'film', 'filmy', 'seriale', 'telewizja'],
   cinema: ['kino', 'film', 'filmy', 'serial', 'seriale', 'telewizja', 'seans', 'ekran', 'projekcja'],
