@@ -73,6 +73,15 @@ export const UI_COLOR_OPTIONS: Array<{ tone: UiColorKey; label: string }> = [
 export type UiIconKey =
   | 'note'
   | 'exchange'
+  | 'exchange_2'
+  | 'exchange_3'
+  | 'exchange_4'
+  | 'exchange_5'
+  | 'exchange_6'
+  | 'exchange_7'
+  | 'exchange_8'
+  | 'exchange_9'
+  | 'exchange_10'
   | 'home'
   | 'food'
   | 'shopping'
@@ -80,17 +89,17 @@ export type UiIconKey =
   | 'car'
   | 'transport'
   | 'plane'
-  | 'plane_2'
-  | 'plane_3'
-  | 'plane_4'
-  | 'plane_5'
-  | 'plane_6'
-  | 'plane_7'
-  | 'plane_8'
-  | 'plane_9'
-  | 'plane_10'
   | 'holiday'
   | 'sun'
+  | 'sun_2'
+  | 'sun_3'
+  | 'sun_4'
+  | 'sun_5'
+  | 'sun_6'
+  | 'sun_7'
+  | 'sun_8'
+  | 'sun_9'
+  | 'sun_10'
   | 'health'
   | 'doctor'
   | 'pharmacy'
@@ -105,15 +114,6 @@ export type UiIconKey =
   | 'books'
   | 'sport'
   | 'gym'
-  | 'gym_2'
-  | 'gym_3'
-  | 'gym_4'
-  | 'gym_5'
-  | 'gym_6'
-  | 'gym_7'
-  | 'gym_8'
-  | 'gym_9'
-  | 'gym_10'
   | 'gaming'
   | 'gaming_2'
   | 'gaming_3'
@@ -126,45 +126,9 @@ export type UiIconKey =
   | 'gaming_10'
   | 'entertainment'
   | 'cinema'
-  | 'cinema_2'
-  | 'cinema_3'
-  | 'cinema_4'
-  | 'cinema_5'
-  | 'cinema_6'
-  | 'cinema_7'
-  | 'cinema_8'
-  | 'cinema_9'
-  | 'cinema_10'
   | 'gift'
-  | 'gift_2'
-  | 'gift_3'
-  | 'gift_4'
-  | 'gift_5'
-  | 'gift_6'
-  | 'gift_7'
-  | 'gift_8'
-  | 'gift_9'
-  | 'gift_10'
   | 'clothes'
-  | 'clothes_2'
-  | 'clothes_3'
-  | 'clothes_4'
-  | 'clothes_5'
-  | 'clothes_6'
-  | 'clothes_7'
-  | 'clothes_8'
-  | 'clothes_9'
-  | 'clothes_10'
   | 'pets'
-  | 'pets_2'
-  | 'pets_3'
-  | 'pets_4'
-  | 'pets_5'
-  | 'pets_6'
-  | 'pets_7'
-  | 'pets_8'
-  | 'pets_9'
-  | 'pets_10'
   | 'child'
   | 'child_2'
   | 'child_3'
@@ -177,36 +141,81 @@ export type UiIconKey =
   | 'child_10'
   | 'savings'
   | 'cash'
-  | 'cash_2'
-  | 'cash_3'
-  | 'cash_4'
-  | 'cash_5'
-  | 'cash_6'
-  | 'cash_7'
-  | 'cash_8'
-  | 'cash_9'
-  | 'cash_10'
   | 'card'
-  | 'card_2'
-  | 'card_3'
-  | 'card_4'
-  | 'card_5'
-  | 'card_6'
-  | 'card_7'
-  | 'card_8'
-  | 'card_9'
-  | 'card_10'
   | 'bank'
+  | 'bank_2'
+  | 'bank_3'
+  | 'bank_4'
+  | 'bank_5'
+  | 'bank_6'
+  | 'bank_7'
+  | 'bank_8'
+  | 'bank_9'
+  | 'bank_10'
   | 'investments'
+  | 'investments_2'
+  | 'investments_3'
+  | 'investments_4'
+  | 'investments_5'
+  | 'investments_6'
+  | 'investments_7'
+  | 'investments_8'
+  | 'investments_9'
+  | 'investments_10'
   | 'restaurant'
   | 'coffee'
   | 'fuel'
   | 'travel'
   | 'warning'
+  | 'warning_2'
+  | 'warning_3'
+  | 'warning_4'
+  | 'warning_5'
+  | 'warning_6'
+  | 'warning_7'
+  | 'warning_8'
+  | 'warning_9'
+  | 'warning_10'
   | 'idea'
+  | 'idea_2'
+  | 'idea_3'
+  | 'idea_4'
+  | 'idea_5'
+  | 'idea_6'
+  | 'idea_7'
+  | 'idea_8'
+  | 'idea_9'
+  | 'idea_10'
   | 'heart'
+  | 'heart_2'
+  | 'heart_3'
+  | 'heart_4'
+  | 'heart_5'
+  | 'heart_6'
+  | 'heart_7'
+  | 'heart_8'
+  | 'heart_9'
+  | 'heart_10'
   | 'calendar'
+  | 'calendar_2'
+  | 'calendar_3'
+  | 'calendar_4'
+  | 'calendar_5'
+  | 'calendar_6'
+  | 'calendar_7'
+  | 'calendar_8'
+  | 'calendar_9'
+  | 'calendar_10'
   | 'more'
+  | 'more_2'
+  | 'more_3'
+  | 'more_4'
+  | 'more_5'
+  | 'more_6'
+  | 'more_7'
+  | 'more_8'
+  | 'more_9'
+  | 'more_10'
   | 'plus'
   | 'edit'
   | 'trash'
@@ -236,15 +245,6 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'car',
   'transport',
   'plane',
-  'plane_2',
-  'plane_3',
-  'plane_4',
-  'plane_5',
-  'plane_6',
-  'plane_7',
-  'plane_8',
-  'plane_9',
-  'plane_10',
   'fuel',
   'health',
 
@@ -259,15 +259,6 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'books',
   'sport',
   'gym',
-  'gym_2',
-  'gym_3',
-  'gym_4',
-  'gym_5',
-  'gym_6',
-  'gym_7',
-  'gym_8',
-  'gym_9',
-  'gym_10',
   'gaming',
   'gaming_2',
   'gaming_3',
@@ -279,35 +270,8 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'gaming_9',
   'gaming_10',
   'cinema',
-  'cinema_2',
-  'cinema_3',
-  'cinema_4',
-  'cinema_5',
-  'cinema_6',
-  'cinema_7',
-  'cinema_8',
-  'cinema_9',
-  'cinema_10',
   'gift',
-  'gift_2',
-  'gift_3',
-  'gift_4',
-  'gift_5',
-  'gift_6',
-  'gift_7',
-  'gift_8',
-  'gift_9',
-  'gift_10',
   'clothes',
-  'clothes_2',
-  'clothes_3',
-  'clothes_4',
-  'clothes_5',
-  'clothes_6',
-  'clothes_7',
-  'clothes_8',
-  'clothes_9',
-  'clothes_10',
   'child',
   'child_2',
   'child_3',
@@ -319,44 +283,98 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'child_9',
   'child_10',
   'pets',
-  'pets_2',
-  'pets_3',
-  'pets_4',
-  'pets_5',
-  'pets_6',
-  'pets_7',
-  'pets_8',
-  'pets_9',
-  'pets_10',
   'cash',
-  'cash_2',
-  'cash_3',
-  'cash_4',
-  'cash_5',
-  'cash_6',
-  'cash_7',
-  'cash_8',
-  'cash_9',
-  'cash_10',
   'card',
-  'card_2',
-  'card_3',
-  'card_4',
-  'card_5',
-  'card_6',
-  'card_7',
-  'card_8',
-  'card_9',
-  'card_10',
   'bank',
+  'bank_2',
+  'bank_3',
+  'bank_4',
+  'bank_5',
+  'bank_6',
+  'bank_7',
+  'bank_8',
+  'bank_9',
+  'bank_10',
   'investments',
+  'investments_2',
+  'investments_3',
+  'investments_4',
+  'investments_5',
+  'investments_6',
+  'investments_7',
+  'investments_8',
+  'investments_9',
+  'investments_10',
   'calendar',
+  'calendar_2',
+  'calendar_3',
+  'calendar_4',
+  'calendar_5',
+  'calendar_6',
+  'calendar_7',
+  'calendar_8',
+  'calendar_9',
+  'calendar_10',
   'warning',
+  'warning_2',
+  'warning_3',
+  'warning_4',
+  'warning_5',
+  'warning_6',
+  'warning_7',
+  'warning_8',
+  'warning_9',
+  'warning_10',
   'idea',
+  'idea_2',
+  'idea_3',
+  'idea_4',
+  'idea_5',
+  'idea_6',
+  'idea_7',
+  'idea_8',
+  'idea_9',
+  'idea_10',
   'heart',
+  'heart_2',
+  'heart_3',
+  'heart_4',
+  'heart_5',
+  'heart_6',
+  'heart_7',
+  'heart_8',
+  'heart_9',
+  'heart_10',
   'sun',
+  'sun_2',
+  'sun_3',
+  'sun_4',
+  'sun_5',
+  'sun_6',
+  'sun_7',
+  'sun_8',
+  'sun_9',
+  'sun_10',
   'exchange',
+  'exchange_2',
+  'exchange_3',
+  'exchange_4',
+  'exchange_5',
+  'exchange_6',
+  'exchange_7',
+  'exchange_8',
+  'exchange_9',
+  'exchange_10',
   'more',
+  'more_2',
+  'more_3',
+  'more_4',
+  'more_5',
+  'more_6',
+  'more_7',
+  'more_8',
+  'more_9',
+  'more_10',
   'plus',
   'edit',
   'trash',
@@ -368,6 +386,15 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
 const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'note', label: 'Notatka' },
   { key: 'exchange', label: 'Wymiana' },
+  { key: 'exchange_2', label: 'Wymiana 2' },
+  { key: 'exchange_3', label: 'Wymiana 3' },
+  { key: 'exchange_4', label: 'Wymiana 4' },
+  { key: 'exchange_5', label: 'Wymiana 5' },
+  { key: 'exchange_6', label: 'Wymiana 6' },
+  { key: 'exchange_7', label: 'Wymiana 7' },
+  { key: 'exchange_8', label: 'Wymiana 8' },
+  { key: 'exchange_9', label: 'Wymiana 9' },
+  { key: 'exchange_10', label: 'Wymiana 10' },
   { key: 'home', label: 'Dom' },
   { key: 'food', label: 'Jedzenie' },
   { key: 'shopping', label: 'Zakupy' },
@@ -375,17 +402,17 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'car', label: 'Auto' },
   { key: 'transport', label: 'Transport' },
   { key: 'plane', label: 'Samolot' },
-  { key: 'plane_2', label: 'Samolot 2' },
-  { key: 'plane_3', label: 'Samolot 3' },
-  { key: 'plane_4', label: 'Samolot 4' },
-  { key: 'plane_5', label: 'Samolot 5' },
-  { key: 'plane_6', label: 'Samolot 6' },
-  { key: 'plane_7', label: 'Samolot 7' },
-  { key: 'plane_8', label: 'Samolot 8' },
-  { key: 'plane_9', label: 'Samolot 9' },
-  { key: 'plane_10', label: 'Samolot 10' },
   { key: 'holiday', label: 'Wakacje' },
   { key: 'sun', label: 'Słońce' },
+  { key: 'sun_2', label: 'Słońce 2' },
+  { key: 'sun_3', label: 'Słońce 3' },
+  { key: 'sun_4', label: 'Słońce 4' },
+  { key: 'sun_5', label: 'Słońce 5' },
+  { key: 'sun_6', label: 'Słońce 6' },
+  { key: 'sun_7', label: 'Słońce 7' },
+  { key: 'sun_8', label: 'Słońce 8' },
+  { key: 'sun_9', label: 'Słońce 9' },
+  { key: 'sun_10', label: 'Słońce 10' },
   { key: 'health', label: 'Zdrowie' },
   { key: 'doctor', label: 'Lekarz' },
   { key: 'pharmacy', label: 'Apteka' },
@@ -400,15 +427,6 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'books', label: 'Książki' },
   { key: 'sport', label: 'Sport' },
   { key: 'gym', label: 'Siłownia' },
-  { key: 'gym_2', label: 'Siłownia 2' },
-  { key: 'gym_3', label: 'Siłownia 3' },
-  { key: 'gym_4', label: 'Siłownia 4' },
-  { key: 'gym_5', label: 'Siłownia 5' },
-  { key: 'gym_6', label: 'Siłownia 6' },
-  { key: 'gym_7', label: 'Siłownia 7' },
-  { key: 'gym_8', label: 'Siłownia 8' },
-  { key: 'gym_9', label: 'Siłownia 9' },
-  { key: 'gym_10', label: 'Siłownia 10' },
   { key: 'gaming', label: 'Gaming' },
   { key: 'gaming_2', label: 'Gaming 2' },
   { key: 'gaming_3', label: 'Gaming 3' },
@@ -421,45 +439,9 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'gaming_10', label: 'Gaming 10' },
   { key: 'entertainment', label: 'Rozrywka' },
   { key: 'cinema', label: 'Kino' },
-  { key: 'cinema_2', label: 'Kino 2' },
-  { key: 'cinema_3', label: 'Kino 3' },
-  { key: 'cinema_4', label: 'Kino 4' },
-  { key: 'cinema_5', label: 'Kino 5' },
-  { key: 'cinema_6', label: 'Kino 6' },
-  { key: 'cinema_7', label: 'Kino 7' },
-  { key: 'cinema_8', label: 'Kino 8' },
-  { key: 'cinema_9', label: 'Kino 9' },
-  { key: 'cinema_10', label: 'Kino 10' },
   { key: 'gift', label: 'Prezent' },
-  { key: 'gift_2', label: 'Prezent 2' },
-  { key: 'gift_3', label: 'Prezent 3' },
-  { key: 'gift_4', label: 'Prezent 4' },
-  { key: 'gift_5', label: 'Prezent 5' },
-  { key: 'gift_6', label: 'Prezent 6' },
-  { key: 'gift_7', label: 'Prezent 7' },
-  { key: 'gift_8', label: 'Prezent 8' },
-  { key: 'gift_9', label: 'Prezent 9' },
-  { key: 'gift_10', label: 'Prezent 10' },
   { key: 'clothes', label: 'Ubrania' },
-  { key: 'clothes_2', label: 'Ubrania 2' },
-  { key: 'clothes_3', label: 'Ubrania 3' },
-  { key: 'clothes_4', label: 'Ubrania 4' },
-  { key: 'clothes_5', label: 'Ubrania 5' },
-  { key: 'clothes_6', label: 'Ubrania 6' },
-  { key: 'clothes_7', label: 'Ubrania 7' },
-  { key: 'clothes_8', label: 'Ubrania 8' },
-  { key: 'clothes_9', label: 'Ubrania 9' },
-  { key: 'clothes_10', label: 'Ubrania 10' },
   { key: 'pets', label: 'Zwierzęta' },
-  { key: 'pets_2', label: 'Zwierzęta 2' },
-  { key: 'pets_3', label: 'Zwierzęta 3' },
-  { key: 'pets_4', label: 'Zwierzęta 4' },
-  { key: 'pets_5', label: 'Zwierzęta 5' },
-  { key: 'pets_6', label: 'Zwierzęta 6' },
-  { key: 'pets_7', label: 'Zwierzęta 7' },
-  { key: 'pets_8', label: 'Zwierzęta 8' },
-  { key: 'pets_9', label: 'Zwierzęta 9' },
-  { key: 'pets_10', label: 'Zwierzęta 10' },
   { key: 'child', label: 'Dziecko' },
   { key: 'child_2', label: 'Dziecko 2' },
   { key: 'child_3', label: 'Dziecko 3' },
@@ -472,36 +454,81 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'child_10', label: 'Dziecko 10' },
   { key: 'savings', label: 'Oszczędności' },
   { key: 'cash', label: 'Gotówka' },
-  { key: 'cash_2', label: 'Gotówka 2' },
-  { key: 'cash_3', label: 'Gotówka 3' },
-  { key: 'cash_4', label: 'Gotówka 4' },
-  { key: 'cash_5', label: 'Gotówka 5' },
-  { key: 'cash_6', label: 'Gotówka 6' },
-  { key: 'cash_7', label: 'Gotówka 7' },
-  { key: 'cash_8', label: 'Gotówka 8' },
-  { key: 'cash_9', label: 'Gotówka 9' },
-  { key: 'cash_10', label: 'Gotówka 10' },
   { key: 'card', label: 'Karta' },
-  { key: 'card_2', label: 'Karta 2' },
-  { key: 'card_3', label: 'Karta 3' },
-  { key: 'card_4', label: 'Karta 4' },
-  { key: 'card_5', label: 'Karta 5' },
-  { key: 'card_6', label: 'Karta 6' },
-  { key: 'card_7', label: 'Karta 7' },
-  { key: 'card_8', label: 'Karta 8' },
-  { key: 'card_9', label: 'Karta 9' },
-  { key: 'card_10', label: 'Karta 10' },
   { key: 'bank', label: 'Bank' },
+  { key: 'bank_2', label: 'Bank 2' },
+  { key: 'bank_3', label: 'Bank 3' },
+  { key: 'bank_4', label: 'Bank 4' },
+  { key: 'bank_5', label: 'Bank 5' },
+  { key: 'bank_6', label: 'Bank 6' },
+  { key: 'bank_7', label: 'Bank 7' },
+  { key: 'bank_8', label: 'Bank 8' },
+  { key: 'bank_9', label: 'Bank 9' },
+  { key: 'bank_10', label: 'Bank 10' },
   { key: 'investments', label: 'Inwestycje' },
+  { key: 'investments_2', label: 'Inwestycje 2' },
+  { key: 'investments_3', label: 'Inwestycje 3' },
+  { key: 'investments_4', label: 'Inwestycje 4' },
+  { key: 'investments_5', label: 'Inwestycje 5' },
+  { key: 'investments_6', label: 'Inwestycje 6' },
+  { key: 'investments_7', label: 'Inwestycje 7' },
+  { key: 'investments_8', label: 'Inwestycje 8' },
+  { key: 'investments_9', label: 'Inwestycje 9' },
+  { key: 'investments_10', label: 'Inwestycje 10' },
   { key: 'restaurant', label: 'Restauracja' },
   { key: 'coffee', label: 'Kawa' },
   { key: 'fuel', label: 'Paliwo' },
   { key: 'travel', label: 'Podróże' },
   { key: 'warning', label: 'Ważne' },
+  { key: 'warning_2', label: 'Ważne 2' },
+  { key: 'warning_3', label: 'Ważne 3' },
+  { key: 'warning_4', label: 'Ważne 4' },
+  { key: 'warning_5', label: 'Ważne 5' },
+  { key: 'warning_6', label: 'Ważne 6' },
+  { key: 'warning_7', label: 'Ważne 7' },
+  { key: 'warning_8', label: 'Ważne 8' },
+  { key: 'warning_9', label: 'Ważne 9' },
+  { key: 'warning_10', label: 'Ważne 10' },
   { key: 'idea', label: 'Pomysł' },
+  { key: 'idea_2', label: 'Pomysł 2' },
+  { key: 'idea_3', label: 'Pomysł 3' },
+  { key: 'idea_4', label: 'Pomysł 4' },
+  { key: 'idea_5', label: 'Pomysł 5' },
+  { key: 'idea_6', label: 'Pomysł 6' },
+  { key: 'idea_7', label: 'Pomysł 7' },
+  { key: 'idea_8', label: 'Pomysł 8' },
+  { key: 'idea_9', label: 'Pomysł 9' },
+  { key: 'idea_10', label: 'Pomysł 10' },
   { key: 'heart', label: 'Osobiste' },
+  { key: 'heart_2', label: 'Osobiste 2' },
+  { key: 'heart_3', label: 'Osobiste 3' },
+  { key: 'heart_4', label: 'Osobiste 4' },
+  { key: 'heart_5', label: 'Osobiste 5' },
+  { key: 'heart_6', label: 'Osobiste 6' },
+  { key: 'heart_7', label: 'Osobiste 7' },
+  { key: 'heart_8', label: 'Osobiste 8' },
+  { key: 'heart_9', label: 'Osobiste 9' },
+  { key: 'heart_10', label: 'Osobiste 10' },
   { key: 'calendar', label: 'Kalendarz' },
+  { key: 'calendar_2', label: 'Kalendarz 2' },
+  { key: 'calendar_3', label: 'Kalendarz 3' },
+  { key: 'calendar_4', label: 'Kalendarz 4' },
+  { key: 'calendar_5', label: 'Kalendarz 5' },
+  { key: 'calendar_6', label: 'Kalendarz 6' },
+  { key: 'calendar_7', label: 'Kalendarz 7' },
+  { key: 'calendar_8', label: 'Kalendarz 8' },
+  { key: 'calendar_9', label: 'Kalendarz 9' },
+  { key: 'calendar_10', label: 'Kalendarz 10' },
   { key: 'more', label: 'Pozostałe' },
+  { key: 'more_2', label: 'Pozostałe 2' },
+  { key: 'more_3', label: 'Pozostałe 3' },
+  { key: 'more_4', label: 'Pozostałe 4' },
+  { key: 'more_5', label: 'Pozostałe 5' },
+  { key: 'more_6', label: 'Pozostałe 6' },
+  { key: 'more_7', label: 'Pozostałe 7' },
+  { key: 'more_8', label: 'Pozostałe 8' },
+  { key: 'more_9', label: 'Pozostałe 9' },
+  { key: 'more_10', label: 'Pozostałe 10' },
   { key: 'plus', label: 'Dodaj' },
   { key: 'edit', label: 'Edytuj' },
   { key: 'trash', label: 'Usu\u0144' },
@@ -521,7 +548,16 @@ export const CATEGORY_ICONS = APP_ICONS
 
 export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   note: ['notatka', 'notatki', 'nota', 'zapis', 'zapiski', 'uwagi', 'tekst', 'opis'],
-  exchange: ['wymiana', 'transfer', 'przelew', 'zamiana', 'kurs', 'waluty', 'przewalutowanie'],
+  exchange: ['wymiana', 'transfer', 'przelew', 'zamiana', 'kurs', 'waluty', 'przewalutowanie', 'rotacja', 'synchronizacja'],
+  exchange_2: [],
+  exchange_3: [],
+  exchange_4: [],
+  exchange_5: [],
+  exchange_6: [],
+  exchange_7: [],
+  exchange_8: [],
+  exchange_9: [],
+  exchange_10: [],
   home: ['dom', 'mieszkanie', 'nieruchomość', 'czynsz', 'mieszkalne', 'domowe'],
   food: ['jedzenie', 'restauracja', 'gastronomia', 'widelec', 'nóż', 'posiłek', 'śniadanie', 'obiad', 'kolacja', 'lunch'],
   shopping: ['zakupy', 'koszyk', 'sklep', 'market', 'supermarket', 'galeria handlowa', 'zakupy spożywcze'],
@@ -529,17 +565,17 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   car: ['auto', 'samochód', 'samochod', 'pojazd', 'motoryzacja', 'suv'],
   transport: ['transport', 'komunikacja', 'komunikacja miejska', 'tramwaj', 'autobus', 'metro', 'pociąg', 'kolej'],
   plane: ['samolot', 'lot', 'loty', 'lotnisko', 'podróż', 'podróże', 'wakacje', 'urlop', 'wyjazd', 'wyjazdy', 'lotniczy'],
-  plane_2: [],
-  plane_3: [],
-  plane_4: [],
-  plane_5: [],
-  plane_6: [],
-  plane_7: [],
-  plane_8: [],
-  plane_9: [],
-  plane_10: [],
   holiday: ['wakacje', 'urlop', 'podróż', 'podróże', 'samolot', 'wyjazd', 'lot'],
-  sun: ['słońce', 'pogoda', 'lato', 'wakacje', 'słoneczny'],
+  sun: ['słońce', 'pogoda', 'lato', 'wakacje', 'słoneczny', 'jasne'],
+  sun_2: [],
+  sun_3: [],
+  sun_4: [],
+  sun_5: [],
+  sun_6: [],
+  sun_7: [],
+  sun_8: [],
+  sun_9: [],
+  sun_10: [],
   health: ['apteka', 'farmacja', 'leki', 'lekarstwa', 'leczenie', 'zdrowie', 'medycyna', 'medyczne', 'lekarz', 'doktor', 'recepta', 'przychodnia', 'szpital', 'opieka zdrowotna', 'choroba', 'badania', 'terapia', 'badanie', 'wizyta', 'ratunek'],
   doctor: ['lekarz', 'doktor', 'wizyta', 'medycyna', 'zdrowie', 'przychodnia', 'szpital'],
   pharmacy: ['apteka', 'farmacja', 'leki', 'lekarstwa', 'leczenie', 'zdrowie', 'medycyna', 'medyczne', 'lekarz', 'doktor', 'recepta', 'przychodnia', 'szpital', 'opieka zdrowotna', 'choroba', 'badania', 'terapia', 'badanie', 'wizyta', 'ratunek'],
@@ -554,16 +590,7 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   books: ['książka', 'książki', 'czytanie', 'biblioteka', 'księgarnia', 'lektura', 'powieść', 'podręcznik', 'literatura'],
   sport: ['sport', 'aktywność', 'piłka', 'piłka nożna', 'koszykówka', 'piłka do kosza', 'trening', 'zawody'],
   gym: ['siłownia', 'sztanga', 'hantle', 'fitness', 'ćwiczenia', 'trening', 'trening siłowy', 'gym'],
-  gym_2: [],
-  gym_3: [],
-  gym_4: [],
-  gym_5: [],
-  gym_6: [],
-  gym_7: [],
-  gym_8: [],
-  gym_9: [],
-  gym_10: [],
-  gaming: ['gaming', 'komputer', 'gry', 'gracz', 'granie', 'gra', 'pc', 'konsola', 'e-sport', 'esport'],
+  gaming: ['gaming', 'komputer', 'gry', 'gracz', 'granie', 'gra', 'pc', 'konsola', 'e-sport', 'esport', 'monitor', 'laptop', 'klawiatura', 'mysz', 'headset', 'słuchawki'],
   gaming_2: [],
   gaming_3: [],
   gaming_4: [],
@@ -575,46 +602,10 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   gaming_10: [],
   entertainment: ['rozrywka', 'kino', 'film', 'filmy', 'seriale', 'telewizja'],
   cinema: ['kino', 'film', 'filmy', 'serial', 'seriale', 'telewizja', 'seans', 'ekran', 'projekcja'],
-  cinema_2: [],
-  cinema_3: [],
-  cinema_4: [],
-  cinema_5: [],
-  cinema_6: [],
-  cinema_7: [],
-  cinema_8: [],
-  cinema_9: [],
-  cinema_10: [],
   gift: ['prezent', 'upominek', 'podarunek', 'niespodzianka'],
-  gift_2: [],
-  gift_3: [],
-  gift_4: [],
-  gift_5: [],
-  gift_6: [],
-  gift_7: [],
-  gift_8: [],
-  gift_9: [],
-  gift_10: [],
   clothes: ['ubrania', 'odzież', 'ciuchy', 'moda', 'garderoba'],
-  clothes_2: [],
-  clothes_3: [],
-  clothes_4: [],
-  clothes_5: [],
-  clothes_6: [],
-  clothes_7: [],
-  clothes_8: [],
-  clothes_9: [],
-  clothes_10: [],
   pets: ['zwierzęta', 'zwierzę', 'pupil', 'pies', 'kot', 'weterynarz', 'karma', 'łapka'],
-  pets_2: [],
-  pets_3: [],
-  pets_4: [],
-  pets_5: [],
-  pets_6: [],
-  pets_7: [],
-  pets_8: [],
-  pets_9: [],
-  pets_10: [],
-  child: ['dziecko', 'dzieci', 'niemowlę', 'rodzicielstwo', 'syn', 'córka'],
+  child: ['dziecko', 'dzieci', 'niemowlę', 'rodzicielstwo', 'syn', 'córka', 'dziecięce', 'maluch', 'bobas', 'niemowlak'],
   child_2: [],
   child_3: [],
   child_4: [],
@@ -626,36 +617,81 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   child_10: [],
   savings: ['oszczędności', 'oszczędzanie', 'bank', 'konto', 'konto oszczędnościowe', 'lokata', 'skarbonka', 'fundusz'],
   cash: ['gotówka', 'pieniądze', 'banknot', 'banknoty', 'kasa', 'cash'],
-  cash_2: [],
-  cash_3: [],
-  cash_4: [],
-  cash_5: [],
-  cash_6: [],
-  cash_7: [],
-  cash_8: [],
-  cash_9: [],
-  cash_10: [],
   card: ['karta', 'płatność', 'płatności', 'karta płatnicza', 'debetowa', 'kredytowa'],
-  card_2: [],
-  card_3: [],
-  card_4: [],
-  card_5: [],
-  card_6: [],
-  card_7: [],
-  card_8: [],
-  card_9: [],
-  card_10: [],
-  bank: ['bank', 'oszczędności', 'oszczędzanie', 'konto', 'konto oszczędnościowe', 'lokata', 'skarbonka', 'fundusz'],
-  investments: ['inwestycje', 'inwestycja', 'inwestowanie', 'giełda', 'akcje', 'etf', 'ETF', 'obligacje', 'kapitał', 'wzrost', 'zysk'],
+  bank: ['bank', 'oszczędności', 'oszczędzanie', 'konto', 'konto oszczędnościowe', 'lokata', 'skarbonka', 'fundusz', 'finanse', 'sejf', 'skarbiec'],
+  bank_2: [],
+  bank_3: [],
+  bank_4: [],
+  bank_5: [],
+  bank_6: [],
+  bank_7: [],
+  bank_8: [],
+  bank_9: [],
+  bank_10: [],
+  investments: ['inwestycje', 'inwestycja', 'inwestowanie', 'giełda', 'akcje', 'etf', 'ETF', 'obligacje', 'kapitał', 'wzrost', 'zysk', 'wykres', 'trend', 'portfel inwestycyjny'],
+  investments_2: [],
+  investments_3: [],
+  investments_4: [],
+  investments_5: [],
+  investments_6: [],
+  investments_7: [],
+  investments_8: [],
+  investments_9: [],
+  investments_10: [],
   restaurant: ['restauracja', 'jedzenie', 'posiłek', 'gastronomia', 'widelec', 'nóż'],
   coffee: ['kawa', 'herbata', 'kawiarnia', 'napój'],
   fuel: ['paliwo', 'benzyna', 'diesel', 'tankowanie', 'stacja paliw'],
   travel: ['podróż', 'podróże', 'wakacje', 'urlop', 'samolot', 'wyjazd', 'lot'],
-  warning: ['ważne', 'istotne', 'priorytet', 'alert', 'uwaga', 'ostrzeżenie', 'pilne'],
-  idea: ['pomysł', 'idea', 'żarówka', 'inspiracja', 'projekt', 'koncepcja'],
-  heart: ['osobiste', 'prywatne', 'życie prywatne', 'dla mnie', 'serce'],
-  calendar: ['kalendarz', 'termin', 'data', 'wydarzenie', 'harmonogram', 'plan'],
-  more: ['pozostałe', 'inne', 'różne', 'reszta', 'wszystko', 'nieskończoność', 'dodatkowe'],
+  warning: ['ważne', 'istotne', 'priorytet', 'alert', 'uwaga', 'ostrzeżenie', 'pilne', 'flaga', 'alarm'],
+  warning_2: [],
+  warning_3: [],
+  warning_4: [],
+  warning_5: [],
+  warning_6: [],
+  warning_7: [],
+  warning_8: [],
+  warning_9: [],
+  warning_10: [],
+  idea: ['pomysł', 'idea', 'żarówka', 'inspiracja', 'projekt', 'koncepcja', 'myśl'],
+  idea_2: [],
+  idea_3: [],
+  idea_4: [],
+  idea_5: [],
+  idea_6: [],
+  idea_7: [],
+  idea_8: [],
+  idea_9: [],
+  idea_10: [],
+  heart: ['osobiste', 'prywatne', 'życie prywatne', 'dla mnie', 'serce', 'ważne dla mnie'],
+  heart_2: [],
+  heart_3: [],
+  heart_4: [],
+  heart_5: [],
+  heart_6: [],
+  heart_7: [],
+  heart_8: [],
+  heart_9: [],
+  heart_10: [],
+  calendar: ['kalendarz', 'termin', 'data', 'wydarzenie', 'harmonogram', 'plan', 'deadline', 'spotkanie'],
+  calendar_2: [],
+  calendar_3: [],
+  calendar_4: [],
+  calendar_5: [],
+  calendar_6: [],
+  calendar_7: [],
+  calendar_8: [],
+  calendar_9: [],
+  calendar_10: [],
+  more: ['pozostałe', 'inne', 'różne', 'reszta', 'wszystko', 'nieskończoność', 'dodatkowe', 'więcej'],
+  more_2: [],
+  more_3: [],
+  more_4: [],
+  more_5: [],
+  more_6: [],
+  more_7: [],
+  more_8: [],
+  more_9: [],
+  more_10: [],
   plus: ['dodaj', 'plus', 'nowe'],
   edit: ['edytuj', 'zmień', 'ołówek', 'edycja'],
   trash: ['usuń', 'kosz', 'śmieci'],
