@@ -78,15 +78,6 @@ export type UiIconKey =
   | 'shopping'
   | 'basket'
   | 'car'
-  | 'car_2'
-  | 'car_3'
-  | 'car_4'
-  | 'car_5'
-  | 'car_6'
-  | 'car_7'
-  | 'car_8'
-  | 'car_9'
-  | 'car_10'
   | 'transport'
   | 'plane'
   | 'plane_2'
@@ -105,97 +96,106 @@ export type UiIconKey =
   | 'pharmacy'
   | 'work'
   | 'salary'
-  | 'salary_2'
-  | 'salary_3'
-  | 'salary_4'
-  | 'salary_5'
-  | 'salary_6'
-  | 'salary_7'
-  | 'salary_8'
-  | 'salary_9'
-  | 'salary_10'
   | 'bills'
-  | 'bills_2'
-  | 'bills_3'
-  | 'bills_4'
-  | 'bills_5'
-  | 'bills_6'
-  | 'bills_7'
-  | 'bills_8'
-  | 'bills_9'
-  | 'bills_10'
   | 'bill'
   | 'electricity'
-  | 'electricity_2'
-  | 'electricity_3'
-  | 'electricity_4'
-  | 'electricity_5'
-  | 'electricity_6'
-  | 'electricity_7'
-  | 'electricity_8'
-  | 'electricity_9'
-  | 'electricity_10'
   | 'internet'
-  | 'internet_2'
-  | 'internet_3'
-  | 'internet_4'
-  | 'internet_5'
-  | 'internet_6'
-  | 'internet_7'
-  | 'internet_8'
-  | 'internet_9'
-  | 'internet_10'
   | 'phone'
-  | 'phone_2'
-  | 'phone_3'
-  | 'phone_4'
-  | 'phone_5'
-  | 'phone_6'
-  | 'phone_7'
-  | 'phone_8'
-  | 'phone_9'
-  | 'phone_10'
   | 'education'
-  | 'education_2'
-  | 'education_3'
-  | 'education_4'
-  | 'education_5'
-  | 'education_6'
-  | 'education_7'
-  | 'education_8'
-  | 'education_9'
-  | 'education_10'
   | 'books'
-  | 'books_2'
-  | 'books_3'
-  | 'books_4'
-  | 'books_5'
-  | 'books_6'
-  | 'books_7'
-  | 'books_8'
-  | 'books_9'
-  | 'books_10'
   | 'sport'
-  | 'sport_2'
-  | 'sport_3'
-  | 'sport_4'
-  | 'sport_5'
-  | 'sport_6'
-  | 'sport_7'
-  | 'sport_8'
-  | 'sport_9'
-  | 'sport_10'
   | 'gym'
+  | 'gym_2'
+  | 'gym_3'
+  | 'gym_4'
+  | 'gym_5'
+  | 'gym_6'
+  | 'gym_7'
+  | 'gym_8'
+  | 'gym_9'
+  | 'gym_10'
   | 'gaming'
+  | 'gaming_2'
+  | 'gaming_3'
+  | 'gaming_4'
+  | 'gaming_5'
+  | 'gaming_6'
+  | 'gaming_7'
+  | 'gaming_8'
+  | 'gaming_9'
+  | 'gaming_10'
   | 'entertainment'
   | 'cinema'
+  | 'cinema_2'
+  | 'cinema_3'
+  | 'cinema_4'
+  | 'cinema_5'
+  | 'cinema_6'
+  | 'cinema_7'
+  | 'cinema_8'
+  | 'cinema_9'
+  | 'cinema_10'
   | 'gift'
+  | 'gift_2'
+  | 'gift_3'
+  | 'gift_4'
+  | 'gift_5'
+  | 'gift_6'
+  | 'gift_7'
+  | 'gift_8'
+  | 'gift_9'
+  | 'gift_10'
   | 'clothes'
+  | 'clothes_2'
+  | 'clothes_3'
+  | 'clothes_4'
+  | 'clothes_5'
+  | 'clothes_6'
+  | 'clothes_7'
+  | 'clothes_8'
+  | 'clothes_9'
+  | 'clothes_10'
   | 'pets'
+  | 'pets_2'
+  | 'pets_3'
+  | 'pets_4'
+  | 'pets_5'
+  | 'pets_6'
+  | 'pets_7'
+  | 'pets_8'
+  | 'pets_9'
+  | 'pets_10'
   | 'child'
+  | 'child_2'
+  | 'child_3'
+  | 'child_4'
+  | 'child_5'
+  | 'child_6'
+  | 'child_7'
+  | 'child_8'
+  | 'child_9'
+  | 'child_10'
   | 'savings'
   | 'cash'
+  | 'cash_2'
+  | 'cash_3'
+  | 'cash_4'
+  | 'cash_5'
+  | 'cash_6'
+  | 'cash_7'
+  | 'cash_8'
+  | 'cash_9'
+  | 'cash_10'
   | 'card'
+  | 'card_2'
+  | 'card_3'
+  | 'card_4'
+  | 'card_5'
+  | 'card_6'
+  | 'card_7'
+  | 'card_8'
+  | 'card_9'
+  | 'card_10'
   | 'bank'
   | 'investments'
   | 'restaurant'
@@ -234,15 +234,6 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'food',
   'coffee',
   'car',
-  'car_2',
-  'car_3',
-  'car_4',
-  'car_5',
-  'car_6',
-  'car_7',
-  'car_8',
-  'car_9',
-  'car_10',
   'transport',
   'plane',
   'plane_2',
@@ -260,94 +251,103 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'pharmacy',
   'work',
   'salary',
-  'salary_2',
-  'salary_3',
-  'salary_4',
-  'salary_5',
-  'salary_6',
-  'salary_7',
-  'salary_8',
-  'salary_9',
-  'salary_10',
   'bills',
-  'bills_2',
-  'bills_3',
-  'bills_4',
-  'bills_5',
-  'bills_6',
-  'bills_7',
-  'bills_8',
-  'bills_9',
-  'bills_10',
   'electricity',
-  'electricity_2',
-  'electricity_3',
-  'electricity_4',
-  'electricity_5',
-  'electricity_6',
-  'electricity_7',
-  'electricity_8',
-  'electricity_9',
-  'electricity_10',
   'internet',
-  'internet_2',
-  'internet_3',
-  'internet_4',
-  'internet_5',
-  'internet_6',
-  'internet_7',
-  'internet_8',
-  'internet_9',
-  'internet_10',
   'phone',
-  'phone_2',
-  'phone_3',
-  'phone_4',
-  'phone_5',
-  'phone_6',
-  'phone_7',
-  'phone_8',
-  'phone_9',
-  'phone_10',
   'education',
-  'education_2',
-  'education_3',
-  'education_4',
-  'education_5',
-  'education_6',
-  'education_7',
-  'education_8',
-  'education_9',
-  'education_10',
   'books',
-  'books_2',
-  'books_3',
-  'books_4',
-  'books_5',
-  'books_6',
-  'books_7',
-  'books_8',
-  'books_9',
-  'books_10',
   'sport',
-  'sport_2',
-  'sport_3',
-  'sport_4',
-  'sport_5',
-  'sport_6',
-  'sport_7',
-  'sport_8',
-  'sport_9',
-  'sport_10',
   'gym',
+  'gym_2',
+  'gym_3',
+  'gym_4',
+  'gym_5',
+  'gym_6',
+  'gym_7',
+  'gym_8',
+  'gym_9',
+  'gym_10',
   'gaming',
+  'gaming_2',
+  'gaming_3',
+  'gaming_4',
+  'gaming_5',
+  'gaming_6',
+  'gaming_7',
+  'gaming_8',
+  'gaming_9',
+  'gaming_10',
   'cinema',
+  'cinema_2',
+  'cinema_3',
+  'cinema_4',
+  'cinema_5',
+  'cinema_6',
+  'cinema_7',
+  'cinema_8',
+  'cinema_9',
+  'cinema_10',
   'gift',
+  'gift_2',
+  'gift_3',
+  'gift_4',
+  'gift_5',
+  'gift_6',
+  'gift_7',
+  'gift_8',
+  'gift_9',
+  'gift_10',
   'clothes',
+  'clothes_2',
+  'clothes_3',
+  'clothes_4',
+  'clothes_5',
+  'clothes_6',
+  'clothes_7',
+  'clothes_8',
+  'clothes_9',
+  'clothes_10',
   'child',
+  'child_2',
+  'child_3',
+  'child_4',
+  'child_5',
+  'child_6',
+  'child_7',
+  'child_8',
+  'child_9',
+  'child_10',
   'pets',
+  'pets_2',
+  'pets_3',
+  'pets_4',
+  'pets_5',
+  'pets_6',
+  'pets_7',
+  'pets_8',
+  'pets_9',
+  'pets_10',
   'cash',
+  'cash_2',
+  'cash_3',
+  'cash_4',
+  'cash_5',
+  'cash_6',
+  'cash_7',
+  'cash_8',
+  'cash_9',
+  'cash_10',
   'card',
+  'card_2',
+  'card_3',
+  'card_4',
+  'card_5',
+  'card_6',
+  'card_7',
+  'card_8',
+  'card_9',
+  'card_10',
   'bank',
   'investments',
   'calendar',
@@ -373,15 +373,6 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'shopping', label: 'Zakupy' },
   { key: 'basket', label: 'Koszyk' },
   { key: 'car', label: 'Auto' },
-  { key: 'car_2', label: 'Auto 2' },
-  { key: 'car_3', label: 'Auto 3' },
-  { key: 'car_4', label: 'Auto 4' },
-  { key: 'car_5', label: 'Auto 5' },
-  { key: 'car_6', label: 'Auto 6' },
-  { key: 'car_7', label: 'Auto 7' },
-  { key: 'car_8', label: 'Auto 8' },
-  { key: 'car_9', label: 'Auto 9' },
-  { key: 'car_10', label: 'Auto 10' },
   { key: 'transport', label: 'Transport' },
   { key: 'plane', label: 'Samolot' },
   { key: 'plane_2', label: 'Samolot 2' },
@@ -400,97 +391,106 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'pharmacy', label: 'Apteka' },
   { key: 'work', label: 'Praca' },
   { key: 'salary', label: 'Pensja' },
-  { key: 'salary_2', label: 'Pensja 2' },
-  { key: 'salary_3', label: 'Pensja 3' },
-  { key: 'salary_4', label: 'Pensja 4' },
-  { key: 'salary_5', label: 'Pensja 5' },
-  { key: 'salary_6', label: 'Pensja 6' },
-  { key: 'salary_7', label: 'Pensja 7' },
-  { key: 'salary_8', label: 'Pensja 8' },
-  { key: 'salary_9', label: 'Pensja 9' },
-  { key: 'salary_10', label: 'Pensja 10' },
   { key: 'bills', label: 'Rachunki' },
-  { key: 'bills_2', label: 'Rachunki 2' },
-  { key: 'bills_3', label: 'Rachunki 3' },
-  { key: 'bills_4', label: 'Rachunki 4' },
-  { key: 'bills_5', label: 'Rachunki 5' },
-  { key: 'bills_6', label: 'Rachunki 6' },
-  { key: 'bills_7', label: 'Rachunki 7' },
-  { key: 'bills_8', label: 'Rachunki 8' },
-  { key: 'bills_9', label: 'Rachunki 9' },
-  { key: 'bills_10', label: 'Rachunki 10' },
   { key: 'bill', label: 'Paragon' },
   { key: 'electricity', label: 'Prąd' },
-  { key: 'electricity_2', label: 'Prąd 2' },
-  { key: 'electricity_3', label: 'Prąd 3' },
-  { key: 'electricity_4', label: 'Prąd 4' },
-  { key: 'electricity_5', label: 'Prąd 5' },
-  { key: 'electricity_6', label: 'Prąd 6' },
-  { key: 'electricity_7', label: 'Prąd 7' },
-  { key: 'electricity_8', label: 'Prąd 8' },
-  { key: 'electricity_9', label: 'Prąd 9' },
-  { key: 'electricity_10', label: 'Prąd 10' },
   { key: 'internet', label: 'Internet' },
-  { key: 'internet_2', label: 'Internet 2' },
-  { key: 'internet_3', label: 'Internet 3' },
-  { key: 'internet_4', label: 'Internet 4' },
-  { key: 'internet_5', label: 'Internet 5' },
-  { key: 'internet_6', label: 'Internet 6' },
-  { key: 'internet_7', label: 'Internet 7' },
-  { key: 'internet_8', label: 'Internet 8' },
-  { key: 'internet_9', label: 'Internet 9' },
-  { key: 'internet_10', label: 'Internet 10' },
   { key: 'phone', label: 'Telefon' },
-  { key: 'phone_2', label: 'Telefon 2' },
-  { key: 'phone_3', label: 'Telefon 3' },
-  { key: 'phone_4', label: 'Telefon 4' },
-  { key: 'phone_5', label: 'Telefon 5' },
-  { key: 'phone_6', label: 'Telefon 6' },
-  { key: 'phone_7', label: 'Telefon 7' },
-  { key: 'phone_8', label: 'Telefon 8' },
-  { key: 'phone_9', label: 'Telefon 9' },
-  { key: 'phone_10', label: 'Telefon 10' },
   { key: 'education', label: 'Edukacja' },
-  { key: 'education_2', label: 'Edukacja 2' },
-  { key: 'education_3', label: 'Edukacja 3' },
-  { key: 'education_4', label: 'Edukacja 4' },
-  { key: 'education_5', label: 'Edukacja 5' },
-  { key: 'education_6', label: 'Edukacja 6' },
-  { key: 'education_7', label: 'Edukacja 7' },
-  { key: 'education_8', label: 'Edukacja 8' },
-  { key: 'education_9', label: 'Edukacja 9' },
-  { key: 'education_10', label: 'Edukacja 10' },
   { key: 'books', label: 'Książki' },
-  { key: 'books_2', label: 'Książki 2' },
-  { key: 'books_3', label: 'Książki 3' },
-  { key: 'books_4', label: 'Książki 4' },
-  { key: 'books_5', label: 'Książki 5' },
-  { key: 'books_6', label: 'Książki 6' },
-  { key: 'books_7', label: 'Książki 7' },
-  { key: 'books_8', label: 'Książki 8' },
-  { key: 'books_9', label: 'Książki 9' },
-  { key: 'books_10', label: 'Książki 10' },
   { key: 'sport', label: 'Sport' },
-  { key: 'sport_2', label: 'Sport 2' },
-  { key: 'sport_3', label: 'Sport 3' },
-  { key: 'sport_4', label: 'Sport 4' },
-  { key: 'sport_5', label: 'Sport 5' },
-  { key: 'sport_6', label: 'Sport 6' },
-  { key: 'sport_7', label: 'Sport 7' },
-  { key: 'sport_8', label: 'Sport 8' },
-  { key: 'sport_9', label: 'Sport 9' },
-  { key: 'sport_10', label: 'Sport 10' },
   { key: 'gym', label: 'Siłownia' },
+  { key: 'gym_2', label: 'Siłownia 2' },
+  { key: 'gym_3', label: 'Siłownia 3' },
+  { key: 'gym_4', label: 'Siłownia 4' },
+  { key: 'gym_5', label: 'Siłownia 5' },
+  { key: 'gym_6', label: 'Siłownia 6' },
+  { key: 'gym_7', label: 'Siłownia 7' },
+  { key: 'gym_8', label: 'Siłownia 8' },
+  { key: 'gym_9', label: 'Siłownia 9' },
+  { key: 'gym_10', label: 'Siłownia 10' },
   { key: 'gaming', label: 'Gaming' },
+  { key: 'gaming_2', label: 'Gaming 2' },
+  { key: 'gaming_3', label: 'Gaming 3' },
+  { key: 'gaming_4', label: 'Gaming 4' },
+  { key: 'gaming_5', label: 'Gaming 5' },
+  { key: 'gaming_6', label: 'Gaming 6' },
+  { key: 'gaming_7', label: 'Gaming 7' },
+  { key: 'gaming_8', label: 'Gaming 8' },
+  { key: 'gaming_9', label: 'Gaming 9' },
+  { key: 'gaming_10', label: 'Gaming 10' },
   { key: 'entertainment', label: 'Rozrywka' },
   { key: 'cinema', label: 'Kino' },
+  { key: 'cinema_2', label: 'Kino 2' },
+  { key: 'cinema_3', label: 'Kino 3' },
+  { key: 'cinema_4', label: 'Kino 4' },
+  { key: 'cinema_5', label: 'Kino 5' },
+  { key: 'cinema_6', label: 'Kino 6' },
+  { key: 'cinema_7', label: 'Kino 7' },
+  { key: 'cinema_8', label: 'Kino 8' },
+  { key: 'cinema_9', label: 'Kino 9' },
+  { key: 'cinema_10', label: 'Kino 10' },
   { key: 'gift', label: 'Prezent' },
+  { key: 'gift_2', label: 'Prezent 2' },
+  { key: 'gift_3', label: 'Prezent 3' },
+  { key: 'gift_4', label: 'Prezent 4' },
+  { key: 'gift_5', label: 'Prezent 5' },
+  { key: 'gift_6', label: 'Prezent 6' },
+  { key: 'gift_7', label: 'Prezent 7' },
+  { key: 'gift_8', label: 'Prezent 8' },
+  { key: 'gift_9', label: 'Prezent 9' },
+  { key: 'gift_10', label: 'Prezent 10' },
   { key: 'clothes', label: 'Ubrania' },
+  { key: 'clothes_2', label: 'Ubrania 2' },
+  { key: 'clothes_3', label: 'Ubrania 3' },
+  { key: 'clothes_4', label: 'Ubrania 4' },
+  { key: 'clothes_5', label: 'Ubrania 5' },
+  { key: 'clothes_6', label: 'Ubrania 6' },
+  { key: 'clothes_7', label: 'Ubrania 7' },
+  { key: 'clothes_8', label: 'Ubrania 8' },
+  { key: 'clothes_9', label: 'Ubrania 9' },
+  { key: 'clothes_10', label: 'Ubrania 10' },
   { key: 'pets', label: 'Zwierzęta' },
+  { key: 'pets_2', label: 'Zwierzęta 2' },
+  { key: 'pets_3', label: 'Zwierzęta 3' },
+  { key: 'pets_4', label: 'Zwierzęta 4' },
+  { key: 'pets_5', label: 'Zwierzęta 5' },
+  { key: 'pets_6', label: 'Zwierzęta 6' },
+  { key: 'pets_7', label: 'Zwierzęta 7' },
+  { key: 'pets_8', label: 'Zwierzęta 8' },
+  { key: 'pets_9', label: 'Zwierzęta 9' },
+  { key: 'pets_10', label: 'Zwierzęta 10' },
   { key: 'child', label: 'Dziecko' },
+  { key: 'child_2', label: 'Dziecko 2' },
+  { key: 'child_3', label: 'Dziecko 3' },
+  { key: 'child_4', label: 'Dziecko 4' },
+  { key: 'child_5', label: 'Dziecko 5' },
+  { key: 'child_6', label: 'Dziecko 6' },
+  { key: 'child_7', label: 'Dziecko 7' },
+  { key: 'child_8', label: 'Dziecko 8' },
+  { key: 'child_9', label: 'Dziecko 9' },
+  { key: 'child_10', label: 'Dziecko 10' },
   { key: 'savings', label: 'Oszczędności' },
   { key: 'cash', label: 'Gotówka' },
+  { key: 'cash_2', label: 'Gotówka 2' },
+  { key: 'cash_3', label: 'Gotówka 3' },
+  { key: 'cash_4', label: 'Gotówka 4' },
+  { key: 'cash_5', label: 'Gotówka 5' },
+  { key: 'cash_6', label: 'Gotówka 6' },
+  { key: 'cash_7', label: 'Gotówka 7' },
+  { key: 'cash_8', label: 'Gotówka 8' },
+  { key: 'cash_9', label: 'Gotówka 9' },
+  { key: 'cash_10', label: 'Gotówka 10' },
   { key: 'card', label: 'Karta' },
+  { key: 'card_2', label: 'Karta 2' },
+  { key: 'card_3', label: 'Karta 3' },
+  { key: 'card_4', label: 'Karta 4' },
+  { key: 'card_5', label: 'Karta 5' },
+  { key: 'card_6', label: 'Karta 6' },
+  { key: 'card_7', label: 'Karta 7' },
+  { key: 'card_8', label: 'Karta 8' },
+  { key: 'card_9', label: 'Karta 9' },
+  { key: 'card_10', label: 'Karta 10' },
   { key: 'bank', label: 'Bank' },
   { key: 'investments', label: 'Inwestycje' },
   { key: 'restaurant', label: 'Restauracja' },
@@ -519,7 +519,6 @@ export const APP_ICONS: Array<{ key: UiIconKey; label: string }> = USER_ICON_REG
 
 export const CATEGORY_ICONS = APP_ICONS
 
-
 export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   note: ['notatka', 'notatki', 'nota', 'zapis', 'zapiski', 'uwagi', 'tekst', 'opis'],
   exchange: ['wymiana', 'transfer', 'przelew', 'zamiana', 'kurs', 'waluty', 'przewalutowanie'],
@@ -528,15 +527,6 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   shopping: ['zakupy', 'koszyk', 'sklep', 'market', 'supermarket', 'galeria handlowa', 'zakupy spożywcze'],
   basket: ['koszyk', 'zakupy', 'sklep', 'market', 'supermarket'],
   car: ['auto', 'samochód', 'samochod', 'pojazd', 'motoryzacja', 'suv'],
-  car_2: [],
-  car_3: [],
-  car_4: [],
-  car_5: [],
-  car_6: [],
-  car_7: [],
-  car_8: [],
-  car_9: [],
-  car_10: [],
   transport: ['transport', 'komunikacja', 'komunikacja miejska', 'tramwaj', 'autobus', 'metro', 'pociąg', 'kolej'],
   plane: ['samolot', 'lot', 'loty', 'lotnisko', 'podróż', 'podróże', 'wakacje', 'urlop', 'wyjazd', 'wyjazdy', 'lotniczy'],
   plane_2: [],
@@ -555,97 +545,106 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   pharmacy: ['apteka', 'farmacja', 'leki', 'lekarstwa', 'leczenie', 'zdrowie', 'medycyna', 'medyczne', 'lekarz', 'doktor', 'recepta', 'przychodnia', 'szpital', 'opieka zdrowotna', 'choroba', 'badania', 'terapia', 'badanie', 'wizyta', 'ratunek'],
   work: ['praca', 'firma', 'biuro', 'zatrudnienie', 'etat', 'zawód'],
   salary: ['pensja', 'wynagrodzenie', 'płaca', 'wypłata', 'portfel', 'zarobki', 'dochód'],
-  salary_2: [],
-  salary_3: [],
-  salary_4: [],
-  salary_5: [],
-  salary_6: [],
-  salary_7: [],
-  salary_8: [],
-  salary_9: [],
-  salary_10: [],
   bills: ['rachunki', 'rachunek', 'paragon', 'faktura', 'faktury', 'opłaty', 'opłata', 'rozliczenie'],
-  bills_2: [],
-  bills_3: [],
-  bills_4: [],
-  bills_5: [],
-  bills_6: [],
-  bills_7: [],
-  bills_8: [],
-  bills_9: [],
-  bills_10: [],
   bill: ['paragon', 'rachunki', 'rachunek', 'faktura', 'opłaty'],
   electricity: ['prąd', 'energia', 'elektryczność', 'elektryka', 'rachunek za prąd'],
-  electricity_2: [],
-  electricity_3: [],
-  electricity_4: [],
-  electricity_5: [],
-  electricity_6: [],
-  electricity_7: [],
-  electricity_8: [],
-  electricity_9: [],
-  electricity_10: [],
   internet: ['internet', 'wifi', 'wi-fi', 'sieć', 'router', 'online', 'łącze'],
-  internet_2: [],
-  internet_3: [],
-  internet_4: [],
-  internet_5: [],
-  internet_6: [],
-  internet_7: [],
-  internet_8: [],
-  internet_9: [],
-  internet_10: [],
   phone: ['telefon', 'smartfon', 'komórka', 'telefon komórkowy', 'rozmowy', 'abonament'],
-  phone_2: [],
-  phone_3: [],
-  phone_4: [],
-  phone_5: [],
-  phone_6: [],
-  phone_7: [],
-  phone_8: [],
-  phone_9: [],
-  phone_10: [],
   education: ['edukacja', 'nauka', 'szkoła', 'studia', 'kurs', 'kursy', 'szkolenie'],
-  education_2: [],
-  education_3: [],
-  education_4: [],
-  education_5: [],
-  education_6: [],
-  education_7: [],
-  education_8: [],
-  education_9: [],
-  education_10: [],
   books: ['książka', 'książki', 'czytanie', 'biblioteka', 'księgarnia', 'lektura', 'powieść', 'podręcznik', 'literatura'],
-  books_2: [],
-  books_3: [],
-  books_4: [],
-  books_5: [],
-  books_6: [],
-  books_7: [],
-  books_8: [],
-  books_9: [],
-  books_10: [],
   sport: ['sport', 'aktywność', 'piłka', 'piłka nożna', 'koszykówka', 'piłka do kosza', 'trening', 'zawody'],
-  sport_2: [],
-  sport_3: [],
-  sport_4: [],
-  sport_5: [],
-  sport_6: [],
-  sport_7: [],
-  sport_8: [],
-  sport_9: [],
-  sport_10: [],
   gym: ['siłownia', 'sztanga', 'hantle', 'fitness', 'ćwiczenia', 'trening', 'trening siłowy', 'gym'],
+  gym_2: [],
+  gym_3: [],
+  gym_4: [],
+  gym_5: [],
+  gym_6: [],
+  gym_7: [],
+  gym_8: [],
+  gym_9: [],
+  gym_10: [],
   gaming: ['gaming', 'komputer', 'gry', 'gracz', 'granie', 'gra', 'pc', 'konsola', 'e-sport', 'esport'],
+  gaming_2: [],
+  gaming_3: [],
+  gaming_4: [],
+  gaming_5: [],
+  gaming_6: [],
+  gaming_7: [],
+  gaming_8: [],
+  gaming_9: [],
+  gaming_10: [],
   entertainment: ['rozrywka', 'kino', 'film', 'filmy', 'seriale', 'telewizja'],
   cinema: ['kino', 'film', 'filmy', 'serial', 'seriale', 'telewizja', 'seans', 'ekran', 'projekcja'],
+  cinema_2: [],
+  cinema_3: [],
+  cinema_4: [],
+  cinema_5: [],
+  cinema_6: [],
+  cinema_7: [],
+  cinema_8: [],
+  cinema_9: [],
+  cinema_10: [],
   gift: ['prezent', 'upominek', 'podarunek', 'niespodzianka'],
+  gift_2: [],
+  gift_3: [],
+  gift_4: [],
+  gift_5: [],
+  gift_6: [],
+  gift_7: [],
+  gift_8: [],
+  gift_9: [],
+  gift_10: [],
   clothes: ['ubrania', 'odzież', 'ciuchy', 'moda', 'garderoba'],
+  clothes_2: [],
+  clothes_3: [],
+  clothes_4: [],
+  clothes_5: [],
+  clothes_6: [],
+  clothes_7: [],
+  clothes_8: [],
+  clothes_9: [],
+  clothes_10: [],
   pets: ['zwierzęta', 'zwierzę', 'pupil', 'pies', 'kot', 'weterynarz', 'karma', 'łapka'],
+  pets_2: [],
+  pets_3: [],
+  pets_4: [],
+  pets_5: [],
+  pets_6: [],
+  pets_7: [],
+  pets_8: [],
+  pets_9: [],
+  pets_10: [],
   child: ['dziecko', 'dzieci', 'niemowlę', 'rodzicielstwo', 'syn', 'córka'],
+  child_2: [],
+  child_3: [],
+  child_4: [],
+  child_5: [],
+  child_6: [],
+  child_7: [],
+  child_8: [],
+  child_9: [],
+  child_10: [],
   savings: ['oszczędności', 'oszczędzanie', 'bank', 'konto', 'konto oszczędnościowe', 'lokata', 'skarbonka', 'fundusz'],
   cash: ['gotówka', 'pieniądze', 'banknot', 'banknoty', 'kasa', 'cash'],
+  cash_2: [],
+  cash_3: [],
+  cash_4: [],
+  cash_5: [],
+  cash_6: [],
+  cash_7: [],
+  cash_8: [],
+  cash_9: [],
+  cash_10: [],
   card: ['karta', 'płatność', 'płatności', 'karta płatnicza', 'debetowa', 'kredytowa'],
+  card_2: [],
+  card_3: [],
+  card_4: [],
+  card_5: [],
+  card_6: [],
+  card_7: [],
+  card_8: [],
+  card_9: [],
+  card_10: [],
   bank: ['bank', 'oszczędności', 'oszczędzanie', 'konto', 'konto oszczędnościowe', 'lokata', 'skarbonka', 'fundusz'],
   investments: ['inwestycje', 'inwestycja', 'inwestowanie', 'giełda', 'akcje', 'etf', 'ETF', 'obligacje', 'kapitał', 'wzrost', 'zysk'],
   restaurant: ['restauracja', 'jedzenie', 'posiłek', 'gastronomia', 'widelec', 'nóż'],
@@ -667,7 +666,6 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
 
 export const getUiIconSearchText = (icon: { key: UiIconKey; label: string }) =>
   [icon.label, icon.key, ...(APP_ICON_ALIASES[icon.key] || [])].join(' ').toLocaleLowerCase('pl-PL')
-
 
 // MODULE_ACTION_ICONS = ikony systemowe/modułowe, nie do pickerów użytkownika.
 export const MODULE_ACTION_ICONS: Array<{ key: ModuleActionIconKey; label: string }> = [
