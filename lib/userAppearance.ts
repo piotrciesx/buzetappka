@@ -84,7 +84,6 @@ export type UiIconKey =
   | 'sun'
   | 'health'
   | 'doctor'
-  | 'pharmacy'
   | 'work'
   | 'salary'
   | 'bills'
@@ -103,15 +102,6 @@ export type UiIconKey =
   | 'clothes'
   | 'pets'
   | 'child'
-  | 'child_2'
-  | 'child_3'
-  | 'child_4'
-  | 'child_5'
-  | 'child_6'
-  | 'child_7'
-  | 'child_8'
-  | 'child_9'
-  | 'child_10'
   | 'savings'
   | 'cash'
   | 'card'
@@ -158,7 +148,6 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'fuel',
   'health',
 
-  'pharmacy',
   'work',
   'salary',
   'bills',
@@ -174,15 +163,6 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'gift',
   'clothes',
   'child',
-  'child_2',
-  'child_3',
-  'child_4',
-  'child_5',
-  'child_6',
-  'child_7',
-  'child_8',
-  'child_9',
-  'child_10',
   'pets',
   'cash',
   'card',
@@ -217,7 +197,6 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'sun', label: 'Słońce' },
   { key: 'health', label: 'Zdrowie' },
   { key: 'doctor', label: 'Lekarz' },
-  { key: 'pharmacy', label: 'Apteka' },
   { key: 'work', label: 'Praca' },
   { key: 'salary', label: 'Pensja' },
   { key: 'bills', label: 'Rachunki' },
@@ -236,15 +215,6 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'clothes', label: 'Ubrania' },
   { key: 'pets', label: 'Zwierzęta' },
   { key: 'child', label: 'Dziecko' },
-  { key: 'child_2', label: 'Dziecko 2' },
-  { key: 'child_3', label: 'Dziecko 3' },
-  { key: 'child_4', label: 'Dziecko 4' },
-  { key: 'child_5', label: 'Dziecko 5' },
-  { key: 'child_6', label: 'Dziecko 6' },
-  { key: 'child_7', label: 'Dziecko 7' },
-  { key: 'child_8', label: 'Dziecko 8' },
-  { key: 'child_9', label: 'Dziecko 9' },
-  { key: 'child_10', label: 'Dziecko 10' },
   { key: 'savings', label: 'Oszczędności' },
   { key: 'cash', label: 'Gotówka' },
   { key: 'card', label: 'Karta' },
@@ -288,9 +258,8 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   plane: ['samolot', 'lot', 'loty', 'lotnisko', 'podróż', 'podróże', 'wakacje', 'urlop', 'wyjazd', 'wyjazdy', 'lotniczy'],
   holiday: ['wakacje', 'urlop', 'podróż', 'podróże', 'samolot', 'wyjazd', 'lot'],
   sun: ['słońce', 'pogoda', 'lato', 'wakacje', 'słoneczny', 'jasne'],
-  health: ['apteka', 'farmacja', 'leki', 'lekarstwa', 'leczenie', 'zdrowie', 'medycyna', 'medyczne', 'lekarz', 'doktor', 'recepta', 'przychodnia', 'szpital', 'opieka zdrowotna', 'choroba', 'badania', 'terapia', 'badanie', 'wizyta', 'ratunek'],
+  health: ['zdrowie', 'medycyna', 'medyczne', 'lekarz', 'doktor', 'wizyta', 'przychodnia', 'szpital', 'klinika', 'apteka', 'farmacja', 'farmaceuta', 'leki', 'lek', 'lekarstwa', 'tabletki', 'kapsułki', 'recepta', 'recepty', 'leczenie', 'terapia', 'badania', 'badanie', 'diagnostyka', 'choroba', 'choroby', 'objawy', 'infekcja', 'przeziębienie', 'grypa', 'antybiotyk', 'suplementy', 'witaminy', 'opieka zdrowotna', 'ratunek', 'SOR', 'pogotowie', 'dentysta', 'stomatolog', 'okulista', 'specjalista', 'konsultacja', 'kontrola', 'zabieg', 'operacja', 'rehabilitacja', 'fizjoterapia', 'ubezpieczenie zdrowotne', 'NFZ', 'prywatna opieka', 'Luxmed', 'Medicover'],
   doctor: ['lekarz', 'doktor', 'wizyta', 'medycyna', 'zdrowie', 'przychodnia', 'szpital'],
-  pharmacy: ['apteka', 'farmacja', 'leki', 'lekarstwa', 'leczenie', 'zdrowie', 'medycyna', 'medyczne', 'lekarz', 'doktor', 'recepta', 'przychodnia', 'szpital', 'opieka zdrowotna', 'choroba', 'badania', 'terapia', 'badanie', 'wizyta', 'ratunek'],
   work: ['praca', 'firma', 'biuro', 'zatrudnienie', 'etat', 'zawód'],
   salary: ['pensja', 'wynagrodzenie', 'płaca', 'wypłata', 'portfel', 'zarobki', 'dochód'],
   bills: ['rachunki', 'rachunek', 'paragon', 'faktura', 'faktury', 'opłaty', 'opłata', 'rozliczenie'],
@@ -309,15 +278,6 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   clothes: ['ubrania', 'odzież', 'ciuchy', 'moda', 'garderoba'],
   pets: ['zwierzęta', 'zwierzę', 'pupil', 'pies', 'kot', 'weterynarz', 'karma', 'łapka'],
   child: ['dziecko', 'dzieci', 'niemowlę', 'rodzicielstwo', 'syn', 'córka', 'dziecięce', 'maluch', 'bobas', 'niemowlak', 'twarz dziecka', 'główka dziecka'],
-  child_2: [],
-  child_3: [],
-  child_4: [],
-  child_5: [],
-  child_6: [],
-  child_7: [],
-  child_8: [],
-  child_9: [],
-  child_10: [],
   savings: ['oszczędności', 'oszczędzanie', 'bank', 'konto', 'konto oszczędnościowe', 'lokata', 'skarbonka', 'fundusz'],
   cash: ['gotówka', 'pieniądze', 'banknot', 'banknoty', 'kasa', 'cash'],
   card: ['karta', 'płatność', 'płatności', 'karta płatnicza', 'debetowa', 'kredytowa'],
