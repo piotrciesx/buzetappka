@@ -73,15 +73,6 @@ export const UI_COLOR_OPTIONS: Array<{ tone: UiColorKey; label: string }> = [
 export type UiIconKey =
   | 'note'
   | 'exchange'
-  | 'exchange_2'
-  | 'exchange_3'
-  | 'exchange_4'
-  | 'exchange_5'
-  | 'exchange_6'
-  | 'exchange_7'
-  | 'exchange_8'
-  | 'exchange_9'
-  | 'exchange_10'
   | 'home'
   | 'food'
   | 'shopping'
@@ -91,15 +82,6 @@ export type UiIconKey =
   | 'plane'
   | 'holiday'
   | 'sun'
-  | 'sun_2'
-  | 'sun_3'
-  | 'sun_4'
-  | 'sun_5'
-  | 'sun_6'
-  | 'sun_7'
-  | 'sun_8'
-  | 'sun_9'
-  | 'sun_10'
   | 'health'
   | 'doctor'
   | 'pharmacy'
@@ -115,15 +97,6 @@ export type UiIconKey =
   | 'sport'
   | 'gym'
   | 'gaming'
-  | 'gaming_2'
-  | 'gaming_3'
-  | 'gaming_4'
-  | 'gaming_5'
-  | 'gaming_6'
-  | 'gaming_7'
-  | 'gaming_8'
-  | 'gaming_9'
-  | 'gaming_10'
   | 'entertainment'
   | 'cinema'
   | 'gift'
@@ -143,85 +116,76 @@ export type UiIconKey =
   | 'cash'
   | 'card'
   | 'bank'
-  | 'bank_2'
-  | 'bank_3'
-  | 'bank_4'
-  | 'bank_5'
-  | 'bank_6'
-  | 'bank_7'
-  | 'bank_8'
-  | 'bank_9'
-  | 'bank_10'
   | 'investments'
-  | 'investments_2'
-  | 'investments_3'
-  | 'investments_4'
-  | 'investments_5'
-  | 'investments_6'
-  | 'investments_7'
-  | 'investments_8'
-  | 'investments_9'
-  | 'investments_10'
   | 'restaurant'
   | 'coffee'
   | 'fuel'
   | 'travel'
   | 'warning'
-  | 'warning_2'
-  | 'warning_3'
-  | 'warning_4'
-  | 'warning_5'
-  | 'warning_6'
-  | 'warning_7'
-  | 'warning_8'
-  | 'warning_9'
-  | 'warning_10'
   | 'idea'
-  | 'idea_2'
-  | 'idea_3'
-  | 'idea_4'
-  | 'idea_5'
-  | 'idea_6'
-  | 'idea_7'
-  | 'idea_8'
-  | 'idea_9'
-  | 'idea_10'
   | 'heart'
-  | 'heart_2'
-  | 'heart_3'
-  | 'heart_4'
-  | 'heart_5'
-  | 'heart_6'
-  | 'heart_7'
-  | 'heart_8'
-  | 'heart_9'
-  | 'heart_10'
   | 'calendar'
-  | 'calendar_2'
-  | 'calendar_3'
-  | 'calendar_4'
-  | 'calendar_5'
-  | 'calendar_6'
-  | 'calendar_7'
-  | 'calendar_8'
-  | 'calendar_9'
-  | 'calendar_10'
   | 'more'
-  | 'more_2'
-  | 'more_3'
-  | 'more_4'
-  | 'more_5'
-  | 'more_6'
-  | 'more_7'
-  | 'more_8'
-  | 'more_9'
-  | 'more_10'
   | 'plus'
+  | 'plus_2'
+  | 'plus_3'
+  | 'plus_4'
+  | 'plus_5'
+  | 'plus_6'
+  | 'plus_7'
+  | 'plus_8'
+  | 'plus_9'
+  | 'plus_10'
   | 'edit'
+  | 'edit_2'
+  | 'edit_3'
+  | 'edit_4'
+  | 'edit_5'
+  | 'edit_6'
+  | 'edit_7'
+  | 'edit_8'
+  | 'edit_9'
+  | 'edit_10'
   | 'trash'
+  | 'trash_2'
+  | 'trash_3'
+  | 'trash_4'
+  | 'trash_5'
+  | 'trash_6'
+  | 'trash_7'
+  | 'trash_8'
+  | 'trash_9'
+  | 'trash_10'
   | 'close'
+  | 'close_2'
+  | 'close_3'
+  | 'close_4'
+  | 'close_5'
+  | 'close_6'
+  | 'close_7'
+  | 'close_8'
+  | 'close_9'
+  | 'close_10'
   | 'expand'
+  | 'expand_2'
+  | 'expand_3'
+  | 'expand_4'
+  | 'expand_5'
+  | 'expand_6'
+  | 'expand_7'
+  | 'expand_8'
+  | 'expand_9'
+  | 'expand_10'
   | 'info'
+  | 'info_2'
+  | 'info_3'
+  | 'info_4'
+  | 'info_5'
+  | 'info_6'
+  | 'info_7'
+  | 'info_8'
+  | 'info_9'
+  | 'info_10'
 
 export type ModuleActionIconKey =
   | 'user'
@@ -260,15 +224,6 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'sport',
   'gym',
   'gaming',
-  'gaming_2',
-  'gaming_3',
-  'gaming_4',
-  'gaming_5',
-  'gaming_6',
-  'gaming_7',
-  'gaming_8',
-  'gaming_9',
-  'gaming_10',
   'cinema',
   'gift',
   'clothes',
@@ -286,115 +241,79 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'cash',
   'card',
   'bank',
-  'bank_2',
-  'bank_3',
-  'bank_4',
-  'bank_5',
-  'bank_6',
-  'bank_7',
-  'bank_8',
-  'bank_9',
-  'bank_10',
   'investments',
-  'investments_2',
-  'investments_3',
-  'investments_4',
-  'investments_5',
-  'investments_6',
-  'investments_7',
-  'investments_8',
-  'investments_9',
-  'investments_10',
   'calendar',
-  'calendar_2',
-  'calendar_3',
-  'calendar_4',
-  'calendar_5',
-  'calendar_6',
-  'calendar_7',
-  'calendar_8',
-  'calendar_9',
-  'calendar_10',
   'warning',
-  'warning_2',
-  'warning_3',
-  'warning_4',
-  'warning_5',
-  'warning_6',
-  'warning_7',
-  'warning_8',
-  'warning_9',
-  'warning_10',
   'idea',
-  'idea_2',
-  'idea_3',
-  'idea_4',
-  'idea_5',
-  'idea_6',
-  'idea_7',
-  'idea_8',
-  'idea_9',
-  'idea_10',
   'heart',
-  'heart_2',
-  'heart_3',
-  'heart_4',
-  'heart_5',
-  'heart_6',
-  'heart_7',
-  'heart_8',
-  'heart_9',
-  'heart_10',
   'sun',
-  'sun_2',
-  'sun_3',
-  'sun_4',
-  'sun_5',
-  'sun_6',
-  'sun_7',
-  'sun_8',
-  'sun_9',
-  'sun_10',
   'exchange',
-  'exchange_2',
-  'exchange_3',
-  'exchange_4',
-  'exchange_5',
-  'exchange_6',
-  'exchange_7',
-  'exchange_8',
-  'exchange_9',
-  'exchange_10',
   'more',
-  'more_2',
-  'more_3',
-  'more_4',
-  'more_5',
-  'more_6',
-  'more_7',
-  'more_8',
-  'more_9',
-  'more_10',
   'plus',
+  'plus_2',
+  'plus_3',
+  'plus_4',
+  'plus_5',
+  'plus_6',
+  'plus_7',
+  'plus_8',
+  'plus_9',
+  'plus_10',
   'edit',
+  'edit_2',
+  'edit_3',
+  'edit_4',
+  'edit_5',
+  'edit_6',
+  'edit_7',
+  'edit_8',
+  'edit_9',
+  'edit_10',
   'trash',
+  'trash_2',
+  'trash_3',
+  'trash_4',
+  'trash_5',
+  'trash_6',
+  'trash_7',
+  'trash_8',
+  'trash_9',
+  'trash_10',
   'close',
+  'close_2',
+  'close_3',
+  'close_4',
+  'close_5',
+  'close_6',
+  'close_7',
+  'close_8',
+  'close_9',
+  'close_10',
   'expand',
+  'expand_2',
+  'expand_3',
+  'expand_4',
+  'expand_5',
+  'expand_6',
+  'expand_7',
+  'expand_8',
+  'expand_9',
+  'expand_10',
   'info',
+  'info_2',
+  'info_3',
+  'info_4',
+  'info_5',
+  'info_6',
+  'info_7',
+  'info_8',
+  'info_9',
+  'info_10',
 ]
 
 const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'note', label: 'Notatka' },
   { key: 'exchange', label: 'Wymiana' },
-  { key: 'exchange_2', label: 'Wymiana 2' },
-  { key: 'exchange_3', label: 'Wymiana 3' },
-  { key: 'exchange_4', label: 'Wymiana 4' },
-  { key: 'exchange_5', label: 'Wymiana 5' },
-  { key: 'exchange_6', label: 'Wymiana 6' },
-  { key: 'exchange_7', label: 'Wymiana 7' },
-  { key: 'exchange_8', label: 'Wymiana 8' },
-  { key: 'exchange_9', label: 'Wymiana 9' },
-  { key: 'exchange_10', label: 'Wymiana 10' },
   { key: 'home', label: 'Dom' },
   { key: 'food', label: 'Jedzenie' },
   { key: 'shopping', label: 'Zakupy' },
@@ -404,15 +323,6 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'plane', label: 'Samolot' },
   { key: 'holiday', label: 'Wakacje' },
   { key: 'sun', label: 'Słońce' },
-  { key: 'sun_2', label: 'Słońce 2' },
-  { key: 'sun_3', label: 'Słońce 3' },
-  { key: 'sun_4', label: 'Słońce 4' },
-  { key: 'sun_5', label: 'Słońce 5' },
-  { key: 'sun_6', label: 'Słońce 6' },
-  { key: 'sun_7', label: 'Słońce 7' },
-  { key: 'sun_8', label: 'Słońce 8' },
-  { key: 'sun_9', label: 'Słońce 9' },
-  { key: 'sun_10', label: 'Słońce 10' },
   { key: 'health', label: 'Zdrowie' },
   { key: 'doctor', label: 'Lekarz' },
   { key: 'pharmacy', label: 'Apteka' },
@@ -428,15 +338,6 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'sport', label: 'Sport' },
   { key: 'gym', label: 'Siłownia' },
   { key: 'gaming', label: 'Gaming' },
-  { key: 'gaming_2', label: 'Gaming 2' },
-  { key: 'gaming_3', label: 'Gaming 3' },
-  { key: 'gaming_4', label: 'Gaming 4' },
-  { key: 'gaming_5', label: 'Gaming 5' },
-  { key: 'gaming_6', label: 'Gaming 6' },
-  { key: 'gaming_7', label: 'Gaming 7' },
-  { key: 'gaming_8', label: 'Gaming 8' },
-  { key: 'gaming_9', label: 'Gaming 9' },
-  { key: 'gaming_10', label: 'Gaming 10' },
   { key: 'entertainment', label: 'Rozrywka' },
   { key: 'cinema', label: 'Kino' },
   { key: 'gift', label: 'Prezent' },
@@ -456,85 +357,76 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'cash', label: 'Gotówka' },
   { key: 'card', label: 'Karta' },
   { key: 'bank', label: 'Bank' },
-  { key: 'bank_2', label: 'Bank 2' },
-  { key: 'bank_3', label: 'Bank 3' },
-  { key: 'bank_4', label: 'Bank 4' },
-  { key: 'bank_5', label: 'Bank 5' },
-  { key: 'bank_6', label: 'Bank 6' },
-  { key: 'bank_7', label: 'Bank 7' },
-  { key: 'bank_8', label: 'Bank 8' },
-  { key: 'bank_9', label: 'Bank 9' },
-  { key: 'bank_10', label: 'Bank 10' },
   { key: 'investments', label: 'Inwestycje' },
-  { key: 'investments_2', label: 'Inwestycje 2' },
-  { key: 'investments_3', label: 'Inwestycje 3' },
-  { key: 'investments_4', label: 'Inwestycje 4' },
-  { key: 'investments_5', label: 'Inwestycje 5' },
-  { key: 'investments_6', label: 'Inwestycje 6' },
-  { key: 'investments_7', label: 'Inwestycje 7' },
-  { key: 'investments_8', label: 'Inwestycje 8' },
-  { key: 'investments_9', label: 'Inwestycje 9' },
-  { key: 'investments_10', label: 'Inwestycje 10' },
   { key: 'restaurant', label: 'Restauracja' },
   { key: 'coffee', label: 'Kawa' },
   { key: 'fuel', label: 'Paliwo' },
   { key: 'travel', label: 'Podróże' },
   { key: 'warning', label: 'Ważne' },
-  { key: 'warning_2', label: 'Ważne 2' },
-  { key: 'warning_3', label: 'Ważne 3' },
-  { key: 'warning_4', label: 'Ważne 4' },
-  { key: 'warning_5', label: 'Ważne 5' },
-  { key: 'warning_6', label: 'Ważne 6' },
-  { key: 'warning_7', label: 'Ważne 7' },
-  { key: 'warning_8', label: 'Ważne 8' },
-  { key: 'warning_9', label: 'Ważne 9' },
-  { key: 'warning_10', label: 'Ważne 10' },
   { key: 'idea', label: 'Pomysł' },
-  { key: 'idea_2', label: 'Pomysł 2' },
-  { key: 'idea_3', label: 'Pomysł 3' },
-  { key: 'idea_4', label: 'Pomysł 4' },
-  { key: 'idea_5', label: 'Pomysł 5' },
-  { key: 'idea_6', label: 'Pomysł 6' },
-  { key: 'idea_7', label: 'Pomysł 7' },
-  { key: 'idea_8', label: 'Pomysł 8' },
-  { key: 'idea_9', label: 'Pomysł 9' },
-  { key: 'idea_10', label: 'Pomysł 10' },
   { key: 'heart', label: 'Osobiste' },
-  { key: 'heart_2', label: 'Osobiste 2' },
-  { key: 'heart_3', label: 'Osobiste 3' },
-  { key: 'heart_4', label: 'Osobiste 4' },
-  { key: 'heart_5', label: 'Osobiste 5' },
-  { key: 'heart_6', label: 'Osobiste 6' },
-  { key: 'heart_7', label: 'Osobiste 7' },
-  { key: 'heart_8', label: 'Osobiste 8' },
-  { key: 'heart_9', label: 'Osobiste 9' },
-  { key: 'heart_10', label: 'Osobiste 10' },
   { key: 'calendar', label: 'Kalendarz' },
-  { key: 'calendar_2', label: 'Kalendarz 2' },
-  { key: 'calendar_3', label: 'Kalendarz 3' },
-  { key: 'calendar_4', label: 'Kalendarz 4' },
-  { key: 'calendar_5', label: 'Kalendarz 5' },
-  { key: 'calendar_6', label: 'Kalendarz 6' },
-  { key: 'calendar_7', label: 'Kalendarz 7' },
-  { key: 'calendar_8', label: 'Kalendarz 8' },
-  { key: 'calendar_9', label: 'Kalendarz 9' },
-  { key: 'calendar_10', label: 'Kalendarz 10' },
   { key: 'more', label: 'Pozostałe' },
-  { key: 'more_2', label: 'Pozostałe 2' },
-  { key: 'more_3', label: 'Pozostałe 3' },
-  { key: 'more_4', label: 'Pozostałe 4' },
-  { key: 'more_5', label: 'Pozostałe 5' },
-  { key: 'more_6', label: 'Pozostałe 6' },
-  { key: 'more_7', label: 'Pozostałe 7' },
-  { key: 'more_8', label: 'Pozostałe 8' },
-  { key: 'more_9', label: 'Pozostałe 9' },
-  { key: 'more_10', label: 'Pozostałe 10' },
   { key: 'plus', label: 'Dodaj' },
+  { key: 'plus_2', label: 'Dodaj 2' },
+  { key: 'plus_3', label: 'Dodaj 3' },
+  { key: 'plus_4', label: 'Dodaj 4' },
+  { key: 'plus_5', label: 'Dodaj 5' },
+  { key: 'plus_6', label: 'Dodaj 6' },
+  { key: 'plus_7', label: 'Dodaj 7' },
+  { key: 'plus_8', label: 'Dodaj 8' },
+  { key: 'plus_9', label: 'Dodaj 9' },
+  { key: 'plus_10', label: 'Dodaj 10' },
   { key: 'edit', label: 'Edytuj' },
+  { key: 'edit_2', label: 'Edytuj 2' },
+  { key: 'edit_3', label: 'Edytuj 3' },
+  { key: 'edit_4', label: 'Edytuj 4' },
+  { key: 'edit_5', label: 'Edytuj 5' },
+  { key: 'edit_6', label: 'Edytuj 6' },
+  { key: 'edit_7', label: 'Edytuj 7' },
+  { key: 'edit_8', label: 'Edytuj 8' },
+  { key: 'edit_9', label: 'Edytuj 9' },
+  { key: 'edit_10', label: 'Edytuj 10' },
   { key: 'trash', label: 'Usu\u0144' },
+  { key: 'trash_2', label: 'Usuń 2' },
+  { key: 'trash_3', label: 'Usuń 3' },
+  { key: 'trash_4', label: 'Usuń 4' },
+  { key: 'trash_5', label: 'Usuń 5' },
+  { key: 'trash_6', label: 'Usuń 6' },
+  { key: 'trash_7', label: 'Usuń 7' },
+  { key: 'trash_8', label: 'Usuń 8' },
+  { key: 'trash_9', label: 'Usuń 9' },
+  { key: 'trash_10', label: 'Usuń 10' },
   { key: 'close', label: 'Zamknij' },
+  { key: 'close_2', label: 'Zamknij 2' },
+  { key: 'close_3', label: 'Zamknij 3' },
+  { key: 'close_4', label: 'Zamknij 4' },
+  { key: 'close_5', label: 'Zamknij 5' },
+  { key: 'close_6', label: 'Zamknij 6' },
+  { key: 'close_7', label: 'Zamknij 7' },
+  { key: 'close_8', label: 'Zamknij 8' },
+  { key: 'close_9', label: 'Zamknij 9' },
+  { key: 'close_10', label: 'Zamknij 10' },
   { key: 'expand', label: 'Rozwi\u0144' },
+  { key: 'expand_2', label: 'Rozwiń 2' },
+  { key: 'expand_3', label: 'Rozwiń 3' },
+  { key: 'expand_4', label: 'Rozwiń 4' },
+  { key: 'expand_5', label: 'Rozwiń 5' },
+  { key: 'expand_6', label: 'Rozwiń 6' },
+  { key: 'expand_7', label: 'Rozwiń 7' },
+  { key: 'expand_8', label: 'Rozwiń 8' },
+  { key: 'expand_9', label: 'Rozwiń 9' },
+  { key: 'expand_10', label: 'Rozwiń 10' },
   { key: 'info', label: 'Informacja' },
+  { key: 'info_2', label: 'Informacja 2' },
+  { key: 'info_3', label: 'Informacja 3' },
+  { key: 'info_4', label: 'Informacja 4' },
+  { key: 'info_5', label: 'Informacja 5' },
+  { key: 'info_6', label: 'Informacja 6' },
+  { key: 'info_7', label: 'Informacja 7' },
+  { key: 'info_8', label: 'Informacja 8' },
+  { key: 'info_9', label: 'Informacja 9' },
+  { key: 'info_10', label: 'Informacja 10' },
 ]
 
 export type CategoryIconKey = UiIconKey
@@ -549,15 +441,6 @@ export const CATEGORY_ICONS = APP_ICONS
 export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   note: ['notatka', 'notatki', 'nota', 'zapis', 'zapiski', 'uwagi', 'tekst', 'opis'],
   exchange: ['wymiana', 'transfer', 'przelew', 'zamiana', 'kurs', 'waluty', 'przewalutowanie', 'rotacja', 'synchronizacja'],
-  exchange_2: [],
-  exchange_3: [],
-  exchange_4: [],
-  exchange_5: [],
-  exchange_6: [],
-  exchange_7: [],
-  exchange_8: [],
-  exchange_9: [],
-  exchange_10: [],
   home: ['dom', 'mieszkanie', 'nieruchomość', 'czynsz', 'mieszkalne', 'domowe'],
   food: ['jedzenie', 'restauracja', 'gastronomia', 'widelec', 'nóż', 'posiłek', 'śniadanie', 'obiad', 'kolacja', 'lunch'],
   shopping: ['zakupy', 'koszyk', 'sklep', 'market', 'supermarket', 'galeria handlowa', 'zakupy spożywcze'],
@@ -567,15 +450,6 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   plane: ['samolot', 'lot', 'loty', 'lotnisko', 'podróż', 'podróże', 'wakacje', 'urlop', 'wyjazd', 'wyjazdy', 'lotniczy'],
   holiday: ['wakacje', 'urlop', 'podróż', 'podróże', 'samolot', 'wyjazd', 'lot'],
   sun: ['słońce', 'pogoda', 'lato', 'wakacje', 'słoneczny', 'jasne'],
-  sun_2: [],
-  sun_3: [],
-  sun_4: [],
-  sun_5: [],
-  sun_6: [],
-  sun_7: [],
-  sun_8: [],
-  sun_9: [],
-  sun_10: [],
   health: ['apteka', 'farmacja', 'leki', 'lekarstwa', 'leczenie', 'zdrowie', 'medycyna', 'medyczne', 'lekarz', 'doktor', 'recepta', 'przychodnia', 'szpital', 'opieka zdrowotna', 'choroba', 'badania', 'terapia', 'badanie', 'wizyta', 'ratunek'],
   doctor: ['lekarz', 'doktor', 'wizyta', 'medycyna', 'zdrowie', 'przychodnia', 'szpital'],
   pharmacy: ['apteka', 'farmacja', 'leki', 'lekarstwa', 'leczenie', 'zdrowie', 'medycyna', 'medyczne', 'lekarz', 'doktor', 'recepta', 'przychodnia', 'szpital', 'opieka zdrowotna', 'choroba', 'badania', 'terapia', 'badanie', 'wizyta', 'ratunek'],
@@ -591,21 +465,12 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   sport: ['sport', 'aktywność', 'piłka', 'piłka nożna', 'koszykówka', 'piłka do kosza', 'trening', 'zawody'],
   gym: ['siłownia', 'sztanga', 'hantle', 'fitness', 'ćwiczenia', 'trening', 'trening siłowy', 'gym'],
   gaming: ['gaming', 'komputer', 'gry', 'gracz', 'granie', 'gra', 'pc', 'konsola', 'e-sport', 'esport', 'monitor', 'laptop', 'klawiatura', 'mysz', 'headset', 'słuchawki'],
-  gaming_2: [],
-  gaming_3: [],
-  gaming_4: [],
-  gaming_5: [],
-  gaming_6: [],
-  gaming_7: [],
-  gaming_8: [],
-  gaming_9: [],
-  gaming_10: [],
   entertainment: ['rozrywka', 'kino', 'film', 'filmy', 'seriale', 'telewizja'],
   cinema: ['kino', 'film', 'filmy', 'serial', 'seriale', 'telewizja', 'seans', 'ekran', 'projekcja'],
   gift: ['prezent', 'upominek', 'podarunek', 'niespodzianka'],
   clothes: ['ubrania', 'odzież', 'ciuchy', 'moda', 'garderoba'],
   pets: ['zwierzęta', 'zwierzę', 'pupil', 'pies', 'kot', 'weterynarz', 'karma', 'łapka'],
-  child: ['dziecko', 'dzieci', 'niemowlę', 'rodzicielstwo', 'syn', 'córka', 'dziecięce', 'maluch', 'bobas', 'niemowlak'],
+  child: ['dziecko', 'dzieci', 'niemowlę', 'rodzicielstwo', 'syn', 'córka', 'dziecięce', 'maluch', 'bobas', 'niemowlak', 'twarz dziecka', 'główka dziecka'],
   child_2: [],
   child_3: [],
   child_4: [],
@@ -619,85 +484,76 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   cash: ['gotówka', 'pieniądze', 'banknot', 'banknoty', 'kasa', 'cash'],
   card: ['karta', 'płatność', 'płatności', 'karta płatnicza', 'debetowa', 'kredytowa'],
   bank: ['bank', 'oszczędności', 'oszczędzanie', 'konto', 'konto oszczędnościowe', 'lokata', 'skarbonka', 'fundusz', 'finanse', 'sejf', 'skarbiec'],
-  bank_2: [],
-  bank_3: [],
-  bank_4: [],
-  bank_5: [],
-  bank_6: [],
-  bank_7: [],
-  bank_8: [],
-  bank_9: [],
-  bank_10: [],
   investments: ['inwestycje', 'inwestycja', 'inwestowanie', 'giełda', 'akcje', 'etf', 'ETF', 'obligacje', 'kapitał', 'wzrost', 'zysk', 'wykres', 'trend', 'portfel inwestycyjny'],
-  investments_2: [],
-  investments_3: [],
-  investments_4: [],
-  investments_5: [],
-  investments_6: [],
-  investments_7: [],
-  investments_8: [],
-  investments_9: [],
-  investments_10: [],
   restaurant: ['restauracja', 'jedzenie', 'posiłek', 'gastronomia', 'widelec', 'nóż'],
   coffee: ['kawa', 'herbata', 'kawiarnia', 'napój'],
   fuel: ['paliwo', 'benzyna', 'diesel', 'tankowanie', 'stacja paliw'],
   travel: ['podróż', 'podróże', 'wakacje', 'urlop', 'samolot', 'wyjazd', 'lot'],
   warning: ['ważne', 'istotne', 'priorytet', 'alert', 'uwaga', 'ostrzeżenie', 'pilne', 'flaga', 'alarm'],
-  warning_2: [],
-  warning_3: [],
-  warning_4: [],
-  warning_5: [],
-  warning_6: [],
-  warning_7: [],
-  warning_8: [],
-  warning_9: [],
-  warning_10: [],
   idea: ['pomysł', 'idea', 'żarówka', 'inspiracja', 'projekt', 'koncepcja', 'myśl'],
-  idea_2: [],
-  idea_3: [],
-  idea_4: [],
-  idea_5: [],
-  idea_6: [],
-  idea_7: [],
-  idea_8: [],
-  idea_9: [],
-  idea_10: [],
   heart: ['osobiste', 'prywatne', 'życie prywatne', 'dla mnie', 'serce', 'ważne dla mnie'],
-  heart_2: [],
-  heart_3: [],
-  heart_4: [],
-  heart_5: [],
-  heart_6: [],
-  heart_7: [],
-  heart_8: [],
-  heart_9: [],
-  heart_10: [],
   calendar: ['kalendarz', 'termin', 'data', 'wydarzenie', 'harmonogram', 'plan', 'deadline', 'spotkanie'],
-  calendar_2: [],
-  calendar_3: [],
-  calendar_4: [],
-  calendar_5: [],
-  calendar_6: [],
-  calendar_7: [],
-  calendar_8: [],
-  calendar_9: [],
-  calendar_10: [],
   more: ['pozostałe', 'inne', 'różne', 'reszta', 'wszystko', 'nieskończoność', 'dodatkowe', 'więcej'],
-  more_2: [],
-  more_3: [],
-  more_4: [],
-  more_5: [],
-  more_6: [],
-  more_7: [],
-  more_8: [],
-  more_9: [],
-  more_10: [],
-  plus: ['dodaj', 'plus', 'nowe'],
-  edit: ['edytuj', 'zmień', 'ołówek', 'edycja'],
-  trash: ['usuń', 'kosz', 'śmieci'],
-  close: ['zamknij', 'x'],
-  expand: ['rozwiń', 'więcej', 'pokaż więcej'],
-  info: ['informacja', 'info', 'pomoc', 'szczegóły'],
+  plus: ['dodaj', 'plus', 'nowe', 'utwórz', 'dodać'],
+  plus_2: [],
+  plus_3: [],
+  plus_4: [],
+  plus_5: [],
+  plus_6: [],
+  plus_7: [],
+  plus_8: [],
+  plus_9: [],
+  plus_10: [],
+  edit: ['edytuj', 'zmień', 'ołówek', 'edycja', 'popraw', 'modyfikuj'],
+  edit_2: [],
+  edit_3: [],
+  edit_4: [],
+  edit_5: [],
+  edit_6: [],
+  edit_7: [],
+  edit_8: [],
+  edit_9: [],
+  edit_10: [],
+  trash: ['usuń', 'kosz', 'śmieci', 'skasuj', 'wyrzuć'],
+  trash_2: [],
+  trash_3: [],
+  trash_4: [],
+  trash_5: [],
+  trash_6: [],
+  trash_7: [],
+  trash_8: [],
+  trash_9: [],
+  trash_10: [],
+  close: ['zamknij', 'x', 'zamknięcie', 'anuluj'],
+  close_2: [],
+  close_3: [],
+  close_4: [],
+  close_5: [],
+  close_6: [],
+  close_7: [],
+  close_8: [],
+  close_9: [],
+  close_10: [],
+  expand: ['rozwiń', 'więcej', 'pokaż więcej', 'chevron', 'strzałka'],
+  expand_2: [],
+  expand_3: [],
+  expand_4: [],
+  expand_5: [],
+  expand_6: [],
+  expand_7: [],
+  expand_8: [],
+  expand_9: [],
+  expand_10: [],
+  info: ['informacja', 'info', 'pomoc', 'szczegóły', 'opis'],
+  info_2: [],
+  info_3: [],
+  info_4: [],
+  info_5: [],
+  info_6: [],
+  info_7: [],
+  info_8: [],
+  info_9: [],
+  info_10: [],
 }
 
 export const getUiIconSearchText = (icon: { key: UiIconKey; label: string }) =>
