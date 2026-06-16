@@ -80,11 +80,6 @@ export type UiIconKey =
   | 'car'
   | 'transport'
   | 'plane'
-  | 'plane_2'
-  | 'plane_3'
-  | 'plane_4'
-  | 'plane_5'
-  | 'plane_6'
   | 'holiday'
   | 'sun'
   | 'health'
@@ -150,11 +145,6 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'car',
   'transport',
   'plane',
-  'plane_2',
-  'plane_3',
-  'plane_4',
-  'plane_5',
-  'plane_6',
   'fuel',
   'health',
 
@@ -203,11 +193,6 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'car', label: 'Auto' },
   { key: 'transport', label: 'Transport' },
   { key: 'plane', label: 'Samolot' },
-  { key: 'plane_2', label: 'Samolot 2' },
-  { key: 'plane_3', label: 'Samolot 3' },
-  { key: 'plane_4', label: 'Samolot 4' },
-  { key: 'plane_5', label: 'Samolot 5' },
-  { key: 'plane_6', label: 'Samolot 6' },
   { key: 'holiday', label: 'Wakacje' },
   { key: 'sun', label: 'Słońce' },
   { key: 'health', label: 'Zdrowie' },
@@ -271,11 +256,6 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   car: ['auto', 'samochód', 'samochod', 'pojazd', 'motoryzacja', 'paliwo', 'mechanik', 'serwis', 'naprawa auta', 'części', 'opony', 'ubezpieczenie auta', 'OC', 'AC', 'przegląd', 'parking', 'myjnia', 'suv'],
   transport: ['transport', 'komunikacja', 'autobus', 'tramwaj', 'metro', 'pociąg', 'kolej', 'bilet', 'bilety', 'przejazd', 'dojazd', 'komunikacja miejska', 'taxi', 'uber', 'bolt', 'przewóz'],
   plane: ['samolot', 'lot', 'loty', 'lotnisko', 'bilet lotniczy', 'podróż', 'podróże', 'wakacje', 'urlop', 'wyjazd', 'wyjazdy', 'boarding', 'bagaż', 'odprawa', 'linie lotnicze', 'lotniczy'],
-  plane_2: [],
-  plane_3: [],
-  plane_4: [],
-  plane_5: [],
-  plane_6: [],
   holiday: ['wakacje', 'urlop', 'podróż', 'podróże', 'samolot', 'wyjazd', 'lot'],
   sun: ['słońce', 'pogoda', 'lato', 'wakacje', 'słoneczny', 'jasne'],
   health: ['zdrowie', 'medycyna', 'medyczne', 'lekarz', 'doktor', 'wizyta', 'przychodnia', 'szpital', 'klinika', 'apteka', 'farmacja', 'farmaceuta', 'leki', 'lek', 'lekarstwa', 'tabletki', 'kapsułki', 'recepta', 'recepty', 'leczenie', 'terapia', 'badania', 'badanie', 'diagnostyka', 'choroba', 'choroby', 'objawy', 'infekcja', 'przeziębienie', 'grypa', 'antybiotyk', 'suplementy', 'witaminy', 'opieka zdrowotna', 'ratunek', 'SOR', 'pogotowie', 'dentysta', 'stomatolog', 'okulista', 'specjalista', 'konsultacja', 'kontrola', 'zabieg', 'operacja', 'rehabilitacja', 'fizjoterapia', 'ubezpieczenie zdrowotne', 'NFZ', 'prywatna opieka', 'Luxmed', 'Medicover'],
