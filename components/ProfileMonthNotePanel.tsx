@@ -31,6 +31,7 @@ type ProfileMonthNoteRow = {
 type MonthNoteTone = UiColorKey;
 type MonthNoteIcon = UiIconKey;
 type MonthNoteCategory = "Notatka" | "Przypomnienie" | "Informacja";
+type MonthNoteDetailsFilter = "all" | MonthNoteCategory;
 
 type MonthNoteItem = {
   id: string;
@@ -75,6 +76,17 @@ const CATEGORY_OPTIONS: MonthNoteCategory[] = [
   "Notatka",
   "Przypomnienie",
   "Informacja",
+];
+
+const DETAILS_FILTER_OPTIONS: Array<{
+  key: MonthNoteDetailsFilter;
+  label: string;
+  category?: MonthNoteCategory;
+}> = [
+  { key: "all", label: "Wszystkie" },
+  { key: "Notatka", label: "Notatki", category: "Notatka" },
+  { key: "Przypomnienie", label: "Przypomnienia", category: "Przypomnienie" },
+  { key: "Informacja", label: "Informacje", category: "Informacja" },
 ];
 
 const NoteIcon = ({ name }: { name: NoteIconName }) => {
@@ -236,6 +248,7 @@ export default function ProfileMonthNotePanel({
   const [expandedNoteIds, setExpandedNoteIds] = useState<string[]>([]);
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [detailsFilter, setDetailsFilter] = useState<MonthNoteDetailsFilter>("all");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isIconPickerExpanded, setIsIconPickerExpanded] = useState(false);
   const [activePicker, setActivePicker] = useState<'category' | 'color' | 'icon' | null>(null);
@@ -286,6 +299,7 @@ export default function ProfileMonthNotePanel({
       setEditingNoteId(null);
       setExpandedNoteIds([]);
       setSelectedNoteId(null);
+      setDetailsFilter("all");
       setIsIconPickerExpanded(false);
       setActivePicker(null);
       setIconSearch('');
@@ -387,6 +401,39 @@ export default function ProfileMonthNotePanel({
   );
 
   const previewNotes = savedNotes.slice(0, NOTE_PREVIEW_LIMIT);
+
+  const detailNoteCounts = useMemo(
+    () => ({
+      all: savedNotes.length,
+      Notatka: savedNotes.filter((note) => note.category === "Notatka").length,
+      Przypomnienie: savedNotes.filter((note) => note.category === "Przypomnienie").length,
+      Informacja: savedNotes.filter((note) => note.category === "Informacja").length,
+    }),
+    [savedNotes],
+  );
+
+  const filteredDetailNotes = useMemo(
+    () =>
+      detailsFilter === "all"
+        ? savedNotes
+        : savedNotes.filter((note) => note.category === detailsFilter),
+    [detailsFilter, savedNotes],
+  );
+
+  const detailsEmptyTitle =
+    detailsFilter === "all"
+      ? "Brak notatek dla tego miesiąca."
+      : "Brak notatek w tej kategorii.";
+
+  const openDetailsModal = () => {
+    setDetailsFilter("all");
+    setIsDetailsOpen(true);
+  };
+
+  const closeDetailsModal = () => {
+    setIsDetailsOpen(false);
+    setDetailsFilter("all");
+  };
 
   const updateDraftTone = (tone: MonthNoteTone) => {
     const toneOption = resolveToneOption(tone);
@@ -836,7 +883,7 @@ export default function ProfileMonthNotePanel({
   ) : null;
 
   const detailsModal = isDetailsOpen ? (
-    <div data-ui-overlay="true" onClick={() => setIsDetailsOpen(false)}>
+    <div data-ui-overlay="true" onClick={closeDetailsModal}>
       <section
         data-ui-modal-shell="true"
         data-ui-size="wide"
@@ -867,7 +914,7 @@ export default function ProfileMonthNotePanel({
               type="button"
               data-ui-close-action="true"
               aria-label="Zamknij"
-              onClick={() => setIsDetailsOpen(false)}
+              onClick={closeDetailsModal}
             >
               <CategoryIcon iconKey="close" />
             </button>
@@ -875,32 +922,26 @@ export default function ProfileMonthNotePanel({
         </header>
 
         <div data-ui-filter-row="true">
-          <span data-ui-filter-pill="true" data-active="true">
-            Wszystkie {savedNotes.length}
-          </span>
-          <span data-ui-filter-pill="true">
-            Notatki{" "}
-            {savedNotes.filter((note) => note.category === "Notatka").length}
-          </span>
-          <span data-ui-filter-pill="true">
-            Przypomnienia{" "}
-            {
-              savedNotes.filter((note) => note.category === "Przypomnienie")
-                .length
-            }
-          </span>
-          <span data-ui-filter-pill="true">
-            Informacje{" "}
-            {savedNotes.filter((note) => note.category === "Informacja").length}
-          </span>
+          {DETAILS_FILTER_OPTIONS.map((filterOption) => (
+            <button
+              key={filterOption.key}
+              type="button"
+              data-ui-filter-pill="true"
+              data-active={detailsFilter === filterOption.key ? "true" : undefined}
+              aria-pressed={detailsFilter === filterOption.key}
+              onClick={() => setDetailsFilter(filterOption.key)}
+            >
+              {filterOption.label} {detailNoteCounts[filterOption.key]}
+            </button>
+          ))}
         </div>
 
-        {!isLoading && savedNotes.length === 0 && (
+        {!isLoading && filteredDetailNotes.length === 0 && (
           <div data-ui-section="true" data-ui-empty-block="true" data-ui-tone="blue">
             <span data-ui-icon-tile="true" data-ui-tone="blue">
               <CategoryIcon iconKey="note" />
             </span>
-            <strong data-ui-empty-title="true">Brak notatek dla tego miesiąca.</strong>
+            <strong data-ui-empty-title="true">{detailsEmptyTitle}</strong>
             <button
               type="button"
               data-ui-button-confirm="true"
@@ -911,9 +952,9 @@ export default function ProfileMonthNotePanel({
           </div>
         )}
 
-        {savedNotes.length > 0 && (
+        {filteredDetailNotes.length > 0 && (
           <div data-ui-card-list="true">
-            {savedNotes.map((note) => renderNoteCard(note, "detail"))}
+            {filteredDetailNotes.map((note) => renderNoteCard(note, "detail"))}
           </div>
         )}
 
@@ -1074,7 +1115,7 @@ export default function ProfileMonthNotePanel({
           <button
             type="button"
             className="ui-button--utility"
-            onClick={() => setIsDetailsOpen(true)}
+            onClick={openDetailsModal}
           >
             Pokaż szczegóły
             <NoteIcon name="expand" />
