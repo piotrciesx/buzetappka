@@ -127,65 +127,11 @@ export type UiIconKey =
   | 'calendar'
   | 'more'
   | 'plus'
-  | 'plus_2'
-  | 'plus_3'
-  | 'plus_4'
-  | 'plus_5'
-  | 'plus_6'
-  | 'plus_7'
-  | 'plus_8'
-  | 'plus_9'
-  | 'plus_10'
   | 'edit'
-  | 'edit_2'
-  | 'edit_3'
-  | 'edit_4'
-  | 'edit_5'
-  | 'edit_6'
-  | 'edit_7'
-  | 'edit_8'
-  | 'edit_9'
-  | 'edit_10'
   | 'trash'
-  | 'trash_2'
-  | 'trash_3'
-  | 'trash_4'
-  | 'trash_5'
-  | 'trash_6'
-  | 'trash_7'
-  | 'trash_8'
-  | 'trash_9'
-  | 'trash_10'
   | 'close'
-  | 'close_2'
-  | 'close_3'
-  | 'close_4'
-  | 'close_5'
-  | 'close_6'
-  | 'close_7'
-  | 'close_8'
-  | 'close_9'
-  | 'close_10'
   | 'expand'
-  | 'expand_2'
-  | 'expand_3'
-  | 'expand_4'
-  | 'expand_5'
-  | 'expand_6'
-  | 'expand_7'
-  | 'expand_8'
-  | 'expand_9'
-  | 'expand_10'
   | 'info'
-  | 'info_2'
-  | 'info_3'
-  | 'info_4'
-  | 'info_5'
-  | 'info_6'
-  | 'info_7'
-  | 'info_8'
-  | 'info_9'
-  | 'info_10'
 
 export type ModuleActionIconKey =
   | 'user'
@@ -250,65 +196,11 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'exchange',
   'more',
   'plus',
-  'plus_2',
-  'plus_3',
-  'plus_4',
-  'plus_5',
-  'plus_6',
-  'plus_7',
-  'plus_8',
-  'plus_9',
-  'plus_10',
   'edit',
-  'edit_2',
-  'edit_3',
-  'edit_4',
-  'edit_5',
-  'edit_6',
-  'edit_7',
-  'edit_8',
-  'edit_9',
-  'edit_10',
   'trash',
-  'trash_2',
-  'trash_3',
-  'trash_4',
-  'trash_5',
-  'trash_6',
-  'trash_7',
-  'trash_8',
-  'trash_9',
-  'trash_10',
   'close',
-  'close_2',
-  'close_3',
-  'close_4',
-  'close_5',
-  'close_6',
-  'close_7',
-  'close_8',
-  'close_9',
-  'close_10',
   'expand',
-  'expand_2',
-  'expand_3',
-  'expand_4',
-  'expand_5',
-  'expand_6',
-  'expand_7',
-  'expand_8',
-  'expand_9',
-  'expand_10',
   'info',
-  'info_2',
-  'info_3',
-  'info_4',
-  'info_5',
-  'info_6',
-  'info_7',
-  'info_8',
-  'info_9',
-  'info_10',
 ]
 
 const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
@@ -368,65 +260,11 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'calendar', label: 'Kalendarz' },
   { key: 'more', label: 'Pozostałe' },
   { key: 'plus', label: 'Dodaj' },
-  { key: 'plus_2', label: 'Dodaj 2' },
-  { key: 'plus_3', label: 'Dodaj 3' },
-  { key: 'plus_4', label: 'Dodaj 4' },
-  { key: 'plus_5', label: 'Dodaj 5' },
-  { key: 'plus_6', label: 'Dodaj 6' },
-  { key: 'plus_7', label: 'Dodaj 7' },
-  { key: 'plus_8', label: 'Dodaj 8' },
-  { key: 'plus_9', label: 'Dodaj 9' },
-  { key: 'plus_10', label: 'Dodaj 10' },
   { key: 'edit', label: 'Edytuj' },
-  { key: 'edit_2', label: 'Edytuj 2' },
-  { key: 'edit_3', label: 'Edytuj 3' },
-  { key: 'edit_4', label: 'Edytuj 4' },
-  { key: 'edit_5', label: 'Edytuj 5' },
-  { key: 'edit_6', label: 'Edytuj 6' },
-  { key: 'edit_7', label: 'Edytuj 7' },
-  { key: 'edit_8', label: 'Edytuj 8' },
-  { key: 'edit_9', label: 'Edytuj 9' },
-  { key: 'edit_10', label: 'Edytuj 10' },
   { key: 'trash', label: 'Usu\u0144' },
-  { key: 'trash_2', label: 'Usuń 2' },
-  { key: 'trash_3', label: 'Usuń 3' },
-  { key: 'trash_4', label: 'Usuń 4' },
-  { key: 'trash_5', label: 'Usuń 5' },
-  { key: 'trash_6', label: 'Usuń 6' },
-  { key: 'trash_7', label: 'Usuń 7' },
-  { key: 'trash_8', label: 'Usuń 8' },
-  { key: 'trash_9', label: 'Usuń 9' },
-  { key: 'trash_10', label: 'Usuń 10' },
   { key: 'close', label: 'Zamknij' },
-  { key: 'close_2', label: 'Zamknij 2' },
-  { key: 'close_3', label: 'Zamknij 3' },
-  { key: 'close_4', label: 'Zamknij 4' },
-  { key: 'close_5', label: 'Zamknij 5' },
-  { key: 'close_6', label: 'Zamknij 6' },
-  { key: 'close_7', label: 'Zamknij 7' },
-  { key: 'close_8', label: 'Zamknij 8' },
-  { key: 'close_9', label: 'Zamknij 9' },
-  { key: 'close_10', label: 'Zamknij 10' },
   { key: 'expand', label: 'Rozwi\u0144' },
-  { key: 'expand_2', label: 'Rozwiń 2' },
-  { key: 'expand_3', label: 'Rozwiń 3' },
-  { key: 'expand_4', label: 'Rozwiń 4' },
-  { key: 'expand_5', label: 'Rozwiń 5' },
-  { key: 'expand_6', label: 'Rozwiń 6' },
-  { key: 'expand_7', label: 'Rozwiń 7' },
-  { key: 'expand_8', label: 'Rozwiń 8' },
-  { key: 'expand_9', label: 'Rozwiń 9' },
-  { key: 'expand_10', label: 'Rozwiń 10' },
   { key: 'info', label: 'Informacja' },
-  { key: 'info_2', label: 'Informacja 2' },
-  { key: 'info_3', label: 'Informacja 3' },
-  { key: 'info_4', label: 'Informacja 4' },
-  { key: 'info_5', label: 'Informacja 5' },
-  { key: 'info_6', label: 'Informacja 6' },
-  { key: 'info_7', label: 'Informacja 7' },
-  { key: 'info_8', label: 'Informacja 8' },
-  { key: 'info_9', label: 'Informacja 9' },
-  { key: 'info_10', label: 'Informacja 10' },
 ]
 
 export type CategoryIconKey = UiIconKey
@@ -495,65 +333,11 @@ export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
   calendar: ['kalendarz', 'termin', 'data', 'wydarzenie', 'harmonogram', 'plan', 'deadline', 'spotkanie'],
   more: ['pozostałe', 'inne', 'różne', 'reszta', 'wszystko', 'nieskończoność', 'dodatkowe', 'więcej'],
   plus: ['dodaj', 'plus', 'nowe', 'utwórz', 'dodać'],
-  plus_2: [],
-  plus_3: [],
-  plus_4: [],
-  plus_5: [],
-  plus_6: [],
-  plus_7: [],
-  plus_8: [],
-  plus_9: [],
-  plus_10: [],
   edit: ['edytuj', 'zmień', 'ołówek', 'edycja', 'popraw', 'modyfikuj'],
-  edit_2: [],
-  edit_3: [],
-  edit_4: [],
-  edit_5: [],
-  edit_6: [],
-  edit_7: [],
-  edit_8: [],
-  edit_9: [],
-  edit_10: [],
   trash: ['usuń', 'kosz', 'śmieci', 'skasuj', 'wyrzuć'],
-  trash_2: [],
-  trash_3: [],
-  trash_4: [],
-  trash_5: [],
-  trash_6: [],
-  trash_7: [],
-  trash_8: [],
-  trash_9: [],
-  trash_10: [],
   close: ['zamknij', 'x', 'zamknięcie', 'anuluj'],
-  close_2: [],
-  close_3: [],
-  close_4: [],
-  close_5: [],
-  close_6: [],
-  close_7: [],
-  close_8: [],
-  close_9: [],
-  close_10: [],
   expand: ['rozwiń', 'więcej', 'pokaż więcej', 'chevron', 'strzałka'],
-  expand_2: [],
-  expand_3: [],
-  expand_4: [],
-  expand_5: [],
-  expand_6: [],
-  expand_7: [],
-  expand_8: [],
-  expand_9: [],
-  expand_10: [],
   info: ['informacja', 'info', 'pomoc', 'szczegóły', 'opis'],
-  info_2: [],
-  info_3: [],
-  info_4: [],
-  info_5: [],
-  info_6: [],
-  info_7: [],
-  info_8: [],
-  info_9: [],
-  info_10: [],
 }
 
 export const getUiIconSearchText = (icon: { key: UiIconKey; label: string }) =>
