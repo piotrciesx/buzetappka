@@ -3199,6 +3199,11 @@
 [data-ui-picker-control="true"] {
   position: relative;
   isolation: isolate;
+  z-index: var(--ui-z-local-base);
+}
+
+[data-ui-picker-control="true"][data-open="true"] {
+  z-index: var(--ui-z-popover);
 }
 
 [data-ui-picker-control="true"] [data-ui-picker-trigger="true"] {
@@ -3447,6 +3452,7 @@
 
 [data-ui-help="true"] {
   position: relative;
+  z-index: var(--ui-z-local-raised);
   width: 16px;
   min-width: 16px;
   height: 16px;
