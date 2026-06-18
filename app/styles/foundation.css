@@ -2170,9 +2170,24 @@
   text-align: center;
 }
 
+[data-ui-empty-block="true"][data-ui-empty-block-variant="notice"] {
+  gap: var(--ui-space-8);
+  padding: var(--ui-space-10);
+}
+
 [data-ui-empty-block="true"] strong {
   color: var(--ui-color-primary-navy);
   font-size: var(--ui-type-t4);
+}
+
+[data-ui-empty-block="true"][data-ui-empty-block-variant="notice"] strong {
+  font-size: var(--ui-type-t3);
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+[data-ui-empty-block="true"][data-ui-empty-block-variant="notice"] span {
+  max-width: 520px;
+  line-height: var(--ui-line-height-body);
 }
 
 [data-ui-overlay="true"] {

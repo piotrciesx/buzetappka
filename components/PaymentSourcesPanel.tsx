@@ -668,7 +668,11 @@ export default function PaymentSourcesPanel({
               </label>
 
               {duplicateSource && (
-                <div data-ui-section="true" data-ui-empty-block="true">
+                <div
+                  data-ui-section="true"
+                  data-ui-empty-block="true"
+                  data-ui-empty-block-variant="notice"
+                >
                   <strong>Źródło „{duplicateSource.name}” już istnieje.</strong>
                   <span>
                     Edytuj istniejące źródło, żeby zmienić dostępność dla przychodów lub wydatków.
