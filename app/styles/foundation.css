@@ -3027,9 +3027,12 @@
 }
 
 [data-ui-picker-more="true"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   min-height: 40px;
-  margin: var(--ui-space-5) 0 0;
+  margin-top: var(--ui-space-4);
   padding: 0 var(--ui-space-6);
   border: 1px solid rgba(8, 44, 122, 0.12);
   border-radius: var(--ui-radius-lg);
@@ -3038,8 +3041,10 @@
   font-size: var(--ui-type-t4);
   font-weight: var(--ui-font-weight-semibold);
   white-space: nowrap;
+
+  align-self: stretch;
+  justify-self: stretch;
   box-sizing: border-box;
-  cursor: pointer;
 }
 
 [data-payment-source-settings-actions="true"] {
@@ -3201,18 +3206,7 @@
 
 [data-ui-picker-more="true"] {
   width: 100%;
-  min-height: 40px;
-  margin: var(--ui-space-5) 0 0;
-  padding: 0 var(--ui-space-6);
-  border: 1px solid rgba(8, 44, 122, 0.12);
-  border-radius: var(--ui-radius-lg);
-  background: #ffffff;
-  color: var(--ui-color-primary-navy);
-  font-size: var(--ui-type-t4);
-  font-weight: var(--ui-font-weight-semibold);
-  white-space: nowrap;
-  box-sizing: border-box;
-  cursor: pointer;
+  margin-top: var(--ui-space-2);
 }
 
 [data-ui-icon-tile="true"] {
@@ -3390,17 +3384,14 @@
 
 [data-ui-picker-more="true"] {
   width: 100%;
-  min-height: 40px;
-  margin: var(--ui-space-5) 0 0;
-  padding: 0 var(--ui-space-6);
-  border: 1px solid rgba(8, 44, 122, 0.12);
-  border-radius: var(--ui-radius-lg);
-  background: #ffffff;
+  min-height: 38px;
+  margin-top: var(--ui-space-2);
+  border: 1px dashed rgba(8, 44, 122, 0.22);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-color-extra-light-blue);
   color: var(--ui-color-primary-navy);
-  font-size: var(--ui-type-t4);
+  font-size: var(--ui-font-size-body-sm);
   font-weight: var(--ui-font-weight-semibold);
-  white-space: nowrap;
-  box-sizing: border-box;
   cursor: pointer;
 }
 
@@ -3678,7 +3669,7 @@
   top: auto;
   z-index: var(--ui-z-popover);
   max-height: min(320px, calc(100dvh - 160px));
-  overflow: auto;
+  overflow: hidden;
   box-sizing: border-box;
   padding: 0;
   border: var(--ui-dropdown-border);
@@ -3716,15 +3707,11 @@
 }
 
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-menu="true"][data-layout="icons"] {
-  height: auto;
   min-width: min(320px, calc(100vw - 32px));
-  max-height: min(320px, calc(100dvh - 160px));
   display: flex;
   flex-direction: column;
-  gap: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  scroll-padding-block: var(--ui-space-5);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
 }
 
 [data-ui-picker-search="true"] {
@@ -3796,18 +3783,15 @@
 }
 
 [data-ui-picker-more="true"] {
-  width: 100%;
+  width: calc(100% - var(--ui-space-10));
   min-height: 40px;
-  margin: var(--ui-space-5) 0 0;
-  padding: 0 var(--ui-space-6);
-  border: 1px solid rgba(8, 44, 122, 0.12);
-  border-radius: var(--ui-radius-lg);
-  background: #ffffff;
+  margin: var(--ui-space-5);
+  border: 1px dashed rgba(8, 44, 122, 0.22);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-color-extra-light-blue);
   color: var(--ui-color-primary-navy);
-  font-size: var(--ui-type-t4);
+  font-size: var(--ui-font-size-body-sm);
   font-weight: var(--ui-font-weight-semibold);
-  white-space: nowrap;
-  box-sizing: border-box;
   cursor: pointer;
 }
 
@@ -4090,15 +4074,9 @@
 }
 
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-menu="true"][data-layout="icons"] {
-  height: auto;
   min-width: min(320px, calc(100vw - 32px));
-  max-height: min(320px, calc(100dvh - 160px));
   display: flex;
   flex-direction: column;
-  gap: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  scroll-padding-block: var(--ui-space-5);
 }
 
 [data-ui-picker-search="true"] {
@@ -4160,18 +4138,15 @@
 }
 
 [data-ui-picker-more="true"] {
-  width: 100%;
+  width: calc(100% - var(--ui-space-10));
   min-height: 40px;
-  margin: var(--ui-space-5) 0 0;
-  padding: 0 var(--ui-space-6);
-  border: 1px solid rgba(8, 44, 122, 0.12);
-  border-radius: var(--ui-radius-lg);
-  background: #ffffff;
+  margin: var(--ui-space-5);
+  border: 1px dashed rgba(8, 44, 122, 0.22);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-color-extra-light-blue);
   color: var(--ui-color-primary-navy);
-  font-size: var(--ui-type-t4);
+  font-size: var(--ui-font-size-body-sm);
   font-weight: var(--ui-font-weight-semibold);
-  white-space: nowrap;
-  box-sizing: border-box;
   cursor: pointer;
 }
 
@@ -4626,20 +4601,13 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 /* Foundation Icon Picker v1 — light option list.
    Global rule for icon pickers in notes, payment sources and future modules. */
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-menu="true"][data-layout="icons"] {
-  min-width: min(320px, calc(100vw - 32px));
-  max-height: min(320px, calc(100dvh - 160px));
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
+  padding: var(--ui-space-3);
 }
 
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-menu-grid="true"] {
   display: flex;
   flex-direction: column;
   gap: 0;
-  flex: 0 0 auto;
 }
 
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"] {
@@ -4722,19 +4690,14 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-more="true"] {
-  width: 100%;
-  min-height: 40px;
-  margin: var(--ui-space-5) 0 0;
-  padding: 0 var(--ui-space-6);
-  border: 1px solid rgba(8, 44, 122, 0.12);
-  border-radius: var(--ui-radius-lg);
-  background: #ffffff;
+  min-height: 36px;
+  margin: var(--ui-space-4) var(--ui-space-3) var(--ui-space-3);
+  border: 1px solid rgba(8, 44, 122, 0.10);
+  border-radius: var(--ui-radius-md);
+  background: transparent;
   color: var(--ui-color-primary-navy);
-  font-size: var(--ui-type-t4);
+  font-size: var(--ui-font-size-body-sm);
   font-weight: var(--ui-font-weight-semibold);
-  white-space: nowrap;
-  box-sizing: border-box;
-  cursor: pointer;
 }
 
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-more="true"]:hover {
