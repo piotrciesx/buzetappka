@@ -1294,7 +1294,7 @@ body {
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  border: var(--app-shell-frame-border);
+  border: var(--ui-dropdown-border);
   border-radius: var(--ui-modal-radius);
   background: var(--ui-surface-modal);
   box-shadow: var(--ui-shadow-modal), var(--ui-frame-ring);
