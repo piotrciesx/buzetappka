@@ -2171,7 +2171,7 @@
 }
 
 [data-ui-empty-block="true"][data-ui-empty-block-variant="notice"] {
-  gap: var(--ui-space-8);
+  gap: var(--ui-space-5);
   padding: var(--ui-space-10);
 }
 
@@ -2181,13 +2181,22 @@
 }
 
 [data-ui-empty-block="true"][data-ui-empty-block-variant="notice"] strong {
-  font-size: var(--ui-type-t3);
-  font-weight: var(--ui-font-weight-semibold);
+  color: var(--ui-color-primary-navy);
+  font-size: var(--ui-type-t2);
+  font-weight: var(--ui-font-weight-bold);
+  line-height: var(--ui-line-height-heading);
 }
 
 [data-ui-empty-block="true"][data-ui-empty-block-variant="notice"] span {
   max-width: 520px;
+  color: var(--ui-text-secondary);
+  font-size: var(--ui-type-helper);
+  font-weight: var(--ui-font-weight-medium);
   line-height: var(--ui-line-height-body);
+}
+
+[data-ui-empty-block="true"][data-ui-empty-block-variant="notice"] button {
+  margin-top: var(--ui-space-3);
 }
 
 [data-ui-overlay="true"] {
