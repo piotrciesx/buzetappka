@@ -91,6 +91,27 @@ export default function BudgetPageMainPanels({
                       ? 'Kosz'
                       : ''
 
+  const utilityPanelIcon =
+    activeUtilityPanel === 'drafts'
+      ? 'note'
+      : activeUtilityPanel === 'importExport'
+        ? 'exchange'
+        : activeUtilityPanel === 'paymentSources'
+          ? 'card'
+          : activeUtilityPanel === 'financialGoals'
+            ? 'savings'
+            : activeUtilityPanel === 'recurringTransactions'
+              ? 'calendar'
+              : activeUtilityPanel === 'search'
+                ? 'info'
+                : activeUtilityPanel === 'monthCalendar'
+                  ? 'calendar'
+                  : activeUtilityPanel === 'hiddenCategories'
+                    ? 'other'
+                    : activeUtilityPanel === 'trash'
+                      ? 'trash'
+                      : 'info'
+
   return (
     <>
       {undoBannerProps && <UndoBanner {...undoBannerProps} />}
@@ -118,6 +139,9 @@ export default function BudgetPageMainPanels({
               data-utility-header-kind={activeUtilityPanel}
             >
               <div data-ui-title-row="true">
+                <span data-ui-icon-tile="true" data-ui-tone="blue">
+                  <CategoryIcon iconKey={utilityPanelIcon} />
+                </span>
                 <div data-ui-title-copy="true">
                   <strong>{utilityPanelTitle}</strong>
                 </div>
