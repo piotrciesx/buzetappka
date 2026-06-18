@@ -270,7 +270,6 @@ export default function TransactionCreatorCategorySection({
   );
 
   const renderBackRow = ({
-    category,
     label,
     onClick,
   }: {
@@ -289,7 +288,6 @@ export default function TransactionCreatorCategorySection({
       <span data-transaction-back-arrow="true" aria-hidden="true">
         ←
       </span>
-      {renderCategoryIcon(category)}
       <span data-transaction-back-label="true">{label}</span>
     </button>
   );
@@ -507,32 +505,45 @@ export default function TransactionCreatorCategorySection({
     </section>
   );
 
-  const renderFinalContext = () => (
-    <section
-      style={panelStyle}
-      data-ui-section="true"
-      data-transaction-final-context="true"
-    >
-      {selectedLevel2
-        ? renderBackRow({
-            category: selectedLevel2,
-            label: selectedLevel2.name,
-            onClick: () => handleLevel2Click(selectedLevel2),
-          })
-        : selectedLevel1
-          ? renderBackRow({
-              category: selectedLevel1,
-              label: selectedLevel1.name,
-              onClick: () => handleLevel1Click(selectedLevel1),
-            })
-          : null}
+  const renderFinalContext = () => {
+    const backCategory = selectedLevel2 || selectedLevel1;
+    const backAction = selectedLevel2
+      ? () => handleLevel2Click(selectedLevel2)
+      : selectedLevel1
+        ? () => handleLevel1Click(selectedLevel1)
+        : null;
 
-      {renderCurrentRow({
-        category: effectiveCategory,
-        label: effectiveCategory?.name || effectiveCategoryLabel,
-      })}
-    </section>
-  );
+    return (
+      <section
+        style={panelStyle}
+        data-ui-section="true"
+        data-transaction-final-context="true"
+      >
+        <div data-transaction-final-path="true">
+          {backCategory && backAction && (
+            <button
+              type="button"
+              data-transaction-final-path-back="true"
+              onClick={() => {
+                closeShortcutMenu();
+                backAction();
+              }}
+            >
+              <span data-transaction-back-arrow="true" aria-hidden="true">
+                ←
+              </span>
+              <span>{backCategory.name}</span>
+            </button>
+          )}
+
+          <div data-transaction-final-path-current="true">
+            {renderCategoryIcon(effectiveCategory)}
+            <span>{effectiveCategory?.name || effectiveCategoryLabel}</span>
+          </div>
+        </div>
+      </section>
+    );
+  };
 
   if (effectiveCategoryId) {
     return (
