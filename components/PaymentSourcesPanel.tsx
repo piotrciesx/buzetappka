@@ -694,8 +694,8 @@ export default function PaymentSourcesPanel({
                 </div>
               </div>
 
-              <div data-payment-source-scope-picker="true">
-                <label data-payment-source-scope="true" data-active={draft.isIncomeSource ? 'true' : 'false'}>
+              <div data-ui-checkbox-card-group="true">
+                <label data-ui-checkbox-card="true" data-checked={draft.isIncomeSource ? 'true' : 'false'}>
                   <input
                     type="checkbox"
                     checked={draft.isIncomeSource}
@@ -705,7 +705,7 @@ export default function PaymentSourcesPanel({
                   />
                   <span>Przychody</span>
                 </label>
-                <label data-payment-source-scope="true" data-active={draft.isExpenseSource ? 'true' : 'false'}>
+                <label data-ui-checkbox-card="true" data-checked={draft.isExpenseSource ? 'true' : 'false'}>
                   <input
                     type="checkbox"
                     checked={draft.isExpenseSource}
