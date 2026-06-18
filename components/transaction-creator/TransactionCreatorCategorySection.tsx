@@ -299,35 +299,92 @@ export default function TransactionCreatorCategorySection({
   const renderStageHeader = ({
     title,
     helper,
-    backCategory,
-    onBack,
   }: {
     title: string;
     helper: string;
-    backCategory?: Category | null;
-    onBack?: () => void;
   }) => (
     <header data-transaction-stage-header="true">
-      {backCategory && onBack && (
-        <button
-          type="button"
-          data-transaction-stage-back="true"
-          onClick={() => {
-            closeShortcutMenu();
-            onBack();
-          }}
-        >
-          <span aria-hidden="true">←</span>
-          <span>{backCategory.name}</span>
-        </button>
-      )}
-
       <span data-transaction-stage-copy="true">
         <strong>{title}</strong>
         <small>{helper}</small>
       </span>
     </header>
   );
+
+  const renderTrailButton = ({
+    category,
+    onClick,
+    isFirst,
+  }: {
+    category: Category;
+    onClick: () => void;
+    isFirst?: boolean;
+  }) => (
+    <button
+      type="button"
+      data-transaction-trail-link="true"
+      onClick={() => {
+        closeShortcutMenu();
+        onClick();
+      }}
+    >
+      {isFirst && <span aria-hidden="true">←</span>}
+      <span>{category.name}</span>
+    </button>
+  );
+
+  const renderTrailSeparator = () => (
+    <span data-transaction-trail-separator="true" aria-hidden="true">
+      ›
+    </span>
+  );
+
+  const renderCategoryTrail = ({
+    includeCurrent,
+    helper,
+  }: {
+    includeCurrent?: boolean;
+    helper?: string;
+  }) => {
+    const hasLevel1 = Boolean(selectedLevel1);
+    const hasLevel2 = Boolean(selectedLevel2);
+    const hasCurrent = Boolean(includeCurrent && effectiveCategory);
+
+    if (!hasLevel1 && !hasLevel2 && !hasCurrent) {
+      return null;
+    }
+
+    return (
+      <header data-transaction-trail-header="true">
+        <div data-transaction-category-trail="true">
+          {selectedLevel1 &&
+            renderTrailButton({
+              category: selectedLevel1,
+              onClick: () => handleLevel1Click(selectedLevel1),
+              isFirst: true,
+            })}
+
+          {selectedLevel1 && selectedLevel2 && renderTrailSeparator()}
+
+          {selectedLevel2 &&
+            renderTrailButton({
+              category: selectedLevel2,
+              onClick: () => handleLevel2Click(selectedLevel2),
+            })}
+
+          {(selectedLevel1 || selectedLevel2) && hasCurrent && renderTrailSeparator()}
+
+          {hasCurrent && (
+            <strong data-transaction-trail-current="true">
+              {effectiveCategory?.name || effectiveCategoryLabel}
+            </strong>
+          )}
+        </div>
+
+        {helper && <small data-transaction-trail-helper="true">{helper}</small>}
+      </header>
+    );
+  };
 
   const renderCategoryRow = ({
     category,
@@ -369,44 +426,11 @@ export default function TransactionCreatorCategorySection({
     </div>
   );
 
-  const renderFinalContext = () => {
-    const isLevel3Final =
-      Boolean(selectedLevel2 && effectiveCategory?.id !== selectedLevel2.id);
-    const backCategory = isLevel3Final ? selectedLevel2 : selectedLevel1;
-    const onBack = isLevel3Final
-      ? selectedLevel2
-        ? () => handleLevel2Click(selectedLevel2)
-        : undefined
-      : selectedLevel1
-        ? () => handleLevel1Click(selectedLevel1)
-        : undefined;
-
-    return (
-      <section data-transaction-final-context="true">
-        <div data-transaction-category-trail="true">
-          {backCategory && onBack && (
-            <button
-              type="button"
-              data-transaction-trail-back="true"
-              onClick={() => {
-                closeShortcutMenu();
-                onBack();
-              }}
-            >
-              <span aria-hidden="true">←</span>
-              <span>{backCategory.name}</span>
-            </button>
-          )}
-
-          {backCategory && <span data-transaction-trail-separator="true">›</span>}
-
-          <strong data-transaction-trail-current="true">
-            {effectiveCategory?.name || effectiveCategoryLabel}
-          </strong>
-        </div>
-      </section>
-    );
-  };
+  const renderFinalContext = () => (
+    <section data-transaction-final-context="true">
+      {renderCategoryTrail({ includeCurrent: true })}
+    </section>
+  );
 
   if (effectiveCategoryId) {
     return (
@@ -490,12 +514,7 @@ export default function TransactionCreatorCategorySection({
 
       {selectedLevel2Id && availableLevel3Categories.length > 0 && (
         <section data-ui-section="true" data-transaction-subcategory-section="true">
-          {renderStageHeader({
-            title: selectedLevel2?.name || "Wybierz podkategorię",
-            helper: "Wybierz podkategorię",
-            backCategory: selectedLevel1,
-            onBack: selectedLevel1 ? () => handleLevel1Click(selectedLevel1) : undefined,
-          })}
+          {renderCategoryTrail({ helper: "Wybierz podkategorię" })}
 
           {renderCategoryList(
             availableLevel3Categories.map((level3Category) =>
@@ -513,11 +532,9 @@ export default function TransactionCreatorCategorySection({
 
       {selectedLevel2Id && availableLevel3Categories.length === 0 && (
         <section data-ui-section="true" data-transaction-entry-section="true">
-          {renderStageHeader({
-            title: selectedLevel2?.name || "Wybrana kategoria",
+          {renderCategoryTrail({
+            includeCurrent: true,
             helper: "Ta kategoria nie ma podkategorii",
-            backCategory: selectedLevel1,
-            onBack: selectedLevel1 ? () => handleLevel1Click(selectedLevel1) : undefined,
           })}
         </section>
       )}
