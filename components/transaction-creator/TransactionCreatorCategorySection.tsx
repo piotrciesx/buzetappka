@@ -70,8 +70,8 @@ const metaStyle: CSSProperties = {
 
 const shortcutBarStyle: CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-  gap: "var(--ui-space-4)",
+  gridTemplateColumns: "repeat(3, minmax(150px, 1fr))",
+  gap: "var(--ui-space-8)",
 };
 
 const shortcutMenuWrapStyle: CSSProperties = {
@@ -269,62 +269,43 @@ export default function TransactionCreatorCategorySection({
     </button>
   );
 
-  const renderContextPanel = ({
-    backCategory,
-    backHelper,
-    onBack,
-    currentCategory,
-    currentLabel,
-    currentHelper,
+  const renderBackRow = ({
+    category,
+    label,
+    onClick,
   }: {
-    backCategory?: Category | null;
-    backHelper?: string;
-    onBack?: () => void;
-    currentCategory?: Category | null;
-    currentLabel?: string;
-    currentHelper?: string;
-  }) => {
-    if (!backCategory && !currentCategory && !currentLabel) {
-      return null;
-    }
+    category?: Category | null;
+    label: string;
+    onClick: () => void;
+  }) => (
+    <button
+      type="button"
+      data-transaction-back-row="true"
+      onClick={() => {
+        closeShortcutMenu();
+        onClick();
+      }}
+    >
+      <span data-transaction-back-arrow="true" aria-hidden="true">
+        ←
+      </span>
+      {renderCategoryIcon(category)}
+      <span data-transaction-back-label="true">{label}</span>
+    </button>
+  );
 
-    return (
-      <section
-        data-ui-section="true"
-        data-transaction-context-section="true"
-        aria-label="Aktualna kategoria wpisu"
-      >
-        <div data-transaction-context-panel="true">
-          {backCategory && onBack && (
-            <button
-              type="button"
-              data-transaction-context-parent="true"
-              onClick={() => {
-                closeShortcutMenu();
-                onBack();
-              }}
-            >
-              {renderCategoryIcon(backCategory)}
-              <span data-transaction-context-copy="true">
-                <strong>{backCategory.name}</strong>
-                <small>{backHelper || "wróć poziom wyżej"}</small>
-              </span>
-            </button>
-          )}
-
-          {(currentCategory || currentLabel) && (
-            <div data-transaction-context-current="true">
-              {renderCategoryIcon(currentCategory)}
-              <span data-transaction-context-copy="true">
-                <strong>{currentCategory?.name || currentLabel}</strong>
-                {currentHelper && <small>{currentHelper}</small>}
-              </span>
-            </div>
-          )}
-        </div>
-      </section>
-    );
-  };
+  const renderCurrentRow = ({
+    category,
+    label,
+  }: {
+    category?: Category | null;
+    label: string;
+  }) => (
+    <div data-transaction-current-row="true">
+      {renderCategoryIcon(category)}
+      <span data-transaction-current-label="true">{label}</span>
+    </div>
+  );
 
   const renderShortcutRow = (shortcut: TransactionShortcut) => {
     const shortcutCategory = categoriesById[shortcut.id] || null;
@@ -344,7 +325,6 @@ export default function TransactionCreatorCategorySection({
         {renderCategoryIcon(shortcutCategory)}
         <span data-ui-dropdown-list-content="true">
           <span data-ui-dropdown-list-title="true">{shortcut.label}</span>
-
         </span>
       </button>
     );
@@ -424,6 +404,136 @@ export default function TransactionCreatorCategorySection({
     </section>
   );
 
+  const renderLevel1List = () => (
+    <section
+      style={panelStyle}
+      data-ui-section="true"
+      data-transaction-entry-section="true"
+    >
+      <header data-transaction-section-header="true">
+        <span style={titleWrapStyle}>
+          <strong style={titleStyle} data-ui-section-title="true">
+            Wybierz typ wpisu
+          </strong>
+        </span>
+      </header>
+
+      <div data-transaction-selection-list="true">
+        <div data-ui-dropdown-list="true" data-density="large">
+          {level1Categories.map((level1Category) =>
+            renderCategoryRow({
+              category: level1Category,
+              label: level1Category.name,
+              helper: "wybierz kategorię",
+              isSelected: selectedLevel1Id === level1Category.id,
+              onClick: () => handleLevel1Click(level1Category),
+            }),
+          )}
+        </div>
+      </div>
+    </section>
+  );
+
+  const renderLevel2List = () => (
+    <section
+      style={panelStyle}
+      data-ui-section="true"
+      data-transaction-entry-section="true"
+    >
+      <header data-transaction-section-header="true">
+        <span style={titleWrapStyle}>
+          <strong style={titleStyle} data-ui-section-title="true">
+            {selectedLevel1?.name || "Wybierz kategorię"}
+          </strong>
+          <small style={metaStyle}>Wybierz kategorię</small>
+        </span>
+      </header>
+
+      <div data-transaction-selection-list="true">
+        <div data-ui-dropdown-list="true" data-density="large">
+          {activeAvailableLevel2Categories.map((level2Category) => {
+            const level3Children = level3ByParentId[level2Category.id] || [];
+            const isFinalHere = level3Children.length === 0;
+
+            return renderCategoryRow({
+              category: level2Category,
+              label: level2Category.name,
+              helper: isFinalHere ? "kategoria końcowa" : "wybierz podkategorię",
+              isSelected: selectedLevel2Id === level2Category.id,
+              onClick: () => handleLevel2Click(level2Category),
+            });
+          })}
+        </div>
+      </div>
+    </section>
+  );
+
+  const renderLevel3List = () => (
+    <section
+      style={panelStyle}
+      data-ui-section="true"
+      data-transaction-subcategory-section="true"
+    >
+      {selectedLevel2 &&
+        renderBackRow({
+          category: selectedLevel2,
+          label: selectedLevel2.name,
+          onClick: selectedLevel1
+            ? () => handleLevel1Click(selectedLevel1)
+            : closeShortcutMenu,
+        })}
+
+      <header data-transaction-section-header="true">
+        <span style={titleWrapStyle}>
+          <strong style={titleStyle} data-ui-section-title="true">
+            Wybierz podkategorię
+          </strong>
+        </span>
+      </header>
+
+      <div data-transaction-selection-list="true">
+        <div data-ui-dropdown-list="true" data-density="large">
+          {availableLevel3Categories.map((level3Category) =>
+            renderCategoryRow({
+              category: level3Category,
+              label: getLevel3ButtonLabel(level3Category),
+              helper: "kategoria końcowa",
+              isSelected: effectiveCategoryId === level3Category.id,
+              onClick: () => handleLevel3Click(level3Category),
+            }),
+          )}
+        </div>
+      </div>
+    </section>
+  );
+
+  const renderFinalContext = () => (
+    <section
+      style={panelStyle}
+      data-ui-section="true"
+      data-transaction-final-context="true"
+    >
+      {selectedLevel2
+        ? renderBackRow({
+            category: selectedLevel2,
+            label: selectedLevel2.name,
+            onClick: () => handleLevel2Click(selectedLevel2),
+          })
+        : selectedLevel1
+          ? renderBackRow({
+              category: selectedLevel1,
+              label: selectedLevel1.name,
+              onClick: () => handleLevel1Click(selectedLevel1),
+            })
+          : null}
+
+      {renderCurrentRow({
+        category: effectiveCategory,
+        label: effectiveCategory?.name || effectiveCategoryLabel,
+      })}
+    </section>
+  );
+
   if (effectiveCategoryId) {
     return (
       <section
@@ -434,22 +544,7 @@ export default function TransactionCreatorCategorySection({
       >
         {renderShortcutSection()}
         <div data-ui-section-separator="true" />
-        {renderContextPanel({
-          backCategory:
-            effectiveCategory && selectedLevel2?.id !== effectiveCategory.id
-              ? selectedLevel2
-              : selectedLevel1,
-          backHelper: "wróć poziom wyżej",
-          onBack:
-            effectiveCategory && selectedLevel2?.id !== effectiveCategory.id && selectedLevel2
-              ? () => handleLevel2Click(selectedLevel2)
-              : selectedLevel1
-                ? () => handleLevel1Click(selectedLevel1)
-                : undefined,
-          currentCategory: effectiveCategory,
-          currentLabel: effectiveCategoryLabel,
-          currentHelper: "wybrana kategoria",
-        })}
+        {renderFinalContext()}
       </section>
     );
   }
@@ -464,73 +559,12 @@ export default function TransactionCreatorCategorySection({
 
       <div data-ui-section-separator="true" />
 
-      {!activeLevel1Id && level1Categories.length > 0 && (
-        <section
-          style={panelStyle}
-          data-ui-section="true"
-          data-transaction-entry-section="true"
-        >
-          <header data-transaction-section-header="true">
-            <span style={titleWrapStyle}>
-              <strong style={titleStyle} data-ui-section-title="true">
-                Wybierz typ wpisu
-              </strong>
-            </span>
-          </header>
-
-          <div data-ui-dropdown-list="true" data-density="large">
-            {level1Categories.map((level1Category) =>
-              renderCategoryRow({
-                category: level1Category,
-                label: level1Category.name,
-                helper: "wybierz kategorię",
-                isSelected: selectedLevel1Id === level1Category.id,
-                onClick: () => handleLevel1Click(level1Category),
-              }),
-            )}
-          </div>
-        </section>
-      )}
+      {!activeLevel1Id && level1Categories.length > 0 && renderLevel1List()}
 
       {activeLevel1Id &&
         activeAvailableLevel2Categories.length > 0 &&
-        !selectedLevel2Id && (
-          <section
-            style={panelStyle}
-            data-ui-section="true"
-            data-transaction-entry-section="true"
-          >
-            {renderContextPanel({
-              currentCategory: selectedLevel1,
-              currentHelper: "wybrany typ wpisu",
-            })}
-
-            <header data-transaction-section-header="true">
-              <span style={titleWrapStyle}>
-                <strong style={titleStyle} data-ui-section-title="true">
-                  Wybierz kategorię
-                </strong>
-                <small style={metaStyle}>Pełna lista kategorii</small>
-              </span>
-            </header>
-
-            <div data-ui-dropdown-list="true" data-density="large">
-              {activeAvailableLevel2Categories.map((level2Category) => {
-                const level3Children =
-                  level3ByParentId[level2Category.id] || [];
-                const isFinalHere = level3Children.length === 0;
-
-                return renderCategoryRow({
-                  category: level2Category,
-                  label: level2Category.name,
-                  helper: isFinalHere ? "kategoria końcowa" : "wybierz podkategorię",
-                  isSelected: selectedLevel2Id === level2Category.id,
-                  onClick: () => handleLevel2Click(level2Category),
-                });
-              })}
-            </div>
-          </section>
-        )}
+        !selectedLevel2Id &&
+        renderLevel2List()}
 
       {activeLevel1Id && activeAvailableLevel2Categories.length === 0 && (
         <section
@@ -538,64 +572,38 @@ export default function TransactionCreatorCategorySection({
           data-ui-section="true"
           data-transaction-final-category-placeholder="true"
         >
-          {renderContextPanel({
-            currentCategory: selectedLevel1,
-            currentHelper: "wybrany typ wpisu",
-          })}
-          <span style={metaStyle}>
-            Ten typ nie ma niższych kategorii — wpis zapisze się bezpośrednio
-            tutaj.
-          </span>
-        </section>
-      )}
-
-      {selectedLevel2Id && availableLevel3Categories.length > 0 && (
-        <section
-          style={panelStyle}
-          data-ui-section="true"
-          data-transaction-subcategory-section="true"
-        >
-          {renderContextPanel({
-            backCategory: selectedLevel2,
-            backHelper: "wróć poziom wyżej",
-            onBack: selectedLevel1 ? () => handleLevel1Click(selectedLevel1) : undefined,
-          })}
-
           <header data-transaction-section-header="true">
             <span style={titleWrapStyle}>
               <strong style={titleStyle} data-ui-section-title="true">
-                Wybierz podkategorię
+                {selectedLevel1?.name || "Wybrany typ"}
               </strong>
-              <small style={metaStyle}>Pełna lista podkategorii</small>
+              <small style={metaStyle}>Wpis zapisze się tutaj.</small>
             </span>
           </header>
-
-          <div data-ui-dropdown-list="true" data-density="large">
-            {availableLevel3Categories.map((level3Category) =>
-              renderCategoryRow({
-                category: level3Category,
-                label: getLevel3ButtonLabel(level3Category),
-                helper: "kategoria końcowa",
-                isSelected: effectiveCategoryId === level3Category.id,
-                onClick: () => handleLevel3Click(level3Category),
-              }),
-            )}
-          </div>
         </section>
       )}
 
+      {selectedLevel2Id &&
+        availableLevel3Categories.length > 0 &&
+        renderLevel3List()}
+
       {selectedLevel2Id && availableLevel3Categories.length === 0 && (
         <section style={panelStyle} data-ui-section="true">
-          {renderContextPanel({
-            backCategory: selectedLevel1,
-            backHelper: "wróć poziom wyżej",
-            onBack: selectedLevel1 ? () => handleLevel1Click(selectedLevel1) : undefined,
-            currentCategory: selectedLevel2,
-            currentHelper: "wybrana kategoria",
-          })}
-          <span style={metaStyle}>
-            Ta kategoria nie ma podkategorii — wpis zapisze się tutaj.
-          </span>
+          {selectedLevel1 && selectedLevel2
+            ? renderBackRow({
+                category: selectedLevel1,
+                label: selectedLevel1.name,
+                onClick: () => handleLevel1Click(selectedLevel1),
+              })
+            : null}
+          <header data-transaction-section-header="true">
+            <span style={titleWrapStyle}>
+              <strong style={titleStyle} data-ui-section-title="true">
+                {selectedLevel2?.name || "Wybrana kategoria"}
+              </strong>
+              <small style={metaStyle}>Wpis zapisze się tutaj.</small>
+            </span>
+          </header>
         </section>
       )}
     </section>
