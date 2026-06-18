@@ -4740,6 +4740,43 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   border-bottom: 0;
 }
 
+/* Foundation Icon Picker v1 — adaptive full-row menu height.
+   Keep the whole picker menu as the scroll container so search, rows, empty state
+   and the "more" action share one clipping boundary. */
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-menu="true"][data-layout="icons"] {
+  --ui-picker-icon-row-height: 38px;
+  --ui-picker-icon-visible-rows: 5;
+  --ui-picker-icon-menu-padding: var(--ui-space-3);
+  --ui-picker-icon-search-height: calc(38px + var(--ui-space-5) + var(--ui-space-4) + 1px);
+  height: auto;
+  max-height: min(
+    calc(
+      var(--ui-picker-icon-search-height) +
+      (var(--ui-picker-icon-row-height) * var(--ui-picker-icon-visible-rows)) +
+      (var(--ui-picker-icon-menu-padding) * 2)
+    ),
+    calc(100dvh - 160px)
+  );
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-padding-block: var(--ui-picker-icon-menu-padding);
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-menu-grid="true"] {
+  flex: 0 0 auto;
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"] {
+  flex: 0 0 var(--ui-picker-icon-row-height);
+  min-height: var(--ui-picker-icon-row-height);
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-more="true"] {
+  flex: 0 0 var(--ui-picker-icon-row-height);
+  min-height: var(--ui-picker-icon-row-height);
+  margin: 0 var(--ui-space-3);
+}
+
 /* Month notes final empty state icon tone. */
 [data-ui-empty-block="true"] [data-ui-icon-tile="true"] {
   background: var(--ui-tone-surface, #eaf2ff);
