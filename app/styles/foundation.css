@@ -3150,7 +3150,7 @@
 [data-ui-picker-menu="true"] {
   z-index: var(--ui-z-global-critical);
   width: min(360px, calc(100vw - 48px));
-  max-height: min(360px, calc(100dvh - 180px));
+  max-height: min(260px, calc(100dvh - 180px));
   overflow: auto;
 }
 
