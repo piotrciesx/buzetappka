@@ -169,6 +169,10 @@ export default function TransactionCreatorCategorySection({
   const effectiveCategory = effectiveCategoryId
     ? categoriesById[effectiveCategoryId] || null
     : null;
+  const effectiveParentCategory = getParentCategory(
+    effectiveCategory,
+    categoriesById,
+  );
 
   const shortcutMenus = useMemo(
     () => [
@@ -269,109 +273,6 @@ export default function TransactionCreatorCategorySection({
     </button>
   );
 
-  const renderContextRow = ({
-    category,
-    label,
-    helper,
-    onClick,
-    isCurrent,
-  }: {
-    category?: Category | null;
-    label: string;
-    helper?: string;
-    onClick?: () => void;
-    isCurrent?: boolean;
-  }) => {
-    const rowContent = (
-      <>
-        {renderCategoryIcon(category)}
-        <span data-ui-dropdown-list-content="true">
-          <span data-ui-dropdown-list-title="true">{label}</span>
-          {helper && <span data-ui-dropdown-list-helper="true">{helper}</span>}
-        </span>
-        {!isCurrent && renderChevron()}
-      </>
-    );
-
-    if (!onClick || isCurrent) {
-      return (
-        <div
-          data-ui-dropdown-list-row="true"
-          data-transaction-context-row="true"
-          data-current={isCurrent ? "true" : "false"}
-        >
-          {rowContent}
-        </div>
-      );
-    }
-
-    return (
-      <button
-        type="button"
-        data-ui-dropdown-list-row="true"
-        data-transaction-context-row="true"
-        onClick={() => {
-          closeShortcutMenu();
-          onClick();
-        }}
-      >
-        {rowContent}
-      </button>
-    );
-  };
-
-  const renderContextStack = ({
-    includeCurrent,
-  }: {
-    includeCurrent: boolean;
-  }) => {
-    if (!selectedLevel1 && !selectedLevel2 && !effectiveCategory) {
-      return null;
-    }
-
-    return (
-      <section
-        data-ui-section="true"
-        data-transaction-context-section="true"
-        aria-label="Wybrana ścieżka kategorii"
-      >
-        <div data-ui-dropdown-list="true" data-density="normal">
-          {selectedLevel1 &&
-            renderContextRow({
-              category: selectedLevel1,
-              label: selectedLevel1.name,
-              helper: selectedLevel2 || effectiveCategory ? "wróć do kategorii" : "typ wpisu",
-              onClick:
-                selectedLevel2 || effectiveCategory
-                  ? () => handleLevel1Click(selectedLevel1)
-                  : undefined,
-              isCurrent: !selectedLevel2 && !effectiveCategory,
-            })}
-
-          {selectedLevel2 &&
-            renderContextRow({
-              category: selectedLevel2,
-              label: selectedLevel2.name,
-              helper: effectiveCategory ? "wróć do podkategorii" : "wybrana kategoria",
-              onClick: effectiveCategory
-                ? () => handleLevel2Click(selectedLevel2)
-                : undefined,
-              isCurrent: !effectiveCategory,
-            })}
-
-          {includeCurrent &&
-            effectiveCategory &&
-            renderContextRow({
-              category: effectiveCategory,
-              label: effectiveCategory.name || effectiveCategoryLabel,
-              helper: "wybrana kategoria końcowa",
-              isCurrent: true,
-            })}
-        </div>
-      </section>
-    );
-  };
-
   const renderShortcutRow = (shortcut: TransactionShortcut) => {
     const shortcutCategory = categoriesById[shortcut.id] || null;
 
@@ -392,7 +293,7 @@ export default function TransactionCreatorCategorySection({
           <span data-ui-dropdown-list-title="true">{shortcut.label}</span>
           {shortcutCategory && (
             <span data-ui-dropdown-list-helper="true">
-              otwórz formularz
+              {effectiveParentCategory?.name || "otwórz formularz"}
             </span>
           )}
         </span>
@@ -474,7 +375,65 @@ export default function TransactionCreatorCategorySection({
     </section>
   );
 
+  const renderContextBar = ({
+    parent,
+    current,
+    parentHelper,
+    currentHelper,
+    onParentClick,
+  }: {
+    parent?: Category | null;
+    current?: Category | null;
+    parentHelper?: string;
+    currentHelper?: string;
+    onParentClick?: () => void;
+  }) => {
+    if (!parent && !current) {
+      return null;
+    }
+
+    return (
+      <section data-transaction-context-section="true" aria-label="Aktualna kategoria">
+        {parent && (
+          <button
+            type="button"
+            data-transaction-context-parent="true"
+            onClick={() => {
+              closeShortcutMenu();
+              onParentClick?.();
+            }}
+          >
+            {renderCategoryIcon(parent)}
+            <span data-transaction-context-copy="true">
+              <strong>{parent.name}</strong>
+              {parentHelper && <small>{parentHelper}</small>}
+            </span>
+          </button>
+        )}
+
+        {current && (
+          <div data-transaction-context-current="true">
+            {renderCategoryIcon(current)}
+            <span data-transaction-context-copy="true">
+              <strong>{current.name || effectiveCategoryLabel}</strong>
+              {currentHelper && <small>{currentHelper}</small>}
+            </span>
+          </div>
+        )}
+      </section>
+    );
+  };
+
   if (effectiveCategoryId) {
+    const finalParent =
+      selectedLevel2 || effectiveParentCategory || selectedLevel1 || null;
+    const parentBack =
+      finalParent?.level === 2 && selectedLevel1
+        ? () => handleLevel1Click(selectedLevel1)
+        : finalParent?.level === 1
+          ? () => handleLevel1Click(finalParent)
+          : undefined;
+
     return (
       <section
         style={flowShellStyle}
@@ -484,7 +443,13 @@ export default function TransactionCreatorCategorySection({
       >
         {renderShortcutSection()}
         <div data-ui-section-separator="true" />
-        {renderContextStack({ includeCurrent: true })}
+        {renderContextBar({
+          parent: finalParent,
+          current: effectiveCategory,
+          parentHelper: "wróć poziom wyżej",
+          currentHelper: "wybrana kategoria",
+          onParentClick: parentBack,
+        })}
       </section>
     );
   }
@@ -535,7 +500,10 @@ export default function TransactionCreatorCategorySection({
             data-ui-section="true"
             data-transaction-entry-section="true"
           >
-            {renderContextStack({ includeCurrent: false })}
+            {renderContextBar({
+              current: selectedLevel1,
+              currentHelper: "typ wpisu",
+            })}
 
             <header data-transaction-section-header="true">
               <span style={titleWrapStyle}>
@@ -570,7 +538,10 @@ export default function TransactionCreatorCategorySection({
           data-ui-section="true"
           data-transaction-final-category-placeholder="true"
         >
-          {renderContextStack({ includeCurrent: false })}
+          {renderContextBar({
+            current: selectedLevel1,
+            currentHelper: "typ bez niższych kategorii",
+          })}
           <span style={metaStyle}>
             Ten typ nie ma niższych kategorii — wpis zapisze się bezpośrednio
             tutaj.
@@ -584,7 +555,13 @@ export default function TransactionCreatorCategorySection({
           data-ui-section="true"
           data-transaction-subcategory-section="true"
         >
-          {renderContextStack({ includeCurrent: false })}
+          {renderContextBar({
+            parent: selectedLevel2,
+            parentHelper: "wróć poziom wyżej",
+            onParentClick: selectedLevel1
+              ? () => handleLevel1Click(selectedLevel1)
+              : undefined,
+          })}
 
           <header data-transaction-section-header="true">
             <span style={titleWrapStyle}>
@@ -611,7 +588,15 @@ export default function TransactionCreatorCategorySection({
 
       {selectedLevel2Id && availableLevel3Categories.length === 0 && (
         <section style={panelStyle} data-ui-section="true">
-          {renderContextStack({ includeCurrent: false })}
+          {renderContextBar({
+            parent: selectedLevel1,
+            current: selectedLevel2,
+            parentHelper: "wróć poziom wyżej",
+            currentHelper: "wybrana kategoria",
+            onParentClick: selectedLevel1
+              ? () => handleLevel1Click(selectedLevel1)
+              : undefined,
+          })}
           <span style={metaStyle}>
             Ta kategoria nie ma podkategorii — wpis zapisze się tutaj.
           </span>
