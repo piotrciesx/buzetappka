@@ -57,7 +57,7 @@ const entryTitleStyle = {
 
 const entryGridStyle = {
   display: "grid",
-  gridTemplateColumns: "auto 86px minmax(220px, 1fr) minmax(130px, 160px)",
+  gridTemplateColumns: "auto minmax(64px, 78px) minmax(280px, 1fr) minmax(96px, 126px)",
   alignItems: "center",
   gap: "var(--ui-space-5)",
 } as const;
@@ -75,7 +75,7 @@ const dayFieldShellStyle = {
 
 const extraGridStyle = {
   display: "grid",
-  gridTemplateColumns: "minmax(220px, 360px) minmax(220px, 1fr)",
+  gridTemplateColumns: "1fr",
   alignItems: "start",
   gap: "var(--ui-space-5)",
 } as const;
@@ -596,7 +596,7 @@ export default function TransactionCreatorModal(
                       className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputL}`}
                       data-input-width={uiInputApi.width.full}
                       data-input-variant="entry"
-                      placeholder="np. sklep, dom, jedzenie"
+                      placeholder="dodaj tag..."
                       value={tagInputValue}
                       autoComplete="off"
                       autoCorrect="off"
