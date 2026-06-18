@@ -504,8 +504,14 @@ export default function PaymentSourcesPanel({
 
         <div data-payment-source-stats-row="true">
           <span>{stats.transactionCount} wpisów</span>
-          <span>Przychody: {formatCurrency(stats.incomeTotal)}</span>
-          <span>Wydatki: {formatCurrency(stats.expenseTotal)}</span>
+
+          {source.is_income_source !== false && (
+            <span>Przychody: {formatCurrency(stats.incomeTotal)}</span>
+          )}
+
+          {source.is_expense_source !== false && (
+            <span>Wydatki: {formatCurrency(stats.expenseTotal)}</span>
+          )}
         </div>
 
         <div data-payment-source-actions="true">
