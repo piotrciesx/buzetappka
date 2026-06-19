@@ -5492,3 +5492,112 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 [data-ui-tone="cocoa"] { --ui-tone-surface: #f1e4d8; --ui-tone-border: #dfc7b5; --ui-tone-text: #92400e; }
 [data-ui-tone="stone"] { --ui-tone-surface: #f5f5f4; --ui-tone-border: #e7e5e4; --ui-tone-text: #57534e; }
 [data-ui-tone="slate"] { --ui-tone-surface: #f1f5f9; --ui-tone-border: #cbd5e1; --ui-tone-text: #475569; }
+
+/* Icon Foundation v1.0 — palette and hover correction before icon tests. */
+:root {
+  --ui-icon-tile-size-a: 28px;
+  --ui-icon-glyph-size-a: 16px;
+  --ui-icon-radius-a: 8px;
+  --ui-icon-tile-size-b: 36px;
+  --ui-icon-glyph-size-b: 20px;
+  --ui-icon-radius-b: 10px;
+  --ui-icon-tile-size-c: 46px;
+  --ui-icon-glyph-size-c: 24px;
+  --ui-icon-radius-c: 12px;
+  --ui-color-swatch-size: 24px;
+  --ui-color-swatch-radius: 7px;
+  --ui-color-swatch-option-size: 28px;
+  --ui-color-swatch-option-radius: 9px;
+}
+
+/* Color picker: square swatches, calmer fill, no old circular geometry. */
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-menu="true"][data-layout="colors"] {
+  width: max-content;
+  min-width: max-content;
+  max-width: min(420px, calc(100vw - 32px));
+  display: grid;
+  grid-template-columns: repeat(8, var(--ui-color-swatch-option-size));
+  justify-content: start;
+  align-content: start;
+  gap: var(--ui-space-5);
+  min-height: auto;
+  max-height: none;
+  overflow: visible;
+  padding: var(--ui-space-6);
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-option="true"],
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-dot="true"] {
+  width: var(--ui-color-swatch-option-size);
+  min-width: var(--ui-color-swatch-option-size);
+  height: var(--ui-color-swatch-option-size);
+  min-height: var(--ui-color-swatch-option-size);
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-color-swatch-option-radius);
+  background: transparent;
+  box-shadow: none;
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-option="true"] [data-ui-color-swatch="true"],
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-dot="true"] span,
+[data-ui-color-option="true"] [data-ui-color-swatch="true"],
+[data-ui-color-dot="true"] span,
+[data-ui-color-swatch="true"] {
+  width: var(--ui-color-swatch-size);
+  min-width: var(--ui-color-swatch-size);
+  height: var(--ui-color-swatch-size);
+  min-height: var(--ui-color-swatch-size);
+  border-radius: var(--ui-color-swatch-radius);
+  background: var(--ui-tone-text, var(--ui-tone-surface, #eef5ff));
+  background: color-mix(in srgb, var(--ui-tone-text, #215dff) 76%, white 24%);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--ui-tone-text, #215dff) 34%, white 66%),
+    0 0 0 2px rgba(255, 255, 255, 0.88);
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-option="true"]:hover [data-ui-color-swatch="true"],
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-dot="true"]:hover span,
+[data-ui-color-option="true"]:hover [data-ui-color-swatch="true"],
+[data-ui-color-dot="true"]:hover span {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--ui-tone-text, #215dff) 44%, white 56%),
+    0 0 0 3px rgba(8, 44, 122, 0.08);
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-option="true"][data-active="true"] [data-ui-color-swatch="true"],
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-dot="true"][data-active="true"] span,
+[data-ui-color-option="true"][data-active="true"] [data-ui-color-swatch="true"],
+[data-ui-color-dot="true"][data-active="true"] span {
+  box-shadow:
+    0 0 0 2px var(--ui-color-card-background),
+    0 0 0 4px var(--ui-tone-text, var(--ui-color-primary-navy)),
+    inset 0 0 0 1px color-mix(in srgb, var(--ui-tone-text, #215dff) 44%, white 56%);
+}
+
+/* Icon picker: hover highlights the row/tile but never turns the icon white. */
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:hover,
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:focus-visible {
+  background: rgba(8, 44, 122, 0.022);
+  color: var(--ui-color-primary-navy);
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:hover [data-ui-icon-tile="true"],
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:focus-visible [data-ui-icon-tile="true"],
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"][data-active="true"] [data-ui-icon-tile="true"],
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"][aria-selected="true"] [data-ui-icon-tile="true"] {
+  background: var(--ui-tone-surface, #eef5ff);
+  color: var(--ui-tone-text, var(--ui-color-primary-navy));
+  box-shadow: inset 0 0 0 1px var(--ui-tone-border, rgba(8, 44, 122, 0.10));
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:hover [data-category-icon="true"],
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:hover [data-category-icon-svg="true"],
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:focus-visible [data-category-icon="true"],
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:focus-visible [data-category-icon-svg="true"] {
+  color: inherit;
+  stroke: currentColor;
+}
