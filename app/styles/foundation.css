@@ -5601,3 +5601,98 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   color: inherit;
   stroke: currentColor;
 }
+
+/* Icon Foundation v1.0 — final clean color palette override. */
+:root {
+  --ui-color-swatch-size: 24px;
+  --ui-color-swatch-radius: 6px;
+  --ui-color-swatch-option-size: 30px;
+  --ui-color-swatch-option-radius: 8px;
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-menu="true"][data-layout="colors"] {
+  width: max-content;
+  min-width: max-content;
+  max-width: min(376px, calc(100vw - 32px));
+  display: grid;
+  grid-template-columns: repeat(8, var(--ui-color-swatch-option-size));
+  justify-content: start;
+  align-content: start;
+  gap: var(--ui-space-5);
+  min-height: auto;
+  max-height: none;
+  overflow: visible;
+  padding: var(--ui-space-6);
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-option="true"],
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-dot="true"],
+[data-ui-color-option="true"],
+[data-ui-color-dot="true"] {
+  width: var(--ui-color-swatch-option-size);
+  min-width: var(--ui-color-swatch-option-size);
+  height: var(--ui-color-swatch-option-size);
+  min-height: var(--ui-color-swatch-option-size);
+  box-sizing: border-box;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-color-swatch-option-radius);
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+  cursor: pointer;
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-option="true"] [data-ui-color-swatch="true"],
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-dot="true"] span,
+[data-ui-color-option="true"] [data-ui-color-swatch="true"],
+[data-ui-color-dot="true"] span,
+[data-ui-color-swatch="true"] {
+  width: var(--ui-color-swatch-size);
+  min-width: var(--ui-color-swatch-size);
+  height: var(--ui-color-swatch-size);
+  min-height: var(--ui-color-swatch-size);
+  box-sizing: border-box;
+  display: block;
+  border: 0;
+  border-radius: var(--ui-color-swatch-radius);
+  background: var(--ui-tone-text, var(--ui-tone-surface, #215dff));
+  box-shadow: inset 0 0 0 1px rgba(8, 44, 122, 0.10);
+  outline: none;
+  transform: none;
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-option="true"]:hover,
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-dot="true"]:hover,
+[data-ui-color-option="true"]:hover,
+[data-ui-color-dot="true"]:hover {
+  background: rgba(8, 44, 122, 0.035);
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-option="true"]:hover [data-ui-color-swatch="true"],
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-dot="true"]:hover span,
+[data-ui-color-option="true"]:hover [data-ui-color-swatch="true"],
+[data-ui-color-dot="true"]:hover span {
+  box-shadow: inset 0 0 0 1px rgba(8, 44, 122, 0.14);
+  transform: none;
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-option="true"][data-active="true"],
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-dot="true"][data-active="true"],
+[data-ui-color-option="true"][data-active="true"],
+[data-ui-color-dot="true"][data-active="true"] {
+  background: var(--ui-color-card-background);
+  box-shadow:
+    0 0 0 2px var(--ui-color-card-background),
+    0 0 0 4px var(--ui-tone-text, var(--ui-color-primary-navy));
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-option="true"][data-active="true"] [data-ui-color-swatch="true"],
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-dot="true"][data-active="true"] span,
+[data-ui-color-option="true"][data-active="true"] [data-ui-color-swatch="true"],
+[data-ui-color-dot="true"][data-active="true"] span {
+  box-shadow: inset 0 0 0 1px rgba(8, 44, 122, 0.12);
+  transform: none;
+}
