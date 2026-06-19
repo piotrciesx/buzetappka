@@ -287,7 +287,7 @@ export function useBankSearch(params: UseBankSearchParams) {
         ...getEffectiveSignedAmountForSourceFilter(transaction, effectivePaymentSourceId),
       }))
       .filter(({ transaction, effectiveSignedAmount }) => {
-        const amount = Math.abs(effectiveSignedAmount || getAmountNumber(transaction.amount))
+        const amount = Math.abs(effectiveSignedAmount)
 
         if (!doesTransactionMatchTextFilter(transaction, normalizedDescription)) {
           return false
