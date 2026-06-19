@@ -73,7 +73,14 @@ const iconShapes: Record<UiIconKey, IconShape> = {
   expand: { paths: ['M8 9l4 4 4-4'] },
   info: { paths: ['M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Z', 'M12 11v5', 'M12 8h.01'] },
 }
-export default function CategoryIcon({ iconKey, level = 2 }: CategoryIconProps) {
+
+type AppIconSize = 'a' | 'b' | 'c' | 'button'
+
+export default function CategoryIcon({
+  iconKey,
+  level = 2,
+  size = 'a',
+}: CategoryIconProps & { size?: AppIconSize }) {
   const resolvedIconKey =
     iconKey && Object.prototype.hasOwnProperty.call(iconShapes, iconKey)
       ? (iconKey as UiIconKey)
@@ -90,10 +97,11 @@ export default function CategoryIcon({ iconKey, level = 2 }: CategoryIconProps) 
     <span
       data-category-icon="true"
       data-category-icon-level={level}
+      data-ui-icon-size={size}
       aria-hidden="true"
       title={icon?.label || resolvedIconKey}
     >
-      <svg viewBox="0 0 24 24" width="16" height="16" focusable="false">
+      <svg viewBox="0 0 24 24" focusable="false">
         {shape.paths?.map((path) => (
           <path
             key={path}
@@ -102,7 +110,7 @@ export default function CategoryIcon({ iconKey, level = 2 }: CategoryIconProps) 
             stroke="currentColor"
             strokeLinecap="round"
             strokeLinejoin="round"
-            strokeWidth="1.75"
+            strokeWidth="2"
           />
         ))}
         {shape.circles?.map((circle) => (
@@ -115,7 +123,7 @@ export default function CategoryIcon({ iconKey, level = 2 }: CategoryIconProps) 
             stroke="currentColor"
             strokeLinecap="round"
             strokeLinejoin="round"
-            strokeWidth="1.75"
+            strokeWidth="2"
           />
         ))}
       </svg>

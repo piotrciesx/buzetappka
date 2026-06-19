@@ -53,7 +53,9 @@ export default function CategoryIconPicker({ value, onChange }: CategoryIconPick
         title="Bez ikony"
         onClick={() => onChange(null)}
       >
-        <span data-category-icon-empty="true" aria-hidden="true">-</span>
+        <span data-ui-icon-tile="true" data-ui-icon-size="a" data-ui-tone="blue">
+          <span data-category-icon-empty="true" aria-hidden="true">-</span>
+        </span>
         <span>Bez ikony</span>
       </button>
       {CATEGORY_ICONS.map((icon) => (
@@ -66,7 +68,9 @@ export default function CategoryIconPicker({ value, onChange }: CategoryIconPick
           title={icon.label}
           onClick={() => onChange(icon.key)}
         >
-          <CategoryIcon iconKey={icon.key} level={2} />
+          <span data-ui-icon-tile="true" data-ui-icon-size="a">
+            <CategoryIcon iconKey={icon.key} level={2} size="a" />
+          </span>
           <span>{icon.label}</span>
         </button>
       ))}
