@@ -3,6 +3,7 @@ import { getUiIcon, type UiIconKey } from '../lib/userAppearance'
 type CategoryIconProps = {
   iconKey?: string | null
   level?: 2 | 3
+  size?: 'a' | 'b' | 'c'
 }
 
 type IconShape = {
@@ -73,14 +74,7 @@ const iconShapes: Record<UiIconKey, IconShape> = {
   expand: { paths: ['M8 9l4 4 4-4'] },
   info: { paths: ['M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Z', 'M12 11v5', 'M12 8h.01'] },
 }
-
-type AppIconSize = 'a' | 'b' | 'c' | 'button'
-
-export default function CategoryIcon({
-  iconKey,
-  level = 2,
-  size = 'a',
-}: CategoryIconProps & { size?: AppIconSize }) {
+export default function CategoryIcon({ iconKey, level = 2, size = 'a' }: CategoryIconProps) {
   const resolvedIconKey =
     iconKey && Object.prototype.hasOwnProperty.call(iconShapes, iconKey)
       ? (iconKey as UiIconKey)
@@ -97,11 +91,11 @@ export default function CategoryIcon({
     <span
       data-category-icon="true"
       data-category-icon-level={level}
-      data-ui-icon-size={size}
+      data-category-icon-size={size}
       aria-hidden="true"
       title={icon?.label || resolvedIconKey}
     >
-      <svg viewBox="0 0 24 24" focusable="false">
+      <svg viewBox="0 0 24 24" width="16" height="16" focusable="false" data-category-icon-svg="true">
         {shape.paths?.map((path) => (
           <path
             key={path}
@@ -110,7 +104,7 @@ export default function CategoryIcon({
             stroke="currentColor"
             strokeLinecap="round"
             strokeLinejoin="round"
-            strokeWidth="2"
+            strokeWidth="2.05"
           />
         ))}
         {shape.circles?.map((circle) => (
@@ -123,7 +117,7 @@ export default function CategoryIcon({
             stroke="currentColor"
             strokeLinecap="round"
             strokeLinejoin="round"
-            strokeWidth="2"
+            strokeWidth="2.05"
           />
         ))}
       </svg>

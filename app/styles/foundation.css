@@ -5247,293 +5247,248 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   }
 }
 
-/* Icon Foundation 2.0 — frozen icon tile, glyph and button icon contracts.
-   Size A = category/list/note/payment source icon.
-   Size B = modal/popup/header icon.
-   Size C = optional larger module/empty-state icon.
-   Button = inline icon inside action buttons, without tile background. */
+/* Icon Foundation v1.0 — final geometry, tones and swatches. */
 :root {
-  --ui-icon-radius-a: 10px;
-  --ui-icon-radius-b: 12px;
-  --ui-icon-radius-c: 14px;
+  --ui-icon-tile-size-a: 28px;
+  --ui-icon-glyph-size-a: 16px;
+  --ui-icon-radius-a: 8px;
+  --ui-icon-tile-size-b: 36px;
+  --ui-icon-glyph-size-b: 20px;
+  --ui-icon-radius-b: 10px;
+  --ui-icon-tile-size-c: 46px;
+  --ui-icon-glyph-size-c: 24px;
+  --ui-icon-radius-c: 12px;
+  --ui-icon-button-glyph-size: 16px;
+  --ui-color-swatch-size: 24px;
+  --ui-color-swatch-radius: 7px;
+  --ui-color-swatch-option-size: 28px;
+  --ui-color-swatch-option-radius: 9px;
+}
 
-  --ui-icon-tile-a: 38px;
-  --ui-icon-tile-b: 48px;
-  --ui-icon-tile-c: 56px;
+[data-ui-icon-tile="true"],
+[data-ui-dropdown-list-icon="true"] {
+  width: var(--ui-icon-tile-size-a);
+  min-width: var(--ui-icon-tile-size-a);
+  height: var(--ui-icon-tile-size-a);
+  min-height: var(--ui-icon-tile-size-a);
+  box-sizing: border-box;
+  display: inline-grid;
+  place-items: center;
+  border-radius: var(--ui-icon-radius-a);
+  background: var(--ui-tone-surface, #eef5ff);
+  color: var(--ui-tone-text, var(--ui-color-primary-navy));
+  box-shadow: inset 0 0 0 1px var(--ui-tone-border, rgba(8, 44, 122, 0.08));
+}
 
-  --ui-icon-glyph-a: 22px;
-  --ui-icon-glyph-b: 28px;
-  --ui-icon-glyph-c: 34px;
+[data-ui-icon-tile="true"] svg,
+[data-ui-icon-tile="true"] [data-category-icon="true"] svg,
+[data-ui-dropdown-list-icon="true"] svg,
+[data-ui-dropdown-list-icon="true"] > span[aria-hidden="true"] {
+  width: var(--ui-icon-glyph-size-a);
+  height: var(--ui-icon-glyph-size-a);
+  display: block;
+}
 
-  --ui-icon-button-sm: 16px;
-  --ui-icon-button-md: 18px;
-  --ui-icon-button-lg: 20px;
+[data-ui-icon-size="a"] {
+  width: var(--ui-icon-tile-size-a);
+  min-width: var(--ui-icon-tile-size-a);
+  height: var(--ui-icon-tile-size-a);
+  min-height: var(--ui-icon-tile-size-a);
+  border-radius: var(--ui-icon-radius-a);
+}
 
-  --ui-icon-tile-background: var(--ui-tone-surface, var(--ui-color-soft-blue));
-  --ui-icon-tile-color: var(--ui-tone-text, var(--ui-color-primary-navy));
-  --ui-icon-tile-border: var(--ui-tone-border, rgba(8, 44, 122, 0.08));
+[data-ui-icon-size="a"] svg,
+[data-ui-icon-size="a"] [data-category-icon="true"] svg {
+  width: var(--ui-icon-glyph-size-a);
+  height: var(--ui-icon-glyph-size-a);
+}
+
+[data-ui-icon-size="b"],
+[data-ui-modal-header="true"] [data-ui-icon-tile="true"],
+[data-ui-popup-header="true"] [data-ui-icon-tile="true"] {
+  width: var(--ui-icon-tile-size-b);
+  min-width: var(--ui-icon-tile-size-b);
+  height: var(--ui-icon-tile-size-b);
+  min-height: var(--ui-icon-tile-size-b);
+  border-radius: var(--ui-icon-radius-b);
+}
+
+[data-ui-icon-size="b"] svg,
+[data-ui-icon-size="b"] [data-category-icon="true"] svg,
+[data-ui-modal-header="true"] [data-ui-icon-tile="true"] svg,
+[data-ui-popup-header="true"] [data-ui-icon-tile="true"] svg {
+  width: var(--ui-icon-glyph-size-b);
+  height: var(--ui-icon-glyph-size-b);
+}
+
+[data-ui-icon-size="c"] {
+  width: var(--ui-icon-tile-size-c);
+  min-width: var(--ui-icon-tile-size-c);
+  height: var(--ui-icon-tile-size-c);
+  min-height: var(--ui-icon-tile-size-c);
+  border-radius: var(--ui-icon-radius-c);
+}
+
+[data-ui-icon-size="c"] svg,
+[data-ui-icon-size="c"] [data-category-icon="true"] svg {
+  width: var(--ui-icon-glyph-size-c);
+  height: var(--ui-icon-glyph-size-c);
 }
 
 [data-category-icon="true"] {
-  --ui-category-icon-glyph-size: var(--ui-icon-glyph-a);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--ui-category-icon-glyph-size);
-  min-width: var(--ui-category-icon-glyph-size);
-  height: var(--ui-category-icon-glyph-size);
-  color: currentColor;
-  line-height: 1;
-}
-
-[data-category-icon="true"][data-ui-icon-size="a"] {
-  --ui-category-icon-glyph-size: var(--ui-icon-glyph-a);
-}
-
-[data-category-icon="true"][data-ui-icon-size="b"] {
-  --ui-category-icon-glyph-size: var(--ui-icon-glyph-b);
-}
-
-[data-category-icon="true"][data-ui-icon-size="c"] {
-  --ui-category-icon-glyph-size: var(--ui-icon-glyph-c);
-}
-
-[data-category-icon="true"][data-ui-icon-size="button"] {
-  --ui-category-icon-glyph-size: var(--ui-icon-button-md);
+  display: inline-grid;
+  place-items: center;
+  color: inherit;
 }
 
 [data-category-icon="true"] svg {
   display: block;
-  width: var(--ui-category-icon-glyph-size);
-  height: var(--ui-category-icon-glyph-size);
-  stroke: currentColor;
-}
-
-[data-ui-icon-tile="true"] {
-  width: var(--ui-icon-tile-a);
-  min-width: var(--ui-icon-tile-a);
-  height: var(--ui-icon-tile-a);
-  display: inline-grid;
-  place-items: center;
-  border-radius: var(--ui-icon-radius-a);
-  background: var(--ui-icon-tile-background);
-  color: var(--ui-icon-tile-color);
-  box-shadow: inset 0 0 0 1px var(--ui-icon-tile-border);
-}
-
-[data-ui-icon-tile="true"][data-ui-icon-size="a"] {
-  width: var(--ui-icon-tile-a);
-  min-width: var(--ui-icon-tile-a);
-  height: var(--ui-icon-tile-a);
-  border-radius: var(--ui-icon-radius-a);
-}
-
-[data-ui-icon-tile="true"][data-ui-icon-size="b"],
-[data-ui-modal-header="true"] [data-ui-icon-tile="true"],
-[data-ui-popup-header="true"] [data-ui-icon-tile="true"] {
-  width: var(--ui-icon-tile-b);
-  min-width: var(--ui-icon-tile-b);
-  height: var(--ui-icon-tile-b);
-  border-radius: var(--ui-icon-radius-b);
-}
-
-[data-ui-icon-tile="true"][data-ui-icon-size="c"],
-[data-ui-empty-block="true"] > [data-ui-icon-tile="true"],
-[data-ui-module-icon="true"] {
-  width: var(--ui-icon-tile-c);
-  min-width: var(--ui-icon-tile-c);
-  height: var(--ui-icon-tile-c);
-  border-radius: var(--ui-icon-radius-c);
-}
-
-[data-ui-icon-tile="true"] svg {
-  width: var(--ui-icon-glyph-a);
-  height: var(--ui-icon-glyph-a);
-}
-
-[data-ui-icon-tile="true"][data-ui-icon-size="b"] svg,
-[data-ui-modal-header="true"] [data-ui-icon-tile="true"] svg,
-[data-ui-popup-header="true"] [data-ui-icon-tile="true"] svg {
-  width: var(--ui-icon-glyph-b);
-  height: var(--ui-icon-glyph-b);
-}
-
-[data-ui-icon-tile="true"][data-ui-icon-size="c"] svg,
-[data-ui-empty-block="true"] > [data-ui-icon-tile="true"] svg,
-[data-ui-module-icon="true"] svg {
-  width: var(--ui-icon-glyph-c);
-  height: var(--ui-icon-glyph-c);
-}
-
-[data-ui-dropdown-list-icon="true"] {
-  --ui-dropdown-list-icon-tile-size: var(--ui-icon-tile-a);
-  --ui-dropdown-list-icon-size: var(--ui-icon-glyph-a);
-  border-radius: var(--ui-icon-radius-a);
-  background: var(--ui-icon-tile-background);
-  color: var(--ui-icon-tile-color);
-  box-shadow: inset 0 0 0 1px var(--ui-icon-tile-border);
-}
-
-[data-ui-dropdown-list="true"][data-density="compact"] {
-  --ui-dropdown-list-icon-tile-size: 32px;
-  --ui-dropdown-list-icon-size: 19px;
-}
-
-[data-ui-dropdown-list="true"][data-density="normal"] {
-  --ui-dropdown-list-icon-tile-size: 34px;
-  --ui-dropdown-list-icon-size: 20px;
-}
-
-[data-ui-dropdown-list="true"][data-density="large"] {
-  --ui-dropdown-list-icon-tile-size: var(--ui-icon-tile-a);
-  --ui-dropdown-list-icon-size: var(--ui-icon-glyph-a);
-}
-
-[data-ui-dropdown-list-icon="true"] svg,
-[data-ui-dropdown-list-icon="true"] [data-category-icon="true"],
-[data-ui-dropdown-list-icon="true"] > span[aria-hidden="true"] {
-  width: var(--ui-dropdown-list-icon-size);
-  min-width: var(--ui-dropdown-list-icon-size);
-  height: var(--ui-dropdown-list-icon-size);
-}
-
-[data-ui-dropdown-list-icon="true"][data-empty="true"] {
-  background: rgba(247, 251, 255, 0.78);
-  border-radius: var(--ui-icon-radius-a);
-  box-shadow: inset 0 0 0 1px rgba(8, 44, 122, 0.10);
 }
 
 [data-ui-button-icon="true"],
-.ui-button--hero [data-ui-button-icon="true"],
-.ui-button--standard [data-ui-button-icon="true"],
-.ui-button--utility [data-ui-button-icon="true"],
-[data-ui-header-primary-action="true"] [data-ui-button-icon="true"] {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-  width: var(--ui-icon-button-md);
-  min-width: var(--ui-icon-button-md);
-  height: var(--ui-icon-button-md);
-  color: currentColor;
-  line-height: 1;
+.ui-button--hero > svg,
+.ui-button--standard > svg,
+.ui-button--utility > svg,
+[data-ui-button-confirm="true"] > svg,
+[data-ui-button-cancel="true"] > svg,
+[data-ui-header-primary-action="true"] > svg {
+  width: var(--ui-icon-button-glyph-size);
+  min-width: var(--ui-icon-button-glyph-size);
+  height: var(--ui-icon-button-glyph-size);
+  display: block;
+  flex: 0 0 var(--ui-icon-button-glyph-size);
 }
 
-.ui-button--hero [data-ui-button-icon="true"],
-[data-ui-header-primary-action="true"] [data-ui-button-icon="true"] {
-  width: var(--ui-icon-button-lg);
-  min-width: var(--ui-icon-button-lg);
-  height: var(--ui-icon-button-lg);
-}
-
-.ui-button--icon [data-ui-button-icon="true"] {
-  width: var(--ui-icon-button-sm);
-  min-width: var(--ui-icon-button-sm);
-  height: var(--ui-icon-button-sm);
-}
-
-[data-ui-button-icon="true"] svg,
-[data-ui-button-icon="true"] [data-category-icon="true"] {
-  width: 100%;
-  min-width: 100%;
-  height: 100%;
-}
-
-.ui-button--hero,
-.ui-button--standard,
-.ui-button--utility,
-[data-ui-header-primary-action="true"] {
+.ui-button--hero:has(> svg),
+.ui-button--standard:has(> svg),
+.ui-button--utility:has(> svg),
+[data-ui-button-confirm="true"]:has(> svg),
+[data-ui-button-cancel="true"]:has(> svg),
+[data-ui-header-primary-action="true"]:has(> svg) {
   gap: var(--ui-space-5);
 }
 
 [data-ui-color-swatch="true"],
-[data-category-color-swatch="true"],
-[data-payment-source-color-swatch="true"],
-[data-note-color-swatch="true"] {
-  border-radius: var(--ui-radius-sm);
+[data-ui-color-dot="true"] span {
+  width: var(--ui-color-swatch-size);
+  min-width: var(--ui-color-swatch-size);
+  height: var(--ui-color-swatch-size);
+  min-height: var(--ui-color-swatch-size);
+  border-radius: var(--ui-color-swatch-radius);
+  background: var(--ui-tone-text, var(--ui-tone-surface, #eef5ff));
+  box-shadow:
+    inset 0 0 0 1px var(--ui-tone-border, rgba(8, 44, 122, 0.12)),
+    0 0 0 2px rgba(255, 255, 255, 0.86);
 }
 
-[data-ui-color-swatch="true"][data-size="small"],
-[data-category-color-swatch="true"][data-size="small"],
-[data-payment-source-color-swatch="true"][data-size="small"],
-[data-note-color-swatch="true"][data-size="small"] {
-  border-radius: var(--ui-radius-xs);
+[data-ui-color-dot="true"],
+[data-ui-color-option="true"] {
+  width: var(--ui-color-swatch-option-size);
+  min-width: var(--ui-color-swatch-option-size);
+  height: var(--ui-color-swatch-option-size);
+  min-height: var(--ui-color-swatch-option-size);
+  display: inline-grid;
+  place-items: center;
+  border-radius: var(--ui-color-swatch-option-radius);
+  padding: 0;
 }
 
-[data-category-icon-picker="true"] [data-ui-icon-tile="true"] {
-  width: var(--ui-icon-tile-a);
-  min-width: var(--ui-icon-tile-a);
-  height: var(--ui-icon-tile-a);
-  border-radius: var(--ui-icon-radius-a);
+[data-ui-color-dot="true"] {
+  border: 1px solid var(--ui-tone-border, rgba(8, 44, 122, 0.12));
+  background: var(--ui-tone-surface, #eef5ff);
 }
 
-[data-category-icon-picker="true"] [data-category-icon-empty="true"] {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--ui-icon-glyph-a);
-  height: var(--ui-icon-glyph-a);
-  color: var(--ui-icon-tile-color);
-  font-size: var(--ui-font-size-body);
-  font-weight: var(--ui-font-weight-bold);
-  line-height: 1;
+[data-ui-color-option="true"] {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
 }
 
-[data-ui-picker-preview="true"] [data-ui-icon-tile="true"],
-[data-ui-picker-value="true"] [data-ui-icon-tile="true"] {
-  width: 34px;
-  min-width: 34px;
-  height: 34px;
-  border-radius: var(--ui-icon-radius-a);
+[data-ui-color-option="true"] [data-ui-color-swatch="true"] {
+  width: var(--ui-color-swatch-size);
+  min-width: var(--ui-color-swatch-size);
+  height: var(--ui-color-swatch-size);
+  min-height: var(--ui-color-swatch-size);
+  border-radius: var(--ui-color-swatch-radius);
 }
 
-[data-ui-picker-preview="true"] [data-ui-icon-tile="true"] svg,
-[data-ui-picker-value="true"] [data-ui-icon-tile="true"] svg {
-  width: 20px;
-  height: 20px;
+[data-ui-color-option="true"][data-active="true"] {
+  border: 0;
+  box-shadow: none;
 }
 
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-value="true"] [data-ui-icon-tile="true"] {
-  width: var(--ui-icon-tile-a);
-  min-width: var(--ui-icon-tile-a);
-  height: var(--ui-icon-tile-a);
-  border-radius: var(--ui-icon-radius-a);
+[data-ui-color-option="true"][data-active="true"] [data-ui-color-swatch="true"],
+[data-ui-color-dot="true"][data-active="true"] span {
+  box-shadow:
+    0 0 0 2px var(--ui-color-card-background),
+    0 0 0 4px rgba(8, 44, 122, 0.38),
+    inset 0 0 0 1px var(--ui-tone-border, rgba(8, 44, 122, 0.12));
 }
 
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-value="true"] [data-ui-icon-tile="true"] svg {
-  width: var(--ui-icon-glyph-a);
-  height: var(--ui-icon-glyph-a);
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-menu="true"][data-layout="colors"] {
+  width: max-content;
+  min-width: max-content;
+  max-width: min(420px, calc(100vw - 32px));
+  display: grid;
+  grid-template-columns: repeat(8, var(--ui-color-swatch-option-size));
+  justify-content: start;
+  align-content: start;
+  gap: var(--ui-space-5);
+  min-height: auto;
+  max-height: none;
+  overflow: visible;
+  padding: var(--ui-space-6);
 }
 
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-value="true"] [data-ui-icon-tile="true"],
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"] [data-ui-icon-tile="true"] {
-  width: 32px;
-  min-width: 32px;
-  height: 32px;
+  width: var(--ui-icon-tile-size-a);
+  min-width: var(--ui-icon-tile-size-a);
+  height: var(--ui-icon-tile-size-a);
+  min-height: var(--ui-icon-tile-size-a);
   border-radius: var(--ui-icon-radius-a);
-  background: var(--ui-icon-tile-background);
-  color: var(--ui-icon-tile-color);
-  box-shadow: inset 0 0 0 1px var(--ui-icon-tile-border);
+  background: var(--ui-tone-surface, #eef5ff);
+  color: var(--ui-tone-text, var(--ui-color-primary-navy));
+  box-shadow: inset 0 0 0 1px var(--ui-tone-border, rgba(8, 44, 122, 0.08));
 }
 
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:hover [data-ui-icon-tile="true"],
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"][data-active="true"] [data-ui-icon-tile="true"] {
-  background: var(--ui-icon-tile-background);
-}
-
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-value="true"] [data-ui-icon-tile="true"] svg,
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"] [data-ui-icon-tile="true"] svg {
-  width: 20px;
-  height: 20px;
+  width: var(--ui-icon-glyph-size-a);
+  height: var(--ui-icon-glyph-size-a);
 }
 
-[data-ui-icon-select-option="true"] [data-ui-icon-tile="true"] {
-  border-radius: var(--ui-icon-radius-a);
-  background: var(--ui-icon-tile-background);
-  color: var(--ui-icon-tile-color);
-  box-shadow: inset 0 0 0 1px var(--ui-icon-tile-border);
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-swatch="true"] {
+  width: var(--ui-color-swatch-size);
+  min-width: var(--ui-color-swatch-size);
+  height: var(--ui-color-swatch-size);
+  min-height: var(--ui-color-swatch-size);
+  border-radius: var(--ui-color-swatch-radius);
 }
 
-[data-ui-icon-select-option="true"] [data-ui-icon-tile="true"] svg {
-  width: 20px;
-  height: 20px;
-}
-
+/* Additional tone support for the expanded color palette. */
+[data-ui-tone="emerald"] { --ui-tone-surface: #dcfce7; --ui-tone-border: #bbf7d0; --ui-tone-text: #15803d; }
+[data-ui-tone="teal"] { --ui-tone-surface: #ccfbf1; --ui-tone-border: #99f6e4; --ui-tone-text: #0f766e; }
+[data-ui-tone="aqua"] { --ui-tone-surface: #cffafe; --ui-tone-border: #a5f3fc; --ui-tone-text: #0891b2; }
+[data-ui-tone="azure"] { --ui-tone-surface: #dbeafe; --ui-tone-border: #bfdbfe; --ui-tone-text: #2563eb; }
+[data-ui-tone="lavender"] { --ui-tone-surface: #ede9fe; --ui-tone-border: #ddd6fe; --ui-tone-text: #7c3aed; }
+[data-ui-tone="magenta"] { --ui-tone-surface: #fce7f3; --ui-tone-border: #fbcfe8; --ui-tone-text: #db2777; }
+[data-ui-tone="coral"] { --ui-tone-surface: #ffe4e6; --ui-tone-border: #fecdd3; --ui-tone-text: #e11d48; }
+[data-ui-tone="tomato"] { --ui-tone-surface: #fee2e2; --ui-tone-border: #fecaca; --ui-tone-text: #dc2626; }
+[data-ui-tone="apricot"] { --ui-tone-surface: #ffedd5; --ui-tone-border: #fed7aa; --ui-tone-text: #ea580c; }
+[data-ui-tone="gold"] { --ui-tone-surface: #fef3c7; --ui-tone-border: #fde68a; --ui-tone-text: #d97706; }
+[data-ui-tone="lemon"] { --ui-tone-surface: #fef9c3; --ui-tone-border: #fef08a; --ui-tone-text: #ca8a04; }
+[data-ui-tone="leaf"] { --ui-tone-surface: #ecfccb; --ui-tone-border: #d9f99d; --ui-tone-text: #65a30d; }
+[data-ui-tone="sage"] { --ui-tone-surface: #edf7ed; --ui-tone-border: #cfe8cf; --ui-tone-text: #3f7d46; }
+[data-ui-tone="seafoam"] { --ui-tone-surface: #d1fae5; --ui-tone-border: #a7f3d0; --ui-tone-text: #059669; }
+[data-ui-tone="powder"] { --ui-tone-surface: #e0f2fe; --ui-tone-border: #bae6fd; --ui-tone-text: #0284c7; }
+[data-ui-tone="periwinkle"] { --ui-tone-surface: #e0e7ff; --ui-tone-border: #c7d2fe; --ui-tone-text: #4f46e5; }
+[data-ui-tone="lilac"] { --ui-tone-surface: #f3e8ff; --ui-tone-border: #e9d5ff; --ui-tone-text: #9333ea; }
+[data-ui-tone="orchid"] { --ui-tone-surface: #fae8ff; --ui-tone-border: #f5d0fe; --ui-tone-text: #c026d3; }
+[data-ui-tone="blush"] { --ui-tone-surface: #ffe4e6; --ui-tone-border: #fecdd3; --ui-tone-text: #be123c; }
+[data-ui-tone="salmon"] { --ui-tone-surface: #fee2e2; --ui-tone-border: #fecaca; --ui-tone-text: #ef4444; }
+[data-ui-tone="sand"] { --ui-tone-surface: #fef3c7; --ui-tone-border: #fde68a; --ui-tone-text: #b45309; }
+[data-ui-tone="cocoa"] { --ui-tone-surface: #f1e4d8; --ui-tone-border: #dfc7b5; --ui-tone-text: #92400e; }
+[data-ui-tone="stone"] { --ui-tone-surface: #f5f5f4; --ui-tone-border: #e7e5e4; --ui-tone-text: #57534e; }
+[data-ui-tone="slate"] { --ui-tone-surface: #f1f5f9; --ui-tone-border: #cbd5e1; --ui-tone-text: #475569; }

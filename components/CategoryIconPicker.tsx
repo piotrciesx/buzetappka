@@ -53,8 +53,8 @@ export default function CategoryIconPicker({ value, onChange }: CategoryIconPick
         title="Bez ikony"
         onClick={() => onChange(null)}
       >
-        <span data-ui-icon-tile="true" data-ui-icon-size="a" data-ui-tone="blue">
-          <span data-category-icon-empty="true" aria-hidden="true">-</span>
+        <span data-ui-icon-tile="true" data-ui-icon-size="a" data-ui-tone="blue" aria-hidden="true">
+          <span data-category-icon-empty="true">-</span>
         </span>
         <span>Bez ikony</span>
       </button>
@@ -68,7 +68,7 @@ export default function CategoryIconPicker({ value, onChange }: CategoryIconPick
           title={icon.label}
           onClick={() => onChange(icon.key)}
         >
-          <span data-ui-icon-tile="true" data-ui-icon-size="a">
+          <span data-ui-icon-tile="true" data-ui-icon-size="a" data-ui-tone="blue">
             <CategoryIcon iconKey={icon.key} level={2} size="a" />
           </span>
           <span>{icon.label}</span>
