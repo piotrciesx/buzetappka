@@ -4959,8 +4959,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 [data-transaction-shortcut-header="true"] {
-  width: min(100%, 540px);
-  margin: 0 auto;
+  width: 100%;
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
@@ -4972,8 +4971,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 [data-transaction-shortcut-bar="true"] {
-  width: min(100%, 540px);
-  margin: 0 auto;
+  width: 100%;
   min-width: 0;
   position: relative;
   z-index: var(--ui-z-local-header);
@@ -5049,8 +5047,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 
 [data-transaction-stage-header="true"],
 [data-transaction-trail-header="true"] {
-  width: min(100%, 540px);
-  margin: 0 auto;
+  width: 100%;
   min-width: 0;
   display: grid;
   gap: var(--ui-space-2);
@@ -5078,8 +5075,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 [data-transaction-category-list-frame="true"] {
-  width: min(100%, 540px);
-  margin: 0 auto;
+  width: 100%;
   min-width: 0;
 }
 
@@ -5111,8 +5107,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 [data-transaction-final-context="true"] {
-  width: min(100%, 540px);
-  margin: 0 auto;
+  width: 100%;
   min-width: 0;
 }
 
