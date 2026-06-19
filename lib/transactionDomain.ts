@@ -22,13 +22,6 @@ type CategoryRootContract = Category & {
   category_type?: string | null
 }
 
-const normalizeRootCategoryName = (name: string) =>
-  name
-    .trim()
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-
 const readRootCategoryTypeContract = (category: Category): Exclude<RootCategoryType, 'unknown'> | null => {
   const source = category as CategoryRootContract
   const rawType = String(
@@ -40,16 +33,6 @@ const readRootCategoryTypeContract = (category: Category): Exclude<RootCategoryT
   }
 
   if (rawType === 'expense' || rawType === 'expenses') {
-    return 'expense'
-  }
-
-  const normalizedName = normalizeRootCategoryName(category.name)
-
-  if (normalizedName === 'przychody' || normalizedName === 'przychod') {
-    return 'income'
-  }
-
-  if (normalizedName === 'wydatki' || normalizedName === 'wydatek') {
     return 'expense'
   }
 
@@ -210,17 +193,17 @@ export const getSignedAmountByRootType = (
 }
 
 export const getBudgetRootCategoryIds = (categories: Category[]): BudgetRootCategoryIds => {
-  const level1 = categories.filter((category) => category.level === 1)
+  const level1 = categories.filter((category) => category.level === 1 && category.parent_id === null)
   const orderedRoots = [...level1].sort(compareRootContractOrder)
   const metadataIncomeRoot = level1.find((category) => readRootCategoryTypeContract(category) === 'income')
   const metadataExpenseRoot = level1.find((category) => readRootCategoryTypeContract(category) === 'expense')
   const incomeLevel1Id =
     metadataIncomeRoot?.id ??
-    (metadataExpenseRoot ? orderedRoots.find((category) => category.id !== metadataExpenseRoot.id)?.id : null) ??
+    orderedRoots.find((category) => category.id !== metadataExpenseRoot?.id)?.id ??
     null
   const expenseLevel1Id =
     metadataExpenseRoot?.id ??
-    (metadataIncomeRoot ? orderedRoots.find((category) => category.id !== metadataIncomeRoot.id)?.id : null) ??
+    orderedRoots.find((category) => category.id !== incomeLevel1Id)?.id ??
     null
 
   return {
