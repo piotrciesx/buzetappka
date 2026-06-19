@@ -18,9 +18,6 @@ type BudgetAppControllerViewPropsContext = Record<string, any>
 const GLOBAL_BUDGET_LIMIT_KEY = '__global__'
 
 const getBudgetLimitKey = (categoryId: string | null) => categoryId || GLOBAL_BUDGET_LIMIT_KEY
-const zeroForCategory = () => 0
-const noRootCategory = () => null
-const fallbackSignedAmount = () => 0
 const getSnoozeStorageKey = (profileId: string, month: string) =>
   `budget-recurring-snooze:${profileId}:${month}`
 const getScopedSnoozeStorageKey = (userId: string, profileId: string, month: string) =>
@@ -120,22 +117,12 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     return getBudgetLimitView(budgetLimitEditorCategoryId)
   }, [budgetLimitEditorCategoryId, getBudgetLimitView])
 
-  const getSignedAmountForTransaction =
-    typeof ctx.getSignedAmountForTransaction === 'function'
-      ? ctx.getSignedAmountForTransaction
-      : fallbackSignedAmount
-  const getRootLevel1IdForCategory =
-    typeof ctx.getRootLevel1IdForCategory === 'function'
-      ? ctx.getRootLevel1IdForCategory
-      : noRootCategory
-  const getSumForCategoryForSelectedMonth =
-    typeof ctx.getSumForCategoryForSelectedMonth === 'function'
-      ? ctx.getSumForCategoryForSelectedMonth
-      : zeroForCategory
-  const getCategoryCountForSelectedMonth =
-    typeof ctx.getCategoryCountForSelectedMonth === 'function'
-      ? ctx.getCategoryCountForSelectedMonth
-      : zeroForCategory
+  const {
+    getSignedAmountForTransaction,
+    getRootLevel1IdForCategory,
+    getSumForCategoryForSelectedMonth,
+    getCategoryCountForSelectedMonth,
+  } = ctx
 
   const editedBudgetLimitCategoryLabel = useMemo(() => {
     if (budgetLimitEditorCategoryId === null) {
@@ -342,6 +329,7 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     hiddenCategoriesInSelectedMonth: ctx.hiddenCategoriesInSelectedMonth,
     incomeLevel1Id: ctx.incomeLevel1Id,
     expenseLevel1Id: ctx.expenseLevel1Id,
+    getSignedAmountForTransaction,
     invitationErrorText: ctx.invitationErrorText,
     invitationStatusText: ctx.invitationStatusText,
     inviteEmail: ctx.inviteEmail,

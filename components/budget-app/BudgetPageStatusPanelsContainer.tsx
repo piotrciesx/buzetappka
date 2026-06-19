@@ -29,6 +29,7 @@ export default function BudgetPageStatusPanelsContainer({
     expenseLevel1Id,
     goToNextMonth,
     goToPrevMonth,
+    getSignedAmountForTransaction,
     handleLockAllPastMonths,
     handleLockMonth,
     handleLockSelectedMonth,
@@ -119,12 +120,8 @@ export default function BudgetPageStatusPanelsContainer({
   const categoryNamesById = new Map<string, string>(
     categories.map((category: { id: string; name: string }) => [category.id, category.name])
   )
-  const signedAmountGetter =
-    typeof ctx.getSignedAmountForTransaction === 'function'
-      ? ctx.getSignedAmountForTransaction
-      : (transaction: { amount?: number | string }) => Number(transaction.amount || 0)
   const profileTotalBalance = profileTransactions.reduce(
-    (total: number, transaction) => total + signedAmountGetter(transaction),
+    (total: number, transaction) => total + getSignedAmountForTransaction(transaction),
     0
   )
   const profileCategoryCounts = new Map<string, number>()

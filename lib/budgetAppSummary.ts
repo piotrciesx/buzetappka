@@ -20,17 +20,6 @@ export type PinnedWorkspaceCategory = {
   transactionCount: number
 }
 
-const getSafeSignedAmount = (
-  transaction: Transaction,
-  getSignedAmountForTransaction?: (transaction: Transaction) => number
-) => {
-  if (typeof getSignedAmountForTransaction === 'function') {
-    return getSignedAmountForTransaction(transaction)
-  }
-
-  return getAmountNumber(transaction.amount)
-}
-
 export const buildPinnedWorkspaceCategories = ({
   pinnedCategoryIds,
   addableTransactionCategoryIds,
@@ -50,9 +39,9 @@ export const buildPinnedWorkspaceCategories = ({
   incomeLevel1Id: string | null
   expenseLevel1Id: string | null
   transactionCategoryPathLabels: Record<string, string>
-  getRootLevel1IdForCategory?: (categoryId: string) => string | null
-  getSumForCategoryForSelectedMonth?: (categoryId: string) => number
-  getCategoryCountForSelectedMonth?: (categoryId: string) => number
+  getRootLevel1IdForCategory: (categoryId: string) => string | null
+  getSumForCategoryForSelectedMonth: (categoryId: string) => number
+  getCategoryCountForSelectedMonth: (categoryId: string) => number
 }): PinnedWorkspaceCategory[] => {
   const safePinnedCategoryIds = Array.isArray(pinnedCategoryIds) ? pinnedCategoryIds : []
   const safeCategories = Array.isArray(categories) ? categories : []
@@ -73,23 +62,14 @@ export const buildPinnedWorkspaceCategories = ({
     .slice(0, 5)
     .map((categoryId) => {
       const category = safeCategoriesById[categoryId]
-      const rootId =
-        typeof getRootLevel1IdForCategory === 'function'
-          ? getRootLevel1IdForCategory(categoryId)
-          : null
+      const rootId = getRootLevel1IdForCategory(categoryId)
       const isDuplicateName = categoryNameCounts[category.name] > 1
       const label = isDuplicateName
         ? safeTransactionCategoryPathLabels[categoryId] ||
           getCategoryPathLabel(categoryId, safeCategoriesById)
         : category.name
-      const amount =
-        typeof getSumForCategoryForSelectedMonth === 'function'
-          ? getSumForCategoryForSelectedMonth(categoryId)
-          : 0
-      const transactionCount =
-        typeof getCategoryCountForSelectedMonth === 'function'
-          ? getCategoryCountForSelectedMonth(categoryId)
-          : 0
+      const amount = getSumForCategoryForSelectedMonth(categoryId)
+      const transactionCount = getCategoryCountForSelectedMonth(categoryId)
 
       return {
         id: categoryId,
@@ -125,7 +105,7 @@ export const buildRecentTransactionPreviews = ({
 }: {
   transactions: Transaction[]
   categoriesById: Record<string, Category>
-  getSignedAmountForTransaction?: (transaction: Transaction) => number
+  getSignedAmountForTransaction: (transaction: Transaction) => number
 }): RecentTransactionPreview[] => {
   const safeTransactions = Array.isArray(transactions) ? transactions : []
   const safeCategoriesById = categoriesById || {}
@@ -137,7 +117,7 @@ export const buildRecentTransactionPreviews = ({
     .map((transaction) => ({
       id: transaction.id,
       amount: String(getAmountNumber(transaction.amount)),
-      kind: getSafeSignedAmount(transaction, getSignedAmountForTransaction) >= 0 ? 'income' : 'expense',
+      kind: getSignedAmountForTransaction(transaction) >= 0 ? 'income' : 'expense',
       date: transaction.day_is_null ? `${transaction.date.slice(0, 7)} · bez dnia` : transaction.date,
       description: transaction.description || '',
       categoryLabel: safeCategoriesById[transaction.category_id]
@@ -151,13 +131,13 @@ export const getTotalBudgetBalance = ({
   getSignedAmountForTransaction,
 }: {
   transactions: Transaction[]
-  getSignedAmountForTransaction?: (transaction: Transaction) => number
+  getSignedAmountForTransaction: (transaction: Transaction) => number
 }) => {
   const safeTransactions = Array.isArray(transactions) ? transactions : []
 
   return safeTransactions
     .filter(isActiveTransaction)
-    .reduce((sum, transaction) => sum + getSafeSignedAmount(transaction, getSignedAmountForTransaction), 0)
+    .reduce((sum, transaction) => sum + getSignedAmountForTransaction(transaction), 0)
 }
 
 export const getSelectedMonthIncomeTotal = ({
@@ -165,12 +145,12 @@ export const getSelectedMonthIncomeTotal = ({
   getSignedAmountForTransaction,
 }: {
   transactions: Transaction[]
-  getSignedAmountForTransaction?: (transaction: Transaction) => number
+  getSignedAmountForTransaction: (transaction: Transaction) => number
 }) => {
   const safeTransactions = Array.isArray(transactions) ? transactions : []
 
   return safeTransactions.reduce((sum, transaction) => {
-    const signedAmount = getSafeSignedAmount(transaction, getSignedAmountForTransaction)
+    const signedAmount = getSignedAmountForTransaction(transaction)
     return signedAmount > 0 ? sum + signedAmount : sum
   }, 0)
 }
@@ -180,12 +160,12 @@ export const getSelectedMonthExpenseTotal = ({
   getSignedAmountForTransaction,
 }: {
   transactions: Transaction[]
-  getSignedAmountForTransaction?: (transaction: Transaction) => number
+  getSignedAmountForTransaction: (transaction: Transaction) => number
 }) => {
   const safeTransactions = Array.isArray(transactions) ? transactions : []
 
   return safeTransactions.reduce((sum, transaction) => {
-    const signedAmount = getSafeSignedAmount(transaction, getSignedAmountForTransaction)
+    const signedAmount = getSignedAmountForTransaction(transaction)
     return signedAmount < 0 ? sum + Math.abs(signedAmount) : sum
   }, 0)
 }
