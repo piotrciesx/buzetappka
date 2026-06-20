@@ -45,6 +45,30 @@ export type UiColorKey =
   | 'brown'
   | 'graphite'
   | 'neutral'
+  | 'emerald'
+  | 'teal'
+  | 'aqua'
+  | 'azure'
+  | 'lavender'
+  | 'magenta'
+  | 'coral'
+  | 'tomato'
+  | 'apricot'
+  | 'gold'
+  | 'lemon'
+  | 'leaf'
+  | 'sage'
+  | 'seafoam'
+  | 'powder'
+  | 'periwinkle'
+  | 'lilac'
+  | 'orchid'
+  | 'blush'
+  | 'salmon'
+  | 'sand'
+  | 'cocoa'
+  | 'stone'
+  | 'slate'
 
 export const UI_COLOR_OPTIONS: Array<{ tone: UiColorKey; label: string }> = [
   { tone: 'blue', label: 'Niebieski' },
@@ -68,6 +92,30 @@ export const UI_COLOR_OPTIONS: Array<{ tone: UiColorKey; label: string }> = [
   { tone: 'brown', label: 'Brązowy' },
   { tone: 'graphite', label: 'Grafitowy' },
   { tone: 'neutral', label: 'Szary' },
+  { tone: 'emerald', label: 'Szmaragdowy' },
+  { tone: 'teal', label: 'Morski' },
+  { tone: 'aqua', label: 'Aqua' },
+  { tone: 'azure', label: 'Lazurowy' },
+  { tone: 'lavender', label: 'Lawendowy' },
+  { tone: 'magenta', label: 'Magenta' },
+  { tone: 'coral', label: 'Koralowy' },
+  { tone: 'tomato', label: 'Pomidorowy' },
+  { tone: 'apricot', label: 'Morelowy' },
+  { tone: 'gold', label: 'Złoty' },
+  { tone: 'lemon', label: 'Cytrynowy' },
+  { tone: 'leaf', label: 'Liściasty' },
+  { tone: 'sage', label: 'Szałwiowy' },
+  { tone: 'seafoam', label: 'Morska pianka' },
+  { tone: 'powder', label: 'Pudrowy błękit' },
+  { tone: 'periwinkle', label: 'Barwinkowy' },
+  { tone: 'lilac', label: 'Liliowy' },
+  { tone: 'orchid', label: 'Orchidea' },
+  { tone: 'blush', label: 'Rumiany' },
+  { tone: 'salmon', label: 'Łososiowy' },
+  { tone: 'sand', label: 'Piaskowy' },
+  { tone: 'cocoa', label: 'Kakaowy' },
+  { tone: 'stone', label: 'Kamienny' },
+  { tone: 'slate', label: 'Łupkowy' },
 ]
 
 export type UiIconKey =

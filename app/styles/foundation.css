@@ -4074,12 +4074,15 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   min-height: var(--ui-color-swatch-size);
   box-sizing: border-box;
   display: block;
-  border: 0;
+  overflow: hidden;
+  border: 1px solid var(--ui-tone-border, rgba(8, 44, 122, 0.12));
   border-radius: var(--ui-color-swatch-radius);
-  background: var(--ui-tone-text, var(--ui-tone-surface, #215dff));
-  box-shadow: inset 0 0 0 1px rgba(8, 44, 122, 0.10);
+  background: var(--ui-tone-surface, #eef5ff);
+  background-clip: padding-box;
+  box-shadow: none;
   outline: none;
-  transform: none;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-option="true"]:hover,
@@ -4089,20 +4092,22 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-option="true"]:hover [data-ui-color-swatch="true"],
 [data-ui-color-option="true"]:hover [data-ui-color-swatch="true"] {
-  box-shadow: inset 0 0 0 1px rgba(8, 44, 122, 0.14);
-  transform: none;
+  border-color: var(--ui-tone-border, rgba(8, 44, 122, 0.18));
+  box-shadow: 0 0 0 2px rgba(8, 44, 122, 0.045);
+  transform: translateZ(0);
 }
 
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-option="true"][data-active="true"],
 [data-ui-color-option="true"][data-active="true"] {
-  background: var(--ui-color-card-background);
-  box-shadow:
-    0 0 0 2px var(--ui-color-card-background),
-    0 0 0 4px var(--ui-tone-text, var(--ui-color-primary-navy));
+  background: transparent;
+  box-shadow: none;
 }
 
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-color-option="true"][data-active="true"] [data-ui-color-swatch="true"],
 [data-ui-color-option="true"][data-active="true"] [data-ui-color-swatch="true"] {
-  box-shadow: inset 0 0 0 1px rgba(8, 44, 122, 0.12);
-  transform: none;
+  border-color: var(--ui-tone-border, rgba(8, 44, 122, 0.20));
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 4px var(--ui-tone-text, var(--ui-color-primary-navy));
+  transform: translateZ(0);
 }
