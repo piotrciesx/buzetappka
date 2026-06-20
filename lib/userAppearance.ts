@@ -23,54 +23,7 @@ export const USER_AVATARS = [
   { key: 'graphite', label: 'Grafit', color: 'var(--ui-color-secondary-text)' },
 ]
 
-export type UiColorKey =
-  | 'blue'
-  | 'sky'
-  | 'navy'
-  | 'cyan'
-  | 'yellow'
-  | 'amber'
-  | 'orange'
-  | 'peach'
-  | 'green'
-  | 'mint'
-  | 'lime'
-  | 'olive'
-  | 'violet'
-  | 'purple'
-  | 'indigo'
-  | 'pink'
-  | 'rose'
-  | 'red'
-  | 'brown'
-  | 'graphite'
-  | 'neutral'
-  | 'emerald'
-  | 'teal'
-  | 'aqua'
-  | 'azure'
-  | 'lavender'
-  | 'magenta'
-  | 'coral'
-  | 'tomato'
-  | 'apricot'
-  | 'gold'
-  | 'lemon'
-  | 'leaf'
-  | 'sage'
-  | 'seafoam'
-  | 'powder'
-  | 'periwinkle'
-  | 'lilac'
-  | 'orchid'
-  | 'blush'
-  | 'salmon'
-  | 'sand'
-  | 'cocoa'
-  | 'stone'
-  | 'slate'
-
-export const UI_COLOR_OPTIONS: Array<{ tone: UiColorKey; label: string }> = [
+export const UI_COLOR_OPTIONS = [
   { tone: 'blue', label: 'Niebieski' },
   { tone: 'sky', label: 'Błękitny' },
   { tone: 'navy', label: 'Granatowy' },
@@ -116,7 +69,9 @@ export const UI_COLOR_OPTIONS: Array<{ tone: UiColorKey; label: string }> = [
   { tone: 'cocoa', label: 'Kakaowy' },
   { tone: 'stone', label: 'Kamienny' },
   { tone: 'slate', label: 'Łupkowy' },
-]
+] as const
+
+export type UiColorKey = (typeof UI_COLOR_OPTIONS)[number]['tone']
 
 export type UiIconKey =
   | 'note'
