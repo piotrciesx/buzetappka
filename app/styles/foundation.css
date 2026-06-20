@@ -4024,15 +4024,19 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-menu="true"][data-layout="colors"] {
   display: grid;
-  grid-template-columns: repeat(auto-fit, var(--ui-color-swatch-option-size));
+  grid-template-columns: repeat(9, var(--ui-color-swatch-option-size));
+  grid-auto-flow: row;
+  grid-auto-rows: var(--ui-color-swatch-option-size);
   gap: var(--ui-space-5);
+  height: auto;
   min-height: auto;
   max-height: none;
   padding: var(--ui-space-6);
   justify-content: center;
   overflow: visible;
-  width: min(376px, calc(100vw - 32px));
+  width: max-content;
   min-width: 0;
+  max-width: min(376px, calc(100vw - 32px));
   align-content: start;
 }
 

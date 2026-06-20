@@ -57,7 +57,6 @@ const NOTE_PREVIEW_LIMIT = 4;
 const NOTE_TEXT_LIMIT = 150;
 const NOTE_DRAFT_LIMIT = 1000;
 
-const NOTE_COLOR_OPTIONS = UI_COLOR_OPTIONS;
 const NOTE_ICON_OPTIONS = APP_ICONS;
 const SUGGESTED_NOTE_ICONS: MonthNoteIcon[] = [
   "note",
@@ -147,8 +146,8 @@ const formatNoteDate = (value: string) =>
   }).format(new Date(value));
 
 const resolveToneOption = (tone?: string) =>
-  NOTE_COLOR_OPTIONS.find((option) => option.tone === tone) ||
-  NOTE_COLOR_OPTIONS[0];
+  UI_COLOR_OPTIONS.find((option) => option.tone === tone) ||
+  UI_COLOR_OPTIONS[0];
 
 const resolveIconOption = (icon?: string) =>
   NOTE_ICON_OPTIONS.find((option) => option.key === icon) ||
@@ -709,7 +708,7 @@ export default function ProfileMonthNotePanel({
         </button>
         {isOpen && (
           <div data-ui-picker-menu="true" data-layout="colors">
-            {NOTE_COLOR_OPTIONS.map((option) => (
+            {UI_COLOR_OPTIONS.map((option) => (
               <button
                 key={option.tone}
                 type="button"
