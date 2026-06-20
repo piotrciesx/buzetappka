@@ -50,7 +50,11 @@ export function useFinancialGoals({ profileId, isEnabled = true }: UseFinancialG
       throw new Error(error.message)
     }
 
-    setFinancialGoals((data || []).map((row) => mapFinancialGoalRow(row as Record<string, unknown>)))
+    setFinancialGoals(
+      (data || [])
+        .map((row) => mapFinancialGoalRow(row as Record<string, unknown>))
+        .filter((goal): goal is FinancialGoal => goal !== null)
+    )
 
     const { data: prioritiesData, error: prioritiesError } = await supabase
       .from('financial_goal_month_priorities')
@@ -88,6 +92,10 @@ export function useFinancialGoals({ profileId, isEnabled = true }: UseFinancialG
     async (input: SaveFinancialGoalInput & { id?: string }) => {
       if (!isEnabled) {
         return
+      }
+
+      if (!Number.isFinite(input.target_amount) || input.target_amount <= 0) {
+        throw new Error('Kwota docelowa celu musi być skończoną liczbą większą od 0.')
       }
 
       const payload = {

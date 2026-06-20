@@ -54,6 +54,24 @@ const assertValidBudgetLimitProfileId = (profileId: string) => {
   }
 }
 
+const getValidBudgetLimitAmount = (value: unknown) => {
+  if (
+    (typeof value !== 'number' && typeof value !== 'string') ||
+    (typeof value === 'string' && !value.trim())
+  ) {
+    return null
+  }
+
+  const amount = Number(value)
+  return Number.isFinite(amount) && amount > 0 ? amount : null
+}
+
+const assertValidBudgetLimitAmount = (amount: number) => {
+  if (getValidBudgetLimitAmount(amount) === null) {
+    throw new Error('Nie udało się zapisać limitu: kwota musi być skończoną liczbą większą od 0.')
+  }
+}
+
 const getBudgetLimitPayload = (profileId: string, input: SaveBudgetLimitInput) => ({
   profile_id: profileId,
   category_id: input.categoryId,
@@ -63,16 +81,24 @@ const getBudgetLimitPayload = (profileId: string, input: SaveBudgetLimitInput) =
   mode: input.mode,
 })
 
-export const mapBudgetLimitRow = (row: Record<string, unknown>): BudgetLimit => ({
-  id: String(row.id),
-  profile_id: String(row.profile_id),
-  category_id: row.category_id ? String(row.category_id) : null,
-  amount: Number(row.amount) || 0,
-  start_month: String(row.start_month || ''),
-  end_month: row.end_month ? String(row.end_month) : null,
-  mode: row.mode === 'strict' ? 'strict' : 'normal',
-  created_at: row.created_at ? String(row.created_at) : undefined,
-})
+export const mapBudgetLimitRow = (row: Record<string, unknown>): BudgetLimit | null => {
+  const amount = getValidBudgetLimitAmount(row.amount)
+
+  if (amount === null) {
+    return null
+  }
+
+  return {
+    id: String(row.id),
+    profile_id: String(row.profile_id),
+    category_id: row.category_id ? String(row.category_id) : null,
+    amount,
+    start_month: String(row.start_month || ''),
+    end_month: row.end_month ? String(row.end_month) : null,
+    mode: row.mode === 'strict' ? 'strict' : 'normal',
+    created_at: row.created_at ? String(row.created_at) : undefined,
+  }
+}
 
 export const isBudgetLimitActiveInMonth = (limit: BudgetLimit, selectedMonth: string) => {
   return limit.start_month <= selectedMonth && (!limit.end_month || limit.end_month >= selectedMonth)
@@ -263,7 +289,11 @@ export function useBudgetLimits({
         throw new Error(error.message)
       }
 
-      setLimits((data || []).map((row) => mapBudgetLimitRow(row as Record<string, unknown>)))
+      setLimits(
+        (data || [])
+          .map((row) => mapBudgetLimitRow(row as Record<string, unknown>))
+          .filter((limit): limit is BudgetLimit => limit !== null)
+      )
     } finally {
       setIsLoading(false)
     }
@@ -349,6 +379,7 @@ export function useBudgetLimits({
       }
 
       assertValidBudgetLimitProfileId(profileId)
+      assertValidBudgetLimitAmount(input.amount)
 
       const { error } = await supabase.from('budget_limits').insert(getBudgetLimitPayload(profileId, input))
 
@@ -368,6 +399,7 @@ export function useBudgetLimits({
       }
 
       assertValidBudgetLimitProfileId(profileId)
+      assertValidBudgetLimitAmount(input.amount)
 
       const existingLimit = limits.find((limit) => limit.id === input.id)
 

@@ -251,7 +251,25 @@ const getOrderedGoalIdsForMonth = ({
   ]
 }
 
-export const mapFinancialGoalRow = (row: Record<string, unknown>): FinancialGoal => {
+const getValidFinancialGoalTargetAmount = (value: unknown) => {
+  if (
+    (typeof value !== 'number' && typeof value !== 'string') ||
+    (typeof value === 'string' && !value.trim())
+  ) {
+    return null
+  }
+
+  const amount = Number(value)
+  return Number.isFinite(amount) && amount > 0 ? amount : null
+}
+
+export const mapFinancialGoalRow = (row: Record<string, unknown>): FinancialGoal | null => {
+  const targetAmount = getValidFinancialGoalTargetAmount(row.target_amount)
+
+  if (targetAmount === null) {
+    return null
+  }
+
   const startMonth =
     typeof row.start_month === 'string' && row.start_month
       ? row.start_month.slice(0, 7)
@@ -269,7 +287,7 @@ export const mapFinancialGoalRow = (row: Record<string, unknown>): FinancialGoal
     id: String(row.id || ''),
     profile_id: String(row.profile_id || ''),
     name: String(row.name || 'Cel'),
-    target_amount: Number(row.target_amount || 0),
+    target_amount: targetAmount,
     start_month: startMonth,
     deadline_month: deadlineMonth,
     allocation_percent:

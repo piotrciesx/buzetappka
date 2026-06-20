@@ -2,6 +2,18 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from './supabaseClient'
+
+const getValidRecurringInstallmentAmount = (value: unknown) => {
+  if (
+    (typeof value !== 'number' && typeof value !== 'string') ||
+    (typeof value === 'string' && !value.trim())
+  ) {
+    return null
+  }
+
+  const amount = Number(value)
+  return Number.isFinite(amount) && amount >= 0 ? amount : null
+}
 import {
   RecurringInstallment,
   RecurringReminderMonthStatus,
@@ -87,7 +99,8 @@ export function useRecurringTransactions({
         (acc, row) => {
           const item = row as Record<string, unknown>
           const recurringId = String(item.recurring_transaction_id || '')
-          if (!recurringId) return acc
+          const amount = getValidRecurringInstallmentAmount(item.amount)
+          if (!recurringId || amount === null) return acc
           acc[recurringId] = [
             ...(acc[recurringId] || []),
             {
@@ -96,7 +109,7 @@ export function useRecurringTransactions({
               recurring_transaction_id: recurringId,
               installment_number: Number(item.installment_number || 0),
               due_date: String(item.due_date || ''),
-              amount: Number(item.amount || 0),
+              amount,
               created_at: typeof item.created_at === 'string' ? item.created_at : undefined,
               updated_at: typeof item.updated_at === 'string' ? item.updated_at : undefined,
             },
