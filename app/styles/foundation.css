@@ -715,6 +715,12 @@
   background: var(--ui-dropdown-item-active-background);
 }
 
+.ui-dropdown__separator {
+  height: 1px;
+  margin: var(--ui-space-2) var(--ui-space-4);
+  background: var(--ui-border-divider);
+}
+
 /* Dropdown List Primitive — separator-based action/selection lists. */
 [data-ui-dropdown-list="true"] {
   --ui-dropdown-list-row-height: var(--ui-dropdown-item-height-action);
@@ -2563,12 +2569,6 @@
   }
 }
 
-/* Picker responsive behavior. */
-
-[data-ui-picker-control="true"][open] [data-ui-picker-chevron="true"] {
-  transform: rotate(180deg);
-}
-
 [data-ui-empty-block="true"] strong,
 [data-utility-empty="true"] strong {
   color: var(--ui-color-primary-navy);
@@ -2599,15 +2599,6 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--ui-spacing-lg);
   align-items: start;
-}
-
-[data-ui-picker-control="true"] summary::-webkit-details-marker {
-  display: none;
-}
-
-[data-ui-picker-control="true"][open] summary {
-  border-color: var(--ui-border-active);
-  box-shadow: var(--ui-color-focus-ring);
 }
 
 [data-payment-source-settings-actions="true"] {
@@ -2643,25 +2634,6 @@
 [data-ui-title-copy="true"] > [data-ui-title-with-help="true"] + span,
 [data-ui-title-copy="true"] > [data-ui-title-with-help="true"] + small {
   display: none;
-}
-
-[data-ui-picker-control="true"] summary {
-  min-height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--ui-spacing-md);
-  box-sizing: border-box;
-  border: var(--ui-input-border);
-  border-radius: var(--ui-input-radius);
-  padding: 0 var(--ui-space-6);
-  background: var(--ui-input-bg);
-  color: var(--ui-input-text);
-  font-size: var(--ui-input-font-size-m);
-  font-weight: var(--ui-font-weight-semibold);
-  list-style: none;
-  cursor: pointer;
-  overflow: hidden;
 }
 
 @media (max-width: 680px) {
@@ -2818,19 +2790,6 @@
 [data-ui-note-card="true"] > [data-ui-icon-tile="true"] svg {
   width: 20px;
   height: 20px;
-}
-
-.ui-select[data-ui-rich-select="true"],
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-trigger="true"] {
-  min-height: 44px;
-  height: 44px;
-  padding: 0 var(--ui-space-7);
-  border: var(--ui-input-border);
-  border-radius: var(--ui-input-radius);
-  background: var(--ui-input-bg);
-  color: var(--ui-color-primary-navy);
-  font-size: var(--ui-font-size-body-sm);
-  font-weight: var(--ui-font-weight-semibold);
 }
 
 [data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-value="true"] {
@@ -3303,13 +3262,11 @@ body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-hel
   transform: translateY(0.5px);
 }
 
-[data-ui-picker-control="true"][open] [data-ui-picker-chevron="true"]::before,
 [data-ui-picker-control="true"][data-open="true"] [data-ui-picker-chevron="true"]::before,
 button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   transform: translateY(1px) rotate(225deg);
 }
 
-[data-ui-picker-control="true"][open] [data-ui-picker-chevron="true"] svg,
 [data-ui-picker-control="true"][data-open="true"] [data-ui-picker-chevron="true"] svg,
 button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   transform: rotate(180deg);
