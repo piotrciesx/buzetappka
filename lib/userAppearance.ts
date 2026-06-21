@@ -81,9 +81,24 @@ export type UiIconKey =
   | 'shopping'
   | 'basket'
   | 'car'
+  | 'car_2'
+  | 'car_3'
+  | 'car_4'
+  | 'car_5'
+  | 'car_6'
   | 'transport'
   | 'plane'
+  | 'plane_2'
+  | 'plane_3'
+  | 'plane_4'
+  | 'plane_5'
+  | 'plane_6'
   | 'holiday'
+  | 'holiday_2'
+  | 'holiday_3'
+  | 'holiday_4'
+  | 'holiday_5'
+  | 'holiday_6'
   | 'sun'
   | 'health'
   | 'doctor'
@@ -113,7 +128,17 @@ export type UiIconKey =
   | 'restaurant'
   | 'coffee'
   | 'fuel'
+  | 'fuel_2'
+  | 'fuel_3'
+  | 'fuel_4'
+  | 'fuel_5'
+  | 'fuel_6'
   | 'travel'
+  | 'travel_2'
+  | 'travel_3'
+  | 'travel_4'
+  | 'travel_5'
+  | 'travel_6'
   | 'warning'
   | 'idea'
   | 'heart'
@@ -146,9 +171,36 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'food',
   'coffee',
   'car',
+  'car_2',
+  'car_3',
+  'car_4',
+  'car_5',
+  'car_6',
   'transport',
   'plane',
+  'plane_2',
+  'plane_3',
+  'plane_4',
+  'plane_5',
+  'plane_6',
+  'travel',
+  'travel_2',
+  'travel_3',
+  'travel_4',
+  'travel_5',
+  'travel_6',
+  'holiday',
+  'holiday_2',
+  'holiday_3',
+  'holiday_4',
+  'holiday_5',
+  'holiday_6',
   'fuel',
+  'fuel_2',
+  'fuel_3',
+  'fuel_4',
+  'fuel_5',
+  'fuel_6',
   'health',
 
   'work',
@@ -194,9 +246,24 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'shopping', label: 'Zakupy' },
   { key: 'basket', label: 'Koszyk' },
   { key: 'car', label: 'Auto' },
+  { key: 'car_2', label: 'Auto 1' },
+  { key: 'car_3', label: 'Auto 2' },
+  { key: 'car_4', label: 'Auto 3' },
+  { key: 'car_5', label: 'Auto 4' },
+  { key: 'car_6', label: 'Auto 5' },
   { key: 'transport', label: 'Transport' },
   { key: 'plane', label: 'Samolot' },
+  { key: 'plane_2', label: 'Samolot 1' },
+  { key: 'plane_3', label: 'Samolot 2' },
+  { key: 'plane_4', label: 'Samolot 3' },
+  { key: 'plane_5', label: 'Samolot 4' },
+  { key: 'plane_6', label: 'Samolot 5' },
   { key: 'holiday', label: 'Wakacje' },
+  { key: 'holiday_2', label: 'Wakacje 1' },
+  { key: 'holiday_3', label: 'Wakacje 2' },
+  { key: 'holiday_4', label: 'Wakacje 3' },
+  { key: 'holiday_5', label: 'Wakacje 4' },
+  { key: 'holiday_6', label: 'Wakacje 5' },
   { key: 'sun', label: 'Słońce' },
   { key: 'health', label: 'Zdrowie' },
   { key: 'doctor', label: 'Lekarz' },
@@ -226,7 +293,17 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
   { key: 'restaurant', label: 'Restauracja' },
   { key: 'coffee', label: 'Kawa' },
   { key: 'fuel', label: 'Paliwo' },
+  { key: 'fuel_2', label: 'Paliwo 1' },
+  { key: 'fuel_3', label: 'Paliwo 2' },
+  { key: 'fuel_4', label: 'Paliwo 3' },
+  { key: 'fuel_5', label: 'Paliwo 4' },
+  { key: 'fuel_6', label: 'Paliwo 5' },
   { key: 'travel', label: 'Podróże' },
+  { key: 'travel_2', label: 'Podróże 1' },
+  { key: 'travel_3', label: 'Podróże 2' },
+  { key: 'travel_4', label: 'Podróże 3' },
+  { key: 'travel_5', label: 'Podróże 4' },
+  { key: 'travel_6', label: 'Podróże 5' },
   { key: 'warning', label: 'Ważne' },
   { key: 'idea', label: 'Pomysł' },
   { key: 'heart', label: 'Osobiste' },
@@ -249,7 +326,7 @@ export const APP_ICONS: Array<{ key: UiIconKey; label: string }> = USER_ICON_REG
 
 export const CATEGORY_ICONS = APP_ICONS
 
-export const APP_ICON_ALIASES: Record<UiIconKey, string[]> = {
+export const APP_ICON_ALIASES: Partial<Record<UiIconKey, string[]>> = {
   note: ['notatka', 'notatki', 'nota', 'zapis', 'zapiski', 'uwagi', 'tekst', 'opis', 'komentarz', 'przypomnienie', 'memo', 'ważne info', 'adnotacja'],
   exchange: ['wymiana', 'transfer', 'przelew', 'zamiana', 'kurs', 'waluty', 'przewalutowanie', 'rotacja', 'synchronizacja'],
   home: ['dom', 'mieszkanie', 'czynsz', 'najem', 'wynajem', 'lokal', 'nieruchomość', 'remont', 'wyposażenie domu', 'domowe', 'meble', 'rachunki domowe', 'opłaty domowe', 'mieszkalne'],
