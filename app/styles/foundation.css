@@ -3790,6 +3790,19 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   mask-size: contain;
 }
 
+[data-letter-icon="true"] {
+  display: inline-grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  color: currentColor;
+  font-family: var(--font-app-sans), sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1;
+}
+
 [data-ui-button-icon="true"],
 .ui-button--hero > svg,
 .ui-button--standard > svg,

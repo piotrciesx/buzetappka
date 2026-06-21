@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
-import { getFinalIconId } from "../lib/iconRegistry";
+import { getFinalIconId, getLetterIconCharacter } from "../lib/iconRegistry";
 import { getUiIcon } from "../lib/userAppearance";
+import LetterIcon from "./LetterIcon";
 
 type CategoryIconProps = {
   iconKey?: string | null;
@@ -19,8 +20,9 @@ export default function CategoryIcon({
   size = "a",
 }: CategoryIconProps) {
   const iconId = getFinalIconId(iconKey);
+  const letterCharacter = getLetterIconCharacter(iconKey);
 
-  if (!iconId) {
+  if (!iconId && !letterCharacter) {
     return null;
   }
 
@@ -34,11 +36,15 @@ export default function CategoryIcon({
       aria-hidden="true"
       title={icon?.label || iconKey || undefined}
     >
-      <span
-        data-category-icon-svg="true"
-        data-category-icon-glyph="true"
-        style={{ "--category-icon-url": getIconMaskUrl(iconId) } as CSSProperties}
-      />
+      {letterCharacter ? (
+        <LetterIcon character={letterCharacter} />
+      ) : (
+        <span
+          data-category-icon-svg="true"
+          data-category-icon-glyph="true"
+          style={{ "--category-icon-url": getIconMaskUrl(iconId as string) } as CSSProperties}
+        />
+      )}
     </span>
   );
 }

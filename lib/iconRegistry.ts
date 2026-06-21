@@ -1,14 +1,40 @@
-const LETTERS = [
-  "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
-  "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+export const LETTER_ICON_OPTIONS = [
+  { key: "letter-a", character: "A", label: "Litera A" },
+  { key: "letter-b", character: "B", label: "Litera B" },
+  { key: "letter-c", character: "C", label: "Litera C" },
+  { key: "letter-ć", character: "Ć", label: "Litera Ć" },
+  { key: "letter-d", character: "D", label: "Litera D" },
+  { key: "letter-e", character: "E", label: "Litera E" },
+  { key: "letter-f", character: "F", label: "Litera F" },
+  { key: "letter-g", character: "G", label: "Litera G" },
+  { key: "letter-h", character: "H", label: "Litera H" },
+  { key: "letter-i", character: "I", label: "Litera I" },
+  { key: "letter-j", character: "J", label: "Litera J" },
+  { key: "letter-k", character: "K", label: "Litera K" },
+  { key: "letter-l", character: "L", label: "Litera L" },
+  { key: "letter-ł", character: "Ł", label: "Litera Ł" },
+  { key: "letter-m", character: "M", label: "Litera M" },
+  { key: "letter-n", character: "N", label: "Litera N" },
+  { key: "letter-ń", character: "Ń", label: "Litera Ń" },
+  { key: "letter-o", character: "O", label: "Litera O" },
+  { key: "letter-p", character: "P", label: "Litera P" },
+  { key: "letter-q", character: "Q", label: "Litera Q" },
+  { key: "letter-r", character: "R", label: "Litera R" },
+  { key: "letter-s", character: "S", label: "Litera S" },
+  { key: "letter-ś", character: "Ś", label: "Litera Ś" },
+  { key: "letter-t", character: "T", label: "Litera T" },
+  { key: "letter-u", character: "U", label: "Litera U" },
+  { key: "letter-v", character: "V", label: "Litera V" },
+  { key: "letter-w", character: "W", label: "Litera W" },
+  { key: "letter-x", character: "X", label: "Litera X" },
+  { key: "letter-y", character: "Y", label: "Litera Y" },
+  { key: "letter-z", character: "Z", label: "Litera Z" },
+  { key: "letter-ź", character: "Ź", label: "Litera Ź" },
+  { key: "letter-ż", character: "Ż", label: "Litera Ż" },
 ] as const;
 
-type LetterIconKey = `letter-${(typeof LETTERS)[number]}`;
-
-const LETTER_ICON_OPTIONS: ReadonlyArray<{ key: LetterIconKey; label: string }> = LETTERS.map((letter) => ({
-  key: `letter-${letter}`,
-  label: `Litera ${letter.toUpperCase()}`,
-}));
+export type LetterIconKey = (typeof LETTER_ICON_OPTIONS)[number]["key"];
+export type LetterIconCharacter = (typeof LETTER_ICON_OPTIONS)[number]["character"];
 
 export const FINAL_USER_ICON_OPTIONS = [
   { key: "note", label: "Notatka" },
@@ -80,6 +106,7 @@ export const FINAL_USER_ICON_OPTIONS = [
 ] as const;
 
 export type FinalUserIconKey = (typeof FINAL_USER_ICON_OPTIONS)[number]["key"];
+type LibraryUserIconKey = Exclude<FinalUserIconKey, LetterIconKey>;
 export const FINAL_USER_ICON_KEYS = FINAL_USER_ICON_OPTIONS.map((icon) => icon.key);
 
 export const SYSTEM_ICON_KEYS = [
@@ -139,7 +166,7 @@ export const LEGACY_VARIANT_ICON_KEYS = [
 type LegacyVariantIconKey = (typeof LEGACY_VARIANT_ICON_KEYS)[number];
 export type FinalIconKey = FinalUserIconKey | SystemIconKey | CompatibilityIconKey | LegacyVariantIconKey;
 
-const SELECTED_ICON_IDS: Record<FinalUserIconKey | SystemIconKey, string> = {
+const SELECTED_ICON_IDS: Record<LibraryUserIconKey | SystemIconKey, string> = {
   "note": "material-symbols:note",
   "exchange": "material-symbols:swap-horiz",
   "home": "ph:house-fill",
@@ -205,32 +232,6 @@ const SELECTED_ICON_IDS: Record<FinalUserIconKey | SystemIconKey, string> = {
   "pen": "fluent:pen-24-filled",
   "keyboard": "fa6-solid:keyboard",
   "other": "material-symbols:category",
-  "letter-a": "ph:letter-a-fill",
-  "letter-b": "ph:letter-b-fill",
-  "letter-c": "ph:letter-c-fill",
-  "letter-d": "ph:letter-d-fill",
-  "letter-e": "ph:letter-e-fill",
-  "letter-f": "ph:letter-f-fill",
-  "letter-g": "ph:letter-g-fill",
-  "letter-h": "ph:letter-h-fill",
-  "letter-i": "ph:letter-i-fill",
-  "letter-j": "ph:letter-j-fill",
-  "letter-k": "ph:letter-k-fill",
-  "letter-l": "ph:letter-l-fill",
-  "letter-m": "ph:letter-m-fill",
-  "letter-n": "ph:letter-n-fill",
-  "letter-o": "ph:letter-o-fill",
-  "letter-p": "ph:letter-p-fill",
-  "letter-q": "ph:letter-q-fill",
-  "letter-r": "ph:letter-r-fill",
-  "letter-s": "ph:letter-s-fill",
-  "letter-t": "ph:letter-t-fill",
-  "letter-u": "ph:letter-u-fill",
-  "letter-v": "ph:letter-v-fill",
-  "letter-w": "ph:letter-w-fill",
-  "letter-x": "ph:letter-x-fill",
-  "letter-y": "ph:letter-y-fill",
-  "letter-z": "ph:letter-z-fill",
   "system-dashboard": "ph:squares-four-fill",
   "system-calendar": "ph:calendar-fill",
   "system-goals": "ph:target-fill",
@@ -262,7 +263,7 @@ const SELECTED_ICON_IDS: Record<FinalUserIconKey | SystemIconKey, string> = {
   "system-lock": "material-symbols:lock",
 };
 
-const COMPATIBILITY_TARGETS: Record<CompatibilityIconKey | LegacyVariantIconKey, FinalUserIconKey | SystemIconKey> = {
+const COMPATIBILITY_TARGETS: Record<CompatibilityIconKey | LegacyVariantIconKey, LibraryUserIconKey | SystemIconKey> = {
   basket: "shopping",
   bill: "bills",
   plus: "system-add",
@@ -277,7 +278,7 @@ const COMPATIBILITY_TARGETS: Record<CompatibilityIconKey | LegacyVariantIconKey,
   travel_2: "travel", travel_3: "travel", travel_4: "travel", travel_5: "travel", travel_6: "travel",
 };
 
-export const FINAL_ICON_IDS: Record<FinalIconKey, string> = {
+export const FINAL_ICON_IDS: Record<Exclude<FinalIconKey, LetterIconKey>, string> = {
   ...SELECTED_ICON_IDS,
   ...Object.fromEntries(
     Object.entries(COMPATIBILITY_TARGETS).map(([alias, target]) => [alias, SELECTED_ICON_IDS[target]]),
@@ -285,7 +286,17 @@ export const FINAL_ICON_IDS: Record<FinalIconKey, string> = {
 };
 
 export const isFinalIconKey = (value?: string | null): value is FinalIconKey =>
-  Boolean(value && Object.prototype.hasOwnProperty.call(FINAL_ICON_IDS, value));
+  Boolean(
+    value && (
+      LETTER_ICON_OPTIONS.some((option) => option.key === value) ||
+      Object.prototype.hasOwnProperty.call(FINAL_ICON_IDS, value)
+    ),
+  );
 
 export const getFinalIconId = (key?: string | null) =>
-  isFinalIconKey(key) ? FINAL_ICON_IDS[key] : null;
+  key && Object.prototype.hasOwnProperty.call(FINAL_ICON_IDS, key)
+    ? FINAL_ICON_IDS[key as Exclude<FinalIconKey, LetterIconKey>]
+    : null;
+
+export const getLetterIconCharacter = (key?: string | null): LetterIconCharacter | null =>
+  LETTER_ICON_OPTIONS.find((option) => option.key === key)?.character || null;
