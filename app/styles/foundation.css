@@ -3683,8 +3683,8 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 
 /* Icon Foundation v1 */
 :root {
-  --ui-icon-tile-size-a: 28px;
-  --ui-icon-glyph-size-a: 16px;
+  --ui-icon-tile-size-a: 24px;
+  --ui-icon-glyph-size-a: 18px;
   --ui-icon-radius-a: 8px;
   --ui-icon-tile-size-b: 36px;
   --ui-icon-glyph-size-b: 20px;
@@ -3773,6 +3773,21 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 
 [data-category-icon="true"] svg {
   display: block;
+}
+
+[data-category-icon-glyph="true"] {
+  display: block;
+  width: 18px;
+  height: 18px;
+  background-color: currentColor;
+  -webkit-mask-image: var(--category-icon-url);
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-image: var(--category-icon-url);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
 }
 
 [data-ui-button-icon="true"],

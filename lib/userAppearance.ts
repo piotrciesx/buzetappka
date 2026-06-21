@@ -1,3 +1,8 @@
+import {
+  FINAL_USER_ICON_OPTIONS,
+  type FinalUserIconKey,
+} from './iconRegistry'
+
 export type UserPublicProfile = {
   user_id: string
   display_name: string | null
@@ -73,7 +78,7 @@ export const UI_COLOR_OPTIONS = [
 
 export type UiColorKey = (typeof UI_COLOR_OPTIONS)[number]['tone']
 
-export type UiIconKey =
+type LegacyUiIconKey =
   | 'note'
   | 'exchange'
   | 'home'
@@ -151,6 +156,8 @@ export type UiIconKey =
   | 'expand'
   | 'info'
 
+export type UiIconKey = LegacyUiIconKey | FinalUserIconKey
+
 export type ModuleActionIconKey =
   | 'user'
   | 'settings'
@@ -164,7 +171,7 @@ export type ModuleActionIconKey =
   | 'import'
   | 'drafts'
 
-const USER_ICON_REGISTRY_V1: UiIconKey[] = [
+export const LEGACY_USER_ICON_REGISTRY_V1: UiIconKey[] = [
   'note',
   'home',
   'shopping',
@@ -239,6 +246,7 @@ const USER_ICON_REGISTRY_V1: UiIconKey[] = [
 ]
 
 const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
+  ...FINAL_USER_ICON_OPTIONS,
   { key: 'note', label: 'Notatka' },
   { key: 'exchange', label: 'Wymiana' },
   { key: 'home', label: 'Dom' },
@@ -320,9 +328,7 @@ const INTERNAL_ICON_OPTIONS: Array<{ key: UiIconKey; label: string }> = [
 export type CategoryIconKey = UiIconKey
 
 // APP_ICONS = ikony wybierane przez użytkownika.
-export const APP_ICONS: Array<{ key: UiIconKey; label: string }> = USER_ICON_REGISTRY_V1.map(
-  (key) => INTERNAL_ICON_OPTIONS.find((icon) => icon.key === key)
-).filter((icon): icon is { key: UiIconKey; label: string } => Boolean(icon))
+export const APP_ICONS: Array<{ key: UiIconKey; label: string }> = [...FINAL_USER_ICON_OPTIONS]
 
 export const CATEGORY_ICONS = APP_ICONS
 
