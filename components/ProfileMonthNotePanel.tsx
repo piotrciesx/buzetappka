@@ -573,7 +573,7 @@ export default function ProfileMonthNotePanel({
       <article
         key={note.id}
         data-ui-note-card="true"
-        data-ui-record-card="true"
+        data-ui-utility-record="true"
         data-ui-tone={note.tone}
         data-ui-clickable="true"
         role="button"
@@ -935,6 +935,8 @@ export default function ProfileMonthNotePanel({
           ))}
         </div>
 
+        {!isLoading && <div data-ui-section-separator="true" />}
+
         {!isLoading && filteredDetailNotes.length === 0 && (
           <div data-ui-section="true" data-ui-empty-block="true" data-ui-tone="blue">
             <span data-ui-icon-tile="true" data-ui-tone="blue">
@@ -952,7 +954,7 @@ export default function ProfileMonthNotePanel({
         )}
 
         {filteredDetailNotes.length > 0 && (
-          <div data-ui-card-list="true">
+          <div data-ui-record-list="true">
             {filteredDetailNotes.map((note) => renderNoteCard(note, "detail"))}
           </div>
         )}
@@ -1095,6 +1097,8 @@ export default function ProfileMonthNotePanel({
 
         {isLoading && <StatusBox>Ładowanie notatek...</StatusBox>}
 
+        {!isLoading && <div data-ui-section-separator="true" />}
+
         {!isLoading && previewNotes.length === 0 && (
           <div data-ui-section="true" data-ui-empty-block="true" data-ui-tone="blue">
             <span data-ui-icon-tile="true" data-ui-tone="blue">
@@ -1105,7 +1109,7 @@ export default function ProfileMonthNotePanel({
         )}
 
         {previewNotes.length > 0 && (
-          <div data-ui-card-list="true" data-ui-density="compact">
+          <div data-ui-record-list="true" data-ui-density="compact">
             {previewNotes.map((note) => renderNoteCard(note, "preview"))}
           </div>
         )}

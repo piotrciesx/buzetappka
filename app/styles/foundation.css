@@ -1682,6 +1682,46 @@
   background: var(--ui-border-divider);
 }
 
+[data-ui-record-separator="true"] {
+  width: 100%;
+  height: 1px;
+  margin: 0;
+  background: rgba(8, 44, 122, 0.08);
+}
+
+[data-ui-record-list="true"] {
+  min-width: 0;
+  display: grid;
+  gap: 0;
+}
+
+[data-ui-record-list="true"] > [data-ui-utility-record="true"] {
+  position: relative;
+}
+
+[data-ui-record-list="true"] > [data-ui-utility-record="true"]::after {
+  content: "";
+  position: absolute;
+  left: var(--ui-space-2);
+  right: var(--ui-space-2);
+  bottom: 0;
+  height: 1px;
+  background: rgba(8, 44, 122, 0.08);
+  pointer-events: none;
+}
+
+[data-ui-record-list="true"] > [data-ui-utility-record="true"]:last-child::after {
+  display: none;
+}
+
+[data-ui-utility-record="true"] {
+  min-width: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
 [data-ui-section-title="true"] {
   margin: 0;
   color: var(--ui-color-primary-navy);
@@ -2114,16 +2154,24 @@
   color: var(--ui-text-primary);
 }
 
-[data-ui-card-list="true"][data-ui-density="compact"] [data-ui-note-card="true"] {
-  grid-template-columns: auto minmax(0, 1fr);
-  border-width: 0 0 1px;
-  border-radius: 0;
+[data-ui-record-list="true"] [data-ui-note-card="true"] {
   padding: var(--ui-space-7) var(--ui-space-2);
-  box-shadow: none;
 }
 
-[data-ui-card-list="true"][data-ui-density="compact"] [data-ui-note-card="true"]:last-child {
-  border-bottom: 0;
+[data-ui-record-list="true"] [data-ui-note-card="true"][data-ui-clickable="true"] {
+  cursor: pointer;
+  transition:
+    background var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    color var(--ui-motion-hover) var(--ui-motion-ease-standard);
+}
+
+[data-ui-record-list="true"] [data-ui-note-card="true"][data-ui-clickable="true"]:hover {
+  background: var(--ui-surface-hover);
+}
+
+[data-ui-record-list="true"][data-ui-density="compact"] [data-ui-note-card="true"] {
+  grid-template-columns: auto minmax(0, 1fr);
+  padding: var(--ui-space-7) var(--ui-space-2);
 }
 
 [data-ui-note-copy="true"] {
