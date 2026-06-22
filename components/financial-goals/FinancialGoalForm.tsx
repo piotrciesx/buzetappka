@@ -1,3 +1,4 @@
+import CategoryIcon from '../CategoryIcon'
 import { uiInputApi } from '../../lib/uiFoundation'
 import type { FormState } from './financialGoalsPanelTypes'
 
@@ -24,9 +25,17 @@ export default function FinancialGoalForm({
 }: FinancialGoalFormProps) {
   return (
     <div data-ui-section="true" data-financial-goal-form="true">
-      <div data-ui-form-card="true" data-financial-goal-form-card="true">
+      <div data-financial-goal-form-card="true">
+        <div data-financial-goal-icon-panel="true">
+          <span data-financial-goal-icon-preview="true" aria-hidden="true">
+            <CategoryIcon iconKey="system-goals" />
+          </span>
+          <strong>Ikona celu</strong>
+          <span>Docelowo wybierzesz tu ikonę i kolor celu. Na razie cel korzysta z globalnej ikony celu.</span>
+        </div>
+
         <div data-financial-goal-form-grid="true">
-          <label data-ui-field-wrapper="true">
+          <label data-ui-field-wrapper="true" data-field-span="full">
             <span data-ui-field-label="true">Nazwa celu</span>
             <input
               className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
@@ -79,11 +88,14 @@ export default function FinancialGoalForm({
               }
             />
           </label>
-        </div>
 
-        <div data-ui-empty-block="true" data-financial-goal-form-note="true">
-          Cel nie ma osobnego źródła finansowania. Jest rozliczany z nadwyżki budżetu
-          zgodnie z trybem ustawionym dla danego miesiąca.
+          <div data-financial-goal-form-info="true">
+            <span aria-hidden="true">i</span>
+            <span>
+              Cel nie ma osobnego źródła finansowania. Jest rozliczany z nadwyżki budżetu
+              zgodnie z trybem ustawionym dla danego miesiąca.
+            </span>
+          </div>
         </div>
       </div>
 

@@ -516,8 +516,8 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
     <section data-ui-section="true" data-financial-goals-panel="true">
       <div data-financial-goals-toolbar="true">
         <div data-financial-goals-toolbar-copy="true">
-          <strong>Rozdział nadwyżki</strong>
-          <span>Ustaw tryb pracy celów dla miesiąca {selectedMonth}.</span>
+          <strong>Cele finansowe</strong>
+          <span>Zarządzaj celami i rozdziałem nadwyżki budżetu.</span>
         </div>
 
         <button
@@ -525,7 +525,7 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
           data-ui-header-primary-action="true"
           onClick={() => setIsCreateFormOpen(true)}
         >
-          <CategoryIcon iconKey="plus" />
+          <CategoryIcon iconKey="system-add" />
           Dodaj cel
         </button>
       </div>
