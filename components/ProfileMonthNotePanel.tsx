@@ -80,12 +80,13 @@ const CATEGORY_OPTIONS: MonthNoteCategory[] = [
 const DETAILS_FILTER_OPTIONS: Array<{
   key: MonthNoteDetailsFilter;
   label: string;
+  icon: UiIconKey;
   category?: MonthNoteCategory;
 }> = [
-  { key: "all", label: "Wszystkie" },
-  { key: "Notatka", label: "Notatki", category: "Notatka" },
-  { key: "Przypomnienie", label: "Przypomnienia", category: "Przypomnienie" },
-  { key: "Informacja", label: "Informacje", category: "Informacja" },
+  { key: "all", label: "Wszystkie", icon: "more" },
+  { key: "Notatka", label: "Notatki", icon: "note", category: "Notatka" },
+  { key: "Przypomnienie", label: "Przypomnienia", icon: "calendar", category: "Przypomnienie" },
+  { key: "Informacja", label: "Informacje", icon: "info", category: "Informacja" },
 ];
 
 const NoteIcon = ({ name }: { name: NoteIconName }) => {
@@ -224,11 +225,11 @@ const serializeNotes = (notes: MonthNoteItem[]) => {
   });
 };
 
-const createEmptyDraft = () => ({
+const createEmptyDraft = (category: MonthNoteCategory = "Notatka") => ({
   text: "",
   tone: "blue" as MonthNoteTone,
-  icon: "note" as MonthNoteIcon,
-  category: "Notatka" as MonthNoteCategory,
+  icon: category === "Przypomnienie" ? "calendar" as MonthNoteIcon : category === "Informacja" ? "info" as MonthNoteIcon : "note" as MonthNoteIcon,
+  category,
 });
 
 export default function ProfileMonthNotePanel({
@@ -451,8 +452,10 @@ export default function ProfileMonthNotePanel({
   };
 
   const startAddingNote = () => {
+    const defaultCategory = detailsFilter === "all" ? "Notatka" : detailsFilter;
+
     setEditingNoteId(null);
-    setDraft(createEmptyDraft());
+    setDraft(createEmptyDraft(defaultCategory));
     setIsIconPickerExpanded(false);
     setActivePicker(null);
     setIconSearch('');
@@ -930,6 +933,9 @@ export default function ProfileMonthNotePanel({
               aria-pressed={detailsFilter === filterOption.key}
               onClick={() => setDetailsFilter(filterOption.key)}
             >
+              <span data-ui-filter-pill-icon="true" aria-hidden="true">
+                <CategoryIcon iconKey={filterOption.icon} />
+              </span>
               {filterOption.label} {detailNoteCounts[filterOption.key]}
             </button>
           ))}

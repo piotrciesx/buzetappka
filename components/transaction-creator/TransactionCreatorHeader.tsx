@@ -22,6 +22,9 @@ export default function TransactionCreatorHeader({
   return (
     <header data-ui-modal-header="true" data-transaction-modal-header="true">
       <div data-ui-title-row="true">
+        <span data-ui-icon-tile="true" data-ui-tone="blue">
+          <CategoryIcon iconKey="pen" />
+        </span>
         <div data-ui-title-copy="true">
           <strong>Nowy wpis</strong>
           <span>Miesiąc zapisu: {selectedMonth}</span>

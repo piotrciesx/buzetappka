@@ -614,7 +614,14 @@
   --ui-row-open-bg: var(--ui-surface-soft);
   --ui-row-drag-bg: var(--ui-surface-hover);
   --ui-row-divider: var(--ui-border-divider);
+  --ui-record-separator-color: rgba(8, 44, 122, 0.08);
+  --ui-record-separator-inset: var(--ui-space-2);
+  --ui-record-card-border: 1px solid rgba(8, 44, 122, 0.09);
+  --ui-record-card-radius: var(--ui-radius-xl);
+  --ui-record-card-bg: rgba(255, 255, 255, 0.82);
+  --ui-record-card-shadow: 0 6px 18px rgba(8, 44, 122, 0.035);
 }
+
 
 .ui-surface {
   min-width: 0;
@@ -799,7 +806,7 @@
   right: var(--ui-dropdown-list-separator-inset);
   bottom: 0;
   height: 1px;
-  background: var(--ui-border-divider);
+  background: var(--ui-record-separator-color);
   pointer-events: none;
 }
 
@@ -1686,7 +1693,7 @@
   width: 100%;
   height: 1px;
   margin: 0;
-  background: rgba(8, 44, 122, 0.08);
+  background: var(--ui-record-separator-color);
 }
 
 [data-ui-record-list="true"] {
@@ -1702,11 +1709,11 @@
 [data-ui-record-list="true"] > [data-ui-utility-record="true"]::after {
   content: "";
   position: absolute;
-  left: var(--ui-space-2);
-  right: var(--ui-space-2);
+  left: var(--ui-record-separator-inset);
+  right: var(--ui-record-separator-inset);
   bottom: 0;
   height: 1px;
-  background: rgba(8, 44, 122, 0.08);
+  background: var(--ui-record-separator-color);
   pointer-events: none;
 }
 
@@ -1732,10 +1739,10 @@
 
 [data-ui-record-card="true"] {
   min-width: 0;
-  border: 1px solid rgba(8, 44, 122, 0.12);
-  border-radius: 16px;
-  background: #ffffff;
-  box-shadow: 0 10px 28px rgba(8, 44, 122, 0.05);
+  border: var(--ui-record-card-border);
+  border-radius: var(--ui-record-card-radius);
+  background: var(--ui-record-card-bg);
+  box-shadow: var(--ui-record-card-shadow);
 }
 
 [data-financial-goals-panel="true"] {
@@ -2312,13 +2319,29 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--ui-space-4);
   border: 1px solid rgba(8, 44, 122, 0.16);
   border-radius: 10px;
-  padding: 0 var(--ui-space-8);
+  padding: 0 var(--ui-space-7);
   background: #ffffff;
   color: var(--ui-color-primary-navy);
   font-size: var(--ui-type-t4);
   font-weight: var(--ui-font-weight-semibold);
+}
+
+[data-ui-filter-pill-icon="true"] {
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: currentColor;
+}
+
+[data-ui-filter-pill-icon="true"] svg {
+  width: 16px;
+  height: 16px;
 }
 
 [data-ui-filter-pill="true"][data-active="true"] {
@@ -2472,24 +2495,20 @@
 
 [data-payment-source-list="true"] {
   display: grid;
-  gap: var(--ui-space-7);
+  gap: var(--ui-space-5);
 }
 
 [data-payment-source-item="true"] {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: var(--ui-space-7);
-  padding: var(--ui-space-8);
-  border: 1px solid rgba(8, 44, 122, 0.12);
-  border-radius: 18px;
-  background: #ffffff;
-  box-shadow: 0 10px 28px rgba(8, 44, 122, 0.05);
+  gap: var(--ui-space-6);
+  padding: var(--ui-space-6);
 }
 
 [data-payment-source-item="true"][data-archived="true"] {
   opacity: 0.66;
-  background: var(--ui-surface-soft);
+  background: rgba(247, 251, 255, 0.72);
 }
 
 [data-payment-source-main="true"] {
@@ -3477,8 +3496,8 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--ui-space-6);
-  padding: 0 var(--ui-space-7);
+  gap: var(--ui-space-4);
+  padding: 0 var(--ui-space-6);
   border-color: rgba(8, 44, 122, 0.16);
   border-radius: var(--ui-radius-md);
   background: var(--ui-surface-card);
@@ -3489,7 +3508,22 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   box-shadow: none;
 }
 
-[data-transaction-shortcut-trigger="true"] > span:first-child {
+[data-transaction-shortcut-trigger-icon="true"] {
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: currentColor;
+}
+
+[data-transaction-shortcut-trigger-icon="true"] svg {
+  width: 16px;
+  height: 16px;
+}
+
+[data-transaction-shortcut-trigger-label="true"] {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;

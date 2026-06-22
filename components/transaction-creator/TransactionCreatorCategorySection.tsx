@@ -1,5 +1,6 @@
 import { CSSProperties, ReactNode, useMemo, useState } from "react";
 import { getUniqueCategoryLabel } from "../../lib/categoryUtils";
+import type { UiIconKey } from "../../lib/userAppearance";
 import CategoryIcon from "../CategoryIcon";
 import { Category, TransactionShortcut } from "./transactionCreatorTypes";
 
@@ -149,18 +150,21 @@ export default function TransactionCreatorCategorySection({
       {
         key: "recent" as const,
         label: "Ostatnie",
+        icon: "system-undo" as UiIconKey,
         items: recentShortcutCategories,
         empty: "Brak ostatnich kategorii.",
       },
       {
         key: "frequent" as const,
         label: "Najczęstsze",
+        icon: "system-sort" as UiIconKey,
         items: topShortcutCategories,
         empty: "Brak najczęstszych kategorii.",
       },
       {
         key: "pinned" as const,
         label: "Przypięte",
+        icon: "system-pin" as UiIconKey,
         items: pinnedShortcutCategories,
         empty: "Brak przypiętych kategorii.",
       },
@@ -237,11 +241,13 @@ export default function TransactionCreatorCategorySection({
   const renderShortcutMenu = ({
     key,
     label,
+    icon,
     items,
     empty,
   }: {
     key: Exclude<ShortcutMenuKey, null>;
     label: string;
+    icon: UiIconKey;
     items: TransactionShortcut[];
     empty: string;
   }) => {
@@ -261,7 +267,10 @@ export default function TransactionCreatorCategorySection({
           aria-expanded={isOpen}
           onClick={() => setActiveShortcutMenu(isOpen ? null : key)}
         >
-          <span>{label}</span>
+          <span data-transaction-shortcut-trigger-icon="true" aria-hidden="true">
+            <CategoryIcon iconKey={icon} />
+          </span>
+          <span data-transaction-shortcut-trigger-label="true">{label}</span>
           <span data-ui-picker-chevron="true" aria-hidden="true" />
         </button>
 
