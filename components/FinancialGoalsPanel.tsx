@@ -12,9 +12,8 @@ import {
   getFinancialGoalPriorityItemsForMonth,
 } from '../lib/financialGoals'
 import FinancialGoalEditModal from './financial-goals/FinancialGoalEditModal'
-import FinancialGoalForm from './financial-goals/FinancialGoalForm'
 import FinancialGoalsList from './financial-goals/FinancialGoalsList'
-import FinancialGoalsHeader from './financial-goals/FinancialGoalsHeader'
+import CategoryIcon from './CategoryIcon'
 import FinancialGoalsModeControls from './financial-goals/FinancialGoalsModeControls'
 import FinancialGoalsSummary from './financial-goals/FinancialGoalsSummary'
 import type { FinancialGoalsPanelProps, FormState } from './financial-goals/financialGoalsPanelTypes'
@@ -27,7 +26,6 @@ import {
   getInitialFormState,
   normalizeAllocationMap,
   orderGoalsByIds,
-  panelStyle,
   rebalanceAllocations,
   sortGoalsByAllocation,
 } from './financial-goals/financialGoalsPanelUtils'
@@ -54,6 +52,7 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
 
   const [createFormState, setCreateFormState] = useState<FormState>(() => getInitialFormState(selectedMonth))
   const [editFormState, setEditFormState] = useState<FormState | null>(null)
+  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [isReordering, setIsReordering] = useState(false)
   const [localModeByMonth, setLocalModeByMonth] = useState<Record<string, FinancialGoalAllocationMode>>({})
@@ -514,21 +513,22 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
   }
 
   return (
-    <section style={panelStyle} data-ui-section="true" data-financial-goals-panel="true">
-      <FinancialGoalsHeader styles={styles} />
+    <section data-ui-section="true" data-financial-goals-panel="true">
+      <div data-financial-goals-toolbar="true">
+        <div data-financial-goals-toolbar-copy="true">
+          <strong>Rozdział nadwyżki</strong>
+          <span>Ustaw tryb pracy celów dla miesiąca {selectedMonth}.</span>
+        </div>
 
-      <FinancialGoalForm
-        formState={createFormState}
-        isSaving={isSaving}
-        submitLabel="Dodaj cel"
-        savingLabel="Zapisywanie..."
-        onFormStateChange={setCreateFormState}
-        onSubmit={() =>
-          void saveGoal(createFormState, () =>
-            setCreateFormState(getInitialFormState(selectedMonth))
-          )
-        }
-      />
+        <button
+          type="button"
+          data-ui-header-primary-action="true"
+          onClick={() => setIsCreateFormOpen(true)}
+        >
+          <CategoryIcon iconKey="plus" />
+          Dodaj cel
+        </button>
+      </div>
 
       <FinancialGoalsModeControls
         effectiveMode={effectiveMode}
@@ -586,6 +586,25 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         openEditModal={openEditModal}
         onDeleteGoal={onDeleteGoal}
       />
+
+      {isCreateFormOpen && (
+        <FinancialGoalEditModal
+          title="Nowy cel finansowy"
+          description="Dodaj cel, który będzie rozliczany z nadwyżki budżetu."
+          submitLabel="Dodaj cel"
+          formState={createFormState}
+          isSaving={isSaving}
+          styles={styles}
+          onFormStateChange={setCreateFormState}
+          onSave={() =>
+            void saveGoal(createFormState, () => {
+              setCreateFormState(getInitialFormState(selectedMonth))
+              setIsCreateFormOpen(false)
+            })
+          }
+          onClose={() => setIsCreateFormOpen(false)}
+        />
+      )}
 
       {editFormState && (
         <FinancialGoalEditModal

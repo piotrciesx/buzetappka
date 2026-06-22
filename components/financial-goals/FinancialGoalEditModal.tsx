@@ -1,29 +1,12 @@
 import type { CSSProperties } from 'react'
-import { uiInputApi, uiOverlayPrimitives, uiSurfacePrimitives } from '../../lib/uiFoundation'
+import CategoryIcon from '../CategoryIcon'
+import FinancialGoalForm from './FinancialGoalForm'
 import type { FormState } from './financialGoalsPanelTypes'
 
-const overlayStyle = {
-  position: 'fixed',
-  inset: 0,
-  zIndex: uiOverlayPrimitives.modalBase.layer,
-  background: 'var(--ui-overlay-backdrop-strong)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: uiOverlayPrimitives.modalBase.padding,
-} as const
-
-const modalStyle = {
-  width: '100%',
-  maxWidth: 'var(--ui-modal-max-width-m)',
-  background: uiSurfacePrimitives.modalSurfaceNeutral.background,
-  borderRadius: uiSurfacePrimitives.modalSurfaceNeutral.radius,
-  border: uiSurfacePrimitives.modalSurfaceNeutral.border,
-  boxShadow: uiSurfacePrimitives.modalSurfaceNeutral.shadow,
-  padding: uiSurfacePrimitives.modalSurfaceNeutral.padding,
-} as const
-
 type FinancialGoalEditModalProps = {
+  title?: string
+  description?: string
+  submitLabel?: string
   formState: FormState
   isSaving: boolean
   styles: Record<string, CSSProperties>
@@ -33,74 +16,55 @@ type FinancialGoalEditModalProps = {
 }
 
 export default function FinancialGoalEditModal({
+  title = 'Edytuj cel',
+  description = 'Zmień dane celu finansowego. Zmiany kwoty albo miesiąca startu mogą przeliczyć historię celów.',
+  submitLabel = 'Zapisz zmiany',
   formState,
   isSaving,
-  styles,
+  styles: _styles,
   onFormStateChange,
   onSave,
   onClose,
 }: FinancialGoalEditModalProps) {
+  void _styles
+
   return (
-    <div style={overlayStyle} onClick={onClose}>
-      <div style={modalStyle} onClick={(event) => event.stopPropagation()}>
-        <div style={styles.sectionTitle}>Edytuj cel</div>
-        <div style={{ ...styles.pageSubtitle, marginBottom: 16 }}>
-          Możesz zmienić nazwę, kwotę docelową i deadline bez ręcznego przenoszenia celu między
-          listami.
-        </div>
-
-        <div style={{ display: 'grid', gap: 12 }}>
-          <div>
-            <label style={styles.sortLabel}>Nazwa</label>
-            <input
-              className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
-              data-input-width={uiInputApi.width.full}
-              value={formState.name}
-              onChange={(event) => onFormStateChange({ ...formState, name: event.target.value })}
-            />
+    <div data-ui-overlay="true" data-financial-goal-modal-overlay="true" onClick={onClose}>
+      <section
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        data-ui-modal-shell="true"
+        data-ui-size="form"
+        data-financial-goal-modal="true"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <header data-ui-modal-header="true" data-budget-utility-header="true">
+          <div data-ui-title-row="true">
+            <span data-ui-title-icon="true" aria-hidden="true">
+              <CategoryIcon iconKey="system-goals" />
+            </span>
+            <div data-ui-title-copy="true">
+              <strong>{title}</strong>
+              <span>{description}</span>
+            </div>
           </div>
 
-          <div>
-            <label style={styles.sortLabel}>Kwota docelowa</label>
-            <input
-              className={uiInputApi.classNames.amountField}
-              data-input-width={uiInputApi.width.full}
-              inputMode="decimal"
-              value={formState.targetAmount}
-              onChange={(event) =>
-                onFormStateChange({ ...formState, targetAmount: event.target.value })
-              }
-            />
-          </div>
-
-          <div>
-            <label style={styles.sortLabel}>Deadline</label>
-            <input
-              className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
-              data-input-width={uiInputApi.width.full}
-              type="month"
-              value={formState.deadlineMonth}
-              onChange={(event) =>
-                onFormStateChange({ ...formState, deadlineMonth: event.target.value })
-              }
-            />
-          </div>
-        </div>
-
-        <div style={{ ...styles.actions, marginTop: 16 }}>
-          <button
-            type="button"
-            data-ui-button-confirm="true"
-            disabled={isSaving || !formState.name.trim() || !formState.targetAmount}
-            onClick={onSave}
-          >
-            {isSaving ? 'Zapisywanie...' : 'Zapisz zmiany'}
+          <button type="button" data-ui-close-action="true" aria-label="Zamknij" onClick={onClose}>
+            <CategoryIcon iconKey="close" />
           </button>
-          <button type="button" data-ui-button-cancel="true" onClick={onClose}>
-            Zamknij
-          </button>
-        </div>
-      </div>
+        </header>
+
+        <FinancialGoalForm
+          formState={formState}
+          isSaving={isSaving}
+          submitLabel={submitLabel}
+          savingLabel="Zapisywanie..."
+          onFormStateChange={onFormStateChange}
+          onSubmit={onSave}
+          onCancel={onClose}
+        />
+      </section>
     </div>
   )
 }

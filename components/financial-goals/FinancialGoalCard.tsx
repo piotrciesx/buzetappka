@@ -178,7 +178,7 @@ export function SortableGoalCard(props: GoalCardBaseProps) {
             {...attributes}
             {...listeners}
           >
-            ...
+            ⋮⋮
           </button>
         }
       />
@@ -189,19 +189,7 @@ export function SortableGoalCard(props: GoalCardBaseProps) {
 export function StaticGoalCard(props: GoalCardBaseProps) {
   return (
     <article data-ui-record-card="true" data-ui-goal-card="true">
-      <GoalCardContent
-        {...props}
-        dragHandle={
-          <button
-            type="button"
-            className="ui-button--icon"
-            data-ui-goal-menu="true"
-            onClick={() => props.onEdit(props.goal)}
-          >
-            ...
-          </button>
-        }
-      />
+      <GoalCardContent {...props} />
     </article>
   )
 }

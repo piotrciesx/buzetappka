@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { closestCenter, DndContext, DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { FinancialGoal, FinancialGoalAllocationMode } from '../../lib/budgetPageTypes'
 import { uiListRowApi } from '../../lib/uiFoundation'
+import CategoryIcon from '../CategoryIcon'
 import { SortableGoalCard, StaticGoalCard } from './FinancialGoalCard'
 
 type ProgressByGoalId = Record<
@@ -72,10 +74,15 @@ export default function FinancialGoalsList({
   openEditModal,
   onDeleteGoal,
 }: Props) {
+  const [isArchiveOpen, setIsArchiveOpen] = useState(false)
+
   return (
     <>
       <section data-ui-section="true" data-financial-goals-current-list="true">
-        <h3 data-ui-section-title="true">Cele aktualne</h3>
+        <div data-ui-section-heading="true">
+          <h3 data-ui-section-title="true">Cele aktualne</h3>
+          <span>{activeGoals.length} aktywnych</span>
+        </div>
 
         {activeGoals.length === 0 ? (
           <div data-ui-empty-block="true">Brak aktywnych celów.</div>
@@ -127,28 +134,40 @@ export default function FinancialGoalsList({
       </section>
 
       <section data-ui-section="true" data-financial-goals-archived-list="true">
-        <h3 data-ui-section-title="true">Cele archiwalne</h3>
+        <button
+          type="button"
+          className="ui-button--utility"
+          data-financial-goals-archive-toggle="true"
+          aria-expanded={isArchiveOpen}
+          onClick={() => setIsArchiveOpen((value) => !value)}
+        >
+          <CategoryIcon iconKey={isArchiveOpen ? 'system-collapse' : 'system-expand'} />
+          {isArchiveOpen ? 'Ukryj cele archiwalne' : 'Pokaż cele archiwalne'} ({archivedGoals.length})
+        </button>
 
-        {archivedGoals.length === 0 ? (
-          <div data-ui-empty-block="true">Brak celów archiwalnych.</div>
-        ) : (
-          <div
-            className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}
-            data-ui-goal-list="true"
-          >
-            {archivedGoals.map((goal) => (
-              <StaticGoalCard
-                key={goal.id}
-                goal={goal}
-                {...getProgressProps(goal, progressByGoalId, lockedMonthsSet)}
-                waitingForLockedMonth={false}
-                allocationPercent={pendingAllocationByGoalId[goal.id] ?? null}
-                isAllocationMode={false}
-                onEdit={openEditModal}
-                onDelete={(goalId) => void onDeleteGoal(goalId)}
-              />
-            ))}
-          </div>
+        {isArchiveOpen && (
+          archivedGoals.length === 0 ? (
+            <div data-ui-empty-block="true">Brak celów archiwalnych.</div>
+          ) : (
+            <div
+              className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}
+              data-ui-goal-list="true"
+              data-ui-goal-list-variant="archive"
+            >
+              {archivedGoals.map((goal) => (
+                <StaticGoalCard
+                  key={goal.id}
+                  goal={goal}
+                  {...getProgressProps(goal, progressByGoalId, lockedMonthsSet)}
+                  waitingForLockedMonth={false}
+                  allocationPercent={pendingAllocationByGoalId[goal.id] ?? null}
+                  isAllocationMode={false}
+                  onEdit={openEditModal}
+                  onDelete={(goalId) => void onDeleteGoal(goalId)}
+                />
+              ))}
+            </div>
+          )
         )}
       </section>
     </>
