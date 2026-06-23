@@ -1307,6 +1307,11 @@ body {
   max-height: var(--ui-modal-max-height-xl);
 }
 
+[data-budget-utility-panel="true"][data-utility-panel-kind="financialGoals"] {
+  max-width: min(1180px, calc(100vw - 48px));
+  max-height: var(--ui-modal-max-height-xl);
+}
+
 [data-budget-utility-header="true"] {
   display: flex;
   align-items: center;

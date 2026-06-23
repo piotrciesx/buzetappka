@@ -35,7 +35,7 @@ export default function FinancialGoalEditModal({
         aria-modal="true"
         aria-label={title}
         data-ui-modal-shell="true"
-        data-ui-size="form"
+        data-ui-size="goal"
         data-financial-goal-modal="true"
         onClick={(event) => event.stopPropagation()}
       >

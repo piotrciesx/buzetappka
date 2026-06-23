@@ -1823,7 +1823,7 @@ body:has([data-financial-goals-panel="true"]) {
 }
 
 [data-financial-goal-modal="true"] {
-  --ui-modal-width: 980px;
+  --ui-modal-width: 1040px;
   gap: var(--ui-space-8);
 }
 
@@ -2044,9 +2044,9 @@ body:has([data-financial-goals-panel="true"]) {
 [data-ui-goal-card-main="true"] {
   min-width: 0;
   display: grid;
-  grid-template-columns: minmax(260px, 1fr) minmax(420px, 1.25fr) minmax(170px, auto);
+  grid-template-columns: minmax(220px, 0.95fr) minmax(300px, 1.15fr) minmax(132px, auto);
   align-items: start;
-  gap: var(--ui-space-7);
+  gap: var(--ui-space-6);
 }
 
 [data-ui-goal-card-title-row="true"] {
@@ -2126,7 +2126,7 @@ body:has([data-financial-goals-panel="true"]) {
 [data-ui-goal-metrics="true"] {
   min-width: 0;
   display: grid;
-  grid-template-columns: repeat(4, minmax(104px, 1fr));
+  grid-template-columns: repeat(4, minmax(86px, 1fr));
   gap: var(--ui-space-4);
 }
 
@@ -2200,7 +2200,7 @@ body:has([data-financial-goals-panel="true"]) {
   transition: width 180ms ease, background-color 180ms ease;
 }
 
-@media (max-width: 980px) {
+@media (max-width: 1120px) {
   [data-ui-goal-card-main="true"] {
     grid-template-columns: 1fr;
   }
@@ -2407,6 +2407,10 @@ body:has([data-financial-goals-panel="true"]) {
 
 [data-ui-modal-shell="true"][data-ui-size="form"] {
   --ui-modal-width: 760px;
+}
+
+[data-ui-modal-shell="true"][data-ui-size="goal"] {
+  --ui-modal-width: 1040px;
 }
 
 [data-ui-filter-row="true"] {
@@ -2756,6 +2760,7 @@ body:has([data-financial-goals-panel="true"]) {
 
 /* Picker form layout. */
 [data-ui-modal-shell="true"][data-ui-size="form"],
+[data-ui-modal-shell="true"][data-ui-size="goal"],
 [data-ui-form-shell="true"],
 [data-ui-picker-row="true"],
 [data-ui-field="true"] {
