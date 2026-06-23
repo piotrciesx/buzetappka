@@ -83,7 +83,7 @@ const DETAILS_FILTER_OPTIONS: Array<{
   icon: UiIconKey;
   category?: MonthNoteCategory;
 }> = [
-  { key: "all", label: "Wszystkie", icon: "more" },
+  { key: "all", label: "Wszystkie", icon: "all" },
   { key: "Notatka", label: "Notatki", icon: "note", category: "Notatka" },
   { key: "Przypomnienie", label: "Przypomnienia", icon: "calendar", category: "Przypomnienie" },
   { key: "Informacja", label: "Informacje", icon: "info", category: "Informacja" },
@@ -934,7 +934,7 @@ export default function ProfileMonthNotePanel({
               onClick={() => setDetailsFilter(filterOption.key)}
             >
               <span data-ui-filter-pill-icon="true" aria-hidden="true">
-                <CategoryIcon iconKey={filterOption.icon} />
+                <CategoryIcon iconKey={filterOption.icon} size="small" />
               </span>
               {filterOption.label} {detailNoteCounts[filterOption.key]}
             </button>

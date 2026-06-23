@@ -2058,15 +2058,22 @@ body:has([data-financial-goals-panel="true"]) {
 }
 
 [data-ui-goal-icon="true"] {
-  width: 56px;
-  height: 56px;
+  width: var(--ui-icon-tile-size-goal);
+  min-width: var(--ui-icon-tile-size-goal);
+  height: var(--ui-icon-tile-size-goal);
+  min-height: var(--ui-icon-tile-size-goal);
   display: inline-grid;
   place-items: center;
-  border-radius: 14px;
-  background: var(--ui-financial-income-soft);
-  color: var(--ui-financial-income);
-  font-size: 24px;
-  font-weight: var(--ui-font-weight-bold);
+  border-radius: var(--ui-icon-radius-goal);
+  background: var(--ui-tone-surface, var(--ui-financial-income-soft));
+  color: var(--ui-tone-text, var(--ui-financial-income));
+  box-shadow: inset 0 0 0 1px var(--ui-tone-border, rgba(8, 44, 122, 0.08));
+}
+
+[data-ui-goal-icon="true"] [data-category-icon-glyph="true"],
+[data-ui-goal-icon="true"] [data-letter-icon="true"] {
+  width: var(--ui-icon-glyph-size-goal);
+  height: var(--ui-icon-glyph-size-goal);
 }
 
 [data-ui-goal-card-copy="true"] {
@@ -2437,18 +2444,20 @@ body:has([data-financial-goals-panel="true"]) {
 }
 
 [data-ui-filter-pill-icon="true"] {
-  width: 16px;
-  min-width: 16px;
-  height: 16px;
+  width: var(--ui-icon-glyph-size-button);
+  min-width: var(--ui-icon-glyph-size-button);
+  height: var(--ui-icon-glyph-size-button);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: currentColor;
 }
 
-[data-ui-filter-pill-icon="true"] svg {
-  width: 16px;
-  height: 16px;
+[data-ui-filter-pill-icon="true"] svg,
+[data-ui-filter-pill-icon="true"] [data-category-icon-glyph="true"],
+[data-ui-filter-pill-icon="true"] [data-letter-icon="true"] {
+  width: var(--ui-icon-glyph-size-button);
+  height: var(--ui-icon-glyph-size-button);
 }
 
 [data-ui-filter-pill="true"][data-active="true"] {
@@ -3617,18 +3626,20 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 [data-transaction-shortcut-trigger-icon="true"] {
-  width: 16px;
-  min-width: 16px;
-  height: 16px;
+  width: var(--ui-icon-glyph-size-button);
+  min-width: var(--ui-icon-glyph-size-button);
+  height: var(--ui-icon-glyph-size-button);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: currentColor;
 }
 
-[data-transaction-shortcut-trigger-icon="true"] svg {
-  width: 16px;
-  height: 16px;
+[data-transaction-shortcut-trigger-icon="true"] svg,
+[data-transaction-shortcut-trigger-icon="true"] [data-category-icon-glyph="true"],
+[data-transaction-shortcut-trigger-icon="true"] [data-letter-icon="true"] {
+  width: var(--ui-icon-glyph-size-button);
+  height: var(--ui-icon-glyph-size-button);
 }
 
 [data-transaction-shortcut-trigger-label="true"] {
@@ -3873,6 +3884,8 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 
 /* Icon Foundation v1 */
 :root {
+  --ui-icon-glyph-size-small: 14px;
+  --ui-icon-glyph-size-button: var(--ui-icon-glyph-size-small);
   --ui-icon-tile-size-a: 24px;
   --ui-icon-glyph-size-a: 18px;
   --ui-icon-radius-a: 8px;
@@ -3882,7 +3895,10 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   --ui-icon-tile-size-c: 46px;
   --ui-icon-glyph-size-c: 24px;
   --ui-icon-radius-c: 12px;
-  --ui-icon-button-glyph-size: 16px;
+  --ui-icon-tile-size-goal: 56px;
+  --ui-icon-glyph-size-goal: 28px;
+  --ui-icon-radius-goal: 14px;
+  --ui-icon-button-glyph-size: var(--ui-icon-glyph-size-button);
 }
 
 [data-ui-icon-tile="true"],
@@ -3960,6 +3976,14 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   place-items: center;
   color: inherit;
 }
+[data-category-icon-size="small"] {
+  --category-icon-glyph-size: var(--ui-icon-glyph-size-small);
+}
+
+[data-category-icon-size="large"] {
+  --category-icon-glyph-size: var(--ui-icon-glyph-size-goal);
+}
+
 
 [data-category-icon="true"] svg {
   display: block;
@@ -3967,8 +3991,8 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 
 [data-category-icon-glyph="true"] {
   display: block;
-  width: 18px;
-  height: 18px;
+  width: var(--category-icon-glyph-size, var(--ui-icon-glyph-size-a));
+  height: var(--category-icon-glyph-size, var(--ui-icon-glyph-size-a));
   background-color: currentColor;
   -webkit-mask-image: var(--category-icon-url);
   -webkit-mask-position: center;
@@ -3982,8 +4006,8 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 
 [data-letter-icon="true"] {
   display: inline-grid;
-  width: 18px;
-  height: 18px;
+  width: var(--category-icon-glyph-size, var(--ui-icon-glyph-size-a));
+  height: var(--category-icon-glyph-size, var(--ui-icon-glyph-size-a));
   place-items: center;
   color: currentColor;
   font-family: var(--font-app-sans), sans-serif;

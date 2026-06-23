@@ -1,6 +1,7 @@
 'use client'
 
 import type { ReactNode } from 'react'
+import CategoryIcon from '../CategoryIcon'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { getGoalProgressBarColor } from '../../lib/financialGoals'
@@ -12,6 +13,30 @@ const getStatusTone = (statusLabel: string) => {
   if (statusLabel === 'zrealizowany') return 'success'
   if (statusLabel === 'niezrealizowany') return 'danger'
   return 'active'
+}
+
+const getGoalIconKey = (goal: GoalCardBaseProps['goal']) => {
+  const goalWithAppearance = goal as GoalCardBaseProps['goal'] & {
+    icon?: string | null
+    icon_key?: string | null
+    category_icon?: string | null
+  }
+
+  return (
+    goalWithAppearance.icon_key ||
+    goalWithAppearance.category_icon ||
+    goalWithAppearance.icon ||
+    'system-goals'
+  )
+}
+
+const getGoalTone = (goal: GoalCardBaseProps['goal']) => {
+  const goalWithAppearance = goal as GoalCardBaseProps['goal'] & {
+    color?: string | null
+    color_tone?: string | null
+  }
+
+  return goalWithAppearance.color_tone || goalWithAppearance.color || 'green'
 }
 
 function GoalCardContent(props: GoalCardBaseProps & { dragHandle?: ReactNode }) {
@@ -46,8 +71,8 @@ function GoalCardContent(props: GoalCardBaseProps & { dragHandle?: ReactNode }) 
     <>
       <div data-ui-goal-card-main="true">
         <div data-ui-goal-card-title-row="true">
-          <span data-ui-goal-icon="true" aria-hidden="true">
-            {goal.name.trim().slice(0, 1).toUpperCase() || '+'}
+          <span data-ui-goal-icon="true" data-ui-tone={getGoalTone(goal)} aria-hidden="true">
+            <CategoryIcon iconKey={getGoalIconKey(goal)} size="large" />
           </span>
 
           <div data-ui-goal-card-copy="true">

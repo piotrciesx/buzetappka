@@ -88,6 +88,20 @@ const getCategoryTone = (category?: Category | null) => {
   );
 };
 
+const getLevel1SystemIcon = (category: Category): { iconKey: UiIconKey; tone: string } | null => {
+  const normalizedName = category.name.toLocaleLowerCase("pl-PL");
+
+  if (normalizedName.includes("przych") || normalizedName.includes("income")) {
+    return { iconKey: "income_plus" as UiIconKey, tone: "green" };
+  }
+
+  if (normalizedName.includes("wydat") || normalizedName.includes("expense")) {
+    return { iconKey: "expense_minus" as UiIconKey, tone: "red" };
+  }
+
+  return null;
+};
+
 const HelpHint = ({ label }: { label: string }) => (
   <span
     data-ui-help="true"
@@ -186,8 +200,11 @@ export default function TransactionCreatorCategorySection({
     setActiveShortcutMenu(null);
   };
 
-  const renderCategoryIcon = (category?: Category | null) => {
-    const iconKey = getCategoryIconKey(category);
+  const renderCategoryIcon = (
+    category?: Category | null,
+    options?: { iconKey?: UiIconKey; tone?: string; size?: "small" | "a" | "b" | "c" | "large" },
+  ) => {
+    const iconKey = options?.iconKey || getCategoryIconKey(category);
 
     if (!iconKey) {
       return (
@@ -202,9 +219,13 @@ export default function TransactionCreatorCategorySection({
     return (
       <span
         data-ui-dropdown-list-icon="true"
-        data-ui-tone={getCategoryTone(category)}
+        data-ui-tone={options?.tone || getCategoryTone(category)}
       >
-        <CategoryIcon iconKey={iconKey} level={category?.level === 3 ? 3 : 2} />
+        <CategoryIcon
+          iconKey={iconKey}
+          level={category?.level === 3 ? 3 : 2}
+          size={options?.size}
+        />
       </span>
     );
   };
@@ -268,7 +289,7 @@ export default function TransactionCreatorCategorySection({
           onClick={() => setActiveShortcutMenu(isOpen ? null : key)}
         >
           <span data-transaction-shortcut-trigger-icon="true" aria-hidden="true">
-            <CategoryIcon iconKey={icon} />
+            <CategoryIcon iconKey={icon} size="small" />
           </span>
           <span data-transaction-shortcut-trigger-label="true">{label}</span>
           <span data-ui-picker-chevron="true" aria-hidden="true" />
@@ -401,12 +422,16 @@ export default function TransactionCreatorCategorySection({
     helper,
     isSelected,
     onClick,
+    iconKey,
+    iconTone,
   }: {
     category?: Category | null;
     label: string;
     helper?: string;
     isSelected?: boolean;
     onClick: () => void;
+    iconKey?: UiIconKey;
+    iconTone?: string;
   }) => (
     <button
       type="button"
@@ -418,7 +443,7 @@ export default function TransactionCreatorCategorySection({
         onClick();
       }}
     >
-      {renderCategoryIcon(category)}
+      {renderCategoryIcon(category, { iconKey, tone: iconTone })}
       <span data-ui-dropdown-list-content="true">
         <span data-ui-dropdown-list-title="true">{label}</span>
         {helper && <span data-ui-dropdown-list-helper="true">{helper}</span>}
@@ -473,15 +498,19 @@ export default function TransactionCreatorCategorySection({
           })}
 
           {renderCategoryList(
-            level1Categories.map((level1Category) =>
-              renderCategoryRow({
+            level1Categories.map((level1Category) => {
+              const level1SystemIcon = getLevel1SystemIcon(level1Category);
+
+              return renderCategoryRow({
                 category: level1Category,
                 label: level1Category.name,
                 helper: "wybierz kategorię",
                 isSelected: selectedLevel1Id === level1Category.id,
                 onClick: () => handleLevel1Click(level1Category),
-              }),
-            ),
+                iconKey: level1SystemIcon?.iconKey,
+                iconTone: level1SystemIcon?.tone,
+              });
+            }),
           )}
         </section>
       )}

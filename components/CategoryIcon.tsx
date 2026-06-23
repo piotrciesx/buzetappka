@@ -3,10 +3,20 @@ import { getFinalIconId, getLetterIconCharacter } from "../lib/iconRegistry";
 import { getUiIcon } from "../lib/userAppearance";
 import LetterIcon from "./LetterIcon";
 
+type CategoryIconSize = "small" | "a" | "b" | "c" | "large";
+
 type CategoryIconProps = {
   iconKey?: string | null;
   level?: 2 | 3;
-  size?: "a" | "b" | "c";
+  size?: CategoryIconSize;
+};
+
+const CATEGORY_ICON_SIZE_VARS: Record<CategoryIconSize, string> = {
+  small: "var(--ui-icon-glyph-size-small, 14px)",
+  a: "var(--ui-icon-glyph-size-a, 18px)",
+  b: "var(--ui-icon-glyph-size-b, 20px)",
+  c: "var(--ui-icon-glyph-size-c, 24px)",
+  large: "var(--ui-icon-glyph-size-goal, 28px)",
 };
 
 const getIconMaskUrl = (iconId: string) => {
@@ -35,6 +45,7 @@ export default function CategoryIcon({
       data-category-icon-size={size}
       aria-hidden="true"
       title={icon?.label || iconKey || undefined}
+      style={{ "--category-icon-glyph-size": CATEGORY_ICON_SIZE_VARS[size] } as CSSProperties}
     >
       {letterCharacter ? (
         <LetterIcon character={letterCharacter} />
