@@ -147,7 +147,8 @@ const Icon = ({ name }: { name: IconName }) => {
         <>
           <circle cx="12" cy="12" r="8" {...common} />
           <circle cx="12" cy="12" r="4" {...common} />
-          <path d="M12 8v4l3 2" {...common} />
+          <circle cx="12" cy="12" r="1.4" {...common} />
+          <path d="M12 2v4M12 18v4M2 12h4M18 12h4" {...common} />
         </>
       )}
       {name === 'import' && (

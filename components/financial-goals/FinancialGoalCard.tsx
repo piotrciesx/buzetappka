@@ -39,7 +39,12 @@ const getGoalTone = (goal: GoalCardBaseProps['goal']) => {
   return goalWithAppearance.color_tone || goalWithAppearance.color || 'green'
 }
 
-function GoalCardContent(props: GoalCardBaseProps & { dragHandle?: ReactNode }) {
+type GoalCardExtraProps = {
+  dragHandle?: ReactNode
+  priorityPosition?: number
+}
+
+function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
   const {
     goal,
     collectedAmount,
@@ -51,26 +56,25 @@ function GoalCardContent(props: GoalCardBaseProps & { dragHandle?: ReactNode }) 
     waitingForLockedMonth,
     allocationPercent,
     isAllocationMode,
-    isAllocationLocked,
-    sliderValue,
-    onAllocationChange,
-    onAllocationDragStart,
-    onAllocationCommit,
-    onToggleAllocationLock,
     onEdit,
     onDelete,
     dragHandle,
+    priorityPosition,
   } = props
 
   const isUnsuccessful = statusLabel === 'niezrealizowany'
   const progressWidth = isUnsuccessful ? '100%' : `${Math.min(percentage, 100)}%`
   const progressColor = isUnsuccessful ? getGoalProgressBarColor(0) : getGoalProgressBarColor(percentage)
   const allocationLabel = allocationPercent === null ? '0%' : `${allocationPercent}%`
+  const modeLabel = isAllocationMode ? 'Alokacja' : 'Priorytet'
+  const modeValue = isAllocationMode ? allocationLabel : String(priorityPosition || '—')
 
   return (
     <>
       <div data-ui-goal-card-main="true">
         <div data-ui-goal-card-title-row="true">
+          {dragHandle}
+
           <span data-ui-goal-icon="true" data-ui-tone={getGoalTone(goal)} aria-hidden="true">
             <CategoryIcon iconKey={getGoalIconKey(goal)} size="large" />
           </span>
@@ -104,14 +108,13 @@ function GoalCardContent(props: GoalCardBaseProps & { dragHandle?: ReactNode }) 
             <span>Brakuje</span>
             <strong>{formatAmount(remainingAmount)}</strong>
           </div>
-          <div data-ui-goal-metric="true">
-            <span>Alokacja</span>
-            <strong>{allocationLabel}</strong>
+          <div data-ui-goal-metric="true" data-ui-goal-metric-kind={isAllocationMode ? 'allocation' : 'priority'}>
+            <span>{modeLabel}</span>
+            <strong>{modeValue}</strong>
           </div>
         </div>
 
         <div data-ui-goal-actions="true">
-          {dragHandle}
           <button type="button" className="ui-button--utility" onClick={() => onEdit(goal)}>
             Edytuj
           </button>
@@ -122,42 +125,8 @@ function GoalCardContent(props: GoalCardBaseProps & { dragHandle?: ReactNode }) 
           >
             Usuń
           </button>
-          {isAllocationMode && onToggleAllocationLock && (
-            <button
-              type="button"
-              className={isAllocationLocked ? 'ui-button--standard' : 'ui-button--utility'}
-              onClick={() => onToggleAllocationLock(goal.id)}
-              title={
-                isAllocationLocked
-                  ? 'Odblokuj procent tego celu'
-                  : 'Zablokuj procent tego celu'
-              }
-            >
-              {isAllocationLocked ? 'Odblokuj' : 'Zablokuj'}
-            </button>
-          )}
         </div>
       </div>
-
-      {isAllocationMode && typeof sliderValue === 'number' && onAllocationChange && (
-        <div data-ui-goal-slider="true">
-          <input
-            type="range"
-            min={0}
-            max={100}
-            step={1}
-            value={sliderValue}
-            disabled={isAllocationLocked}
-            onPointerDown={onAllocationDragStart}
-            onPointerUp={onAllocationCommit}
-            onMouseUp={onAllocationCommit}
-            onTouchEnd={onAllocationCommit}
-            onKeyUp={onAllocationCommit}
-            onChange={(event) => onAllocationChange(goal.id, Number(event.target.value))}
-          />
-          <strong>{sliderValue}%</strong>
-        </div>
-      )}
 
       <div data-ui-goal-progress="true">
         <strong>{percentage.toFixed(0)}%</strong>
@@ -175,7 +144,7 @@ function GoalCardContent(props: GoalCardBaseProps & { dragHandle?: ReactNode }) 
   )
 }
 
-export function SortableGoalCard(props: GoalCardBaseProps) {
+export function SortableGoalCard(props: GoalCardBaseProps & { priorityPosition?: number }) {
   const { goal } = props
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: goal.id,
@@ -186,6 +155,7 @@ export function SortableGoalCard(props: GoalCardBaseProps) {
       ref={setNodeRef}
       data-ui-record-card="true"
       data-ui-goal-card="true"
+      data-ui-goal-card-mode="priority"
       data-dragging={isDragging ? 'true' : 'false'}
       style={{
         transform: CSS.Transform.toString(transform),
@@ -211,10 +181,31 @@ export function SortableGoalCard(props: GoalCardBaseProps) {
   )
 }
 
-export function StaticGoalCard(props: GoalCardBaseProps) {
+export function StaticGoalCard(
+  props: GoalCardBaseProps & { priorityPosition?: number; showInactiveDragHandle?: boolean }
+) {
   return (
-    <article data-ui-record-card="true" data-ui-goal-card="true">
-      <GoalCardContent {...props} />
+    <article
+      data-ui-record-card="true"
+      data-ui-goal-card="true"
+      data-ui-goal-card-mode={props.isAllocationMode ? 'allocation' : 'static'}
+    >
+      <GoalCardContent
+        {...props}
+        dragHandle={
+          props.showInactiveDragHandle ? (
+            <span
+              className="ui-button--icon"
+              data-ui-goal-menu="true"
+              data-ui-goal-menu-state="disabled"
+              aria-hidden="true"
+              title="Kolejność w alokacji wynika z procentów"
+            >
+              ⋮⋮
+            </span>
+          ) : undefined
+        }
+      />
     </article>
   )
 }

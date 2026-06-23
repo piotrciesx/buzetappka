@@ -32,9 +32,14 @@ type Props = {
   handleAllocationDragStart: () => void
   handleAllocationCommit: () => void
   handleToggleAllocationLock: (goalId: string) => void
+  totalPercent: number
+  monthSurplus: number
+  isAllocationSaving: boolean
   openEditModal: (goal: FinancialGoal) => void
   onDeleteGoal: (goalId: string) => Promise<void>
 }
+
+const formatAmount = (value: number) => `${value.toFixed(2)} zł`
 
 const getProgressProps = (
   goal: FinancialGoal,
@@ -71,105 +76,190 @@ export default function FinancialGoalsList({
   handleAllocationDragStart,
   handleAllocationCommit,
   handleToggleAllocationLock,
+  totalPercent,
+  monthSurplus,
+  isAllocationSaving,
   openEditModal,
   onDeleteGoal,
 }: Props) {
-  const [isArchiveOpen, setIsArchiveOpen] = useState(false)
+  const [activeList, setActiveList] = useState<'current' | 'archived'>('current')
+  const [isAllocationMenuOpen, setIsAllocationMenuOpen] = useState(false)
 
-  return (
-    <>
-      <section data-ui-section="true" data-financial-goals-current-list="true">
-        <div data-ui-section-heading="true">
-          <h3 data-ui-section-title="true">Cele aktualne</h3>
-          <span>{activeGoals.length} aktywnych</span>
-        </div>
+  const visibleGoals = activeList === 'current' ? activeGoals : archivedGoals
+  const isCurrentList = activeList === 'current'
 
-        {activeGoals.length === 0 ? (
-          <div data-ui-empty-block="true">Brak aktywnych celów.</div>
-        ) : effectiveMode === 'priority' ? (
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <SortableContext items={activeGoals.map((goal) => goal.id)} strategy={verticalListSortingStrategy}>
-              <div
-                className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}
-                data-ui-goal-list="true"
-              >
-                {activeGoals.map((goal) => (
-                  <SortableGoalCard
-                    key={goal.id}
-                    goal={goal}
-                    {...getProgressProps(goal, progressByGoalId, lockedMonthsSet)}
-                    allocationPercent={pendingAllocationByGoalId[goal.id] ?? null}
-                    isAllocationMode={false}
-                    onEdit={openEditModal}
-                    onDelete={(goalId) => void onDeleteGoal(goalId)}
-                  />
-                ))}
-              </div>
-            </SortableContext>
-          </DndContext>
-        ) : (
-          <div
-            className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}
-            data-ui-goal-list="true"
-          >
-            {activeGoals.map((goal) => (
-              <StaticGoalCard
-                key={goal.id}
-                goal={goal}
-                {...getProgressProps(goal, progressByGoalId, lockedMonthsSet)}
-                allocationPercent={pendingAllocationByGoalId[goal.id] ?? null}
-                isAllocationMode
-                isAllocationLocked={lockedAllocationGoalIds.has(goal.id)}
-                sliderValue={pendingAllocationByGoalId[goal.id] ?? 0}
-                onAllocationChange={handleAllocationChange}
-                onAllocationDragStart={handleAllocationDragStart}
-                onAllocationCommit={handleAllocationCommit}
-                onToggleAllocationLock={handleToggleAllocationLock}
-                onEdit={openEditModal}
-                onDelete={(goalId) => void onDeleteGoal(goalId)}
-              />
-            ))}
-          </div>
-        )}
-      </section>
+  const renderAllocationManager = () => {
+    if (effectiveMode !== 'allocation' || !isCurrentList || activeGoals.length === 0) {
+      return null
+    }
 
-      <section data-ui-section="true" data-financial-goals-archived-list="true">
+    return (
+      <div data-financial-goals-allocation-control="true" data-open={isAllocationMenuOpen ? 'true' : 'false'}>
         <button
           type="button"
           className="ui-button--utility"
-          data-financial-goals-archive-toggle="true"
-          aria-expanded={isArchiveOpen}
-          onClick={() => setIsArchiveOpen((value) => !value)}
+          data-financial-goals-allocation-trigger="true"
+          aria-expanded={isAllocationMenuOpen}
+          onClick={() => setIsAllocationMenuOpen((value) => !value)}
         >
-          <CategoryIcon iconKey={isArchiveOpen ? 'system-collapse' : 'system-expand'} />
-          {isArchiveOpen ? 'Ukryj cele archiwalne' : 'Pokaż cele archiwalne'} ({archivedGoals.length})
+          <CategoryIcon iconKey="allocation" size="small" />
+          Ustaw alokację
+          <span data-ui-picker-chevron="true" aria-hidden="true" />
         </button>
 
-        {isArchiveOpen && (
-          archivedGoals.length === 0 ? (
-            <div data-ui-empty-block="true">Brak celów archiwalnych.</div>
-          ) : (
+        {isAllocationMenuOpen && (
+          <div data-financial-goals-allocation-menu="true">
+            <header data-financial-goals-allocation-menu-header="true">
+              <span>
+                <strong>Suma alokacji:</strong> {totalPercent.toFixed(0)}%
+              </span>
+              <span>
+                <strong>Nadwyżka:</strong> {formatAmount(monthSurplus)}
+              </span>
+              {isAllocationSaving && <small>Zapisywanie...</small>}
+            </header>
+
+            <div data-financial-goals-allocation-rows="true">
+              {activeGoals.map((goal) => {
+                const value = pendingAllocationByGoalId[goal.id] ?? 0
+                const isLocked = lockedAllocationGoalIds.has(goal.id)
+
+                return (
+                  <div key={goal.id} data-financial-goals-allocation-row="true">
+                    <strong>{goal.name}</strong>
+                    <input
+                      type="range"
+                      min={0}
+                      max={100}
+                      step={1}
+                      value={value}
+                      disabled={isLocked}
+                      onPointerDown={handleAllocationDragStart}
+                      onPointerUp={handleAllocationCommit}
+                      onMouseUp={handleAllocationCommit}
+                      onTouchEnd={handleAllocationCommit}
+                      onKeyUp={handleAllocationCommit}
+                      onChange={(event) => handleAllocationChange(goal.id, Number(event.target.value))}
+                    />
+                    <span>{value}%</span>
+                    <button
+                      type="button"
+                      className="ui-button--icon"
+                      data-financial-goals-lock-action="true"
+                      data-active={isLocked ? 'true' : 'false'}
+                      aria-label={isLocked ? 'Odblokuj alokację' : 'Zablokuj alokację'}
+                      title={isLocked ? 'Odblokuj alokację' : 'Zablokuj alokację'}
+                      onClick={() => handleToggleAllocationLock(goal.id)}
+                    >
+                      <CategoryIcon iconKey={isLocked ? 'lock' : 'unlock'} size="small" />
+                    </button>
+                  </div>
+                )
+              })}
+            </div>
+
+            <footer data-financial-goals-allocation-menu-footer="true">
+              <span data-state={totalPercent === 100 ? 'valid' : 'invalid'}>
+                {totalPercent === 100 ? 'Alokacja gotowa do zapisu.' : 'Suma musi wynosić 100%.'}
+              </span>
+            </footer>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  const renderGoalList = () => {
+    if (visibleGoals.length === 0) {
+      return (
+        <div data-ui-empty-block="true">
+          {isCurrentList ? 'Brak aktywnych celów.' : 'Brak celów historycznych.'}
+        </div>
+      )
+    }
+
+    if (isCurrentList && effectiveMode === 'priority') {
+      return (
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={activeGoals.map((goal) => goal.id)} strategy={verticalListSortingStrategy}>
             <div
               className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}
               data-ui-goal-list="true"
-              data-ui-goal-list-variant="archive"
             >
-              {archivedGoals.map((goal) => (
-                <StaticGoalCard
+              {activeGoals.map((goal, index) => (
+                <SortableGoalCard
                   key={goal.id}
                   goal={goal}
                   {...getProgressProps(goal, progressByGoalId, lockedMonthsSet)}
-                  waitingForLockedMonth={false}
                   allocationPercent={pendingAllocationByGoalId[goal.id] ?? null}
                   isAllocationMode={false}
+                  priorityPosition={index + 1}
                   onEdit={openEditModal}
                   onDelete={(goalId) => void onDeleteGoal(goalId)}
                 />
               ))}
             </div>
-          )
-        )}
-      </section>
-    </>
+          </SortableContext>
+        </DndContext>
+      )
+    }
+
+    return (
+      <div
+        className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}
+        data-ui-goal-list="true"
+        data-ui-goal-list-variant={isCurrentList ? 'current' : 'archive'}
+      >
+        {visibleGoals.map((goal, index) => (
+          <StaticGoalCard
+            key={goal.id}
+            goal={goal}
+            {...getProgressProps(goal, progressByGoalId, lockedMonthsSet)}
+            allocationPercent={pendingAllocationByGoalId[goal.id] ?? null}
+            isAllocationMode={isCurrentList && effectiveMode === 'allocation'}
+            priorityPosition={index + 1}
+            showInactiveDragHandle={isCurrentList && effectiveMode === 'allocation'}
+            onEdit={openEditModal}
+            onDelete={(goalId) => void onDeleteGoal(goalId)}
+          />
+        ))}
+      </div>
+    )
+  }
+
+  return (
+    <section data-ui-section="true" data-financial-goals-current-list="true">
+      <div data-financial-goals-list-toolbar="true">
+        <div data-financial-goals-list-heading="true">
+          <h3 data-ui-section-title="true">
+            {isCurrentList ? 'Cele aktualne' : 'Cele historyczne'}
+          </h3>
+          <span>{visibleGoals.length} {isCurrentList ? 'aktywnych' : 'historycznych'}</span>
+        </div>
+
+        <div data-financial-goals-list-actions="true">
+          {renderAllocationManager()}
+
+          <div data-financial-goals-list-switch="true" role="group" aria-label="Zakres celów">
+            <button
+              type="button"
+              data-active={activeList === 'current' ? 'true' : undefined}
+              onClick={() => setActiveList('current')}
+            >
+              Cele aktualne
+            </button>
+            <button
+              type="button"
+              data-active={activeList === 'archived' ? 'true' : undefined}
+              onClick={() => setActiveList('archived')}
+            >
+              Cele historyczne
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {renderGoalList()}
+    </section>
   )
 }

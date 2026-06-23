@@ -13,7 +13,6 @@ import {
 } from '../lib/financialGoals'
 import FinancialGoalEditModal from './financial-goals/FinancialGoalEditModal'
 import FinancialGoalsList from './financial-goals/FinancialGoalsList'
-import CategoryIcon from './CategoryIcon'
 import FinancialGoalsModeControls from './financial-goals/FinancialGoalsModeControls'
 import FinancialGoalsSummary from './financial-goals/FinancialGoalsSummary'
 import type { FinancialGoalsPanelProps, FormState } from './financial-goals/financialGoalsPanelTypes'
@@ -91,6 +90,18 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
       if (saveTimeoutRef.current) {
         window.clearTimeout(saveTimeoutRef.current)
       }
+    }
+  }, [])
+
+  useEffect(() => {
+    const handleOpenCreate = () => {
+      setIsCreateFormOpen(true)
+    }
+
+    window.addEventListener('budget-open-financial-goal-create', handleOpenCreate)
+
+    return () => {
+      window.removeEventListener('budget-open-financial-goal-create', handleOpenCreate)
     }
   }, [])
 
@@ -514,22 +525,6 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
 
   return (
     <section data-ui-section="true" data-financial-goals-panel="true">
-      <div data-financial-goals-toolbar="true">
-        <div data-financial-goals-toolbar-copy="true">
-          <strong>Cele finansowe</strong>
-          <span>Zarządzaj celami i rozdziałem nadwyżki budżetu.</span>
-        </div>
-
-        <button
-          type="button"
-          data-ui-header-primary-action="true"
-          onClick={() => setIsCreateFormOpen(true)}
-        >
-          <CategoryIcon iconKey="system-add" />
-          Dodaj cel
-        </button>
-      </div>
-
       <FinancialGoalsModeControls
         effectiveMode={effectiveMode}
         activeGoalsCount={activeGoals.length}
@@ -543,31 +538,14 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         lockedMonthsSet={lockedMonthsSet}
       />
 
-      {effectiveMode === 'allocation' ? (
-        <>
-          <div data-ui-goal-allocation-bar="true">
-            <span>
-              <strong>Suma alokacji:</strong> {totalPercent.toFixed(0)}%
-            </span>
-            <span>
-              {totalPercent !== 100 ? 'musi wynosić dokładnie 100%' : 'zapis automatyczny'}
-              {isAllocationSaving ? ' · zapisywanie...' : ''}
-            </span>
-          </div>
-
-          <div data-ui-goal-helper="true">
-            W trybie alokacji suwak działa co 1%. Zmiana zapisuje się automatycznie dla wybranego
-            miesiąca i kolejnych miesięcy, dopóki w kolejnym miesiącu nie ustawisz innej alokacji.
-            Zablokowany cel nie bierze udziału w automatycznym przeliczaniu procentów.
-          </div>
-        </>
-      ) : (
-        <div data-ui-goal-helper="true">
-          Przeciągnij kafle, aby ustawić priorytet dla miesiąca {selectedMonth}.
-          {isReordering ? ' Zapisywanie nowej kolejności...' : ''}
-          {isModeSaving ? ' Zapisywanie trybu...' : ''}
-        </div>
-      )}
+      <div data-ui-goal-helper="true">
+        {effectiveMode === 'allocation'
+          ? 'W trybie alokacji ustawiasz procentowy podział nadwyżki między aktywne cele.'
+          : `Przeciągnij cele, aby ustawić priorytet realizacji dla miesiąca ${selectedMonth}.`}
+        {isReordering ? ' Zapisywanie nowej kolejności...' : ''}
+        {isModeSaving ? ' Zapisywanie trybu...' : ''}
+        {isAllocationSaving ? ' Zapisywanie alokacji...' : ''}
+      </div>
 
       <FinancialGoalsList
         activeGoals={activeGoals}
@@ -583,6 +561,9 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         handleAllocationDragStart={handleAllocationDragStart}
         handleAllocationCommit={handleAllocationCommit}
         handleToggleAllocationLock={handleToggleAllocationLock}
+        totalPercent={totalPercent}
+        monthSurplus={monthSurplus}
+        isAllocationSaving={isAllocationSaving}
         openEditModal={openEditModal}
         onDeleteGoal={onDeleteGoal}
       />
