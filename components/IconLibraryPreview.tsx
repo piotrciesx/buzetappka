@@ -12,6 +12,7 @@ const sections: PreviewSection[] = [
   "shopping-cart-test",
   "Litery",
   "Systemowe",
+  "Brakujace systemowe",
   "Kompatybilność",
 ];
 
@@ -20,9 +21,28 @@ function iconUrl(icon: string) {
   return `url("https://api.iconify.design/${prefix}/${name.join(":")}.svg")`;
 }
 
-function Proposal({ icon, recommended }: { icon: string | null; recommended: boolean }) {
+function Proposal({ icon, recommended, exactSize }: { icon: string | null; recommended: boolean; exactSize?: boolean }) {
   if (!icon) return <span className={styles.missing}>BRAK DOBREGO ODPOWIEDNIKA</span>;
   const [, name] = icon.split(":");
+  if (exactSize) {
+    return (
+      <div className={styles.proposal}>
+        <span className={styles.tile} aria-hidden="true">
+          <span
+            className={styles.icon}
+            style={{
+              "--icon-url": iconUrl(icon),
+              "--icon-size": "18px",
+            } as CSSProperties}
+          />
+        </span>
+        <span className={styles.name}>
+          {icon}
+          {recommended ? <span className={styles.badge}>szczegolnie dobra</span> : null}
+        </span>
+      </div>
+    );
+  }
   return (
     <div className={styles.proposal}>
       <span className={styles.sizeVariants} aria-hidden="true">
@@ -46,6 +66,23 @@ function Proposal({ icon, recommended }: { icon: string | null; recommended: boo
         {recommended ? <span className={styles.badge}>szczególnie dobra</span> : null}
       </span>
     </div>
+  );
+}
+
+function KeyCell({ entry }: { entry: (typeof ICON_LIBRARY_PREVIEW_DATA)[number] }) {
+  return (
+    <td className={styles.key}>
+      <span>{entry.key}</span>
+      {entry.label ? <span className={styles.keyLabel}>{entry.label}</span> : null}
+      {entry.meaning ? <span className={styles.keyMeta}>{entry.meaning}</span> : null}
+      {typeof entry.picker === "boolean" ? (
+        <span className={styles.keyMeta}>picker: {entry.picker ? "TAK" : "NIE"}</span>
+      ) : null}
+      {typeof entry.technical === "boolean" ? (
+        <span className={styles.keyMeta}>techniczna: {entry.technical ? "TAK" : "NIE"}</span>
+      ) : null}
+      {entry.aliases?.length ? <span className={styles.keyMeta}>aliasy: {entry.aliases.join(", ")}</span> : null}
+    </td>
   );
 }
 
@@ -92,12 +129,16 @@ export default function IconLibraryPreview() {
                   <tbody>
                     {entries.map((entry) => (
                       <tr key={entry.key}>
-                        <td className={styles.key}>{entry.key}</td>
+                        <KeyCell entry={entry} />
                         {PREVIEW_LIBRARIES.map((library) => {
                           const recommended = entry.recommended === (library.key as PreviewLibraryKey);
                           return (
                             <td className={recommended ? styles.recommended : undefined} key={library.key}>
-                              <Proposal icon={entry.icons[library.key]} recommended={recommended} />
+                              <Proposal
+                                exactSize={section === "Brakujace systemowe"}
+                                icon={entry.icons[library.key]}
+                                recommended={recommended}
+                              />
                             </td>
                           );
                         })}

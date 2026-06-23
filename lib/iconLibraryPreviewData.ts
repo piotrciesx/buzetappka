@@ -4,7 +4,7 @@ export const PREVIEW_LIBRARIES = [
   { key: "fontawesome", label: "Font Awesome Solid" },
   { key: "fluent", label: "Fluent UI Icons Filled" },
   { key: "solar", label: "Solar Bold" },
-  { key: "hugeicons", label: "Hugeicons" },
+  { key: "hugeicons", label: "HugeIcons" },
 ] as const;
 
 export type PreviewLibraryKey = (typeof PREVIEW_LIBRARIES)[number]["key"];
@@ -13,6 +13,7 @@ export type PreviewSection =
   | "shopping-cart-test"
   | "Litery"
   | "Systemowe"
+  | "Brakujace systemowe"
   | "Kompatybilność";
 export type PreviewIconSet = Record<PreviewLibraryKey, string | null>;
 
@@ -21,6 +22,11 @@ export type IconLibraryPreviewEntry = {
   section: PreviewSection;
   icons: PreviewIconSet;
   recommended?: PreviewLibraryKey;
+  label?: string;
+  meaning?: string;
+  picker?: boolean;
+  technical?: boolean;
+  aliases?: string[];
 };
 
 const row = (
@@ -39,6 +45,23 @@ const user = (key: string, icons: Parameters<typeof row>[2], recommended?: Previ
   row(key, "Użytkownika", icons, recommended);
 const system = (key: string, icons: Parameters<typeof row>[2], recommended?: PreviewLibraryKey) =>
   row(key, "Systemowe", icons, recommended);
+const missingSystem = (
+  key: string,
+  label: string,
+  meaning: string,
+  icons: Parameters<typeof row>[2],
+  recommended: PreviewLibraryKey,
+  picker: boolean,
+  technical: boolean,
+  aliases: string[],
+): IconLibraryPreviewEntry => ({
+  ...row(key, "Brakujace systemowe", icons, recommended),
+  label,
+  meaning,
+  picker,
+  technical,
+  aliases,
+});
 
 const USER_ICONS: IconLibraryPreviewEntry[] = [
   user("note", ["material-symbols:note", "ph:note-fill", "fa6-solid:note-sticky", "fluent:note-24-filled", "solar:notes-bold", "hugeicons:note"], "phosphor"),
@@ -164,6 +187,111 @@ const SHOPPING_CART_TEST: IconLibraryPreviewEntry[] = [
   ),
 ];
 
+const MISSING_SYSTEM_ICONS: IconLibraryPreviewEntry[] = [
+  missingSystem(
+    "all",
+    "Wszystkie",
+    "wszystko / wszystkie / calosc / kazdy / infinity",
+    [
+      "material-symbols:all-inclusive",
+      "ph:infinity-fill",
+      "fa6-solid:infinity",
+      null,
+      "solar:infinity-bold",
+      "hugeicons:infinity-01",
+    ],
+    "material",
+    true,
+    false,
+    ["wszystko", "wszystkie", "calosc", "kazdy", "kazda", "all", "everything", "infinity", "nieskonczonosc"],
+  ),
+  missingSystem(
+    "income_plus",
+    "Przychod",
+    "plus dla wyboru L1 Przychody w kreatorze z kalendarza",
+    [
+      "material-symbols:add-circle",
+      "ph:plus-circle-fill",
+      "fa6-solid:circle-plus",
+      "fluent:add-circle-24-filled",
+      "solar:add-circle-bold",
+      "hugeicons:add-money-circle",
+    ],
+    "hugeicons",
+    false,
+    true,
+    [],
+  ),
+  missingSystem(
+    "expense_minus",
+    "Wydatek",
+    "minus dla wyboru L1 Wydatki w kreatorze z kalendarza",
+    [
+      "material-symbols:remove",
+      "ph:minus-circle-fill",
+      "fa6-solid:circle-minus",
+      "fluent:subtract-circle-24-filled",
+      "solar:minus-circle-bold",
+      "hugeicons:minus-sign-circle",
+    ],
+    "phosphor",
+    false,
+    true,
+    [],
+  ),
+  missingSystem(
+    "allocation",
+    "Zarzadzaj alokacja",
+    "suwaki / regulacja / konfiguracja podzialu procentowego",
+    [
+      "material-symbols:tune",
+      "ph:sliders-horizontal-fill",
+      "fa6-solid:sliders",
+      "fluent:options-24-filled",
+      "solar:slider-horizontal-bold",
+      "hugeicons:sliders-horizontal",
+    ],
+    "material",
+    false,
+    true,
+    [],
+  ),
+  missingSystem(
+    "lock",
+    "Blokada",
+    "zablokowana alokacja",
+    [
+      "material-symbols:lock",
+      "ph:lock-fill",
+      "fa6-solid:lock",
+      "fluent:lock-closed-24-filled",
+      "solar:lock-bold",
+      "hugeicons:square-lock-01",
+    ],
+    "phosphor",
+    false,
+    true,
+    [],
+  ),
+  missingSystem(
+    "unlock",
+    "Odblokowanie",
+    "odblokowana alokacja",
+    [
+      "material-symbols:lock-open",
+      "ph:lock-open-fill",
+      "fa6-solid:unlock",
+      "fluent:lock-open-24-filled",
+      "solar:lock-unlocked-bold",
+      "hugeicons:square-unlock-01",
+    ],
+    "phosphor",
+    false,
+    true,
+    [],
+  ),
+];
+
 const compatibilityAliases: Array<[string, string]> = [
   ["basket", "shopping"],
   ["bill", "bills"],
@@ -174,7 +302,7 @@ const compatibilityAliases: Array<[string, string]> = [
   ["expand", "system-expand"],
 ];
 
-const ALL_PRIMARY_ICONS = [...USER_ICONS, ...SHOPPING_CART_TEST, ...LETTER_ICONS, ...SYSTEM_ICONS];
+const ALL_PRIMARY_ICONS = [...USER_ICONS, ...SHOPPING_CART_TEST, ...LETTER_ICONS, ...SYSTEM_ICONS, ...MISSING_SYSTEM_ICONS];
 const COMPATIBILITY_ICONS = compatibilityAliases.map(([key, sourceKey]) => {
   const source = ALL_PRIMARY_ICONS.find((entry) => entry.key === sourceKey);
   if (!source) throw new Error(`Missing compatibility source: ${sourceKey}`);

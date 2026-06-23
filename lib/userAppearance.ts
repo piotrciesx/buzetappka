@@ -440,6 +440,7 @@ export const APP_ICON_ALIASES: Partial<Record<UiIconKey, string[]>> = {
   tools: ['narzędzia', 'narzedzia', 'narzędzie', 'narzedzie', 'klucz', 'śrubokręt', 'srubokret', 'warsztat', 'majsterkowanie', 'sprzęt', 'sprzet', 'przybornik'],
   pen: ['pióro', 'pioro', 'długopis', 'dlugopis', 'pisanie', 'notowanie', 'podpis', 'atrament', 'edytowanie', 'tekst', 'notatka'],
   keyboard: ['klawiatura', 'keyboard', 'pisanie', 'komputer', 'pc', 'laptop', 'przyciski', 'klawisze', 'tekst', 'wprowadzanie danych'],
+  all: ['wszystko', 'wszystkie', 'całość', 'każdy', 'każda', 'all', 'everything', 'infinity', 'nieskończoność'],
   other: ['inne', 'inny', 'inna', 'pozostałe', 'pozostale', 'różne', 'rozne', 'reszta', 'misc', 'miscellaneous', 'kategoria', 'pozostała kategoria', 'pozostala kategoria'],
 }
 

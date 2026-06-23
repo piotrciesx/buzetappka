@@ -101,6 +101,7 @@ export const FINAL_USER_ICON_OPTIONS = [
   { key: "info", label: "Informacja" },
   { key: "pen", label: "Pióro" },
   { key: "keyboard", label: "Klawiatura" },
+  { key: "all", label: "Wszystkie" },
   { key: "other", label: "Inne" },
   ...LETTER_ICON_OPTIONS,
 ] as const;
@@ -139,6 +140,11 @@ export const SYSTEM_ICON_KEYS = [
   "system-export",
   "system-trash",
   "system-lock",
+  "income_plus",
+  "expense_minus",
+  "allocation",
+  "lock",
+  "unlock",
 ] as const;
 
 export type SystemIconKey = (typeof SYSTEM_ICON_KEYS)[number];
@@ -231,6 +237,7 @@ const SELECTED_ICON_IDS: Record<LibraryUserIconKey | SystemIconKey, string> = {
   "info": "ph:info-fill",
   "pen": "fluent:pen-24-filled",
   "keyboard": "fa6-solid:keyboard",
+  "all": "material-symbols:all-inclusive",
   "other": "material-symbols:category",
   "system-dashboard": "ph:squares-four-fill",
   "system-calendar": "ph:calendar-fill",
@@ -261,6 +268,11 @@ const SELECTED_ICON_IDS: Record<LibraryUserIconKey | SystemIconKey, string> = {
   "system-export": "fluent:arrow-upload-24-filled",
   "system-trash": "fa6-solid:trash-can",
   "system-lock": "material-symbols:lock",
+  "income_plus": "fa6-solid:circle-plus",
+  "expense_minus": "fa6-solid:circle-minus",
+  "allocation": "material-symbols:tune",
+  "lock": "fluent:lock-closed-24-filled",
+  "unlock": "fluent:lock-open-24-filled",
 };
 
 const COMPATIBILITY_TARGETS: Record<CompatibilityIconKey | LegacyVariantIconKey, LibraryUserIconKey | SystemIconKey> = {
