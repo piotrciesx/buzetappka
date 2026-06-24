@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { closestCenter, DndContext, DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { FinancialGoal, FinancialGoalAllocationMode } from '../../lib/budgetPageTypes'
@@ -84,6 +84,31 @@ export default function FinancialGoalsList({
 }: Props) {
   const [activeList, setActiveList] = useState<'current' | 'archived'>('current')
   const [isAllocationMenuOpen, setIsAllocationMenuOpen] = useState(false)
+  const allocationMenuRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (!isAllocationMenuOpen) {
+      return
+    }
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target
+
+      if (!(target instanceof Node)) {
+        return
+      }
+
+      if (!allocationMenuRef.current?.contains(target)) {
+        setIsAllocationMenuOpen(false)
+      }
+    }
+
+    window.addEventListener('pointerdown', handlePointerDown)
+
+    return () => {
+      window.removeEventListener('pointerdown', handlePointerDown)
+    }
+  }, [isAllocationMenuOpen])
 
   const visibleGoals = activeList === 'current' ? activeGoals : archivedGoals
   const isCurrentList = activeList === 'current'
@@ -94,7 +119,11 @@ export default function FinancialGoalsList({
     }
 
     return (
-      <div data-financial-goals-allocation-control="true" data-open={isAllocationMenuOpen ? 'true' : 'false'}>
+      <div
+        ref={allocationMenuRef}
+        data-financial-goals-allocation-control="true"
+        data-open={isAllocationMenuOpen ? 'true' : 'false'}
+      >
         <button
           type="button"
           className="ui-button--utility"
@@ -244,14 +273,20 @@ export default function FinancialGoalsList({
             <button
               type="button"
               data-active={activeList === 'current' ? 'true' : undefined}
-              onClick={() => setActiveList('current')}
+              onClick={() => {
+                setActiveList('current')
+                setIsAllocationMenuOpen(false)
+              }}
             >
               Cele aktualne
             </button>
             <button
               type="button"
               data-active={activeList === 'archived' ? 'true' : undefined}
-              onClick={() => setActiveList('archived')}
+              onClick={() => {
+                setActiveList('archived')
+                setIsAllocationMenuOpen(false)
+              }}
             >
               Cele historyczne
             </button>
