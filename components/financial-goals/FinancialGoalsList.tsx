@@ -213,8 +213,9 @@ export default function FinancialGoalsList({
           <SortableContext items={activeGoals.map((goal) => goal.id)} strategy={verticalListSortingStrategy}>
             <div
               className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}
-              data-ui-record-list="true"
               data-ui-goal-list="true"
+              data-ui-record-list="true"
+              data-ui-record-separator="strong"
             >
               {activeGoals.map((goal, index) => (
                 <SortableGoalCard
@@ -237,8 +238,9 @@ export default function FinancialGoalsList({
     return (
       <div
         className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}
-        data-ui-record-list="true"
         data-ui-goal-list="true"
+        data-ui-record-list="true"
+        data-ui-record-separator="strong"
         data-ui-goal-list-variant={isCurrentList ? 'current' : 'archive'}
       >
         {visibleGoals.map((goal, index) => (

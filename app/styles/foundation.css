@@ -616,6 +616,16 @@
   --ui-row-divider: var(--ui-border-divider);
   --ui-record-separator-color: rgba(8, 44, 122, 0.10);
   --ui-record-separator-inset: var(--ui-space-6);
+  --ui-record-separator-light-color: rgba(8, 44, 122, 0.10);
+  --ui-record-separator-strong-color: rgba(8, 44, 122, 0.20);
+  --ui-record-separator-light-inset: var(--ui-space-6);
+  --ui-record-separator-strong-inset: var(--ui-space-8);
+  --ui-record-section-padding-y-light: var(--ui-space-8);
+  --ui-record-section-padding-y-strong: var(--ui-space-10);
+  --ui-record-section-padding-x: var(--ui-space-7);
+  --ui-record-section-gap-light: var(--ui-space-7);
+  --ui-record-section-gap-strong: var(--ui-space-9);
+  --ui-record-section-vertical-separator-color: rgba(8, 44, 122, 0.14);
   --ui-record-card-border: 1px solid rgba(8, 44, 122, 0.12);
   --ui-record-card-radius: var(--ui-radius-2xl);
   --ui-record-card-bg: rgba(255, 255, 255, 0.92);
@@ -1689,14 +1699,30 @@
   height: 1px;
   justify-self: center;
   margin: var(--ui-space-3) 0;
-  background: var(--ui-border-divider);
+  background: var(--ui-record-separator-light-color);
+}
+
+[data-ui-section-separator="true"][data-ui-separator-weight="strong"] {
+  width: min(100%, calc(100% - var(--ui-space-8)));
+  margin: var(--ui-space-5) 0;
+  background: var(--ui-record-separator-strong-color);
 }
 
 [data-ui-record-separator="true"] {
   width: 100%;
   height: 1px;
   margin: 0;
-  background: var(--ui-record-separator-color);
+  background: var(--ui-record-separator-light-color);
+}
+
+[data-ui-record-separator="true"][data-ui-separator-weight="strong"] {
+  background: var(--ui-record-separator-strong-color);
+}
+
+[data-ui-vertical-separator="true"] {
+  width: 1px;
+  align-self: stretch;
+  background: var(--ui-record-section-vertical-separator-color);
 }
 
 [data-ui-record-list="true"] {
@@ -1712,12 +1738,18 @@
 [data-ui-record-list="true"] > [data-ui-utility-record="true"]::after {
   content: "";
   position: absolute;
-  left: var(--ui-record-separator-inset);
-  right: var(--ui-record-separator-inset);
+  left: var(--ui-record-separator-light-inset);
+  right: var(--ui-record-separator-light-inset);
   bottom: 0;
   height: 1px;
-  background: var(--ui-record-separator-color);
+  background: var(--ui-record-separator-light-color);
   pointer-events: none;
+}
+
+[data-ui-record-list="true"][data-ui-record-separator="strong"] > [data-ui-utility-record="true"]::after {
+  left: var(--ui-record-separator-strong-inset);
+  right: var(--ui-record-separator-strong-inset);
+  background: var(--ui-record-separator-strong-color);
 }
 
 [data-ui-record-list="true"] > [data-ui-utility-record="true"]:last-child::after {
@@ -1730,6 +1762,14 @@
   border-radius: 0;
   background: transparent;
   box-shadow: none;
+}
+
+[data-ui-utility-record="true"][data-ui-record-section="light"] {
+  padding: var(--ui-record-section-padding-y-light) var(--ui-record-section-padding-x);
+}
+
+[data-ui-utility-record="true"][data-ui-record-section="strong"] {
+  padding: var(--ui-record-section-padding-y-strong) var(--ui-record-section-padding-x);
 }
 
 [data-ui-section-title="true"] {
@@ -2255,13 +2295,12 @@ body:has([data-financial-goals-panel="true"]) {
 
 [data-ui-goal-list="true"] {
   display: grid;
-  gap: var(--ui-record-card-gap);
+  gap: 0;
 }
 
 [data-ui-goal-card="true"] {
   display: grid;
-  gap: var(--ui-record-card-gap);
-  padding: var(--ui-record-card-padding);
+  gap: var(--ui-record-section-gap-strong);
 }
 
 [data-ui-goal-card="true"][data-dragging="true"] {
@@ -2375,20 +2414,24 @@ body:has([data-financial-goals-panel="true"]) {
   min-width: 0;
   display: grid;
   grid-template-columns: repeat(4, minmax(96px, 1fr));
-  gap: var(--ui-space-4);
+  gap: 0;
 }
 
 [data-ui-goal-metric="true"] {
-  min-height: 58px;
+  min-height: 54px;
   display: grid;
   place-items: center;
   align-content: center;
   gap: var(--ui-space-2);
-  padding: var(--ui-space-4) var(--ui-space-5);
-  border: 1px solid rgba(8, 44, 122, 0.09);
-  border-radius: 10px;
-  background: rgba(248, 250, 252, 0.72);
+  padding: 0 var(--ui-space-6);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   text-align: center;
+}
+
+[data-ui-goal-metric="true"] + [data-ui-goal-metric="true"] {
+  border-left: 1px solid var(--ui-record-section-vertical-separator-color);
 }
 
 [data-ui-goal-actions="true"] {
@@ -2867,7 +2910,7 @@ body:has([data-financial-goals-panel="true"]) {
 
 [data-payment-source-list="true"] {
   display: grid;
-  gap: var(--ui-record-card-gap);
+  gap: 0;
 }
 
 [data-payment-source-item="true"] {
@@ -2875,12 +2918,10 @@ body:has([data-financial-goals-panel="true"]) {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--ui-space-7);
-  padding: var(--ui-record-card-padding);
 }
 
 [data-payment-source-item="true"][data-archived="true"] {
   opacity: 0.66;
-  background: rgba(247, 251, 255, 0.78);
 }
 
 [data-payment-source-main="true"] {
@@ -4704,45 +4745,3 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
     grid-template-columns: repeat(5, var(--ui-picker-gallery-option-size));
   }
 }
-
-/* Goal list separator test v1 — use Utility Record list instead of card panels. */
-[data-ui-goal-list="true"][data-ui-record-list="true"] {
-  display: grid;
-  gap: 0;
-}
-
-[data-ui-goal-list="true"][data-ui-record-list="true"] > [data-ui-utility-record="true"]::after {
-  left: var(--ui-space-6);
-  right: var(--ui-space-6);
-  background: rgba(8, 44, 122, 0.12);
-}
-
-[data-ui-goal-card="true"][data-ui-utility-record="true"] {
-  padding: var(--ui-space-9) var(--ui-space-6);
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-}
-
-[data-ui-goal-card="true"][data-ui-utility-record="true"]:hover {
-  background: rgba(247, 251, 255, 0.52);
-  box-shadow: none;
-}
-
-[data-ui-goal-card="true"][data-ui-utility-record="true"][data-dragging="true"] {
-  border-radius: var(--ui-radius-xl);
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.13);
-  opacity: 0.88;
-}
-
-[data-ui-goal-card="true"][data-ui-utility-record="true"] [data-ui-goal-card-main="true"] {
-  column-gap: var(--ui-space-16);
-}
-
-[data-ui-goal-card="true"][data-ui-utility-record="true"] [data-ui-goal-progress="true"] {
-  margin-top: var(--ui-space-6);
-  margin-bottom: 0;
-}
-

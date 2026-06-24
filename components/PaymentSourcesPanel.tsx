@@ -389,7 +389,8 @@ export default function PaymentSourcesPanel({
       <article
         key={source.id}
         data-payment-source-item="true"
-        data-ui-record-card="true"
+        data-ui-utility-record="true"
+        data-ui-record-section="strong"
         data-archived={isArchived ? 'true' : 'false'}
       >
         <div data-payment-source-main="true">
@@ -515,7 +516,7 @@ export default function PaymentSourcesPanel({
           <strong>Twoje źródła</strong>
           <span>{activeSources.length} aktywnych</span>
         </header>
-        <div data-payment-source-list="true">
+        <div data-payment-source-list="true" data-ui-record-list="true" data-ui-record-separator="strong">
           {activeSources.length === 0 ? (
             <EmptyState>Brak aktywnych źródeł płatności.</EmptyState>
           ) : (
@@ -530,7 +531,7 @@ export default function PaymentSourcesPanel({
             <strong>Archiwalne</strong>
             <span>{archivedSources.length}</span>
           </header>
-          <div data-payment-source-list="true">{archivedSources.map(renderSourceCard)}</div>
+          <div data-payment-source-list="true" data-ui-record-list="true" data-ui-record-separator="strong">{archivedSources.map(renderSourceCard)}</div>
         </section>
       )}
 
