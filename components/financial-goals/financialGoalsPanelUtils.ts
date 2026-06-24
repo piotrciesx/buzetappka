@@ -15,6 +15,8 @@ export const getInitialFormState = (selectedMonth: string): FormState => ({
   deadlineMonth: '',
   startMonth: selectedMonth,
   allocationPercent: null,
+  icon_key: 'system-goals',
+  color_tone: 'blue',
 })
 
 export const clampPercent = (value: number) => Math.max(0, Math.min(100, Math.round(value)))

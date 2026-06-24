@@ -221,8 +221,16 @@ export const uiPrimitiveContracts = {
   buttonDensity: ['compact', 'normal'],
   iconButton: ['default', 'subtle', 'danger', 'active'],
   input: ['s', 'm', 'l', 'search', 'amount', 'textarea', 'default', 'small', 'invalid', 'disabled'],
+  amountInput: ['default', 'hero'],
   select: ['default', 's', 'm', 'l', 'invalid', 'disabled'],
-  checkbox: ['default', 'disabled'],
+  checkbox: ['default', 'field', 'comfortable', 'disabled'],
+  form: ['default', 'comfortable'],
+  formSection: ['default', 'creator'],
+  creatorHeroZone: ['default'],
+  picker: ['rich', 'gallery'],
+  pickerTrigger: ['default', 'comfortable'],
+  separator: ['light', 'strong', 'vertical'],
+  sectionRecord: ['default', 'light', 'strong'],
   badge: ['neutral', 'info', 'success', 'warning', 'danger'],
   tag: ['default', 'interactive', 'removable'],
   segmentedControl: ['default', 'compact'],
@@ -611,6 +619,94 @@ export const uiInputApi = {
   },
 } as const
 
+export const uiFormApi = {
+  attributes: {
+    shell: 'data-ui-form-shell',
+    density: 'data-ui-form-density',
+    field: 'data-ui-field',
+    fieldWrapper: 'data-ui-field-wrapper',
+    fieldLabel: 'data-ui-field-label',
+    meta: 'data-ui-form-meta',
+    actions: 'data-ui-form-actions',
+  },
+  density: {
+    default: 'default',
+    comfortable: 'comfortable',
+  },
+} as const
+
+export const uiAmountApi = {
+  classNames: {
+    field: uiInputApi.classNames.amountField,
+  },
+  attributes: {
+    shell: 'data-ui-amount-shell',
+    variant: 'data-ui-amount-variant',
+    hero: 'data-ui-hero-input',
+    currency: 'data-ui-amount-currency',
+  },
+  variant: {
+    default: 'default',
+    hero: 'hero',
+  },
+} as const
+
+export const uiPickerApi = {
+  attributes: {
+    control: 'data-ui-picker-control',
+    variant: 'data-ui-picker-variant',
+    trigger: 'data-ui-picker-trigger',
+    value: 'data-ui-picker-value',
+    menu: 'data-ui-picker-menu',
+    grid: 'data-ui-picker-menu-grid',
+    search: 'data-ui-picker-search',
+    chevron: 'data-ui-picker-chevron',
+    more: 'data-ui-picker-more',
+    empty: 'data-ui-picker-empty',
+  },
+  variant: {
+    rich: 'rich',
+    gallery: 'gallery',
+  },
+} as const
+
+export const uiCreatorApi = {
+  attributes: {
+    section: 'data-ui-creator-section',
+    heroZone: 'data-ui-creator-hero-zone',
+    heroActions: 'data-ui-creator-hero-actions',
+    quickActions: 'data-ui-creator-quick-actions',
+    segments: 'data-ui-creator-segments',
+    statusRow: 'data-ui-creator-status-row',
+  },
+} as const
+
+export const uiSeparatorApi = {
+  attributes: {
+    section: 'data-ui-section-separator',
+    record: 'data-ui-record-separator',
+    vertical: 'data-ui-vertical-separator',
+    weight: 'data-ui-separator-weight',
+  },
+  weight: {
+    light: 'light',
+    strong: 'strong',
+  },
+} as const
+
+export const uiSectionRecordApi = {
+  attributes: {
+    record: 'data-ui-section-record',
+    main: 'data-ui-section-record-main',
+    copy: 'data-ui-section-record-copy',
+    title: 'data-ui-section-record-title',
+    meta: 'data-ui-section-record-meta',
+    metrics: 'data-ui-section-record-metrics',
+    status: 'data-ui-section-record-status',
+    actions: 'data-ui-section-record-actions',
+  },
+} as const
+
 
 
 export const uiCheckboxApi = {
@@ -623,6 +719,8 @@ export const uiCheckboxApi = {
     layout: 'data-checkbox-layout',
     density: 'data-checkbox-density',
     state: 'data-checkbox-state',
+    variant: 'data-checkbox-variant',
+    align: 'data-checkbox-align',
   },
   layout: {
     inline: 'inline',
@@ -631,6 +729,13 @@ export const uiCheckboxApi = {
   density: {
     compact: 'compact',
     normal: 'normal',
+    comfortable: 'comfortable',
+  },
+  variant: {
+    field: 'field',
+  },
+  align: {
+    field: 'field',
   },
 } as const
 
@@ -742,6 +847,96 @@ export const uiListRowPrimitives = {
   drag: {
     className: uiListRowApi.classNames.drag,
     size: 'var(--ui-row-drag-size)',
+  },
+} as const
+
+export const uiFormPrimitives = {
+  shell: {
+    attribute: uiFormApi.attributes.shell,
+    gap: 'var(--ui-spacing-form-comfortable-gap)',
+  },
+  comfortableShell: {
+    attribute: uiFormApi.attributes.shell,
+    density: uiFormApi.density.comfortable,
+    gap: 'var(--ui-spacing-form-section-gap)',
+    controlHeight: 'var(--ui-input-height-comfortable)',
+    controlPadding: 'var(--ui-input-padding-comfortable)',
+    labelGap: 'var(--ui-spacing-form-label-gap)',
+  },
+  field: {
+    attribute: uiFormApi.attributes.field,
+    gap: 'var(--ui-spacing-form-label-gap)',
+  },
+  actions: {
+    attribute: uiFormApi.attributes.actions,
+    gap: 'var(--ui-spacing-action-gap)',
+  },
+} as const
+
+export const uiPickerPrimitives = {
+  gallery: {
+    controlAttribute: uiPickerApi.attributes.control,
+    variant: uiPickerApi.variant.gallery,
+    triggerHeight: 'var(--ui-picker-trigger-height)',
+    triggerPadding: 'var(--ui-picker-trigger-padding)',
+    triggerGap: 'var(--ui-picker-trigger-gap)',
+    triggerRadius: 'var(--ui-picker-trigger-radius)',
+  },
+} as const
+
+export const uiCreatorPrimitives = {
+  section: {
+    attribute: uiCreatorApi.attributes.section,
+    gap: 'var(--ui-creator-section-gap)',
+    paddingY: 'var(--ui-creator-section-padding-y)',
+  },
+  heroZone: {
+    attribute: uiCreatorApi.attributes.heroZone,
+    padding: 'var(--ui-creator-hero-zone-padding)',
+    gap: 'var(--ui-creator-hero-zone-gap)',
+    radius: 'var(--ui-creator-hero-zone-radius)',
+    border: 'var(--ui-creator-hero-zone-border)',
+    background: 'var(--ui-creator-hero-zone-bg)',
+  },
+} as const
+
+export const uiSeparatorPrimitives = {
+  light: {
+    weight: uiSeparatorApi.weight.light,
+    height: '1px',
+    margin: 'var(--ui-record-separator-light-margin)',
+    color: 'var(--ui-record-separator-light-color)',
+  },
+  strong: {
+    weight: uiSeparatorApi.weight.strong,
+    height: '1px',
+    margin: 'var(--ui-record-separator-strong-margin)',
+    color: 'var(--ui-record-separator-strong-color)',
+  },
+  vertical: {
+    attribute: uiSeparatorApi.attributes.vertical,
+    width: '1px',
+    color: 'var(--ui-record-section-vertical-separator-color)',
+  },
+} as const
+
+export const uiSectionRecordPrimitives = {
+  record: {
+    attribute: uiSectionRecordApi.attributes.record,
+    gap: 'var(--ui-section-record-gap)',
+    iconSize: 'var(--ui-section-record-icon-size)',
+  },
+  copy: {
+    attribute: uiSectionRecordApi.attributes.copy,
+    gap: 'var(--ui-space-2)',
+  },
+  metrics: {
+    attribute: uiSectionRecordApi.attributes.metrics,
+    gap: 'var(--ui-section-record-metric-gap)',
+  },
+  actions: {
+    attribute: uiSectionRecordApi.attributes.actions,
+    gap: 'var(--ui-section-record-metric-gap)',
   },
 } as const
 
@@ -909,6 +1104,20 @@ export const uiControlPrimitives = {
       outline: 'none',
       textAlign: 'right',
     },
+    amountHero: {
+      className: uiInputApi.classNames.amountField,
+      variant: uiAmountApi.variant.hero,
+      height: 'var(--ui-amount-hero-height)',
+      radius: 'var(--ui-input-radius)',
+      padding: 'var(--ui-amount-hero-padding)',
+      border: 'var(--ui-input-border)',
+      background: 'var(--ui-input-bg)',
+      color: 'var(--ui-input-text)',
+      fontSize: 'var(--ui-amount-hero-font-size)',
+      fontWeight: 'var(--ui-font-weight-bold)',
+      outline: 'none',
+      textAlign: 'right',
+    },
     textarea: {
       className: uiInputApi.classNames.textarea,
       minHeight: 'var(--ui-textarea-min-height)',
@@ -982,6 +1191,14 @@ export const uiControlPrimitives = {
   checkbox: {
     default: {
       gap: 'var(--ui-checkbox-gap)',
+    },
+    field: {
+      gap: 'var(--ui-checkbox-gap)',
+      minHeight: 'var(--ui-checkbox-field-height)',
+      padding: 'var(--ui-checkbox-field-padding)',
+      border: 'var(--ui-input-border)',
+      radius: 'var(--ui-input-radius)',
+      background: 'var(--ui-input-bg)',
     },
   },
   badge: {
@@ -1350,6 +1567,11 @@ export type UiDropdownPrimitive = keyof typeof uiDropdownPrimitives
 export type UiDropdownPlacement = keyof typeof uiDropdownApi.placement
 export type UiDropdownAlign = keyof typeof uiDropdownApi.align
 export type UiListRowPrimitive = keyof typeof uiListRowPrimitives
+export type UiFormPrimitive = keyof typeof uiFormPrimitives
+export type UiPickerPrimitive = keyof typeof uiPickerPrimitives
+export type UiCreatorPrimitive = keyof typeof uiCreatorPrimitives
+export type UiSeparatorPrimitive = keyof typeof uiSeparatorPrimitives
+export type UiSectionRecordPrimitive = keyof typeof uiSectionRecordPrimitives
 export type UiRowKind = keyof typeof uiListRowApi.kind
 export type UiRowState = keyof typeof uiListRowApi.state
 export type UiRowDensity = keyof typeof uiListRowApi.density

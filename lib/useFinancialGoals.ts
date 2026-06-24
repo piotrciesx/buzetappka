@@ -21,6 +21,28 @@ type UseFinancialGoalsParams = {
   isEnabled?: boolean
 }
 
+const getGoalHistoryMonths = (rows: Array<Record<string, unknown>> = []) =>
+  rows
+    .map((row) => (typeof row.month === 'string' ? row.month.slice(0, 7) : ''))
+    .filter(Boolean)
+    .sort((left, right) => left.localeCompare(right))
+
+const hasStoredGoalAmountOrFinalStatus = (row: Record<string, unknown> | null | undefined) => {
+  if (!row) {
+    return false
+  }
+
+  const currentAmount = Number(row.current_amount || 0)
+  const status = typeof row.status === 'string' ? row.status : 'active'
+
+  return (
+    (Number.isFinite(currentAmount) && currentAmount > 0) ||
+    status === 'completed' ||
+    status === 'cancelled' ||
+    Boolean(row.completed_at)
+  )
+}
+
 export function useFinancialGoals({ profileId, isEnabled = true }: UseFinancialGoalsParams) {
   const [financialGoals, setFinancialGoals] = useState<FinancialGoal[]>([])
   const [financialGoalPriorities, setFinancialGoalPriorities] = useState<FinancialGoalMonthPriority[]>([])
@@ -98,6 +120,53 @@ export function useFinancialGoals({ profileId, isEnabled = true }: UseFinancialG
         throw new Error('Kwota docelowa celu musi być skończoną liczbą większą od 0.')
       }
 
+      if (input.id) {
+        const { data: existingGoal, error: existingGoalError } = await supabase
+          .from('financial_goals')
+          .select('id, start_month, start_date, current_amount, status, completed_at')
+          .eq('id', input.id)
+          .eq('profile_id', profileId)
+          .maybeSingle()
+
+        if (existingGoalError) {
+          throw new Error(existingGoalError.message)
+        }
+
+        const { data: historyRows, error: historyError } = await supabase
+          .from('financial_goal_month_priorities')
+          .select('month')
+          .eq('profile_id', profileId)
+          .eq('goal_id', input.id)
+          .order('month', { ascending: true })
+
+        if (historyError) {
+          throw new Error(historyError.message)
+        }
+
+        const historyMonths = getGoalHistoryMonths((historyRows || []) as Array<Record<string, unknown>>)
+        const existingStartMonth =
+          typeof existingGoal?.start_month === 'string' && existingGoal.start_month
+            ? existingGoal.start_month.slice(0, 7)
+            : typeof existingGoal?.start_date === 'string' && existingGoal.start_date
+              ? existingGoal.start_date.slice(0, 7)
+              : ''
+        const firstProtectedMonth =
+          historyMonths[0] ||
+          (hasStoredGoalAmountOrFinalStatus(existingGoal as Record<string, unknown> | null)
+            ? existingStartMonth
+            : '')
+
+        if (
+          firstProtectedMonth &&
+          input.start_month &&
+          input.start_month.localeCompare(firstProtectedMonth) > 0
+        ) {
+          throw new Error(
+            `Nie można przesunąć startu celu po miesiącu ${firstProtectedMonth}, bo cel ma już historię lub środki.`
+          )
+        }
+      }
+
       const payload = {
         profile_id: profileId,
         name: input.name.trim(),
@@ -110,6 +179,8 @@ export function useFinancialGoals({ profileId, isEnabled = true }: UseFinancialG
             : Math.round(input.allocation_percent),
         start_date: input.start_month ? `${input.start_month}-01` : null,
         end_date: input.deadline_month ? `${input.deadline_month}-01` : null,
+        icon_key: input.icon_key || null,
+        color_tone: input.color_tone || null,
       }
 
       const query = input.id
@@ -300,6 +371,36 @@ export function useFinancialGoals({ profileId, isEnabled = true }: UseFinancialG
     async (goalId: string) => {
       if (!isEnabled) {
         return
+      }
+
+      const { data: existingGoal, error: existingGoalError } = await supabase
+        .from('financial_goals')
+        .select('id, current_amount, status, completed_at')
+        .eq('id', goalId)
+        .eq('profile_id', profileId)
+        .maybeSingle()
+
+      if (existingGoalError) {
+        throw new Error(existingGoalError.message)
+      }
+
+      const { data: priorityRows, error: priorityRowsError } = await supabase
+        .from('financial_goal_month_priorities')
+        .select('id, month, allocation_percent, allocation_locked')
+        .eq('profile_id', profileId)
+        .eq('goal_id', goalId)
+
+      if (priorityRowsError) {
+        throw new Error(priorityRowsError.message)
+      }
+
+      if (
+        hasStoredGoalAmountOrFinalStatus(existingGoal as Record<string, unknown> | null) ||
+        (priorityRows || []).length > 0
+      ) {
+        throw new Error(
+          'Nie można trwale usunąć celu z historią, środkami albo alokacją bez migracji soft delete. Cel pozostaje bez zmian.'
+        )
       }
 
       const { error } = await supabase

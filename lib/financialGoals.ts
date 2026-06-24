@@ -7,7 +7,11 @@ import {
 } from './budgetPageTypes'
 import { getTransactionMonth } from './transactionDomain'
 
-export type FinancialGoalComputedStatus = 'w trakcie' | 'zrealizowany' | 'niezrealizowany'
+export type FinancialGoalComputedStatus =
+  | 'w trakcie'
+  | 'oczekuje na zamknięcie miesiąca'
+  | 'zrealizowany'
+  | 'niezrealizowany'
 
 export type FinancialGoalProgress = {
   goalId: string
@@ -19,6 +23,7 @@ export type FinancialGoalProgress = {
   allocationsByMonth: Record<string, number>
   deadlineMonth: string | null
   isArchived: boolean
+  waitingForLockedMonth: boolean
 }
 
 export type FinancialGoalPlan = {
@@ -196,6 +201,26 @@ export const getFinancialGoalAllocationPercentagesForMonth = ({
   return normalizeAllocationWeights(goalIds, rawWeights)
 }
 
+export const getFinancialGoalFirstProtectedMonth = (
+  goal: Pick<FinancialGoal, 'start_month'>,
+  progress?: Pick<FinancialGoalProgress, 'collectedAmount' | 'allocationsByMonth'> | null
+) => {
+  const allocationMonths = Object.entries(progress?.allocationsByMonth || {})
+    .filter(([, amount]) => Number(amount) > 0)
+    .map(([month]) => month)
+    .sort(compareMonths)
+
+  if (allocationMonths[0]) {
+    return allocationMonths[0]
+  }
+
+  if ((progress?.collectedAmount || 0) > 0) {
+    return goal.start_month
+  }
+
+  return null
+}
+
 const getInheritedOrderIds = (month: string, priorities: FinancialGoalMonthPriority[] = []) => {
   return getEffectiveMonthPriorityRowsForMonth(month, priorities).map((priority) => priority.goal_id)
 }
@@ -294,6 +319,13 @@ export const mapFinancialGoalRow = (row: Record<string, unknown>): FinancialGoal
       row.allocation_percent === null || row.allocation_percent === undefined
         ? null
         : Math.round(Number(row.allocation_percent)),
+    icon_key: typeof row.icon_key === 'string' && row.icon_key ? row.icon_key : null,
+    color_tone: typeof row.color_tone === 'string' && row.color_tone ? row.color_tone : null,
+    status:
+      row.status === 'completed' || row.status === 'cancelled' || row.status === 'active'
+        ? row.status
+        : 'active',
+    completed_at: typeof row.completed_at === 'string' ? row.completed_at : null,
     created_at: typeof row.created_at === 'string' ? row.created_at : undefined,
   }
 }
@@ -401,7 +433,15 @@ export const buildFinancialGoalsPlan = ({
 
       const completionMonth = completionMonthByGoalId[goal.id]
 
-      return !completionMonth || compareMonths(completionMonth, month) >= 0
+      if (completionMonth) {
+        return compareMonths(completionMonth, month) >= 0
+      }
+
+      if (goal.deadline_month && compareMonths(goal.deadline_month, month) < 0) {
+        return false
+      }
+
+      return true
     })
 
     if (mode === 'allocation') {
@@ -439,7 +479,6 @@ export const buildFinancialGoalsPlan = ({
 
         if (
           collectedByGoalId[goal.id] >= goal.target_amount &&
-          lockedMonthsSet.has(month) &&
           !completionMonthByGoalId[goal.id]
         ) {
           completionMonthByGoalId[goal.id] = month
@@ -481,7 +520,6 @@ export const buildFinancialGoalsPlan = ({
 
           if (
             collectedByGoalId[goal.id] >= goal.target_amount &&
-            lockedMonthsSet.has(month) &&
             !completionMonthByGoalId[goal.id]
           ) {
             completionMonthByGoalId[goal.id] = month
@@ -526,7 +564,6 @@ export const buildFinancialGoalsPlan = ({
 
       if (
         collectedByGoalId[goal.id] >= goal.target_amount &&
-        lockedMonthsSet.has(month) &&
         !completionMonthByGoalId[goal.id]
       ) {
         completionMonthByGoalId[goal.id] = month
@@ -548,20 +585,33 @@ export const buildFinancialGoalsPlan = ({
       const percentage =
         goal.target_amount > 0 ? Math.min((collectedAmount / goal.target_amount) * 100, 100) : 0
       const completionMonth = completionMonthByGoalId[goal.id]
-      const isCompleted = Boolean(completionMonth)
+      const isCompletionMonthLocked = Boolean(completionMonth && lockedMonthsSet.has(completionMonth))
+      const isCompleted = Boolean(completionMonth && isCompletionMonthLocked)
       const deadlineMonth = goal.deadline_month || null
-      const isDeadlinePassed =
+      const isDeadlineReached =
         Boolean(deadlineMonth) &&
-        compareMonths(deadlineMonth as string, selectedMonth) < 0 &&
-        !isCompleted
+        compareMonths(deadlineMonth as string, selectedMonth) <= 0 &&
+        !completionMonth
+      const isFailedDeadlineClosed =
+        isDeadlineReached &&
+        Boolean(deadlineMonth) &&
+        lockedMonthsSet.has(deadlineMonth as string)
+      const waitingForLockedMonth =
+        Boolean(completionMonth && !isCompletionMonthLocked) ||
+        Boolean(isDeadlineReached && !isFailedDeadlineClosed)
       const isArchived =
-        isCompleted && completionMonth ? compareMonths(completionMonth, selectedMonth) < 0 : false
+        isCompleted ||
+        Boolean(isFailedDeadlineClosed) ||
+        goal.status === 'completed' ||
+        goal.status === 'cancelled'
 
-      const statusLabel: FinancialGoalComputedStatus = isCompleted
+      const statusLabel: FinancialGoalComputedStatus = isCompleted || goal.status === 'completed'
         ? 'zrealizowany'
-        : isDeadlinePassed
+        : isFailedDeadlineClosed || goal.status === 'cancelled'
           ? 'niezrealizowany'
-          : 'w trakcie'
+          : waitingForLockedMonth
+            ? 'oczekuje na zamknięcie miesiąca'
+            : 'w trakcie'
 
       return [
         goal.id,
@@ -575,6 +625,7 @@ export const buildFinancialGoalsPlan = ({
           allocationsByMonth: allocationsByGoalId[goal.id] || {},
           deadlineMonth,
           isArchived,
+          waitingForLockedMonth,
         },
       ]
     })

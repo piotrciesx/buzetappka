@@ -8,6 +8,8 @@ export type FormState = {
   deadlineMonth: string
   startMonth: string
   allocationPercent: number | null
+  icon_key?: string | null
+  color_tone?: string | null
 }
 
 export type FinancialGoalsPanelProps = {

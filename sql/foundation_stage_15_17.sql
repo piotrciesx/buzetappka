@@ -232,6 +232,8 @@ create table if not exists public.financial_goals (
   start_month text null,
   deadline_month text null,
   allocation_percent numeric(5, 2) null,
+  icon_key text null,
+  color_tone text null,
   current_amount numeric(12, 2) not null default 0,
   start_date date not null,
   end_date date not null,
@@ -247,6 +249,8 @@ alter table public.financial_goals
   add column if not exists start_month text null,
   add column if not exists deadline_month text null,
   add column if not exists allocation_percent numeric(5, 2) null,
+  add column if not exists icon_key text null,
+  add column if not exists color_tone text null,
   add column if not exists category_ids uuid[] not null default '{}',
   add column if not exists status text not null default 'active',
   add column if not exists completed_at timestamptz null;

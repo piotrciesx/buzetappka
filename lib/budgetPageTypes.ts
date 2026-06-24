@@ -138,6 +138,10 @@ export type FinancialGoal = {
   start_month: string
   deadline_month?: string | null
   allocation_percent?: number | null
+  icon_key?: string | null
+  color_tone?: string | null
+  status?: 'active' | 'completed' | 'cancelled'
+  completed_at?: string | null
   created_at?: string
 }
 

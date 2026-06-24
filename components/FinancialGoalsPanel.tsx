@@ -8,6 +8,7 @@ import {
   buildFinancialGoalsPlan,
   getEffectiveMonthPriorityRowsForMonth,
   getFinancialGoalAllocationPercentagesForMonth,
+  getFinancialGoalFirstProtectedMonth,
   getFinancialGoalModeForMonth,
   getFinancialGoalPriorityItemsForMonth,
 } from '../lib/financialGoals'
@@ -392,6 +393,8 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
       deadlineMonth: goal.deadline_month || '',
       startMonth: goal.start_month,
       allocationPercent: goal.allocation_percent ?? null,
+      icon_key: goal.icon_key || 'system-goals',
+      color_tone: goal.color_tone || 'blue',
     })
   }
 
@@ -509,6 +512,23 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
     setIsSaving(true)
 
     try {
+      if (formState.id) {
+        const existingGoal = goals.find((goal) => goal.id === formState.id)
+        const firstProtectedMonth = existingGoal
+          ? getFinancialGoalFirstProtectedMonth(existingGoal, plan.progressByGoalId[existingGoal.id])
+          : null
+
+        if (
+          firstProtectedMonth &&
+          formState.startMonth &&
+          formState.startMonth.localeCompare(firstProtectedMonth) > 0
+        ) {
+          throw new Error(
+            `Nie można przesunąć startu celu po miesiącu ${firstProtectedMonth}, bo cel ma już historię lub środki.`
+          )
+        }
+      }
+
       await onSaveGoal({
         id: formState.id,
         name: formState.name,
@@ -516,6 +536,8 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         start_month: formState.startMonth,
         deadline_month: formState.deadlineMonth || null,
         allocation_percent: formState.allocationPercent,
+        icon_key: formState.icon_key || null,
+        color_tone: formState.color_tone || null,
       })
       onDone()
     } finally {

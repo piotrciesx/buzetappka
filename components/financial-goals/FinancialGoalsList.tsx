@@ -15,6 +15,7 @@ type ProgressByGoalId = Record<
     statusLabel: string
     completionMonth: string | null
     deadlineMonth: string | null
+    waitingForLockedMonth?: boolean
   }
 >
 
@@ -56,6 +57,7 @@ const getProgressProps = (
     completionMonth: progress?.completionMonth || null,
     deadlineMonth: progress?.deadlineMonth || goal.deadline_month || null,
     waitingForLockedMonth:
+      progress?.waitingForLockedMonth === true ||
       Boolean(progress?.completionMonth) &&
       progress?.statusLabel === 'w trakcie' &&
       !lockedMonthsSet.has(progress.completionMonth as string),
