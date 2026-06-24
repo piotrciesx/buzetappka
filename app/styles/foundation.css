@@ -4281,8 +4281,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   gap: var(--ui-space-5);
 }
 
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-value="true"] [data-ui-icon-tile="true"],
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"] [data-ui-icon-tile="true"] {
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-value="true"] [data-ui-icon-tile="true"] {
   width: var(--ui-icon-tile-size-a);
   min-width: var(--ui-icon-tile-size-a);
   height: var(--ui-icon-tile-size-a);
@@ -4293,162 +4292,9 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   box-shadow: inset 0 0 0 1px var(--ui-tone-border, rgba(8, 44, 122, 0.08));
 }
 
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-value="true"] [data-ui-icon-tile="true"] svg,
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"] [data-ui-icon-tile="true"] svg {
+[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-value="true"] [data-ui-icon-tile="true"] svg {
   width: var(--ui-icon-glyph-size-a);
   height: var(--ui-icon-glyph-size-a);
-}
-
-
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-menu="true"][data-layout="icons"] {
-  min-width: min(320px, calc(100vw - 32px));
-  display: flex;
-  flex-direction: column;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  overflow: hidden;
-  padding: var(--ui-space-3);
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-menu-grid="true"] {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"] {
-  position: relative;
-  width: 100%;
-  min-height: 38px;
-  display: flex;
-  align-items: center;
-  gap: var(--ui-space-5);
-  padding: var(--ui-space-3) var(--ui-space-5);
-  border: 0;
-  border-bottom: 1px solid rgba(8, 44, 122, 0.055);
-  border-radius: 0;
-  background: transparent;
-  color: var(--ui-color-primary-navy);
-  font-size: var(--ui-font-size-body-sm);
-  font-weight: var(--ui-font-weight-medium);
-  line-height: var(--ui-line-height-compact);
-  text-align: left;
-  cursor: pointer;
-  transition:
-    background var(--ui-motion-hover) var(--ui-motion-ease-standard),
-    color var(--ui-motion-hover) var(--ui-motion-ease-standard);
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:last-child {
-  border-bottom: 0;
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 9px;
-  bottom: 9px;
-  width: 1px;
-  border-radius: var(--ui-radius-pill);
-  background: transparent;
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:hover {
-  background: rgba(8, 44, 122, 0.018);
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"][data-active="true"] {
-  background: rgba(8, 44, 122, 0.026);
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"][data-active="true"]::before {
-  background: rgba(8, 44, 122, 0.26);
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:hover [data-ui-icon-tile="true"],
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"][data-active="true"] [data-ui-icon-tile="true"] {
-  background: transparent;
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"] span:last-child {
-  color: inherit;
-  font-size: var(--ui-font-size-body-sm);
-  font-weight: var(--ui-font-weight-medium);
-  line-height: var(--ui-line-height-compact);
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-more="true"] {
-  min-height: 36px;
-  margin: var(--ui-space-4) var(--ui-space-3) var(--ui-space-3);
-  border: 1px solid rgba(8, 44, 122, 0.10);
-  border-radius: var(--ui-radius-md);
-  background: transparent;
-  color: var(--ui-color-primary-navy);
-  font-size: var(--ui-font-size-body-sm);
-  font-weight: var(--ui-font-weight-semibold);
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-picker-more="true"]:hover {
-  background: rgba(8, 44, 122, 0.018);
-  border-color: rgba(8, 44, 122, 0.16);
-}
-
-
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"],
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:hover,
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:focus,
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:focus-visible,
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"][data-active="true"],
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"][aria-selected="true"] {
-  outline: none;
-  box-shadow: none;
-  border-top: 0;
-  border-right: 0;
-  border-left: 0;
-  border-bottom: 1px solid rgba(8, 44, 122, 0.055);
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:focus,
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:focus-visible {
-  background: rgba(8, 44, 122, 0.018);
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"][data-active="true"],
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"][aria-selected="true"] {
-  background: rgba(8, 44, 122, 0.026);
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:last-child,
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:last-child:hover,
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:last-child:focus,
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:last-child:focus-visible,
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:last-child[data-active="true"],
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:last-child[aria-selected="true"] {
-  border-bottom: 0;
-}
-
-/* Icon picker states. */
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:hover,
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:focus-visible {
-  background: rgba(8, 44, 122, 0.022);
-  color: var(--ui-color-primary-navy);
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:hover [data-ui-icon-tile="true"],
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:focus-visible [data-ui-icon-tile="true"],
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"][data-active="true"] [data-ui-icon-tile="true"],
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"][aria-selected="true"] [data-ui-icon-tile="true"] {
-  background: var(--ui-tone-surface, #eef5ff);
-  color: var(--ui-tone-text, var(--ui-color-primary-navy));
-  box-shadow: inset 0 0 0 1px var(--ui-tone-border, rgba(8, 44, 122, 0.10));
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:hover [data-category-icon="true"],
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:hover [data-category-icon-svg="true"],
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:focus-visible [data-category-icon="true"],
-[data-ui-picker-control="true"][data-ui-picker-variant="rich"] [data-ui-icon-select-option="true"]:focus-visible [data-category-icon-svg="true"] {
-  color: inherit;
-  stroke: currentColor;
 }
 
 /* Color Foundation v1 */
@@ -4832,4 +4678,3 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
     grid-template-columns: repeat(5, var(--ui-picker-gallery-option-size));
   }
 }
-

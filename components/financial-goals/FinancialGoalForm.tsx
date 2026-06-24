@@ -1,18 +1,15 @@
 'use client'
 
-import { useMemo, useState } from 'react'
-import CategoryIcon from '../CategoryIcon'
+import { useState } from 'react'
 import { uiInputApi } from '../../lib/uiFoundation'
 import {
-  APP_ICONS,
   UI_COLOR_OPTIONS,
   getUiColor,
   getUiIcon,
-  getUiIconSearchText,
   type UiColorKey,
   type UiIconKey,
 } from '../../lib/userAppearance'
-import { useScrollSelectedIconIntoView } from '../ui/useScrollSelectedIconIntoView'
+import FoundationIconPicker from '../ui/FoundationIconPicker'
 import type { FormState } from './financialGoalsPanelTypes'
 
 type FinancialGoalFormProps = {
@@ -75,30 +72,10 @@ export default function FinancialGoalForm({
   onCancel,
 }: FinancialGoalFormProps) {
   const [activePicker, setActivePicker] = useState<'color' | 'icon' | null>(null)
-  const [isIconPickerExpanded, setIsIconPickerExpanded] = useState(false)
-  const [iconSearch, setIconSearch] = useState('')
 
   const selectedIconKey = resolveGoalIconKey(formState)
   const selectedColorKey = resolveGoalColorKey(formState)
-  const selectedIcon = getUiIcon(selectedIconKey as UiIconKey)
   const selectedColor = getUiColor(selectedColorKey as UiColorKey)
-
-  const selectedIconOptionRef = useScrollSelectedIconIntoView({
-    isOpen: activePicker === 'icon',
-    selectedKey: selectedIconKey,
-    scrollSignal: isIconPickerExpanded,
-  })
-
-  const orderedIcons = useMemo(() => {
-    const suggestedIcons = SUGGESTED_GOAL_ICON_KEYS
-      .map((iconKey) => APP_ICONS.find((option) => option.key === iconKey))
-      .filter((option): option is (typeof APP_ICONS)[number] => Boolean(option))
-
-    return [
-      ...suggestedIcons,
-      ...APP_ICONS.filter((option) => !SUGGESTED_GOAL_ICON_KEYS.includes(option.key)),
-    ]
-  }, [])
 
   const updateAppearance = (nextAppearance: Partial<GoalFormAppearance>) => {
     onFormStateChange({
@@ -158,96 +135,21 @@ export default function FinancialGoalForm({
   }
 
   const renderIconPicker = () => {
-    const isOpen = activePicker === 'icon'
-    const normalizedSearch = iconSearch.trim().toLocaleLowerCase('pl-PL')
-    const baseIcons = isIconPickerExpanded
-      ? orderedIcons
-      : orderedIcons.filter((option) => SUGGESTED_GOAL_ICON_KEYS.includes(option.key))
-    const visibleIcons = normalizedSearch
-      ? orderedIcons.filter((option) => getUiIconSearchText(option).includes(normalizedSearch))
-      : baseIcons
-
     return (
-      <div
-        data-ui-picker-control="true"
-        data-ui-picker-variant="gallery"
-        data-open={isOpen ? 'true' : 'false'}
-        onClick={(event) => event.stopPropagation()}
-      >
-        <button
-          type="button"
-          data-ui-picker-trigger="true"
-          aria-expanded={isOpen}
-          onClick={() => {
-            const nextIsOpen = !isOpen
-            setActivePicker(nextIsOpen ? 'icon' : null)
-
-            if (nextIsOpen) {
-              setIconSearch('')
-            }
-          }}
-        >
-          <span data-ui-picker-value="true">
-            <span data-ui-icon-tile="true" data-ui-tone={selectedColor.tone}>
-              <CategoryIcon iconKey={selectedIconKey as UiIconKey} />
-            </span>
-            {selectedIcon?.label || 'Ikona celu'}
-          </span>
-          <span data-ui-picker-chevron="true" aria-hidden="true" />
-        </button>
-        {isOpen && (
-          <div data-ui-picker-menu="true" data-layout="icons">
-            <label data-ui-picker-search="true">
-              <input
-                type="search"
-                value={iconSearch}
-                onChange={(event) => setIconSearch(event.target.value)}
-                placeholder="Szukaj ikony..."
-                autoFocus
-              />
-            </label>
-            <div data-ui-picker-menu-grid="true">
-              {visibleIcons.map((option) => (
-                <button
-                  key={option.key}
-                  ref={selectedIconKey === option.key ? selectedIconOptionRef : undefined}
-                  type="button"
-                  data-ui-icon-select-option="true"
-                  data-ui-tone={selectedColor.tone}
-                  data-active={selectedIconKey === option.key}
-                  aria-label={`Wybierz ikonę: ${option.label}`}
-                  title={option.label}
-                  onClick={() => {
-                    updateAppearance({
-                      icon: option.key,
-                      icon_key: option.key,
-                    })
-                    setActivePicker(null)
-                    setIconSearch('')
-                  }}
-                >
-                  <span data-ui-icon-tile="true" data-ui-tone={selectedColor.tone}>
-                    <CategoryIcon iconKey={option.key} />
-                  </span>
-                  <span>{option.label}</span>
-                </button>
-              ))}
-            </div>
-            {!isIconPickerExpanded && !normalizedSearch && (
-              <button
-                type="button"
-                data-ui-picker-more="true"
-                onClick={() => setIsIconPickerExpanded(true)}
-              >
-                Pokaż więcej ikon
-              </button>
-            )}
-            {visibleIcons.length === 0 && (
-              <div data-ui-picker-empty="true">Brak ikon dla tej nazwy.</div>
-            )}
-          </div>
-        )}
-      </div>
+      <FoundationIconPicker
+        value={selectedIconKey as UiIconKey}
+        tone={selectedColor.tone}
+        isOpen={activePicker === 'icon'}
+        suggestedIconKeys={SUGGESTED_GOAL_ICON_KEYS}
+        fallbackLabel="Ikona celu"
+        onOpenChange={(isOpen) => setActivePicker(isOpen ? 'icon' : null)}
+        onChange={(iconKey) => {
+          updateAppearance({
+            icon: iconKey,
+            icon_key: iconKey,
+          })
+        }}
+      />
     )
   }
 

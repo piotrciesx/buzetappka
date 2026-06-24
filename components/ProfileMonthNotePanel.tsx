@@ -11,17 +11,15 @@ import {
 import { createPortal } from "react-dom";
 import CategoryIcon from "./CategoryIcon";
 import {
-  APP_ICONS,
   UI_COLOR_OPTIONS,
   getUiColor,
   getUiIcon,
-  getUiIconSearchText,
   type UiColorKey,
   type UiIconKey,
 } from "../lib/userAppearance";
 import { supabase } from "../lib/supabaseClient";
 import { StatusBox } from "./utility-panels/utilityPanelPrimitives";
-import { useScrollSelectedIconIntoView } from "./ui/useScrollSelectedIconIntoView";
+import FoundationIconPicker from "./ui/FoundationIconPicker";
 
 type ProfileMonthNoteRow = {
   id: string;
@@ -57,7 +55,6 @@ const NOTE_PREVIEW_LIMIT = 4;
 const NOTE_TEXT_LIMIT = 150;
 const NOTE_DRAFT_LIMIT = 1000;
 
-const NOTE_ICON_OPTIONS = APP_ICONS;
 const SUGGESTED_NOTE_ICONS: MonthNoteIcon[] = [
   "note",
   "calendar",
@@ -151,8 +148,8 @@ const resolveToneOption = (tone?: string) =>
   UI_COLOR_OPTIONS[0];
 
 const resolveIconOption = (icon?: string) =>
-  NOTE_ICON_OPTIONS.find((option) => option.key === icon) ||
-  NOTE_ICON_OPTIONS[0];
+  getUiIcon(icon) ||
+  getUiIcon("note");
 
 const parseSavedNotes = (rawNote: string): MonthNoteItem[] => {
   const trimmedNote = rawNote.trim();
@@ -188,7 +185,7 @@ const parseSavedNotes = (rawNote: string): MonthNoteItem[] => {
                 ? note.updatedAt
                 : new Date().toISOString(),
             tone: toneOption.tone,
-            icon: resolveIconOption(note.icon).key,
+            icon: resolveIconOption(note.icon)?.key || "note",
             category: CATEGORY_OPTIONS.includes(
               note.category as MonthNoteCategory,
             )
@@ -250,18 +247,11 @@ export default function ProfileMonthNotePanel({
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [detailsFilter, setDetailsFilter] = useState<MonthNoteDetailsFilter>("all");
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isIconPickerExpanded, setIsIconPickerExpanded] = useState(false);
   const [activePicker, setActivePicker] = useState<'category' | 'color' | 'icon' | null>(null);
-  const [iconSearch, setIconSearch] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [statusText, setStatusText] = useState("");
   const [errorText, setErrorText] = useState("");
-  const selectedIconOptionRef = useScrollSelectedIconIntoView({
-    isOpen: activePicker === 'icon',
-    selectedKey: draft.icon,
-    scrollSignal: isIconPickerExpanded,
-  });
 
   useEffect(() => {
     setHasMounted(true);
@@ -300,9 +290,7 @@ export default function ProfileMonthNotePanel({
       setExpandedNoteIds([]);
       setSelectedNoteId(null);
       setDetailsFilter("all");
-      setIsIconPickerExpanded(false);
       setActivePicker(null);
-      setIconSearch('');
       setIsFormOpen(false);
     } catch (error) {
       setNoteId(null);
@@ -447,7 +435,7 @@ export default function ProfileMonthNotePanel({
     const iconOption = resolveIconOption(icon);
     setDraft((previousValue) => ({
       ...previousValue,
-      icon: iconOption.key,
+      icon: iconOption?.key || "note",
     }));
   };
 
@@ -456,9 +444,7 @@ export default function ProfileMonthNotePanel({
 
     setEditingNoteId(null);
     setDraft(createEmptyDraft(defaultCategory));
-    setIsIconPickerExpanded(false);
     setActivePicker(null);
-    setIconSearch('');
     setIsFormOpen(true);
     setStatusText("");
     setErrorText("");
@@ -474,7 +460,6 @@ export default function ProfileMonthNotePanel({
       category: note.category,
     });
     setActivePicker(null);
-    setIconSearch('');
     setIsFormOpen(true);
     setStatusText("");
     setErrorText("");
@@ -483,9 +468,7 @@ export default function ProfileMonthNotePanel({
   const cancelForm = () => {
     setEditingNoteId(null);
     setDraft(createEmptyDraft());
-    setIsIconPickerExpanded(false);
     setActivePicker(null);
-    setIconSearch('');
     setIsFormOpen(false);
     setStatusText("");
     setErrorText("");
@@ -736,93 +719,18 @@ export default function ProfileMonthNotePanel({
 
   const renderIconPicker = () => {
     const selectedIcon = resolveIconOption(draft.icon);
-    const isOpen = activePicker === "icon";
-    const normalizedSearch = iconSearch.trim().toLocaleLowerCase("pl-PL");
-    const baseIcons = isIconPickerExpanded
-      ? NOTE_ICON_OPTIONS
-      : NOTE_ICON_OPTIONS.filter((option) => SUGGESTED_NOTE_ICONS.includes(option.key));
-    const visibleIcons = normalizedSearch
-      ? NOTE_ICON_OPTIONS.filter((option) => getUiIconSearchText(option).includes(normalizedSearch))
-      : baseIcons;
 
     return (
-      <div
-        data-ui-picker-control="true"
-        data-ui-picker-variant="rich"
-        data-open={isOpen ? "true" : "false"}
-        onClick={(event) => event.stopPropagation()}
-      >
-        <button
-          type="button"
-          data-ui-picker-trigger="true"
-          aria-expanded={isOpen}
-          onClick={() => {
-            const nextIsOpen = !isOpen;
-            setActivePicker(nextIsOpen ? "icon" : null);
-
-            if (nextIsOpen) {
-              setIconSearch("");
-            }
-          }}
-        >
-          <span data-ui-picker-value="true">
-            <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
-              <CategoryIcon iconKey={draft.icon} />
-            </span>
-            {selectedIcon.label}
-          </span>
-          <span data-ui-picker-chevron="true" aria-hidden="true" />
-        </button>
-        {isOpen && (
-          <div data-ui-picker-menu="true" data-layout="icons">
-            <label data-ui-picker-search="true">
-              <input
-                type="search"
-                value={iconSearch}
-                onChange={(event) => setIconSearch(event.target.value)}
-                placeholder="Szukaj ikony..."
-                autoFocus
-              />
-            </label>
-            <div data-ui-picker-menu-grid="true">
-              {visibleIcons.map((option) => (
-                <button
-                  key={option.key}
-                  ref={draft.icon === option.key ? selectedIconOptionRef : undefined}
-                  type="button"
-                  data-ui-icon-select-option="true"
-                  data-ui-tone={draft.tone}
-                  data-active={draft.icon === option.key}
-                  aria-label={`Wybierz ikonę: ${option.label}`}
-                  title={option.label}
-                  onClick={() => {
-                    updateDraftIcon(option.key);
-                    setActivePicker(null);
-                    setIconSearch("");
-                  }}
-                >
-                  <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
-                    <CategoryIcon iconKey={option.key} />
-                  </span>
-                  <span>{option.label}</span>
-                </button>
-              ))}
-            </div>
-            {!isIconPickerExpanded && !normalizedSearch && (
-              <button
-                type="button"
-                data-ui-picker-more="true"
-                onClick={() => setIsIconPickerExpanded(true)}
-              >
-                Wybierz więcej ikon
-              </button>
-            )}
-            {visibleIcons.length === 0 && (
-              <div data-ui-picker-empty="true">Brak ikon dla tej nazwy.</div>
-            )}
-          </div>
-        )}
-      </div>
+      <FoundationIconPicker
+        value={(selectedIcon?.key || "note") as UiIconKey}
+        tone={draft.tone}
+        isOpen={activePicker === "icon"}
+        suggestedIconKeys={SUGGESTED_NOTE_ICONS}
+        fallbackLabel="Ikona notatki"
+        moreLabel="Wybierz więcej ikon"
+        onOpenChange={(isOpen) => setActivePicker(isOpen ? "icon" : null)}
+        onChange={updateDraftIcon}
+      />
     );
   };
 

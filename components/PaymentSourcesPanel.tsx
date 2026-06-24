@@ -3,7 +3,6 @@
 import { CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PaymentSource, PaymentSourceType } from '../lib/budgetPageTypes'
 import {
-  APP_ICONS,
   UI_COLOR_OPTIONS,
   getUiColor,
   getUiIcon,
@@ -17,7 +16,7 @@ import {
   PaymentSourceListKind,
 } from '../lib/paymentSources'
 import CategoryIcon from './CategoryIcon'
-import { useScrollSelectedIconIntoView } from './ui/useScrollSelectedIconIntoView'
+import FoundationIconPicker from './ui/FoundationIconPicker'
 import { EmptyState, StatusBox, UtilityPanel } from './utility-panels/utilityPanelPrimitives'
 
 type PaymentSourceStats = {
@@ -124,20 +123,13 @@ export default function PaymentSourcesPanel({
   const [draft, setDraft] = useState<PaymentSourceDraft>(DEFAULT_DRAFT)
   const [settingsDraft, setSettingsDraft] = useState(paymentSourceSettings)
   const [isFormOpen, setIsFormOpen] = useState(false)
-  const [isIconPickerExpanded, setIsIconPickerExpanded] = useState(false)
   const [activePicker, setActivePicker] = useState<'color' | 'icon' | null>(null)
-  const [iconSearch, setIconSearch] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const [isConfigSaving, setIsConfigSaving] = useState(false)
   const [statusText, setStatusText] = useState('')
   const [errorText, setErrorText] = useState('')
   const [duplicateSourceId, setDuplicateSourceId] = useState<string | null>(null)
   const previousOpenCreateRequestRef = useRef(openCreateRequest)
-  const selectedIconOptionRef = useScrollSelectedIconIntoView({
-    isOpen: activePicker === 'icon',
-    selectedKey: draft.icon,
-    scrollSignal: isIconPickerExpanded,
-  })
 
   useEffect(() => {
     setSettingsDraft(paymentSourceSettings)
@@ -167,9 +159,7 @@ export default function PaymentSourcesPanel({
 
   const closeForm = () => {
     setDraft(DEFAULT_DRAFT)
-    setIsIconPickerExpanded(false)
     setActivePicker(null)
-    setIconSearch('')
     setIsFormOpen(false)
     setErrorText('')
     setDuplicateSourceId(null)
@@ -180,9 +170,7 @@ export default function PaymentSourcesPanel({
     setStatusText('')
     setErrorText('')
     setDuplicateSourceId(null)
-    setIsIconPickerExpanded(false)
     setActivePicker(null)
-    setIconSearch('')
     setIsFormOpen(true)
   }, [])
 
@@ -211,9 +199,7 @@ export default function PaymentSourcesPanel({
     setStatusText('')
     setErrorText('')
     setDuplicateSourceId(null)
-    setIsIconPickerExpanded(false)
     setActivePicker(null)
-    setIconSearch('')
     setIsFormOpen(true)
   }
 
@@ -365,102 +351,23 @@ export default function PaymentSourcesPanel({
   }
 
   const renderIconPicker = () => {
-    const selectedIcon = getUiIcon(draft.icon)
-    const isOpen = activePicker === 'icon'
-    const normalizedSearch = iconSearch.trim().toLocaleLowerCase('pl-PL')
-    const orderedIcons = [
-      ...SUGGESTED_PAYMENT_SOURCE_ICONS
-        .map((iconKey) => APP_ICONS.find((option) => option.key === iconKey))
-        .filter((option): option is (typeof APP_ICONS)[number] => Boolean(option)),
-      ...APP_ICONS.filter((option) => !SUGGESTED_PAYMENT_SOURCE_ICONS.includes(option.key)),
-    ]
-    const baseIcons = isIconPickerExpanded
-      ? orderedIcons
-      : orderedIcons.filter((option) => SUGGESTED_PAYMENT_SOURCE_ICONS.includes(option.key))
-    const visibleIcons = normalizedSearch
-      ? orderedIcons.filter((option) => option.label.toLocaleLowerCase('pl-PL').includes(normalizedSearch))
-      : baseIcons
-
     return (
-      <div
-        data-ui-picker-control="true"
-        data-ui-picker-variant="gallery"
-        data-open={isOpen ? 'true' : 'false'}
-        onClick={(event) => event.stopPropagation()}
-      >
-        <button
-          type="button"
-          data-ui-picker-trigger="true"
-          aria-expanded={isOpen}
-          onClick={() => {
-            const nextIsOpen = !isOpen
-            setActivePicker(nextIsOpen ? 'icon' : null)
-
-            if (nextIsOpen) {
-              setIconSearch('')
-            }
-          }}
-        >
-          <span data-ui-picker-value="true">
-            <span data-ui-icon-tile="true" data-ui-tone={draft.color}>
-              <CategoryIcon iconKey={draft.icon} />
-            </span>
-            {selectedIcon?.label || 'Ikona'}
-          </span>
-          <span data-ui-picker-chevron="true" aria-hidden="true" />
-        </button>
-        {isOpen && (
-          <div data-ui-picker-menu="true" data-layout="icons">
-            <label data-ui-picker-search="true">
-              <input
-                type="search"
-                value={iconSearch}
-                onChange={(event) => setIconSearch(event.target.value)}
-                placeholder="Szukaj ikony..."
-                autoFocus
-              />
-            </label>
-            <div data-ui-picker-menu-grid="true">
-              {visibleIcons.map((option) => (
-                <button
-                  key={option.key}
-                  ref={draft.icon === option.key ? selectedIconOptionRef : undefined}
-                  type="button"
-                  data-ui-icon-select-option="true"
-                  data-ui-tone={draft.color}
-                  data-active={draft.icon === option.key}
-                  onClick={() => {
-                    setDraft((currentDraft) => ({
-                      ...currentDraft,
-                      icon: option.key,
-                      type: inferPaymentSourceTypeFromIcon(option.key),
-                    }))
-                    setActivePicker(null)
-                    setIconSearch('')
-                  }}
-                >
-                  <span data-ui-icon-tile="true" data-ui-tone={draft.color}>
-                    <CategoryIcon iconKey={option.key} />
-                  </span>
-                  <span>{option.label}</span>
-                </button>
-              ))}
-            </div>
-            {!isIconPickerExpanded && !normalizedSearch && (
-              <button
-                type="button"
-                data-ui-picker-more="true"
-                onClick={() => setIsIconPickerExpanded(true)}
-              >
-                Wybierz więcej ikon
-              </button>
-            )}
-            {visibleIcons.length === 0 && (
-              <div data-ui-picker-empty="true">Brak ikon dla tej nazwy.</div>
-            )}
-          </div>
-        )}
-      </div>
+      <FoundationIconPicker
+        value={draft.icon}
+        tone={draft.color}
+        isOpen={activePicker === 'icon'}
+        suggestedIconKeys={SUGGESTED_PAYMENT_SOURCE_ICONS}
+        fallbackLabel="Ikona"
+        moreLabel="Wybierz więcej ikon"
+        onOpenChange={(isOpen) => setActivePicker(isOpen ? 'icon' : null)}
+        onChange={(iconKey) => {
+          setDraft((currentDraft) => ({
+            ...currentDraft,
+            icon: iconKey,
+            type: inferPaymentSourceTypeFromIcon(iconKey),
+          }))
+        }}
+      />
     )
   }
 
