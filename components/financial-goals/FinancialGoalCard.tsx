@@ -51,9 +51,7 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
     remainingAmount,
     percentage,
     statusLabel,
-    completionMonth,
     deadlineMonth,
-    waitingForLockedMonth,
     allocationPercent,
     isAllocationMode,
     onEdit,
@@ -134,12 +132,6 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
           <span style={{ width: progressWidth, background: progressColor }} />
         </div>
       </div>
-
-      <p data-ui-goal-progress-caption="true">
-        Postęp: {percentage.toFixed(1)}%
-        {completionMonth ? ` · osiągnięcie: ${completionMonth}` : ''}
-        {waitingForLockedMonth ? ' · czeka na zamknięcie miesiąca' : ''}
-      </p>
     </>
   )
 }

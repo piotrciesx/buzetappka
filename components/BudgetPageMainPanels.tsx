@@ -163,7 +163,15 @@ export default function BudgetPageMainPanels({
                     data-ui-header-primary-action="true"
                     onClick={() => window.dispatchEvent(new CustomEvent('budget-open-financial-goal-create'))}
                   >
-                    <CategoryIcon iconKey="system-add" size="small" />
+                    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+                      <path
+                        d="M12 5v14M5 12h14"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                     Dodaj cel
                   </button>
                 )}

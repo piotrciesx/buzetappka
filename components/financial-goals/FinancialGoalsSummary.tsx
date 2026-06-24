@@ -15,44 +15,38 @@ export default function FinancialGoalsSummary({
   monthSurplus,
   lockedMonthsSet,
 }: Props) {
-  const hasSurplus = monthSurplus > 0
+  const surplusTone = monthSurplus > 0 ? 'success' : 'danger'
 
   return (
     <div data-financial-goals-summary="true">
-      <div data-ui-goal-summary-card="true" data-ui-tone="navy" data-summary-kind="balance">
-        <span data-ui-goal-summary-icon="true" aria-hidden="true">
-          <CategoryIcon iconKey="cash" size="summary" />
+      <div data-ui-goal-summary-card="true" data-ui-summary-tone="neutral">
+        <span data-ui-goal-summary-icon="true" data-ui-tone="blue" aria-hidden="true">
+          <CategoryIcon iconKey="card" size="summary" />
         </span>
-        <span data-ui-goal-summary-copy="true">
+        <div data-ui-goal-summary-copy="true">
           <span>Bilans miesiąca</span>
           <strong>{formatAmount(monthBalance)}</strong>
-        </span>
+        </div>
       </div>
 
-      <div
-        data-ui-goal-summary-card="true"
-        data-ui-tone={hasSurplus ? 'green' : 'red'}
-        data-summary-kind="surplus"
-        data-value-state={hasSurplus ? 'positive' : 'empty'}
-        title="Dodatnia część bilansu, którą system może rozdzielić między aktywne cele."
-      >
-        <span data-ui-goal-summary-icon="true" aria-hidden="true">
+      <div data-ui-goal-summary-card="true" data-ui-summary-tone={surplusTone}>
+        <span data-ui-goal-summary-icon="true" data-ui-tone="green" aria-hidden="true">
           <CategoryIcon iconKey="investments" size="summary" />
         </span>
-        <span data-ui-goal-summary-copy="true">
+        <div data-ui-goal-summary-copy="true">
           <span>Dostępne dla celów</span>
           <strong>{formatAmount(monthSurplus)}</strong>
-        </span>
+        </div>
       </div>
 
-      <div data-ui-goal-summary-card="true" data-ui-tone="gold" data-summary-kind="month">
-        <span data-ui-goal-summary-icon="true" aria-hidden="true">
+      <div data-ui-goal-summary-card="true" data-ui-summary-tone="neutral">
+        <span data-ui-goal-summary-icon="true" data-ui-tone="yellow" aria-hidden="true">
           <CategoryIcon iconKey="calendar" size="summary" />
         </span>
-        <span data-ui-goal-summary-copy="true">
+        <div data-ui-goal-summary-copy="true">
           <span>Miesiąc</span>
           <strong>{selectedMonth} · {lockedMonthsSet.has(selectedMonth) ? 'zamknięty' : 'otwarty'}</strong>
-        </span>
+        </div>
       </div>
     </div>
   )
