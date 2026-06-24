@@ -628,6 +628,7 @@ export const uiFormApi = {
     fieldLabel: 'data-ui-field-label',
     meta: 'data-ui-form-meta',
     actions: 'data-ui-form-actions',
+    grid: 'data-ui-form-grid',
   },
   density: {
     default: 'default',
@@ -683,6 +684,7 @@ export const uiCreatorApi = {
 
 export const uiSeparatorApi = {
   attributes: {
+    sectionHeader: 'data-ui-section-header',
     section: 'data-ui-section-separator',
     record: 'data-ui-record-separator',
     vertical: 'data-ui-vertical-separator',
@@ -704,6 +706,11 @@ export const uiSectionRecordApi = {
     metrics: 'data-ui-section-record-metrics',
     status: 'data-ui-section-record-status',
     actions: 'data-ui-section-record-actions',
+    state: 'data-ui-record-state',
+  },
+  state: {
+    active: 'active',
+    archived: 'archived',
   },
 } as const
 
@@ -721,6 +728,7 @@ export const uiCheckboxApi = {
     state: 'data-checkbox-state',
     variant: 'data-checkbox-variant',
     align: 'data-checkbox-align',
+    group: 'data-ui-checkbox-field-group',
   },
   layout: {
     inline: 'inline',
@@ -736,6 +744,17 @@ export const uiCheckboxApi = {
   },
   align: {
     field: 'field',
+  },
+} as const
+
+export const uiStatusPillApi = {
+  attributes: {
+    root: 'data-ui-status-pill',
+    tone: 'data-ui-tone',
+  },
+  tone: {
+    success: 'success',
+    danger: 'danger',
   },
 } as const
 
@@ -1208,6 +1227,23 @@ export const uiControlPrimitives = {
       radius: 'var(--ui-badge-radius)',
       background: 'var(--ui-color-expense)',
       color: 'var(--ui-color-white-text)',
+    },
+  },
+  statusPill: {
+    default: {
+      attribute: uiStatusPillApi.attributes.root,
+      radius: 'var(--ui-radius-pill)',
+      padding: '0 var(--ui-space-6)',
+    },
+    success: {
+      tone: uiStatusPillApi.tone.success,
+      background: 'var(--ui-financial-income-soft)',
+      color: 'var(--ui-financial-income)',
+    },
+    danger: {
+      tone: uiStatusPillApi.tone.danger,
+      background: 'var(--ui-financial-expense-soft)',
+      color: 'var(--ui-financial-expense)',
     },
   },
   tag: {

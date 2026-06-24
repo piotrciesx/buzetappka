@@ -296,7 +296,11 @@ export default function PaymentSourcesPanel({
   }
 
   const renderAvailability = (label: string, isActive: boolean) => (
-    <span data-payment-source-availability="true" data-active={isActive ? 'true' : 'false'}>
+    <span
+      data-ui-status-pill="true"
+      data-ui-tone={isActive ? 'success' : 'danger'}
+      data-active={isActive ? 'true' : 'false'}
+    >
       <span aria-hidden="true">{isActive ? '✓' : '×'}</span>
       {label}
     </span>
@@ -388,29 +392,29 @@ export default function PaymentSourcesPanel({
     return (
       <article
         key={source.id}
-        data-payment-source-item="true"
         data-ui-utility-record="true"
+        data-ui-section-record="true"
         data-ui-record-section="strong"
-        data-archived={isArchived ? 'true' : 'false'}
+        data-ui-record-state={isArchived ? 'archived' : 'active'}
       >
-        <div data-payment-source-main="true">
+        <div data-ui-section-record-main="true">
           <span data-ui-icon-tile="true" data-ui-tone={color.tone}>
             <CategoryIcon iconKey={iconKey} />
           </span>
-          <div data-payment-source-copy="true">
-            <strong>{source.name}</strong>
-            <span>
+          <div data-ui-section-record-copy="true">
+            <strong data-ui-section-record-title="true">{source.name}</strong>
+            <span data-ui-section-record-meta="true">
               {getPaymentSourceTypeLabel(source.type)} · {icon?.label || 'Ikona'} · {color.label}
             </span>
           </div>
         </div>
 
-        <div data-payment-source-statuses="true">
+        <div data-ui-section-record-status="true">
           {renderAvailability('Przychody', source.is_income_source !== false && !isArchived)}
           {renderAvailability('Wydatki', source.is_expense_source !== false && !isArchived)}
         </div>
 
-        <div data-payment-source-stats-row="true">
+        <div data-ui-section-record-metrics="true">
           <span>{stats.transactionCount} wpisów</span>
 
           {source.is_income_source !== false && (
@@ -422,7 +426,7 @@ export default function PaymentSourcesPanel({
           )}
         </div>
 
-        <div data-payment-source-actions="true">
+        <div data-ui-section-record-actions="true">
           {!isArchived && (
             <button type="button" className="ui-button--utility" onClick={() => openEditForm(source)}>
               Edytuj
@@ -442,8 +446,8 @@ export default function PaymentSourcesPanel({
   }
 
   return (
-    <UtilityPanel data-payment-sources-panel="true">
-      <section data-ui-section="true" data-payment-source-defaults="true">
+    <UtilityPanel>
+      <section data-ui-section="true" data-ui-form-grid="two">
         <label data-ui-field="true">
           Domyślne źródło przychodów
           <span data-ui-select-shell="true">
@@ -494,7 +498,7 @@ export default function PaymentSourcesPanel({
             <span data-ui-picker-chevron="true" aria-hidden="true" />
           </span>
         </label>
-        <div data-payment-source-settings-actions="true">
+        <div data-ui-form-actions="true">
           <button
             type="button"
             data-ui-button-confirm="true"
@@ -511,12 +515,12 @@ export default function PaymentSourcesPanel({
       {statusText && <StatusBox tone="success">{statusText}</StatusBox>}
       {errorText && <StatusBox tone="danger">{errorText}</StatusBox>}
 
-      <section data-ui-section="true" data-payment-source-list-section="true">
-        <header data-payment-source-section-header="true">
+      <section data-ui-section="true">
+        <header data-ui-section-header="true">
           <strong>Twoje źródła</strong>
           <span>{activeSources.length} aktywnych</span>
         </header>
-        <div data-payment-source-list="true" data-ui-record-list="true" data-ui-record-separator="strong">
+        <div data-ui-record-list="true" data-ui-separator-weight="strong">
           {activeSources.length === 0 ? (
             <EmptyState>Brak aktywnych źródeł płatności.</EmptyState>
           ) : (
@@ -526,12 +530,12 @@ export default function PaymentSourcesPanel({
       </section>
 
       {archivedSources.length > 0 && (
-        <section data-ui-section="true" data-payment-source-list-section="true">
-          <header data-payment-source-section-header="true">
+        <section data-ui-section="true">
+          <header data-ui-section-header="true">
             <strong>Archiwalne</strong>
             <span>{archivedSources.length}</span>
           </header>
-          <div data-payment-source-list="true" data-ui-record-list="true" data-ui-record-separator="strong">{archivedSources.map(renderSourceCard)}</div>
+          <div data-ui-record-list="true" data-ui-separator-weight="strong">{archivedSources.map(renderSourceCard)}</div>
         </section>
       )}
 
@@ -564,7 +568,8 @@ export default function PaymentSourcesPanel({
               </button>
             </header>
 
-            <div data-ui-form-shell="true">
+            <div data-ui-form-shell="true" data-ui-form-density="comfortable">
+              <section data-ui-creator-section="true">
               <label data-ui-field="true">
                 Nazwa
                 <input
@@ -600,7 +605,11 @@ export default function PaymentSourcesPanel({
                   </button>
                 </div>
               )}
+              </section>
 
+              <div data-ui-section-separator="true" data-ui-separator-weight="light" />
+
+              <section data-ui-creator-section="true">
               <div data-ui-picker-row="true">
                 <div data-ui-field="true">
                   Kolor
@@ -611,29 +620,50 @@ export default function PaymentSourcesPanel({
                   {renderIconPicker()}
                 </div>
               </div>
+              </section>
 
-              <div data-ui-checkbox-card-group="true">
-                <label data-ui-checkbox-card="true" data-checked={draft.isIncomeSource ? 'true' : 'false'}>
+              <div data-ui-section-separator="true" data-ui-separator-weight="light" />
+
+              <section data-ui-creator-section="true">
+              <div data-ui-checkbox-field-group="true">
+                <label
+                  data-ui-checkbox="true"
+                  data-checkbox-variant="field"
+                  data-checkbox-density="comfortable"
+                  data-checkbox-align="field"
+                  data-checked={draft.isIncomeSource ? 'true' : 'false'}
+                >
                   <input
+                    className="ui-checkbox__input"
                     type="checkbox"
                     checked={draft.isIncomeSource}
                     onChange={(event) =>
                       setDraft((currentDraft) => ({ ...currentDraft, isIncomeSource: event.target.checked }))
                     }
                   />
-                  <span>Przychody</span>
+                  <span className="ui-checkbox__label">Przychody</span>
                 </label>
-                <label data-ui-checkbox-card="true" data-checked={draft.isExpenseSource ? 'true' : 'false'}>
+                <label
+                  data-ui-checkbox="true"
+                  data-checkbox-variant="field"
+                  data-checkbox-density="comfortable"
+                  data-checkbox-align="field"
+                  data-checked={draft.isExpenseSource ? 'true' : 'false'}
+                >
                   <input
+                    className="ui-checkbox__input"
                     type="checkbox"
                     checked={draft.isExpenseSource}
                     onChange={(event) =>
                       setDraft((currentDraft) => ({ ...currentDraft, isExpenseSource: event.target.checked }))
                     }
                   />
-                  <span>Wydatki</span>
+                  <span className="ui-checkbox__label">Wydatki</span>
                 </label>
               </div>
+              </section>
+
+              <div data-ui-section-separator="true" data-ui-separator-weight="light" />
 
               <footer data-ui-form-actions="true">
                 <button type="button" data-ui-button-cancel="true" onClick={closeForm} disabled={isSaving}>
