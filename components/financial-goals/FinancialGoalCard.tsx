@@ -149,7 +149,7 @@ export function SortableGoalCard(props: GoalCardBaseProps & { priorityPosition?:
   return (
     <article
       ref={setNodeRef}
-      data-ui-record-card="true"
+      data-ui-utility-record="true"
       data-ui-goal-card="true"
       data-ui-goal-card-mode="priority"
       data-dragging={isDragging ? 'true' : 'false'}
@@ -182,7 +182,7 @@ export function StaticGoalCard(
 ) {
   return (
     <article
-      data-ui-record-card="true"
+      data-ui-utility-record="true"
       data-ui-goal-card="true"
       data-ui-goal-card-mode={props.isAllocationMode ? 'allocation' : 'static'}
     >

@@ -4704,3 +4704,45 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
     grid-template-columns: repeat(5, var(--ui-picker-gallery-option-size));
   }
 }
+
+/* Goal list separator test v1 — use Utility Record list instead of card panels. */
+[data-ui-goal-list="true"][data-ui-record-list="true"] {
+  display: grid;
+  gap: 0;
+}
+
+[data-ui-goal-list="true"][data-ui-record-list="true"] > [data-ui-utility-record="true"]::after {
+  left: var(--ui-space-6);
+  right: var(--ui-space-6);
+  background: rgba(8, 44, 122, 0.12);
+}
+
+[data-ui-goal-card="true"][data-ui-utility-record="true"] {
+  padding: var(--ui-space-9) var(--ui-space-6);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+[data-ui-goal-card="true"][data-ui-utility-record="true"]:hover {
+  background: rgba(247, 251, 255, 0.52);
+  box-shadow: none;
+}
+
+[data-ui-goal-card="true"][data-ui-utility-record="true"][data-dragging="true"] {
+  border-radius: var(--ui-radius-xl);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.13);
+  opacity: 0.88;
+}
+
+[data-ui-goal-card="true"][data-ui-utility-record="true"] [data-ui-goal-card-main="true"] {
+  column-gap: var(--ui-space-16);
+}
+
+[data-ui-goal-card="true"][data-ui-utility-record="true"] [data-ui-goal-progress="true"] {
+  margin-top: var(--ui-space-6);
+  margin-bottom: 0;
+}
+
