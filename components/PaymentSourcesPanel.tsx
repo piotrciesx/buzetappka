@@ -323,7 +323,7 @@ export default function PaymentSourcesPanel({
     return (
       <div
         data-ui-picker-control="true"
-        data-ui-picker-variant="rich"
+        data-ui-picker-variant="gallery"
         data-open={isOpen ? 'true' : 'false'}
         onClick={(event) => event.stopPropagation()}
       >
@@ -384,7 +384,7 @@ export default function PaymentSourcesPanel({
     return (
       <div
         data-ui-picker-control="true"
-        data-ui-picker-variant="rich"
+        data-ui-picker-variant="gallery"
         data-open={isOpen ? 'true' : 'false'}
         onClick={(event) => event.stopPropagation()}
       >

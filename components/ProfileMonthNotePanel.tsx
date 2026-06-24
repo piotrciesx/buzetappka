@@ -909,7 +909,7 @@ export default function ProfileMonthNotePanel({
               data-ui-header-primary-action="true"
               onClick={startAddingNote}
             >
-              <NoteIcon name="plus" />
+              <CategoryIcon iconKey="system-add" size="small" />
               Dodaj notatkę
             </button>
             <button
@@ -1096,7 +1096,7 @@ export default function ProfileMonthNotePanel({
             aria-label="Dodaj notatkę"
             onClick={startAddingNote}
           >
-            <NoteIcon name="plus" />
+            <CategoryIcon iconKey="system-add" size="small" />
             Dodaj notatkę
           </button>
         </header>
