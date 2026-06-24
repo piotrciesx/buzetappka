@@ -52,6 +52,7 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
     percentage,
     statusLabel,
     deadlineMonth,
+    waitingForLockedMonth,
     allocationPercent,
     isAllocationMode,
     onEdit,
@@ -71,7 +72,7 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
     <>
       <div data-ui-goal-card-main="true">
         <div data-ui-goal-card-title-row="true">
-          {dragHandle}
+          {dragHandle || <span data-ui-goal-menu-spacer="true" aria-hidden="true" />}
 
           <span data-ui-goal-icon="true" data-ui-tone={getGoalTone(goal)} aria-hidden="true">
             <CategoryIcon iconKey={getGoalIconKey(goal)} size="large" />
@@ -90,6 +91,9 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
               {' · '}
               Deadline: {deadlineMonth || 'brak'}
             </p>
+            {waitingForLockedMonth && (
+              <span data-ui-goal-lock-note="true">Oczekuje na zamknięcie miesiąca</span>
+            )}
           </div>
         </div>
 
