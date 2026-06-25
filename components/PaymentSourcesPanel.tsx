@@ -314,8 +314,10 @@ export default function PaymentSourcesPanel({
       <span data-ui-section-record-metric-icon="true" aria-hidden="true">
         <CategoryIcon iconKey={input.iconKey} size="small" />
       </span>
-      <strong>{input.value}</strong>
-      <span>{input.label}</span>
+      <span data-ui-section-record-metric-copy="true">
+        <strong>{input.value}</strong>
+        <span>{input.label}</span>
+      </span>
     </span>
   )
 
@@ -418,7 +420,6 @@ export default function PaymentSourcesPanel({
 
           <div data-ui-section-record-copy="true">
             <strong data-ui-section-record-title="true">{source.name}</strong>
-
             <div data-ui-section-record-status="true">
               {renderAvailability('Przychody', source.is_income_source !== false && !isArchived)}
               {renderAvailability('Wydatki', source.is_expense_source !== false && !isArchived)}
@@ -465,6 +466,7 @@ export default function PaymentSourcesPanel({
             </button>
           </div>
         </div>
+
       </article>
     )
   }
