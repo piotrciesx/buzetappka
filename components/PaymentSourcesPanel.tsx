@@ -157,6 +157,16 @@ export default function PaymentSourcesPanel({
   const [errorText, setErrorText] = useState('')
   const [duplicateSourceId, setDuplicateSourceId] = useState<string | null>(null)
   const previousOpenCreateRequestRef = useRef(openCreateRequest)
+  const activeRecordListRef = useRef<HTMLDivElement | null>(null)
+  const archivedRecordListRef = useRef<HTMLDivElement | null>(null)
+  const [recordActionsLayout, setRecordActionsLayout] = useState<{
+    active: 'inline' | 'stacked'
+    archived: 'inline' | 'stacked'
+  }>({
+    active: 'inline',
+    archived: 'inline',
+  })
+
 
   useEffect(() => {
     setSettingsDraft(paymentSourceSettings)
@@ -438,12 +448,6 @@ export default function PaymentSourcesPanel({
     }
     const isArchived = Boolean(source.archived_at)
     const hasHistory = stats.transactionCount > 0
-    const metricCount =
-      1 +
-      (source.is_income_source !== false ? 1 : 0) +
-      (source.is_expense_source !== false ? 1 : 0)
-    const actionFlow = metricCount >= 3 ? 'stacked' : 'inline'
-
     return (
       <article
         key={source.id}
@@ -496,7 +500,7 @@ export default function PaymentSourcesPanel({
             </div>
           </div>
 
-          <div data-ui-section-record-actions="true" data-ui-actions-flow={actionFlow}>
+          <div data-ui-section-record-actions="true">
             {!isArchived && (
               <button type="button" className="ui-button--utility" onClick={() => openEditForm(source)}>
                 Edytuj
@@ -515,6 +519,95 @@ export default function PaymentSourcesPanel({
       </article>
     )
   }
+
+  const measureRecordActionsLayout = useCallback((element: HTMLDivElement | null) => {
+    if (!element) {
+      return 'inline'
+    }
+
+    const previousLayout = element.getAttribute('data-ui-record-actions-layout')
+    element.setAttribute('data-ui-record-actions-layout', 'inline')
+
+    const records = Array.from(
+      element.querySelectorAll<HTMLElement>('[data-ui-section-record-main="true"]')
+    )
+
+    const shouldStack = records.some((record) => {
+      const metrics = record.querySelector<HTMLElement>('[data-ui-section-record-metrics="true"]')
+      const actions = record.querySelector<HTMLElement>('[data-ui-section-record-actions="true"]')
+
+      if (!metrics || !actions) {
+        return false
+      }
+
+      const metricsRect = metrics.getBoundingClientRect()
+      const actionsRect = actions.getBoundingClientRect()
+      const availableGap = actionsRect.left - metricsRect.right
+
+      return availableGap < 12
+    })
+
+    if (previousLayout) {
+      element.setAttribute('data-ui-record-actions-layout', previousLayout)
+    } else {
+      element.removeAttribute('data-ui-record-actions-layout')
+    }
+
+    return shouldStack ? 'stacked' : 'inline'
+  }, [])
+
+  useEffect(() => {
+    let frame = 0
+
+    const updateRecordActionsLayout = () => {
+      window.cancelAnimationFrame(frame)
+      frame = window.requestAnimationFrame(() => {
+        const activeLayout = measureRecordActionsLayout(activeRecordListRef.current)
+        const archivedLayout = measureRecordActionsLayout(archivedRecordListRef.current)
+
+        setRecordActionsLayout((currentLayout) => {
+          if (
+            currentLayout.active === activeLayout &&
+            currentLayout.archived === archivedLayout
+          ) {
+            return currentLayout
+          }
+
+          return {
+            active: activeLayout,
+            archived: archivedLayout,
+          }
+        })
+      })
+    }
+
+    updateRecordActionsLayout()
+
+    const resizeObserver = new ResizeObserver(updateRecordActionsLayout)
+
+    if (activeRecordListRef.current) {
+      resizeObserver.observe(activeRecordListRef.current)
+    }
+
+    if (archivedRecordListRef.current) {
+      resizeObserver.observe(archivedRecordListRef.current)
+    }
+
+    window.addEventListener('resize', updateRecordActionsLayout)
+
+    return () => {
+      window.cancelAnimationFrame(frame)
+      resizeObserver.disconnect()
+      window.removeEventListener('resize', updateRecordActionsLayout)
+    }
+  }, [
+    activeSources,
+    archivedSources,
+    measureRecordActionsLayout,
+    paymentSourceStats,
+    settingsDraft.defaultExpensePaymentSourceId,
+    settingsDraft.defaultIncomePaymentSourceId,
+  ])
 
   return (
     <UtilityPanel data-ui-payment-sources-shell="true">
@@ -613,7 +706,13 @@ export default function PaymentSourcesPanel({
           </div>
           <span data-ui-section-count="true">{activeSources.length} aktywnych</span>
         </header>
-        <div data-ui-record-list="true" data-ui-separator-role="record" data-ui-separator-strength="comfortable">
+        <div
+          ref={activeRecordListRef}
+          data-ui-record-list="true"
+          data-ui-record-actions-layout={recordActionsLayout.active}
+          data-ui-separator-role="record"
+          data-ui-separator-strength="comfortable"
+        >
           {activeSources.length === 0 ? (
             <EmptyState>Brak aktywnych źródeł płatności.</EmptyState>
           ) : (
@@ -640,7 +739,13 @@ export default function PaymentSourcesPanel({
               </div>
               <span data-ui-section-count="true">{archivedSources.length}</span>
             </header>
-            <div data-ui-record-list="true" data-ui-separator-role="record" data-ui-separator-strength="comfortable">
+            <div
+              ref={archivedRecordListRef}
+              data-ui-record-list="true"
+              data-ui-record-actions-layout={recordActionsLayout.archived}
+              data-ui-separator-role="record"
+              data-ui-separator-strength="comfortable"
+            >
               {archivedSources.map(renderSourceCard)}
             </div>
           </section>

@@ -5604,3 +5604,59 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
     margin-left: var(--ui-space-8);
   }
 }
+
+/* ==========================================================
+   Foundation — adaptive record actions controlled by list
+   ========================================================== */
+
+:root {
+  --ui-record-actions-min-gap: 12px;
+}
+
+[data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-actions="true"] {
+  margin-left: var(--ui-record-actions-min-gap);
+  flex-shrink: 0;
+}
+
+[data-ui-record-list="true"][data-ui-record-actions-layout="inline"] [data-ui-section-record-actions="true"] {
+  width: auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ui-space-5);
+}
+
+[data-ui-record-list="true"][data-ui-record-actions-layout="stacked"] [data-ui-section-record-actions="true"] {
+  width: min(100%, 104px);
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: var(--ui-space-4);
+}
+
+[data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-metrics="true"] {
+  min-width: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--ui-section-record-metric-gap);
+  white-space: nowrap;
+}
+
+[data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-metric="true"] {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+[data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-metric-copy="true"],
+[data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-metric-copy="true"] > strong,
+[data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-metric-copy="true"] > small {
+  white-space: nowrap;
+}
+
