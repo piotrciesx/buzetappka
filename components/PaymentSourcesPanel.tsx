@@ -316,7 +316,7 @@ export default function PaymentSourcesPanel({
       </span>
       <span data-ui-section-record-metric-copy="true">
         <strong>{input.value}</strong>
-        <span>{input.label}</span>
+        <small>{input.label}</small>
       </span>
     </span>
   )
@@ -466,7 +466,6 @@ export default function PaymentSourcesPanel({
             </button>
           </div>
         </div>
-
       </article>
     )
   }
