@@ -5,14 +5,12 @@ import { PaymentSource, PaymentSourceType } from '../lib/budgetPageTypes'
 import {
   UI_COLOR_OPTIONS,
   getUiColor,
-  getUiIcon,
   type UiColorKey,
   type UiIconKey,
 } from '../lib/userAppearance'
 import {
   getPaymentSourceColorTone,
   getPaymentSourceIconKey,
-  getPaymentSourceTypeLabel,
   PaymentSourceListKind,
 } from '../lib/paymentSources'
 import CategoryIcon from './CategoryIcon'
@@ -393,7 +391,6 @@ export default function PaymentSourcesPanel({
   const renderSourceCard = (source: PaymentSource) => {
     const iconKey = getPaymentSourceIconKey(source)
     const colorTone = getPaymentSourceColorTone(source)
-    const icon = getUiIcon(iconKey)
     const color = getUiColor(colorTone)
     const stats = statsById[source.id] || {
       sourceId: source.id,
@@ -421,13 +418,34 @@ export default function PaymentSourcesPanel({
 
           <div data-ui-section-record-copy="true">
             <strong data-ui-section-record-title="true">{source.name}</strong>
-            <span data-ui-section-record-meta="true">
-              {getPaymentSourceTypeLabel(source.type)} · {icon?.label || 'Ikona'} · {color.label}
-            </span>
 
             <div data-ui-section-record-status="true">
               {renderAvailability('Przychody', source.is_income_source !== false && !isArchived)}
               {renderAvailability('Wydatki', source.is_expense_source !== false && !isArchived)}
+            </div>
+
+            <div data-ui-section-record-metrics="true">
+              {renderMetric({
+                iconKey: 'system-records',
+                label: 'wpisów',
+                value: stats.transactionCount,
+              })}
+
+              {source.is_income_source !== false &&
+                renderMetric({
+                  iconKey: 'system-income',
+                  label: 'przychody',
+                  value: formatCurrency(stats.incomeTotal),
+                  tone: 'success',
+                })}
+
+              {source.is_expense_source !== false &&
+                renderMetric({
+                  iconKey: 'system-expense',
+                  label: 'wydatki',
+                  value: formatCurrency(stats.expenseTotal),
+                  tone: 'danger',
+                })}
             </div>
           </div>
 
@@ -446,30 +464,6 @@ export default function PaymentSourcesPanel({
               {hasHistory ? 'Archiwizuj' : 'Usuń'}
             </button>
           </div>
-        </div>
-
-        <div data-ui-section-record-metrics="true">
-          {renderMetric({
-            iconKey: 'system-records',
-            label: 'wpisów',
-            value: stats.transactionCount,
-          })}
-
-          {source.is_income_source !== false &&
-            renderMetric({
-              iconKey: 'system-income',
-              label: 'przychody',
-              value: formatCurrency(stats.incomeTotal),
-              tone: 'success',
-            })}
-
-          {source.is_expense_source !== false &&
-            renderMetric({
-              iconKey: 'system-expense',
-              label: 'wydatki',
-              value: formatCurrency(stats.expenseTotal),
-              tone: 'danger',
-            })}
         </div>
       </article>
     )
