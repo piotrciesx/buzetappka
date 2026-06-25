@@ -306,6 +306,21 @@ export default function PaymentSourcesPanel({
     </span>
   )
 
+  const renderMetric = (input: {
+    iconKey: string
+    label: string
+    value: string | number
+    tone?: 'neutral' | 'success' | 'danger'
+  }) => (
+    <span data-ui-section-record-metric="true" data-ui-tone={input.tone || 'neutral'}>
+      <span data-ui-section-record-metric-icon="true" aria-hidden="true">
+        <CategoryIcon iconKey={input.iconKey} size="small" />
+      </span>
+      <strong>{input.value}</strong>
+      <span>{input.label}</span>
+    </span>
+  )
+
   const renderColorPicker = () => {
     const selectedColor = getUiColor(draft.color)
     const isOpen = activePicker === 'color'
@@ -395,6 +410,7 @@ export default function PaymentSourcesPanel({
         data-ui-utility-record="true"
         data-ui-section-record="true"
         data-ui-section-record-variant="payment-source"
+        data-ui-record-layout="payment-source"
         data-ui-record-section="strong"
         data-ui-record-state={isArchived ? 'archived' : 'active'}
       >
@@ -433,105 +449,130 @@ export default function PaymentSourcesPanel({
         </div>
 
         <div data-ui-section-record-metrics="true">
-          <span data-ui-section-record-metric="true">
-            <strong>{stats.transactionCount}</strong>
-            <span>wpisów</span>
-          </span>
+          {renderMetric({
+            iconKey: 'system-records',
+            label: 'wpisów',
+            value: stats.transactionCount,
+          })}
 
-          {source.is_income_source !== false && (
-            <span data-ui-section-record-metric="true" data-ui-tone="success">
-              <strong>{formatCurrency(stats.incomeTotal)}</strong>
-              <span>przychody</span>
-            </span>
-          )}
+          {source.is_income_source !== false &&
+            renderMetric({
+              iconKey: 'system-income',
+              label: 'przychody',
+              value: formatCurrency(stats.incomeTotal),
+              tone: 'success',
+            })}
 
-          {source.is_expense_source !== false && (
-            <span data-ui-section-record-metric="true" data-ui-tone="danger">
-              <strong>{formatCurrency(stats.expenseTotal)}</strong>
-              <span>wydatki</span>
-            </span>
-          )}
+          {source.is_expense_source !== false &&
+            renderMetric({
+              iconKey: 'system-expense',
+              label: 'wydatki',
+              value: formatCurrency(stats.expenseTotal),
+              tone: 'danger',
+            })}
         </div>
       </article>
     )
   }
 
   return (
-    <UtilityPanel>
-      <section data-ui-section="true" data-ui-settings-strip="true" data-ui-form-grid="two">
-        <label data-ui-field="true">
-          Domyślne źródło przychodów
-          <span data-ui-select-shell="true">
-            <select
-              className="ui-select"
-              data-input-width="full"
-              value={settingsDraft.defaultIncomePaymentSourceId || ''}
-              disabled={isConfigSaving}
-              onChange={(event) =>
-                setSettingsDraft((currentDraft) => ({
-                  ...currentDraft,
-                  defaultIncomePaymentSourceId: event.target.value || null,
-                }))
-              }
-            >
-              <option value="">Brak domyślnego źródła</option>
-              {incomeSources.map((source) => (
-                <option key={source.id} value={source.id}>
-                  {source.name}
-                </option>
-              ))}
-            </select>
-            <span data-ui-picker-chevron="true" aria-hidden="true" />
+    <UtilityPanel data-ui-payment-sources-shell="true">
+      <section data-ui-section="true" data-ui-section-layout="comfortable" data-ui-payment-section="defaults">
+        <header data-ui-section-header="true" data-ui-section-header-variant="subsection">
+          <span data-ui-section-header-icon="true" data-ui-tone="blue" aria-hidden="true">
+            <CategoryIcon iconKey="system-payment-sources" size="small" />
           </span>
-        </label>
-        <label data-ui-field="true">
-          Domyślne źródło wydatków
-          <span data-ui-select-shell="true">
-            <select
-              className="ui-select"
-              data-input-width="full"
-              value={settingsDraft.defaultExpensePaymentSourceId || ''}
-              disabled={isConfigSaving}
-              onChange={(event) =>
-                setSettingsDraft((currentDraft) => ({
-                  ...currentDraft,
-                  defaultExpensePaymentSourceId: event.target.value || null,
-                }))
-              }
+          <div data-ui-section-header-copy="true">
+            <strong>Domyślne źródła płatności</strong>
+            <span>Ustaw źródła, które będą podpowiadane przy nowych wpisach.</span>
+          </div>
+        </header>
+
+        <div data-ui-settings-strip="true" data-ui-form-grid="two">
+          <label data-ui-field="true">
+            Domyślne źródło przychodów
+            <span data-ui-select-shell="true">
+              <select
+                className="ui-select"
+                data-input-width="full"
+                value={settingsDraft.defaultIncomePaymentSourceId || ''}
+                disabled={isConfigSaving}
+                onChange={(event) =>
+                  setSettingsDraft((currentDraft) => ({
+                    ...currentDraft,
+                    defaultIncomePaymentSourceId: event.target.value || null,
+                  }))
+                }
+              >
+                <option value="">Brak domyślnego źródła</option>
+                {incomeSources.map((source) => (
+                  <option key={source.id} value={source.id}>
+                    {source.name}
+                  </option>
+                ))}
+              </select>
+              <span data-ui-picker-chevron="true" aria-hidden="true" />
+            </span>
+          </label>
+          <label data-ui-field="true">
+            Domyślne źródło wydatków
+            <span data-ui-select-shell="true">
+              <select
+                className="ui-select"
+                data-input-width="full"
+                value={settingsDraft.defaultExpensePaymentSourceId || ''}
+                disabled={isConfigSaving}
+                onChange={(event) =>
+                  setSettingsDraft((currentDraft) => ({
+                    ...currentDraft,
+                    defaultExpensePaymentSourceId: event.target.value || null,
+                  }))
+                }
+              >
+                <option value="">Brak domyślnego źródła</option>
+                {expenseSources.map((source) => (
+                  <option key={source.id} value={source.id}>
+                    {source.name}
+                  </option>
+                ))}
+              </select>
+              <span data-ui-picker-chevron="true" aria-hidden="true" />
+            </span>
+          </label>
+          <div data-ui-form-actions="true" data-ui-actions-align="start">
+            <button
+              type="button"
+              data-ui-button-confirm="true"
+              disabled={isConfigSaving || !isSettingsDirty}
+              onClick={() => void saveSettingsDraft()}
             >
-              <option value="">Brak domyślnego źródła</option>
-              {expenseSources.map((source) => (
-                <option key={source.id} value={source.id}>
-                  {source.name}
-                </option>
-              ))}
-            </select>
-            <span data-ui-picker-chevron="true" aria-hidden="true" />
-          </span>
-        </label>
-        <div data-ui-form-actions="true">
-          <button
-            type="button"
-            data-ui-button-confirm="true"
-            disabled={isConfigSaving || !isSettingsDirty}
-            onClick={() => void saveSettingsDraft()}
-          >
-            {isConfigSaving ? 'Zapisywanie...' : 'Zapisz ustawienia'}
-          </button>
+              {isConfigSaving ? 'Zapisywanie...' : 'Zapisz ustawienia'}
+            </button>
+          </div>
         </div>
       </section>
 
-      <div data-ui-section-separator="true" />
+      <div
+        data-ui-section-separator="true"
+        data-ui-separator-role="section"
+        data-ui-separator-strength="comfortable"
+      />
 
       {statusText && <StatusBox tone="success">{statusText}</StatusBox>}
       {errorText && <StatusBox tone="danger">{errorText}</StatusBox>}
 
-      <section data-ui-section="true">
-        <header data-ui-section-header="true">
-          <strong>Twoje źródła</strong>
-          <span>{activeSources.length} aktywnych</span>
+      <section data-ui-section="true" data-ui-section-layout="comfortable" data-ui-payment-section="sources">
+        <header data-ui-section-header="true" data-ui-section-header-variant="major">
+          <span data-ui-section-header-icon="true" data-ui-tone="navy" aria-hidden="true">
+            <CategoryIcon iconKey="system-records" size="small" />
+          </span>
+          <div data-ui-section-header-copy="true">
+            <strong>Twoje źródła</strong>
+            <span>Aktywne źródła dostępne w kreatorze wpisów.</span>
+          </div>
+          <span data-ui-section-count="true">{activeSources.length} aktywnych</span>
         </header>
-        <div data-ui-record-list="true" data-ui-separator-weight="strong">
+        <div data-ui-record-list="true" data-ui-separator-role="record" data-ui-separator-strength="comfortable">
           {activeSources.length === 0 ? (
             <EmptyState>Brak aktywnych źródeł płatności.</EmptyState>
           ) : (
@@ -541,13 +582,28 @@ export default function PaymentSourcesPanel({
       </section>
 
       {archivedSources.length > 0 && (
-        <section data-ui-section="true">
-          <header data-ui-section-header="true">
-            <strong>Archiwalne</strong>
-            <span>{archivedSources.length}</span>
-          </header>
-          <div data-ui-record-list="true" data-ui-separator-weight="strong">{archivedSources.map(renderSourceCard)}</div>
-        </section>
+        <>
+          <div
+            data-ui-section-separator="true"
+            data-ui-separator-role="section"
+            data-ui-separator-strength="comfortable"
+          />
+          <section data-ui-section="true" data-ui-section-layout="comfortable">
+            <header data-ui-section-header="true" data-ui-section-header-variant="major">
+              <span data-ui-section-header-icon="true" data-ui-tone="graphite" aria-hidden="true">
+                <CategoryIcon iconKey="system-trash" size="small" />
+              </span>
+              <div data-ui-section-header-copy="true">
+                <strong>Archiwalne</strong>
+                <span>Źródła zachowane ze względu na historię wpisów.</span>
+              </div>
+              <span data-ui-section-count="true">{archivedSources.length}</span>
+            </header>
+            <div data-ui-record-list="true" data-ui-separator-role="record" data-ui-separator-strength="comfortable">
+              {archivedSources.map(renderSourceCard)}
+            </div>
+          </section>
+        </>
       )}
 
       {isFormOpen && (
