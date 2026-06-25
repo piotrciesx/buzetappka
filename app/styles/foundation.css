@@ -5458,3 +5458,121 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
     max-width: none;
   }
 }
+
+/* ==========================================================
+   Foundation — final compact record metrics contract
+   ========================================================== */
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-main="true"] {
+  grid-template-columns: var(--ui-section-record-hero-icon-size) minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--ui-space-7);
+}
+
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-copy="true"] {
+  max-width: none;
+  min-width: 0;
+  justify-self: stretch;
+}
+
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-metrics="true"] {
+  width: auto;
+  max-width: none;
+  min-width: 0;
+  margin-left: 0;
+  margin-top: var(--ui-space-4);
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0;
+  overflow: visible;
+}
+
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-metric="true"] {
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  flex: 0 0 auto;
+  display: inline-grid;
+  grid-template-columns: 16px max-content;
+  align-items: center;
+  column-gap: var(--ui-space-3);
+  padding: 0 var(--ui-space-5) 0 0;
+  margin: 0 var(--ui-space-5) 0 0;
+  border-right: 1px solid rgba(91, 103, 124, 0.18);
+  white-space: nowrap;
+}
+
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-metric="true"][data-ui-metric-kind="count"] {
+  min-width: 72px;
+}
+
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-metric="true"][data-ui-metric-kind="money"] {
+  min-width: 94px;
+}
+
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-metric="true"]:last-child {
+  margin-right: 0;
+  padding-right: 0;
+  border-right: 0;
+}
+
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-metric-icon="true"] {
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
+}
+
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-metric-copy="true"] {
+  min-width: 0;
+  display: grid;
+  gap: var(--ui-space-1);
+  align-content: center;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-metric="true"] strong {
+  display: block;
+  max-width: 100%;
+  font-size: var(--ui-type-t4);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-metric-copy="true"] > small {
+  display: block;
+  font-size: var(--ui-type-t5);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"] {
+  justify-self: end;
+  width: auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ui-space-5);
+}
+
+@container (max-width: 620px) {
+  [data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"] {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    width: auto;
+  }
+}
+
+@container (max-width: 520px) {
+  [data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"] {
+    flex-direction: column;
+    align-items: stretch;
+    width: min(100%, 92px);
+  }
+}

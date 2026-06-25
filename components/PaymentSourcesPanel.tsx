@@ -103,6 +103,29 @@ const formatCurrency = (value: number) =>
     maximumFractionDigits: 2,
   }).format(value)
 
+const formatCompactNumber = (value: number) =>
+  new Intl.NumberFormat('pl-PL', {
+    maximumFractionDigits: Math.abs(value) >= 100 ? 0 : 1,
+  }).format(value)
+
+const formatCompactCurrency = (value: number) => {
+  const absoluteValue = Math.abs(value)
+
+  if (absoluteValue < 10_000) {
+    return formatCurrency(value)
+  }
+
+  if (absoluteValue < 1_000_000) {
+    return `${formatCompactNumber(value / 1_000)} tys. zł`
+  }
+
+  if (absoluteValue < 1_000_000_000) {
+    return `${formatCompactNumber(value / 1_000_000)} mln zł`
+  }
+
+  return `${formatCompactNumber(value / 1_000_000_000)} mld zł`
+}
+
 const normalizeName = (value: string) => value.trim().toLocaleLowerCase('pl-PL')
 
 const HelpHint = ({ label }: { label: string }) => (
@@ -309,8 +332,13 @@ export default function PaymentSourcesPanel({
     label: string
     value: string | number
     tone?: 'neutral' | 'success' | 'danger'
+    metricKind?: 'count' | 'money'
   }) => (
-    <span data-ui-section-record-metric="true" data-ui-tone={input.tone || 'neutral'}>
+    <span
+      data-ui-section-record-metric="true"
+      data-ui-metric-kind={input.metricKind || 'money'}
+      data-ui-tone={input.tone || 'neutral'}
+    >
       <span data-ui-section-record-metric-icon="true" aria-hidden="true">
         <CategoryIcon iconKey={input.iconKey} size="small" />
       </span>
@@ -430,13 +458,14 @@ export default function PaymentSourcesPanel({
                 iconKey: 'system-records',
                 label: 'wpisów',
                 value: stats.transactionCount,
+                metricKind: 'count',
               })}
 
               {source.is_income_source !== false &&
                 renderMetric({
                   iconKey: 'system-income',
                   label: 'przychody',
-                  value: formatCurrency(stats.incomeTotal),
+                  value: formatCompactCurrency(stats.incomeTotal),
                   tone: 'success',
                 })}
 
@@ -444,7 +473,7 @@ export default function PaymentSourcesPanel({
                 renderMetric({
                   iconKey: 'system-expense',
                   label: 'wydatki',
-                  value: formatCurrency(stats.expenseTotal),
+                  value: formatCompactCurrency(stats.expenseTotal),
                   tone: 'danger',
                 })}
             </div>
