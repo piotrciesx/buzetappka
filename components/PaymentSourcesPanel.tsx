@@ -103,27 +103,33 @@ const formatCurrency = (value: number) =>
     maximumFractionDigits: 2,
   }).format(value)
 
-const formatCompactNumber = (value: number) =>
-  new Intl.NumberFormat('pl-PL', {
-    maximumFractionDigits: Math.abs(value) >= 100 ? 0 : 1,
-  }).format(value)
-
 const formatCompactCurrency = (value: number) => {
   const absoluteValue = Math.abs(value)
+  const sign = value < 0 ? '-' : ''
 
-  if (absoluteValue < 10_000) {
-    return formatCurrency(value)
+  const formatDecimal = (input: number) =>
+    new Intl.NumberFormat('pl-PL', {
+      maximumFractionDigits: input >= 10 ? 0 : 1,
+      minimumFractionDigits: 0,
+    }).format(input)
+
+  if (absoluteValue >= 1_000_000_000) {
+    return `${sign}${formatDecimal(absoluteValue / 1_000_000_000)} mld zł`
   }
 
-  if (absoluteValue < 1_000_000) {
-    return `${formatCompactNumber(value / 1_000)} tys. zł`
+  if (absoluteValue >= 1_000_000) {
+    return `${sign}${formatDecimal(absoluteValue / 1_000_000)} mln zł`
   }
 
-  if (absoluteValue < 1_000_000_000) {
-    return `${formatCompactNumber(value / 1_000_000)} mln zł`
+  if (absoluteValue >= 100_000) {
+    return `${sign}${formatDecimal(absoluteValue / 1_000)} tys. zł`
   }
 
-  return `${formatCompactNumber(value / 1_000_000_000)} mld zł`
+  return new Intl.NumberFormat('pl-PL', {
+    style: 'currency',
+    currency: 'PLN',
+    maximumFractionDigits: 2,
+  }).format(value)
 }
 
 const normalizeName = (value: string) => value.trim().toLocaleLowerCase('pl-PL')
@@ -331,13 +337,15 @@ export default function PaymentSourcesPanel({
     iconKey: string
     label: string
     value: string | number
+    kind: 'count' | 'money'
     tone?: 'neutral' | 'success' | 'danger'
-    metricKind?: 'count' | 'money'
+    title?: string
   }) => (
     <span
       data-ui-section-record-metric="true"
-      data-ui-metric-kind={input.metricKind || 'money'}
+      data-ui-metric-kind={input.kind}
       data-ui-tone={input.tone || 'neutral'}
+      title={input.title}
     >
       <span data-ui-section-record-metric-icon="true" aria-hidden="true">
         <CategoryIcon iconKey={input.iconKey} size="small" />
@@ -430,6 +438,11 @@ export default function PaymentSourcesPanel({
     }
     const isArchived = Boolean(source.archived_at)
     const hasHistory = stats.transactionCount > 0
+    const metricCount =
+      1 +
+      (source.is_income_source !== false ? 1 : 0) +
+      (source.is_expense_source !== false ? 1 : 0)
+    const actionFlow = metricCount >= 3 ? 'stacked' : 'inline'
 
     return (
       <article
@@ -456,9 +469,9 @@ export default function PaymentSourcesPanel({
             <div data-ui-section-record-metrics="true">
               {renderMetric({
                 iconKey: 'system-records',
-                label: 'wpisów',
+                label: stats.transactionCount === 1 ? 'wpis' : 'wpisów',
                 value: stats.transactionCount,
-                metricKind: 'count',
+                kind: 'count',
               })}
 
               {source.is_income_source !== false &&
@@ -466,7 +479,9 @@ export default function PaymentSourcesPanel({
                   iconKey: 'system-income',
                   label: 'przychody',
                   value: formatCompactCurrency(stats.incomeTotal),
+                  kind: 'money',
                   tone: 'success',
+                  title: formatCurrency(stats.incomeTotal),
                 })}
 
               {source.is_expense_source !== false &&
@@ -474,12 +489,14 @@ export default function PaymentSourcesPanel({
                   iconKey: 'system-expense',
                   label: 'wydatki',
                   value: formatCompactCurrency(stats.expenseTotal),
+                  kind: 'money',
                   tone: 'danger',
+                  title: formatCurrency(stats.expenseTotal),
                 })}
             </div>
           </div>
 
-          <div data-ui-section-record-actions="true">
+          <div data-ui-section-record-actions="true" data-ui-actions-flow={actionFlow}>
             {!isArchived && (
               <button type="button" className="ui-button--utility" onClick={() => openEditForm(source)}>
                 Edytuj

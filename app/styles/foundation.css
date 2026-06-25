@@ -5460,7 +5460,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 /* ==========================================================
-   Foundation — final compact record metrics contract
+   Foundation — adaptive record actions and compact metrics
    ========================================================== */
 [data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-main="true"] {
   grid-template-columns: var(--ui-section-record-hero-icon-size) minmax(0, 1fr) auto;
@@ -5486,6 +5486,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   justify-content: flex-start;
   gap: 0;
   overflow: visible;
+  white-space: nowrap;
 }
 
 [data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-metric="true"] {
@@ -5504,7 +5505,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 [data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-metric="true"][data-ui-metric-kind="count"] {
-  min-width: 72px;
+  min-width: 66px;
 }
 
 [data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-metric="true"][data-ui-metric-kind="money"] {
@@ -5535,7 +5536,9 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 [data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-metric="true"] strong {
   display: block;
   max-width: 100%;
+  color: var(--ui-color-primary-navy);
   font-size: var(--ui-type-t4);
+  font-weight: var(--ui-font-weight-bold);
   line-height: 1;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -5543,7 +5546,9 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 
 [data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-metric-copy="true"] > small {
   display: block;
+  color: inherit;
   font-size: var(--ui-type-t5);
+  font-weight: var(--ui-font-weight-medium);
   line-height: 1;
   white-space: nowrap;
 }
@@ -5552,6 +5557,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   justify-self: end;
   width: auto;
   min-width: 0;
+  margin-left: var(--ui-space-12);
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -5560,19 +5566,41 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   gap: var(--ui-space-5);
 }
 
-@container (max-width: 620px) {
-  [data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"] {
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-    width: auto;
-  }
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"][data-ui-actions-flow="stacked"] {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  width: min(100%, 104px);
+  margin-left: var(--ui-space-12);
+}
+
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"][data-ui-actions-flow="inline"] {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  width: auto;
+  min-width: 176px;
+  margin-left: var(--ui-space-12);
+}
+
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"] .ui-button--utility,
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"] [data-ui-button-danger="true"] {
+  width: 100%;
+  min-width: 80px;
+}
+
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"][data-ui-actions-flow="inline"] .ui-button--utility,
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"][data-ui-actions-flow="inline"] [data-ui-button-danger="true"] {
+  width: auto;
 }
 
 @container (max-width: 520px) {
-  [data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"] {
+  [data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"],
+  [data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"][data-ui-actions-flow="inline"] {
     flex-direction: column;
     align-items: stretch;
-    width: min(100%, 92px);
+    width: min(100%, 104px);
+    min-width: 0;
+    margin-left: var(--ui-space-8);
   }
 }
