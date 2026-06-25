@@ -4867,3 +4867,162 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
     grid-template-columns: repeat(5, var(--ui-picker-gallery-option-size));
   }
 }
+
+/* Foundation v2 composition polish — reusable utility flow, records and comfortable creator forms. */
+[data-ui-utility-flow="true"] {
+  min-width: 0;
+  display: grid;
+  gap: var(--ui-space-10);
+}
+
+[data-ui-defaults-zone="true"] {
+  min-width: 0;
+  display: grid;
+  gap: var(--ui-space-8);
+  padding: var(--ui-space-8);
+  border: 1px solid rgba(8, 44, 122, 0.12);
+  border-radius: var(--ui-radius-2xl);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(247, 251, 255, 0.58) 100%);
+}
+
+[data-ui-defaults-grid="true"] {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ui-space-7);
+}
+
+[data-ui-defaults-actions="true"] {
+  min-width: 0;
+  display: flex;
+  justify-content: flex-start;
+}
+
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--ui-space-8) var(--ui-space-10);
+  padding-top: var(--ui-space-10);
+  padding-bottom: var(--ui-space-10);
+}
+
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-main="true"] {
+  grid-column: 1 / 2;
+}
+
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-status="true"],
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-metrics="true"] {
+  grid-column: 1 / 2;
+  padding-left: calc(var(--ui-section-record-icon-size) + var(--ui-section-record-gap));
+}
+
+[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"] {
+  grid-column: 2 / 3;
+  grid-row: 1 / span 3;
+  align-self: end;
+  justify-content: flex-end;
+  padding-bottom: var(--ui-space-2);
+}
+
+[data-ui-section-record-metric="true"] {
+  min-width: 0;
+  display: inline-grid;
+  gap: var(--ui-space-1);
+  color: var(--ui-text-secondary);
+  font-size: var(--ui-type-t5);
+  font-weight: var(--ui-font-weight-medium);
+  line-height: var(--ui-line-height-compact);
+}
+
+[data-ui-section-record-metric="true"] strong {
+  color: var(--ui-color-primary-navy);
+  font-size: var(--ui-type-t3);
+  font-weight: var(--ui-font-weight-bold);
+  line-height: var(--ui-line-height-heading);
+  font-variant-numeric: tabular-nums;
+}
+
+[data-ui-form-section-header="true"] {
+  min-width: 0;
+  display: grid;
+  gap: var(--ui-space-2);
+}
+
+[data-ui-form-section-header="true"] strong {
+  color: var(--ui-color-primary-navy);
+  font-size: var(--ui-type-t3);
+  font-weight: var(--ui-font-weight-bold);
+  line-height: var(--ui-line-height-heading);
+}
+
+[data-ui-form-section-header="true"] span {
+  color: var(--ui-text-secondary);
+  font-size: var(--ui-type-t5);
+  font-weight: var(--ui-font-weight-medium);
+  line-height: var(--ui-line-height-body);
+}
+
+[data-ui-form-shell="true"][data-ui-form-density="comfortable"] [data-ui-creator-section="true"] {
+  gap: var(--ui-space-8);
+  padding: var(--ui-space-2) 0;
+}
+
+[data-ui-form-shell="true"][data-ui-form-density="comfortable"] [data-ui-section-separator="true"] {
+  width: 100%;
+  margin: var(--ui-space-2) 0;
+}
+
+[data-ui-checkbox="true"][data-checkbox-variant="field"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--ui-space-5);
+  box-sizing: border-box;
+  cursor: pointer;
+  transition:
+    border-color var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    background var(--ui-motion-hover) var(--ui-motion-ease-standard),
+    color var(--ui-motion-hover) var(--ui-motion-ease-standard);
+}
+
+[data-ui-checkbox="true"][data-checkbox-variant="field"]:hover {
+  border-color: rgba(8, 44, 122, 0.34);
+  background: var(--ui-color-soft-blue);
+}
+
+[data-ui-checkbox="true"][data-checkbox-variant="field"] .ui-checkbox__label {
+  color: var(--ui-color-primary-navy);
+  font-size: var(--ui-type-t4);
+  font-weight: var(--ui-font-weight-semibold);
+  line-height: var(--ui-line-height-compact);
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="gallery"] [data-ui-picker-trigger="true"] {
+  box-shadow: inset 0 0 0 1px rgba(8, 44, 122, 0.02);
+}
+
+[data-ui-picker-control="true"][data-ui-picker-variant="gallery"] [data-ui-picker-trigger="true"]:hover {
+  border-color: rgba(8, 44, 122, 0.30);
+  background: var(--ui-color-soft-blue);
+}
+
+@media (max-width: 760px) {
+  [data-ui-defaults-grid="true"],
+  [data-ui-checkbox-field-group="true"] {
+    grid-template-columns: 1fr;
+  }
+
+  [data-ui-section-record="true"][data-ui-record-layout="payment-source"] {
+    grid-template-columns: 1fr;
+  }
+
+  [data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-status="true"],
+  [data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-metrics="true"] {
+    padding-left: 0;
+  }
+
+  [data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"] {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    justify-content: flex-start;
+  }
+}
