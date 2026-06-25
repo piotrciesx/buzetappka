@@ -5462,6 +5462,13 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 /* ==========================================================
    Foundation — adaptive record actions and compact metrics
    ========================================================== */
+
+:root {
+  --ui-record-actions-min-gap: 12px;
+  --ui-record-action-button-min-width: 80px;
+  --ui-record-action-button-stack-width: 104px;
+}
+
 [data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-main="true"] {
   grid-template-columns: var(--ui-section-record-hero-icon-size) minmax(0, 1fr) auto;
   align-items: center;
@@ -5498,9 +5505,11 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   grid-template-columns: 16px max-content;
   align-items: center;
   column-gap: var(--ui-space-3);
-  padding: 0 var(--ui-space-5) 0 0;
   margin: 0 var(--ui-space-5) 0 0;
+  padding: 0 var(--ui-space-5) 0 0;
   border-right: 1px solid rgba(91, 103, 124, 0.18);
+  font-weight: var(--ui-font-weight-medium);
+  line-height: 1;
   white-space: nowrap;
 }
 
@@ -5553,110 +5562,81 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   white-space: nowrap;
 }
 
-[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"] {
-  justify-self: end;
-  width: auto;
-  min-width: 0;
-  margin-left: var(--ui-space-12);
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--ui-space-5);
-}
-
-[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"][data-ui-actions-flow="stacked"] {
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: center;
-  width: min(100%, 104px);
-  margin-left: var(--ui-space-12);
-}
-
-[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"][data-ui-actions-flow="inline"] {
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-  width: auto;
-  min-width: 176px;
-  margin-left: var(--ui-space-12);
-}
-
-[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"] .ui-button--utility,
-[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"] [data-ui-button-danger="true"] {
-  width: 100%;
-  min-width: 80px;
-}
-
-[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"][data-ui-actions-flow="inline"] .ui-button--utility,
-[data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"][data-ui-actions-flow="inline"] [data-ui-button-danger="true"] {
-  width: auto;
-}
-
-@container (max-width: 520px) {
-  [data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"],
-  [data-ui-section-record="true"][data-ui-record-layout="payment-source"] [data-ui-section-record-actions="true"][data-ui-actions-flow="inline"] {
-    flex-direction: column;
-    align-items: stretch;
-    width: min(100%, 104px);
-    min-width: 0;
-    margin-left: var(--ui-space-8);
-  }
-}
-
-/* ==========================================================
-   Foundation — adaptive record actions controlled by list
-   ========================================================== */
-
-:root {
-  --ui-record-actions-min-gap: 12px;
-}
-
 [data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-actions="true"] {
-  margin-left: var(--ui-record-actions-min-gap);
+  justify-self: end;
+  align-self: center;
   flex-shrink: 0;
+  margin-left: var(--ui-record-actions-min-gap);
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
 }
 
 [data-ui-record-list="true"][data-ui-record-actions-layout="inline"] [data-ui-section-record-actions="true"] {
   width: auto;
   min-width: 0;
-  display: flex;
+  max-width: max-content;
   flex-direction: row;
-  flex-wrap: nowrap;
   align-items: center;
-  justify-content: flex-end;
   gap: var(--ui-space-5);
 }
 
 [data-ui-record-list="true"][data-ui-record-actions-layout="stacked"] [data-ui-section-record-actions="true"] {
-  width: min(100%, 104px);
-  display: flex;
+  width: var(--ui-record-action-button-stack-width);
+  min-width: 0;
+  max-width: var(--ui-record-action-button-stack-width);
   flex-direction: column;
-  flex-wrap: nowrap;
   align-items: stretch;
-  justify-content: center;
   gap: var(--ui-space-4);
 }
 
-[data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-metrics="true"] {
-  min-width: 0;
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: flex-start;
-  gap: var(--ui-section-record-metric-gap);
-  white-space: nowrap;
-}
-
-[data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-metric="true"] {
+[data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-actions="true"] .ui-button--utility,
+[data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-actions="true"] [data-ui-button-danger="true"] {
+  min-width: var(--ui-record-action-button-min-width);
+  min-height: 36px;
+  box-sizing: border-box;
   flex: 0 0 auto;
+  font-size: var(--ui-type-t4);
+  line-height: var(--ui-line-height-compact);
   white-space: nowrap;
 }
 
+[data-ui-record-list="true"][data-ui-record-actions-layout="inline"] [data-ui-section-record-actions="true"] .ui-button--utility,
+[data-ui-record-list="true"][data-ui-record-actions-layout="inline"] [data-ui-section-record-actions="true"] [data-ui-button-danger="true"] {
+  width: auto;
+  max-width: max-content;
+}
+
+[data-ui-record-list="true"][data-ui-record-actions-layout="stacked"] [data-ui-section-record-actions="true"] .ui-button--utility,
+[data-ui-record-list="true"][data-ui-record-actions-layout="stacked"] [data-ui-section-record-actions="true"] [data-ui-button-danger="true"] {
+  width: 100%;
+  max-width: 100%;
+}
+
+[data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-metrics="true"],
+[data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-metric="true"],
 [data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-metric-copy="true"],
 [data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-metric-copy="true"] > strong,
 [data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-metric-copy="true"] > small {
   white-space: nowrap;
 }
 
+@container (max-width: 520px) {
+  [data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-actions="true"],
+  [data-ui-record-list="true"][data-ui-record-actions-layout="inline"] [data-ui-section-record-actions="true"],
+  [data-ui-record-list="true"][data-ui-record-actions-layout="stacked"] [data-ui-section-record-actions="true"] {
+    width: var(--ui-record-action-button-stack-width);
+    min-width: 0;
+    max-width: var(--ui-record-action-button-stack-width);
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--ui-space-4);
+    margin-left: var(--ui-record-actions-min-gap);
+  }
+
+  [data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-actions="true"] .ui-button--utility,
+  [data-ui-record-list="true"][data-ui-record-actions-layout] [data-ui-section-record-actions="true"] [data-ui-button-danger="true"] {
+    width: 100%;
+    max-width: 100%;
+  }
+}

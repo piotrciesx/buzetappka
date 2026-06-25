@@ -138,6 +138,8 @@ const HelpHint = ({ label }: { label: string }) => (
   <span data-ui-help="true" tabIndex={0} aria-label={label} data-tooltip={label} />
 )
 
+const RECORD_ACTIONS_MIN_GAP = 12
+
 export default function PaymentSourcesPanel({
   paymentSources,
   paymentSourceStats,
@@ -544,7 +546,7 @@ export default function PaymentSourcesPanel({
       const actionsRect = actions.getBoundingClientRect()
       const availableGap = actionsRect.left - metricsRect.right
 
-      return availableGap < 12
+      return availableGap < RECORD_ACTIONS_MIN_GAP
     })
 
     if (previousLayout) {
