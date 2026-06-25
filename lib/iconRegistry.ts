@@ -140,6 +140,11 @@ export const SYSTEM_ICON_KEYS = [
   "system-export",
   "system-trash",
   "system-lock",
+
+  "system-records",
+  "system-income",
+  "system-expense",
+
   "income_plus",
   "expense_minus",
   "allocation",
@@ -268,6 +273,11 @@ const SELECTED_ICON_IDS: Record<LibraryUserIconKey | SystemIconKey, string> = {
   "system-export": "fluent:arrow-upload-24-filled",
   "system-trash": "fa6-solid:trash-can",
   "system-lock": "material-symbols:lock",
+
+  "system-records": "material-symbols:receipt-long",
+  "system-income": "material-symbols:north-east",
+  "system-expense": "material-symbols:south-west",
+
   "income_plus": "fa6-solid:circle-plus",
   "expense_minus": "fa6-solid:circle-minus",
   "allocation": "material-symbols:tune",
