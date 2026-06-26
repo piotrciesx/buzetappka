@@ -24,6 +24,12 @@ type PaymentSourceStats = {
   transactionCount: number
 }
 
+type PaymentSourceTotals = {
+  incomeTotal: number
+  expenseTotal: number
+  transactionCount: number
+}
+
 type PaymentSourceSettings = {
   defaultIncomePaymentSourceId: string | null
   defaultExpensePaymentSourceId: string | null
@@ -132,6 +138,47 @@ const formatCompactCurrency = (value: number) => {
   }).format(value)
 }
 
+
+const formatCompactNumber = (value: number) =>
+  new Intl.NumberFormat('pl-PL', {
+    notation: Math.abs(value) >= 10_000 ? 'compact' : 'standard',
+    maximumFractionDigits: Math.abs(value) >= 10_000 ? 1 : 0,
+  }).format(value)
+
+const calculateShare = (value: number, total: number) => {
+  if (!Number.isFinite(value) || !Number.isFinite(total) || total <= 0) {
+    return 0
+  }
+
+  return Math.min(100, Math.max(0, Math.round((Math.abs(value) / Math.abs(total)) * 100)))
+}
+
+const buildPaymentSourceTotals = (
+  sources: PaymentSource[],
+  statsById: Record<string, PaymentSourceStats>
+): PaymentSourceTotals => {
+  return sources.reduce<PaymentSourceTotals>(
+    (totals, source) => {
+      const stats = statsById[source.id]
+
+      if (!stats) {
+        return totals
+      }
+
+      return {
+        incomeTotal: totals.incomeTotal + Math.max(0, stats.incomeTotal),
+        expenseTotal: totals.expenseTotal + Math.max(0, stats.expenseTotal),
+        transactionCount: totals.transactionCount + Math.max(0, stats.transactionCount),
+      }
+    },
+    {
+      incomeTotal: 0,
+      expenseTotal: 0,
+      transactionCount: 0,
+    }
+  )
+}
+
 const normalizeName = (value: string) => value.trim().toLocaleLowerCase('pl-PL')
 
 const HelpHint = ({ label }: { label: string }) => (
@@ -195,6 +242,15 @@ export default function PaymentSourcesPanel({
   const duplicateSource = duplicateSourceId
     ? paymentSources.find((source) => source.id === duplicateSourceId) || null
     : null
+
+  const activeSourceTotals = useMemo(
+    () => buildPaymentSourceTotals(activeSources, statsById),
+    [activeSources, statsById]
+  )
+  const archivedSourceTotals = useMemo(
+    () => buildPaymentSourceTotals(archivedSources, statsById),
+    [archivedSources, statsById]
+  )
 
   const closeForm = () => {
     setDraft(DEFAULT_DRAFT)
@@ -348,23 +404,28 @@ export default function PaymentSourcesPanel({
   const renderMetric = (input: {
     iconKey: string
     label: string
-    value: string | number
-    kind: 'count' | 'money'
+    percent: number
+    detail: string
     tone?: 'neutral' | 'success' | 'danger'
     title?: string
   }) => (
     <span
       data-ui-section-record-metric="true"
-      data-ui-metric-kind={input.kind}
+      data-ui-large-metric="true"
       data-ui-tone={input.tone || 'neutral'}
       title={input.title}
+      style={{ '--ui-large-metric-progress': `${input.percent}%` } as CSSProperties}
     >
-      <span data-ui-section-record-metric-icon="true" aria-hidden="true">
-        <CategoryIcon iconKey={input.iconKey} size="small" />
+      <span data-ui-large-metric-label="true">
+        <span data-ui-section-record-metric-icon="true" aria-hidden="true">
+          <CategoryIcon iconKey={input.iconKey} size="small" />
+        </span>
+        <span>{input.label}</span>
       </span>
-      <span data-ui-section-record-metric-copy="true">
-        <strong>{input.value}</strong>
-        <small>{input.label}</small>
+      <strong data-ui-large-metric-value="true">{input.percent}%</strong>
+      <span data-ui-large-metric-detail="true">{input.detail}</span>
+      <span data-ui-large-metric-progress="true" aria-hidden="true">
+        <span data-ui-large-metric-progress-fill="true" />
       </span>
     </span>
   )
@@ -438,7 +499,7 @@ export default function PaymentSourcesPanel({
     )
   }
 
-  const renderSourceCard = (source: PaymentSource) => {
+  const renderSourceCard = (source: PaymentSource, totals: PaymentSourceTotals) => {
     const iconKey = getPaymentSourceIconKey(source)
     const colorTone = getPaymentSourceColorTone(source)
     const color = getUiColor(colorTone)
@@ -459,50 +520,50 @@ export default function PaymentSourcesPanel({
         data-ui-record-layout="payment-source"
         data-ui-record-section="strong"
         data-ui-record-state={isArchived ? 'archived' : 'active'}
+        data-ui-large-record="true"
       >
-        <div data-ui-section-record-main="true">
-          <span data-ui-icon-tile="true" data-ui-tone={color.tone}>
+        <div data-ui-section-record-main="true" data-ui-large-record-main="true">
+          <span data-ui-icon-tile="true" data-ui-tone={color.tone} data-ui-large-record-icon="true">
             <CategoryIcon iconKey={iconKey} />
           </span>
 
-          <div data-ui-section-record-copy="true">
+          <div data-ui-section-record-copy="true" data-ui-large-record-copy="true">
             <strong data-ui-section-record-title="true">{source.name}</strong>
             <div data-ui-section-record-status="true">
               {renderAvailability('Przychody', source.is_income_source !== false && !isArchived)}
               {renderAvailability('Wydatki', source.is_expense_source !== false && !isArchived)}
             </div>
 
-            <div data-ui-section-record-metrics="true">
+            <div data-ui-section-record-metrics="true" data-ui-large-metrics="true">
               {renderMetric({
                 iconKey: 'system-records',
-                label: stats.transactionCount === 1 ? 'wpis' : 'wpisów',
-                value: stats.transactionCount,
-                kind: 'count',
+                label: 'wpisy',
+                percent: calculateShare(stats.transactionCount, totals.transactionCount),
+                detail: `${formatCompactNumber(stats.transactionCount)} z ${formatCompactNumber(totals.transactionCount)} wpisów`,
+                title: `${stats.transactionCount} z ${totals.transactionCount} wpisów`,
               })}
 
-              {source.is_income_source !== false &&
-                renderMetric({
-                  iconKey: 'system-income',
-                  label: 'przychody',
-                  value: formatCompactCurrency(stats.incomeTotal),
-                  kind: 'money',
-                  tone: 'success',
-                  title: formatCurrency(stats.incomeTotal),
-                })}
+              {renderMetric({
+                iconKey: 'system-income',
+                label: 'przychody',
+                percent: calculateShare(stats.incomeTotal, totals.incomeTotal),
+                detail: `${formatCompactCurrency(stats.incomeTotal)} z ${formatCompactCurrency(totals.incomeTotal)}`,
+                tone: 'success',
+                title: `${formatCurrency(stats.incomeTotal)} z ${formatCurrency(totals.incomeTotal)}`,
+              })}
 
-              {source.is_expense_source !== false &&
-                renderMetric({
-                  iconKey: 'system-expense',
-                  label: 'wydatki',
-                  value: formatCompactCurrency(stats.expenseTotal),
-                  kind: 'money',
-                  tone: 'danger',
-                  title: formatCurrency(stats.expenseTotal),
-                })}
+              {renderMetric({
+                iconKey: 'system-expense',
+                label: 'wydatki',
+                percent: calculateShare(stats.expenseTotal, totals.expenseTotal),
+                detail: `${formatCompactCurrency(stats.expenseTotal)} z ${formatCompactCurrency(totals.expenseTotal)}`,
+                tone: 'danger',
+                title: `${formatCurrency(stats.expenseTotal)} z ${formatCurrency(totals.expenseTotal)}`,
+              })}
             </div>
           </div>
 
-          <div data-ui-section-record-actions="true">
+          <div data-ui-section-record-actions="true" data-ui-large-record-actions="true">
             {!isArchived && (
               <button type="button" className="ui-button--utility" onClick={() => openEditForm(source)}>
                 Edytuj
@@ -612,8 +673,8 @@ export default function PaymentSourcesPanel({
   ])
 
   return (
-    <UtilityPanel data-ui-payment-sources-shell="true">
-      <section data-ui-section="true" data-ui-section-layout="comfortable" data-ui-payment-section="defaults">
+    <UtilityPanel data-ui-payment-sources-shell="true" data-ui-large-module="true">
+      <section data-ui-section="true" data-ui-section-layout="comfortable" data-ui-payment-section="defaults" data-ui-large-section="true">
         <header data-ui-section-header="true" data-ui-section-header-variant="subsection">
           <span data-ui-section-header-icon="true" data-ui-tone="blue" aria-hidden="true">
             <CategoryIcon iconKey="system-payment-sources" size="small" />
@@ -697,7 +758,7 @@ export default function PaymentSourcesPanel({
       {statusText && <StatusBox tone="success">{statusText}</StatusBox>}
       {errorText && <StatusBox tone="danger">{errorText}</StatusBox>}
 
-      <section data-ui-section="true" data-ui-section-layout="comfortable" data-ui-payment-section="sources">
+      <section data-ui-section="true" data-ui-section-layout="comfortable" data-ui-payment-section="sources" data-ui-large-section="true">
         <header data-ui-section-header="true" data-ui-section-header-variant="major">
           <span data-ui-section-header-icon="true" data-ui-tone="navy" aria-hidden="true">
             <CategoryIcon iconKey="system-records" size="small" />
@@ -711,6 +772,7 @@ export default function PaymentSourcesPanel({
         <div
           ref={activeRecordListRef}
           data-ui-record-list="true"
+          data-ui-large-record-list="true"
           data-ui-record-actions-layout={recordActionsLayout.active}
           data-ui-separator-role="record"
           data-ui-separator-strength="comfortable"
@@ -718,7 +780,7 @@ export default function PaymentSourcesPanel({
           {activeSources.length === 0 ? (
             <EmptyState>Brak aktywnych źródeł płatności.</EmptyState>
           ) : (
-            activeSources.map(renderSourceCard)
+            activeSources.map((source) => renderSourceCard(source, activeSourceTotals))
           )}
         </div>
       </section>
@@ -730,7 +792,7 @@ export default function PaymentSourcesPanel({
             data-ui-separator-role="section"
             data-ui-separator-strength="comfortable"
           />
-          <section data-ui-section="true" data-ui-section-layout="comfortable">
+          <section data-ui-section="true" data-ui-section-layout="comfortable" data-ui-large-section="true">
             <header data-ui-section-header="true" data-ui-section-header-variant="major">
               <span data-ui-section-header-icon="true" data-ui-tone="graphite" aria-hidden="true">
                 <CategoryIcon iconKey="system-trash" size="small" />
@@ -744,11 +806,12 @@ export default function PaymentSourcesPanel({
             <div
               ref={archivedRecordListRef}
               data-ui-record-list="true"
+              data-ui-large-record-list="true"
               data-ui-record-actions-layout={recordActionsLayout.archived}
               data-ui-separator-role="record"
               data-ui-separator-strength="comfortable"
             >
-              {archivedSources.map(renderSourceCard)}
+              {archivedSources.map((source) => renderSourceCard(source, archivedSourceTotals))}
             </div>
           </section>
         </>
