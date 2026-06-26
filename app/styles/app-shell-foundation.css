@@ -1312,6 +1312,14 @@ body {
   max-height: var(--ui-modal-max-height-xl);
 }
 
+/* Utility Modal XL: the shell owns modal sizing; module content never does. */
+[data-budget-utility-panel="true"][data-ui-utility-modal-size="xl"],
+[data-budget-utility-panel="true"]:has([data-ui-utility-modal-size="xl"]),
+[data-ui-utility-modal="true"][data-ui-utility-modal-size="xl"] {
+  max-width: var(--ui-modal-max-width-xl);
+  max-height: var(--ui-modal-max-height-xl);
+}
+
 [data-budget-utility-header="true"] {
   display: flex;
   align-items: center;

@@ -15,7 +15,7 @@ import {
 } from '../lib/paymentSources'
 import CategoryIcon from './CategoryIcon'
 import FoundationIconPicker from './ui/FoundationIconPicker'
-import { EmptyState, StatusBox, UtilityPanel } from './utility-panels/utilityPanelPrimitives'
+import { EmptyState, StatusBox } from './utility-panels/utilityPanelPrimitives'
 
 type PaymentSourceStats = {
   sourceId: string
@@ -185,7 +185,6 @@ const HelpHint = ({ label }: { label: string }) => (
   <span data-ui-help="true" tabIndex={0} aria-label={label} data-tooltip={label} />
 )
 
-const RECORD_ACTIONS_MIN_GAP = 12
 
 export default function PaymentSourcesPanel({
   paymentSources,
@@ -206,15 +205,6 @@ export default function PaymentSourcesPanel({
   const [errorText, setErrorText] = useState('')
   const [duplicateSourceId, setDuplicateSourceId] = useState<string | null>(null)
   const previousOpenCreateRequestRef = useRef(openCreateRequest)
-  const activeRecordListRef = useRef<HTMLDivElement | null>(null)
-  const archivedRecordListRef = useRef<HTMLDivElement | null>(null)
-  const [recordActionsLayout, setRecordActionsLayout] = useState<{
-    active: 'inline' | 'stacked'
-    archived: 'inline' | 'stacked'
-  }>({
-    active: 'inline',
-    archived: 'inline',
-  })
 
 
   useEffect(() => {
@@ -410,22 +400,19 @@ export default function PaymentSourcesPanel({
     title?: string
   }) => (
     <span
-      data-ui-section-record-metric="true"
-      data-ui-large-metric="true"
+      data-ui-metric-card="true"
       data-ui-tone={input.tone || 'neutral'}
       title={input.title}
-      style={{ '--ui-large-metric-progress': `${input.percent}%` } as CSSProperties}
+      style={{ '--ui-metric-progress': `${input.percent}%` } as CSSProperties}
     >
-      <span data-ui-large-metric-label="true">
-        <span data-ui-section-record-metric-icon="true" aria-hidden="true">
-          <CategoryIcon iconKey={input.iconKey} size="small" />
-        </span>
+      <span data-ui-metric-card-label="true">
+        <CategoryIcon iconKey={input.iconKey} size="small" />
         <span>{input.label}</span>
       </span>
-      <strong data-ui-large-metric-value="true">{input.percent}%</strong>
-      <span data-ui-large-metric-detail="true">{input.detail}</span>
-      <span data-ui-large-metric-progress="true" aria-hidden="true">
-        <span data-ui-large-metric-progress-fill="true" />
+      <strong data-ui-metric-card-value="true">{input.percent}%</strong>
+      <span data-ui-metric-card-detail="true">{input.detail}</span>
+      <span data-ui-metric-card-progress="true" aria-hidden="true">
+        <span data-ui-metric-card-progress-fill="true" />
       </span>
     </span>
   )
@@ -511,182 +498,87 @@ export default function PaymentSourcesPanel({
     }
     const isArchived = Boolean(source.archived_at)
     const hasHistory = stats.transactionCount > 0
+
     return (
-      <article
-        key={source.id}
-        data-ui-utility-record="true"
-        data-ui-section-record="true"
-        data-ui-section-record-variant="payment-source"
-        data-ui-record-layout="payment-source"
-        data-ui-record-section="strong"
-        data-ui-record-state={isArchived ? 'archived' : 'active'}
-        data-ui-large-record="true"
-      >
-        <div data-ui-section-record-main="true" data-ui-large-record-main="true">
-          <span data-ui-icon-tile="true" data-ui-tone={color.tone} data-ui-large-record-icon="true">
+      <article key={source.id} data-ui-large-record="true" data-ui-record-state={isArchived ? 'archived' : 'active'}>
+        <div data-ui-large-record-identity="true">
+          <span data-ui-icon-tile="true" data-ui-tone={color.tone} aria-hidden="true">
             <CategoryIcon iconKey={iconKey} />
           </span>
 
-          <div data-ui-section-record-copy="true" data-ui-large-record-copy="true">
-            <strong data-ui-section-record-title="true">{source.name}</strong>
-            <div data-ui-section-record-status="true">
+          <div data-ui-large-record-identity-copy="true">
+            <strong data-ui-large-record-title="true">{source.name}</strong>
+            <div data-ui-status-pill-group="true">
               {renderAvailability('Przychody', source.is_income_source !== false && !isArchived)}
               {renderAvailability('Wydatki', source.is_expense_source !== false && !isArchived)}
             </div>
-
-            <div data-ui-section-record-metrics="true" data-ui-large-metrics="true">
-              {renderMetric({
-                iconKey: 'system-records',
-                label: 'wpisy',
-                percent: calculateShare(stats.transactionCount, totals.transactionCount),
-                detail: `${formatCompactNumber(stats.transactionCount)} z ${formatCompactNumber(totals.transactionCount)} wpisów`,
-                title: `${stats.transactionCount} z ${totals.transactionCount} wpisów`,
-              })}
-
-              {renderMetric({
-                iconKey: 'system-income',
-                label: 'przychody',
-                percent: calculateShare(stats.incomeTotal, totals.incomeTotal),
-                detail: `${formatCompactCurrency(stats.incomeTotal)} z ${formatCompactCurrency(totals.incomeTotal)}`,
-                tone: 'success',
-                title: `${formatCurrency(stats.incomeTotal)} z ${formatCurrency(totals.incomeTotal)}`,
-              })}
-
-              {renderMetric({
-                iconKey: 'system-expense',
-                label: 'wydatki',
-                percent: calculateShare(stats.expenseTotal, totals.expenseTotal),
-                detail: `${formatCompactCurrency(stats.expenseTotal)} z ${formatCompactCurrency(totals.expenseTotal)}`,
-                tone: 'danger',
-                title: `${formatCurrency(stats.expenseTotal)} z ${formatCurrency(totals.expenseTotal)}`,
-              })}
-            </div>
           </div>
+        </div>
 
-          <div data-ui-section-record-actions="true" data-ui-large-record-actions="true">
-            {!isArchived && (
-              <button type="button" className="ui-button--utility" onClick={() => openEditForm(source)}>
-                Edytuj
-              </button>
-            )}
-            <button
-              type="button"
-              data-ui-button-danger="true"
-              disabled={isSaving}
-              onClick={() => void deleteSource(source)}
-            >
-              {hasHistory ? 'Archiwizuj' : 'Usuń'}
+        <div data-ui-metric-group="true" data-ui-metric-columns="3">
+          {renderMetric({
+            iconKey: 'system-records',
+            label: 'wpisy',
+            percent: calculateShare(stats.transactionCount, totals.transactionCount),
+            detail: `${formatCompactNumber(stats.transactionCount)} z ${formatCompactNumber(totals.transactionCount)} wpisów`,
+            title: `${stats.transactionCount} z ${totals.transactionCount} wpisów`,
+          })}
+
+          {renderMetric({
+            iconKey: 'system-income',
+            label: 'przychody',
+            percent: calculateShare(stats.incomeTotal, totals.incomeTotal),
+            detail: `${formatCompactCurrency(stats.incomeTotal)} z ${formatCompactCurrency(totals.incomeTotal)}`,
+            tone: 'success',
+            title: `${formatCurrency(stats.incomeTotal)} z ${formatCurrency(totals.incomeTotal)}`,
+          })}
+
+          {renderMetric({
+            iconKey: 'system-expense',
+            label: 'wydatki',
+            percent: calculateShare(stats.expenseTotal, totals.expenseTotal),
+            detail: `${formatCompactCurrency(stats.expenseTotal)} z ${formatCompactCurrency(totals.expenseTotal)}`,
+            tone: 'danger',
+            title: `${formatCurrency(stats.expenseTotal)} z ${formatCurrency(totals.expenseTotal)}`,
+          })}
+        </div>
+
+        <div data-ui-action-group="true">
+          {!isArchived && (
+            <button type="button" className="ui-button--utility" onClick={() => openEditForm(source)}>
+              Edytuj
             </button>
-          </div>
+          )}
+          <button
+            type="button"
+            data-ui-button-danger="true"
+            disabled={isSaving}
+            onClick={() => void deleteSource(source)}
+          >
+            {hasHistory ? 'Archiwizuj' : 'Usuń'}
+          </button>
         </div>
       </article>
     )
   }
 
-  const measureRecordActionsLayout = useCallback((element: HTMLDivElement | null) => {
-    if (!element) {
-      return 'inline'
-    }
 
-    const previousLayout = element.getAttribute('data-ui-record-actions-layout')
-    element.setAttribute('data-ui-record-actions-layout', 'inline')
-
-    const records = Array.from(
-      element.querySelectorAll<HTMLElement>('[data-ui-section-record-main="true"]')
-    )
-
-    const shouldStack = records.some((record) => {
-      const metrics = record.querySelector<HTMLElement>('[data-ui-section-record-metrics="true"]')
-      const actions = record.querySelector<HTMLElement>('[data-ui-section-record-actions="true"]')
-
-      if (!metrics || !actions) {
-        return false
-      }
-
-      const metricsRect = metrics.getBoundingClientRect()
-      const actionsRect = actions.getBoundingClientRect()
-      const availableGap = actionsRect.left - metricsRect.right
-
-      return availableGap < RECORD_ACTIONS_MIN_GAP
-    })
-
-    if (previousLayout) {
-      element.setAttribute('data-ui-record-actions-layout', previousLayout)
-    } else {
-      element.removeAttribute('data-ui-record-actions-layout')
-    }
-
-    return shouldStack ? 'stacked' : 'inline'
-  }, [])
-
-  useEffect(() => {
-    let frame = 0
-
-    const updateRecordActionsLayout = () => {
-      window.cancelAnimationFrame(frame)
-      frame = window.requestAnimationFrame(() => {
-        const activeLayout = measureRecordActionsLayout(activeRecordListRef.current)
-        const archivedLayout = measureRecordActionsLayout(archivedRecordListRef.current)
-
-        setRecordActionsLayout((currentLayout) => {
-          if (
-            currentLayout.active === activeLayout &&
-            currentLayout.archived === archivedLayout
-          ) {
-            return currentLayout
-          }
-
-          return {
-            active: activeLayout,
-            archived: archivedLayout,
-          }
-        })
-      })
-    }
-
-    updateRecordActionsLayout()
-
-    const resizeObserver = new ResizeObserver(updateRecordActionsLayout)
-
-    if (activeRecordListRef.current) {
-      resizeObserver.observe(activeRecordListRef.current)
-    }
-
-    if (archivedRecordListRef.current) {
-      resizeObserver.observe(archivedRecordListRef.current)
-    }
-
-    window.addEventListener('resize', updateRecordActionsLayout)
-
-    return () => {
-      window.cancelAnimationFrame(frame)
-      resizeObserver.disconnect()
-      window.removeEventListener('resize', updateRecordActionsLayout)
-    }
-  }, [
-    activeSources,
-    archivedSources,
-    measureRecordActionsLayout,
-    paymentSourceStats,
-    settingsDraft.defaultExpensePaymentSourceId,
-    settingsDraft.defaultIncomePaymentSourceId,
-  ])
 
   return (
-    <UtilityPanel data-ui-payment-sources-shell="true" data-ui-large-module="true">
-      <section data-ui-section="true" data-ui-section-layout="comfortable" data-ui-payment-section="defaults" data-ui-large-section="true">
-        <header data-ui-section-header="true" data-ui-section-header-variant="subsection">
-          <span data-ui-section-header-icon="true" data-ui-tone="blue" aria-hidden="true">
+    <section data-ui-payment-sources-shell="true" data-ui-large-module="true" data-ui-utility-modal-size="xl">
+      <section data-ui-payment-section="defaults" data-ui-large-section="true">
+        <header data-ui-large-section-header="true">
+          <span data-ui-large-section-header-icon="true" data-ui-tone="blue" aria-hidden="true">
             <CategoryIcon iconKey="system-payment-sources" size="small" />
           </span>
-          <div data-ui-section-header-copy="true">
+          <div data-ui-large-section-header-copy="true">
             <strong>Domyślne źródła płatności</strong>
             <span>Ustaw źródła, które będą podpowiadane przy nowych wpisach.</span>
           </div>
         </header>
 
-        <div data-ui-settings-strip="true" data-ui-form-grid="two">
-          <label data-ui-field="true">
+        <div data-ui-settings-strip="true">
+          <label data-ui-settings-strip-field="true" data-ui-settings-position="primary">
             Domyślne źródło przychodów
             <span data-ui-select-shell="true">
               <select
@@ -711,7 +603,7 @@ export default function PaymentSourcesPanel({
               <span data-ui-picker-chevron="true" aria-hidden="true" />
             </span>
           </label>
-          <label data-ui-field="true">
+          <label data-ui-settings-strip-field="true" data-ui-settings-position="secondary">
             Domyślne źródło wydatków
             <span data-ui-select-shell="true">
               <select
@@ -736,7 +628,7 @@ export default function PaymentSourcesPanel({
               <span data-ui-picker-chevron="true" aria-hidden="true" />
             </span>
           </label>
-          <div data-ui-form-actions="true" data-ui-actions-align="start">
+          <div data-ui-settings-strip-actions="true">
             <button
               type="button"
               data-ui-button-confirm="true"
@@ -749,34 +641,23 @@ export default function PaymentSourcesPanel({
         </div>
       </section>
 
-      <div
-        data-ui-section-separator="true"
-        data-ui-separator-role="section"
-        data-ui-separator-strength="comfortable"
-      />
+      <hr data-ui-heavy-divider="true" />
 
       {statusText && <StatusBox tone="success">{statusText}</StatusBox>}
       {errorText && <StatusBox tone="danger">{errorText}</StatusBox>}
 
-      <section data-ui-section="true" data-ui-section-layout="comfortable" data-ui-payment-section="sources" data-ui-large-section="true">
-        <header data-ui-section-header="true" data-ui-section-header-variant="major">
-          <span data-ui-section-header-icon="true" data-ui-tone="navy" aria-hidden="true">
+      <section data-ui-payment-section="sources" data-ui-large-section="true">
+        <header data-ui-large-section-header="true">
+          <span data-ui-large-section-header-icon="true" data-ui-tone="navy" aria-hidden="true">
             <CategoryIcon iconKey="system-records" size="small" />
           </span>
-          <div data-ui-section-header-copy="true">
+          <div data-ui-large-section-header-copy="true">
             <strong>Twoje źródła</strong>
             <span>Aktywne źródła dostępne w kreatorze wpisów.</span>
           </div>
-          <span data-ui-section-count="true">{activeSources.length} aktywnych</span>
+          <span data-ui-large-section-header-trailing="true" data-ui-section-count="true">{activeSources.length} aktywnych</span>
         </header>
-        <div
-          ref={activeRecordListRef}
-          data-ui-record-list="true"
-          data-ui-large-record-list="true"
-          data-ui-record-actions-layout={recordActionsLayout.active}
-          data-ui-separator-role="record"
-          data-ui-separator-strength="comfortable"
-        >
+        <div data-ui-large-record-list="true">
           {activeSources.length === 0 ? (
             <EmptyState>Brak aktywnych źródeł płatności.</EmptyState>
           ) : (
@@ -787,30 +668,19 @@ export default function PaymentSourcesPanel({
 
       {archivedSources.length > 0 && (
         <>
-          <div
-            data-ui-section-separator="true"
-            data-ui-separator-role="section"
-            data-ui-separator-strength="comfortable"
-          />
-          <section data-ui-section="true" data-ui-section-layout="comfortable" data-ui-large-section="true">
-            <header data-ui-section-header="true" data-ui-section-header-variant="major">
-              <span data-ui-section-header-icon="true" data-ui-tone="graphite" aria-hidden="true">
+          <hr data-ui-heavy-divider="true" />
+          <section data-ui-large-section="true">
+            <header data-ui-large-section-header="true">
+              <span data-ui-large-section-header-icon="true" data-ui-tone="graphite" aria-hidden="true">
                 <CategoryIcon iconKey="system-trash" size="small" />
               </span>
-              <div data-ui-section-header-copy="true">
+              <div data-ui-large-section-header-copy="true">
                 <strong>Archiwalne</strong>
                 <span>Źródła zachowane ze względu na historię wpisów.</span>
               </div>
-              <span data-ui-section-count="true">{archivedSources.length}</span>
+              <span data-ui-large-section-header-trailing="true" data-ui-section-count="true">{archivedSources.length}</span>
             </header>
-            <div
-              ref={archivedRecordListRef}
-              data-ui-record-list="true"
-              data-ui-large-record-list="true"
-              data-ui-record-actions-layout={recordActionsLayout.archived}
-              data-ui-separator-role="record"
-              data-ui-separator-strength="comfortable"
-            >
+            <div data-ui-large-record-list="true">
               {archivedSources.map((source) => renderSourceCard(source, archivedSourceTotals))}
             </div>
           </section>
@@ -960,6 +830,6 @@ export default function PaymentSourcesPanel({
           </section>
         </div>
       )}
-    </UtilityPanel>
+    </section>
   )
 }
