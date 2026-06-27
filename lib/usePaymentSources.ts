@@ -29,6 +29,7 @@ type ProfileFinanceSettingsRow = {
 
 type SavePaymentSourceInput = {
   id?: string
+  allowArchivedDuplicateName?: boolean
   name: string
   type: PaymentSourceType
   emoji: string
@@ -169,6 +170,10 @@ export function usePaymentSources({
           return false
         }
 
+        if (input.allowArchivedDuplicateName && source.archived_at) {
+          return false
+        }
+
         return source.name.trim().toLocaleLowerCase('pl-PL') === normalizedName
       })
 
@@ -275,6 +280,31 @@ export function usePaymentSources({
       transactionPaymentSplitsMap,
       transactions,
     ]
+  )
+
+  const restorePaymentSource = useCallback(
+    async (paymentSourceId: string) => {
+      if (!isPaymentSourcesEnabled) {
+        return
+      }
+
+      const { error } = await supabase
+        .from('payment_sources')
+        .update({
+          is_income_source: true,
+          is_expense_source: true,
+          archived_at: null,
+        })
+        .eq('id', paymentSourceId)
+        .eq('profile_id', profileId)
+
+      if (error) {
+        throw new Error(error.message)
+      }
+
+      await loadPaymentSources()
+    },
+    [isPaymentSourcesEnabled, loadPaymentSources, profileId]
   )
 
   const savePaymentSourceSettings = useCallback(
@@ -415,6 +445,7 @@ export function usePaymentSources({
     loadPaymentSources,
     savePaymentSource,
     deletePaymentSource,
+    restorePaymentSource,
     setDefaultPaymentSource,
     setPaymentSourceFieldVisibility,
     copyPaymentSourcesBetweenKinds,

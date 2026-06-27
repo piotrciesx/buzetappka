@@ -275,7 +275,7 @@ export default function FinancialGoalsList({
         <div data-financial-goals-list-actions="true">
           {renderAllocationManager()}
 
-          <div data-financial-goals-list-switch="true" role="group" aria-label="Zakres celów">
+          <div data-ui-list-switch="true" role="group" aria-label="Zakres celów">
             <button
               type="button"
               data-active={activeList === 'current' ? 'true' : undefined}

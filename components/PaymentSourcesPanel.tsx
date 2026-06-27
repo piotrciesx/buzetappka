@@ -43,6 +43,7 @@ type Props = {
   paymentSourceSettings: PaymentSourceSettings
   onSave: (input: {
     id?: string
+    allowArchivedDuplicateName?: boolean
     name: string
     type: PaymentSourceType
     emoji: string
@@ -51,6 +52,7 @@ type Props = {
     isExpenseSource: boolean
   }) => Promise<void>
   onDelete: (id: string) => Promise<void>
+  onRestore: (id: string) => Promise<void>
   onSetDefault: (kind: PaymentSourceListKind, id: string | null) => Promise<void>
   onSetFieldVisibility: (kind: PaymentSourceListKind, isVisible: boolean) => Promise<void>
   onCopyList: (sourceKind: PaymentSourceListKind, targetKind: PaymentSourceListKind) => Promise<void>
@@ -192,12 +194,14 @@ export default function PaymentSourcesPanel({
   paymentSourceSettings,
   onSave,
   onDelete,
+  onRestore,
   onSetDefault,
   openCreateRequest,
 }: Props) {
   const [draft, setDraft] = useState<PaymentSourceDraft>(DEFAULT_DRAFT)
   const [settingsDraft, setSettingsDraft] = useState(paymentSourceSettings)
   const [isFormOpen, setIsFormOpen] = useState(false)
+  const [activeList, setActiveList] = useState<'active' | 'archived'>('active')
   const [activePicker, setActivePicker] = useState<'color' | 'icon' | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [isConfigSaving, setIsConfigSaving] = useState(false)
@@ -308,7 +312,7 @@ export default function PaymentSourcesPanel({
     }
   }
 
-  const saveDraft = async () => {
+  const saveDraft = async (allowArchivedDuplicateName = false) => {
     const trimmedName = draft.name.trim()
 
     if (!trimmedName) {
@@ -321,15 +325,17 @@ export default function PaymentSourcesPanel({
       return
     }
 
-    const duplicate = paymentSources.find((source) => {
+    const duplicateCandidates = paymentSources.filter((source) => {
       if (draft.id && source.id === draft.id) {
         return false
       }
 
       return normalizeName(source.name) === normalizeName(trimmedName)
     })
+    const duplicate =
+      duplicateCandidates.find((source) => !source.archived_at) || duplicateCandidates[0]
 
-    if (duplicate) {
+    if (duplicate && (!allowArchivedDuplicateName || !duplicate.archived_at)) {
       setDuplicateSourceId(duplicate.id)
       setErrorText('')
       return
@@ -342,6 +348,7 @@ export default function PaymentSourcesPanel({
     try {
       await onSave({
         id: draft.id,
+        allowArchivedDuplicateName,
         name: trimmedName,
         type: draft.type,
         emoji: draft.icon,
@@ -375,6 +382,25 @@ export default function PaymentSourcesPanel({
       )
     } catch (error) {
       setErrorText(error instanceof Error ? error.message : 'Nie udało się usunąć źródła płatności.')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const restoreSource = async (source: PaymentSource, closeAfterRestore = false) => {
+    setIsSaving(true)
+    setStatusText('')
+    setErrorText('')
+
+    try {
+      await onRestore(source.id)
+      if (closeAfterRestore) {
+        closeForm()
+      }
+      setActiveList('active')
+      setStatusText('Przywrócono źródło płatności.')
+    } catch (error) {
+      setErrorText(error instanceof Error ? error.message : 'Nie udało się przywrócić źródła płatności.')
     } finally {
       setIsSaving(false)
     }
@@ -544,19 +570,30 @@ export default function PaymentSourcesPanel({
         </div>
 
         <div data-ui-action-group="true">
-          {!isArchived && (
-            <button type="button" className="ui-button--utility" onClick={() => openEditForm(source)}>
-              Edytuj
+          {isArchived ? (
+            <button
+              type="button"
+              className="ui-button--utility"
+              disabled={isSaving}
+              onClick={() => void restoreSource(source)}
+            >
+              Przywróć
             </button>
+          ) : (
+            <>
+              <button type="button" className="ui-button--utility" onClick={() => openEditForm(source)}>
+                Edytuj
+              </button>
+              <button
+                type="button"
+                data-ui-button-danger="true"
+                disabled={isSaving}
+                onClick={() => void deleteSource(source)}
+              >
+                {hasHistory ? 'Archiwizuj' : 'Usuń'}
+              </button>
+            </>
           )}
-          <button
-            type="button"
-            data-ui-button-danger="true"
-            disabled={isSaving}
-            onClick={() => void deleteSource(source)}
-          >
-            {hasHistory ? 'Archiwizuj' : 'Usuń'}
-          </button>
         </div>
       </article>
     )
@@ -653,39 +690,48 @@ export default function PaymentSourcesPanel({
           </span>
           <div data-ui-large-section-header-copy="true">
             <strong>Twoje źródła</strong>
-            <span>Aktywne źródła dostępne w kreatorze wpisów.</span>
+            <span>
+              {activeList === 'active'
+                ? 'Aktywne źródła dostępne w kreatorze wpisów.'
+                : 'Źródła zachowane ze względu na historię wpisów.'}
+            </span>
           </div>
-          <span data-ui-large-section-header-trailing="true" data-ui-section-count="true">{activeSources.length} aktywnych</span>
+          <div data-ui-large-section-header-trailing="true">
+            <div data-ui-list-switch="true" role="group" aria-label="Zakres źródeł płatności">
+              <button
+                type="button"
+                data-active={activeList === 'active' ? 'true' : undefined}
+                onClick={() => setActiveList('active')}
+              >
+                Źródła aktywne
+              </button>
+              <button
+                type="button"
+                data-active={activeList === 'archived' ? 'true' : undefined}
+                onClick={() => setActiveList('archived')}
+              >
+                Źródła archiwalne
+              </button>
+            </div>
+          </div>
         </header>
         <div data-ui-large-record-list="true">
-          {activeSources.length === 0 ? (
-            <EmptyState>Brak aktywnych źródeł płatności.</EmptyState>
+          {(activeList === 'active' ? activeSources : archivedSources).length === 0 ? (
+            <EmptyState>
+              {activeList === 'active'
+                ? 'Brak aktywnych źródeł płatności.'
+                : 'Brak archiwalnych źródeł płatności.'}
+            </EmptyState>
           ) : (
-            activeSources.map((source) => renderSourceCard(source, activeSourceTotals))
+            (activeList === 'active' ? activeSources : archivedSources).map((source) =>
+              renderSourceCard(
+                source,
+                activeList === 'active' ? activeSourceTotals : archivedSourceTotals
+              )
+            )
           )}
         </div>
       </section>
-
-      {archivedSources.length > 0 && (
-        <>
-          <hr data-ui-heavy-divider="true" />
-          <section data-ui-large-section="true">
-            <header data-ui-large-section-header="true">
-              <span data-ui-large-section-header-icon="true" data-ui-tone="graphite" aria-hidden="true">
-                <CategoryIcon iconKey="system-trash" size="small" />
-              </span>
-              <div data-ui-large-section-header-copy="true">
-                <strong>Archiwalne</strong>
-                <span>Źródła zachowane ze względu na historię wpisów.</span>
-              </div>
-              <span data-ui-large-section-header-trailing="true" data-ui-section-count="true">{archivedSources.length}</span>
-            </header>
-            <div data-ui-large-record-list="true">
-              {archivedSources.map((source) => renderSourceCard(source, archivedSourceTotals))}
-            </div>
-          </section>
-        </>
-      )}
 
       {isFormOpen && (
         <div data-ui-overlay="true" onClick={closeForm}>
@@ -740,17 +786,43 @@ export default function PaymentSourcesPanel({
                   data-ui-empty-block="true"
                   data-ui-empty-block-variant="notice"
                 >
-                  <strong>Źródło „{duplicateSource.name}” już istnieje.</strong>
-                  <span>
-                    Edytuj istniejące źródło, żeby zmienić dostępność dla przychodów lub wydatków.
-                  </span>
-                  <button
-                    type="button"
-                    className="ui-button--standard"
-                    onClick={() => openEditForm(duplicateSource)}
-                  >
-                    Edytuj istniejące źródło
-                  </button>
+                  {!draft.id && duplicateSource.archived_at ? (
+                    <>
+                      <strong>Istnieje archiwalne źródło o tej nazwie.</strong>
+                      <div data-ui-action-group="true">
+                        <button
+                          type="button"
+                          className="ui-button--standard"
+                          disabled={isSaving}
+                          onClick={() => void restoreSource(duplicateSource, true)}
+                        >
+                          Przywróć istniejące
+                        </button>
+                        <button
+                          type="button"
+                          className="ui-button--utility"
+                          disabled={isSaving}
+                          onClick={() => void saveDraft(true)}
+                        >
+                          Utwórz nowe mimo wszystko
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <strong>Źródło „{duplicateSource.name}” już istnieje.</strong>
+                      <span>
+                        Edytuj istniejące źródło, żeby zmienić dostępność dla przychodów lub wydatków.
+                      </span>
+                      <button
+                        type="button"
+                        className="ui-button--standard"
+                        onClick={() => openEditForm(duplicateSource)}
+                      >
+                        Edytuj istniejące źródło
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
               </section>

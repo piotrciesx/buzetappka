@@ -161,6 +161,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     recurringExecutions,
     recurringReminderMonthStatuses,
     recurringTransactions,
+    restorePaymentSource,
     reorderingLevel1Id,
     reorderingLevel2Id,
     resetBankSearch,
@@ -370,6 +371,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
               }
             }
           },
+          onRestore: restorePaymentSource,
           onSetDefault: async (kind: any, paymentSourceId: string | null) => {
             try {
               await setDefaultPaymentSource(kind, paymentSourceId)
