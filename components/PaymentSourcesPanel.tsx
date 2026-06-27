@@ -618,10 +618,13 @@ export default function PaymentSourcesPanel({
         </header>
 
         <div data-ui-settings-strip="true">
-          <label data-ui-settings-strip-field="true" data-ui-settings-position="primary">
-            Domyślne źródło przychodów
-            <span data-ui-select-shell="true">
+          <div data-ui-settings-strip-field="true" data-ui-settings-position="primary">
+            <label data-ui-settings-strip-label="true" htmlFor="default-income-payment-source">
+              Domyślne źródło przychodów
+            </label>
+            <span data-ui-settings-strip-control="true" data-ui-select-shell="true">
               <select
+                id="default-income-payment-source"
                 className="ui-select"
                 data-input-width="full"
                 value={settingsDraft.defaultIncomePaymentSourceId || ''}
@@ -642,11 +645,14 @@ export default function PaymentSourcesPanel({
               </select>
               <span data-ui-picker-chevron="true" aria-hidden="true" />
             </span>
-          </label>
-          <label data-ui-settings-strip-field="true" data-ui-settings-position="secondary">
-            Domyślne źródło wydatków
-            <span data-ui-select-shell="true">
+          </div>
+          <div data-ui-settings-strip-field="true" data-ui-settings-position="secondary">
+            <label data-ui-settings-strip-label="true" htmlFor="default-expense-payment-source">
+              Domyślne źródło wydatków
+            </label>
+            <span data-ui-settings-strip-control="true" data-ui-select-shell="true">
               <select
+                id="default-expense-payment-source"
                 className="ui-select"
                 data-input-width="full"
                 value={settingsDraft.defaultExpensePaymentSourceId || ''}
@@ -667,7 +673,7 @@ export default function PaymentSourcesPanel({
               </select>
               <span data-ui-picker-chevron="true" aria-hidden="true" />
             </span>
-          </label>
+          </div>
           <div data-ui-settings-strip-actions="true">
             <button
               type="button"

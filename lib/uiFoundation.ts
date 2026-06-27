@@ -1675,6 +1675,8 @@ export const uiLargeModuleApi = {
   actionStack: 'data-ui-action-stack',
   settingsStrip: 'data-ui-settings-strip',
   settingsStripField: 'data-ui-settings-strip-field',
+  settingsStripLabel: 'data-ui-settings-strip-label',
+  settingsStripControl: 'data-ui-settings-strip-control',
   settingsStripActions: 'data-ui-settings-strip-actions',
   heroIconRole: 'data-ui-icon-role="large-record-hero"',
 } as const

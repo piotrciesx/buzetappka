@@ -901,23 +901,38 @@
 /* Settings Strip */
 [data-ui-settings-strip="true"] {
   display: grid;
-  grid-template-areas: "primary secondary actions";
+  grid-template-areas:
+    "primary-label secondary-label ."
+    "primary-control secondary-control actions";
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  column-gap: var(--ui-space-7);
+  row-gap: var(--ui-spacing-form-label-gap);
   align-items: center;
-  gap: var(--ui-space-7);
 }
 
 [data-ui-settings-strip-field="true"] {
-  display: grid;
-  gap: var(--ui-spacing-form-label-gap);
+  display: contents;
 }
 
-[data-ui-settings-strip-field="true"][data-ui-settings-position="primary"] {
-  grid-area: primary;
+[data-ui-settings-strip-label="true"],
+[data-ui-settings-strip-control="true"] {
+  min-width: 0;
 }
 
-[data-ui-settings-strip-field="true"][data-ui-settings-position="secondary"] {
-  grid-area: secondary;
+[data-ui-settings-strip-field="true"][data-ui-settings-position="primary"] > [data-ui-settings-strip-label="true"] {
+  grid-area: primary-label;
+}
+
+[data-ui-settings-strip-field="true"][data-ui-settings-position="primary"] > [data-ui-settings-strip-control="true"] {
+  grid-area: primary-control;
+}
+
+[data-ui-settings-strip-field="true"][data-ui-settings-position="secondary"] > [data-ui-settings-strip-label="true"] {
+  grid-area: secondary-label;
+}
+
+[data-ui-settings-strip-field="true"][data-ui-settings-position="secondary"] > [data-ui-settings-strip-control="true"] {
+  grid-area: secondary-control;
 }
 
 [data-ui-settings-strip-actions="true"] {
@@ -978,6 +993,25 @@
       "primary secondary"
       "actions actions";
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--ui-space-7);
+  }
+
+  [data-ui-settings-strip-field="true"] {
+    display: grid;
+    gap: var(--ui-spacing-form-label-gap);
+  }
+
+  [data-ui-settings-strip-field="true"][data-ui-settings-position="primary"] {
+    grid-area: primary;
+  }
+
+  [data-ui-settings-strip-field="true"][data-ui-settings-position="secondary"] {
+    grid-area: secondary;
+  }
+
+  [data-ui-settings-strip-field="true"] > [data-ui-settings-strip-label="true"],
+  [data-ui-settings-strip-field="true"] > [data-ui-settings-strip-control="true"] {
+    grid-area: auto;
   }
 }
 
@@ -1206,19 +1240,6 @@
   block-size: var(--ui-metric-progress-height);
   background: var(--ui-metric-accent-soft);
   color: var(--ui-metric-accent);
-}
-
-[data-ui-settings-strip="true"] {
-  align-items: end;
-}
-
-[data-ui-settings-strip-actions="true"] {
-  align-self: end;
-  align-items: center;
-}
-
-[data-ui-settings-strip-actions="true"] > button {
-  min-height: var(--ui-picker-trigger-height);
 }
 
 [data-ui-large-record="true"] > [data-ui-action-group="true"][data-ui-action-stack="record"] {
