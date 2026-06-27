@@ -903,7 +903,7 @@
   display: grid;
   grid-template-areas: "primary secondary actions";
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
-  align-items: end;
+  align-items: center;
   gap: var(--ui-space-7);
 }
 
@@ -922,10 +922,11 @@
 
 [data-ui-settings-strip-actions="true"] {
   grid-area: actions;
-  align-self: end;
+  align-self: center;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
   gap: var(--ui-space-5);
 }
 
