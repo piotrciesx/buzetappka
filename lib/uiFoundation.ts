@@ -1613,3 +1613,90 @@ export type UiRowState = keyof typeof uiListRowApi.state
 export type UiRowDensity = keyof typeof uiListRowApi.density
 export type UiOverlayKind = keyof typeof uiOverlayContracts
 export type UiOverlayPrimitive = keyof typeof uiOverlayPrimitives
+
+
+// Foundation large module public API v1 — visual rules and contracts.
+export const uiNeutralAccentTokens = {
+  accent1: {
+    surface: 'var(--ui-neutral-accent-1-surface)',
+    border: 'var(--ui-neutral-accent-1-border)',
+    text: 'var(--ui-neutral-accent-1-text)',
+  },
+  accent2: {
+    surface: 'var(--ui-neutral-accent-2-surface)',
+    border: 'var(--ui-neutral-accent-2-border)',
+    text: 'var(--ui-neutral-accent-2-text)',
+  },
+  accent3: {
+    surface: 'var(--ui-neutral-accent-3-surface)',
+    border: 'var(--ui-neutral-accent-3-border)',
+    text: 'var(--ui-neutral-accent-3-text)',
+  },
+  accent4: {
+    surface: 'var(--ui-neutral-accent-4-surface)',
+    border: 'var(--ui-neutral-accent-4-border)',
+    text: 'var(--ui-neutral-accent-4-text)',
+  },
+  accent5: {
+    surface: 'var(--ui-neutral-accent-5-surface)',
+    border: 'var(--ui-neutral-accent-5-border)',
+    text: 'var(--ui-neutral-accent-5-text)',
+  },
+  accent6: {
+    surface: 'var(--ui-neutral-accent-6-surface)',
+    border: 'var(--ui-neutral-accent-6-border)',
+    text: 'var(--ui-neutral-accent-6-text)',
+  },
+} as const
+
+export const uiLargeModuleApi = {
+  module: 'data-ui-large-module',
+  section: 'data-ui-large-section',
+  sectionHeader: 'data-ui-large-section-header',
+  sectionHeaderIcon: 'data-ui-large-section-header-icon',
+  sectionHeaderCopy: 'data-ui-large-section-header-copy',
+  sectionHeaderTrailing: 'data-ui-large-section-header-trailing',
+  heavyDivider: 'data-ui-heavy-divider',
+  recordList: 'data-ui-large-record-list',
+  record: 'data-ui-large-record',
+  recordIdentity: 'data-ui-large-record-identity',
+  recordIdentityCopy: 'data-ui-large-record-identity-copy',
+  recordTitle: 'data-ui-large-record-title',
+  recordMeta: 'data-ui-large-record-meta',
+  metricGroup: 'data-ui-metric-group',
+  metricColumns: 'data-ui-metric-columns',
+  metricCard: 'data-ui-metric-card',
+  metricLabel: 'data-ui-metric-card-label',
+  metricValue: 'data-ui-metric-card-value',
+  metricDetail: 'data-ui-metric-card-detail',
+  metricProgress: 'data-ui-metric-card-progress',
+  metricProgressFill: 'data-ui-metric-card-progress-fill',
+  actionGroup: 'data-ui-action-group',
+  actionStack: 'data-ui-action-stack',
+  settingsStrip: 'data-ui-settings-strip',
+  settingsStripField: 'data-ui-settings-strip-field',
+  settingsStripActions: 'data-ui-settings-strip-actions',
+  heroIconRole: 'data-ui-icon-role="large-record-hero"',
+} as const
+
+export const uiMetricToneApi = {
+  neutralAccent1: 'neutral-accent-1',
+  neutralAccent2: 'neutral-accent-2',
+  neutralAccent3: 'neutral-accent-3',
+  neutralAccent4: 'neutral-accent-4',
+  neutralAccent5: 'neutral-accent-5',
+  neutralAccent6: 'neutral-accent-6',
+  success: 'success',
+  danger: 'danger',
+} as const
+
+export const uiHelpPatternApi = {
+  tooltip: 'Short contextual help hidden behind a help icon.',
+  description: 'Short visible section context that helps scan the screen.',
+  infoBanner: 'Visible explanation for advanced logic or important persistent context.',
+  statusBanner: 'Visible success, warning, danger or info state feedback.',
+} as const
+
+export type UiNeutralAccentToken = keyof typeof uiNeutralAccentTokens
+export type UiMetricTone = keyof typeof uiMetricToneApi
+export type UiLargeModuleApiKey = keyof typeof uiLargeModuleApi

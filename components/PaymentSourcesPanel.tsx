@@ -422,12 +422,12 @@ export default function PaymentSourcesPanel({
     label: string
     percent: number
     detail: string
-    tone?: 'neutral' | 'success' | 'danger'
+    tone?: 'neutral' | 'neutral-accent-1' | 'neutral-accent-2' | 'neutral-accent-3' | 'neutral-accent-4' | 'neutral-accent-5' | 'neutral-accent-6' | 'success' | 'danger'
     title?: string
   }) => (
     <span
       data-ui-metric-card="true"
-      data-ui-tone={input.tone || 'neutral'}
+      data-ui-tone={input.tone || 'neutral-accent-1'}
       title={input.title}
       style={{ '--ui-metric-progress': `${input.percent}%` } as CSSProperties}
     >
@@ -528,8 +528,8 @@ export default function PaymentSourcesPanel({
     return (
       <article key={source.id} data-ui-large-record="true" data-ui-record-state={isArchived ? 'archived' : 'active'}>
         <div data-ui-large-record-identity="true">
-          <span data-ui-icon-tile="true" data-ui-tone={color.tone} aria-hidden="true">
-            <CategoryIcon iconKey={iconKey} />
+          <span data-ui-icon-tile="true" data-ui-icon-role="large-record-hero" data-ui-tone={color.tone} aria-hidden="true">
+            <CategoryIcon iconKey={iconKey} size="large" />
           </span>
 
           <div data-ui-large-record-identity-copy="true">
@@ -545,6 +545,7 @@ export default function PaymentSourcesPanel({
           {renderMetric({
             iconKey: 'system-records',
             label: 'wpisy',
+            tone: 'neutral-accent-1',
             percent: calculateShare(stats.transactionCount, totals.transactionCount),
             detail: `${formatCompactNumber(stats.transactionCount)} z ${formatCompactNumber(totals.transactionCount)} wpisów`,
             title: `${stats.transactionCount} z ${totals.transactionCount} wpisów`,
@@ -569,7 +570,7 @@ export default function PaymentSourcesPanel({
           })}
         </div>
 
-        <div data-ui-action-group="true">
+        <div data-ui-action-group="true" data-ui-action-stack="record">
           {isArchived ? (
             <button
               type="button"
@@ -605,12 +606,14 @@ export default function PaymentSourcesPanel({
     <section data-ui-payment-sources-shell="true" data-ui-large-module="true" data-ui-utility-modal-size="xl">
       <section data-ui-payment-section="defaults" data-ui-large-section="true">
         <header data-ui-large-section-header="true">
-          <span data-ui-large-section-header-icon="true" data-ui-tone="blue" aria-hidden="true">
+          <span data-ui-large-section-header-icon="true" data-ui-tone="neutral-accent-1" aria-hidden="true">
             <CategoryIcon iconKey="system-payment-sources" size="small" />
           </span>
           <div data-ui-large-section-header-copy="true">
-            <strong>Domyślne źródła płatności</strong>
-            <span>Ustaw źródła, które będą podpowiadane przy nowych wpisach.</span>
+            <span data-ui-title-with-help="true">
+              <strong>Domyślne źródła płatności</strong>
+              <HelpHint label="Ustaw źródła, które będą podpowiadane przy nowych wpisach." />
+            </span>
           </div>
         </header>
 
@@ -685,15 +688,19 @@ export default function PaymentSourcesPanel({
 
       <section data-ui-payment-section="sources" data-ui-large-section="true">
         <header data-ui-large-section-header="true">
-          <span data-ui-large-section-header-icon="true" data-ui-tone="navy" aria-hidden="true">
+          <span data-ui-large-section-header-icon="true" data-ui-tone="neutral-accent-2" aria-hidden="true">
             <CategoryIcon iconKey="system-records" size="small" />
           </span>
           <div data-ui-large-section-header-copy="true">
-            <strong>Twoje źródła</strong>
-            <span>
-              {activeList === 'active'
-                ? 'Aktywne źródła dostępne w kreatorze wpisów.'
-                : 'Źródła zachowane ze względu na historię wpisów.'}
+            <span data-ui-title-with-help="true">
+              <strong>Twoje źródła</strong>
+              <HelpHint
+                label={
+                  activeList === 'active'
+                    ? 'Aktywne źródła dostępne w kreatorze wpisów.'
+                    : 'Źródła zachowane ze względu na historię wpisów.'
+                }
+              />
             </span>
           </div>
           <div data-ui-large-section-header-trailing="true">

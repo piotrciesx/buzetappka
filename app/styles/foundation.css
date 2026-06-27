@@ -1025,6 +1025,213 @@
 }
 
 
+/* Foundation visual rules v1 — large modules final polish. */
+:root {
+  --ui-text-technical: var(--ui-text-secondary);
+  --ui-neutral-accent-1-surface: #e0f2fe;
+  --ui-neutral-accent-1-border: #bae6fd;
+  --ui-neutral-accent-1-text: #0284c7;
+  --ui-neutral-accent-2-surface: #ede9fe;
+  --ui-neutral-accent-2-border: #ddd6fe;
+  --ui-neutral-accent-2-text: #7c3aed;
+  --ui-neutral-accent-3-surface: #fce7f3;
+  --ui-neutral-accent-3-border: #fbcfe8;
+  --ui-neutral-accent-3-text: #be185d;
+  --ui-neutral-accent-4-surface: #ccfbf1;
+  --ui-neutral-accent-4-border: #99f6e4;
+  --ui-neutral-accent-4-text: #0f766e;
+  --ui-neutral-accent-5-surface: #f1e4d8;
+  --ui-neutral-accent-5-border: #dfc7b5;
+  --ui-neutral-accent-5-text: #92400e;
+  --ui-neutral-accent-6-surface: #e0e7ff;
+  --ui-neutral-accent-6-border: #c7d2fe;
+  --ui-neutral-accent-6-text: #4f46e5;
+  --ui-large-section-icon-size: 40px;
+  --ui-large-section-icon-glyph-size: 18px;
+  --ui-large-record-hero-icon-size: var(--ui-icon-tile-size-goal);
+  --ui-large-record-hero-glyph-size: var(--ui-icon-glyph-size-goal);
+  --ui-large-record-hero-radius: var(--ui-icon-radius-goal);
+  --ui-metric-card-detail-min-height: 34px;
+  --ui-metric-progress-height: 6px;
+  --ui-metric-progress-track: rgba(8, 44, 122, 0.08);
+}
+
+[data-ui-tone="neutral-accent-1"] {
+  --ui-tone-surface: var(--ui-neutral-accent-1-surface);
+  --ui-tone-border: var(--ui-neutral-accent-1-border);
+  --ui-tone-text: var(--ui-neutral-accent-1-text);
+}
+
+[data-ui-tone="neutral-accent-2"] {
+  --ui-tone-surface: var(--ui-neutral-accent-2-surface);
+  --ui-tone-border: var(--ui-neutral-accent-2-border);
+  --ui-tone-text: var(--ui-neutral-accent-2-text);
+}
+
+[data-ui-tone="neutral-accent-3"] {
+  --ui-tone-surface: var(--ui-neutral-accent-3-surface);
+  --ui-tone-border: var(--ui-neutral-accent-3-border);
+  --ui-tone-text: var(--ui-neutral-accent-3-text);
+}
+
+[data-ui-tone="neutral-accent-4"] {
+  --ui-tone-surface: var(--ui-neutral-accent-4-surface);
+  --ui-tone-border: var(--ui-neutral-accent-4-border);
+  --ui-tone-text: var(--ui-neutral-accent-4-text);
+}
+
+[data-ui-tone="neutral-accent-5"] {
+  --ui-tone-surface: var(--ui-neutral-accent-5-surface);
+  --ui-tone-border: var(--ui-neutral-accent-5-border);
+  --ui-tone-text: var(--ui-neutral-accent-5-text);
+}
+
+[data-ui-tone="neutral-accent-6"] {
+  --ui-tone-surface: var(--ui-neutral-accent-6-surface);
+  --ui-tone-border: var(--ui-neutral-accent-6-border);
+  --ui-tone-text: var(--ui-neutral-accent-6-text);
+}
+
+[data-ui-large-module="true"] {
+  align-content: start;
+}
+
+[data-ui-payment-sources-shell="true"] {
+  padding-block-start: var(--ui-space-4);
+}
+
+[data-ui-large-section-header-icon="true"] {
+  inline-size: var(--ui-large-section-icon-size);
+  block-size: var(--ui-large-section-icon-size);
+  background: var(--ui-tone-surface, var(--ui-surface-hover));
+  border-color: var(--ui-tone-border, rgba(8, 44, 122, 0.12));
+  color: var(--ui-tone-text, var(--ui-color-primary-navy));
+}
+
+[data-ui-large-section-header-icon="true"] svg,
+[data-ui-large-section-header-icon="true"] [data-category-icon="true"] svg,
+[data-ui-large-section-header-icon="true"] [data-category-icon-glyph="true"] {
+  width: var(--ui-large-section-icon-glyph-size);
+  height: var(--ui-large-section-icon-glyph-size);
+}
+
+[data-ui-large-section-header-copy="true"] [data-ui-title-with-help="true"] {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-4);
+  min-width: 0;
+}
+
+[data-ui-large-section-header-copy="true"] [data-ui-title-with-help="true"] > strong {
+  color: var(--ui-text-primary);
+  font-size: var(--ui-type-t2);
+  font-weight: var(--ui-font-weight-bold);
+  line-height: var(--ui-line-height-heading);
+}
+
+[data-ui-icon-tile="true"][data-ui-icon-role="large-record-hero"] {
+  width: var(--ui-large-record-hero-icon-size);
+  min-width: var(--ui-large-record-hero-icon-size);
+  height: var(--ui-large-record-hero-icon-size);
+  min-height: var(--ui-large-record-hero-icon-size);
+  border-radius: var(--ui-large-record-hero-radius);
+}
+
+[data-ui-icon-tile="true"][data-ui-icon-role="large-record-hero"] svg,
+[data-ui-icon-tile="true"][data-ui-icon-role="large-record-hero"] [data-category-icon="true"] svg,
+[data-ui-icon-tile="true"][data-ui-icon-role="large-record-hero"] [data-category-icon-glyph="true"] {
+  width: var(--ui-large-record-hero-glyph-size);
+  height: var(--ui-large-record-hero-glyph-size);
+}
+
+[data-ui-metric-card="true"] {
+  --ui-metric-accent: var(--ui-neutral-accent-1-text);
+  --ui-metric-accent-soft: var(--ui-neutral-accent-1-surface);
+  color: var(--ui-metric-accent);
+}
+
+[data-ui-metric-card="true"][data-ui-tone="neutral"],
+[data-ui-metric-card="true"][data-ui-tone="neutral-accent-1"] {
+  --ui-metric-accent: var(--ui-neutral-accent-1-text);
+  --ui-metric-accent-soft: var(--ui-neutral-accent-1-surface);
+}
+
+[data-ui-metric-card="true"][data-ui-tone="neutral-accent-2"] {
+  --ui-metric-accent: var(--ui-neutral-accent-2-text);
+  --ui-metric-accent-soft: var(--ui-neutral-accent-2-surface);
+}
+
+[data-ui-metric-card="true"][data-ui-tone="neutral-accent-3"] {
+  --ui-metric-accent: var(--ui-neutral-accent-3-text);
+  --ui-metric-accent-soft: var(--ui-neutral-accent-3-surface);
+}
+
+[data-ui-metric-card="true"][data-ui-tone="neutral-accent-4"] {
+  --ui-metric-accent: var(--ui-neutral-accent-4-text);
+  --ui-metric-accent-soft: var(--ui-neutral-accent-4-surface);
+}
+
+[data-ui-metric-card="true"][data-ui-tone="neutral-accent-5"] {
+  --ui-metric-accent: var(--ui-neutral-accent-5-text);
+  --ui-metric-accent-soft: var(--ui-neutral-accent-5-surface);
+}
+
+[data-ui-metric-card="true"][data-ui-tone="neutral-accent-6"] {
+  --ui-metric-accent: var(--ui-neutral-accent-6-text);
+  --ui-metric-accent-soft: var(--ui-neutral-accent-6-surface);
+}
+
+[data-ui-metric-card="true"][data-ui-tone="success"] {
+  --ui-metric-accent: var(--ui-financial-income);
+  --ui-metric-accent-soft: var(--ui-financial-income-soft);
+}
+
+[data-ui-metric-card="true"][data-ui-tone="danger"] {
+  --ui-metric-accent: var(--ui-financial-expense);
+  --ui-metric-accent-soft: var(--ui-financial-expense-soft);
+}
+
+[data-ui-metric-card-label="true"],
+[data-ui-metric-card-value="true"] {
+  color: var(--ui-metric-accent);
+}
+
+[data-ui-metric-card-detail="true"] {
+  min-block-size: var(--ui-metric-card-detail-min-height);
+  color: var(--ui-text-technical);
+}
+
+[data-ui-metric-card-progress="true"] {
+  block-size: var(--ui-metric-progress-height);
+  background: var(--ui-metric-accent-soft);
+  color: var(--ui-metric-accent);
+}
+
+[data-ui-settings-strip="true"] {
+  align-items: end;
+}
+
+[data-ui-settings-strip-actions="true"] {
+  align-self: end;
+  align-items: center;
+}
+
+[data-ui-settings-strip-actions="true"] > button {
+  min-height: var(--ui-picker-trigger-height);
+}
+
+[data-ui-large-record="true"] > [data-ui-action-group="true"][data-ui-action-stack="record"] {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+}
+
+[data-ui-large-record="true"] > [data-ui-action-group="true"][data-ui-action-stack="record"] > button {
+  width: 100%;
+  justify-content: center;
+}
+
+
 
 .ui-surface {
   min-width: 0;
