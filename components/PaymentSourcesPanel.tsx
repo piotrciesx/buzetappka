@@ -783,8 +783,10 @@ export default function PaymentSourcesPanel({
                   <span data-ui-creator-step-icon="true" aria-hidden="true">1</span>
                   <div data-ui-creator-step-content="true">
                     <header data-ui-creator-step-header="true">
-                      <strong>Nazwa źródła</strong>
-                      <span>To nazwa widoczna w aplikacji.</span>
+                      <span data-ui-title-with-help="true">
+                        <strong>Nazwa źródła</strong>
+                        <HelpHint label="To nazwa widoczna w aplikacji." />
+                      </span>
                     </header>
                     <label data-ui-field="true" data-ui-field-size="comfortable">
                       <span data-ui-visually-hidden="true">Nazwa</span>
@@ -871,8 +873,10 @@ export default function PaymentSourcesPanel({
                   <span data-ui-creator-step-icon="true" aria-hidden="true">2</span>
                   <div data-ui-creator-step-content="true">
                     <header data-ui-creator-step-header="true">
-                      <strong>Wygląd</strong>
-                      <span>Wybierz kolor i ikonę reprezentujące to źródło.</span>
+                      <span data-ui-title-with-help="true">
+                        <strong>Wygląd</strong>
+                        <HelpHint label="Wybierz kolor i ikonę reprezentujące to źródło." />
+                      </span>
                     </header>
                     <div data-ui-picker-row="true" data-ui-picker-row-size="comfortable">
                       <div data-ui-field="true" data-ui-field-size="comfortable">
@@ -891,8 +895,10 @@ export default function PaymentSourcesPanel({
                   <span data-ui-creator-step-icon="true" aria-hidden="true">3</span>
                   <div data-ui-creator-step-content="true">
                     <header data-ui-creator-step-header="true">
-                      <strong>Dostępność</strong>
-                      <span>Określ, do jakich typów operacji ma być dostępne to źródło.</span>
+                      <span data-ui-title-with-help="true">
+                        <strong>Dostępność</strong>
+                        <HelpHint label="Określ, do jakich typów operacji ma być dostępne to źródło." />
+                      </span>
                     </header>
                     <div data-ui-checkbox-field-group="true" data-ui-checkbox-group-size="comfortable">
                       <label

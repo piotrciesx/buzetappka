@@ -721,7 +721,7 @@
 
 [data-ui-large-section-header-copy="true"] > strong {
   color: var(--ui-text-primary);
-  font-size: var(--ui-type-t2);
+  font-size: var(--ui-creator-step-icon-glyph-size);
   font-weight: var(--ui-font-weight-bold);
   line-height: var(--ui-line-height-heading);
 }
@@ -1081,8 +1081,8 @@
   --ui-neutral-accent-6-surface: #e0e7ff;
   --ui-neutral-accent-6-border: #c7d2fe;
   --ui-neutral-accent-6-text: #4f46e5;
-  --ui-large-section-icon-size: 40px;
-  --ui-large-section-icon-glyph-size: 18px;
+  --ui-large-section-icon-size: 42px;
+  --ui-large-section-icon-glyph-size: 20px;
   --ui-large-record-hero-icon-size: var(--ui-icon-tile-size-goal);
   --ui-large-record-hero-glyph-size: var(--ui-icon-glyph-size-goal);
   --ui-large-record-hero-radius: var(--ui-icon-radius-goal);
@@ -5464,12 +5464,21 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   --ui-creator-summary-width: 360px;
   --ui-creator-summary-padding: var(--ui-space-9);
   --ui-creator-step-grid-gap: var(--ui-space-7);
-  --ui-creator-step-icon-size: 44px;
+  --ui-creator-step-icon-size: 38px;
   --ui-creator-step-content-gap: var(--ui-space-7);
   --ui-creator-comfortable-control-height: var(--ui-input-height-hero);
   --ui-creator-comfortable-control-padding: 0 var(--ui-space-8);
   --ui-creator-comfortable-control-font-size: var(--ui-type-t3);
   --ui-creator-footer-padding: var(--ui-space-8) 0 0;
+  --ui-module-hero-title-size: 26px;
+  --ui-module-hero-icon-size: 52px;
+  --ui-module-hero-glyph-size: 27px;
+  --ui-module-hero-gap: var(--ui-space-8);
+  --ui-section-title-size: 18px;
+  --ui-creator-step-title-size: 18px;
+  --ui-creator-step-icon-glyph-size: 17px;
+  --ui-creator-availability-option-width: 190px;
+  --ui-creator-availability-option-min-width: 168px;
 }
 
 [data-ui-modal-shell="true"][data-ui-size="creator"] {
@@ -5477,7 +5486,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   max-height: min(860px, calc(100dvh - 48px));
   gap: 0;
   padding: var(--ui-creator-modal-padding);
-  overflow: auto;
+  overflow: visible;
 }
 
 [data-ui-creator-header="true"] {
@@ -5491,7 +5500,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 
 [data-ui-creator-header="true"] [data-ui-title-with-help="true"] > strong {
   color: var(--ui-text-primary);
-  font-size: clamp(24px, 2vw, 30px);
+  font-size: var(--ui-module-hero-title-size);
   font-weight: var(--ui-font-weight-bold);
   line-height: var(--ui-line-height-heading);
 }
@@ -5504,16 +5513,16 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 [data-ui-icon-role="creator-header"] {
-  inline-size: 58px;
-  block-size: 58px;
+  inline-size: var(--ui-module-hero-icon-size);
+  block-size: var(--ui-module-hero-icon-size);
   border-radius: var(--ui-radius-2xl);
 }
 
 [data-ui-icon-role="creator-header"] [data-category-icon-glyph="true"],
 [data-ui-icon-role="creator-header"] svg,
 [data-ui-icon-role="creator-header"] [data-letter-icon="true"] {
-  inline-size: 30px;
-  block-size: 30px;
+  inline-size: var(--ui-module-hero-glyph-size);
+  block-size: var(--ui-module-hero-glyph-size);
 }
 
 [data-ui-creator-layout="true"] {
@@ -5572,9 +5581,17 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   gap: var(--ui-space-3);
 }
 
-[data-ui-creator-step-header="true"] > strong {
+[data-ui-creator-step-header="true"] [data-ui-title-with-help="true"] {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-4);
+  min-width: 0;
+}
+
+[data-ui-creator-step-header="true"] > strong,
+[data-ui-creator-step-header="true"] [data-ui-title-with-help="true"] > strong {
   color: var(--ui-text-primary);
-  font-size: var(--ui-type-t1);
+  font-size: var(--ui-creator-step-title-size);
   font-weight: var(--ui-font-weight-bold);
   line-height: var(--ui-line-height-heading);
 }
@@ -5673,12 +5690,16 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 
 [data-ui-checkbox-group-size="comfortable"] {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(var(--ui-creator-availability-option-min-width), var(--ui-creator-availability-option-width)));
+  justify-content: start;
+  align-items: center;
   gap: var(--ui-space-8);
 }
 
 [data-ui-checkbox-group-size="comfortable"] [data-ui-checkbox="true"] {
   min-height: var(--ui-creator-comfortable-control-height);
+  inline-size: 100%;
+  justify-content: flex-start;
   border-radius: var(--ui-radius-lg);
   font-size: var(--ui-type-t3);
 }
@@ -5837,4 +5858,42 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   [data-ui-creator-footer="true"] [data-ui-button-confirm="true"] {
     width: 100%;
   }
+}
+
+
+/* Foundation Freeze v4 — hero header and creator polish. */
+[data-ui-modal-header="true"] [data-ui-title-row="true"] > [data-ui-icon-tile="true"]:not([data-ui-icon-role="creator-header"]) {
+  inline-size: var(--ui-module-hero-icon-size);
+  block-size: var(--ui-module-hero-icon-size);
+  border-radius: var(--ui-radius-2xl);
+}
+
+[data-ui-modal-header="true"] [data-ui-title-row="true"] > [data-ui-icon-tile="true"]:not([data-ui-icon-role="creator-header"]) svg,
+[data-ui-modal-header="true"] [data-ui-title-row="true"] > [data-ui-icon-tile="true"]:not([data-ui-icon-role="creator-header"]) [data-category-icon="true"] svg,
+[data-ui-modal-header="true"] [data-ui-title-row="true"] > [data-ui-icon-tile="true"]:not([data-ui-icon-role="creator-header"]) [data-category-icon-glyph="true"] {
+  inline-size: var(--ui-module-hero-glyph-size);
+  block-size: var(--ui-module-hero-glyph-size);
+}
+
+[data-ui-modal-header="true"] [data-ui-title-copy="true"] strong,
+[data-ui-popup-header="true"] [data-ui-title-copy="true"] strong {
+  font-size: var(--ui-module-hero-title-size);
+}
+
+[data-ui-large-section-header-copy="true"] [data-ui-title-with-help="true"] > strong {
+  font-size: var(--ui-section-title-size);
+}
+
+[data-ui-modal-shell="true"][data-ui-size="creator"],
+[data-ui-modal-shell="true"][data-ui-size="creator"] [data-ui-creator-layout="true"],
+[data-ui-modal-shell="true"][data-ui-size="creator"] [data-ui-creator-main="true"],
+[data-ui-modal-shell="true"][data-ui-size="creator"] [data-ui-creator-step="true"],
+[data-ui-modal-shell="true"][data-ui-size="creator"] [data-ui-creator-step-content="true"],
+[data-ui-modal-shell="true"][data-ui-size="creator"] [data-ui-picker-row="true"],
+[data-ui-modal-shell="true"][data-ui-size="creator"] [data-ui-field="true"] {
+  overflow: visible;
+}
+
+[data-ui-modal-shell="true"][data-ui-size="creator"] [data-ui-picker-menu="true"] {
+  z-index: var(--ui-z-popover);
 }

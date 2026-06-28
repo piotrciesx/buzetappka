@@ -226,6 +226,10 @@ export const uiPrimitiveContracts = {
   checkbox: ['default', 'field', 'comfortable', 'disabled'],
   form: ['default', 'comfortable'],
   formSection: ['default', 'creator'],
+  heroHeader: ['module', 'creator'],
+  creatorHeader: ['default'],
+  creatorStep: ['default'],
+  creatorSummary: ['default'],
   creatorHeroZone: ['default'],
   picker: ['rich', 'gallery'],
   pickerTrigger: ['default', 'comfortable'],
@@ -673,12 +677,30 @@ export const uiPickerApi = {
 
 export const uiCreatorApi = {
   attributes: {
+    header: 'data-ui-creator-header',
+    layout: 'data-ui-creator-layout',
+    main: 'data-ui-creator-main',
+    step: 'data-ui-creator-step',
+    stepIcon: 'data-ui-creator-step-icon',
+    stepContent: 'data-ui-creator-step-content',
+    stepHeader: 'data-ui-creator-step-header',
+    summary: 'data-ui-creator-summary',
+    summaryHeader: 'data-ui-creator-summary-header',
+    summaryCard: 'data-ui-creator-summary-card',
+    summaryTitle: 'data-ui-creator-summary-title',
+    footer: 'data-ui-creator-footer',
     section: 'data-ui-creator-section',
     heroZone: 'data-ui-creator-hero-zone',
     heroActions: 'data-ui-creator-hero-actions',
     quickActions: 'data-ui-creator-quick-actions',
     segments: 'data-ui-creator-segments',
     statusRow: 'data-ui-creator-status-row',
+  },
+  density: {
+    comfortable: 'comfortable',
+  },
+  controlSize: {
+    comfortable: 'comfortable',
   },
 } as const
 
@@ -904,6 +926,28 @@ export const uiPickerPrimitives = {
 } as const
 
 export const uiCreatorPrimitives = {
+  header: {
+    attribute: uiCreatorApi.attributes.header,
+    titleSize: 'var(--ui-module-hero-title-size)',
+    iconSize: 'var(--ui-module-hero-icon-size)',
+    iconGlyphSize: 'var(--ui-module-hero-glyph-size)',
+  },
+  layout: {
+    attribute: uiCreatorApi.attributes.layout,
+    gap: 'var(--ui-creator-layout-gap)',
+    summaryWidth: 'var(--ui-creator-summary-width)',
+  },
+  step: {
+    attribute: uiCreatorApi.attributes.step,
+    iconAttribute: uiCreatorApi.attributes.stepIcon,
+    titleSize: 'var(--ui-creator-step-title-size)',
+    iconSize: 'var(--ui-creator-step-icon-size)',
+  },
+  summary: {
+    attribute: uiCreatorApi.attributes.summary,
+    padding: 'var(--ui-creator-summary-padding)',
+    width: 'var(--ui-creator-summary-width)',
+  },
   section: {
     attribute: uiCreatorApi.attributes.section,
     gap: 'var(--ui-creator-section-gap)',
@@ -1651,6 +1695,10 @@ export const uiNeutralAccentTokens = {
 
 export const uiLargeModuleApi = {
   module: 'data-ui-large-module',
+  heroHeader: 'data-ui-hero-header',
+  heroHeaderIcon: 'data-ui-hero-header-icon',
+  heroHeaderCopy: 'data-ui-hero-header-copy',
+  heroHeaderActions: 'data-ui-hero-header-actions',
   section: 'data-ui-large-section',
   sectionHeader: 'data-ui-large-section-header',
   sectionHeaderIcon: 'data-ui-large-section-header-icon',
@@ -1702,3 +1750,4 @@ export const uiHelpPatternApi = {
 export type UiNeutralAccentToken = keyof typeof uiNeutralAccentTokens
 export type UiMetricTone = keyof typeof uiMetricToneApi
 export type UiLargeModuleApiKey = keyof typeof uiLargeModuleApi
+export type UiCreatorApiKey = keyof typeof uiCreatorApi
