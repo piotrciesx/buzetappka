@@ -750,7 +750,8 @@ export default function PaymentSourcesPanel({
         <div data-ui-overlay="true" onClick={closeForm}>
           <section
             data-ui-modal-shell="true"
-            data-ui-size="form"
+            data-ui-size="creator"
+            data-ui-creator-modal="true"
             onClick={(event) => {
               event.stopPropagation()
               if (activePicker) {
@@ -758,16 +759,17 @@ export default function PaymentSourcesPanel({
               }
             }}
           >
-            <header data-ui-modal-header="true">
+            <header data-ui-modal-header="true" data-ui-creator-header="true">
               <div data-ui-title-row="true">
-                <span data-ui-icon-tile="true" data-ui-tone={draft.color}>
+                <span data-ui-icon-tile="true" data-ui-tone={draft.color} data-ui-icon-role="creator-header" aria-hidden="true">
                   <CategoryIcon iconKey={draft.icon} />
                 </span>
                 <div data-ui-title-copy="true">
                   <span data-ui-title-with-help="true">
                     <strong>{draft.id ? 'Edytuj źródło' : 'Nowe źródło'}</strong>
-                    <HelpHint label="Zdecyduj, czy źródło ma być dostępne przy przychodach, wydatkach albo obu." />
+                    <HelpHint label="Utwórz źródło płatności lub przychodów i określ, gdzie ma być dostępne." />
                   </span>
+                  <span>Utwórz nowe źródło płatności lub przychodów.</span>
                 </div>
               </div>
               <button type="button" data-ui-close-action="true" aria-label="Zamknij" onClick={closeForm}>
@@ -775,143 +777,201 @@ export default function PaymentSourcesPanel({
               </button>
             </header>
 
-            <div data-ui-form-shell="true" data-ui-form-density="comfortable">
-              <section data-ui-creator-section="true">
-              <label data-ui-field="true">
-                Nazwa
-                <input
-                  className="ui-input"
-                  data-input-width="full"
-                  data-input-variant="rich"
-                  value={draft.name}
-                  onChange={(event) => {
-                    setDraft((currentDraft) => ({ ...currentDraft, name: event.target.value }))
-                    setDuplicateSourceId(null)
-                    setErrorText('')
-                  }}
-                  placeholder="np. Gotówka, Karta kredytowa, Konto główne"
-                />
-              </label>
-
-              {duplicateSource && (
-                <div
-                  data-ui-section="true"
-                  data-ui-empty-block="true"
-                  data-ui-empty-block-variant="notice"
-                >
-                  {!draft.id && duplicateSource.archived_at ? (
-                    <>
-                      <strong>Istnieje archiwalne źródło o tej nazwie.</strong>
-                      <div data-ui-action-group="true">
-                        <button
-                          type="button"
-                          className="ui-button--standard"
-                          disabled={isSaving}
-                          onClick={() => void restoreSource(duplicateSource, true)}
-                        >
-                          Przywróć istniejące
-                        </button>
-                        <button
-                          type="button"
-                          className="ui-button--utility"
-                          disabled={isSaving}
-                          onClick={() => void saveDraft(true)}
-                        >
-                          Utwórz nowe mimo wszystko
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <strong>Źródło „{duplicateSource.name}” już istnieje.</strong>
-                      <span>
-                        Edytuj istniejące źródło, żeby zmienić dostępność dla przychodów lub wydatków.
+            <div data-ui-creator-layout="true">
+              <div data-ui-creator-main="true">
+                <section data-ui-creator-step="true" data-ui-tone="neutral-accent-3">
+                  <span data-ui-creator-step-icon="true" aria-hidden="true">1</span>
+                  <div data-ui-creator-step-content="true">
+                    <header data-ui-creator-step-header="true">
+                      <strong>Nazwa źródła</strong>
+                      <span>To nazwa widoczna w aplikacji.</span>
+                    </header>
+                    <label data-ui-field="true" data-ui-field-size="comfortable">
+                      <span data-ui-visually-hidden="true">Nazwa</span>
+                      <span data-ui-input-affix="true">
+                        <span data-ui-input-leading="true" aria-hidden="true">Aa</span>
+                        <input
+                          className="ui-input"
+                          data-input-width="full"
+                          data-input-variant="creator"
+                          value={draft.name}
+                          onChange={(event) => {
+                            setDraft((currentDraft) => ({ ...currentDraft, name: event.target.value }))
+                            setDuplicateSourceId(null)
+                            setErrorText('')
+                          }}
+                          placeholder="np. Gotówka, Karta kredytowa, Konto główne"
+                        />
+                        {draft.name.trim() && (
+                          <button
+                            type="button"
+                            data-ui-input-clear="true"
+                            aria-label="Wyczyść nazwę"
+                            onClick={() => {
+                              setDraft((currentDraft) => ({ ...currentDraft, name: '' }))
+                              setDuplicateSourceId(null)
+                              setErrorText('')
+                            }}
+                          >
+                            ×
+                          </button>
+                        )}
                       </span>
-                      <button
-                        type="button"
-                        className="ui-button--standard"
-                        onClick={() => openEditForm(duplicateSource)}
+                    </label>
+
+                    {duplicateSource && (
+                      <div
+                        data-ui-section="true"
+                        data-ui-empty-block="true"
+                        data-ui-empty-block-variant="notice"
                       >
-                        Edytuj istniejące źródło
-                      </button>
-                    </>
-                  )}
-                </div>
-              )}
-              </section>
+                        {!draft.id && duplicateSource.archived_at ? (
+                          <>
+                            <strong>Istnieje archiwalne źródło o tej nazwie.</strong>
+                            <div data-ui-action-group="true">
+                              <button
+                                type="button"
+                                className="ui-button--standard"
+                                disabled={isSaving}
+                                onClick={() => void restoreSource(duplicateSource, true)}
+                              >
+                                Przywróć istniejące
+                              </button>
+                              <button
+                                type="button"
+                                className="ui-button--utility"
+                                disabled={isSaving}
+                                onClick={() => void saveDraft(true)}
+                              >
+                                Utwórz nowe mimo wszystko
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <strong>Źródło „{duplicateSource.name}” już istnieje.</strong>
+                            <span>
+                              Edytuj istniejące źródło, żeby zmienić dostępność dla przychodów lub wydatków.
+                            </span>
+                            <button
+                              type="button"
+                              className="ui-button--standard"
+                              onClick={() => openEditForm(duplicateSource)}
+                            >
+                              Edytuj istniejące źródło
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </section>
 
-              <div data-ui-section-separator="true" data-ui-separator-weight="light" />
+                <section data-ui-creator-step="true" data-ui-tone="neutral-accent-4">
+                  <span data-ui-creator-step-icon="true" aria-hidden="true">2</span>
+                  <div data-ui-creator-step-content="true">
+                    <header data-ui-creator-step-header="true">
+                      <strong>Wygląd</strong>
+                      <span>Wybierz kolor i ikonę reprezentujące to źródło.</span>
+                    </header>
+                    <div data-ui-picker-row="true" data-ui-picker-row-size="comfortable">
+                      <div data-ui-field="true" data-ui-field-size="comfortable">
+                        Kolor
+                        {renderColorPicker()}
+                      </div>
+                      <div data-ui-field="true" data-ui-field-size="comfortable">
+                        Ikona
+                        {renderIconPicker()}
+                      </div>
+                    </div>
+                  </div>
+                </section>
 
-              <section data-ui-creator-section="true">
-              <div data-ui-picker-row="true">
-                <div data-ui-field="true">
-                  Kolor
-                  {renderColorPicker()}
-                </div>
-                <div data-ui-field="true">
-                  Ikona
-                  {renderIconPicker()}
-                </div>
+                <section data-ui-creator-step="true" data-ui-tone="success">
+                  <span data-ui-creator-step-icon="true" aria-hidden="true">3</span>
+                  <div data-ui-creator-step-content="true">
+                    <header data-ui-creator-step-header="true">
+                      <strong>Dostępność</strong>
+                      <span>Określ, do jakich typów operacji ma być dostępne to źródło.</span>
+                    </header>
+                    <div data-ui-checkbox-field-group="true" data-ui-checkbox-group-size="comfortable">
+                      <label
+                        data-ui-checkbox="true"
+                        data-checkbox-variant="field"
+                        data-checkbox-density="comfortable"
+                        data-checkbox-align="field"
+                        data-checked={draft.isIncomeSource ? 'true' : 'false'}
+                      >
+                        <input
+                          className="ui-checkbox__input"
+                          type="checkbox"
+                          checked={draft.isIncomeSource}
+                          onChange={(event) =>
+                            setDraft((currentDraft) => ({ ...currentDraft, isIncomeSource: event.target.checked }))
+                          }
+                        />
+                        <span className="ui-checkbox__label">Przychody</span>
+                      </label>
+                      <label
+                        data-ui-checkbox="true"
+                        data-checkbox-variant="field"
+                        data-checkbox-density="comfortable"
+                        data-checkbox-align="field"
+                        data-checked={draft.isExpenseSource ? 'true' : 'false'}
+                      >
+                        <input
+                          className="ui-checkbox__input"
+                          type="checkbox"
+                          checked={draft.isExpenseSource}
+                          onChange={(event) =>
+                            setDraft((currentDraft) => ({ ...currentDraft, isExpenseSource: event.target.checked }))
+                          }
+                        />
+                        <span className="ui-checkbox__label">Wydatki</span>
+                      </label>
+                    </div>
+                  </div>
+                </section>
               </div>
-              </section>
 
-              <div data-ui-section-separator="true" data-ui-separator-weight="light" />
+              <aside data-ui-creator-summary="true" aria-label="Podsumowanie źródła">
+                <header data-ui-creator-summary-header="true">
+                  <strong>Podsumowanie</strong>
+                  <span>Tak będzie wyglądało źródło na Twojej liście.</span>
+                </header>
 
-              <section data-ui-creator-section="true">
-              <div data-ui-checkbox-field-group="true">
-                <label
-                  data-ui-checkbox="true"
-                  data-checkbox-variant="field"
-                  data-checkbox-density="comfortable"
-                  data-checkbox-align="field"
-                  data-checked={draft.isIncomeSource ? 'true' : 'false'}
-                >
-                  <input
-                    className="ui-checkbox__input"
-                    type="checkbox"
-                    checked={draft.isIncomeSource}
-                    onChange={(event) =>
-                      setDraft((currentDraft) => ({ ...currentDraft, isIncomeSource: event.target.checked }))
-                    }
-                  />
-                  <span className="ui-checkbox__label">Przychody</span>
-                </label>
-                <label
-                  data-ui-checkbox="true"
-                  data-checkbox-variant="field"
-                  data-checkbox-density="comfortable"
-                  data-checkbox-align="field"
-                  data-checked={draft.isExpenseSource ? 'true' : 'false'}
-                >
-                  <input
-                    className="ui-checkbox__input"
-                    type="checkbox"
-                    checked={draft.isExpenseSource}
-                    onChange={(event) =>
-                      setDraft((currentDraft) => ({ ...currentDraft, isExpenseSource: event.target.checked }))
-                    }
-                  />
-                  <span className="ui-checkbox__label">Wydatki</span>
-                </label>
-              </div>
-              </section>
+                <div data-ui-creator-summary-card="true">
+                  <span data-ui-icon-tile="true" data-ui-icon-role="creator-summary" data-ui-tone={draft.color} aria-hidden="true">
+                    <CategoryIcon iconKey={draft.icon} size="large" />
+                  </span>
+                  <strong data-ui-creator-summary-title="true">{draft.name.trim() || 'Nowe źródło'}</strong>
+                  <div data-ui-status-pill-group="true" data-ui-summary-status="true">
+                    {renderAvailability('Przychody', draft.isIncomeSource)}
+                    {renderAvailability('Wydatki', draft.isExpenseSource)}
+                  </div>
+                </div>
 
-              <div data-ui-section-separator="true" data-ui-separator-weight="light" />
-
-              <footer data-ui-form-actions="true">
-                <button type="button" data-ui-button-cancel="true" onClick={closeForm} disabled={isSaving}>
-                  Anuluj
-                </button>
-                <button
-                  type="button"
-                  data-ui-button-confirm="true"
-                  onClick={() => void saveDraft()}
-                  disabled={isSaving || !draft.name.trim() || (!draft.isIncomeSource && !draft.isExpenseSource)}
-                >
-                  {isSaving ? 'Zapisywanie...' : 'Zapisz'}
-                </button>
-              </footer>
+                <div data-ui-info-banner="true" data-ui-tone="info">
+                  <CategoryIcon iconKey="info" size="small" />
+                  <span>Podsumowanie aktualizuje się na bieżąco wraz ze zmianami.</span>
+                </div>
+              </aside>
             </div>
+
+            <footer data-ui-creator-footer="true">
+              <button type="button" data-ui-button-cancel="true" onClick={closeForm} disabled={isSaving}>
+                Anuluj
+              </button>
+              <button
+                type="button"
+                data-ui-button-confirm="true"
+                data-ui-button-width="wide"
+                onClick={() => void saveDraft()}
+                disabled={isSaving || !draft.name.trim() || (!draft.isIncomeSource && !draft.isExpenseSource)}
+              >
+                {isSaving ? 'Zapisywanie...' : draft.id ? 'Zapisz zmiany' : 'Zapisz źródło'}
+              </button>
+            </footer>
           </section>
         </div>
       )}
