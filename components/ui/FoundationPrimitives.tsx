@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ButtonHTMLAttributes, ReactNode } from 'react'
 
 type FoundationDensity = 'compact' | 'regular' | 'comfort'
 type FoundationTone = 'default' | 'danger' | 'success' | 'neutral-accent-1' | 'neutral-accent-2' | 'neutral-accent-3' | 'neutral-accent-4' | 'neutral-accent-5' | 'neutral-accent-6' | string
@@ -126,13 +126,14 @@ export function DangerAction({ children, type = 'button', disabled, onClick, ari
   )
 }
 
-type IconActionProps = Omit<ActionProps, 'width'> & {
+type IconActionProps = Omit<ActionProps, 'width'> &
+  Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'type' | 'disabled' | 'onClick' | 'title'> & {
   tone?: 'default' | 'danger' | 'subtle'
 }
 
-export function IconAction({ children, type = 'button', disabled, onClick, ariaLabel, title, tone = 'default', density = 'regular' }: IconActionProps) {
+export function IconAction({ children, type = 'button', disabled, onClick, ariaLabel, title, tone = 'default', density = 'regular', ...buttonProps }: IconActionProps) {
   return (
-    <button type={type} data-ui-action="icon" data-ui-action-tone={tone} data-ui-density={density} disabled={disabled} onClick={onClick} aria-label={ariaLabel} title={title}>
+    <button {...buttonProps} type={type} data-ui-action="icon" data-ui-action-tone={tone} data-ui-density={density} disabled={disabled} onClick={onClick} aria-label={ariaLabel} title={title}>
       {children}
     </button>
   )

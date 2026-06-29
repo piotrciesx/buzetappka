@@ -9,12 +9,11 @@ import {
   type UiColorKey,
   type UiIconKey,
 } from "../../lib/userAppearance";
-import FoundationIconPicker from "../ui/FoundationIconPicker";
 import CategoryIcon from "../CategoryIcon";
+import FoundationIconPicker from "../ui/FoundationIconPicker";
 import {
   PrimaryAction,
   SecondaryAction,
-  SectionHeader,
 } from "../ui/FoundationPrimitives";
 import type { FormState } from "./financialGoalsPanelTypes";
 
@@ -146,24 +145,22 @@ export default function FinancialGoalForm({
     );
   };
 
-  const renderIconPicker = () => {
-    return (
-      <FoundationIconPicker
-        value={selectedIconKey as UiIconKey}
-        tone={selectedColor.tone}
-        isOpen={activePicker === "icon"}
-        suggestedIconKeys={SUGGESTED_GOAL_ICON_KEYS}
-        fallbackLabel="Ikona celu"
-        onOpenChange={(isOpen) => setActivePicker(isOpen ? "icon" : null)}
-        onChange={(iconKey) => {
-          updateAppearance({
-            icon: iconKey,
-            icon_key: iconKey,
-          });
-        }}
-      />
-    );
-  };
+  const renderIconPicker = () => (
+    <FoundationIconPicker
+      value={selectedIconKey as UiIconKey}
+      tone={selectedColor.tone}
+      isOpen={activePicker === "icon"}
+      suggestedIconKeys={SUGGESTED_GOAL_ICON_KEYS}
+      fallbackLabel="Ikona celu"
+      onOpenChange={(isOpen) => setActivePicker(isOpen ? "icon" : null)}
+      onChange={(iconKey) => {
+        updateAppearance({
+          icon: iconKey,
+          icon_key: iconKey,
+        });
+      }}
+    />
+  );
 
   const normalizedName = formState.name.trim() || "Nowy cel";
   const targetAmountLabel = formState.targetAmount
@@ -172,173 +169,185 @@ export default function FinancialGoalForm({
   const deadlineLabel = formState.deadlineMonth || "bez deadline’u";
 
   return (
-    <div
-      data-ui-section="true"
-      data-financial-goal-form="true"
-      onClick={() => {
-        if (activePicker) {
-          setActivePicker(null);
-        }
-      }}
-    >
-      <div data-financial-goal-form-card="true">
-        <aside
-          data-financial-goal-summary="true"
-          aria-label="Podsumowanie celu"
-        >
-          <span data-financial-goal-summary-kicker="true">Podsumowanie</span>
-          <span
-            data-financial-goal-summary-icon="true"
-            data-ui-tone={selectedColor.tone}
-            aria-hidden="true"
-          >
-            <CategoryIcon iconKey={selectedIconKey as UiIconKey} size="large" />
-          </span>
-          <strong>{normalizedName}</strong>
-          <span data-financial-goal-summary-meta="true">
-            {targetAmountLabel}
-          </span>
-          <div data-financial-goal-summary-details="true">
-            <span>Start: {formState.startMonth || "bieżący miesiąc"}</span>
-            <span>Deadline: {deadlineLabel}</span>
-            <span>Kolor: {selectedColor.label}</span>
-          </div>
-        </aside>
+    <>
+      <div
+        data-ui-creator-layout="true"
+        onClick={() => {
+          if (activePicker) {
+            setActivePicker(null);
+          }
+        }}
+      >
+        <div data-ui-creator-main="true">
+          <section data-ui-creator-step="true" data-ui-tone="neutral-accent-1">
+            <span data-ui-creator-step-icon="true" aria-hidden="true">
+              1
+            </span>
+            <div data-ui-creator-step-content="true">
+              <header data-ui-creator-step-header="true">
+                <strong>Cel</strong>
+                <span>Nazwa, kwota i podstawowe dane celu.</span>
+              </header>
 
-        <div data-financial-goal-form-sections="true">
-          <section data-ui-creator-section="true">
-            <SectionHeader
-              tone="neutral-accent-1"
-              density="comfort"
-              icon={<span>1</span>}
-              title="Cel"
-              description="Nazwa, kwota i podstawowe dane celu."
-            />
-
-            <div data-financial-goal-form-grid="true">
-              <label data-ui-field-wrapper="true" data-field-span="full">
-                <span data-ui-field-label="true">Nazwa celu</span>
-                <input
-                  className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
-                  data-input-width={uiInputApi.width.full}
-                  placeholder="np. Wycieczka, laptop, poduszka finansowa"
-                  value={formState.name}
-                  onChange={(event) =>
-                    onFormStateChange({
-                      ...formState,
-                      name: event.target.value,
-                    })
-                  }
-                />
-              </label>
-
-              <label data-ui-field-wrapper="true">
-                <span data-ui-field-label="true">Kwota docelowa</span>
-                <span data-ui-amount-shell="true">
+              <div data-ui-form-shell="true" data-ui-form-density="comfortable">
+                <label data-ui-field="true" data-ui-field-size="comfortable">
+                  Nazwa celu
                   <input
-                    className={uiInputApi.classNames.amountField}
+                    className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
                     data-input-width={uiInputApi.width.full}
-                    placeholder="0,00"
-                    inputMode="decimal"
-                    value={formState.targetAmount}
+                    data-input-variant="creator"
+                    placeholder="np. Wycieczka, laptop, poduszka finansowa"
+                    value={formState.name}
                     onChange={(event) =>
                       onFormStateChange({
                         ...formState,
-                        targetAmount: event.target.value,
+                        name: event.target.value,
                       })
                     }
                   />
-                  <span aria-hidden="true">zł</span>
-                </span>
-              </label>
+                </label>
 
-              <label data-ui-field-wrapper="true">
-                <span data-ui-field-label="true">Miesiąc startu</span>
-                <input
-                  className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
-                  data-input-width={uiInputApi.width.full}
-                  type="month"
-                  value={formState.startMonth}
-                  onChange={(event) =>
-                    onFormStateChange({
-                      ...formState,
-                      startMonth: event.target.value,
-                    })
-                  }
-                />
-              </label>
+                <div data-ui-form-grid="two">
+                  <label data-ui-field="true" data-ui-field-size="comfortable">
+                    Kwota docelowa
+                    <span data-ui-amount-shell="true">
+                      <input
+                        className={uiInputApi.classNames.amountField}
+                        data-input-width={uiInputApi.width.full}
+                        placeholder="0,00"
+                        inputMode="decimal"
+                        value={formState.targetAmount}
+                        onChange={(event) =>
+                          onFormStateChange({
+                            ...formState,
+                            targetAmount: event.target.value,
+                          })
+                        }
+                      />
+                      <span aria-hidden="true">zł</span>
+                    </span>
+                  </label>
 
-              <label data-ui-field-wrapper="true">
-                <span data-ui-field-label="true">Deadline</span>
-                <input
-                  className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
-                  data-input-width={uiInputApi.width.full}
-                  type="month"
-                  value={formState.deadlineMonth}
-                  onChange={(event) =>
-                    onFormStateChange({
-                      ...formState,
-                      deadlineMonth: event.target.value,
-                    })
-                  }
-                />
-              </label>
-            </div>
-          </section>
+                  <label data-ui-field="true" data-ui-field-size="comfortable">
+                    Miesiąc startu
+                    <input
+                      className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+                      data-input-width={uiInputApi.width.full}
+                      data-input-variant="creator"
+                      type="month"
+                      value={formState.startMonth}
+                      onChange={(event) =>
+                        onFormStateChange({
+                          ...formState,
+                          startMonth: event.target.value,
+                        })
+                      }
+                    />
+                  </label>
 
-          <section data-ui-creator-section="true">
-            <SectionHeader
-              tone="neutral-accent-2"
-              density="comfort"
-              icon={<span>2</span>}
-              title="Wygląd"
-              description="Kolor i ikona będą widoczne na karcie celu."
-            />
-
-            <div
-              data-financial-goal-form-grid="true"
-              data-grid-mode="appearance"
-            >
-              <div data-ui-field-wrapper="true">
-                <span data-ui-field-label="true">Kolor</span>
-                {renderColorPicker()}
-              </div>
-
-              <div data-ui-field-wrapper="true">
-                <span data-ui-field-label="true">Ikona</span>
-                {renderIconPicker()}
+                  <label data-ui-field="true" data-ui-field-size="comfortable">
+                    Deadline
+                    <input
+                      className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+                      data-input-width={uiInputApi.width.full}
+                      data-input-variant="creator"
+                      type="month"
+                      value={formState.deadlineMonth}
+                      onChange={(event) =>
+                        onFormStateChange({
+                          ...formState,
+                          deadlineMonth: event.target.value,
+                        })
+                      }
+                    />
+                  </label>
+                </div>
               </div>
             </div>
           </section>
 
-          <div
-            data-ui-status-banner="true"
-            data-ui-tone="info"
-            data-financial-goal-form-info="true"
-          >
-            <span aria-hidden="true">i</span>
+          <section data-ui-creator-step="true" data-ui-tone="neutral-accent-2">
+            <span data-ui-creator-step-icon="true" aria-hidden="true">
+              2
+            </span>
+            <div data-ui-creator-step-content="true">
+              <header data-ui-creator-step-header="true">
+                <strong>Wygląd</strong>
+                <span>Kolor i ikona będą widoczne na karcie celu.</span>
+              </header>
+
+              <div data-ui-picker-row="true" data-ui-picker-row-size="comfortable">
+                <div data-ui-field="true" data-ui-field-size="comfortable">
+                  Kolor
+                  {renderColorPicker()}
+                </div>
+
+                <div data-ui-field="true" data-ui-field-size="comfortable">
+                  Ikona
+                  {renderIconPicker()}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div data-ui-info-banner="true" data-ui-tone="info">
+            <CategoryIcon iconKey="info" size="small" />
             <span>
               Cel nie ma osobnego źródła finansowania. Jest rozliczany z
               nadwyżki budżetu zgodnie z trybem ustawionym dla danego miesiąca.
             </span>
           </div>
         </div>
+
+        <aside data-ui-creator-summary="true" aria-label="Podsumowanie celu">
+          <header data-ui-creator-summary-header="true">
+            <strong>Podsumowanie</strong>
+            <span>Tak będzie wyglądał cel na Twojej liście.</span>
+          </header>
+
+          <div data-ui-creator-summary-card="true">
+            <span
+              data-ui-icon-tile="true"
+              data-ui-icon-role="creator-summary"
+              data-ui-tone={selectedColor.tone}
+              aria-hidden="true"
+            >
+              <CategoryIcon iconKey={selectedIconKey as UiIconKey} size="large" />
+            </span>
+            <strong data-ui-creator-summary-title="true">{normalizedName}</strong>
+            <div data-ui-status-pill-group="true" data-ui-summary-status="true">
+              <span data-ui-status-pill="true">{targetAmountLabel}</span>
+              <span data-ui-status-pill="true">
+                Start: {formState.startMonth || "bieżący miesiąc"}
+              </span>
+              <span data-ui-status-pill="true">Deadline: {deadlineLabel}</span>
+            </div>
+          </div>
+
+          <div data-ui-info-banner="true" data-ui-tone="info">
+            <CategoryIcon iconKey="info" size="small" />
+            <span>Wybrany kolor: {selectedColor.label}.</span>
+          </div>
+        </aside>
       </div>
 
-      <div data-ui-creator-footer="true" data-financial-goal-form-footer="true">
+      <footer data-ui-creator-footer="true">
         {onCancel && (
-          <SecondaryAction onClick={onCancel}>{cancelLabel}</SecondaryAction>
+          <SecondaryAction onClick={onCancel} disabled={isSaving}>
+            {cancelLabel}
+          </SecondaryAction>
         )}
         <PrimaryAction
           disabled={
             isSaving || !formState.name.trim() || !formState.targetAmount
           }
           onClick={onSubmit}
-          width="wide"
+          width="full"
+          density="comfort"
         >
           {isSaving ? savingLabel : submitLabel}
         </PrimaryAction>
-      </div>
-    </div>
+      </footer>
+    </>
   );
 }

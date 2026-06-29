@@ -20,6 +20,7 @@ import FinancialGoalEditModal from "./financial-goals/FinancialGoalEditModal";
 import FinancialGoalsList from "./financial-goals/FinancialGoalsList";
 import FinancialGoalsModeControls from "./financial-goals/FinancialGoalsModeControls";
 import FinancialGoalsSummary from "./financial-goals/FinancialGoalsSummary";
+import CategoryIcon from "./CategoryIcon";
 import type {
   FinancialGoalsPanelProps,
   FormState,
@@ -612,6 +613,7 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
     <section
       data-ui-section="true"
       data-ui-large-module="true"
+      data-ui-utility-modal-size="xl"
       data-financial-goals-panel="true"
     >
       <FinancialGoalsModeControls
@@ -627,13 +629,16 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         lockedMonthsSet={lockedMonthsSet}
       />
 
-      <div data-ui-goal-helper="true">
-        {effectiveMode === "allocation"
-          ? "W trybie alokacji ustawiasz procentowy podział nadwyżki między aktywne cele."
-          : `Przeciągnij cele, aby ustawić priorytet realizacji dla miesiąca ${selectedMonth}.`}
-        {isReordering ? " Zapisywanie nowej kolejności..." : ""}
-        {isModeSaving ? " Zapisywanie trybu..." : ""}
-        {isAllocationSaving ? " Zapisywanie alokacji..." : ""}
+      <div data-ui-info-banner="true" data-ui-tone="info">
+        <CategoryIcon iconKey="info" size="small" />
+        <span>
+          {effectiveMode === "allocation"
+            ? "W trybie alokacji ustawiasz procentowy podział nadwyżki między aktywne cele."
+            : `Przeciągnij cele, aby ustawić priorytet realizacji dla miesiąca ${selectedMonth}.`}
+          {isReordering ? " Zapisywanie nowej kolejności..." : ""}
+          {isModeSaving ? " Zapisywanie trybu..." : ""}
+          {isAllocationSaving ? " Zapisywanie alokacji..." : ""}
+        </span>
       </div>
 
       <FinancialGoalsList

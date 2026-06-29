@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react'
 import CategoryIcon from '../CategoryIcon'
+import { HeroHeader, IconAction } from '../ui/FoundationPrimitives'
 import FinancialGoalForm from './FinancialGoalForm'
 import type { FormState } from './financialGoalsPanelTypes'
 
@@ -29,31 +30,30 @@ export default function FinancialGoalEditModal({
   void _styles
 
   return (
-    <div data-ui-overlay="true" data-financial-goal-modal-overlay="true" onClick={onClose}>
+    <div data-ui-overlay="true" onClick={onClose}>
       <section
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        data-ui-modal-shell="true"
-        data-ui-size="goal"
-        data-financial-goal-modal="true"
+        data-ui-modal-surface="true"
+        data-ui-modal-size="creator"
+        data-ui-density="comfort"
+        data-ui-creator-modal="true"
         onClick={(event) => event.stopPropagation()}
       >
-        <header data-ui-modal-header="true" data-budget-utility-header="true">
-          <div data-ui-title-row="true">
-            <span data-ui-title-icon="true" aria-hidden="true">
-              <CategoryIcon iconKey="system-goals" />
-            </span>
-            <div data-ui-title-copy="true">
-              <strong>{title}</strong>
-              <span>{description}</span>
-            </div>
-          </div>
-
-          <button type="button" data-ui-close-action="true" aria-label="Zamknij" onClick={onClose}>
-            <CategoryIcon iconKey="close" />
-          </button>
-        </header>
+        <HeroHeader
+          variant="creator"
+          density="comfort"
+          tone={formState.color_tone || 'blue'}
+          icon={<CategoryIcon iconKey={formState.icon_key || 'system-goals'} />}
+          title={title}
+          description={description}
+          closeAction={
+            <IconAction ariaLabel="Zamknij" onClick={onClose} density="comfort">
+              <CategoryIcon iconKey="close" />
+            </IconAction>
+          }
+        />
 
         <FinancialGoalForm
           formState={formState}

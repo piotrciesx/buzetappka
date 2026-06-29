@@ -1,11 +1,15 @@
 "use client";
 
-import type { ReactNode } from "react";
-import CategoryIcon from "../CategoryIcon";
-import { DangerAction, SecondaryAction } from "../ui/FoundationPrimitives";
+import type { CSSProperties, ReactNode } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { getGoalProgressBarColor } from "../../lib/financialGoals";
+import CategoryIcon from "../CategoryIcon";
+import {
+  DangerAction,
+  IconAction,
+  SecondaryAction,
+} from "../ui/FoundationPrimitives";
 import type { GoalCardBaseProps } from "./financialGoalsPanelTypes";
 
 const formatAmount = (value: number) => `${value.toFixed(2)} zł`;
@@ -63,9 +67,7 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
   } = props;
 
   const isUnsuccessful = statusLabel === "niezrealizowany";
-  const progressWidth = isUnsuccessful
-    ? "100%"
-    : `${Math.min(percentage, 100)}%`;
+  const progressPercent = isUnsuccessful ? 100 : Math.min(percentage, 100);
   const progressColor = isUnsuccessful
     ? getGoalProgressBarColor(0)
     : getGoalProgressBarColor(percentage);
@@ -78,76 +80,84 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
 
   return (
     <>
-      <div data-ui-goal-card-main="true">
-        <div data-ui-goal-card-title-row="true">
-          {dragHandle || (
-            <span data-ui-goal-menu-spacer="true" aria-hidden="true" />
-          )}
+      <div data-ui-large-record-identity="true">
+        <span
+          data-ui-icon-tile="true"
+          data-ui-icon-role="large-record-hero"
+          data-ui-tone={getGoalTone(goal)}
+          aria-hidden="true"
+        >
+          <CategoryIcon iconKey={getGoalIconKey(goal)} size="large" />
+        </span>
 
-          <span
-            data-ui-goal-icon="true"
-            data-ui-tone={getGoalTone(goal)}
-            aria-hidden="true"
-          >
-            <CategoryIcon iconKey={getGoalIconKey(goal)} size="large" />
-          </span>
-
-          <div data-ui-goal-card-copy="true">
-            <div>
-              <strong>{goal.name}</strong>
-              <span data-ui-goal-status={getStatusTone(statusLabel)}>
-                <span aria-hidden="true" />
-                {statusLabel}
-              </span>
-            </div>
-            <p>
-              Start: {goal.start_month}
-              {" · "}
-              Deadline: {deadlineMonth || "brak"}
-            </p>
+        <div data-ui-large-record-identity-copy="true">
+          <strong data-ui-large-record-title="true">{goal.name}</strong>
+          <div data-ui-status-pill-group="true">
+            {dragHandle}
+            <span data-ui-status-pill="true" data-ui-tone={getStatusTone(statusLabel)}>
+              {statusLabel}
+            </span>
             {waitingForLockedMonth && (
-              <span data-ui-goal-lock-note="true">
+              <span data-ui-status-pill="true" data-ui-tone="warning">
                 Oczekuje na zamknięcie miesiąca
               </span>
             )}
           </div>
-        </div>
-
-        <div data-ui-goal-metrics="true">
-          <div data-ui-goal-metric="true">
-            <span>Docelowa</span>
-            <strong>{formatAmount(goal.target_amount)}</strong>
-          </div>
-          <div data-ui-goal-metric="true">
-            <span>Uzbierano</span>
-            <strong>{formatAmount(collectedAmount)}</strong>
-          </div>
-          <div data-ui-goal-metric="true">
-            <span>Brakuje</span>
-            <strong>{formatAmount(remainingAmount)}</strong>
-          </div>
-          <div
-            data-ui-goal-metric="true"
-            data-ui-goal-metric-kind={
-              isAllocationMode ? "allocation" : "priority"
-            }
-          >
-            <span>{modeLabel}</span>
-            <strong>{modeValue}</strong>
-          </div>
-        </div>
-
-        <div data-ui-goal-actions="true">
-          <SecondaryAction onClick={() => onEdit(goal)}>Edytuj</SecondaryAction>
-          <DangerAction onClick={() => onDelete(goal.id)}>Usuń</DangerAction>
+          <span data-ui-large-record-meta="true">
+            Start: {goal.start_month} · Deadline: {deadlineMonth || "brak"}
+          </span>
         </div>
       </div>
 
-      <div data-ui-goal-progress="true">
-        <strong>{percentage.toFixed(0)}%</strong>
-        <div>
-          <span style={{ width: progressWidth, background: progressColor }} />
+      <div data-ui-metric-group="true" data-ui-metric-columns="4">
+        <div data-ui-metric-card="true" data-ui-tone="neutral-accent-1">
+          <span data-ui-metric-card-label="true">Docelowa</span>
+          <strong data-ui-metric-card-value="true">
+            {formatAmount(goal.target_amount)}
+          </strong>
+          <span data-ui-metric-card-detail="true">Kwota celu</span>
         </div>
+
+        <div
+          data-ui-metric-card="true"
+          data-ui-tone={isUnsuccessful ? "danger" : "success"}
+          style={
+            {
+              "--ui-metric-progress": `${progressPercent}%`,
+              "--ui-metric-accent": progressColor,
+            } as CSSProperties
+          }
+        >
+          <span data-ui-metric-card-label="true">Uzbierano</span>
+          <strong data-ui-metric-card-value="true">
+            {formatAmount(collectedAmount)}
+          </strong>
+          <span data-ui-metric-card-detail="true">
+            {percentage.toFixed(0)}% celu
+          </span>
+          <span data-ui-metric-card-progress="true" aria-hidden="true">
+            <span data-ui-metric-card-progress-fill="true" />
+          </span>
+        </div>
+
+        <div data-ui-metric-card="true" data-ui-tone="danger">
+          <span data-ui-metric-card-label="true">Brakuje</span>
+          <strong data-ui-metric-card-value="true">
+            {formatAmount(remainingAmount)}
+          </strong>
+          <span data-ui-metric-card-detail="true">Do realizacji</span>
+        </div>
+
+        <div data-ui-metric-card="true" data-ui-tone="neutral-accent-2">
+          <span data-ui-metric-card-label="true">{modeLabel}</span>
+          <strong data-ui-metric-card-value="true">{modeValue}</strong>
+          <span data-ui-metric-card-detail="true">Tryb miesiąca</span>
+        </div>
+      </div>
+
+      <div data-ui-action-group="true" data-ui-action-stack="record">
+        <SecondaryAction onClick={() => onEdit(goal)}>Edytuj</SecondaryAction>
+        <DangerAction onClick={() => onDelete(goal.id)}>Usuń</DangerAction>
       </div>
     </>
   );
@@ -171,10 +181,7 @@ export function SortableGoalCard(
   return (
     <article
       ref={setNodeRef}
-      data-ui-utility-record="true"
-      data-ui-record-section="strong"
-      data-ui-goal-card="true"
-      data-ui-goal-card-mode="priority"
+      data-ui-large-record="true"
       data-dragging={isDragging ? "true" : "false"}
       style={{
         transform: CSS.Transform.toString(transform),
@@ -184,16 +191,15 @@ export function SortableGoalCard(
       <GoalCardContent
         {...props}
         dragHandle={
-          <button
-            type="button"
-            className="ui-button--icon"
-            data-ui-goal-menu="true"
+          <IconAction
+            ariaLabel="Przeciągnij, aby zmienić priorytet"
             title="Przeciągnij, aby zmienić priorytet"
+            density="compact"
             {...attributes}
             {...listeners}
           >
-            ⋮⋮
-          </button>
+            <CategoryIcon iconKey="system-sort" size="small" />
+          </IconAction>
         }
       />
     </article>
@@ -207,25 +213,19 @@ export function StaticGoalCard(
   },
 ) {
   return (
-    <article
-      data-ui-utility-record="true"
-      data-ui-record-section="strong"
-      data-ui-goal-card="true"
-      data-ui-goal-card-mode={props.isAllocationMode ? "allocation" : "static"}
-    >
+    <article data-ui-large-record="true">
       <GoalCardContent
         {...props}
         dragHandle={
           props.showInactiveDragHandle ? (
-            <span
-              className="ui-button--icon"
-              data-ui-goal-menu="true"
-              data-ui-goal-menu-state="disabled"
-              aria-hidden="true"
+            <IconAction
+              ariaLabel="Kolejność w alokacji wynika z procentów"
               title="Kolejność w alokacji wynika z procentów"
+              density="compact"
+              disabled
             >
-              ⋮⋮
-            </span>
+              <CategoryIcon iconKey="system-sort" size="small" />
+            </IconAction>
           ) : undefined
         }
       />

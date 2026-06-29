@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { closestCenter, DndContext, DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { FinancialGoal, FinancialGoalAllocationMode } from '../../lib/budgetPageTypes'
-import { uiListRowApi } from '../../lib/uiFoundation'
 import CategoryIcon from '../CategoryIcon'
+import { SectionHeader } from '../ui/FoundationPrimitives'
 import { SortableGoalCard, StaticGoalCard } from './FinancialGoalCard'
 
 type ProgressByGoalId = Record<
@@ -214,10 +214,7 @@ export default function FinancialGoalsList({
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={activeGoals.map((goal) => goal.id)} strategy={verticalListSortingStrategy}>
             <div
-              className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}
-              data-ui-goal-list="true"
-              data-ui-record-list="true"
-              data-ui-record-separator="strong"
+              data-ui-large-record-list="true"
             >
               {activeGoals.map((goal, index) => (
                 <SortableGoalCard
@@ -239,11 +236,7 @@ export default function FinancialGoalsList({
 
     return (
       <div
-        className={`${uiListRowApi.classNames.list} ${uiListRowApi.classNames.listNormal}`}
-        data-ui-goal-list="true"
-        data-ui-record-list="true"
-        data-ui-record-separator="strong"
-        data-ui-goal-list-variant={isCurrentList ? 'current' : 'archive'}
+        data-ui-large-record-list="true"
       >
         {visibleGoals.map((goal, index) => (
           <StaticGoalCard
@@ -263,42 +256,41 @@ export default function FinancialGoalsList({
   }
 
   return (
-    <section data-ui-section="true" data-financial-goals-current-list="true">
-      <div data-financial-goals-list-toolbar="true">
-        <div data-financial-goals-list-heading="true">
-          <h3 data-ui-section-title="true">
-            {isCurrentList ? 'Cele aktualne' : 'Cele historyczne'}
-          </h3>
-          <span>{visibleGoals.length} {isCurrentList ? 'aktywnych' : 'historycznych'}</span>
-        </div>
+    <section data-ui-section="true" data-ui-large-section="true" data-financial-goals-current-list="true">
+      <SectionHeader
+        tone={isCurrentList ? 'neutral-accent-2' : 'neutral-accent-3'}
+        icon={<CategoryIcon iconKey={isCurrentList ? 'system-goals' : 'calendar'} size="small" />}
+        title={isCurrentList ? 'Cele aktualne' : 'Cele historyczne'}
+        description={`${visibleGoals.length} ${isCurrentList ? 'aktywnych' : 'historycznych'}`}
+        trailing={
+          <>
+            {renderAllocationManager()}
 
-        <div data-financial-goals-list-actions="true">
-          {renderAllocationManager()}
-
-          <div data-ui-list-switch="true" role="group" aria-label="Zakres celów">
-            <button
-              type="button"
-              data-active={activeList === 'current' ? 'true' : undefined}
-              onClick={() => {
-                setActiveList('current')
-                setIsAllocationMenuOpen(false)
-              }}
-            >
-              Cele aktualne
-            </button>
-            <button
-              type="button"
-              data-active={activeList === 'archived' ? 'true' : undefined}
-              onClick={() => {
-                setActiveList('archived')
-                setIsAllocationMenuOpen(false)
-              }}
-            >
-              Cele historyczne
-            </button>
-          </div>
-        </div>
-      </div>
+            <div data-ui-list-switch="true" role="group" aria-label="Zakres celów">
+              <button
+                type="button"
+                data-active={activeList === 'current' ? 'true' : undefined}
+                onClick={() => {
+                  setActiveList('current')
+                  setIsAllocationMenuOpen(false)
+                }}
+              >
+                Cele aktualne
+              </button>
+              <button
+                type="button"
+                data-active={activeList === 'archived' ? 'true' : undefined}
+                onClick={() => {
+                  setActiveList('archived')
+                  setIsAllocationMenuOpen(false)
+                }}
+              >
+                Cele historyczne
+              </button>
+            </div>
+          </>
+        }
+      />
 
       {renderGoalList()}
     </section>
