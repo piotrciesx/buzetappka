@@ -175,7 +175,6 @@ export default function FinancialGoalForm({
     <div
       data-ui-section="true"
       data-financial-goal-form="true"
-      data-ui-creator-layout="true"
       onClick={() => {
         if (activePicker) {
           setActivePicker(null);
@@ -202,6 +201,7 @@ export default function FinancialGoalForm({
           <div data-financial-goal-summary-details="true">
             <span>Start: {formState.startMonth || "bieżący miesiąc"}</span>
             <span>Deadline: {deadlineLabel}</span>
+            <span>Kolor: {selectedColor.label}</span>
           </div>
         </aside>
 
