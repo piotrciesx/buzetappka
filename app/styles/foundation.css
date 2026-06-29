@@ -6371,9 +6371,13 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 
 [data-ui-payment-sources-shell="true"] [data-ui-settings-strip-actions="true"] [data-ui-action="primary"] {
   min-width: 142px;
-  box-shadow: none;
-  background: color-mix(in srgb, var(--ui-color-primary-navy) 58%, #ffffff);
-  border-color: transparent;
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-settings-strip-actions="true"] [data-ui-action="primary"]:disabled {
+  background: #eef3fb;
+  border-color: #d7e1f1;
+  color: #7d8aa5;
+  opacity: 1;
 }
 
 [data-ui-payment-sources-shell="true"] [data-ui-large-record-list="true"] {
@@ -6508,9 +6512,13 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 
 [data-ui-creator-footer="true"] [data-ui-action="primary"] {
   width: 100%;
-  box-shadow: none;
-  background: color-mix(in srgb, var(--ui-color-primary-navy) 58%, #ffffff);
-  border-color: transparent;
+}
+
+[data-ui-creator-footer="true"] [data-ui-action="primary"]:disabled {
+  background: #eef3fb;
+  border-color: #d7e1f1;
+  color: #7d8aa5;
+  opacity: 1;
 }
 
 @container ui-large-record-list (max-width: 52rem) {
