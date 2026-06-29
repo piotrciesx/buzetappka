@@ -73,7 +73,7 @@ export function SectionHeader({
   trailing,
 }: SectionHeaderProps) {
   return (
-    <header data-ui-section-header-v5="true" data-ui-density={density} data-ui-indent-level="section">
+    <header data-ui-section-header-v5="true" data-ui-density={density} data-ui-tone={tone} data-ui-indent-level="section">
       <div data-ui-section-header-main="true">
         {icon && (
           <span data-ui-section-header-icon-v5="true" data-ui-tone={tone} aria-hidden="true">

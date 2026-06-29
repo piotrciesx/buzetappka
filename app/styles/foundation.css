@@ -6836,3 +6836,87 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
     --ui-visual-axis-record-offset: var(--ui-space-6);
   }
 }
+
+
+/* ========================================================================== */
+/* Foundation v5.2 — Freeze: section tone, collapsible chevron, primary overlay */
+/* ========================================================================== */
+
+:root {
+  --ui-action-primary-disabled-overlay: rgba(255, 255, 255, 0.28);
+  --ui-action-primary-disabled-bg: linear-gradient(var(--ui-action-primary-disabled-overlay), var(--ui-action-primary-disabled-overlay)), var(--ui-action-primary-bg);
+  --ui-action-primary-disabled-border: color-mix(in srgb, var(--ui-action-primary-bg) 72%, #ffffff);
+  --ui-action-primary-disabled-text: var(--ui-color-white-text);
+  --ui-collapsible-secondary-chevron-area: 32px;
+  --ui-collapsible-secondary-chevron-size: 10px;
+  --ui-collapsible-secondary-chevron-stroke: 2.25px;
+}
+
+/* Primary disabled stays the same primary action, only muted by a white overlay. */
+[data-ui-action="primary"]:disabled,
+[data-ui-action="primary"][disabled],
+[data-ui-action="primary"][data-button-state="disabled"],
+[data-ui-button-confirm="true"]:disabled,
+[data-ui-button-confirm="true"][data-button-state="disabled"],
+[data-ui-header-primary-action="true"]:disabled,
+[data-ui-header-primary-action="true"][data-button-state="disabled"] {
+  background: var(--ui-action-primary-disabled-bg);
+  border-color: var(--ui-action-primary-disabled-border);
+  color: var(--ui-action-primary-disabled-text);
+  opacity: 1;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+[data-ui-action="primary"]:disabled *,
+[data-ui-action="primary"][disabled] *,
+[data-ui-action="primary"][data-button-state="disabled"] *,
+[data-ui-button-confirm="true"]:disabled *,
+[data-ui-button-confirm="true"][data-button-state="disabled"] *,
+[data-ui-header-primary-action="true"]:disabled *,
+[data-ui-header-primary-action="true"][data-button-state="disabled"] * {
+  color: var(--ui-action-primary-disabled-text);
+}
+
+/* Section titles inherit the same neutral accent tone as the section icon. */
+[data-ui-section-header-v5="true"] [data-ui-section-header-copy-v5="true"] strong {
+  color: var(--ui-tone-text, var(--ui-color-primary-navy));
+}
+
+[data-ui-collapsible-secondary-section="true"] [data-ui-collapsible-secondary-copy="true"] strong {
+  color: var(--ui-tone-text, var(--ui-color-primary-navy));
+}
+
+/* Collapsible secondary sections use a dedicated Foundation chevron. */
+[data-ui-collapsible-secondary-chevron="true"] {
+  width: var(--ui-collapsible-secondary-chevron-area);
+  height: var(--ui-collapsible-secondary-chevron-area);
+  color: var(--ui-tone-text, var(--ui-neutral-accent-1-text));
+  opacity: 0.96;
+  transform: none;
+  transition:
+    color var(--ui-motion-fast) var(--ui-motion-ease-standard),
+    opacity var(--ui-motion-fast) var(--ui-motion-ease-standard);
+}
+
+[data-ui-collapsible-secondary-chevron="true"]::before {
+  width: var(--ui-collapsible-secondary-chevron-size);
+  height: var(--ui-collapsible-secondary-chevron-size);
+  border-right: var(--ui-collapsible-secondary-chevron-stroke) solid currentColor;
+  border-bottom: var(--ui-collapsible-secondary-chevron-stroke) solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform var(--ui-motion-normal) var(--ui-motion-ease-emphasized);
+}
+
+[data-ui-collapsible-secondary-trigger="true"]:hover [data-ui-collapsible-secondary-chevron="true"] {
+  color: color-mix(in srgb, var(--ui-tone-text, var(--ui-neutral-accent-1-text)) 88%, #000000);
+  opacity: 1;
+}
+
+[data-ui-collapsible-secondary-section="true"][data-ui-collapsed="false"] [data-ui-collapsible-secondary-chevron="true"] {
+  opacity: 1;
+}
+
+[data-ui-collapsible-secondary-section="true"][data-ui-collapsed="false"] [data-ui-collapsible-secondary-chevron="true"]::before {
+  transform: rotate(45deg);
+}
