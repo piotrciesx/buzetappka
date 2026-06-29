@@ -228,6 +228,8 @@ export const uiPrimitiveContracts = {
   formSection: ['default', 'creator'],
   heroHeader: ['module', 'creator'],
   collapsibleSecondarySection: ['default', 'collapsed', 'expanded'],
+  visualIndentLevel: ['hero', 'section', 'record'],
+  sectionToneInheritance: ['smartColorBySection'],
   creatorHeader: ['default'],
   creatorStep: ['default'],
   creatorSummary: ['default'],
@@ -1832,3 +1834,29 @@ export const uiModalSurfaceApiV5 = {
   layer: 'data-ui-modal-layer',
 } as const
 
+
+
+export const uiVisualIndentationLevels = {
+  hero: {
+    attribute: 'data-ui-indent-level="hero"',
+    role: 'Hero Header axis. Used only for the module or creator header.',
+  },
+  section: {
+    attribute: 'data-ui-indent-level="section"',
+    role: 'Section axis. Used by SectionHeader and CollapsibleSecondarySection; icons align even when one section is inside a tonal bar.',
+  },
+  record: {
+    attribute: 'data-ui-indent-level="record"',
+    role: 'Record axis. Used by LargeRecord and list cards; icon axis sits one hierarchy level deeper than section icons.',
+  },
+} as const
+
+export const uiCollapsibleSecondarySectionPattern = {
+  primitive: 'CollapsibleSecondarySection',
+  purpose: 'Required but secondary content that would otherwise push the main module content too low.',
+  rule: 'Do not shrink inner controls. Collapse the secondary section and keep the primary content visually dominant.',
+  color: 'Smart Color by Section: the tonal background inherits the section tone.',
+  hierarchy: 'It is a section header variant, not a card.',
+  disclosure: 'Small sideways chevron for collapsed state; rotates when expanded.',
+  copy: 'Use either a description or a help tooltip. Do not duplicate the same explanation in both places.',
+} as const

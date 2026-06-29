@@ -527,7 +527,7 @@ export default function PaymentSourcesPanel({
     const hasHistory = stats.transactionCount > 0
 
     return (
-      <article key={source.id} data-ui-large-record="true" data-ui-record-state={isArchived ? 'archived' : 'active'}>
+      <article key={source.id} data-ui-large-record="true" data-ui-indent-level="record" data-ui-record-state={isArchived ? 'archived' : 'active'}>
         <div data-ui-large-record-identity="true">
           <span data-ui-icon-tile="true" data-ui-icon-role="large-record-hero" data-ui-tone={color.tone} aria-hidden="true">
             <CategoryIcon iconKey={iconKey} size="large" />
@@ -599,7 +599,6 @@ export default function PaymentSourcesPanel({
         tone="neutral-accent-1"
         icon={<CategoryIcon iconKey="system-payment-sources" size="small" />}
         title="Domyślne źródła płatności"
-        description="Źródła podpowiadane automatycznie przy nowych wpisach."
         help={<HelpHint label="Ustaw źródła, które będą podpowiadane przy nowych wpisach." />}
         defaultCollapsed
       >

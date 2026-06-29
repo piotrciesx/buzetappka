@@ -6699,3 +6699,140 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   }
 }
 
+
+
+/* ========================================================================== */
+/* Foundation v5.2 — Visual axes + tonal collapsible sections                  */
+/* ========================================================================== */
+
+:root {
+  /* Visual Indentation Levels
+   * L0: Hero Header. L1: section headers and collapsible section headers.
+   * L2: records and list cards. The icon axis is the contract, not the panel edge.
+   */
+  --ui-visual-axis-hero-offset: 0px;
+  --ui-visual-axis-section-offset: var(--ui-space-7);
+  --ui-visual-axis-record-offset: var(--ui-space-9);
+  --ui-collapsible-secondary-min-height: 58px;
+  --ui-collapsible-secondary-padding-y: var(--ui-space-5);
+  --ui-collapsible-secondary-padding-x: var(--ui-space-7);
+  --ui-collapsible-secondary-icon-size: 34px;
+  --ui-collapsible-secondary-chevron-area: 30px;
+  --ui-collapsible-secondary-chevron-size: 8px;
+}
+
+[data-ui-collapsible-secondary-section="true"] {
+  --ui-collapsible-secondary-surface: color-mix(in srgb, var(--ui-tone-surface, var(--ui-neutral-accent-1-surface)) 54%, var(--ui-surface-card));
+  --ui-collapsible-secondary-surface-hover: color-mix(in srgb, var(--ui-tone-surface, var(--ui-neutral-accent-1-surface)) 66%, var(--ui-surface-card));
+  --ui-collapsible-secondary-border: rgba(255, 255, 255, 0.72);
+  --ui-collapsible-secondary-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.68), 0 8px 18px rgba(8, 44, 122, 0.025);
+  border: 1px solid var(--ui-collapsible-secondary-border);
+  border-radius: var(--ui-radius-2xl);
+  background: var(--ui-collapsible-secondary-surface);
+  box-shadow: var(--ui-collapsible-secondary-shadow);
+  overflow: visible;
+}
+
+[data-ui-collapsible-secondary-trigger="true"] {
+  min-height: var(--ui-collapsible-secondary-min-height);
+  padding: var(--ui-collapsible-secondary-padding-y) var(--ui-collapsible-secondary-padding-x);
+  border-radius: inherit;
+  gap: var(--ui-space-8);
+}
+
+[data-ui-collapsible-secondary-trigger="true"]:hover {
+  background: var(--ui-collapsible-secondary-surface-hover);
+}
+
+[data-ui-collapsible-secondary-main="true"] {
+  gap: var(--ui-space-6);
+}
+
+[data-ui-collapsible-secondary-icon="true"] {
+  width: var(--ui-collapsible-secondary-icon-size);
+  height: var(--ui-collapsible-secondary-icon-size);
+  flex-basis: var(--ui-collapsible-secondary-icon-size);
+  background: var(--ui-tone-surface, var(--ui-neutral-accent-1-surface));
+  border-color: color-mix(in srgb, var(--ui-tone-border, var(--ui-neutral-accent-1-border)) 72%, #ffffff);
+  color: var(--ui-tone-text, var(--ui-neutral-accent-1-text));
+}
+
+[data-ui-collapsible-secondary-copy="true"] {
+  gap: 0;
+}
+
+[data-ui-collapsible-secondary-copy="true"] small {
+  display: none;
+}
+
+[data-ui-collapsible-secondary-chevron="true"] {
+  position: relative;
+  width: var(--ui-collapsible-secondary-chevron-area);
+  height: var(--ui-collapsible-secondary-chevron-area);
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ui-text-secondary);
+  opacity: 0.82;
+  transform: none;
+  transition: opacity var(--ui-motion-fast) var(--ui-motion-ease-standard), color var(--ui-motion-fast) var(--ui-motion-ease-standard);
+}
+
+[data-ui-collapsible-secondary-chevron="true"]::before {
+  content: "";
+  width: var(--ui-collapsible-secondary-chevron-size);
+  height: var(--ui-collapsible-secondary-chevron-size);
+  border-right: 1.7px solid currentColor;
+  border-bottom: 1.7px solid currentColor;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  transition: transform var(--ui-motion-normal) var(--ui-motion-ease-emphasized);
+}
+
+[data-ui-collapsible-secondary-trigger="true"]:hover [data-ui-collapsible-secondary-chevron="true"] {
+  color: var(--ui-color-primary-navy);
+  opacity: 0.92;
+}
+
+[data-ui-collapsible-secondary-section="true"][data-ui-collapsed="false"] [data-ui-collapsible-secondary-chevron="true"] {
+  transform: none;
+  opacity: 0.9;
+}
+
+[data-ui-collapsible-secondary-section="true"][data-ui-collapsed="false"] [data-ui-collapsible-secondary-chevron="true"]::before {
+  transform: rotate(45deg);
+}
+
+[data-ui-collapsible-secondary-content="true"] {
+  padding: 0 var(--ui-collapsible-secondary-padding-x) var(--ui-space-7);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-collapsible-secondary-section="true"],
+[data-ui-payment-sources-shell="true"] [data-ui-section-header-v5="true"] {
+  margin-inline: 0;
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-collapsible-secondary-trigger="true"] {
+  padding-inline-start: var(--ui-visual-axis-section-offset);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-section-header-v5="true"] {
+  padding-inline-start: var(--ui-visual-axis-section-offset);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-large-record="true"] {
+  padding-inline-start: var(--ui-visual-axis-record-offset);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-section-header-v5="true"] [data-ui-title-with-help="true"],
+[data-ui-payment-sources-shell="true"] [data-ui-collapsible-secondary-copy="true"] [data-ui-title-with-help="true"] {
+  align-items: center;
+}
+
+@media (max-width: 720px) {
+  [data-ui-payment-sources-shell="true"] {
+    --ui-visual-axis-section-offset: var(--ui-space-5);
+    --ui-visual-axis-record-offset: var(--ui-space-6);
+  }
+}
