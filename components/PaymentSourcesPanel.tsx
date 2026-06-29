@@ -15,8 +15,8 @@ import {
 } from '../lib/paymentSources'
 import CategoryIcon from './CategoryIcon'
 import FoundationIconPicker from './ui/FoundationIconPicker'
-import { EmptyState, StatusBox } from './utility-panels/utilityPanelPrimitives'
-import { HeroHeader, IconAction, SectionHeader } from './ui/FoundationPrimitives'
+import { EmptyState } from './utility-panels/utilityPanelPrimitives'
+import { DangerAction, HeroHeader, IconAction, PrimaryAction, SecondaryAction, SectionHeader } from './ui/FoundationPrimitives'
 
 type PaymentSourceStats = {
   sourceId: string
@@ -573,27 +573,17 @@ export default function PaymentSourcesPanel({
 
         <div data-ui-action-group="true" data-ui-action-stack="record">
           {isArchived ? (
-            <button
-              type="button"
-              className="ui-button--utility"
-              disabled={isSaving}
-              onClick={() => void restoreSource(source)}
-            >
+            <SecondaryAction disabled={isSaving} onClick={() => void restoreSource(source)}>
               Przywróć
-            </button>
+            </SecondaryAction>
           ) : (
             <>
-              <button type="button" className="ui-button--utility" onClick={() => openEditForm(source)}>
+              <SecondaryAction onClick={() => openEditForm(source)}>
                 Edytuj
-              </button>
-              <button
-                type="button"
-                data-ui-button-danger="true"
-                disabled={isSaving}
-                onClick={() => void deleteSource(source)}
-              >
+              </SecondaryAction>
+              <DangerAction disabled={isSaving} onClick={() => void deleteSource(source)}>
                 {hasHistory ? 'Archiwizuj' : 'Usuń'}
-              </button>
+              </DangerAction>
             </>
           )}
         </div>
@@ -671,22 +661,30 @@ export default function PaymentSourcesPanel({
             </span>
           </div>
           <div data-ui-settings-strip-actions="true">
-            <button
-              type="button"
-              data-ui-button-confirm="true"
+            <PrimaryAction
               disabled={isConfigSaving || !isSettingsDirty}
               onClick={() => void saveSettingsDraft()}
             >
               {isConfigSaving ? 'Zapisywanie...' : 'Zapisz ustawienia'}
-            </button>
+            </PrimaryAction>
           </div>
         </div>
       </section>
 
       <hr data-ui-heavy-divider="true" />
 
-      {statusText && <StatusBox tone="success">{statusText}</StatusBox>}
-      {errorText && <StatusBox tone="danger">{errorText}</StatusBox>}
+      {statusText && (
+        <div data-ui-status-banner="true" data-ui-tone="success">
+          <CategoryIcon iconKey="info" size="small" />
+          <span>{statusText}</span>
+        </div>
+      )}
+      {errorText && (
+        <div data-ui-status-banner="true" data-ui-tone="danger">
+          <CategoryIcon iconKey="warning" size="small" />
+          <span>{errorText}</span>
+        </div>
+      )}
 
       <section data-ui-payment-section="sources" data-ui-large-section="true">
         <SectionHeader
@@ -806,30 +804,23 @@ export default function PaymentSourcesPanel({
 
                     {duplicateSource && (
                       <div
-                        data-ui-section="true"
-                        data-ui-empty-block="true"
-                        data-ui-empty-block-variant="notice"
+                        data-ui-status-banner="true"
+                        data-ui-tone={duplicateSource.archived_at ? 'warning' : 'danger'}
+                        data-ui-payment-duplicate-banner="true"
                       >
                         {!draft.id && duplicateSource.archived_at ? (
                           <>
                             <strong>Istnieje archiwalne źródło o tej nazwie.</strong>
                             <div data-ui-action-group="true">
-                              <button
-                                type="button"
-                                className="ui-button--standard"
+                              <PrimaryAction
                                 disabled={isSaving}
                                 onClick={() => void restoreSource(duplicateSource, true)}
                               >
                                 Przywróć istniejące
-                              </button>
-                              <button
-                                type="button"
-                                className="ui-button--utility"
-                                disabled={isSaving}
-                                onClick={() => void saveDraft(true)}
-                              >
+                              </PrimaryAction>
+                              <SecondaryAction disabled={isSaving} onClick={() => void saveDraft(true)}>
                                 Utwórz nowe mimo wszystko
-                              </button>
+                              </SecondaryAction>
                             </div>
                           </>
                         ) : (
@@ -838,13 +829,9 @@ export default function PaymentSourcesPanel({
                             <span>
                               Edytuj istniejące źródło, żeby zmienić dostępność dla przychodów lub wydatków.
                             </span>
-                            <button
-                              type="button"
-                              className="ui-button--standard"
-                              onClick={() => openEditForm(duplicateSource)}
-                            >
+                            <PrimaryAction onClick={() => openEditForm(duplicateSource)}>
                               Edytuj istniejące źródło
-                            </button>
+                            </PrimaryAction>
                           </>
                         )}
                       </div>
@@ -948,18 +935,17 @@ export default function PaymentSourcesPanel({
             </div>
 
             <footer data-ui-creator-footer="true">
-              <button type="button" data-ui-button-cancel="true" onClick={closeForm} disabled={isSaving}>
+              <SecondaryAction onClick={closeForm} disabled={isSaving}>
                 Anuluj
-              </button>
-              <button
-                type="button"
-                data-ui-button-confirm="true"
-                data-ui-button-width="wide"
+              </SecondaryAction>
+              <PrimaryAction
+                width="full"
+                density="comfort"
                 onClick={() => void saveDraft()}
                 disabled={isSaving || !draft.name.trim() || (!draft.isIncomeSource && !draft.isExpenseSource)}
               >
                 {isSaving ? 'Zapisywanie...' : draft.id ? 'Zapisz zmiany' : 'Zapisz źródło'}
-              </button>
+              </PrimaryAction>
             </footer>
           </section>
         </div>

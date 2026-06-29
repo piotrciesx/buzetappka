@@ -6342,3 +6342,191 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
     flex: 0 1 auto;
   }
 }
+
+/* ========================================================================== */
+/* Foundation v5 — Payment Sources freeze polish                              */
+/* ========================================================================== */
+
+[data-ui-payment-sources-shell="true"] {
+  gap: var(--ui-space-12);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-large-section="true"] {
+  gap: var(--ui-space-9);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-heavy-divider="true"] {
+  inline-size: calc(100% - (var(--ui-space-8) * 2));
+  margin: var(--ui-space-6) var(--ui-space-8) var(--ui-space-8);
+  background: rgba(8, 44, 122, 0.14);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-section-header-v5="true"] {
+  margin-block: 0 var(--ui-space-4);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-settings-strip="true"] {
+  margin-top: var(--ui-space-2);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-settings-strip-actions="true"] [data-ui-action="primary"] {
+  min-width: 142px;
+  box-shadow: none;
+  background: color-mix(in srgb, var(--ui-color-primary-navy) 58%, #ffffff);
+  border-color: transparent;
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-large-record-list="true"] {
+  display: grid;
+  gap: var(--ui-space-8);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-large-record-list="true"] > [data-ui-large-record="true"] + [data-ui-large-record="true"] {
+  border-block-start: 0;
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-large-record="true"] {
+  padding: var(--ui-space-8);
+  border: var(--ui-record-card-border);
+  border-radius: var(--ui-record-card-radius);
+  background: var(--ui-record-card-bg);
+  box-shadow: var(--ui-record-card-shadow);
+  transition:
+    background var(--ui-motion-fast) var(--ui-motion-ease-standard),
+    border-color var(--ui-motion-fast) var(--ui-motion-ease-standard),
+    box-shadow var(--ui-motion-fast) var(--ui-motion-ease-standard);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-large-record="true"]:hover {
+  background: var(--ui-record-card-bg-hover);
+  border-color: rgba(8, 44, 122, 0.18);
+  box-shadow: 0 12px 28px rgba(8, 44, 122, 0.07);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-action-group="true"][data-ui-action-stack="record"] {
+  display: grid;
+  justify-items: stretch;
+  min-width: 96px;
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-action-group="true"][data-ui-action-stack="record"] [data-ui-action] {
+  min-height: 36px;
+  padding-inline: var(--ui-space-6);
+  border-radius: var(--ui-radius-md);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-metric-card="true"] {
+  padding-inline: var(--ui-space-6);
+}
+
+[data-ui-status-banner="true"] {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--ui-space-5);
+  padding: var(--ui-space-6) var(--ui-space-7);
+  border: 1px solid var(--ui-tone-border, rgba(8, 44, 122, 0.12));
+  border-radius: var(--ui-radius-lg);
+  background: color-mix(in srgb, var(--ui-tone-surface, var(--ui-status-info-soft)) 82%, #ffffff);
+  color: var(--ui-tone-text, var(--ui-status-info));
+  font-size: var(--ui-type-t4);
+  font-weight: var(--ui-font-weight-medium);
+  line-height: var(--ui-line-height-body);
+}
+
+[data-ui-status-banner="true"] > [data-category-icon="true"],
+[data-ui-status-banner="true"] > svg {
+  margin-top: 1px;
+  color: currentColor;
+}
+
+[data-ui-status-banner="true"] > strong {
+  grid-column: 1 / -1;
+  color: var(--ui-text-primary);
+  font-size: var(--ui-type-t3);
+  font-weight: var(--ui-font-weight-bold);
+}
+
+[data-ui-status-banner="true"] > span {
+  min-width: 0;
+}
+
+[data-ui-status-banner="true"] [data-ui-action-group="true"] {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-top: var(--ui-space-3);
+}
+
+[data-ui-status-banner="true"][data-ui-tone="success"] {
+  --ui-tone-surface: var(--ui-status-success-soft);
+  --ui-tone-border: color-mix(in srgb, var(--ui-status-success) 22%, transparent);
+  --ui-tone-text: var(--ui-status-success);
+}
+
+[data-ui-status-banner="true"][data-ui-tone="danger"] {
+  --ui-tone-surface: var(--ui-status-error-soft);
+  --ui-tone-border: color-mix(in srgb, var(--ui-status-error) 24%, transparent);
+  --ui-tone-text: var(--ui-status-error);
+}
+
+[data-ui-status-banner="true"][data-ui-tone="warning"] {
+  --ui-tone-surface: var(--ui-status-warning-soft);
+  --ui-tone-border: color-mix(in srgb, var(--ui-status-warning) 24%, transparent);
+  --ui-tone-text: var(--ui-status-warning);
+}
+
+[data-ui-status-banner="true"][data-ui-tone="info"] {
+  --ui-tone-surface: var(--ui-neutral-accent-1-surface);
+  --ui-tone-border: var(--ui-neutral-accent-1-border);
+  --ui-tone-text: var(--ui-neutral-accent-1-text);
+}
+
+[data-ui-payment-duplicate-banner="true"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+[data-ui-payment-duplicate-banner="true"] > strong,
+[data-ui-payment-duplicate-banner="true"] > span,
+[data-ui-payment-duplicate-banner="true"] [data-ui-action-group="true"] {
+  grid-column: 1;
+}
+
+[data-ui-creator-footer="true"] {
+  grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+  align-items: center;
+}
+
+[data-ui-creator-footer="true"] [data-ui-action="secondary"] {
+  color: var(--ui-color-expense);
+  border-color: rgba(215, 38, 61, 0.24);
+  background: var(--ui-color-card-background);
+}
+
+[data-ui-creator-footer="true"] [data-ui-action="secondary"]:hover:not(:disabled) {
+  background: var(--ui-color-error-soft);
+}
+
+[data-ui-creator-footer="true"] [data-ui-action="primary"] {
+  width: 100%;
+  box-shadow: none;
+  background: color-mix(in srgb, var(--ui-color-primary-navy) 58%, #ffffff);
+  border-color: transparent;
+}
+
+@container ui-large-record-list (max-width: 52rem) {
+  [data-ui-payment-sources-shell="true"] [data-ui-large-record="true"] {
+    gap: var(--ui-space-8);
+  }
+}
+
+@container ui-large-record-list (max-width: 38rem) {
+  [data-ui-payment-sources-shell="true"] [data-ui-large-record="true"] {
+    padding: var(--ui-space-7);
+  }
+
+  [data-ui-payment-sources-shell="true"] [data-ui-action-group="true"][data-ui-action-stack="record"] {
+    display: flex;
+    min-width: 0;
+    justify-content: flex-start;
+  }
+}
