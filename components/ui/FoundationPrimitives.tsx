@@ -157,11 +157,17 @@ export function CollapsibleSecondarySection({
         <span data-ui-collapsible-secondary-chevron="true" aria-hidden="true" />
       </button>
 
-      {!isCollapsed && (
-        <div data-ui-collapsible-secondary-content="true">
-          {children}
+      <div
+        data-ui-collapsible-secondary-content="true"
+        aria-hidden={isCollapsed}
+        inert={isCollapsed}
+      >
+        <div data-ui-collapsible-secondary-content-clip="true">
+          <div data-ui-collapsible-secondary-content-inner="true">
+            {children}
+          </div>
         </div>
-      )}
+      </div>
     </section>
   )
 }

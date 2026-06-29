@@ -6356,7 +6356,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   --ui-collapsible-secondary-border: color-mix(in srgb, var(--ui-tone-border, var(--ui-neutral-accent-1-border)) 18%, transparent);
   --ui-collapsible-secondary-shadow: none;
   display: grid;
-  gap: var(--ui-space-6);
+  gap: 0;
   border: 1px solid var(--ui-collapsible-secondary-border);
   border-radius: var(--ui-radius-2xl);
   background: var(--ui-collapsible-secondary-surface);
@@ -6805,7 +6805,29 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 [data-ui-collapsible-secondary-content="true"] {
-  padding: 0 var(--ui-collapsible-secondary-padding-x) var(--ui-space-7);
+  padding: 0;
+  gap: 0;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--ui-motion-normal) var(--ui-motion-ease-emphasized),
+    opacity var(--ui-motion-fast) var(--ui-motion-ease-standard);
+}
+
+[data-ui-collapsible-secondary-section="true"][data-ui-collapsed="false"] [data-ui-collapsible-secondary-content="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+[data-ui-collapsible-secondary-content-clip="true"] {
+  min-height: 0;
+  overflow: hidden;
+}
+
+[data-ui-collapsible-secondary-content-inner="true"] {
+  padding: var(--ui-space-6) var(--ui-collapsible-secondary-padding-x) var(--ui-space-7);
+  display: grid;
+  gap: var(--ui-space-6);
 }
 
 [data-ui-payment-sources-shell="true"] [data-ui-collapsible-secondary-section="true"],
