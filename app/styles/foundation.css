@@ -6343,3 +6343,206 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
     justify-self: stretch;
   }
 }
+
+/* ========================================================================== */
+/* Foundation v5.1 — Payment Sources final polish                             */
+/* ========================================================================== */
+
+:root {
+  --ui-action-primary-disabled-bg: #eaf1fb;
+  --ui-action-primary-disabled-border: #d5e0f0;
+  --ui-action-primary-disabled-text: #73819d;
+  --ui-action-primary-shadow: 0 12px 28px rgba(8, 44, 122, 0.18);
+  --ui-action-primary-shadow-compact: 0 8px 18px rgba(8, 44, 122, 0.14);
+  --ui-record-card-radius: var(--ui-radius-2xl);
+  --ui-record-card-shadow: 0 10px 26px rgba(8, 44, 122, 0.055);
+  --ui-record-card-padding: var(--ui-space-9);
+  --ui-record-card-gap: var(--ui-space-9);
+  --ui-large-record-gap: var(--ui-space-10);
+  --ui-large-section-gap: var(--ui-space-9);
+  --ui-metric-card-detail-min-height: 28px;
+  --ui-metric-progress-height: 5px;
+}
+
+[data-ui-action="primary"] {
+  min-height: var(--ui-density-regular-control);
+  box-shadow: var(--ui-action-primary-shadow);
+}
+
+[data-ui-action="primary"][data-ui-density="compact"] {
+  box-shadow: var(--ui-action-primary-shadow-compact);
+}
+
+[data-ui-action="primary"]:disabled,
+[data-ui-action="primary"][disabled] {
+  background: var(--ui-action-primary-disabled-bg);
+  border-color: var(--ui-action-primary-disabled-border);
+  color: var(--ui-action-primary-disabled-text);
+  opacity: 1;
+  box-shadow: none;
+}
+
+[data-ui-action="primary"]:disabled *,
+[data-ui-action="primary"][disabled] * {
+  color: var(--ui-action-primary-disabled-text);
+}
+
+[data-ui-hero-actions="true"] {
+  gap: var(--ui-space-6);
+}
+
+[data-ui-payment-sources-shell="true"] {
+  gap: var(--ui-space-12);
+  padding-block-start: var(--ui-space-4);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-large-section="true"] {
+  gap: var(--ui-space-10);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-section-header-v5="true"],
+[data-ui-payment-sources-shell="true"] [data-ui-large-section-header="true"] {
+  margin-block: 0 var(--ui-space-5);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-heavy-divider="true"] {
+  inline-size: calc(100% - (var(--ui-space-10) * 2));
+  margin: var(--ui-space-8) var(--ui-space-10) var(--ui-space-10);
+  background: rgba(8, 44, 122, 0.12);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-settings-strip="true"] {
+  margin-top: var(--ui-space-2);
+  row-gap: var(--ui-space-5);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-settings-strip-actions="true"] [data-ui-action="primary"] {
+  min-width: 142px;
+  min-height: 40px;
+  padding-inline: var(--ui-space-7);
+}
+
+[data-ui-large-record-list="true"] {
+  gap: var(--ui-space-8);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-large-record="true"] {
+  min-height: 114px;
+  padding: var(--ui-record-card-padding);
+  gap: var(--ui-record-card-gap);
+  align-items: center;
+  border-radius: var(--ui-record-card-radius);
+  box-shadow: var(--ui-record-card-shadow);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-large-record="true"]:hover {
+  box-shadow: 0 14px 32px rgba(8, 44, 122, 0.075);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-large-record-identity="true"] {
+  gap: var(--ui-space-8);
+  align-items: center;
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-large-record-identity-copy="true"] {
+  gap: var(--ui-space-4);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-status-pill-group="true"] {
+  align-items: center;
+  gap: var(--ui-space-4);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-status-pill="true"] {
+  min-height: 24px;
+  padding-inline: var(--ui-space-6);
+  align-items: center;
+  line-height: 1;
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-metric-group="true"] {
+  align-items: center;
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-metric-card="true"] {
+  min-height: 78px;
+  align-content: center;
+  gap: var(--ui-space-2);
+  padding-inline: var(--ui-space-7);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-metric-card-label="true"] {
+  min-height: 16px;
+  align-items: center;
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-metric-card-value="true"] {
+  font-size: 22px;
+  line-height: 1.05;
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-metric-card-detail="true"] {
+  min-block-size: var(--ui-metric-card-detail-min-height);
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-metric-card-progress="true"] {
+  block-size: var(--ui-metric-progress-height);
+  margin-top: var(--ui-space-2);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-action-group="true"][data-ui-action-stack="record"] {
+  align-self: center;
+  justify-self: end;
+  gap: var(--ui-space-5);
+}
+
+[data-ui-payment-sources-shell="true"] [data-ui-action-group="true"][data-ui-action-stack="record"] > button {
+  min-height: 36px;
+  min-width: 92px;
+}
+
+[data-ui-creator-summary="true"] {
+  padding: calc(var(--ui-creator-summary-padding) + var(--ui-space-2));
+}
+
+[data-ui-creator-summary-card="true"] {
+  padding: var(--ui-space-12) var(--ui-space-9);
+  gap: var(--ui-space-8);
+}
+
+[data-ui-creator-summary-card="true"] [data-ui-status-pill-group="true"] {
+  justify-content: center;
+}
+
+[data-ui-creator-footer="true"] {
+  gap: var(--ui-space-7);
+  padding-top: var(--ui-space-7);
+}
+
+[data-ui-creator-footer="true"] [data-ui-action="primary"] {
+  min-height: 40px;
+  height: 40px;
+}
+
+[data-ui-creator-footer="true"] [data-ui-action="primary"]:disabled,
+[data-ui-creator-footer="true"] [data-ui-action="primary"][disabled] {
+  background: var(--ui-action-primary-disabled-bg);
+  border-color: var(--ui-action-primary-disabled-border);
+  color: var(--ui-action-primary-disabled-text);
+  opacity: 1;
+  box-shadow: none;
+}
+
+@container ui-large-record-list (max-width: 52rem) {
+  [data-ui-payment-sources-shell="true"] [data-ui-large-record="true"] {
+    min-height: 0;
+  }
+
+  [data-ui-payment-sources-shell="true"] [data-ui-metric-card="true"] {
+    min-height: 70px;
+  }
+}
+
