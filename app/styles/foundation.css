@@ -6328,7 +6328,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   background: var(--ui-goal-progress-color, var(--ui-neutral-accent-2-text));
 }
 
-@container ui-large-record-list (max-width: 62rem) {
+@container ui-large-record-list (max-width: 52rem) {
   [data-ui-large-record="true"][data-ui-record-type="goal"] {
     grid-template-areas:
       "identity actions"
