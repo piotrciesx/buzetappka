@@ -16,6 +16,7 @@ import {
 import CategoryIcon from './CategoryIcon'
 import FoundationIconPicker from './ui/FoundationIconPicker'
 import { EmptyState, StatusBox } from './utility-panels/utilityPanelPrimitives'
+import { HeroHeader, IconAction, SectionHeader } from './ui/FoundationPrimitives'
 
 type PaymentSourceStats = {
   sourceId: string
@@ -605,17 +606,12 @@ export default function PaymentSourcesPanel({
   return (
     <section data-ui-payment-sources-shell="true" data-ui-large-module="true" data-ui-utility-modal-size="xl">
       <section data-ui-payment-section="defaults" data-ui-large-section="true">
-        <header data-ui-large-section-header="true">
-          <span data-ui-large-section-header-icon="true" data-ui-tone="neutral-accent-1" aria-hidden="true">
-            <CategoryIcon iconKey="system-payment-sources" size="small" />
-          </span>
-          <div data-ui-large-section-header-copy="true">
-            <span data-ui-title-with-help="true">
-              <strong>Domyślne źródła płatności</strong>
-              <HelpHint label="Ustaw źródła, które będą podpowiadane przy nowych wpisach." />
-            </span>
-          </div>
-        </header>
+        <SectionHeader
+          tone="neutral-accent-1"
+          icon={<CategoryIcon iconKey="system-payment-sources" size="small" />}
+          title="Domyślne źródła płatności"
+          help={<HelpHint label="Ustaw źródła, które będą podpowiadane przy nowych wpisach." />}
+        />
 
         <div data-ui-settings-strip="true">
           <div data-ui-settings-strip-field="true" data-ui-settings-position="primary">
@@ -693,23 +689,13 @@ export default function PaymentSourcesPanel({
       {errorText && <StatusBox tone="danger">{errorText}</StatusBox>}
 
       <section data-ui-payment-section="sources" data-ui-large-section="true">
-        <header data-ui-large-section-header="true">
-          <span data-ui-large-section-header-icon="true" data-ui-tone="neutral-accent-2" aria-hidden="true">
-            <CategoryIcon iconKey="system-records" size="small" />
-          </span>
-          <div data-ui-large-section-header-copy="true">
-            <span data-ui-title-with-help="true">
-              <strong>Twoje źródła</strong>
-              <HelpHint
-                label={
-                  activeList === 'active'
-                    ? 'Aktywne źródła dostępne w kreatorze wpisów.'
-                    : 'Źródła zachowane ze względu na historię wpisów.'
-                }
-              />
-            </span>
-          </div>
-          <div data-ui-large-section-header-trailing="true">
+        <SectionHeader
+          tone="neutral-accent-2"
+          icon={<CategoryIcon iconKey="system-records" size="small" />}
+          title="Twoje źródła"
+          help={<HelpHint label={activeList === 'active' ? 'Aktywne źródła dostępne w kreatorze wpisów.' : 'Źródła zachowane ze względu na historię wpisów.'} />}
+          trailing={
+
             <div data-ui-list-switch="true" role="group" aria-label="Zakres źródeł płatności">
               <button
                 type="button"
@@ -726,8 +712,8 @@ export default function PaymentSourcesPanel({
                 Źródła archiwalne
               </button>
             </div>
-          </div>
-        </header>
+          }
+        />
         <div data-ui-large-record-list="true">
           {(activeList === 'active' ? activeSources : archivedSources).length === 0 ? (
             <EmptyState>
@@ -749,8 +735,9 @@ export default function PaymentSourcesPanel({
       {isFormOpen && (
         <div data-ui-overlay="true" onClick={closeForm}>
           <section
-            data-ui-modal-shell="true"
-            data-ui-size="creator"
+            data-ui-modal-surface="true"
+            data-ui-modal-size="creator"
+            data-ui-density="comfort"
             data-ui-creator-modal="true"
             onClick={(event) => {
               event.stopPropagation()
@@ -759,23 +746,19 @@ export default function PaymentSourcesPanel({
               }
             }}
           >
-            <header data-ui-modal-header="true" data-ui-creator-header="true">
-              <div data-ui-title-row="true">
-                <span data-ui-icon-tile="true" data-ui-tone={draft.color} data-ui-icon-role="creator-header" aria-hidden="true">
-                  <CategoryIcon iconKey={draft.icon} />
-                </span>
-                <div data-ui-title-copy="true">
-                  <span data-ui-title-with-help="true">
-                    <strong>{draft.id ? 'Edytuj źródło' : 'Nowe źródło'}</strong>
-                    <HelpHint label="Utwórz źródło płatności lub przychodów i określ, gdzie ma być dostępne." />
-                  </span>
-                  <span>Utwórz nowe źródło płatności lub przychodów.</span>
-                </div>
-              </div>
-              <button type="button" data-ui-close-action="true" aria-label="Zamknij" onClick={closeForm}>
-                <CategoryIcon iconKey="close" />
-              </button>
-            </header>
+            <HeroHeader
+              variant="creator"
+              density="comfort"
+              tone={draft.color}
+              icon={<CategoryIcon iconKey={draft.icon} />}
+              title={draft.id ? 'Edytuj źródło' : 'Nowe źródło'}
+              description="Utwórz źródło płatności lub przychodów i określ, gdzie ma być dostępne."
+              closeAction={
+                <IconAction ariaLabel="Zamknij" onClick={closeForm} density="comfort">
+                  <CategoryIcon iconKey="close" />
+                </IconAction>
+              }
+            />
 
             <div data-ui-creator-layout="true">
               <div data-ui-creator-main="true">

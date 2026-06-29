@@ -343,8 +343,9 @@ export default function TransactionCreatorModal(
       onClick={onClose}
     >
       <section
-        data-ui-modal-shell="true"
-        data-ui-size="wide"
+        data-ui-modal-surface="true"
+        data-ui-modal-size="wide"
+        data-ui-density="comfort"
         data-transaction-modal="true"
         onClick={(event) => event.stopPropagation()}
       >

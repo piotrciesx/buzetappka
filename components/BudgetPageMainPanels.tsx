@@ -5,6 +5,7 @@ import BudgetTreeSection from './BudgetTreeSection'
 import BulkActionsBar from './BulkActionsBar'
 import CategoryMigrationPrompt from './CategoryMigrationPrompt'
 import CategoryIcon from './CategoryIcon'
+import { HeroHeader, IconAction, PrimaryAction } from './ui/FoundationPrimitives'
 import DraftsPanel from './DraftsPanel'
 import FinancialGoalsContainer from './FinancialGoalsContainer'
 import HiddenCategoriesPanel from './HiddenCategoriesPanel'
@@ -112,6 +113,27 @@ export default function BudgetPageMainPanels({
                       ? 'trash'
                       : 'info'
 
+  const utilityPanelDescription =
+    activeUtilityPanel === 'drafts'
+      ? 'Zapisane wersje robocze wpisów gotowe do dokończenia.'
+      : activeUtilityPanel === 'importExport'
+        ? 'Eksport, import i kopie bezpieczeństwa Twoich danych.'
+        : activeUtilityPanel === 'paymentSources'
+          ? 'Zarządzaj źródłami przychodów i wydatków używanymi w kreatorze wpisów.'
+          : activeUtilityPanel === 'financialGoals'
+            ? 'Śledź cele, postęp i planowane oszczędności.'
+            : activeUtilityPanel === 'recurringTransactions'
+              ? 'Kontroluj stałe płatności, raty i cykliczne operacje.'
+              : activeUtilityPanel === 'search'
+                ? 'Szukaj wpisów, kategorii i informacji w budżecie.'
+                : activeUtilityPanel === 'monthCalendar'
+                  ? 'Przeglądaj wpisy i aktywność w układzie miesiąca.'
+                  : activeUtilityPanel === 'hiddenCategories'
+                    ? 'Zarządzaj ukrytymi kategoriami i ich przywracaniem.'
+                    : activeUtilityPanel === 'trash'
+                      ? 'Przeglądaj usunięte elementy i przywracaj je w razie potrzeby.'
+                      : ''
+
   return (
     <>
       {undoBannerProps && <UndoBanner {...undoBannerProps} />}
@@ -133,45 +155,32 @@ export default function BudgetPageMainPanels({
             data-utility-panel-kind={activeUtilityPanel}
             aria-label={utilityPanelTitle}
           >
-            <header
-              data-budget-utility-header="true"
-              data-ui-modal-header="true"
-              data-utility-header-kind={activeUtilityPanel}
-            >
-              <div data-ui-title-row="true">
-                <span data-ui-icon-tile="true" data-ui-tone="blue">
-                  <CategoryIcon iconKey={utilityPanelIcon} />
-                </span>
-                <div data-ui-title-copy="true">
-                  <strong>{utilityPanelTitle}</strong>
-                </div>
-              </div>
-              <div data-utility-header-actions="true">
-                {activeUtilityPanel === 'paymentSources' && (
-                  <button
-                    type="button"
-                    data-ui-header-primary-action="true"
-                    onClick={() => setPaymentSourceCreateRequest((value) => value + 1)}
-                  >
+            <HeroHeader
+              variant="module"
+              density="regular"
+              tone="neutral-accent-1"
+              icon={<CategoryIcon iconKey={utilityPanelIcon} />}
+              title={utilityPanelTitle}
+              description={utilityPanelDescription}
+              primaryAction={
+                activeUtilityPanel === 'paymentSources' ? (
+                  <PrimaryAction onClick={() => setPaymentSourceCreateRequest((value) => value + 1)}>
                     <CategoryIcon iconKey="system-add" size="small" />
                     Dodaj źródło
-                  </button>
-                )}
-                {activeUtilityPanel === 'financialGoals' && (
-                  <button
-                    type="button"
-                    data-ui-header-primary-action="true"
-                    onClick={() => window.dispatchEvent(new CustomEvent('budget-open-financial-goal-create'))}
-                  >
+                  </PrimaryAction>
+                ) : activeUtilityPanel === 'financialGoals' ? (
+                  <PrimaryAction onClick={() => window.dispatchEvent(new CustomEvent('budget-open-financial-goal-create'))}>
                     <CategoryIcon iconKey="system-add" size="small" />
                     Dodaj cel
-                  </button>
-                )}
-                <button type="button" data-ui-close-action="true" onClick={onCloseUtilityPanel} aria-label="Zamknij panel">
+                  </PrimaryAction>
+                ) : null
+              }
+              closeAction={
+                <IconAction ariaLabel="Zamknij panel" onClick={onCloseUtilityPanel}>
                   <CategoryIcon iconKey="close" />
-                </button>
-              </div>
-            </header>
+                </IconAction>
+              }
+            />
 
             <div data-budget-utility-body="true">
               {activeUtilityPanel === 'drafts' && <DraftsPanel {...draftsPanelProps} />}

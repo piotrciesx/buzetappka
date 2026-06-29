@@ -20,6 +20,7 @@ import {
 import { supabase } from "../lib/supabaseClient";
 import { StatusBox } from "./utility-panels/utilityPanelPrimitives";
 import FoundationIconPicker from "./ui/FoundationIconPicker";
+import { HeroHeader, IconAction, PrimaryAction } from "./ui/FoundationPrimitives";
 
 type ProfileMonthNoteRow = {
   id: string;
@@ -737,55 +738,36 @@ export default function ProfileMonthNotePanel({
   const notePreviewModal = selectedNote ? (
     <div data-ui-overlay="true" onClick={() => setSelectedNoteId(null)}>
       <section
-        data-ui-modal-shell="true"
-        data-ui-size="note"
+        data-ui-modal-surface="true"
+        data-ui-modal-size="note"
+        data-ui-density="regular"
         onClick={(event) => event.stopPropagation()}
       >
-        <header data-ui-modal-header="true">
-          <div data-ui-title-row="true">
-            <span data-ui-icon-tile="true" data-ui-tone={selectedNote.tone}>
-              <CategoryIcon iconKey={selectedNote.icon} />
-            </span>
-            <div data-ui-title-copy="true">
-              <strong>Podgląd notatki</strong>
-              <span>
-                {selectedNote.createdAt === selectedNote.updatedAt
-                  ? `Dodano: ${formatNoteDate(selectedNote.createdAt)}`
-                  : `Dodano: ${formatNoteDate(selectedNote.createdAt)} · Edytowano: ${formatNoteDate(selectedNote.updatedAt)}`}
-              </span>
-            </div>
-          </div>
-          <div data-ui-note-actions="true">
-            <button
-              type="button"
-              className="ui-button--icon"
-              aria-label="Edytuj notatkę"
-              title="Edytuj"
-              onClick={() => editNote(selectedNote)}
-            >
-              <NoteIcon name="edit" />
-            </button>
-            <button
-              type="button"
-              className="ui-button--icon"
-              data-button-tone="danger"
-              aria-label="Usuń notatkę"
-              title="Usuń"
-              disabled={isSaving}
-              onClick={() => deleteNote(selectedNote.id)}
-            >
-              <NoteIcon name="trash" />
-            </button>
-            <button
-              type="button"
-              data-ui-close-action="true"
-              aria-label="Zamknij"
-              onClick={() => setSelectedNoteId(null)}
-            >
-              <CategoryIcon iconKey="close" />
-            </button>
-          </div>
-        </header>
+        <HeroHeader
+          variant="compact"
+          density="regular"
+          tone={selectedNote.tone}
+          icon={<CategoryIcon iconKey={selectedNote.icon} />}
+          title="Podgląd notatki"
+          description={
+            selectedNote.createdAt === selectedNote.updatedAt
+              ? `Dodano: ${formatNoteDate(selectedNote.createdAt)}`
+              : `Dodano: ${formatNoteDate(selectedNote.createdAt)} · Edytowano: ${formatNoteDate(selectedNote.updatedAt)}`
+          }
+          closeAction={
+            <>
+              <IconAction ariaLabel="Edytuj notatkę" title="Edytuj" onClick={() => editNote(selectedNote)}>
+                <NoteIcon name="edit" />
+              </IconAction>
+              <IconAction ariaLabel="Usuń notatkę" title="Usuń" tone="danger" disabled={isSaving} onClick={() => deleteNote(selectedNote.id)}>
+                <NoteIcon name="trash" />
+              </IconAction>
+              <IconAction ariaLabel="Zamknij" onClick={() => setSelectedNoteId(null)}>
+                <CategoryIcon iconKey="close" />
+              </IconAction>
+            </>
+          }
+        />
 
         <div data-ui-section="true" data-ui-note-full="true">{selectedNote.text}</div>
       </section>
@@ -795,41 +777,30 @@ export default function ProfileMonthNotePanel({
   const detailsModal = isDetailsOpen ? (
     <div data-ui-overlay="true" onClick={closeDetailsModal}>
       <section
-        data-ui-modal-shell="true"
-        data-ui-size="wide"
+        data-ui-modal-surface="true"
+        data-ui-modal-size="wide"
+        data-ui-density="regular"
         onClick={(event) => event.stopPropagation()}
       >
-        <header data-ui-modal-header="true">
-          <div data-ui-title-row="true">
-            <span data-ui-icon-tile="true" data-ui-tone="blue">
-              <CategoryIcon iconKey="note" />
-            </span>
-            <div data-ui-title-copy="true">
-              <span data-ui-title-with-help="true">
-                <strong>Notatki miesiąca {selectedMonth}</strong>
-                <HelpHint label="Wspólne notatki dla tego miesiąca. Widoczne są tylko dla Ciebie i tylko w tym miesiącu." />
-              </span>
-            </div>
-          </div>
-          <div data-ui-note-actions="true">
-            <button
-              type="button"
-              data-ui-header-primary-action="true"
-              onClick={startAddingNote}
-            >
+        <HeroHeader
+          variant="module"
+          density="regular"
+          tone="neutral-accent-1"
+          icon={<CategoryIcon iconKey="note" />}
+          title={`Notatki miesiąca ${selectedMonth}`}
+          description="Wspólne notatki, przypomnienia i informacje dla bieżącego miesiąca."
+          primaryAction={
+            <PrimaryAction onClick={startAddingNote}>
               <CategoryIcon iconKey="system-add" size="small" />
               Dodaj notatkę
-            </button>
-            <button
-              type="button"
-              data-ui-close-action="true"
-              aria-label="Zamknij"
-              onClick={closeDetailsModal}
-            >
+            </PrimaryAction>
+          }
+          closeAction={
+            <IconAction ariaLabel="Zamknij" onClick={closeDetailsModal}>
               <CategoryIcon iconKey="close" />
-            </button>
-          </div>
-        </header>
+            </IconAction>
+          }
+        />
 
         <div data-ui-filter-row="true">
           {DETAILS_FILTER_OPTIONS.map((filterOption) => (
@@ -883,8 +854,9 @@ export default function ProfileMonthNotePanel({
   const formModal = isFormOpen ? (
     <div data-ui-overlay="true" onClick={cancelForm}>
       <section
-        data-ui-modal-shell="true"
-        data-ui-size="form"
+        data-ui-modal-surface="true"
+        data-ui-modal-size="form"
+        data-ui-density="comfort"
         onClick={(event) => {
           event.stopPropagation();
           if (activePicker) {
@@ -892,27 +864,19 @@ export default function ProfileMonthNotePanel({
           }
         }}
       >
-        <header data-ui-modal-header="true">
-          <div data-ui-title-row="true">
-            <span data-ui-icon-tile="true" data-ui-tone={draft.tone}>
-              <CategoryIcon iconKey={draft.icon} />
-            </span>
-            <div data-ui-title-copy="true">
-              <span data-ui-title-with-help="true">
-                <strong>{editingNote ? "Edytuj notatkę" : "Nowa notatka"}</strong>
-                <HelpHint label={`Notatka będzie widoczna tylko dla Ciebie i tylko w miesiącu ${selectedMonth}.`} />
-              </span>
-            </div>
-          </div>
-          <button
-            type="button"
-            data-ui-close-action="true"
-            aria-label="Zamknij"
-            onClick={cancelForm}
-          >
-            <CategoryIcon iconKey="close" />
-          </button>
-        </header>
+        <HeroHeader
+          variant="creator"
+          density="comfort"
+          tone={draft.tone}
+          icon={<CategoryIcon iconKey={draft.icon} />}
+          title={editingNote ? "Edytuj notatkę" : "Nowa notatka"}
+          description={`Notatka będzie widoczna tylko dla Ciebie i tylko w miesiącu ${selectedMonth}.`}
+          closeAction={
+            <IconAction ariaLabel="Zamknij" onClick={cancelForm} density="comfort">
+              <CategoryIcon iconKey="close" />
+            </IconAction>
+          }
+        />
 
         <div data-ui-section="true" data-ui-form-shell="true">
           <textarea
@@ -988,26 +952,20 @@ export default function ProfileMonthNotePanel({
   return (
     <>
       <section data-ui-popup-shell="true">
-        <header data-ui-popup-header="true">
-          <div data-ui-title-row="true">
-            <span data-ui-icon-tile="true" data-ui-tone="blue">
-              <CategoryIcon iconKey="note" />
-            </span>
-            <div data-ui-title-copy="true">
-              <strong>Notatki miesiąca</strong>
-              <small>{isLoading ? "Ładowanie..." : noteCountLabel}</small>
-            </div>
-          </div>
-          <button
-            type="button"
-            data-ui-header-primary-action="true"
-            aria-label="Dodaj notatkę"
-            onClick={startAddingNote}
-          >
-            <CategoryIcon iconKey="system-add" size="small" />
-            Dodaj notatkę
-          </button>
-        </header>
+        <HeroHeader
+          variant="compact"
+          density="compact"
+          tone="neutral-accent-1"
+          icon={<CategoryIcon iconKey="note" />}
+          title="Notatki miesiąca"
+          description={isLoading ? "Ładowanie..." : noteCountLabel}
+          primaryAction={
+            <PrimaryAction ariaLabel="Dodaj notatkę" onClick={startAddingNote} density="compact">
+              <CategoryIcon iconKey="system-add" size="small" />
+              Dodaj notatkę
+            </PrimaryAction>
+          }
+        />
 
         {isLoading && <StatusBox>Ładowanie notatek...</StatusBox>}
 

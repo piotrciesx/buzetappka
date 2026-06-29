@@ -1751,3 +1751,58 @@ export type UiNeutralAccentToken = keyof typeof uiNeutralAccentTokens
 export type UiMetricTone = keyof typeof uiMetricToneApi
 export type UiLargeModuleApiKey = keyof typeof uiLargeModuleApi
 export type UiCreatorApiKey = keyof typeof uiCreatorApi
+
+// Foundation Core v5 — public presentation contracts.
+// These replace local hero/header/action/layout contracts during v5 migration.
+export const uiDensityV5 = {
+  compact: 'compact',
+  regular: 'regular',
+  comfort: 'comfort',
+} as const
+
+export const uiActionApiV5 = {
+  attributes: {
+    action: 'data-ui-action',
+    width: 'data-ui-action-width',
+    tone: 'data-ui-action-tone',
+    density: 'data-ui-density',
+  },
+  variant: {
+    primary: 'primary',
+    secondary: 'secondary',
+    danger: 'danger',
+    icon: 'icon',
+  },
+  width: {
+    auto: 'auto',
+    wide: 'wide',
+    full: 'full',
+  },
+} as const
+
+export const uiHeroHeaderApiV5 = {
+  root: 'data-ui-hero-header',
+  variant: 'data-ui-hero-variant',
+  density: 'data-ui-density',
+  main: 'data-ui-hero-main',
+  icon: 'data-ui-hero-icon',
+  copy: 'data-ui-hero-copy',
+  actions: 'data-ui-hero-actions',
+} as const
+
+export const uiSectionHeaderApiV5 = {
+  root: 'data-ui-section-header-v5',
+  density: 'data-ui-density',
+  main: 'data-ui-section-header-main',
+  icon: 'data-ui-section-header-icon-v5',
+  copy: 'data-ui-section-header-copy-v5',
+  trailing: 'data-ui-section-header-trailing-v5',
+} as const
+
+export const uiModalSurfaceApiV5 = {
+  root: 'data-ui-modal-surface',
+  size: 'data-ui-modal-size',
+  density: 'data-ui-density',
+  layer: 'data-ui-modal-layer',
+} as const
+

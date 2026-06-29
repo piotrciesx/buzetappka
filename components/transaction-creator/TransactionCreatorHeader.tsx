@@ -2,6 +2,7 @@ import { CSSProperties } from 'react'
 import { Category } from './transactionCreatorTypes'
 import { getCategoryPathLabel } from './transactionCreatorUtils'
 import CategoryIcon from '../CategoryIcon'
+import { HeroHeader, IconAction } from '../ui/FoundationPrimitives'
 
 type Props = {
   selectedMonth: string
@@ -20,20 +21,20 @@ export default function TransactionCreatorHeader({
   onClose,
 }: Props) {
   return (
-    <header data-ui-modal-header="true" data-transaction-modal-header="true">
-      <div data-ui-title-row="true">
-        <span data-ui-icon-tile="true" data-ui-tone="blue">
-          <CategoryIcon iconKey="pen" />
-        </span>
-        <div data-ui-title-copy="true">
-          <strong>Nowy wpis</strong>
-          <span>Miesiąc zapisu: {selectedMonth}</span>
-        </div>
-      </div>
-
-      <button type="button" data-ui-close-action="true" aria-label="Zamknij kreator wpisu" onClick={onClose}>
-        <CategoryIcon iconKey="close" />
-      </button>
+    <>
+      <HeroHeader
+        variant="creator"
+        density="comfort"
+        tone="neutral-accent-1"
+        icon={<CategoryIcon iconKey="pen" />}
+        title="Nowy wpis"
+        description={`Miesiąc zapisu: ${selectedMonth}`}
+        closeAction={
+          <IconAction ariaLabel="Zamknij kreator wpisu" onClick={onClose} density="comfort">
+            <CategoryIcon iconKey="close" />
+          </IconAction>
+        }
+      />
 
       {suggestedCategoryId && (
         <div data-ui-empty-block="true" data-transaction-header-note="true">
@@ -41,6 +42,6 @@ export default function TransactionCreatorHeader({
           <span>{getCategoryPathLabel(suggestedCategoryId, categoriesById)}</span>
         </div>
       )}
-    </header>
+    </>
   )
 }
