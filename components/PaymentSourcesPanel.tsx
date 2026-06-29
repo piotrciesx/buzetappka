@@ -762,7 +762,7 @@ export default function PaymentSourcesPanel({
 
             <div data-ui-creator-layout="true">
               <div data-ui-creator-main="true">
-                <section data-ui-creator-step="true" data-ui-tone="neutral-accent-3">
+                <section data-ui-creator-step="true" data-ui-tone="neutral-accent-1">
                   <span data-ui-creator-step-icon="true" aria-hidden="true">1</span>
                   <div data-ui-creator-step-content="true">
                     <header data-ui-creator-step-header="true">
@@ -852,7 +852,7 @@ export default function PaymentSourcesPanel({
                   </div>
                 </section>
 
-                <section data-ui-creator-step="true" data-ui-tone="neutral-accent-4">
+                <section data-ui-creator-step="true" data-ui-tone="neutral-accent-2">
                   <span data-ui-creator-step-icon="true" aria-hidden="true">2</span>
                   <div data-ui-creator-step-content="true">
                     <header data-ui-creator-step-header="true">
@@ -874,7 +874,7 @@ export default function PaymentSourcesPanel({
                   </div>
                 </section>
 
-                <section data-ui-creator-step="true" data-ui-tone="success">
+                <section data-ui-creator-step="true" data-ui-tone="neutral-accent-3">
                   <span data-ui-creator-step-icon="true" aria-hidden="true">3</span>
                   <div data-ui-creator-step-content="true">
                     <header data-ui-creator-step-header="true">
