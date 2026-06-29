@@ -80,7 +80,9 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
 
   return (
     <>
-      <div data-ui-large-record-identity="true">
+      <div data-ui-large-record-identity="true" data-ui-record-kind="goal">
+        {dragHandle && <span data-ui-record-drag-handle="true">{dragHandle}</span>}
+
         <span
           data-ui-icon-tile="true"
           data-ui-icon-role="large-record-hero"
@@ -91,25 +93,29 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
         </span>
 
         <div data-ui-large-record-identity-copy="true">
-          <strong data-ui-large-record-title="true">{goal.name}</strong>
-          <div data-ui-status-pill-group="true">
-            {dragHandle}
-            <span data-ui-status-pill="true" data-ui-tone={getStatusTone(statusLabel)}>
+          <div data-ui-large-record-title-line="true">
+            <strong data-ui-large-record-title="true">{goal.name}</strong>
+            <span data-ui-status-inline="true" data-ui-tone={getStatusTone(statusLabel)}>
+              <span aria-hidden="true" />
               {statusLabel}
             </span>
-            {waitingForLockedMonth && (
-              <span data-ui-status-pill="true" data-ui-tone="warning">
-                Oczekuje na zamknięcie miesiąca
-              </span>
-            )}
           </div>
+
           <span data-ui-large-record-meta="true">
-            Start: {goal.start_month} · Deadline: {deadlineMonth || "brak"}
+            <span>Start: {goal.start_month}</span>
+            <span>Deadline: {deadlineMonth || "brak"}</span>
           </span>
+
+          {waitingForLockedMonth && (
+            <span data-ui-status-inline="true" data-ui-tone="warning">
+              <span aria-hidden="true" />
+              Oczekuje na zamknięcie miesiąca
+            </span>
+          )}
         </div>
       </div>
 
-      <div data-ui-metric-group="true" data-ui-metric-columns="4">
+      <div data-ui-metric-group="true" data-ui-metric-columns="4" data-ui-metric-variant="goal-card">
         <div data-ui-metric-card="true" data-ui-tone="neutral-accent-1">
           <span data-ui-metric-card-label="true">Docelowa</span>
           <strong data-ui-metric-card-value="true">
@@ -118,25 +124,13 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
           <span data-ui-metric-card-detail="true">Kwota celu</span>
         </div>
 
-        <div
-          data-ui-metric-card="true"
-          data-ui-tone={isUnsuccessful ? "danger" : "success"}
-          style={
-            {
-              "--ui-metric-progress": `${progressPercent}%`,
-              "--ui-metric-accent": progressColor,
-            } as CSSProperties
-          }
-        >
+        <div data-ui-metric-card="true" data-ui-tone={isUnsuccessful ? "danger" : "success"}>
           <span data-ui-metric-card-label="true">Uzbierano</span>
           <strong data-ui-metric-card-value="true">
             {formatAmount(collectedAmount)}
           </strong>
           <span data-ui-metric-card-detail="true">
             {percentage.toFixed(0)}% celu
-          </span>
-          <span data-ui-metric-card-progress="true" aria-hidden="true">
-            <span data-ui-metric-card-progress-fill="true" />
           </span>
         </div>
 
@@ -158,6 +152,24 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
       <div data-ui-action-group="true" data-ui-action-stack="record">
         <SecondaryAction onClick={() => onEdit(goal)}>Edytuj</SecondaryAction>
         <DangerAction onClick={() => onDelete(goal.id)}>Usuń</DangerAction>
+      </div>
+
+      <div
+        data-ui-large-record-progress="true"
+        style={
+          {
+            "--ui-goal-progress": `${progressPercent}%`,
+            "--ui-goal-progress-color": progressColor,
+          } as CSSProperties
+        }
+      >
+        <div data-ui-large-record-progress-header="true">
+          <span>Postęp celu</span>
+          <strong>{percentage.toFixed(0)}%</strong>
+        </div>
+        <span data-ui-large-record-progress-track="true" aria-hidden="true">
+          <span data-ui-large-record-progress-fill="true" />
+        </span>
       </div>
     </>
   );
@@ -182,6 +194,7 @@ export function SortableGoalCard(
     <article
       ref={setNodeRef}
       data-ui-large-record="true"
+      data-ui-record-type="goal"
       data-dragging={isDragging ? "true" : "false"}
       style={{
         transform: CSS.Transform.toString(transform),
@@ -213,7 +226,7 @@ export function StaticGoalCard(
   },
 ) {
   return (
-    <article data-ui-large-record="true">
+    <article data-ui-large-record="true" data-ui-record-type="goal">
       <GoalCardContent
         {...props}
         dragHandle={
