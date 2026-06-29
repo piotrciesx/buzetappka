@@ -1,48 +1,49 @@
-'use client'
+"use client";
 
-import type { ReactNode } from 'react'
-import CategoryIcon from '../CategoryIcon'
-import { useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
-import { getGoalProgressBarColor } from '../../lib/financialGoals'
-import type { GoalCardBaseProps } from './financialGoalsPanelTypes'
+import type { ReactNode } from "react";
+import CategoryIcon from "../CategoryIcon";
+import { DangerAction, SecondaryAction } from "../ui/FoundationPrimitives";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { getGoalProgressBarColor } from "../../lib/financialGoals";
+import type { GoalCardBaseProps } from "./financialGoalsPanelTypes";
 
-const formatAmount = (value: number) => `${value.toFixed(2)} zł`
+const formatAmount = (value: number) => `${value.toFixed(2)} zł`;
 
 const getStatusTone = (statusLabel: string) => {
-  if (statusLabel === 'zrealizowany') return 'success'
-  if (statusLabel === 'niezrealizowany') return 'danger'
-  return 'active'
-}
+  if (statusLabel === "zrealizowany") return "success";
+  if (statusLabel === "niezrealizowany") return "danger";
+  return "active";
+};
 
-const getGoalIconKey = (goal: GoalCardBaseProps['goal']) => {
-  const goalWithAppearance = goal as GoalCardBaseProps['goal'] & {
-    icon?: string | null
-    icon_key?: string | null
-    category_icon?: string | null
-  }
+const getGoalIconKey = (goal: GoalCardBaseProps["goal"]) => {
+  const goalWithAppearance = goal as GoalCardBaseProps["goal"] & {
+    icon?: string | null;
+    icon_key?: string | null;
+    category_icon?: string | null;
+  };
 
   return (
     goalWithAppearance.icon_key ||
     goalWithAppearance.category_icon ||
     goalWithAppearance.icon ||
-    'system-goals'
-  )
-}
+    "system-goals"
+  );
+};
 
-const getGoalTone = (goal: GoalCardBaseProps['goal']) => {
-  const goalWithAppearance = goal as GoalCardBaseProps['goal'] & {
-    color?: string | null
-    color_tone?: string | null
-  }
+const getGoalTone = (goal: GoalCardBaseProps["goal"]) => {
+  const goalWithAppearance = goal as GoalCardBaseProps["goal"] & {
+    color?: string | null;
+    color_tone?: string | null;
+  };
 
-  return goalWithAppearance.color_tone || goalWithAppearance.color || 'green'
-}
+  return goalWithAppearance.color_tone || goalWithAppearance.color || "blue";
+};
 
 type GoalCardExtraProps = {
-  dragHandle?: ReactNode
-  priorityPosition?: number
-}
+  dragHandle?: ReactNode;
+  priorityPosition?: number;
+};
 
 function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
   const {
@@ -59,22 +60,35 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
     onDelete,
     dragHandle,
     priorityPosition,
-  } = props
+  } = props;
 
-  const isUnsuccessful = statusLabel === 'niezrealizowany'
-  const progressWidth = isUnsuccessful ? '100%' : `${Math.min(percentage, 100)}%`
-  const progressColor = isUnsuccessful ? getGoalProgressBarColor(0) : getGoalProgressBarColor(percentage)
-  const allocationLabel = allocationPercent === null ? '0%' : `${allocationPercent}%`
-  const modeLabel = isAllocationMode ? 'Alokacja' : 'Priorytet'
-  const modeValue = isAllocationMode ? allocationLabel : String(priorityPosition || '—')
+  const isUnsuccessful = statusLabel === "niezrealizowany";
+  const progressWidth = isUnsuccessful
+    ? "100%"
+    : `${Math.min(percentage, 100)}%`;
+  const progressColor = isUnsuccessful
+    ? getGoalProgressBarColor(0)
+    : getGoalProgressBarColor(percentage);
+  const allocationLabel =
+    allocationPercent === null ? "0%" : `${allocationPercent}%`;
+  const modeLabel = isAllocationMode ? "Alokacja" : "Priorytet";
+  const modeValue = isAllocationMode
+    ? allocationLabel
+    : String(priorityPosition || "—");
 
   return (
     <>
       <div data-ui-goal-card-main="true">
         <div data-ui-goal-card-title-row="true">
-          {dragHandle || <span data-ui-goal-menu-spacer="true" aria-hidden="true" />}
+          {dragHandle || (
+            <span data-ui-goal-menu-spacer="true" aria-hidden="true" />
+          )}
 
-          <span data-ui-goal-icon="true" data-ui-tone={getGoalTone(goal)} aria-hidden="true">
+          <span
+            data-ui-goal-icon="true"
+            data-ui-tone={getGoalTone(goal)}
+            aria-hidden="true"
+          >
             <CategoryIcon iconKey={getGoalIconKey(goal)} size="large" />
           </span>
 
@@ -88,11 +102,13 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
             </div>
             <p>
               Start: {goal.start_month}
-              {' · '}
-              Deadline: {deadlineMonth || 'brak'}
+              {" · "}
+              Deadline: {deadlineMonth || "brak"}
             </p>
             {waitingForLockedMonth && (
-              <span data-ui-goal-lock-note="true">Oczekuje na zamknięcie miesiąca</span>
+              <span data-ui-goal-lock-note="true">
+                Oczekuje na zamknięcie miesiąca
+              </span>
             )}
           </div>
         </div>
@@ -110,23 +126,20 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
             <span>Brakuje</span>
             <strong>{formatAmount(remainingAmount)}</strong>
           </div>
-          <div data-ui-goal-metric="true" data-ui-goal-metric-kind={isAllocationMode ? 'allocation' : 'priority'}>
+          <div
+            data-ui-goal-metric="true"
+            data-ui-goal-metric-kind={
+              isAllocationMode ? "allocation" : "priority"
+            }
+          >
             <span>{modeLabel}</span>
             <strong>{modeValue}</strong>
           </div>
         </div>
 
         <div data-ui-goal-actions="true">
-          <button type="button" className="ui-button--utility" onClick={() => onEdit(goal)}>
-            Edytuj
-          </button>
-          <button
-            type="button"
-            data-ui-button-danger="true"
-            onClick={() => onDelete(goal.id)}
-          >
-            Usuń
-          </button>
+          <SecondaryAction onClick={() => onEdit(goal)}>Edytuj</SecondaryAction>
+          <DangerAction onClick={() => onDelete(goal.id)}>Usuń</DangerAction>
         </div>
       </div>
 
@@ -137,14 +150,23 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export function SortableGoalCard(props: GoalCardBaseProps & { priorityPosition?: number }) {
-  const { goal } = props
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+export function SortableGoalCard(
+  props: GoalCardBaseProps & { priorityPosition?: number },
+) {
+  const { goal } = props;
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
     id: goal.id,
-  })
+  });
 
   return (
     <article
@@ -153,7 +175,7 @@ export function SortableGoalCard(props: GoalCardBaseProps & { priorityPosition?:
       data-ui-record-section="strong"
       data-ui-goal-card="true"
       data-ui-goal-card-mode="priority"
-      data-dragging={isDragging ? 'true' : 'false'}
+      data-dragging={isDragging ? "true" : "false"}
       style={{
         transform: CSS.Transform.toString(transform),
         transition,
@@ -175,18 +197,21 @@ export function SortableGoalCard(props: GoalCardBaseProps & { priorityPosition?:
         }
       />
     </article>
-  )
+  );
 }
 
 export function StaticGoalCard(
-  props: GoalCardBaseProps & { priorityPosition?: number; showInactiveDragHandle?: boolean }
+  props: GoalCardBaseProps & {
+    priorityPosition?: number;
+    showInactiveDragHandle?: boolean;
+  },
 ) {
   return (
     <article
       data-ui-utility-record="true"
       data-ui-record-section="strong"
       data-ui-goal-card="true"
-      data-ui-goal-card-mode={props.isAllocationMode ? 'allocation' : 'static'}
+      data-ui-goal-card-mode={props.isAllocationMode ? "allocation" : "static"}
     >
       <GoalCardContent
         {...props}
@@ -205,5 +230,5 @@ export function StaticGoalCard(
         }
       />
     </article>
-  )
+  );
 }

@@ -1,9 +1,13 @@
-﻿'use client'
+﻿"use client";
 
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { DragEndEvent } from '@dnd-kit/core'
-import { arrayMove } from '@dnd-kit/sortable'
-import { FinancialGoal, FinancialGoalAllocationMode, FinancialGoalMonthPriority } from '../lib/budgetPageTypes'
+import { useEffect, useMemo, useRef, useState } from "react";
+import { DragEndEvent } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
+import {
+  FinancialGoal,
+  FinancialGoalAllocationMode,
+  FinancialGoalMonthPriority,
+} from "../lib/budgetPageTypes";
 import {
   buildFinancialGoalsPlan,
   getEffectiveMonthPriorityRowsForMonth,
@@ -11,14 +15,17 @@ import {
   getFinancialGoalFirstProtectedMonth,
   getFinancialGoalModeForMonth,
   getFinancialGoalPriorityItemsForMonth,
-} from '../lib/financialGoals'
-import FinancialGoalEditModal from './financial-goals/FinancialGoalEditModal'
-import FinancialGoalsList from './financial-goals/FinancialGoalsList'
-import FinancialGoalsModeControls from './financial-goals/FinancialGoalsModeControls'
-import FinancialGoalsSummary from './financial-goals/FinancialGoalsSummary'
-import type { FinancialGoalsPanelProps, FormState } from './financial-goals/financialGoalsPanelTypes'
-import { usePressHoldDndSensors } from '../lib/usePressHoldDndSensors'
-import { getEffectiveTransactionScope } from '../lib/transactionScope'
+} from "../lib/financialGoals";
+import FinancialGoalEditModal from "./financial-goals/FinancialGoalEditModal";
+import FinancialGoalsList from "./financial-goals/FinancialGoalsList";
+import FinancialGoalsModeControls from "./financial-goals/FinancialGoalsModeControls";
+import FinancialGoalsSummary from "./financial-goals/FinancialGoalsSummary";
+import type {
+  FinancialGoalsPanelProps,
+  FormState,
+} from "./financial-goals/financialGoalsPanelTypes";
+import { usePressHoldDndSensors } from "../lib/usePressHoldDndSensors";
+import { getEffectiveTransactionScope } from "../lib/transactionScope";
 
 import {
   areAllocationMapsEqual,
@@ -28,7 +35,7 @@ import {
   orderGoalsByIds,
   rebalanceAllocations,
   sortGoalsByAllocation,
-} from './financial-goals/financialGoalsPanelUtils'
+} from "./financial-goals/financialGoalsPanelUtils";
 export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
   const {
     selectedMonth,
@@ -46,85 +53,110 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
     onSaveGoalAllocationsForMonth,
     onReorderGoalsForMonth,
     styles,
-  } = props
+  } = props;
 
-  const saveTimeoutRef = useRef<number | null>(null); const selectedMonthRef = useRef(selectedMonth)
+  const saveTimeoutRef = useRef<number | null>(null);
+  const selectedMonthRef = useRef(selectedMonth);
 
-  const [createFormState, setCreateFormState] = useState<FormState>(() => getInitialFormState(selectedMonth))
-  const [editFormState, setEditFormState] = useState<FormState | null>(null)
-  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
-  const [isReordering, setIsReordering] = useState(false)
-  const [localModeByMonth, setLocalModeByMonth] = useState<Record<string, FinancialGoalAllocationMode>>({})
-  const [isModeSaving, setIsModeSaving] = useState(false)
-  const [isAllocationSaving, setIsAllocationSaving] = useState(false)
-  const [localPriorityOrderByMonth, setLocalPriorityOrderByMonth] = useState<Record<string, string[]>>({})
-  const [pendingAllocationByGoalId, setPendingAllocationByGoalId] = useState<Record<string, number>>({})
-  const [lockedAllocationGoalIds, setLockedAllocationGoalIds] = useState<Set<string>>(() => new Set())
-  const [allocationDragOrderIds, setAllocationDragOrderIds] = useState<string[]>([])
-  const [isAllocationSliderActive, setIsAllocationSliderActive] = useState(false)
-  const [isLocalAllocationActive, setIsLocalAllocationActive] = useState(false)
+  const [createFormState, setCreateFormState] = useState<FormState>(() =>
+    getInitialFormState(selectedMonth),
+  );
+  const [editFormState, setEditFormState] = useState<FormState | null>(null);
+  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isReordering, setIsReordering] = useState(false);
+  const [localModeByMonth, setLocalModeByMonth] = useState<
+    Record<string, FinancialGoalAllocationMode>
+  >({});
+  const [isModeSaving, setIsModeSaving] = useState(false);
+  const [isAllocationSaving, setIsAllocationSaving] = useState(false);
+  const [localPriorityOrderByMonth, setLocalPriorityOrderByMonth] = useState<
+    Record<string, string[]>
+  >({});
+  const [pendingAllocationByGoalId, setPendingAllocationByGoalId] = useState<
+    Record<string, number>
+  >({});
+  const [lockedAllocationGoalIds, setLockedAllocationGoalIds] = useState<
+    Set<string>
+  >(() => new Set());
+  const [allocationDragOrderIds, setAllocationDragOrderIds] = useState<
+    string[]
+  >([]);
+  const [isAllocationSliderActive, setIsAllocationSliderActive] =
+    useState(false);
+  const [isLocalAllocationActive, setIsLocalAllocationActive] = useState(false);
 
-  const sensors = usePressHoldDndSensors()
+  const sensors = usePressHoldDndSensors();
 
   const storedMode = useMemo(
     () => getFinancialGoalModeForMonth(selectedMonth, goalMonthConfigs),
-    [goalMonthConfigs, selectedMonth]
-  )
+    [goalMonthConfigs, selectedMonth],
+  );
 
-  const effectiveMode = localModeByMonth[selectedMonth] || storedMode
-  const localPriorityOrder = useMemo(() => localPriorityOrderByMonth[selectedMonth] || [], [localPriorityOrderByMonth, selectedMonth])
+  const effectiveMode = localModeByMonth[selectedMonth] || storedMode;
+  const localPriorityOrder = useMemo(
+    () => localPriorityOrderByMonth[selectedMonth] || [],
+    [localPriorityOrderByMonth, selectedMonth],
+  );
 
   useEffect(() => {
-    selectedMonthRef.current = selectedMonth
-  }, [selectedMonth])
+    selectedMonthRef.current = selectedMonth;
+  }, [selectedMonth]);
 
   useEffect(() => {
-    setCreateFormState((prev) => ({ ...prev, startMonth: selectedMonth }))
-    setAllocationDragOrderIds([])
-    setIsAllocationSliderActive(false)
-    setIsLocalAllocationActive(false)
-  }, [selectedMonth])
+    setCreateFormState((prev) => ({ ...prev, startMonth: selectedMonth }));
+    setAllocationDragOrderIds([]);
+    setIsAllocationSliderActive(false);
+    setIsLocalAllocationActive(false);
+  }, [selectedMonth]);
 
   useEffect(() => {
     return () => {
       if (saveTimeoutRef.current) {
-        window.clearTimeout(saveTimeoutRef.current)
+        window.clearTimeout(saveTimeoutRef.current);
       }
-    }
-  }, [])
+    };
+  }, []);
 
   useEffect(() => {
     const handleOpenCreate = () => {
-      setIsCreateFormOpen(true)
-    }
+      setIsCreateFormOpen(true);
+    };
 
-    window.addEventListener('budget-open-financial-goal-create', handleOpenCreate)
+    window.addEventListener(
+      "budget-open-financial-goal-create",
+      handleOpenCreate,
+    );
 
     return () => {
-      window.removeEventListener('budget-open-financial-goal-create', handleOpenCreate)
-    }
-  }, [])
+      window.removeEventListener(
+        "budget-open-financial-goal-create",
+        handleOpenCreate,
+      );
+    };
+  }, []);
 
   const effectiveMonthConfigs = useMemo(() => {
-    const localMode = localModeByMonth[selectedMonth]
+    const localMode = localModeByMonth[selectedMonth];
 
     if (!localMode) {
-      return goalMonthConfigs
+      return goalMonthConfigs;
     }
 
-    const withoutSelectedMonth = goalMonthConfigs.filter((config) => config.month !== selectedMonth)
+    const withoutSelectedMonth = goalMonthConfigs.filter(
+      (config) => config.month !== selectedMonth,
+    );
 
     return [
       ...withoutSelectedMonth,
       {
         id: `local-mode-${selectedMonth}`,
-        profile_id: '',
+        profile_id: "",
         month: selectedMonth,
         mode: localMode,
       },
-    ]
-  }, [goalMonthConfigs, localModeByMonth, selectedMonth])
+    ];
+  }, [goalMonthConfigs, localModeByMonth, selectedMonth]);
 
   const orderedGoalsFromStoredData = useMemo(() => {
     return getFinancialGoalPriorityItemsForMonth({
@@ -132,8 +164,8 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
       priorities: goalPriorities,
       monthConfigs: effectiveMonthConfigs,
       month: selectedMonth,
-    })
-  }, [effectiveMonthConfigs, goalPriorities, goals, selectedMonth])
+    });
+  }, [effectiveMonthConfigs, goalPriorities, goals, selectedMonth]);
 
   const storedPlan = useMemo(() => {
     return buildFinancialGoalsPlan({
@@ -141,14 +173,14 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
       priorities: goalPriorities,
       monthConfigs: effectiveMonthConfigs,
       transactions: getEffectiveTransactionScope(transactions, {
-        mode: 'goals',
+        mode: "goals",
         budgetStartDate,
         excludedMonthsSet,
       }),
       selectedMonth,
       lockedMonthsSet,
       getSignedAmountForTransaction,
-    })
+    });
   }, [
     effectiveMonthConfigs,
     getSignedAmountForTransaction,
@@ -159,114 +191,135 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
     excludedMonthsSet,
     selectedMonth,
     transactions,
-  ])
+  ]);
 
   const baseActiveGoals = useMemo(() => {
-    return orderedGoalsFromStoredData.filter((goal) => !storedPlan.progressByGoalId[goal.id]?.isArchived)
-  }, [orderedGoalsFromStoredData, storedPlan.progressByGoalId])
+    return orderedGoalsFromStoredData.filter(
+      (goal) => !storedPlan.progressByGoalId[goal.id]?.isArchived,
+    );
+  }, [orderedGoalsFromStoredData, storedPlan.progressByGoalId]);
 
-  const baseActiveGoalIds = useMemo(() => baseActiveGoals.map((goal) => goal.id), [baseActiveGoals])
+  const baseActiveGoalIds = useMemo(
+    () => baseActiveGoals.map((goal) => goal.id),
+    [baseActiveGoals],
+  );
 
   const effectiveAllocationByGoalId = useMemo(() => {
     return getFinancialGoalAllocationPercentagesForMonth({
       month: selectedMonth,
       goals: baseActiveGoals,
       priorities: goalPriorities,
-    })
-  }, [baseActiveGoals, goalPriorities, selectedMonth])
+    });
+  }, [baseActiveGoals, goalPriorities, selectedMonth]);
 
   const effectiveLockedGoalIds = useMemo(() => {
-    const effectivePriorityRows = getEffectiveMonthPriorityRowsForMonth(selectedMonth, goalPriorities)
+    const effectivePriorityRows = getEffectiveMonthPriorityRowsForMonth(
+      selectedMonth,
+      goalPriorities,
+    );
 
     return new Set(
       effectivePriorityRows
         .filter((priority) => priority.allocation_locked === true)
-        .map((priority) => priority.goal_id)
-    )
-  }, [goalPriorities, selectedMonth])
+        .map((priority) => priority.goal_id),
+    );
+  }, [goalPriorities, selectedMonth]);
 
   useEffect(() => {
     if (isLocalAllocationActive) {
-      return
+      return;
     }
 
     setPendingAllocationByGoalId((prev) => {
       if (areAllocationMapsEqual(prev, effectiveAllocationByGoalId)) {
-        return prev
+        return prev;
       }
 
-      return effectiveAllocationByGoalId
-    })
+      return effectiveAllocationByGoalId;
+    });
 
     setLockedAllocationGoalIds((prev) => {
       if (areSetsEqual(prev, effectiveLockedGoalIds)) {
-        return prev
+        return prev;
       }
 
-      return effectiveLockedGoalIds
-    })
-  }, [effectiveAllocationByGoalId, effectiveLockedGoalIds, isLocalAllocationActive, selectedMonth])
+      return effectiveLockedGoalIds;
+    });
+  }, [
+    effectiveAllocationByGoalId,
+    effectiveLockedGoalIds,
+    isLocalAllocationActive,
+    selectedMonth,
+  ]);
 
   useEffect(() => {
     setLockedAllocationGoalIds((prev) => {
-      const allowedGoalIds = new Set(baseActiveGoalIds)
-      const next = new Set<string>()
+      const allowedGoalIds = new Set(baseActiveGoalIds);
+      const next = new Set<string>();
 
       prev.forEach((goalId) => {
         if (allowedGoalIds.has(goalId)) {
-          next.add(goalId)
+          next.add(goalId);
         }
-      })
+      });
 
-      return next
-    })
-  }, [baseActiveGoalIds])
+      return next;
+    });
+  }, [baseActiveGoalIds]);
 
   const effectiveGoalPriorities = useMemo(() => {
-    const withoutSelectedMonth = goalPriorities.filter((priority) => priority.month !== selectedMonth)
+    const withoutSelectedMonth = goalPriorities.filter(
+      (priority) => priority.month !== selectedMonth,
+    );
 
-    if (effectiveMode === 'allocation') {
+    if (effectiveMode === "allocation") {
       const allocationRows = baseActiveGoalIds
         .slice()
         .sort((leftGoalId, rightGoalId) => {
           const allocationDiff =
             (pendingAllocationByGoalId[rightGoalId] || 0) -
-            (pendingAllocationByGoalId[leftGoalId] || 0)
+            (pendingAllocationByGoalId[leftGoalId] || 0);
 
           if (allocationDiff !== 0) {
-            return allocationDiff
+            return allocationDiff;
           }
 
-          return leftGoalId.localeCompare(rightGoalId)
+          return leftGoalId.localeCompare(rightGoalId);
         })
-        .map((goalId, index) => ({
-          id: `local-allocation-${selectedMonth}-${goalId}`,
-          profile_id: '',
-          goal_id: goalId,
-          month: selectedMonth,
-          sort_order: index,
-          allocation_percent: pendingAllocationByGoalId[goalId] ?? 0,
-          allocation_locked: lockedAllocationGoalIds.has(goalId),
-        } satisfies FinancialGoalMonthPriority))
+        .map(
+          (goalId, index) =>
+            ({
+              id: `local-allocation-${selectedMonth}-${goalId}`,
+              profile_id: "",
+              goal_id: goalId,
+              month: selectedMonth,
+              sort_order: index,
+              allocation_percent: pendingAllocationByGoalId[goalId] ?? 0,
+              allocation_locked: lockedAllocationGoalIds.has(goalId),
+            }) satisfies FinancialGoalMonthPriority,
+        );
 
-      return [...withoutSelectedMonth, ...allocationRows]
+      return [...withoutSelectedMonth, ...allocationRows];
     }
 
     if (localPriorityOrder.length > 0) {
-      const priorityRows = localPriorityOrder.map((goalId, index) => ({
-        id: `local-priority-${selectedMonth}-${goalId}`,
-        profile_id: '',
-        goal_id: goalId,
-        month: selectedMonth,
-        sort_order: index,
-        allocation_percent: null,
-        allocation_locked: false,
-      } satisfies FinancialGoalMonthPriority))
+      const priorityRows = localPriorityOrder.map(
+        (goalId, index) =>
+          ({
+            id: `local-priority-${selectedMonth}-${goalId}`,
+            profile_id: "",
+            goal_id: goalId,
+            month: selectedMonth,
+            sort_order: index,
+            allocation_percent: null,
+            allocation_locked: false,
+          }) satisfies FinancialGoalMonthPriority,
+      );
 
-      return [...withoutSelectedMonth, ...priorityRows]
+      return [...withoutSelectedMonth, ...priorityRows];
     }
 
-    return goalPriorities
+    return goalPriorities;
   }, [
     baseActiveGoalIds,
     effectiveMode,
@@ -275,7 +328,7 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
     lockedAllocationGoalIds,
     pendingAllocationByGoalId,
     selectedMonth,
-  ])
+  ]);
 
   const plan = useMemo(() => {
     return buildFinancialGoalsPlan({
@@ -283,14 +336,14 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
       priorities: effectiveGoalPriorities,
       monthConfigs: effectiveMonthConfigs,
       transactions: getEffectiveTransactionScope(transactions, {
-        mode: 'goals',
+        mode: "goals",
         budgetStartDate,
         excludedMonthsSet,
       }),
       selectedMonth,
       lockedMonthsSet,
       getSignedAmountForTransaction,
-    })
+    });
   }, [
     effectiveGoalPriorities,
     effectiveMonthConfigs,
@@ -301,7 +354,7 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
     excludedMonthsSet,
     selectedMonth,
     transactions,
-  ])
+  ]);
 
   const orderedGoals = useMemo(() => {
     return getFinancialGoalPriorityItemsForMonth({
@@ -309,33 +362,37 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
       priorities: effectiveGoalPriorities,
       monthConfigs: effectiveMonthConfigs,
       month: selectedMonth,
-    })
-  }, [effectiveGoalPriorities, effectiveMonthConfigs, goals, selectedMonth])
+    });
+  }, [effectiveGoalPriorities, effectiveMonthConfigs, goals, selectedMonth]);
 
   const archivedGoals = useMemo(() => {
-    return orderedGoals.filter((goal) => plan.progressByGoalId[goal.id]?.isArchived)
-  }, [orderedGoals, plan.progressByGoalId])
+    return orderedGoals.filter(
+      (goal) => plan.progressByGoalId[goal.id]?.isArchived,
+    );
+  }, [orderedGoals, plan.progressByGoalId]);
 
   const activeGoals = useMemo(() => {
-    const currentActiveGoals = orderedGoals.filter((goal) => !plan.progressByGoalId[goal.id]?.isArchived)
+    const currentActiveGoals = orderedGoals.filter(
+      (goal) => !plan.progressByGoalId[goal.id]?.isArchived,
+    );
 
-    if (effectiveMode !== 'allocation') {
+    if (effectiveMode !== "allocation") {
       if (localPriorityOrder.length > 0) {
-        return orderGoalsByIds(currentActiveGoals, localPriorityOrder)
+        return orderGoalsByIds(currentActiveGoals, localPriorityOrder);
       }
 
-      return currentActiveGoals
+      return currentActiveGoals;
     }
 
     if (isAllocationSliderActive && allocationDragOrderIds.length > 0) {
-      return orderGoalsByIds(currentActiveGoals, allocationDragOrderIds)
+      return orderGoalsByIds(currentActiveGoals, allocationDragOrderIds);
     }
 
     if (isAllocationSaving && allocationDragOrderIds.length > 0) {
-      return orderGoalsByIds(currentActiveGoals, allocationDragOrderIds)
+      return orderGoalsByIds(currentActiveGoals, allocationDragOrderIds);
     }
 
-    return sortGoalsByAllocation(currentActiveGoals, pendingAllocationByGoalId)
+    return sortGoalsByAllocation(currentActiveGoals, pendingAllocationByGoalId);
   }, [
     allocationDragOrderIds,
     effectiveMode,
@@ -345,107 +402,107 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
     orderedGoals,
     pendingAllocationByGoalId,
     plan.progressByGoalId,
-  ])
+  ]);
 
-  const monthBalance = plan.monthlyBalances[selectedMonth] || 0
-  const monthSurplus = plan.monthlySurplus[selectedMonth] || 0
+  const monthBalance = plan.monthlyBalances[selectedMonth] || 0;
+  const monthSurplus = plan.monthlySurplus[selectedMonth] || 0;
 
-  const allocationGoalIds = baseActiveGoalIds
+  const allocationGoalIds = baseActiveGoalIds;
 
   const totalPercent = allocationGoalIds.reduce(
     (sum, goalId) => sum + (pendingAllocationByGoalId[goalId] || 0),
-    0
-  )
+    0,
+  );
 
   const scheduleAllocationSave = (
     nextAllocations: Record<string, number>,
-    nextLockedGoalIds: Set<string>
+    nextLockedGoalIds: Set<string>,
   ) => {
-    if (effectiveMode !== 'allocation') {
-      return
+    if (effectiveMode !== "allocation") {
+      return;
     }
 
     if (saveTimeoutRef.current) {
-      window.clearTimeout(saveTimeoutRef.current)
+      window.clearTimeout(saveTimeoutRef.current);
     }
 
-    setIsLocalAllocationActive(true)
-    setIsAllocationSaving(true)
+    setIsLocalAllocationActive(true);
+    setIsAllocationSaving(true);
 
     saveTimeoutRef.current = window.setTimeout(() => {
-      const monthToSave = selectedMonthRef.current
+      const monthToSave = selectedMonthRef.current;
 
       void onSaveGoalAllocationsForMonth(
         monthToSave,
         nextAllocations,
-        Array.from(nextLockedGoalIds)
+        Array.from(nextLockedGoalIds),
       ).finally(() => {
-        setIsAllocationSaving(false)
-      })
-    }, 700)
-  }
+        setIsAllocationSaving(false);
+      });
+    }, 700);
+  };
 
   const openEditModal = (goal: FinancialGoal) => {
     setEditFormState({
       id: goal.id,
       name: goal.name,
       targetAmount: String(goal.target_amount),
-      deadlineMonth: goal.deadline_month || '',
+      deadlineMonth: goal.deadline_month || "",
       startMonth: goal.start_month,
       allocationPercent: goal.allocation_percent ?? null,
-      icon_key: goal.icon_key || 'system-goals',
-      color_tone: goal.color_tone || 'blue',
-    })
-  }
+      icon_key: goal.icon_key || "system-goals",
+      color_tone: goal.color_tone || "blue",
+    });
+  };
 
   const handleDragEnd = (event: DragEndEvent) => {
-    if (effectiveMode !== 'priority') {
-      return
+    if (effectiveMode !== "priority") {
+      return;
     }
 
-    const { active, over } = event
+    const { active, over } = event;
 
     if (!over || active.id === over.id) {
-      return
+      return;
     }
 
-    const currentIds = activeGoals.map((goal) => goal.id)
-    const oldIndex = currentIds.indexOf(String(active.id))
-    const newIndex = currentIds.indexOf(String(over.id))
+    const currentIds = activeGoals.map((goal) => goal.id);
+    const oldIndex = currentIds.indexOf(String(active.id));
+    const newIndex = currentIds.indexOf(String(over.id));
 
     if (oldIndex < 0 || newIndex < 0) {
-      return
+      return;
     }
 
-    const nextIds = arrayMove(currentIds, oldIndex, newIndex)
+    const nextIds = arrayMove(currentIds, oldIndex, newIndex);
 
     setLocalPriorityOrderByMonth((prev) => ({
       ...prev,
       [selectedMonth]: nextIds,
-    }))
-    setIsReordering(true)
+    }));
+    setIsReordering(true);
 
     void onReorderGoalsForMonth(selectedMonth, nextIds).finally(() => {
-      setIsReordering(false)
-    })
-  }
+      setIsReordering(false);
+    });
+  };
 
   const handleAllocationDragStart = () => {
-    setAllocationDragOrderIds(activeGoals.map((goal) => goal.id))
-    setIsAllocationSliderActive(true)
-  }
+    setAllocationDragOrderIds(activeGoals.map((goal) => goal.id));
+    setIsAllocationSliderActive(true);
+  };
 
   const handleAllocationCommit = () => {
-    setIsAllocationSliderActive(false)
-    setAllocationDragOrderIds([])
-  }
+    setIsAllocationSliderActive(false);
+    setAllocationDragOrderIds([]);
+  };
 
   const handleAllocationChange = (goalId: string, nextValue: number) => {
     if (lockedAllocationGoalIds.has(goalId)) {
-      return
+      return;
     }
 
-    setIsLocalAllocationActive(true)
+    setIsLocalAllocationActive(true);
 
     setPendingAllocationByGoalId((prev) => {
       const next = rebalanceAllocations(
@@ -453,70 +510,76 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         prev,
         goalId,
         nextValue,
-        lockedAllocationGoalIds
-      )
+        lockedAllocationGoalIds,
+      );
 
-      scheduleAllocationSave(next, lockedAllocationGoalIds)
-      return next
-    })
-  }
+      scheduleAllocationSave(next, lockedAllocationGoalIds);
+      return next;
+    });
+  };
 
   const handleToggleAllocationLock = (goalId: string) => {
-    setIsLocalAllocationActive(true)
+    setIsLocalAllocationActive(true);
 
     setLockedAllocationGoalIds((prev) => {
-      const next = new Set(prev)
+      const next = new Set(prev);
 
       if (next.has(goalId)) {
-        next.delete(goalId)
+        next.delete(goalId);
       } else {
-        next.add(goalId)
+        next.add(goalId);
       }
 
-      scheduleAllocationSave(pendingAllocationByGoalId, next)
-      return next
-    })
-  }
+      scheduleAllocationSave(pendingAllocationByGoalId, next);
+      return next;
+    });
+  };
 
   const handleModeChange = (nextMode: FinancialGoalAllocationMode) => {
     if (nextMode === effectiveMode) {
-      return
+      return;
     }
 
     setLocalModeByMonth((prev) => ({
       ...prev,
       [selectedMonth]: nextMode,
-    }))
-    setIsModeSaving(true)
+    }));
+    setIsModeSaving(true);
 
-    if (nextMode === 'allocation') {
-      const snapshot = normalizeAllocationMap(baseActiveGoalIds, pendingAllocationByGoalId)
-      setPendingAllocationByGoalId(snapshot)
-      setIsLocalAllocationActive(true)
+    if (nextMode === "allocation") {
+      const snapshot = normalizeAllocationMap(
+        baseActiveGoalIds,
+        pendingAllocationByGoalId,
+      );
+      setPendingAllocationByGoalId(snapshot);
+      setIsLocalAllocationActive(true);
 
       void onSaveGoalAllocationsForMonth(
         selectedMonth,
         snapshot,
-        Array.from(lockedAllocationGoalIds)
+        Array.from(lockedAllocationGoalIds),
       ).catch((error) => {
-        console.error(error)
-      })
+        console.error(error);
+      });
     }
 
     void onSetGoalModeForMonth(selectedMonth, nextMode).finally(() => {
-      setIsModeSaving(false)
-    })
-  }
+      setIsModeSaving(false);
+    });
+  };
 
   const saveGoal = async (formState: FormState, onDone: () => void) => {
-    setIsSaving(true)
+    setIsSaving(true);
 
     try {
       if (formState.id) {
-        const existingGoal = goals.find((goal) => goal.id === formState.id)
+        const existingGoal = goals.find((goal) => goal.id === formState.id);
         const firstProtectedMonth = existingGoal
-          ? getFinancialGoalFirstProtectedMonth(existingGoal, plan.progressByGoalId[existingGoal.id])
-          : null
+          ? getFinancialGoalFirstProtectedMonth(
+              existingGoal,
+              plan.progressByGoalId[existingGoal.id],
+            )
+          : null;
 
         if (
           firstProtectedMonth &&
@@ -524,29 +587,33 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
           formState.startMonth.localeCompare(firstProtectedMonth) > 0
         ) {
           throw new Error(
-            `Nie można przesunąć startu celu po miesiącu ${firstProtectedMonth}, bo cel ma już historię lub środki.`
-          )
+            `Nie można przesunąć startu celu po miesiącu ${firstProtectedMonth}, bo cel ma już historię lub środki.`,
+          );
         }
       }
 
       await onSaveGoal({
         id: formState.id,
         name: formState.name,
-        target_amount: Number(formState.targetAmount.replace(',', '.')),
+        target_amount: Number(formState.targetAmount.replace(",", ".")),
         start_month: formState.startMonth,
         deadline_month: formState.deadlineMonth || null,
         allocation_percent: formState.allocationPercent,
         icon_key: formState.icon_key || null,
         color_tone: formState.color_tone || null,
-      })
-      onDone()
+      });
+      onDone();
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   return (
-    <section data-ui-section="true" data-financial-goals-panel="true">
+    <section
+      data-ui-section="true"
+      data-ui-large-module="true"
+      data-financial-goals-panel="true"
+    >
       <FinancialGoalsModeControls
         effectiveMode={effectiveMode}
         activeGoalsCount={activeGoals.length}
@@ -561,12 +628,12 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
       />
 
       <div data-ui-goal-helper="true">
-        {effectiveMode === 'allocation'
-          ? 'W trybie alokacji ustawiasz procentowy podział nadwyżki między aktywne cele.'
+        {effectiveMode === "allocation"
+          ? "W trybie alokacji ustawiasz procentowy podział nadwyżki między aktywne cele."
           : `Przeciągnij cele, aby ustawić priorytet realizacji dla miesiąca ${selectedMonth}.`}
-        {isReordering ? ' Zapisywanie nowej kolejności...' : ''}
-        {isModeSaving ? ' Zapisywanie trybu...' : ''}
-        {isAllocationSaving ? ' Zapisywanie alokacji...' : ''}
+        {isReordering ? " Zapisywanie nowej kolejności..." : ""}
+        {isModeSaving ? " Zapisywanie trybu..." : ""}
+        {isAllocationSaving ? " Zapisywanie alokacji..." : ""}
       </div>
 
       <FinancialGoalsList
@@ -601,8 +668,8 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
           onFormStateChange={setCreateFormState}
           onSave={() =>
             void saveGoal(createFormState, () => {
-              setCreateFormState(getInitialFormState(selectedMonth))
-              setIsCreateFormOpen(false)
+              setCreateFormState(getInitialFormState(selectedMonth));
+              setIsCreateFormOpen(false);
             })
           }
           onClose={() => setIsCreateFormOpen(false)}
@@ -615,10 +682,12 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
           isSaving={isSaving}
           styles={styles}
           onFormStateChange={setEditFormState}
-          onSave={() => void saveGoal(editFormState, () => setEditFormState(null))}
+          onSave={() =>
+            void saveGoal(editFormState, () => setEditFormState(null))
+          }
           onClose={() => setEditFormState(null)}
         />
       )}
     </section>
-  )
+  );
 }
