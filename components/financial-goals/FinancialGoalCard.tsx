@@ -211,7 +211,7 @@ export function SortableGoalCard(
             {...attributes}
             {...listeners}
           >
-            <CategoryIcon iconKey="system-sort" size="small" />
+            <CategoryIcon iconKey="system-drag-handle" size="small" />
           </IconAction>
         }
       />
@@ -237,7 +237,7 @@ export function StaticGoalCard(
               density="compact"
               disabled
             >
-              <CategoryIcon iconKey="system-sort" size="small" />
+              <CategoryIcon iconKey="system-drag-handle" size="small" />
             </IconAction>
           ) : undefined
         }

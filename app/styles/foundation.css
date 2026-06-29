@@ -5385,6 +5385,12 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   color: currentColor;
 }
 
+[data-ui-info-banner="true"][data-ui-info-banner-variant="module-guidance"] {
+  border-color: color-mix(in srgb, var(--ui-neutral-accent-4-border, #99f6e4) 42%, transparent);
+  background: color-mix(in srgb, var(--ui-neutral-accent-4-surface, #ccfbf1) 34%, var(--ui-surface-card));
+  color: var(--ui-neutral-accent-4-text, var(--ui-text-secondary));
+}
+
 [data-ui-creator-footer="true"] {
   display: grid;
   grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
@@ -6122,15 +6128,15 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   --ui-tone-text: var(--ui-neutral-accent-3-text);
 }
 
-/* Foundation Large Record v2 — financial goals card alignment. */
+/* Foundation Large Record v3 — compact financial goals card alignment. */
 :root {
-  --ui-large-record-v2-padding: var(--ui-space-9);
-  --ui-large-record-v2-gap: var(--ui-space-9);
-  --ui-large-record-v2-identity-min: 260px;
+  --ui-large-record-v2-padding: var(--ui-space-7);
+  --ui-large-record-v2-gap: var(--ui-space-7);
+  --ui-large-record-v2-identity-min: 272px;
   --ui-large-record-v2-actions-width: 108px;
-  --ui-large-record-v2-progress-height: 8px;
-  --ui-large-record-v2-shadow: 0 12px 30px rgba(8, 44, 122, 0.07);
-  --ui-large-record-v2-shadow-hover: 0 16px 34px rgba(8, 44, 122, 0.095);
+  --ui-large-record-v2-progress-height: 7px;
+  --ui-large-record-v2-shadow: 0 10px 24px rgba(8, 44, 122, 0.055);
+  --ui-large-record-v2-shadow-hover: 0 14px 30px rgba(8, 44, 122, 0.08);
 }
 
 [data-ui-large-record="true"][data-ui-record-type="goal"] {
@@ -6138,11 +6144,11 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
     "identity metrics actions"
     "progress progress progress";
   grid-template-columns:
-    minmax(var(--ui-large-record-v2-identity-min), 3fr)
-    minmax(0, 5fr)
+    minmax(var(--ui-large-record-v2-identity-min), 2.15fr)
+    minmax(0, 4.85fr)
     var(--ui-large-record-v2-actions-width);
   align-items: center;
-  gap: var(--ui-space-8) var(--ui-large-record-v2-gap);
+  gap: var(--ui-space-5) var(--ui-large-record-v2-gap);
   padding: var(--ui-large-record-v2-padding);
   border: 1px solid rgba(8, 44, 122, 0.13);
   border-radius: var(--ui-record-card-radius);
@@ -6175,12 +6181,23 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   opacity: 0.82;
 }
 
+[data-ui-record-drag-handle="true"] [data-category-icon="true"] svg,
+[data-ui-record-drag-handle="true"] [data-category-icon-glyph="true"] {
+  width: 16px;
+  height: 16px;
+}
+
 [data-ui-large-record-title-line="true"] {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--ui-space-4);
   min-width: 0;
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-large-record-identity-copy="true"] {
+  gap: var(--ui-space-2);
+  align-content: center;
 }
 
 [data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-large-record-title="true"] {
@@ -6191,21 +6208,14 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 [data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-large-record-meta="true"] {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--ui-space-4);
+  display: grid;
+  gap: var(--ui-space-1);
+  color: var(--ui-text-secondary);
+  line-height: var(--ui-line-height-compact);
 }
 
 [data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-large-record-meta="true"] > span + span::before {
-  content: "";
-  display: inline-block;
-  width: 4px;
-  height: 4px;
-  margin-inline-end: var(--ui-space-4);
-  border-radius: var(--ui-radius-pill);
-  background: rgba(95, 107, 133, 0.46);
-  vertical-align: middle;
+  content: none;
 }
 
 [data-ui-status-inline="true"] {
@@ -6245,23 +6255,28 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 
 [data-ui-large-record="true"][data-ui-record-type="goal"] > [data-ui-metric-group="true"] {
   align-self: stretch;
-  padding-inline: var(--ui-space-3);
+  padding-inline: var(--ui-space-2);
 }
 
 [data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-metric-card="true"] {
   min-width: 0;
   align-content: center;
-  gap: var(--ui-space-3);
-  padding-inline: var(--ui-space-6);
+  gap: var(--ui-space-2);
+  padding-inline: var(--ui-space-5);
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-metric-card-label="true"] {
+  font-size: var(--ui-type-t5);
 }
 
 [data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-metric-card-value="true"] {
-  font-size: clamp(18px, 1.35vw, 22px);
+  font-size: clamp(17px, 1.2vw, 21px);
   letter-spacing: -0.02em;
 }
 
 [data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-metric-card-detail="true"] {
   min-block-size: auto;
+  line-height: var(--ui-line-height-compact);
 }
 
 [data-ui-large-record="true"][data-ui-record-type="goal"] > [data-ui-action-group="true"][data-ui-action-stack="record"] {
@@ -6270,11 +6285,15 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   min-width: var(--ui-large-record-v2-actions-width);
 }
 
+[data-ui-large-record="true"][data-ui-record-type="goal"] > [data-ui-action-group="true"][data-ui-action-stack="record"] > button {
+  min-height: 34px;
+}
+
 [data-ui-large-record-progress="true"] {
   grid-area: progress;
   display: grid;
-  gap: var(--ui-space-3);
-  padding-block-start: var(--ui-space-2);
+  gap: var(--ui-space-2);
+  padding-block-start: 0;
 }
 
 [data-ui-large-record-progress-header="true"] {
@@ -6327,7 +6346,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
       "actions"
       "progress";
     grid-template-columns: minmax(0, 1fr);
-    padding: var(--ui-space-8);
+    padding: var(--ui-space-7);
   }
 
   [data-ui-large-record-identity="true"][data-ui-record-kind="goal"] {

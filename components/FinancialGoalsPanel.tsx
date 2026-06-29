@@ -629,7 +629,7 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         lockedMonthsSet={lockedMonthsSet}
       />
 
-      <div data-ui-info-banner="true" data-ui-tone="info">
+      <div data-ui-info-banner="true" data-ui-tone="info" data-ui-info-banner-variant="module-guidance">
         <CategoryIcon iconKey="info" size="small" />
         <span>
           {effectiveMode === "allocation"
