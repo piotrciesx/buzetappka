@@ -1,4 +1,6 @@
-import { ButtonHTMLAttributes, ReactNode } from 'react'
+'use client'
+
+import { ButtonHTMLAttributes, ReactNode, useState } from 'react'
 
 type FoundationDensity = 'compact' | 'regular' | 'comfort'
 type FoundationTone = 'default' | 'danger' | 'success' | 'neutral-accent-1' | 'neutral-accent-2' | 'neutral-accent-3' | 'neutral-accent-4' | 'neutral-accent-5' | 'neutral-accent-6' | string
@@ -88,6 +90,79 @@ export function SectionHeader({
       </div>
       {trailing && <div data-ui-section-header-trailing-v5="true">{trailing}</div>}
     </header>
+  )
+}
+
+
+
+type CollapsibleSecondarySectionProps = {
+  icon?: ReactNode
+  title: ReactNode
+  description?: ReactNode
+  help?: ReactNode
+  tone?: FoundationTone
+  density?: FoundationDensity
+  defaultCollapsed?: boolean
+  collapsed?: boolean
+  onCollapsedChange?: (isCollapsed: boolean) => void
+  children: ReactNode
+}
+
+export function CollapsibleSecondarySection({
+  icon,
+  title,
+  description,
+  help,
+  tone = 'neutral-accent-1',
+  density = 'regular',
+  defaultCollapsed = true,
+  collapsed,
+  onCollapsedChange,
+  children,
+}: CollapsibleSecondarySectionProps) {
+  const [internalCollapsed, setInternalCollapsed] = useState(defaultCollapsed)
+  const isControlled = collapsed !== undefined
+  const isCollapsed = isControlled ? collapsed : internalCollapsed
+
+  const toggleCollapsed = () => {
+    const nextCollapsed = !isCollapsed
+    if (!isControlled) {
+      setInternalCollapsed(nextCollapsed)
+    }
+    onCollapsedChange?.(nextCollapsed)
+  }
+
+  return (
+    <section data-ui-collapsible-secondary-section="true" data-ui-density={density} data-ui-collapsed={isCollapsed ? 'true' : 'false'}>
+      <button
+        type="button"
+        data-ui-collapsible-secondary-trigger="true"
+        aria-expanded={!isCollapsed}
+        onClick={toggleCollapsed}
+      >
+        <span data-ui-collapsible-secondary-main="true">
+          {icon && (
+            <span data-ui-collapsible-secondary-icon="true" data-ui-tone={tone} aria-hidden="true">
+              {icon}
+            </span>
+          )}
+          <span data-ui-collapsible-secondary-copy="true">
+            <span data-ui-title-with-help="true">
+              <strong>{title}</strong>
+              {help}
+            </span>
+            {description && <small>{description}</small>}
+          </span>
+        </span>
+        <span data-ui-collapsible-secondary-chevron="true" aria-hidden="true" />
+      </button>
+
+      {!isCollapsed && (
+        <div data-ui-collapsible-secondary-content="true">
+          {children}
+        </div>
+      )}
+    </section>
   )
 }
 

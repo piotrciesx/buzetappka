@@ -16,7 +16,7 @@ import {
 import CategoryIcon from './CategoryIcon'
 import FoundationIconPicker from './ui/FoundationIconPicker'
 import { EmptyState } from './utility-panels/utilityPanelPrimitives'
-import { DangerAction, HeroHeader, IconAction, PrimaryAction, SecondaryAction, SectionHeader } from './ui/FoundationPrimitives'
+import { CollapsibleSecondarySection, DangerAction, HeroHeader, IconAction, PrimaryAction, SecondaryAction, SectionHeader } from './ui/FoundationPrimitives'
 
 type PaymentSourceStats = {
   sourceId: string
@@ -595,14 +595,14 @@ export default function PaymentSourcesPanel({
 
   return (
     <section data-ui-payment-sources-shell="true" data-ui-large-module="true" data-ui-utility-modal-size="xl">
-      <section data-ui-payment-section="defaults" data-ui-large-section="true">
-        <SectionHeader
-          tone="neutral-accent-1"
-          icon={<CategoryIcon iconKey="system-payment-sources" size="small" />}
-          title="Domyślne źródła płatności"
-          help={<HelpHint label="Ustaw źródła, które będą podpowiadane przy nowych wpisach." />}
-        />
-
+      <CollapsibleSecondarySection
+        tone="neutral-accent-1"
+        icon={<CategoryIcon iconKey="system-payment-sources" size="small" />}
+        title="Domyślne źródła płatności"
+        description="Źródła podpowiadane automatycznie przy nowych wpisach."
+        help={<HelpHint label="Ustaw źródła, które będą podpowiadane przy nowych wpisach." />}
+        defaultCollapsed
+      >
         <div data-ui-settings-strip="true">
           <div data-ui-settings-strip-field="true" data-ui-settings-position="primary">
             <label data-ui-settings-strip-label="true" htmlFor="default-income-payment-source">
@@ -669,9 +669,7 @@ export default function PaymentSourcesPanel({
             </PrimaryAction>
           </div>
         </div>
-      </section>
-
-      <hr data-ui-heavy-divider="true" />
+      </CollapsibleSecondarySection>
 
       {statusText && (
         <div data-ui-status-banner="true" data-ui-tone="success">

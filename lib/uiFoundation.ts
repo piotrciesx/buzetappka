@@ -227,6 +227,7 @@ export const uiPrimitiveContracts = {
   form: ['default', 'comfortable'],
   formSection: ['default', 'creator'],
   heroHeader: ['module', 'creator'],
+  collapsibleSecondarySection: ['default', 'collapsed', 'expanded'],
   creatorHeader: ['default'],
   creatorStep: ['default'],
   creatorSummary: ['default'],
@@ -1693,6 +1694,27 @@ export const uiNeutralAccentTokens = {
   },
 } as const
 
+
+export const uiCollapsibleSecondarySectionApi = {
+  attributes: {
+    root: 'data-ui-collapsible-secondary-section',
+    trigger: 'data-ui-collapsible-secondary-trigger',
+    main: 'data-ui-collapsible-secondary-main',
+    icon: 'data-ui-collapsible-secondary-icon',
+    copy: 'data-ui-collapsible-secondary-copy',
+    chevron: 'data-ui-collapsible-secondary-chevron',
+    content: 'data-ui-collapsible-secondary-content',
+    collapsed: 'data-ui-collapsed',
+    density: 'data-ui-density',
+  },
+  states: {
+    collapsed: 'true',
+    expanded: 'false',
+  },
+  purpose:
+    'Lekka rozwijana belka dla wymaganych, ale drugorzędnych sekcji w dużych modułach, gdy pełna sekcja spycha główną zawartość za nisko.',
+} as const
+
 export const uiLargeModuleApi = {
   module: 'data-ui-large-module',
   heroHeader: 'data-ui-hero-header',
@@ -1704,6 +1726,10 @@ export const uiLargeModuleApi = {
   sectionHeaderIcon: 'data-ui-large-section-header-icon',
   sectionHeaderCopy: 'data-ui-large-section-header-copy',
   sectionHeaderTrailing: 'data-ui-large-section-header-trailing',
+  collapsibleSecondarySection: 'data-ui-collapsible-secondary-section',
+  collapsibleSecondaryTrigger: 'data-ui-collapsible-secondary-trigger',
+  collapsibleSecondaryContent: 'data-ui-collapsible-secondary-content',
+  collapsibleSecondaryState: 'data-ui-collapsed',
   heavyDivider: 'data-ui-heavy-divider',
   recordList: 'data-ui-large-record-list',
   record: 'data-ui-large-record',
