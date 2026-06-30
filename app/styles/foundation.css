@@ -7287,3 +7287,162 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* ========================================================================== */
+/* Foundation v5 — Creator Preview Card + Hero Amount Field                    */
+/* ========================================================================== */
+
+:root {
+  --ui-modal-width-xl: 1220px;
+  --ui-creator-modal-width: 1220px;
+  --ui-creator-summary-width: 430px;
+  --ui-goal-creator-preview-width: 420px;
+  --ui-goal-creator-preview-icon-size: 78px;
+  --ui-goal-creator-preview-glyph-size: 34px;
+  --ui-creator-hero-amount-height: 66px;
+  --ui-creator-hero-amount-font-size: 24px;
+}
+
+[data-ui-modal-surface="true"][data-ui-modal-size="creator"] {
+  width: min(var(--ui-creator-modal-width), calc(100vw - 32px));
+  max-height: min(900px, calc(100dvh - 28px));
+  overflow: auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+[data-ui-modal-surface="true"][data-ui-modal-size="creator"] [data-ui-creator-layout="true"] {
+  grid-template-columns: minmax(0, 1fr) minmax(390px, var(--ui-goal-creator-preview-width));
+  gap: var(--ui-space-16);
+  align-items: start;
+}
+
+[data-ui-modal-surface="true"][data-ui-modal-size="creator"] [data-ui-creator-main="true"] {
+  gap: var(--ui-space-10);
+}
+
+[data-ui-modal-surface="true"][data-ui-modal-size="creator"] [data-ui-creator-summary="true"] {
+  align-self: start;
+  gap: var(--ui-space-8);
+  padding: var(--ui-space-9);
+}
+
+[data-ui-form-grid="two"][data-ui-form-grid-role="period"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+[data-ui-creator-hero-field="amount"] {
+  display: grid;
+  gap: var(--ui-space-5);
+}
+
+[data-ui-amount-shell="true"][data-ui-creator-hero-amount="true"] {
+  min-height: var(--ui-creator-hero-amount-height);
+  height: var(--ui-creator-hero-amount-height);
+}
+
+[data-ui-amount-shell="true"][data-ui-creator-hero-amount="true"] .ui-amount-field {
+  min-height: var(--ui-creator-hero-amount-height);
+  height: var(--ui-creator-hero-amount-height);
+  padding-inline-start: 76px;
+  padding-inline-end: 56px;
+  font-size: var(--ui-creator-hero-amount-font-size);
+  font-weight: var(--ui-font-weight-bold);
+  letter-spacing: -0.02em;
+}
+
+[data-ui-amount-shell="true"][data-ui-creator-hero-amount="true"] [data-ui-input-leading="true"] {
+  inline-size: 42px;
+  block-size: 42px;
+}
+
+[data-ui-amount-shell="true"][data-ui-creator-hero-amount="true"] [data-ui-amount-currency="true"] {
+  font-size: var(--ui-type-t3);
+}
+
+[data-ui-month-shell="true"] .ui-input,
+[data-ui-month-shell="true"] input[type="month"] {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Creator Preview Card is a Foundation summary pattern, not a 1:1 mini record. */
+[data-ui-creator-preview-card="true"] {
+  min-width: 0;
+}
+
+[data-ui-creator-preview-card="true"][data-ui-creator-preview-layout="stacked-metrics"] {
+  gap: var(--ui-space-9);
+  min-height: 340px;
+  padding: var(--ui-space-10);
+}
+
+[data-ui-creator-preview-card="true"][data-ui-creator-preview-layout="stacked-metrics"] [data-ui-creator-preview-identity="true"] {
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--ui-space-8);
+  align-items: center;
+}
+
+[data-ui-creator-preview-card="true"][data-ui-creator-preview-layout="stacked-metrics"] [data-ui-icon-role="creator-summary"] {
+  inline-size: var(--ui-goal-creator-preview-icon-size);
+  block-size: var(--ui-goal-creator-preview-icon-size);
+  flex: 0 0 auto;
+}
+
+[data-ui-creator-preview-card="true"][data-ui-creator-preview-layout="stacked-metrics"] [data-ui-icon-role="creator-summary"] [data-category-icon="true"],
+[data-ui-creator-preview-card="true"][data-ui-creator-preview-layout="stacked-metrics"] [data-ui-icon-role="creator-summary"] [data-category-icon-glyph="true"],
+[data-ui-creator-preview-card="true"][data-ui-creator-preview-layout="stacked-metrics"] [data-ui-icon-role="creator-summary"] [data-letter-icon="true"] {
+  inline-size: var(--ui-goal-creator-preview-glyph-size);
+  block-size: var(--ui-goal-creator-preview-glyph-size);
+}
+
+[data-ui-creator-preview-card="true"][data-ui-creator-preview-layout="stacked-metrics"] [data-ui-large-record-title="true"] {
+  font-size: clamp(22px, 1.65vw, 26px);
+}
+
+[data-ui-creator-preview-card="true"][data-ui-creator-preview-layout="stacked-metrics"] [data-ui-record-period="true"] > span {
+  white-space: normal;
+}
+
+[data-ui-creator-preview-metrics="true"] {
+  gap: var(--ui-space-5);
+  padding-block-start: var(--ui-space-8);
+}
+
+[data-ui-creator-preview-metric="true"] {
+  min-height: 28px;
+}
+
+[data-ui-creator-preview-metric="true"] > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+}
+
+[data-ui-creator-preview-metric="true"] > strong {
+  font-size: clamp(17px, 1.25vw, 20px);
+}
+
+[data-ui-creator-preview-card="true"][data-ui-creator-preview-layout="stacked-metrics"] [data-ui-large-record-progress="true"] {
+  margin-block-start: var(--ui-space-2);
+}
+
+[data-ui-modal-surface="true"][data-ui-modal-size="creator"] [data-ui-creator-footer="true"] {
+  margin-block-start: var(--ui-space-8);
+}
+
+@media (max-width: 1080px) {
+  [data-ui-modal-surface="true"][data-ui-modal-size="creator"] [data-ui-creator-layout="true"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-ui-modal-surface="true"][data-ui-modal-size="creator"] [data-ui-creator-summary="true"] {
+    position: static;
+  }
+}
+
+@media (max-width: 680px) {
+  [data-ui-form-grid="two"][data-ui-form-grid-role="period"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+

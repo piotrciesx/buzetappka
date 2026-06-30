@@ -253,31 +253,40 @@ export default function FinancialGoalForm({
                   </span>
                 </label>
 
-                <div data-ui-form-grid="two">
-                  <label data-ui-field="true" data-ui-field-size="comfortable">
-                    Kwota docelowa
-                    <span data-ui-amount-shell="true" data-ui-input-affix="true">
-                      <span data-ui-input-leading="true" aria-hidden="true">
-                        <CategoryIcon iconKey="system-goals" size="small" />
-                      </span>
-                      <input
-                        className={uiInputApi.classNames.amountField}
-                        data-input-width={uiInputApi.width.full}
-                        data-input-variant="creator"
-                        placeholder="0,00"
-                        inputMode="decimal"
-                        value={formState.targetAmount}
-                        onChange={(event) =>
-                          onFormStateChange({
-                            ...formState,
-                            targetAmount: event.target.value,
-                          })
-                        }
-                      />
-                      <span data-ui-amount-currency="true" aria-hidden="true">zł</span>
+                <label
+                  data-ui-field="true"
+                  data-ui-field-size="comfortable"
+                  data-ui-creator-hero-field="amount"
+                >
+                  Kwota docelowa
+                  <span
+                    data-ui-amount-shell="true"
+                    data-ui-input-affix="true"
+                    data-ui-amount-variant="hero"
+                    data-ui-creator-hero-amount="true"
+                  >
+                    <span data-ui-input-leading="true" aria-hidden="true">
+                      <CategoryIcon iconKey="system-goals" size="small" />
                     </span>
-                  </label>
+                    <input
+                      className={uiInputApi.classNames.amountField}
+                      data-input-width={uiInputApi.width.full}
+                      data-input-variant="creator"
+                      placeholder="0,00"
+                      inputMode="decimal"
+                      value={formState.targetAmount}
+                      onChange={(event) =>
+                        onFormStateChange({
+                          ...formState,
+                          targetAmount: event.target.value,
+                        })
+                      }
+                    />
+                    <span data-ui-amount-currency="true" aria-hidden="true">zł</span>
+                  </span>
+                </label>
 
+                <div data-ui-form-grid="two" data-ui-form-grid-role="period">
                   <label data-ui-field="true" data-ui-field-size="comfortable">
                     Miesiąc startu
                     <span data-ui-input-affix="true" data-ui-month-shell="true" data-empty="false">
@@ -371,6 +380,7 @@ export default function FinancialGoalForm({
           <div
             data-ui-creator-preview-card="true"
             data-ui-creator-preview-kind="goal"
+            data-ui-creator-preview-layout="stacked-metrics"
             data-ui-record-type="goal"
             data-ui-tone={selectedColor.tone}
           >
