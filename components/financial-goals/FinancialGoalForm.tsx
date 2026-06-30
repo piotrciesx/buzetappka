@@ -54,6 +54,15 @@ const SUGGESTED_GOAL_ICON_KEYS = [
 const DEFAULT_GOAL_ICON = "system-goals";
 const DEFAULT_GOAL_COLOR = "blue";
 
+const HelpHint = ({ label }: { label: string }) => (
+  <span
+    data-ui-help="true"
+    tabIndex={0}
+    aria-label={label}
+    data-tooltip={label}
+  />
+);
+
 const resolveGoalIconKey = (formState: FormState) => {
   const appearance = formState as GoalFormAppearance;
   const iconKey = appearance.icon_key || appearance.icon || DEFAULT_GOAL_ICON;
@@ -228,67 +237,80 @@ export default function FinancialGoalForm({
             </span>
             <div data-ui-creator-step-content="true">
               <header data-ui-creator-step-header="true">
-                <strong>Cel</strong>
-                <span>Nazwa, kwota i podstawowe dane celu.</span>
+                <span data-ui-title-with-help="true">
+                  <strong>Nazwa i kwota docelowa</strong>
+                  <HelpHint label="Nazwa i kwota są głównymi danymi celu widocznymi w podsumowaniu." />
+                </span>
               </header>
 
               <div data-ui-form-shell="true" data-ui-form-density="comfortable">
-                <label data-ui-field="true" data-ui-field-size="comfortable">
-                  Nazwa celu
-                  <span data-ui-input-affix="true" data-ui-input-affix-tone="name">
-                    <span data-ui-input-leading="true" aria-hidden="true">Aa</span>
-                    <input
-                      className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
-                      data-input-width={uiInputApi.width.full}
-                      data-input-variant="creator"
-                      placeholder="np. Wycieczka, laptop, poduszka finansowa"
-                      value={formState.name}
-                      onChange={(event) =>
-                        onFormStateChange({
-                          ...formState,
-                          name: event.target.value,
-                        })
-                      }
-                    />
-                  </span>
-                </label>
-
-                <label
-                  data-ui-field="true"
-                  data-ui-field-size="comfortable"
-                  data-ui-creator-hero-field="amount"
-                >
-                  Kwota docelowa
-                  <span
-                    data-ui-amount-shell="true"
-                    data-ui-input-affix="true"
-                    data-ui-amount-variant="hero"
-                    data-ui-creator-hero-amount="true"
-                  >
-                    <span data-ui-input-leading="true" aria-hidden="true">
-                      <CategoryIcon iconKey="system-goals" size="small" />
+                <div data-ui-form-grid="two" data-ui-form-grid-role="goal-primary">
+                  <label data-ui-field="true" data-ui-field-size="comfortable">
+                    <span data-ui-title-with-help="true">
+                      Nazwa celu
+                      <HelpHint label="To nazwa widoczna na karcie celu." />
                     </span>
-                    <input
-                      className={uiInputApi.classNames.amountField}
-                      data-input-width={uiInputApi.width.full}
-                      data-input-variant="creator"
-                      placeholder="0,00"
-                      inputMode="decimal"
-                      value={formState.targetAmount}
-                      onChange={(event) =>
-                        onFormStateChange({
-                          ...formState,
-                          targetAmount: event.target.value,
-                        })
-                      }
-                    />
-                    <span data-ui-amount-currency="true" aria-hidden="true">zł</span>
-                  </span>
-                </label>
+                    <span data-ui-input-affix="true" data-ui-input-affix-tone="name">
+                      <span data-ui-input-leading="true" aria-hidden="true">Aa</span>
+                      <input
+                        className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+                        data-input-width={uiInputApi.width.full}
+                        data-input-variant="creator"
+                        placeholder="np. Wycieczka, laptop, poduszka finansowa"
+                        value={formState.name}
+                        onChange={(event) =>
+                          onFormStateChange({
+                            ...formState,
+                            name: event.target.value,
+                          })
+                        }
+                      />
+                    </span>
+                  </label>
+
+                  <label
+                    data-ui-field="true"
+                    data-ui-field-size="comfortable"
+                    data-ui-creator-hero-field="amount"
+                  >
+                    <span data-ui-title-with-help="true">
+                      Kwota docelowa
+                      <HelpHint label="Kwota, którą chcesz zebrać na ten cel." />
+                    </span>
+                    <span
+                      data-ui-amount-shell="true"
+                      data-ui-input-affix="true"
+                      data-ui-amount-variant="hero"
+                      data-ui-creator-hero-amount="true"
+                    >
+                      <span data-ui-input-leading="true" aria-hidden="true">
+                        <CategoryIcon iconKey="system-goals" size="small" />
+                      </span>
+                      <input
+                        className={uiInputApi.classNames.amountField}
+                        data-input-width={uiInputApi.width.full}
+                        data-input-variant="creator"
+                        placeholder="0,00"
+                        inputMode="decimal"
+                        value={formState.targetAmount}
+                        onChange={(event) =>
+                          onFormStateChange({
+                            ...formState,
+                            targetAmount: event.target.value,
+                          })
+                        }
+                      />
+                      <span data-ui-amount-currency="true" aria-hidden="true">zł</span>
+                    </span>
+                  </label>
+                </div>
 
                 <div data-ui-form-grid="two" data-ui-form-grid-role="period">
                   <label data-ui-field="true" data-ui-field-size="comfortable">
-                    Miesiąc startu
+                    <span data-ui-title-with-help="true">
+                      Miesiąc startu
+                      <HelpHint label="Od tego miesiąca cel będzie rozliczany z nadwyżki budżetu." />
+                    </span>
                     <span data-ui-input-affix="true" data-ui-month-shell="true" data-empty="false">
                       <span data-ui-input-leading="true" aria-hidden="true">
                         <CategoryIcon iconKey="calendar" size="small" />
@@ -310,7 +332,10 @@ export default function FinancialGoalForm({
                   </label>
 
                   <label data-ui-field="true" data-ui-field-size="comfortable">
-                    Deadline
+                    <span data-ui-title-with-help="true">
+                      Deadline
+                      <HelpHint label="Opcjonalny termin, do którego chcesz zebrać pełną kwotę." />
+                    </span>
                     <span data-ui-input-affix="true" data-ui-month-shell="true" data-empty={formState.deadlineMonth ? "false" : "true"}>
                       <span data-ui-input-leading="true" aria-hidden="true">
                         <CategoryIcon iconKey="calendar" size="small" />
@@ -371,10 +396,10 @@ export default function FinancialGoalForm({
           </div>
         </div>
 
-        <aside data-ui-creator-summary="true" aria-label="Podgląd celu">
+        <aside data-ui-creator-summary="true" aria-label="Podsumowanie celu">
           <header data-ui-creator-summary-header="true">
-            <strong>Podgląd celu</strong>
-            <span>Tak będzie wyglądał cel na Twojej liście.</span>
+            <strong>Podsumowanie celu</strong>
+            <span>Sprawdź najważniejsze dane celu przed zapisaniem.</span>
           </header>
 
           <div
@@ -414,19 +439,19 @@ export default function FinancialGoalForm({
 
             <div data-ui-creator-preview-metrics="true">
               <div data-ui-creator-preview-metric="true" data-ui-tone="neutral-accent-1">
-                <span>Docelowa</span>
+                <span><CategoryIcon iconKey="system-goals" size="small" /> Docelowa kwota</span>
                 <strong>{targetAmountLabel}</strong>
               </div>
               <div data-ui-creator-preview-metric="true" data-ui-tone="success">
-                <span>Uzbierano</span>
+                <span><CategoryIcon iconKey="investments" size="small" /> Uzbierano</span>
                 <strong>{collectedAmountLabel}</strong>
               </div>
               <div data-ui-creator-preview-metric="true" data-ui-tone="danger">
-                <span>Brakuje</span>
+                <span><CategoryIcon iconKey="warning" size="small" /> Brakuje do celu</span>
                 <strong>{remainingAmountLabel}</strong>
               </div>
               <div data-ui-creator-preview-metric="true" data-ui-tone="neutral-accent-2">
-                <span>Priorytet</span>
+                <span><CategoryIcon iconKey="more" size="small" /> Priorytet</span>
                 <strong>—</strong>
               </div>
             </div>
@@ -455,7 +480,7 @@ export default function FinancialGoalForm({
             data-ui-info-banner-variant="module-guidance"
           >
             <CategoryIcon iconKey="info" size="small" />
-            <span>Podgląd prezentuje dane z formularza celu.</span>
+            <span>Podsumowanie prezentuje dane z formularza celu.</span>
           </div>
         </aside>
       </div>

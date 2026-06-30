@@ -1126,11 +1126,11 @@ export default function PaymentSourcesPanel({
                 aria-label="Podsumowanie źródła"
               >
                 <header data-ui-creator-summary-header="true">
-                  <strong>Podsumowanie</strong>
+                  <strong>Podsumowanie źródła</strong>
                   <span>Tak będzie wyglądało źródło na Twojej liście.</span>
                 </header>
 
-                <div data-ui-creator-summary-card="true">
+                <div data-ui-creator-summary-card="true" data-ui-creator-preview-kind="payment-source" data-ui-tone={draft.color}>
                   <span
                     data-ui-icon-tile="true"
                     data-ui-icon-role="creator-summary"
@@ -1151,7 +1151,7 @@ export default function PaymentSourcesPanel({
                   </div>
                 </div>
 
-                <div data-ui-info-banner="true" data-ui-tone="info">
+                <div data-ui-info-banner="true" data-ui-info-banner-variant="module-guidance">
                   <CategoryIcon iconKey="info" size="small" />
                   <span>
                     Podsumowanie aktualizuje się na bieżąco wraz ze zmianami.
