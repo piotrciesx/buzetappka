@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useState } from "react";
 import { uiInputApi } from "../../lib/uiFoundation";
 import {
@@ -65,6 +66,50 @@ const resolveGoalColorKey = (formState: FormState) => {
     appearance.color_tone || appearance.color || DEFAULT_GOAL_COLOR;
 
   return getUiColor(colorKey as UiColorKey)?.tone || DEFAULT_GOAL_COLOR;
+};
+
+const parseGoalAmount = (value: string) => {
+  const normalized = value
+    .replace(/\s/g, "")
+    .replace(",", ".");
+
+  const parsed = Number(normalized);
+
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+};
+
+const formatAmount = (value: number) =>
+  new Intl.NumberFormat("pl-PL", {
+    style: "currency",
+    currency: "PLN",
+    maximumFractionDigits: 2,
+  }).format(value);
+
+const formatMonthLabel = (value: string) => {
+  if (!value) {
+    return "bieżący miesiąc";
+  }
+
+  const [year, month] = value.split("-").map(Number);
+
+  if (!year || !month) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat("pl-PL", {
+    month: "long",
+    year: "numeric",
+  }).format(new Date(year, month - 1, 1));
+};
+
+const getGoalPeriodLabel = (startMonth: string, deadlineMonth: string) => {
+  const startLabel = formatMonthLabel(startMonth);
+
+  if (!deadlineMonth) {
+    return `od ${startLabel}`;
+  }
+
+  return `${startLabel} → ${formatMonthLabel(deadlineMonth)}`;
 };
 
 export default function FinancialGoalForm({
@@ -163,10 +208,14 @@ export default function FinancialGoalForm({
   );
 
   const normalizedName = formState.name.trim() || "Nowy cel";
-  const targetAmountLabel = formState.targetAmount
-    ? `${formState.targetAmount} zł`
-    : "0,00 zł";
-  const deadlineLabel = formState.deadlineMonth || "bez deadline’u";
+  const targetAmount = parseGoalAmount(formState.targetAmount);
+  const targetAmountLabel = formatAmount(targetAmount);
+  const collectedAmountLabel = formatAmount(0);
+  const remainingAmountLabel = formatAmount(targetAmount);
+  const goalPeriodLabel = getGoalPeriodLabel(
+    formState.startMonth,
+    formState.deadlineMonth,
+  );
 
   return (
     <>
@@ -299,34 +348,118 @@ export default function FinancialGoalForm({
           </div>
         </div>
 
-        <aside data-ui-creator-summary="true" aria-label="Podsumowanie celu">
+        <aside data-ui-creator-summary="true" aria-label="Podgląd celu">
           <header data-ui-creator-summary-header="true">
-            <strong>Podsumowanie</strong>
+            <strong>Podgląd celu</strong>
             <span>Tak będzie wyglądał cel na Twojej liście.</span>
           </header>
 
-          <div data-ui-creator-summary-card="true">
-            <span
-              data-ui-icon-tile="true"
-              data-ui-icon-role="creator-summary"
-              data-ui-tone={selectedColor.tone}
-              aria-hidden="true"
-            >
-              <CategoryIcon iconKey={selectedIconKey as UiIconKey} size="large" />
-            </span>
-            <strong data-ui-creator-summary-title="true">{normalizedName}</strong>
-            <div data-ui-status-pill-group="true" data-ui-summary-status="true">
-              <span data-ui-status-pill="true">{targetAmountLabel}</span>
-              <span data-ui-status-pill="true">
-                Start: {formState.startMonth || "bieżący miesiąc"}
+          <div
+            data-ui-creator-preview-card="true"
+            data-ui-record-type="goal"
+            data-ui-tone={selectedColor.tone}
+          >
+            <div data-ui-creator-preview-identity="true">
+              <span
+                data-ui-icon-tile="true"
+                data-ui-icon-role="creator-summary"
+                data-ui-tone={selectedColor.tone}
+                aria-hidden="true"
+              >
+                <CategoryIcon
+                  iconKey={selectedIconKey as UiIconKey}
+                  size="large"
+                />
               </span>
-              <span data-ui-status-pill="true">Deadline: {deadlineLabel}</span>
+
+              <div data-ui-creator-preview-copy="true">
+                <strong data-ui-large-record-title="true">
+                  {normalizedName}
+                </strong>
+                <span data-ui-status-inline="true" data-ui-tone="active">
+                  <span aria-hidden="true" />
+                  w trakcie
+                </span>
+                <span data-ui-record-period="true">
+                  <CategoryIcon iconKey="calendar" size="small" />
+                  <span>{goalPeriodLabel}</span>
+                </span>
+              </div>
+            </div>
+
+            <div
+              data-ui-metric-group="true"
+              data-ui-metric-columns="4"
+              data-ui-metric-variant="goal-card"
+            >
+              <div data-ui-metric-card="true" data-ui-tone="neutral-accent-1">
+                <span data-ui-metric-card-label="true">
+                  <CategoryIcon iconKey="system-goals" size="small" />
+                  Docelowa
+                </span>
+                <strong data-ui-metric-card-value="true">
+                  {targetAmountLabel}
+                </strong>
+                <span data-ui-metric-card-detail="true">Kwota celu</span>
+              </div>
+
+              <div data-ui-metric-card="true" data-ui-tone="success">
+                <span data-ui-metric-card-label="true">
+                  <CategoryIcon iconKey="system-income" size="small" />
+                  Uzbierano
+                </span>
+                <strong data-ui-metric-card-value="true">
+                  {collectedAmountLabel}
+                </strong>
+                <span data-ui-metric-card-detail="true">0% celu</span>
+              </div>
+
+              <div data-ui-metric-card="true" data-ui-tone="danger">
+                <span data-ui-metric-card-label="true">
+                  <CategoryIcon iconKey="system-expense" size="small" />
+                  Brakuje
+                </span>
+                <strong data-ui-metric-card-value="true">
+                  {remainingAmountLabel}
+                </strong>
+                <span data-ui-metric-card-detail="true">Do realizacji</span>
+              </div>
+
+              <div data-ui-metric-card="true" data-ui-tone="neutral-accent-2">
+                <span data-ui-metric-card-label="true">
+                  <CategoryIcon iconKey="allocation" size="small" />
+                  Priorytet
+                </span>
+                <strong data-ui-metric-card-value="true">—</strong>
+                <span data-ui-metric-card-detail="true">Tryb miesiąca</span>
+              </div>
+            </div>
+
+            <div
+              data-ui-large-record-progress="true"
+              style={
+                {
+                  "--ui-goal-progress": "0%",
+                  "--ui-goal-progress-color": "var(--ui-neutral-accent-2-text)",
+                } as CSSProperties
+              }
+            >
+              <div data-ui-large-record-progress-header="true">
+                <span>Postęp celu</span>
+                <strong>0%</strong>
+              </div>
+              <span data-ui-large-record-progress-track="true" aria-hidden="true">
+                <span data-ui-large-record-progress-fill="true" />
+              </span>
             </div>
           </div>
 
-          <div data-ui-info-banner="true" data-ui-tone="info">
+          <div
+            data-ui-info-banner="true"
+            data-ui-info-banner-variant="module-guidance"
+          >
             <CategoryIcon iconKey="info" size="small" />
-            <span>Wybrany kolor: {selectedColor.label}.</span>
+            <span>Podgląd prezentuje dane z formularza celu.</span>
           </div>
         </aside>
       </div>

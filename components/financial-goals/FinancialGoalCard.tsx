@@ -106,9 +106,13 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
             {statusLabel}
           </span>
 
-          <span data-ui-large-record-meta="true">
-            <span>Start: {goal.start_month}</span>
-            <span>Deadline: {deadlineMonth || "brak"}</span>
+          <span data-ui-record-period="true">
+            <CategoryIcon iconKey="calendar" size="small" />
+            <span>
+              {deadlineMonth
+                ? `${goal.start_month} → ${deadlineMonth}`
+                : `od ${goal.start_month}`}
+            </span>
           </span>
 
           {waitingForLockedMonth && (
