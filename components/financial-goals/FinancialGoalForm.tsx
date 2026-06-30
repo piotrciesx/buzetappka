@@ -54,6 +54,15 @@ const SUGGESTED_GOAL_ICON_KEYS = [
 const DEFAULT_GOAL_ICON = "system-goals";
 const DEFAULT_GOAL_COLOR = "blue";
 
+const HelpHint = ({ label }: { label: string }) => (
+  <span
+    data-ui-help="true"
+    tabIndex={0}
+    aria-label={label}
+    data-tooltip={label}
+  />
+);
+
 const resolveGoalIconKey = (formState: FormState) => {
   const appearance = formState as GoalFormAppearance;
   const iconKey = appearance.icon_key || appearance.icon || DEFAULT_GOAL_ICON;
@@ -228,7 +237,10 @@ export default function FinancialGoalForm({
             </span>
             <div data-ui-creator-step-content="true">
               <header data-ui-creator-step-header="true">
-                <strong>Nazwa i kwota docelowa</strong>
+                <span data-ui-title-with-help="true">
+                  <strong>Nazwa i kwota docelowa</strong>
+                  <HelpHint label="Określ nazwę celu, kwotę do zebrania, miesiąc startu i opcjonalny deadline." />
+                </span>
                 <span>Określ nazwę celu oraz kwotę, którą chcesz osiągnąć.</span>
               </header>
 
@@ -288,21 +300,6 @@ export default function FinancialGoalForm({
                   </label>
                 </div>
 
-              </div>
-            </div>
-          </section>
-
-          <section data-ui-creator-step="true" data-ui-tone="neutral-accent-2">
-            <span data-ui-creator-step-icon="true" aria-hidden="true">
-              2
-            </span>
-            <div data-ui-creator-step-content="true">
-              <header data-ui-creator-step-header="true">
-                <strong>Harmonogram</strong>
-                <span>Wybierz miesiąc startu i ewentualny deadline realizacji celu.</span>
-              </header>
-
-              <div data-ui-form-shell="true" data-ui-form-density="comfortable">
                 <div data-ui-form-grid="two" data-ui-form-grid-role="period">
                   <label data-ui-field="true" data-ui-field-size="comfortable">
                     Miesiąc startu
@@ -355,9 +352,9 @@ export default function FinancialGoalForm({
             </div>
           </section>
 
-          <section data-ui-creator-step="true" data-ui-tone="neutral-accent-3">
+          <section data-ui-creator-step="true" data-ui-tone="neutral-accent-2">
             <span data-ui-creator-step-icon="true" aria-hidden="true">
-              3
+              2
             </span>
             <div data-ui-creator-step-content="true">
               <header data-ui-creator-step-header="true">
@@ -379,7 +376,7 @@ export default function FinancialGoalForm({
             </div>
           </section>
 
-          <div data-ui-info-banner="true" data-ui-tone="info" data-ui-creator-form-note="footer">
+          <div data-ui-info-banner="true" data-ui-tone="info">
             <CategoryIcon iconKey="info" size="small" />
             <span>
               Cel nie ma osobnego źródła finansowania. Jest rozliczany z
@@ -397,7 +394,7 @@ export default function FinancialGoalForm({
           <div
             data-ui-creator-preview-card="true"
             data-ui-creator-preview-kind="goal"
-            data-ui-creator-preview-layout="summary-metrics"
+            data-ui-creator-preview-layout="summary-list"
             data-ui-record-type="goal"
             data-ui-tone={selectedColor.tone}
           >
@@ -429,7 +426,7 @@ export default function FinancialGoalForm({
               </div>
             </div>
 
-            <div data-ui-creator-preview-metrics="true">
+            <div data-ui-creator-preview-metrics="true" data-ui-summary-metrics-layout="list">
               <div data-ui-creator-preview-metric="true" data-ui-tone="neutral-accent-1">
                 <span><CategoryIcon iconKey="system-goals" size="small" /> Kwota docelowa</span>
                 <strong>{targetAmountLabel}</strong>

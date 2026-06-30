@@ -1127,7 +1127,7 @@ export default function PaymentSourcesPanel({
               >
                 <header data-ui-creator-summary-header="true">
                   <strong>Podsumowanie źródła</strong>
-                  <span>Sprawdź najważniejsze dane źródła przed zapisaniem.</span>
+                  <span>Tak będzie wyglądało źródło na Twojej liście.</span>
                 </header>
 
                 <div data-ui-creator-summary-card="true" data-ui-creator-preview-kind="payment-source" data-ui-tone={draft.color}>
@@ -1154,7 +1154,7 @@ export default function PaymentSourcesPanel({
                 <div data-ui-info-banner="true" data-ui-info-banner-variant="module-guidance">
                   <CategoryIcon iconKey="info" size="small" />
                   <span>
-                    Podsumowanie prezentuje dane z formularza źródła.
+                    Podsumowanie aktualizuje się na bieżąco wraz ze zmianami.
                   </span>
                 </div>
               </aside>
