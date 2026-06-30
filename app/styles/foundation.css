@@ -7088,3 +7088,202 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
     border-inline-start: 0;
   }
 }
+
+
+/* ========================================================================== */
+/* Foundation v5 — Goals creator preview stabilization                         */
+/* ========================================================================== */
+
+:root {
+  --ui-side-panel-utility-width: min(900px, calc(100vw - var(--ui-side-panel-left) - 24px));
+  --ui-modal-width-xl: 1140px;
+  --ui-goal-creator-preview-width: 360px;
+  --ui-goal-creator-preview-icon-size: 74px;
+  --ui-goal-creator-preview-glyph-size: 34px;
+}
+
+[data-ui-modal-surface="true"][data-ui-modal-size="creator"] {
+  width: min(1120px, calc(100vw - 32px));
+}
+
+[data-ui-modal-surface="true"][data-ui-modal-size="creator"] > [data-ui-creator-layout="true"] {
+  margin-inline: var(--ui-space-10);
+}
+
+[data-ui-modal-surface="true"][data-ui-modal-size="creator"] > [data-ui-creator-footer="true"] {
+  margin-inline: var(--ui-space-10);
+}
+
+[data-ui-modal-surface="true"][data-ui-modal-size="creator"] [data-ui-creator-layout="true"] {
+  grid-template-columns: minmax(0, 1fr) minmax(330px, var(--ui-goal-creator-preview-width));
+  gap: var(--ui-space-12);
+}
+
+[data-ui-modal-surface="true"][data-ui-modal-size="creator"] [data-ui-creator-main="true"] {
+  min-width: 0;
+}
+
+[data-ui-modal-surface="true"][data-ui-modal-size="creator"] [data-ui-creator-summary="true"] {
+  padding: var(--ui-space-8);
+}
+
+[data-ui-input-affix="true"] {
+  position: relative;
+  display: grid;
+  align-items: center;
+  min-width: 0;
+}
+
+[data-ui-input-affix="true"] .ui-input,
+[data-ui-input-affix="true"] .ui-amount-field {
+  padding-inline-start: 64px;
+}
+
+[data-ui-input-affix="true"] .ui-amount-field {
+  padding-inline-end: 42px;
+}
+
+[data-ui-input-leading="true"] {
+  position: absolute;
+  inset-inline-start: var(--ui-space-6);
+  z-index: var(--ui-z-local-raised);
+  display: grid;
+  place-items: center;
+  inline-size: 34px;
+  block-size: 34px;
+  border-radius: var(--ui-radius-md);
+  border: 1px solid color-mix(in srgb, var(--ui-tone-border, var(--ui-neutral-accent-1-border)) 48%, transparent);
+  background: color-mix(in srgb, var(--ui-tone-surface, var(--ui-neutral-accent-1-surface)) 72%, var(--ui-surface-card));
+  color: var(--ui-tone-text, var(--ui-color-primary-navy));
+  font-size: var(--ui-type-t3);
+  font-weight: var(--ui-font-weight-bold);
+  pointer-events: none;
+}
+
+[data-ui-input-affix-tone="name"] [data-ui-input-leading="true"] {
+  --ui-tone-surface: var(--ui-neutral-accent-3-surface);
+  --ui-tone-border: var(--ui-neutral-accent-3-border);
+  --ui-tone-text: var(--ui-neutral-accent-3-text);
+}
+
+[data-ui-amount-currency="true"] {
+  position: absolute;
+  inset-inline-end: var(--ui-space-6);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ui-color-primary-navy);
+  font-size: var(--ui-type-t4);
+  font-weight: var(--ui-font-weight-bold);
+  pointer-events: none;
+}
+
+[data-ui-month-shell="true"] input[type="month"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  cursor: pointer;
+}
+
+[data-ui-month-shell="true"][data-empty="true"] input[type="month"] {
+  color: transparent;
+}
+
+[data-ui-month-shell="true"][data-empty="true"] input[type="month"]:focus {
+  color: var(--ui-color-primary-navy);
+}
+
+[data-ui-month-placeholder="true"] {
+  position: absolute;
+  inset-inline-start: 64px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ui-text-muted);
+  font-size: var(--ui-creator-comfortable-control-font-size);
+  font-weight: var(--ui-font-weight-semibold);
+  pointer-events: none;
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] {
+  --ui-large-record-v2-identity-min: 272px;
+  grid-template-columns:
+    minmax(var(--ui-large-record-v2-identity-min), 1.9fr)
+    minmax(0, 5.35fr)
+    var(--ui-large-record-v2-actions-width);
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-record-period="true"] {
+  max-width: none;
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-record-period="true"] > span {
+  overflow: visible;
+  text-overflow: clip;
+}
+
+[data-ui-creator-preview-card="true"][data-ui-creator-preview-kind="goal"] {
+  gap: var(--ui-space-7);
+  padding: var(--ui-space-8);
+}
+
+[data-ui-creator-preview-card="true"][data-ui-creator-preview-kind="goal"] [data-ui-creator-preview-identity="true"] {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--ui-space-7);
+}
+
+[data-ui-creator-preview-card="true"][data-ui-creator-preview-kind="goal"] [data-ui-icon-role="creator-summary"] {
+  inline-size: var(--ui-goal-creator-preview-icon-size);
+  block-size: var(--ui-goal-creator-preview-icon-size);
+  border-radius: var(--ui-radius-2xl);
+}
+
+[data-ui-creator-preview-card="true"][data-ui-creator-preview-kind="goal"] [data-ui-icon-role="creator-summary"] [data-category-icon="true"],
+[data-ui-creator-preview-card="true"][data-ui-creator-preview-kind="goal"] [data-ui-icon-role="creator-summary"] [data-category-icon-glyph="true"],
+[data-ui-creator-preview-card="true"][data-ui-creator-preview-kind="goal"] [data-ui-icon-role="creator-summary"] [data-letter-icon="true"] {
+  inline-size: var(--ui-goal-creator-preview-glyph-size);
+  block-size: var(--ui-goal-creator-preview-glyph-size);
+}
+
+[data-ui-creator-preview-card="true"][data-ui-creator-preview-kind="goal"] [data-ui-large-record-title="true"] {
+  font-size: clamp(19px, 1.6vw, 22px);
+  line-height: var(--ui-line-height-heading);
+}
+
+[data-ui-creator-preview-metrics="true"] {
+  display: grid;
+  gap: var(--ui-space-4);
+  padding-block-start: var(--ui-space-6);
+  border-block-start: 1px solid rgba(8, 44, 122, 0.10);
+}
+
+[data-ui-creator-preview-metric="true"] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: var(--ui-space-6);
+  min-width: 0;
+}
+
+[data-ui-creator-preview-metric="true"] > span {
+  color: var(--ui-tone-text, var(--ui-text-secondary));
+  font-size: var(--ui-type-t5);
+  font-weight: var(--ui-font-weight-bold);
+  line-height: var(--ui-line-height-compact);
+}
+
+[data-ui-creator-preview-metric="true"] > strong {
+  color: var(--ui-tone-text, var(--ui-text-primary));
+  font-size: clamp(15px, 1.25vw, 18px);
+  font-weight: var(--ui-font-weight-bold);
+  line-height: var(--ui-line-height-heading);
+  text-align: right;
+  white-space: nowrap;
+}
+
+[data-ui-creator-preview-card="true"][data-ui-creator-preview-kind="goal"] [data-ui-large-record-progress="true"] {
+  inline-size: 100%;
+}
+
+@media (max-width: 980px) {
+  [data-ui-modal-surface="true"][data-ui-modal-size="creator"] [data-ui-creator-layout="true"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

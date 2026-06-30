@@ -14,6 +14,31 @@ import type { GoalCardBaseProps } from "./financialGoalsPanelTypes";
 
 const formatAmount = (value: number) => `${value.toFixed(2)} zł`;
 
+const formatMonthLabel = (value: string) => {
+  if (!value) return "bieżący miesiąc";
+
+  const [year, month] = value.split("-").map(Number);
+
+  if (!year || !month) return value;
+
+  return new Intl.DateTimeFormat("pl-PL", {
+    month: "short",
+    year: "numeric",
+  })
+    .format(new Date(year, month - 1, 1))
+    .replace(".", "");
+};
+
+const getGoalPeriodLabel = (startMonth: string, deadlineMonth: string | null) => {
+  const startLabel = formatMonthLabel(startMonth);
+
+  if (!deadlineMonth) {
+    return `od ${startLabel}`;
+  }
+
+  return `${startLabel} → ${formatMonthLabel(deadlineMonth)}`;
+};
+
 const getStatusTone = (statusLabel: string) => {
   if (statusLabel === "zrealizowany") return "success";
   if (statusLabel === "niezrealizowany") return "danger";
@@ -108,11 +133,7 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
 
           <span data-ui-record-period="true">
             <CategoryIcon iconKey="calendar" size="small" />
-            <span>
-              {deadlineMonth
-                ? `${goal.start_month} → ${deadlineMonth}`
-                : `od ${goal.start_month}`}
-            </span>
+            <span>{getGoalPeriodLabel(goal.start_month, deadlineMonth)}</span>
           </span>
 
           {waitingForLockedMonth && (

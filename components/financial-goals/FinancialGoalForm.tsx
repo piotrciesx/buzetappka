@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { CSSProperties } from "react";
@@ -69,10 +70,7 @@ const resolveGoalColorKey = (formState: FormState) => {
 };
 
 const parseGoalAmount = (value: string) => {
-  const normalized = value
-    .replace(/\s/g, "")
-    .replace(",", ".");
-
+  const normalized = value.replace(/\s/g, "").replace(",", ".");
   const parsed = Number(normalized);
 
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
@@ -86,15 +84,11 @@ const formatAmount = (value: number) =>
   }).format(value);
 
 const formatMonthLabel = (value: string) => {
-  if (!value) {
-    return "bieżący miesiąc";
-  }
+  if (!value) return "bieżący miesiąc";
 
   const [year, month] = value.split("-").map(Number);
 
-  if (!year || !month) {
-    return value;
-  }
+  if (!year || !month) return value;
 
   return new Intl.DateTimeFormat("pl-PL", {
     month: "long",
@@ -241,28 +235,35 @@ export default function FinancialGoalForm({
               <div data-ui-form-shell="true" data-ui-form-density="comfortable">
                 <label data-ui-field="true" data-ui-field-size="comfortable">
                   Nazwa celu
-                  <input
-                    className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
-                    data-input-width={uiInputApi.width.full}
-                    data-input-variant="creator"
-                    placeholder="np. Wycieczka, laptop, poduszka finansowa"
-                    value={formState.name}
-                    onChange={(event) =>
-                      onFormStateChange({
-                        ...formState,
-                        name: event.target.value,
-                      })
-                    }
-                  />
+                  <span data-ui-input-affix="true" data-ui-input-affix-tone="name">
+                    <span data-ui-input-leading="true" aria-hidden="true">Aa</span>
+                    <input
+                      className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+                      data-input-width={uiInputApi.width.full}
+                      data-input-variant="creator"
+                      placeholder="np. Wycieczka, laptop, poduszka finansowa"
+                      value={formState.name}
+                      onChange={(event) =>
+                        onFormStateChange({
+                          ...formState,
+                          name: event.target.value,
+                        })
+                      }
+                    />
+                  </span>
                 </label>
 
                 <div data-ui-form-grid="two">
                   <label data-ui-field="true" data-ui-field-size="comfortable">
                     Kwota docelowa
-                    <span data-ui-amount-shell="true">
+                    <span data-ui-amount-shell="true" data-ui-input-affix="true">
+                      <span data-ui-input-leading="true" aria-hidden="true">
+                        <CategoryIcon iconKey="system-goals" size="small" />
+                      </span>
                       <input
                         className={uiInputApi.classNames.amountField}
                         data-input-width={uiInputApi.width.full}
+                        data-input-variant="creator"
                         placeholder="0,00"
                         inputMode="decimal"
                         value={formState.targetAmount}
@@ -273,42 +274,55 @@ export default function FinancialGoalForm({
                           })
                         }
                       />
-                      <span aria-hidden="true">zł</span>
+                      <span data-ui-amount-currency="true" aria-hidden="true">zł</span>
                     </span>
                   </label>
 
                   <label data-ui-field="true" data-ui-field-size="comfortable">
                     Miesiąc startu
-                    <input
-                      className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
-                      data-input-width={uiInputApi.width.full}
-                      data-input-variant="creator"
-                      type="month"
-                      value={formState.startMonth}
-                      onChange={(event) =>
-                        onFormStateChange({
-                          ...formState,
-                          startMonth: event.target.value,
-                        })
-                      }
-                    />
+                    <span data-ui-input-affix="true" data-ui-month-shell="true" data-empty="false">
+                      <span data-ui-input-leading="true" aria-hidden="true">
+                        <CategoryIcon iconKey="calendar" size="small" />
+                      </span>
+                      <input
+                        className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+                        data-input-width={uiInputApi.width.full}
+                        data-input-variant="creator"
+                        type="month"
+                        value={formState.startMonth}
+                        onChange={(event) =>
+                          onFormStateChange({
+                            ...formState,
+                            startMonth: event.target.value,
+                          })
+                        }
+                      />
+                    </span>
                   </label>
 
                   <label data-ui-field="true" data-ui-field-size="comfortable">
                     Deadline
-                    <input
-                      className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
-                      data-input-width={uiInputApi.width.full}
-                      data-input-variant="creator"
-                      type="month"
-                      value={formState.deadlineMonth}
-                      onChange={(event) =>
-                        onFormStateChange({
-                          ...formState,
-                          deadlineMonth: event.target.value,
-                        })
-                      }
-                    />
+                    <span data-ui-input-affix="true" data-ui-month-shell="true" data-empty={formState.deadlineMonth ? "false" : "true"}>
+                      <span data-ui-input-leading="true" aria-hidden="true">
+                        <CategoryIcon iconKey="calendar" size="small" />
+                      </span>
+                      <input
+                        className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
+                        data-input-width={uiInputApi.width.full}
+                        data-input-variant="creator"
+                        type="month"
+                        value={formState.deadlineMonth}
+                        onChange={(event) =>
+                          onFormStateChange({
+                            ...formState,
+                            deadlineMonth: event.target.value,
+                          })
+                        }
+                      />
+                      {!formState.deadlineMonth && (
+                        <span data-ui-month-placeholder="true">Wybierz miesiąc</span>
+                      )}
+                    </span>
                   </label>
                 </div>
               </div>
@@ -356,6 +370,7 @@ export default function FinancialGoalForm({
 
           <div
             data-ui-creator-preview-card="true"
+            data-ui-creator-preview-kind="goal"
             data-ui-record-type="goal"
             data-ui-tone={selectedColor.tone}
           >
@@ -387,51 +402,22 @@ export default function FinancialGoalForm({
               </div>
             </div>
 
-            <div
-              data-ui-metric-group="true"
-              data-ui-metric-columns="4"
-              data-ui-metric-variant="goal-card"
-            >
-              <div data-ui-metric-card="true" data-ui-tone="neutral-accent-1">
-                <span data-ui-metric-card-label="true">
-                  <CategoryIcon iconKey="system-goals" size="small" />
-                  Docelowa
-                </span>
-                <strong data-ui-metric-card-value="true">
-                  {targetAmountLabel}
-                </strong>
-                <span data-ui-metric-card-detail="true">Kwota celu</span>
+            <div data-ui-creator-preview-metrics="true">
+              <div data-ui-creator-preview-metric="true" data-ui-tone="neutral-accent-1">
+                <span>Docelowa</span>
+                <strong>{targetAmountLabel}</strong>
               </div>
-
-              <div data-ui-metric-card="true" data-ui-tone="success">
-                <span data-ui-metric-card-label="true">
-                  <CategoryIcon iconKey="system-income" size="small" />
-                  Uzbierano
-                </span>
-                <strong data-ui-metric-card-value="true">
-                  {collectedAmountLabel}
-                </strong>
-                <span data-ui-metric-card-detail="true">0% celu</span>
+              <div data-ui-creator-preview-metric="true" data-ui-tone="success">
+                <span>Uzbierano</span>
+                <strong>{collectedAmountLabel}</strong>
               </div>
-
-              <div data-ui-metric-card="true" data-ui-tone="danger">
-                <span data-ui-metric-card-label="true">
-                  <CategoryIcon iconKey="system-expense" size="small" />
-                  Brakuje
-                </span>
-                <strong data-ui-metric-card-value="true">
-                  {remainingAmountLabel}
-                </strong>
-                <span data-ui-metric-card-detail="true">Do realizacji</span>
+              <div data-ui-creator-preview-metric="true" data-ui-tone="danger">
+                <span>Brakuje</span>
+                <strong>{remainingAmountLabel}</strong>
               </div>
-
-              <div data-ui-metric-card="true" data-ui-tone="neutral-accent-2">
-                <span data-ui-metric-card-label="true">
-                  <CategoryIcon iconKey="allocation" size="small" />
-                  Priorytet
-                </span>
-                <strong data-ui-metric-card-value="true">—</strong>
-                <span data-ui-metric-card-detail="true">Tryb miesiąca</span>
+              <div data-ui-creator-preview-metric="true" data-ui-tone="neutral-accent-2">
+                <span>Priorytet</span>
+                <strong>—</strong>
               </div>
             </div>
 
