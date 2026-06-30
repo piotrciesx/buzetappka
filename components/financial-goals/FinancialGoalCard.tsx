@@ -77,29 +77,34 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
   const modeValue = isAllocationMode
     ? allocationLabel
     : String(priorityPosition || "—");
+  const goalTone = getGoalTone(goal);
 
   return (
     <>
       <div data-ui-large-record-identity="true" data-ui-record-kind="goal">
-        {dragHandle && <span data-ui-record-drag-handle="true">{dragHandle}</span>}
+        {dragHandle && (
+          <span data-ui-record-drag-handle="true">{dragHandle}</span>
+        )}
 
         <span
           data-ui-icon-tile="true"
           data-ui-icon-role="large-record-hero"
-          data-ui-tone={getGoalTone(goal)}
+          data-ui-tone={goalTone}
           aria-hidden="true"
         >
           <CategoryIcon iconKey={getGoalIconKey(goal)} size="large" />
         </span>
 
         <div data-ui-large-record-identity-copy="true">
-          <div data-ui-large-record-title-line="true">
-            <strong data-ui-large-record-title="true">{goal.name}</strong>
-            <span data-ui-status-inline="true" data-ui-tone={getStatusTone(statusLabel)}>
-              <span aria-hidden="true" />
-              {statusLabel}
-            </span>
-          </div>
+          <strong data-ui-large-record-title="true">{goal.name}</strong>
+
+          <span
+            data-ui-status-inline="true"
+            data-ui-tone={getStatusTone(statusLabel)}
+          >
+            <span aria-hidden="true" />
+            {statusLabel}
+          </span>
 
           <span data-ui-large-record-meta="true">
             <span>Start: {goal.start_month}</span>
@@ -115,17 +120,30 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
         </div>
       </div>
 
-      <div data-ui-metric-group="true" data-ui-metric-columns="4" data-ui-metric-variant="goal-card">
+      <div
+        data-ui-metric-group="true"
+        data-ui-metric-columns="4"
+        data-ui-metric-variant="goal-card"
+      >
         <div data-ui-metric-card="true" data-ui-tone="neutral-accent-1">
-          <span data-ui-metric-card-label="true">Docelowa</span>
+          <span data-ui-metric-card-label="true">
+            <CategoryIcon iconKey="system-goals" size="small" />
+            Docelowa
+          </span>
           <strong data-ui-metric-card-value="true">
             {formatAmount(goal.target_amount)}
           </strong>
           <span data-ui-metric-card-detail="true">Kwota celu</span>
         </div>
 
-        <div data-ui-metric-card="true" data-ui-tone={isUnsuccessful ? "danger" : "success"}>
-          <span data-ui-metric-card-label="true">Uzbierano</span>
+        <div
+          data-ui-metric-card="true"
+          data-ui-tone={isUnsuccessful ? "danger" : "success"}
+        >
+          <span data-ui-metric-card-label="true">
+            <CategoryIcon iconKey="system-income" size="small" />
+            Uzbierano
+          </span>
           <strong data-ui-metric-card-value="true">
             {formatAmount(collectedAmount)}
           </strong>
@@ -135,7 +153,10 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
         </div>
 
         <div data-ui-metric-card="true" data-ui-tone="danger">
-          <span data-ui-metric-card-label="true">Brakuje</span>
+          <span data-ui-metric-card-label="true">
+            <CategoryIcon iconKey="system-expense" size="small" />
+            Brakuje
+          </span>
           <strong data-ui-metric-card-value="true">
             {formatAmount(remainingAmount)}
           </strong>
@@ -143,7 +164,10 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
         </div>
 
         <div data-ui-metric-card="true" data-ui-tone="neutral-accent-2">
-          <span data-ui-metric-card-label="true">{modeLabel}</span>
+          <span data-ui-metric-card-label="true">
+            <CategoryIcon iconKey="allocation" size="small" />
+            {modeLabel}
+          </span>
           <strong data-ui-metric-card-value="true">{modeValue}</strong>
           <span data-ui-metric-card-detail="true">Tryb miesiąca</span>
         </div>
@@ -179,6 +203,7 @@ export function SortableGoalCard(
   props: GoalCardBaseProps & { priorityPosition?: number },
 ) {
   const { goal } = props;
+  const goalTone = getGoalTone(goal);
   const {
     attributes,
     listeners,
@@ -195,6 +220,7 @@ export function SortableGoalCard(
       ref={setNodeRef}
       data-ui-large-record="true"
       data-ui-record-type="goal"
+      data-ui-tone={goalTone}
       data-dragging={isDragging ? "true" : "false"}
       style={{
         transform: CSS.Transform.toString(transform),
@@ -225,8 +251,14 @@ export function StaticGoalCard(
     showInactiveDragHandle?: boolean;
   },
 ) {
+  const goalTone = getGoalTone(props.goal);
+
   return (
-    <article data-ui-large-record="true" data-ui-record-type="goal">
+    <article
+      data-ui-large-record="true"
+      data-ui-record-type="goal"
+      data-ui-tone={goalTone}
+    >
       <GoalCardContent
         {...props}
         dragHandle={

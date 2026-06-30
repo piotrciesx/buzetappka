@@ -6131,8 +6131,8 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 /* Foundation Large Record v3 — compact financial goals card alignment. */
 :root {
   --ui-large-record-v2-padding: var(--ui-space-7);
-  --ui-large-record-v2-gap: var(--ui-space-7);
-  --ui-large-record-v2-identity-min: 272px;
+  --ui-large-record-v2-gap: var(--ui-space-8);
+  --ui-large-record-v2-identity-min: 228px;
   --ui-large-record-v2-actions-width: 108px;
   --ui-large-record-v2-progress-height: 7px;
   --ui-large-record-v2-shadow: 0 10px 24px rgba(8, 44, 122, 0.055);
@@ -6144,8 +6144,8 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
     "identity metrics actions"
     "progress progress progress";
   grid-template-columns:
-    minmax(var(--ui-large-record-v2-identity-min), 2.15fr)
-    minmax(0, 4.85fr)
+    minmax(var(--ui-large-record-v2-identity-min), 1.65fr)
+    minmax(0, 5.35fr)
     var(--ui-large-record-v2-actions-width);
   align-items: center;
   gap: var(--ui-space-5) var(--ui-large-record-v2-gap);
@@ -6196,8 +6196,12 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 [data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-large-record-identity-copy="true"] {
-  gap: var(--ui-space-2);
+  gap: var(--ui-space-1);
   align-content: center;
+}
+
+[data-ui-large-record="true"][data-ui-tone] [data-ui-large-record-title="true"] {
+  color: var(--ui-tone-text, var(--ui-text-primary));
 }
 
 [data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-large-record-title="true"] {
@@ -6205,6 +6209,9 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--ui-tone-text, var(--ui-text-primary));
+  font-size: clamp(18px, 1.32vw, 21px);
+  letter-spacing: -0.025em;
 }
 
 [data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-large-record-meta="true"] {
@@ -6255,27 +6262,38 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 
 [data-ui-large-record="true"][data-ui-record-type="goal"] > [data-ui-metric-group="true"] {
   align-self: stretch;
-  padding-inline: var(--ui-space-2);
+  padding-inline: var(--ui-space-3);
 }
 
 [data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-metric-card="true"] {
   min-width: 0;
   align-content: center;
   gap: var(--ui-space-2);
-  padding-inline: var(--ui-space-5);
+  padding-inline: var(--ui-space-6);
 }
 
 [data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-metric-card-label="true"] {
   font-size: var(--ui-type-t5);
+  min-block-size: 16px;
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-metric-card-label="true"] [data-category-icon="true"],
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-metric-card-label="true"] [data-category-icon-glyph="true"] {
+  color: currentColor;
 }
 
 [data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-metric-card-value="true"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 42px;
   font-size: clamp(17px, 1.2vw, 21px);
   letter-spacing: -0.02em;
+  line-height: 1.05;
 }
 
 [data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-metric-card-detail="true"] {
-  min-block-size: auto;
+  min-block-size: 16px;
   line-height: var(--ui-line-height-compact);
 }
 
@@ -6291,6 +6309,8 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 
 [data-ui-large-record-progress="true"] {
   grid-area: progress;
+  justify-self: center;
+  inline-size: calc(100% - var(--ui-space-8));
   display: grid;
   gap: var(--ui-space-2);
   padding-block-start: 0;
@@ -6356,6 +6376,10 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   [data-ui-record-drag-handle="true"] {
     grid-column: 1 / -1;
     justify-content: flex-start;
+  }
+
+  [data-ui-large-record-progress="true"] {
+    inline-size: 100%;
   }
 
   [data-ui-large-record="true"][data-ui-record-type="goal"] > [data-ui-action-group="true"][data-ui-action-stack="record"] {

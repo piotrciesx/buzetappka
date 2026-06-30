@@ -34,7 +34,8 @@ export const LETTER_ICON_OPTIONS = [
 ] as const;
 
 export type LetterIconKey = (typeof LETTER_ICON_OPTIONS)[number]["key"];
-export type LetterIconCharacter = (typeof LETTER_ICON_OPTIONS)[number]["character"];
+export type LetterIconCharacter =
+  (typeof LETTER_ICON_OPTIONS)[number]["character"];
 
 export const FINAL_USER_ICON_OPTIONS = [
   { key: "note", label: "Notatka" },
@@ -108,7 +109,9 @@ export const FINAL_USER_ICON_OPTIONS = [
 
 export type FinalUserIconKey = (typeof FINAL_USER_ICON_OPTIONS)[number]["key"];
 type LibraryUserIconKey = Exclude<FinalUserIconKey, LetterIconKey>;
-export const FINAL_USER_ICON_KEYS = FINAL_USER_ICON_OPTIONS.map((icon) => icon.key);
+export const FINAL_USER_ICON_KEYS = FINAL_USER_ICON_OPTIONS.map(
+  (icon) => icon.key,
+);
 
 export const SYSTEM_ICON_KEYS = [
   "system-dashboard",
@@ -168,83 +171,107 @@ export const COMPATIBILITY_ICON_KEYS = [
 type CompatibilityIconKey = (typeof COMPATIBILITY_ICON_KEYS)[number];
 
 export const LEGACY_VARIANT_ICON_KEYS = [
-  "car_2", "car_3", "car_4", "car_5", "car_6",
-  "plane_2", "plane_3", "plane_4", "plane_5", "plane_6",
-  "holiday_2", "holiday_3", "holiday_4", "holiday_5", "holiday_6",
-  "fuel_2", "fuel_3", "fuel_4", "fuel_5", "fuel_6",
-  "travel_2", "travel_3", "travel_4", "travel_5", "travel_6",
+  "car_2",
+  "car_3",
+  "car_4",
+  "car_5",
+  "car_6",
+  "plane_2",
+  "plane_3",
+  "plane_4",
+  "plane_5",
+  "plane_6",
+  "holiday_2",
+  "holiday_3",
+  "holiday_4",
+  "holiday_5",
+  "holiday_6",
+  "fuel_2",
+  "fuel_3",
+  "fuel_4",
+  "fuel_5",
+  "fuel_6",
+  "travel_2",
+  "travel_3",
+  "travel_4",
+  "travel_5",
+  "travel_6",
 ] as const;
 
 type LegacyVariantIconKey = (typeof LEGACY_VARIANT_ICON_KEYS)[number];
-export type FinalIconKey = FinalUserIconKey | SystemIconKey | CompatibilityIconKey | LegacyVariantIconKey;
+export type FinalIconKey =
+  | FinalUserIconKey
+  | SystemIconKey
+  | CompatibilityIconKey
+  | LegacyVariantIconKey;
 
 const SELECTED_ICON_IDS: Record<LibraryUserIconKey | SystemIconKey, string> = {
-  "note": "material-symbols:note",
-  "exchange": "material-symbols:swap-horiz",
-  "home": "ph:house-fill",
-  "food": "material-symbols:fastfood",
-  "restaurant": "material-symbols:restaurant",
-  "coffee": "ph:coffee-fill",
-  "shopping": "material-symbols:shopping-cart",
-  "car": "ph:car-fill",
-  "transport": "fa6-solid:bus-simple",
-  "fuel": "material-symbols:local-gas-station",
-  "parking": "fa6-solid:square-parking",
-  "taxi": "ph:taxi-fill",
-  "plane": "fa6-solid:plane",
-  "travel": "fa6-solid:suitcase-rolling",
-  "holiday": "fa6-solid:umbrella-beach",
-  "health": "ph:first-aid-kit-fill",
-  "doctor": "ph:stethoscope-fill",
-  "work": "material-symbols:work",
-  "company": "ph:buildings-fill",
-  "salary": "material-symbols:payments",
-  "bills": "material-symbols:receipt-long",
-  "electricity": "material-symbols:bolt",
-  "water": "ph:drop-fill",
-  "gas": "ph:flame-fill",
-  "internet": "material-symbols:wifi",
-  "phone": "fa6-solid:mobile-screen-button",
-  "tv": "ph:television-fill",
-  "subscription": "material-symbols:subscriptions",
-  "education": "ph:graduation-cap-fill",
-  "books": "material-symbols:menu-book",
-  "sport": "fluent:sport-soccer-24-filled",
-  "gym": "material-symbols:fitness-center",
-  "gaming": "material-symbols:sports-esports",
-  "entertainment": "fa6-solid:masks-theater",
-  "cinema": "solar:clapperboard-play-bold",
-  "music": "fluent:music-note-2-24-filled",
-  "camera": "ph:camera-fill",
-  "microphone": "ph:microphone-fill",
-  "headphones": "material-symbols:headphones",
-  "gift": "fluent:gift-24-filled",
-  "clothes": "fa6-solid:shirt",
-  "beauty": "solar:magic-stick-3-bold",
-  "pets": "material-symbols:pets",
-  "child": "ph:baby-fill",
-  "cash": "ph:money-fill",
-  "card": "ph:credit-card-fill",
-  "bank": "material-symbols:account-balance",
-  "wallet": "solar:wallet-bold",
-  "savings": "material-symbols:savings",
-  "investments": "material-symbols:trending-up",
-  "insurance": "solar:shield-check-bold",
-  "tax": "fluent:receipt-money-24-filled",
-  "documents": "ph:files-fill",
-  "repair": "fa6-solid:hammer",
-  "tools": "ph:wrench-fill",
-  "warning": "ph:warning-fill",
-  "idea": "fa6-solid:lightbulb",
-  "heart": "ph:heart-fill",
-  "calendar": "ph:calendar-fill",
-  "sun": "ph:sun-fill",
-  "more": "material-symbols:more-horiz",
-  "info": "ph:info-fill",
-  "pen": "fluent:pen-24-filled",
-  "keyboard": "fa6-solid:keyboard",
-  "all": "material-symbols:all-inclusive",
-  "other": "material-symbols:category",
+  note: "material-symbols:note",
+  exchange: "material-symbols:swap-horiz",
+  home: "ph:house-fill",
+  food: "material-symbols:fastfood",
+  restaurant: "material-symbols:restaurant",
+  coffee: "ph:coffee-fill",
+  shopping: "material-symbols:shopping-cart",
+  car: "ph:car-fill",
+  transport: "fa6-solid:bus-simple",
+  fuel: "material-symbols:local-gas-station",
+  parking: "fa6-solid:square-parking",
+  taxi: "ph:taxi-fill",
+  plane: "fa6-solid:plane",
+  travel: "fa6-solid:suitcase-rolling",
+  holiday: "fa6-solid:umbrella-beach",
+  health: "ph:first-aid-kit-fill",
+  doctor: "ph:stethoscope-fill",
+  work: "material-symbols:work",
+  company: "ph:buildings-fill",
+  salary: "material-symbols:payments",
+  bills: "material-symbols:receipt-long",
+  electricity: "material-symbols:bolt",
+  water: "ph:drop-fill",
+  gas: "ph:flame-fill",
+  internet: "material-symbols:wifi",
+  phone: "fa6-solid:mobile-screen-button",
+  tv: "ph:television-fill",
+  subscription: "material-symbols:subscriptions",
+  education: "ph:graduation-cap-fill",
+  books: "material-symbols:menu-book",
+  sport: "fluent:sport-soccer-24-filled",
+  gym: "material-symbols:fitness-center",
+  gaming: "material-symbols:sports-esports",
+  entertainment: "fa6-solid:masks-theater",
+  cinema: "solar:clapperboard-play-bold",
+  music: "fluent:music-note-2-24-filled",
+  camera: "ph:camera-fill",
+  microphone: "ph:microphone-fill",
+  headphones: "material-symbols:headphones",
+  gift: "fluent:gift-24-filled",
+  clothes: "fa6-solid:shirt",
+  beauty: "solar:magic-stick-3-bold",
+  pets: "material-symbols:pets",
+  child: "ph:baby-fill",
+  cash: "ph:money-fill",
+  card: "ph:credit-card-fill",
+  bank: "material-symbols:account-balance",
+  wallet: "solar:wallet-bold",
+  savings: "material-symbols:savings",
+  investments: "material-symbols:trending-up",
+  insurance: "solar:shield-check-bold",
+  tax: "fluent:receipt-money-24-filled",
+  documents: "ph:files-fill",
+  repair: "fa6-solid:hammer",
+  tools: "ph:wrench-fill",
+  warning: "ph:warning-fill",
+  idea: "fa6-solid:lightbulb",
+  heart: "ph:heart-fill",
+  calendar: "ph:calendar-fill",
+  sun: "ph:sun-fill",
+  more: "material-symbols:more-horiz",
+  info: "ph:info-fill",
+  pen: "fluent:pen-24-filled",
+  keyboard: "fa6-solid:keyboard",
+  all: "material-symbols:all-inclusive",
+  other: "material-symbols:category",
   "system-dashboard": "ph:squares-four-fill",
   "system-calendar": "ph:calendar-fill",
   "system-goals": "ph:target-fill",
@@ -280,14 +307,17 @@ const SELECTED_ICON_IDS: Record<LibraryUserIconKey | SystemIconKey, string> = {
   "system-income": "material-symbols:north-east",
   "system-expense": "material-symbols:south-west",
 
-  "income_plus": "fa6-solid:circle-plus",
-  "expense_minus": "fa6-solid:circle-minus",
-  "allocation": "material-symbols:tune",
-  "lock": "fluent:lock-closed-24-filled",
-  "unlock": "fluent:lock-open-24-filled",
+  income_plus: "fa6-solid:circle-plus",
+  expense_minus: "fa6-solid:circle-minus",
+  allocation: "material-symbols:tune",
+  lock: "fluent:lock-closed-24-filled",
+  unlock: "fluent:lock-open-24-filled",
 };
 
-const COMPATIBILITY_TARGETS: Record<CompatibilityIconKey | LegacyVariantIconKey, LibraryUserIconKey | SystemIconKey> = {
+const COMPATIBILITY_TARGETS: Record<
+  CompatibilityIconKey | LegacyVariantIconKey,
+  LibraryUserIconKey | SystemIconKey
+> = {
   basket: "shopping",
   bill: "bills",
   plus: "system-add",
@@ -295,26 +325,51 @@ const COMPATIBILITY_TARGETS: Record<CompatibilityIconKey | LegacyVariantIconKey,
   trash: "system-trash",
   close: "system-close",
   expand: "system-expand",
-  car_2: "car", car_3: "car", car_4: "car", car_5: "car", car_6: "car",
-  plane_2: "plane", plane_3: "plane", plane_4: "plane", plane_5: "plane", plane_6: "plane",
-  holiday_2: "holiday", holiday_3: "holiday", holiday_4: "holiday", holiday_5: "holiday", holiday_6: "holiday",
-  fuel_2: "fuel", fuel_3: "fuel", fuel_4: "fuel", fuel_5: "fuel", fuel_6: "fuel",
-  travel_2: "travel", travel_3: "travel", travel_4: "travel", travel_5: "travel", travel_6: "travel",
+  car_2: "car",
+  car_3: "car",
+  car_4: "car",
+  car_5: "car",
+  car_6: "car",
+  plane_2: "plane",
+  plane_3: "plane",
+  plane_4: "plane",
+  plane_5: "plane",
+  plane_6: "plane",
+  holiday_2: "holiday",
+  holiday_3: "holiday",
+  holiday_4: "holiday",
+  holiday_5: "holiday",
+  holiday_6: "holiday",
+  fuel_2: "fuel",
+  fuel_3: "fuel",
+  fuel_4: "fuel",
+  fuel_5: "fuel",
+  fuel_6: "fuel",
+  travel_2: "travel",
+  travel_3: "travel",
+  travel_4: "travel",
+  travel_5: "travel",
+  travel_6: "travel",
 };
 
-export const FINAL_ICON_IDS: Record<Exclude<FinalIconKey, LetterIconKey>, string> = {
+export const FINAL_ICON_IDS: Record<
+  Exclude<FinalIconKey, LetterIconKey>,
+  string
+> = {
   ...SELECTED_ICON_IDS,
-  ...Object.fromEntries(
-    Object.entries(COMPATIBILITY_TARGETS).map(([alias, target]) => [alias, SELECTED_ICON_IDS[target]]),
-  ) as Record<CompatibilityIconKey | LegacyVariantIconKey, string>,
+  ...(Object.fromEntries(
+    Object.entries(COMPATIBILITY_TARGETS).map(([alias, target]) => [
+      alias,
+      SELECTED_ICON_IDS[target],
+    ]),
+  ) as Record<CompatibilityIconKey | LegacyVariantIconKey, string>),
 };
 
 export const isFinalIconKey = (value?: string | null): value is FinalIconKey =>
   Boolean(
-    value && (
-      LETTER_ICON_OPTIONS.some((option) => option.key === value) ||
-      Object.prototype.hasOwnProperty.call(FINAL_ICON_IDS, value)
-    ),
+    value &&
+    (LETTER_ICON_OPTIONS.some((option) => option.key === value) ||
+      Object.prototype.hasOwnProperty.call(FINAL_ICON_IDS, value)),
   );
 
 export const getFinalIconId = (key?: string | null) =>
@@ -322,5 +377,7 @@ export const getFinalIconId = (key?: string | null) =>
     ? FINAL_ICON_IDS[key as Exclude<FinalIconKey, LetterIconKey>]
     : null;
 
-export const getLetterIconCharacter = (key?: string | null): LetterIconCharacter | null =>
+export const getLetterIconCharacter = (
+  key?: string | null,
+): LetterIconCharacter | null =>
   LETTER_ICON_OPTIONS.find((option) => option.key === key)?.character || null;

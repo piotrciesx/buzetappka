@@ -1,193 +1,225 @@
-'use client'
+"use client";
 
-import { CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { PaymentSource, PaymentSourceType } from '../lib/budgetPageTypes'
+import {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { PaymentSource, PaymentSourceType } from "../lib/budgetPageTypes";
 import {
   UI_COLOR_OPTIONS,
   getUiColor,
   type UiColorKey,
   type UiIconKey,
-} from '../lib/userAppearance'
+} from "../lib/userAppearance";
 import {
   getPaymentSourceColorTone,
   getPaymentSourceIconKey,
   PaymentSourceListKind,
-} from '../lib/paymentSources'
-import CategoryIcon from './CategoryIcon'
-import FoundationIconPicker from './ui/FoundationIconPicker'
-import { EmptyState } from './utility-panels/utilityPanelPrimitives'
-import { CollapsibleSecondarySection, DangerAction, HeroHeader, IconAction, PrimaryAction, SecondaryAction, SectionHeader } from './ui/FoundationPrimitives'
+} from "../lib/paymentSources";
+import CategoryIcon from "./CategoryIcon";
+import FoundationIconPicker from "./ui/FoundationIconPicker";
+import { EmptyState } from "./utility-panels/utilityPanelPrimitives";
+import {
+  CollapsibleSecondarySection,
+  DangerAction,
+  HeroHeader,
+  IconAction,
+  PrimaryAction,
+  SecondaryAction,
+  SectionHeader,
+} from "./ui/FoundationPrimitives";
 
 type PaymentSourceStats = {
-  sourceId: string
-  incomeTotal: number
-  expenseTotal: number
-  transactionCount: number
-}
+  sourceId: string;
+  incomeTotal: number;
+  expenseTotal: number;
+  transactionCount: number;
+};
 
 type PaymentSourceTotals = {
-  incomeTotal: number
-  expenseTotal: number
-  transactionCount: number
-}
+  incomeTotal: number;
+  expenseTotal: number;
+  transactionCount: number;
+};
 
 type PaymentSourceSettings = {
-  defaultIncomePaymentSourceId: string | null
-  defaultExpensePaymentSourceId: string | null
-  showIncomePaymentSource: boolean
-  showExpensePaymentSource: boolean
-}
+  defaultIncomePaymentSourceId: string | null;
+  defaultExpensePaymentSourceId: string | null;
+  showIncomePaymentSource: boolean;
+  showExpensePaymentSource: boolean;
+};
 
 type Props = {
-  paymentSources: PaymentSource[]
-  paymentSourceStats: PaymentSourceStats[]
-  paymentSourceSettings: PaymentSourceSettings
+  paymentSources: PaymentSource[];
+  paymentSourceStats: PaymentSourceStats[];
+  paymentSourceSettings: PaymentSourceSettings;
   onSave: (input: {
-    id?: string
-    allowArchivedDuplicateName?: boolean
-    name: string
-    type: PaymentSourceType
-    emoji: string
-    color: string
-    isIncomeSource: boolean
-    isExpenseSource: boolean
-  }) => Promise<void>
-  onDelete: (id: string) => Promise<void>
-  onRestore: (id: string) => Promise<void>
-  onSetDefault: (kind: PaymentSourceListKind, id: string | null) => Promise<void>
-  onSetFieldVisibility: (kind: PaymentSourceListKind, isVisible: boolean) => Promise<void>
-  onCopyList: (sourceKind: PaymentSourceListKind, targetKind: PaymentSourceListKind) => Promise<void>
-  openCreateRequest?: number
-  styles: Record<string, CSSProperties>
-}
+    id?: string;
+    allowArchivedDuplicateName?: boolean;
+    name: string;
+    type: PaymentSourceType;
+    emoji: string;
+    color: string;
+    isIncomeSource: boolean;
+    isExpenseSource: boolean;
+  }) => Promise<void>;
+  onDelete: (id: string) => Promise<void>;
+  onRestore: (id: string) => Promise<void>;
+  onSetDefault: (
+    kind: PaymentSourceListKind,
+    id: string | null,
+  ) => Promise<void>;
+  onSetFieldVisibility: (
+    kind: PaymentSourceListKind,
+    isVisible: boolean,
+  ) => Promise<void>;
+  onCopyList: (
+    sourceKind: PaymentSourceListKind,
+    targetKind: PaymentSourceListKind,
+  ) => Promise<void>;
+  openCreateRequest?: number;
+  styles: Record<string, CSSProperties>;
+};
 
 type PaymentSourceDraft = {
-  id?: string
-  name: string
-  type: PaymentSourceType
-  icon: UiIconKey
-  color: UiColorKey
-  isIncomeSource: boolean
-  isExpenseSource: boolean
-}
+  id?: string;
+  name: string;
+  type: PaymentSourceType;
+  icon: UiIconKey;
+  color: UiColorKey;
+  isIncomeSource: boolean;
+  isExpenseSource: boolean;
+};
 
 const DEFAULT_DRAFT: PaymentSourceDraft = {
-  name: '',
-  type: 'card',
-  icon: 'card',
-  color: 'blue',
+  name: "",
+  type: "card",
+  icon: "card",
+  color: "blue",
   isIncomeSource: true,
   isExpenseSource: true,
-}
+};
 
 const SUGGESTED_PAYMENT_SOURCE_ICONS: UiIconKey[] = [
-  'card',
-  'cash',
-  'bank',
-  'savings',
-  'gift',
-  'more',
-]
+  "card",
+  "cash",
+  "bank",
+  "savings",
+  "gift",
+  "more",
+];
 
 const inferPaymentSourceTypeFromIcon = (icon: UiIconKey): PaymentSourceType => {
-  if (icon === 'cash') {
-    return 'cash'
+  if (icon === "cash") {
+    return "cash";
   }
 
-  if (icon === 'card') {
-    return 'card'
+  if (icon === "card") {
+    return "card";
   }
 
-  if (['bank', 'savings', 'investments'].includes(icon)) {
-    return 'account'
+  if (["bank", "savings", "investments"].includes(icon)) {
+    return "account";
   }
 
-  return 'other'
-}
+  return "other";
+};
 
 const formatCurrency = (value: number) =>
-  new Intl.NumberFormat('pl-PL', {
-    style: 'currency',
-    currency: 'PLN',
+  new Intl.NumberFormat("pl-PL", {
+    style: "currency",
+    currency: "PLN",
     maximumFractionDigits: 2,
-  }).format(value)
+  }).format(value);
 
 const formatCompactCurrency = (value: number) => {
-  const absoluteValue = Math.abs(value)
-  const sign = value < 0 ? '-' : ''
+  const absoluteValue = Math.abs(value);
+  const sign = value < 0 ? "-" : "";
 
   const formatDecimal = (input: number) =>
-    new Intl.NumberFormat('pl-PL', {
+    new Intl.NumberFormat("pl-PL", {
       maximumFractionDigits: input >= 10 ? 0 : 1,
       minimumFractionDigits: 0,
-    }).format(input)
+    }).format(input);
 
   if (absoluteValue >= 1_000_000_000) {
-    return `${sign}${formatDecimal(absoluteValue / 1_000_000_000)} mld zł`
+    return `${sign}${formatDecimal(absoluteValue / 1_000_000_000)} mld zł`;
   }
 
   if (absoluteValue >= 1_000_000) {
-    return `${sign}${formatDecimal(absoluteValue / 1_000_000)} mln zł`
+    return `${sign}${formatDecimal(absoluteValue / 1_000_000)} mln zł`;
   }
 
   if (absoluteValue >= 100_000) {
-    return `${sign}${formatDecimal(absoluteValue / 1_000)} tys. zł`
+    return `${sign}${formatDecimal(absoluteValue / 1_000)} tys. zł`;
   }
 
-  return new Intl.NumberFormat('pl-PL', {
-    style: 'currency',
-    currency: 'PLN',
+  return new Intl.NumberFormat("pl-PL", {
+    style: "currency",
+    currency: "PLN",
     maximumFractionDigits: 2,
-  }).format(value)
-}
-
+  }).format(value);
+};
 
 const formatCompactNumber = (value: number) =>
-  new Intl.NumberFormat('pl-PL', {
-    notation: Math.abs(value) >= 10_000 ? 'compact' : 'standard',
+  new Intl.NumberFormat("pl-PL", {
+    notation: Math.abs(value) >= 10_000 ? "compact" : "standard",
     maximumFractionDigits: Math.abs(value) >= 10_000 ? 1 : 0,
-  }).format(value)
+  }).format(value);
 
 const calculateShare = (value: number, total: number) => {
   if (!Number.isFinite(value) || !Number.isFinite(total) || total <= 0) {
-    return 0
+    return 0;
   }
 
-  return Math.min(100, Math.max(0, Math.round((Math.abs(value) / Math.abs(total)) * 100)))
-}
+  return Math.min(
+    100,
+    Math.max(0, Math.round((Math.abs(value) / Math.abs(total)) * 100)),
+  );
+};
 
 const buildPaymentSourceTotals = (
   sources: PaymentSource[],
-  statsById: Record<string, PaymentSourceStats>
+  statsById: Record<string, PaymentSourceStats>,
 ): PaymentSourceTotals => {
   return sources.reduce<PaymentSourceTotals>(
     (totals, source) => {
-      const stats = statsById[source.id]
+      const stats = statsById[source.id];
 
       if (!stats) {
-        return totals
+        return totals;
       }
 
       return {
         incomeTotal: totals.incomeTotal + Math.max(0, stats.incomeTotal),
         expenseTotal: totals.expenseTotal + Math.max(0, stats.expenseTotal),
-        transactionCount: totals.transactionCount + Math.max(0, stats.transactionCount),
-      }
+        transactionCount:
+          totals.transactionCount + Math.max(0, stats.transactionCount),
+      };
     },
     {
       incomeTotal: 0,
       expenseTotal: 0,
       transactionCount: 0,
-    }
-  )
-}
+    },
+  );
+};
 
-const normalizeName = (value: string) => value.trim().toLocaleLowerCase('pl-PL')
+const normalizeName = (value: string) =>
+  value.trim().toLocaleLowerCase("pl-PL");
 
 const HelpHint = ({ label }: { label: string }) => (
-  <span data-ui-help="true" tabIndex={0} aria-label={label} data-tooltip={label} />
-)
-
+  <span
+    data-ui-help="true"
+    tabIndex={0}
+    aria-label={label}
+    data-tooltip={label}
+  />
+);
 
 export default function PaymentSourcesPanel({
   paymentSources,
@@ -199,82 +231,92 @@ export default function PaymentSourcesPanel({
   onSetDefault,
   openCreateRequest,
 }: Props) {
-  const [draft, setDraft] = useState<PaymentSourceDraft>(DEFAULT_DRAFT)
-  const [settingsDraft, setSettingsDraft] = useState(paymentSourceSettings)
-  const [isFormOpen, setIsFormOpen] = useState(false)
-  const [activeList, setActiveList] = useState<'active' | 'archived'>('active')
-  const [activePicker, setActivePicker] = useState<'color' | 'icon' | null>(null)
-  const [isSaving, setIsSaving] = useState(false)
-  const [isConfigSaving, setIsConfigSaving] = useState(false)
-  const [statusText, setStatusText] = useState('')
-  const [errorText, setErrorText] = useState('')
-  const [duplicateSourceId, setDuplicateSourceId] = useState<string | null>(null)
-  const previousOpenCreateRequestRef = useRef(openCreateRequest)
-
+  const [draft, setDraft] = useState<PaymentSourceDraft>(DEFAULT_DRAFT);
+  const [settingsDraft, setSettingsDraft] = useState(paymentSourceSettings);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [activeList, setActiveList] = useState<"active" | "archived">("active");
+  const [activePicker, setActivePicker] = useState<"color" | "icon" | null>(
+    null,
+  );
+  const [isSaving, setIsSaving] = useState(false);
+  const [isConfigSaving, setIsConfigSaving] = useState(false);
+  const [statusText, setStatusText] = useState("");
+  const [errorText, setErrorText] = useState("");
+  const [duplicateSourceId, setDuplicateSourceId] = useState<string | null>(
+    null,
+  );
+  const previousOpenCreateRequestRef = useRef(openCreateRequest);
 
   useEffect(() => {
-    setSettingsDraft(paymentSourceSettings)
-  }, [paymentSourceSettings])
+    setSettingsDraft(paymentSourceSettings);
+  }, [paymentSourceSettings]);
 
   const statsById = useMemo(() => {
-    return paymentSourceStats.reduce<Record<string, PaymentSourceStats>>((acc, item) => {
-      acc[item.sourceId] = item
-      return acc
-    }, {})
-  }, [paymentSourceStats])
+    return paymentSourceStats.reduce<Record<string, PaymentSourceStats>>(
+      (acc, item) => {
+        acc[item.sourceId] = item;
+        return acc;
+      },
+      {},
+    );
+  }, [paymentSourceStats]);
 
   const activeSources = useMemo(
     () => paymentSources.filter((source) => !source.archived_at),
-    [paymentSources]
-  )
+    [paymentSources],
+  );
   const archivedSources = useMemo(
     () => paymentSources.filter((source) => Boolean(source.archived_at)),
-    [paymentSources]
-  )
+    [paymentSources],
+  );
 
-  const incomeSources = activeSources.filter((source) => source.is_income_source !== false)
-  const expenseSources = activeSources.filter((source) => source.is_expense_source !== false)
+  const incomeSources = activeSources.filter(
+    (source) => source.is_income_source !== false,
+  );
+  const expenseSources = activeSources.filter(
+    (source) => source.is_expense_source !== false,
+  );
   const duplicateSource = duplicateSourceId
     ? paymentSources.find((source) => source.id === duplicateSourceId) || null
-    : null
+    : null;
 
   const activeSourceTotals = useMemo(
     () => buildPaymentSourceTotals(activeSources, statsById),
-    [activeSources, statsById]
-  )
+    [activeSources, statsById],
+  );
   const archivedSourceTotals = useMemo(
     () => buildPaymentSourceTotals(archivedSources, statsById),
-    [archivedSources, statsById]
-  )
+    [archivedSources, statsById],
+  );
 
   const closeForm = () => {
-    setDraft(DEFAULT_DRAFT)
-    setActivePicker(null)
-    setIsFormOpen(false)
-    setErrorText('')
-    setDuplicateSourceId(null)
-  }
+    setDraft(DEFAULT_DRAFT);
+    setActivePicker(null);
+    setIsFormOpen(false);
+    setErrorText("");
+    setDuplicateSourceId(null);
+  };
 
   const openNewForm = useCallback(() => {
-    setDraft(DEFAULT_DRAFT)
-    setStatusText('')
-    setErrorText('')
-    setDuplicateSourceId(null)
-    setActivePicker(null)
-    setIsFormOpen(true)
-  }, [])
+    setDraft(DEFAULT_DRAFT);
+    setStatusText("");
+    setErrorText("");
+    setDuplicateSourceId(null);
+    setActivePicker(null);
+    setIsFormOpen(true);
+  }, []);
 
   useEffect(() => {
     if (
       openCreateRequest === undefined ||
       previousOpenCreateRequestRef.current === openCreateRequest
     ) {
-      return
+      return;
     }
 
-    previousOpenCreateRequestRef.current = openCreateRequest
-    openNewForm()
-  }, [openCreateRequest, openNewForm])
+    previousOpenCreateRequestRef.current = openCreateRequest;
+    openNewForm();
+  }, [openCreateRequest, openNewForm]);
 
   const openEditForm = (source: PaymentSource) => {
     setDraft({
@@ -285,66 +327,78 @@ export default function PaymentSourcesPanel({
       color: getPaymentSourceColorTone(source),
       isIncomeSource: source.is_income_source !== false,
       isExpenseSource: source.is_expense_source !== false,
-    })
-    setStatusText('')
-    setErrorText('')
-    setDuplicateSourceId(null)
-    setActivePicker(null)
-    setIsFormOpen(true)
-  }
+    });
+    setStatusText("");
+    setErrorText("");
+    setDuplicateSourceId(null);
+    setActivePicker(null);
+    setIsFormOpen(true);
+  };
 
   const isSettingsDirty =
-    settingsDraft.defaultIncomePaymentSourceId !== paymentSourceSettings.defaultIncomePaymentSourceId ||
-    settingsDraft.defaultExpensePaymentSourceId !== paymentSourceSettings.defaultExpensePaymentSourceId
+    settingsDraft.defaultIncomePaymentSourceId !==
+      paymentSourceSettings.defaultIncomePaymentSourceId ||
+    settingsDraft.defaultExpensePaymentSourceId !==
+      paymentSourceSettings.defaultExpensePaymentSourceId;
 
   const saveSettingsDraft = async () => {
-    setIsConfigSaving(true)
-    setStatusText('')
-    setErrorText('')
+    setIsConfigSaving(true);
+    setStatusText("");
+    setErrorText("");
 
     try {
-      await onSetDefault('income', settingsDraft.defaultIncomePaymentSourceId)
-      await onSetDefault('expense', settingsDraft.defaultExpensePaymentSourceId)
-      setStatusText('Zapisano ustawienia źródeł płatności.')
+      await onSetDefault("income", settingsDraft.defaultIncomePaymentSourceId);
+      await onSetDefault(
+        "expense",
+        settingsDraft.defaultExpensePaymentSourceId,
+      );
+      setStatusText("Zapisano ustawienia źródeł płatności.");
     } catch (error) {
-      setErrorText(error instanceof Error ? error.message : 'Nie udało się zapisać ustawień źródeł płatności.')
+      setErrorText(
+        error instanceof Error
+          ? error.message
+          : "Nie udało się zapisać ustawień źródeł płatności.",
+      );
     } finally {
-      setIsConfigSaving(false)
+      setIsConfigSaving(false);
     }
-  }
+  };
 
   const saveDraft = async (allowArchivedDuplicateName = false) => {
-    const trimmedName = draft.name.trim()
+    const trimmedName = draft.name.trim();
 
     if (!trimmedName) {
-      setErrorText('Wpisz nazwę źródła.')
-      return
+      setErrorText("Wpisz nazwę źródła.");
+      return;
     }
 
     if (!draft.isIncomeSource && !draft.isExpenseSource) {
-      setErrorText('Źródło musi być dostępne przynajmniej dla przychodów albo wydatków.')
-      return
+      setErrorText(
+        "Źródło musi być dostępne przynajmniej dla przychodów albo wydatków.",
+      );
+      return;
     }
 
     const duplicateCandidates = paymentSources.filter((source) => {
       if (draft.id && source.id === draft.id) {
-        return false
+        return false;
       }
 
-      return normalizeName(source.name) === normalizeName(trimmedName)
-    })
+      return normalizeName(source.name) === normalizeName(trimmedName);
+    });
     const duplicate =
-      duplicateCandidates.find((source) => !source.archived_at) || duplicateCandidates[0]
+      duplicateCandidates.find((source) => !source.archived_at) ||
+      duplicateCandidates[0];
 
     if (duplicate && (!allowArchivedDuplicateName || !duplicate.archived_at)) {
-      setDuplicateSourceId(duplicate.id)
-      setErrorText('')
-      return
+      setDuplicateSourceId(duplicate.id);
+      setErrorText("");
+      return;
     }
 
-    setDuplicateSourceId(null)
-    setIsSaving(true)
-    setErrorText('')
+    setDuplicateSourceId(null);
+    setIsSaving(true);
+    setErrorText("");
 
     try {
       await onSave({
@@ -356,81 +410,107 @@ export default function PaymentSourcesPanel({
         color: draft.color,
         isIncomeSource: draft.isIncomeSource,
         isExpenseSource: draft.isExpenseSource,
-      })
-      closeForm()
-      setStatusText(draft.id ? 'Zapisano źródło płatności.' : 'Dodano źródło płatności.')
+      });
+      closeForm();
+      setStatusText(
+        draft.id ? "Zapisano źródło płatności." : "Dodano źródło płatności.",
+      );
     } catch (error) {
-      setErrorText(error instanceof Error ? error.message : 'Nie udało się zapisać źródła płatności.')
+      setErrorText(
+        error instanceof Error
+          ? error.message
+          : "Nie udało się zapisać źródła płatności.",
+      );
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   const deleteSource = async (source: PaymentSource) => {
-    const stats = statsById[source.id]
-    const hasHistory = Boolean(stats?.transactionCount)
+    const stats = statsById[source.id];
+    const hasHistory = Boolean(stats?.transactionCount);
 
-    setIsSaving(true)
-    setStatusText('')
-    setErrorText('')
+    setIsSaving(true);
+    setStatusText("");
+    setErrorText("");
 
     try {
-      await onDelete(source.id)
+      await onDelete(source.id);
       setStatusText(
         hasHistory
-          ? 'Źródło ma historię, więc zostało zarchiwizowane i nie pojawi się przy nowych wpisach.'
-          : 'Usunięto źródło płatności.'
-      )
+          ? "Źródło ma historię, więc zostało zarchiwizowane i nie pojawi się przy nowych wpisach."
+          : "Usunięto źródło płatności.",
+      );
     } catch (error) {
-      setErrorText(error instanceof Error ? error.message : 'Nie udało się usunąć źródła płatności.')
+      setErrorText(
+        error instanceof Error
+          ? error.message
+          : "Nie udało się usunąć źródła płatności.",
+      );
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
-  const restoreSource = async (source: PaymentSource, closeAfterRestore = false) => {
-    setIsSaving(true)
-    setStatusText('')
-    setErrorText('')
+  const restoreSource = async (
+    source: PaymentSource,
+    closeAfterRestore = false,
+  ) => {
+    setIsSaving(true);
+    setStatusText("");
+    setErrorText("");
 
     try {
-      await onRestore(source.id)
+      await onRestore(source.id);
       if (closeAfterRestore) {
-        closeForm()
+        closeForm();
       }
-      setActiveList('active')
-      setStatusText('Przywrócono źródło płatności.')
+      setActiveList("active");
+      setStatusText("Przywrócono źródło płatności.");
     } catch (error) {
-      setErrorText(error instanceof Error ? error.message : 'Nie udało się przywrócić źródła płatności.')
+      setErrorText(
+        error instanceof Error
+          ? error.message
+          : "Nie udało się przywrócić źródła płatności.",
+      );
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   const renderAvailability = (label: string, isActive: boolean) => (
     <span
       data-ui-status-pill="true"
-      data-ui-tone={isActive ? 'success' : 'danger'}
-      data-active={isActive ? 'true' : 'false'}
+      data-ui-tone={isActive ? "success" : "danger"}
+      data-active={isActive ? "true" : "false"}
     >
-      <span aria-hidden="true">{isActive ? '✓' : '×'}</span>
+      <span aria-hidden="true">{isActive ? "✓" : "×"}</span>
       {label}
     </span>
-  )
+  );
 
   const renderMetric = (input: {
-    iconKey: string
-    label: string
-    percent: number
-    detail: string
-    tone?: 'neutral' | 'neutral-accent-1' | 'neutral-accent-2' | 'neutral-accent-3' | 'neutral-accent-4' | 'neutral-accent-5' | 'neutral-accent-6' | 'success' | 'danger'
-    title?: string
+    iconKey: string;
+    label: string;
+    percent: number;
+    detail: string;
+    tone?:
+      | "neutral"
+      | "neutral-accent-1"
+      | "neutral-accent-2"
+      | "neutral-accent-3"
+      | "neutral-accent-4"
+      | "neutral-accent-5"
+      | "neutral-accent-6"
+      | "success"
+      | "danger";
+    title?: string;
   }) => (
     <span
       data-ui-metric-card="true"
-      data-ui-tone={input.tone || 'neutral-accent-1'}
+      data-ui-tone={input.tone || "neutral-accent-1"}
       title={input.title}
-      style={{ '--ui-metric-progress': `${input.percent}%` } as CSSProperties}
+      style={{ "--ui-metric-progress": `${input.percent}%` } as CSSProperties}
     >
       <span data-ui-metric-card-label="true">
         <CategoryIcon iconKey={input.iconKey} size="small" />
@@ -442,27 +522,30 @@ export default function PaymentSourcesPanel({
         <span data-ui-metric-card-progress-fill="true" />
       </span>
     </span>
-  )
+  );
 
   const renderColorPicker = () => {
-    const selectedColor = getUiColor(draft.color)
-    const isOpen = activePicker === 'color'
+    const selectedColor = getUiColor(draft.color);
+    const isOpen = activePicker === "color";
 
     return (
       <div
         data-ui-picker-control="true"
         data-ui-picker-variant="gallery"
-        data-open={isOpen ? 'true' : 'false'}
+        data-open={isOpen ? "true" : "false"}
         onClick={(event) => event.stopPropagation()}
       >
         <button
           type="button"
           data-ui-picker-trigger="true"
           aria-expanded={isOpen}
-          onClick={() => setActivePicker(isOpen ? null : 'color')}
+          onClick={() => setActivePicker(isOpen ? null : "color")}
         >
           <span data-ui-picker-value="true">
-            <span data-ui-color-swatch="true" data-ui-tone={selectedColor.tone} />
+            <span
+              data-ui-color-swatch="true"
+              data-ui-tone={selectedColor.tone}
+            />
             {selectedColor.label}
           </span>
           <span data-ui-picker-chevron="true" aria-hidden="true" />
@@ -479,8 +562,11 @@ export default function PaymentSourcesPanel({
                 aria-label={`Wybierz kolor: ${option.label}`}
                 title={option.label}
                 onClick={() => {
-                  setDraft((currentDraft) => ({ ...currentDraft, color: option.tone }))
-                  setActivePicker(null)
+                  setDraft((currentDraft) => ({
+                    ...currentDraft,
+                    color: option.tone,
+                  }));
+                  setActivePicker(null);
                 }}
               >
                 <span data-ui-color-swatch="true" data-ui-tone={option.tone} />
@@ -489,91 +575,117 @@ export default function PaymentSourcesPanel({
           </div>
         )}
       </div>
-    )
-  }
+    );
+  };
 
   const renderIconPicker = () => {
     return (
       <FoundationIconPicker
         value={draft.icon}
         tone={draft.color}
-        isOpen={activePicker === 'icon'}
+        isOpen={activePicker === "icon"}
         suggestedIconKeys={SUGGESTED_PAYMENT_SOURCE_ICONS}
         fallbackLabel="Ikona"
         moreLabel="Wybierz więcej ikon"
-        onOpenChange={(isOpen) => setActivePicker(isOpen ? 'icon' : null)}
+        onOpenChange={(isOpen) => setActivePicker(isOpen ? "icon" : null)}
         onChange={(iconKey) => {
           setDraft((currentDraft) => ({
             ...currentDraft,
             icon: iconKey,
             type: inferPaymentSourceTypeFromIcon(iconKey),
-          }))
+          }));
         }}
       />
-    )
-  }
+    );
+  };
 
-  const renderSourceCard = (source: PaymentSource, totals: PaymentSourceTotals) => {
-    const iconKey = getPaymentSourceIconKey(source)
-    const colorTone = getPaymentSourceColorTone(source)
-    const color = getUiColor(colorTone)
+  const renderSourceCard = (
+    source: PaymentSource,
+    totals: PaymentSourceTotals,
+  ) => {
+    const iconKey = getPaymentSourceIconKey(source);
+    const colorTone = getPaymentSourceColorTone(source);
+    const color = getUiColor(colorTone);
     const stats = statsById[source.id] || {
       sourceId: source.id,
       incomeTotal: 0,
       expenseTotal: 0,
       transactionCount: 0,
-    }
-    const isArchived = Boolean(source.archived_at)
-    const hasHistory = stats.transactionCount > 0
+    };
+    const isArchived = Boolean(source.archived_at);
+    const hasHistory = stats.transactionCount > 0;
 
     return (
-      <article key={source.id} data-ui-large-record="true" data-ui-indent-level="record" data-ui-record-state={isArchived ? 'archived' : 'active'}>
+      <article
+        key={source.id}
+        data-ui-large-record="true"
+        data-ui-indent-level="record"
+        data-ui-tone={color.tone}
+        data-ui-record-state={isArchived ? "archived" : "active"}
+      >
         <div data-ui-large-record-identity="true">
-          <span data-ui-icon-tile="true" data-ui-icon-role="large-record-hero" data-ui-tone={color.tone} aria-hidden="true">
+          <span
+            data-ui-icon-tile="true"
+            data-ui-icon-role="large-record-hero"
+            data-ui-tone={color.tone}
+            aria-hidden="true"
+          >
             <CategoryIcon iconKey={iconKey} size="large" />
           </span>
 
           <div data-ui-large-record-identity-copy="true">
             <strong data-ui-large-record-title="true">{source.name}</strong>
             <div data-ui-status-pill-group="true">
-              {renderAvailability('Przychody', source.is_income_source !== false && !isArchived)}
-              {renderAvailability('Wydatki', source.is_expense_source !== false && !isArchived)}
+              {renderAvailability(
+                "Przychody",
+                source.is_income_source !== false && !isArchived,
+              )}
+              {renderAvailability(
+                "Wydatki",
+                source.is_expense_source !== false && !isArchived,
+              )}
             </div>
           </div>
         </div>
 
         <div data-ui-metric-group="true" data-ui-metric-columns="3">
           {renderMetric({
-            iconKey: 'system-records',
-            label: 'wpisy',
-            tone: 'neutral-accent-1',
-            percent: calculateShare(stats.transactionCount, totals.transactionCount),
+            iconKey: "system-records",
+            label: "wpisy",
+            tone: "neutral-accent-1",
+            percent: calculateShare(
+              stats.transactionCount,
+              totals.transactionCount,
+            ),
             detail: `${formatCompactNumber(stats.transactionCount)} z ${formatCompactNumber(totals.transactionCount)} wpisów`,
             title: `${stats.transactionCount} z ${totals.transactionCount} wpisów`,
           })}
 
           {renderMetric({
-            iconKey: 'system-income',
-            label: 'przychody',
+            iconKey: "system-income",
+            label: "przychody",
             percent: calculateShare(stats.incomeTotal, totals.incomeTotal),
             detail: `${formatCompactCurrency(stats.incomeTotal)} z ${formatCompactCurrency(totals.incomeTotal)}`,
-            tone: 'success',
+            tone: "success",
             title: `${formatCurrency(stats.incomeTotal)} z ${formatCurrency(totals.incomeTotal)}`,
           })}
 
           {renderMetric({
-            iconKey: 'system-expense',
-            label: 'wydatki',
+            iconKey: "system-expense",
+            label: "wydatki",
             percent: calculateShare(stats.expenseTotal, totals.expenseTotal),
             detail: `${formatCompactCurrency(stats.expenseTotal)} z ${formatCompactCurrency(totals.expenseTotal)}`,
-            tone: 'danger',
+            tone: "danger",
             title: `${formatCurrency(stats.expenseTotal)} z ${formatCurrency(totals.expenseTotal)}`,
           })}
         </div>
 
         <div data-ui-action-group="true" data-ui-action-stack="record">
           {isArchived ? (
-            <SecondaryAction disabled={isSaving} onClick={() => void restoreSource(source)}>
+            <SecondaryAction
+              disabled={isSaving}
+              onClick={() => void restoreSource(source)}
+            >
               Przywróć
             </SecondaryAction>
           ) : (
@@ -581,38 +693,54 @@ export default function PaymentSourcesPanel({
               <SecondaryAction onClick={() => openEditForm(source)}>
                 Edytuj
               </SecondaryAction>
-              <DangerAction disabled={isSaving} onClick={() => void deleteSource(source)}>
-                {hasHistory ? 'Archiwizuj' : 'Usuń'}
+              <DangerAction
+                disabled={isSaving}
+                onClick={() => void deleteSource(source)}
+              >
+                {hasHistory ? "Archiwizuj" : "Usuń"}
               </DangerAction>
             </>
           )}
         </div>
       </article>
-    )
-  }
-
-
+    );
+  };
 
   return (
-    <section data-ui-payment-sources-shell="true" data-ui-large-module="true" data-ui-utility-modal-size="xl">
+    <section
+      data-ui-payment-sources-shell="true"
+      data-ui-large-module="true"
+      data-ui-utility-modal-size="xl"
+    >
       <CollapsibleSecondarySection
         tone="neutral-accent-1"
         icon={<CategoryIcon iconKey="system-payment-sources" size="small" />}
         title="Domyślne źródła płatności"
-        help={<HelpHint label="Ustaw źródła, które będą podpowiadane przy nowych wpisach." />}
+        help={
+          <HelpHint label="Ustaw źródła, które będą podpowiadane przy nowych wpisach." />
+        }
         defaultCollapsed
       >
         <div data-ui-settings-strip="true">
-          <div data-ui-settings-strip-field="true" data-ui-settings-position="primary">
-            <label data-ui-settings-strip-label="true" htmlFor="default-income-payment-source">
+          <div
+            data-ui-settings-strip-field="true"
+            data-ui-settings-position="primary"
+          >
+            <label
+              data-ui-settings-strip-label="true"
+              htmlFor="default-income-payment-source"
+            >
               Domyślne źródło przychodów
             </label>
-            <span data-ui-settings-strip-control="true" data-ui-select-shell="true">
+            <span
+              data-ui-settings-strip-control="true"
+              data-ui-select-shell="true"
+            >
               <select
                 id="default-income-payment-source"
                 className="ui-select"
                 data-input-width="full"
-                value={settingsDraft.defaultIncomePaymentSourceId || ''}
+                value={settingsDraft.defaultIncomePaymentSourceId || ""}
                 disabled={isConfigSaving}
                 onChange={(event) =>
                   setSettingsDraft((currentDraft) => ({
@@ -631,16 +759,25 @@ export default function PaymentSourcesPanel({
               <span data-ui-picker-chevron="true" aria-hidden="true" />
             </span>
           </div>
-          <div data-ui-settings-strip-field="true" data-ui-settings-position="secondary">
-            <label data-ui-settings-strip-label="true" htmlFor="default-expense-payment-source">
+          <div
+            data-ui-settings-strip-field="true"
+            data-ui-settings-position="secondary"
+          >
+            <label
+              data-ui-settings-strip-label="true"
+              htmlFor="default-expense-payment-source"
+            >
               Domyślne źródło wydatków
             </label>
-            <span data-ui-settings-strip-control="true" data-ui-select-shell="true">
+            <span
+              data-ui-settings-strip-control="true"
+              data-ui-select-shell="true"
+            >
               <select
                 id="default-expense-payment-source"
                 className="ui-select"
                 data-input-width="full"
-                value={settingsDraft.defaultExpensePaymentSourceId || ''}
+                value={settingsDraft.defaultExpensePaymentSourceId || ""}
                 disabled={isConfigSaving}
                 onChange={(event) =>
                   setSettingsDraft((currentDraft) => ({
@@ -664,7 +801,7 @@ export default function PaymentSourcesPanel({
               disabled={isConfigSaving || !isSettingsDirty}
               onClick={() => void saveSettingsDraft()}
             >
-              {isConfigSaving ? 'Zapisywanie...' : 'Zapisz ustawienia'}
+              {isConfigSaving ? "Zapisywanie..." : "Zapisz ustawienia"}
             </PrimaryAction>
           </div>
         </div>
@@ -688,21 +825,32 @@ export default function PaymentSourcesPanel({
           tone="neutral-accent-2"
           icon={<CategoryIcon iconKey="system-records" size="small" />}
           title="Twoje źródła"
-          help={<HelpHint label={activeList === 'active' ? 'Aktywne źródła dostępne w kreatorze wpisów.' : 'Źródła zachowane ze względu na historię wpisów.'} />}
+          help={
+            <HelpHint
+              label={
+                activeList === "active"
+                  ? "Aktywne źródła dostępne w kreatorze wpisów."
+                  : "Źródła zachowane ze względu na historię wpisów."
+              }
+            />
+          }
           trailing={
-
-            <div data-ui-list-switch="true" role="group" aria-label="Zakres źródeł płatności">
+            <div
+              data-ui-list-switch="true"
+              role="group"
+              aria-label="Zakres źródeł płatności"
+            >
               <button
                 type="button"
-                data-active={activeList === 'active' ? 'true' : undefined}
-                onClick={() => setActiveList('active')}
+                data-active={activeList === "active" ? "true" : undefined}
+                onClick={() => setActiveList("active")}
               >
                 Źródła aktywne
               </button>
               <button
                 type="button"
-                data-active={activeList === 'archived' ? 'true' : undefined}
-                onClick={() => setActiveList('archived')}
+                data-active={activeList === "archived" ? "true" : undefined}
+                onClick={() => setActiveList("archived")}
               >
                 Źródła archiwalne
               </button>
@@ -710,18 +858,22 @@ export default function PaymentSourcesPanel({
           }
         />
         <div data-ui-large-record-list="true">
-          {(activeList === 'active' ? activeSources : archivedSources).length === 0 ? (
+          {(activeList === "active" ? activeSources : archivedSources)
+            .length === 0 ? (
             <EmptyState>
-              {activeList === 'active'
-                ? 'Brak aktywnych źródeł płatności.'
-                : 'Brak archiwalnych źródeł płatności.'}
+              {activeList === "active"
+                ? "Brak aktywnych źródeł płatności."
+                : "Brak archiwalnych źródeł płatności."}
             </EmptyState>
           ) : (
-            (activeList === 'active' ? activeSources : archivedSources).map((source) =>
-              renderSourceCard(
-                source,
-                activeList === 'active' ? activeSourceTotals : archivedSourceTotals
-              )
+            (activeList === "active" ? activeSources : archivedSources).map(
+              (source) =>
+                renderSourceCard(
+                  source,
+                  activeList === "active"
+                    ? activeSourceTotals
+                    : archivedSourceTotals,
+                ),
             )
           )}
         </div>
@@ -735,9 +887,9 @@ export default function PaymentSourcesPanel({
             data-ui-density="comfort"
             data-ui-creator-modal="true"
             onClick={(event) => {
-              event.stopPropagation()
+              event.stopPropagation();
               if (activePicker) {
-                setActivePicker(null)
+                setActivePicker(null);
               }
             }}
           >
@@ -746,10 +898,14 @@ export default function PaymentSourcesPanel({
               density="comfort"
               tone={draft.color}
               icon={<CategoryIcon iconKey={draft.icon} />}
-              title={draft.id ? 'Edytuj źródło' : 'Nowe źródło'}
+              title={draft.id ? "Edytuj źródło" : "Nowe źródło"}
               description="Utwórz źródło płatności lub przychodów i określ, gdzie ma być dostępne."
               closeAction={
-                <IconAction ariaLabel="Zamknij" onClick={closeForm} density="comfort">
+                <IconAction
+                  ariaLabel="Zamknij"
+                  onClick={closeForm}
+                  density="comfort"
+                >
                   <CategoryIcon iconKey="close" />
                 </IconAction>
               }
@@ -757,8 +913,13 @@ export default function PaymentSourcesPanel({
 
             <div data-ui-creator-layout="true">
               <div data-ui-creator-main="true">
-                <section data-ui-creator-step="true" data-ui-tone="neutral-accent-1">
-                  <span data-ui-creator-step-icon="true" aria-hidden="true">1</span>
+                <section
+                  data-ui-creator-step="true"
+                  data-ui-tone="neutral-accent-1"
+                >
+                  <span data-ui-creator-step-icon="true" aria-hidden="true">
+                    1
+                  </span>
                   <div data-ui-creator-step-content="true">
                     <header data-ui-creator-step-header="true">
                       <span data-ui-title-with-help="true">
@@ -766,19 +927,27 @@ export default function PaymentSourcesPanel({
                         <HelpHint label="To nazwa widoczna w aplikacji." />
                       </span>
                     </header>
-                    <label data-ui-field="true" data-ui-field-size="comfortable">
+                    <label
+                      data-ui-field="true"
+                      data-ui-field-size="comfortable"
+                    >
                       <span data-ui-visually-hidden="true">Nazwa</span>
                       <span data-ui-input-affix="true">
-                        <span data-ui-input-leading="true" aria-hidden="true">Aa</span>
+                        <span data-ui-input-leading="true" aria-hidden="true">
+                          Aa
+                        </span>
                         <input
                           className="ui-input"
                           data-input-width="full"
                           data-input-variant="creator"
                           value={draft.name}
                           onChange={(event) => {
-                            setDraft((currentDraft) => ({ ...currentDraft, name: event.target.value }))
-                            setDuplicateSourceId(null)
-                            setErrorText('')
+                            setDraft((currentDraft) => ({
+                              ...currentDraft,
+                              name: event.target.value,
+                            }));
+                            setDuplicateSourceId(null);
+                            setErrorText("");
                           }}
                           placeholder="np. Gotówka, Karta kredytowa, Konto główne"
                         />
@@ -788,9 +957,12 @@ export default function PaymentSourcesPanel({
                             data-ui-input-clear="true"
                             aria-label="Wyczyść nazwę"
                             onClick={() => {
-                              setDraft((currentDraft) => ({ ...currentDraft, name: '' }))
-                              setDuplicateSourceId(null)
-                              setErrorText('')
+                              setDraft((currentDraft) => ({
+                                ...currentDraft,
+                                name: "",
+                              }));
+                              setDuplicateSourceId(null);
+                              setErrorText("");
                             }}
                           >
                             ×
@@ -802,31 +974,45 @@ export default function PaymentSourcesPanel({
                     {duplicateSource && (
                       <div
                         data-ui-status-banner="true"
-                        data-ui-tone={duplicateSource.archived_at ? 'warning' : 'danger'}
+                        data-ui-tone={
+                          duplicateSource.archived_at ? "warning" : "danger"
+                        }
                         data-ui-payment-duplicate-banner="true"
                       >
                         {!draft.id && duplicateSource.archived_at ? (
                           <>
-                            <strong>Istnieje archiwalne źródło o tej nazwie.</strong>
+                            <strong>
+                              Istnieje archiwalne źródło o tej nazwie.
+                            </strong>
                             <div data-ui-action-group="true">
                               <PrimaryAction
                                 disabled={isSaving}
-                                onClick={() => void restoreSource(duplicateSource, true)}
+                                onClick={() =>
+                                  void restoreSource(duplicateSource, true)
+                                }
                               >
                                 Przywróć istniejące
                               </PrimaryAction>
-                              <SecondaryAction disabled={isSaving} onClick={() => void saveDraft(true)}>
+                              <SecondaryAction
+                                disabled={isSaving}
+                                onClick={() => void saveDraft(true)}
+                              >
                                 Utwórz nowe mimo wszystko
                               </SecondaryAction>
                             </div>
                           </>
                         ) : (
                           <>
-                            <strong>Źródło „{duplicateSource.name}” już istnieje.</strong>
+                            <strong>
+                              Źródło „{duplicateSource.name}” już istnieje.
+                            </strong>
                             <span>
-                              Edytuj istniejące źródło, żeby zmienić dostępność dla przychodów lub wydatków.
+                              Edytuj istniejące źródło, żeby zmienić dostępność
+                              dla przychodów lub wydatków.
                             </span>
-                            <PrimaryAction onClick={() => openEditForm(duplicateSource)}>
+                            <PrimaryAction
+                              onClick={() => openEditForm(duplicateSource)}
+                            >
                               Edytuj istniejące źródło
                             </PrimaryAction>
                           </>
@@ -836,8 +1022,13 @@ export default function PaymentSourcesPanel({
                   </div>
                 </section>
 
-                <section data-ui-creator-step="true" data-ui-tone="neutral-accent-2">
-                  <span data-ui-creator-step-icon="true" aria-hidden="true">2</span>
+                <section
+                  data-ui-creator-step="true"
+                  data-ui-tone="neutral-accent-2"
+                >
+                  <span data-ui-creator-step-icon="true" aria-hidden="true">
+                    2
+                  </span>
                   <div data-ui-creator-step-content="true">
                     <header data-ui-creator-step-header="true">
                       <span data-ui-title-with-help="true">
@@ -845,12 +1036,21 @@ export default function PaymentSourcesPanel({
                         <HelpHint label="Wybierz kolor i ikonę reprezentujące to źródło." />
                       </span>
                     </header>
-                    <div data-ui-picker-row="true" data-ui-picker-row-size="comfortable">
-                      <div data-ui-field="true" data-ui-field-size="comfortable">
+                    <div
+                      data-ui-picker-row="true"
+                      data-ui-picker-row-size="comfortable"
+                    >
+                      <div
+                        data-ui-field="true"
+                        data-ui-field-size="comfortable"
+                      >
                         Kolor
                         {renderColorPicker()}
                       </div>
-                      <div data-ui-field="true" data-ui-field-size="comfortable">
+                      <div
+                        data-ui-field="true"
+                        data-ui-field-size="comfortable"
+                      >
                         Ikona
                         {renderIconPicker()}
                       </div>
@@ -858,8 +1058,13 @@ export default function PaymentSourcesPanel({
                   </div>
                 </section>
 
-                <section data-ui-creator-step="true" data-ui-tone="neutral-accent-3">
-                  <span data-ui-creator-step-icon="true" aria-hidden="true">3</span>
+                <section
+                  data-ui-creator-step="true"
+                  data-ui-tone="neutral-accent-3"
+                >
+                  <span data-ui-creator-step-icon="true" aria-hidden="true">
+                    3
+                  </span>
                   <div data-ui-creator-step-content="true">
                     <header data-ui-creator-step-header="true">
                       <span data-ui-title-with-help="true">
@@ -867,20 +1072,26 @@ export default function PaymentSourcesPanel({
                         <HelpHint label="Określ, do jakich typów operacji ma być dostępne to źródło." />
                       </span>
                     </header>
-                    <div data-ui-checkbox-field-group="true" data-ui-checkbox-group-size="comfortable">
+                    <div
+                      data-ui-checkbox-field-group="true"
+                      data-ui-checkbox-group-size="comfortable"
+                    >
                       <label
                         data-ui-checkbox="true"
                         data-checkbox-variant="field"
                         data-checkbox-density="comfortable"
                         data-checkbox-align="field"
-                        data-checked={draft.isIncomeSource ? 'true' : 'false'}
+                        data-checked={draft.isIncomeSource ? "true" : "false"}
                       >
                         <input
                           className="ui-checkbox__input"
                           type="checkbox"
                           checked={draft.isIncomeSource}
                           onChange={(event) =>
-                            setDraft((currentDraft) => ({ ...currentDraft, isIncomeSource: event.target.checked }))
+                            setDraft((currentDraft) => ({
+                              ...currentDraft,
+                              isIncomeSource: event.target.checked,
+                            }))
                           }
                         />
                         <span className="ui-checkbox__label">Przychody</span>
@@ -890,14 +1101,17 @@ export default function PaymentSourcesPanel({
                         data-checkbox-variant="field"
                         data-checkbox-density="comfortable"
                         data-checkbox-align="field"
-                        data-checked={draft.isExpenseSource ? 'true' : 'false'}
+                        data-checked={draft.isExpenseSource ? "true" : "false"}
                       >
                         <input
                           className="ui-checkbox__input"
                           type="checkbox"
                           checked={draft.isExpenseSource}
                           onChange={(event) =>
-                            setDraft((currentDraft) => ({ ...currentDraft, isExpenseSource: event.target.checked }))
+                            setDraft((currentDraft) => ({
+                              ...currentDraft,
+                              isExpenseSource: event.target.checked,
+                            }))
                           }
                         />
                         <span className="ui-checkbox__label">Wydatki</span>
@@ -907,26 +1121,41 @@ export default function PaymentSourcesPanel({
                 </section>
               </div>
 
-              <aside data-ui-creator-summary="true" aria-label="Podsumowanie źródła">
+              <aside
+                data-ui-creator-summary="true"
+                aria-label="Podsumowanie źródła"
+              >
                 <header data-ui-creator-summary-header="true">
                   <strong>Podsumowanie</strong>
                   <span>Tak będzie wyglądało źródło na Twojej liście.</span>
                 </header>
 
                 <div data-ui-creator-summary-card="true">
-                  <span data-ui-icon-tile="true" data-ui-icon-role="creator-summary" data-ui-tone={draft.color} aria-hidden="true">
+                  <span
+                    data-ui-icon-tile="true"
+                    data-ui-icon-role="creator-summary"
+                    data-ui-tone={draft.color}
+                    aria-hidden="true"
+                  >
                     <CategoryIcon iconKey={draft.icon} size="large" />
                   </span>
-                  <strong data-ui-creator-summary-title="true">{draft.name.trim() || 'Nowe źródło'}</strong>
-                  <div data-ui-status-pill-group="true" data-ui-summary-status="true">
-                    {renderAvailability('Przychody', draft.isIncomeSource)}
-                    {renderAvailability('Wydatki', draft.isExpenseSource)}
+                  <strong data-ui-creator-summary-title="true">
+                    {draft.name.trim() || "Nowe źródło"}
+                  </strong>
+                  <div
+                    data-ui-status-pill-group="true"
+                    data-ui-summary-status="true"
+                  >
+                    {renderAvailability("Przychody", draft.isIncomeSource)}
+                    {renderAvailability("Wydatki", draft.isExpenseSource)}
                   </div>
                 </div>
 
                 <div data-ui-info-banner="true" data-ui-tone="info">
                   <CategoryIcon iconKey="info" size="small" />
-                  <span>Podsumowanie aktualizuje się na bieżąco wraz ze zmianami.</span>
+                  <span>
+                    Podsumowanie aktualizuje się na bieżąco wraz ze zmianami.
+                  </span>
                 </div>
               </aside>
             </div>
@@ -939,14 +1168,22 @@ export default function PaymentSourcesPanel({
                 width="full"
                 density="comfort"
                 onClick={() => void saveDraft()}
-                disabled={isSaving || !draft.name.trim() || (!draft.isIncomeSource && !draft.isExpenseSource)}
+                disabled={
+                  isSaving ||
+                  !draft.name.trim() ||
+                  (!draft.isIncomeSource && !draft.isExpenseSource)
+                }
               >
-                {isSaving ? 'Zapisywanie...' : draft.id ? 'Zapisz zmiany' : 'Zapisz źródło'}
+                {isSaving
+                  ? "Zapisywanie..."
+                  : draft.id
+                    ? "Zapisz zmiany"
+                    : "Zapisz źródło"}
               </PrimaryAction>
             </footer>
           </section>
         </div>
       )}
     </section>
-  )
+  );
 }
