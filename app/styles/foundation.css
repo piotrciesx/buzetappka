@@ -6637,12 +6637,29 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   box-shadow: var(--ui-record-card-shadow);
 }
 
-[data-ui-large-record="true"][data-ui-record-variant="metric"] {
+[data-ui-record-card="true"][data-ui-record-variant="metric"] {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.99) 0%,
+      rgba(246,250,255,.84) 100%
+    );
+  box-shadow: var(--ui-record-card-shadow);
+
   background:
     linear-gradient(180deg, rgba(249, 252, 255, 0.98) 0%, rgba(237, 246, 255, 0.86) 100%);
 }
 
-[data-ui-large-record="true"][data-ui-record-variant="metric"]:hover {
+[data-ui-record-card="true"][data-ui-record-variant="metric"]:hover {
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      rgba(242,248,255,.90) 100%
+    );
+  border-color: rgba(8,44,122,.16);
+  box-shadow: 0 10px 24px rgba(8,44,122,.055);
+
   background:
     linear-gradient(180deg, rgba(247, 251, 255, 1) 0%, rgba(229, 241, 255, 0.94) 100%);
 }
@@ -6663,7 +6680,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 [data-ui-payment-sources-shell="true"] [data-ui-large-record="true"]:hover {
-  box-shadow: 0 14px 32px rgba(8, 44, 122, 0.075);
+    cursor: pointer;
 }
 
 [data-ui-payment-sources-shell="true"] [data-ui-large-record-identity="true"] {
