@@ -105,6 +105,14 @@ const formatMonthLabel = (value: string) => {
   }).format(new Date(year, month - 1, 1));
 };
 
+
+const formatMonthFieldLabel = (value: string, emptyLabel = "Wybierz miesiąc") => {
+  if (!value) return emptyLabel;
+
+  const label = formatMonthLabel(value);
+  return label.charAt(0).toLocaleUpperCase("pl-PL") + label.slice(1);
+};
+
 const getGoalPeriodLabel = (startMonth: string, deadlineMonth: string) => {
   const startLabel = formatMonthLabel(startMonth);
 
@@ -219,6 +227,8 @@ export default function FinancialGoalForm({
     formState.startMonth,
     formState.deadlineMonth,
   );
+  const startMonthFieldLabel = formatMonthFieldLabel(formState.startMonth, "Bieżący miesiąc");
+  const deadlineMonthFieldLabel = formatMonthFieldLabel(formState.deadlineMonth);
 
   return (
     <>
@@ -241,7 +251,6 @@ export default function FinancialGoalForm({
                   <strong>Nazwa i kwota docelowa</strong>
                   <HelpHint label="Określ nazwę celu, kwotę do zebrania, miesiąc startu i opcjonalny deadline." />
                 </span>
-                <span>Określ nazwę celu oraz kwotę, którą chcesz osiągnąć.</span>
               </header>
 
               <div data-ui-form-shell="true" data-ui-form-density="comfortable">
@@ -307,11 +316,13 @@ export default function FinancialGoalForm({
                       <span data-ui-input-leading="true" aria-hidden="true">
                         <CategoryIcon iconKey="calendar" size="small" />
                       </span>
+                      <span data-ui-month-value="true" aria-hidden="true">{startMonthFieldLabel}</span>
                       <input
                         className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
                         data-input-width={uiInputApi.width.full}
                         data-input-variant="creator"
                         type="month"
+                        aria-label="Miesiąc startu"
                         value={formState.startMonth}
                         onChange={(event) =>
                           onFormStateChange({
@@ -329,11 +340,13 @@ export default function FinancialGoalForm({
                       <span data-ui-input-leading="true" aria-hidden="true">
                         <CategoryIcon iconKey="calendar" size="small" />
                       </span>
+                      <span data-ui-month-value="true" aria-hidden="true">{deadlineMonthFieldLabel}</span>
                       <input
                         className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
                         data-input-width={uiInputApi.width.full}
                         data-input-variant="creator"
                         type="month"
+                        aria-label="Deadline"
                         value={formState.deadlineMonth}
                         onChange={(event) =>
                           onFormStateChange({
@@ -342,9 +355,6 @@ export default function FinancialGoalForm({
                           })
                         }
                       />
-                      {!formState.deadlineMonth && (
-                        <span data-ui-month-placeholder="true">Wybierz miesiąc</span>
-                      )}
                     </span>
                   </label>
                 </div>
@@ -426,7 +436,7 @@ export default function FinancialGoalForm({
               </div>
             </div>
 
-            <div data-ui-creator-preview-metrics="true" data-ui-summary-metrics-layout="list">
+            <div data-ui-creator-preview-metrics="true" data-ui-summary-metrics-layout="clean-list">
               <div data-ui-creator-preview-metric="true" data-ui-tone="neutral-accent-1">
                 <span><CategoryIcon iconKey="system-goals" size="small" /> Kwota docelowa</span>
                 <strong>{targetAmountLabel}</strong>
@@ -464,13 +474,6 @@ export default function FinancialGoalForm({
             </div>
           </div>
 
-          <div
-            data-ui-info-banner="true"
-            data-ui-info-banner-variant="module-guidance"
-          >
-            <CategoryIcon iconKey="info" size="small" />
-            <span>Podsumowanie prezentuje dane z formularza celu.</span>
-          </div>
         </aside>
       </div>
 

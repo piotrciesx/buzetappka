@@ -1,6 +1,6 @@
 'use client'
 
-import { ButtonHTMLAttributes, ReactNode, useState } from 'react'
+import { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode, useState } from 'react'
 
 type FoundationDensity = 'compact' | 'regular' | 'comfort'
 type FoundationTone = 'default' | 'danger' | 'success' | 'neutral-accent-1' | 'neutral-accent-2' | 'neutral-accent-3' | 'neutral-accent-4' | 'neutral-accent-5' | 'neutral-accent-6' | string
@@ -217,5 +217,119 @@ export function IconAction({ children, type = 'button', disabled, onClick, ariaL
     <button {...buttonProps} type={type} data-ui-action="icon" data-ui-action-tone={tone} data-ui-density={density} disabled={disabled} onClick={onClick} aria-label={ariaLabel} title={title}>
       {children}
     </button>
+  )
+}
+
+
+type CreatorModalProps = {
+  size?: 'compact' | 'standard' | 'wide'
+  density?: FoundationDensity
+  children: ReactNode
+}
+
+export function CreatorModal({
+  size = 'standard',
+  density = 'comfort',
+  children,
+}: CreatorModalProps) {
+  return (
+    <section
+      data-ui-modal-surface="true"
+      data-ui-modal-size="creator"
+      data-ui-density={density}
+      data-ui-creator-modal="true"
+      data-ui-creator-variant={size}
+    >
+      {children}
+    </section>
+  )
+}
+
+type FormFieldProps = {
+  label: ReactNode
+  children: ReactNode
+  description?: ReactNode
+  help?: ReactNode
+  size?: 'regular' | 'comfortable'
+}
+
+export function FormField({
+  label,
+  children,
+  description,
+  help,
+  size = 'comfortable',
+}: FormFieldProps) {
+  return (
+    <label data-ui-field="true" data-ui-field-size={size}>
+      <span data-ui-title-with-help="true">
+        <span>{label}</span>
+        {help}
+      </span>
+      {children}
+      {description && <small data-ui-field-description="true">{description}</small>}
+    </label>
+  )
+}
+
+type MoneyFieldProps = InputHTMLAttributes<HTMLInputElement> & {
+  leading?: ReactNode
+  currency?: string
+}
+
+export function MoneyField({
+  leading,
+  currency = 'zł',
+  ...inputProps
+}: MoneyFieldProps) {
+  return (
+    <span data-ui-amount-shell="true" data-ui-input-affix="true">
+      {leading && <span data-ui-input-leading="true" aria-hidden="true">{leading}</span>}
+      <input inputMode="decimal" {...inputProps} />
+      <span data-ui-amount-currency="true" aria-hidden="true">{currency}</span>
+    </span>
+  )
+}
+
+type MonthFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
+  leading?: ReactNode
+  displayValue: ReactNode
+  isEmpty?: boolean
+}
+
+export function MonthField({
+  leading,
+  displayValue,
+  isEmpty = false,
+  ...inputProps
+}: MonthFieldProps) {
+  return (
+    <span data-ui-input-affix="true" data-ui-month-shell="true" data-empty={isEmpty ? 'true' : 'false'}>
+      {leading && <span data-ui-input-leading="true" aria-hidden="true">{leading}</span>}
+      <span data-ui-month-value="true" aria-hidden="true">{displayValue}</span>
+      <input type="month" {...inputProps} />
+    </span>
+  )
+}
+
+type CreatorSummaryCardProps = {
+  kind?: string
+  tone?: FoundationTone
+  children: ReactNode
+}
+
+export function CreatorSummaryCard({
+  kind = 'default',
+  tone = 'neutral-accent-1',
+  children,
+}: CreatorSummaryCardProps) {
+  return (
+    <div
+      data-ui-creator-preview-card="true"
+      data-ui-creator-preview-kind={kind}
+      data-ui-tone={tone}
+    >
+      {children}
+    </div>
   )
 }
