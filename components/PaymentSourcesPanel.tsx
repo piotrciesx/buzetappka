@@ -886,6 +886,7 @@ export default function PaymentSourcesPanel({
             data-ui-modal-size="creator"
             data-ui-density="comfort"
             data-ui-creator-modal="true"
+            data-ui-creator-variant="compact"
             onClick={(event) => {
               event.stopPropagation();
               if (activePicker) {

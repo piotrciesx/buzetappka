@@ -39,6 +39,7 @@ export default function FinancialGoalEditModal({
         data-ui-modal-size="creator"
         data-ui-density="comfort"
         data-ui-creator-modal="true"
+        data-ui-creator-variant="standard"
         onClick={(event) => event.stopPropagation()}
       >
         <HeroHeader

@@ -439,7 +439,7 @@ export default function FinancialGoalForm({
                 <span><CategoryIcon iconKey="warning" size="small" /> Brakuje do celu</span>
                 <strong>{remainingAmountLabel}</strong>
               </div>
-              <div data-ui-creator-preview-metric="true" data-ui-tone="neutral-accent-1">
+              <div data-ui-creator-preview-metric="true" data-ui-tone="neutral-accent-2">
                 <span><CategoryIcon iconKey="more" size="small" /> Priorytet</span>
                 <strong>—</strong>
               </div>
