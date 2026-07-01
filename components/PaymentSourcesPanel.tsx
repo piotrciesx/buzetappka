@@ -249,6 +249,9 @@ export default function PaymentSourcesPanel({
   const [duplicateSourceId, setDuplicateSourceId] = useState<string | null>(
     null,
   );
+  const [selectedSourceDetailsId, setSelectedSourceDetailsId] = useState<string | null>(
+    null,
+  );
   const previousOpenCreateRequestRef = useRef(openCreateRequest);
 
   useEffect(() => {
@@ -293,6 +296,10 @@ export default function PaymentSourcesPanel({
     [archivedSources, statsById],
   );
 
+  const selectedSourceDetails = selectedSourceDetailsId
+    ? paymentSources.find((source) => source.id === selectedSourceDetailsId) || null
+    : null;
+
   const closeForm = () => {
     setDraft(DEFAULT_DRAFT);
     setActivePicker(null);
@@ -321,6 +328,14 @@ export default function PaymentSourcesPanel({
     previousOpenCreateRequestRef.current = openCreateRequest;
     openNewForm();
   }, [openCreateRequest, openNewForm]);
+
+  const openSourceDetails = (source: PaymentSource) => {
+    setSelectedSourceDetailsId(source.id);
+  };
+
+  const closeSourceDetails = () => {
+    setSelectedSourceDetailsId(null);
+  };
 
   const openEditForm = (source: PaymentSource) => {
     setDraft({
@@ -624,10 +639,21 @@ export default function PaymentSourcesPanel({
       <article
         key={source.id}
         data-ui-large-record="true"
+        data-ui-record-card="true"
         data-ui-record-variant="metric"
+        data-ui-record-interactive="true"
         data-ui-indent-level="record"
         data-ui-tone={color.tone}
         data-ui-record-state={isArchived ? "archived" : "active"}
+        role="button"
+        tabIndex={0}
+        onClick={() => openSourceDetails(source)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openSourceDetails(source);
+          }
+        }}
       >
         <div data-ui-large-record-identity="true">
           <span
@@ -686,7 +712,12 @@ export default function PaymentSourcesPanel({
           })}
         </div>
 
-        <div data-ui-action-group="true" data-ui-action-stack="record">
+        <div
+          data-ui-action-group="true"
+          data-ui-action-stack="record"
+          onClick={(event) => event.stopPropagation()}
+          onKeyDown={(event) => event.stopPropagation()}
+        >
           {isArchived ? (
             <SecondaryAction
               disabled={isSaving}
@@ -709,6 +740,75 @@ export default function PaymentSourcesPanel({
           )}
         </div>
       </article>
+    );
+  };
+
+  const renderSourceDetails = (source: PaymentSource) => {
+    const iconKey = getPaymentSourceIconKey(source);
+    const colorTone = getPaymentSourceColorTone(source);
+    const color = getUiColor(colorTone);
+    const stats = statsById[source.id] || {
+      sourceId: source.id,
+      incomeTotal: 0,
+      expenseTotal: 0,
+      transactionCount: 0,
+    };
+
+    return (
+      <section data-ui-record-details="true" data-ui-tone={color.tone}>
+        <header data-ui-record-details-header="true">
+          <div data-ui-large-record-identity="true">
+            <span
+              data-ui-icon-tile="true"
+              data-ui-icon-role="large-record-hero"
+              data-ui-tone={color.tone}
+              aria-hidden="true"
+            >
+              <CategoryIcon iconKey={iconKey} size="large" />
+            </span>
+            <div data-ui-large-record-identity-copy="true">
+              <strong data-ui-large-record-title="true">{source.name}</strong>
+              <div data-ui-status-pill-group="true">
+                {renderAvailability("Przychody", source.is_income_source !== false)}
+                {renderAvailability("Wydatki", source.is_expense_source !== false)}
+              </div>
+            </div>
+          </div>
+          <SecondaryAction onClick={closeSourceDetails}>Wróć do listy</SecondaryAction>
+        </header>
+
+        <div data-ui-record-details-metrics="true">
+          {renderMetric({
+            iconKey: "system-records",
+            label: "wpisy",
+            tone: "neutral-accent-1",
+            percent: stats.transactionCount > 0 ? 100 : 0,
+            detail: `${formatCompactNumber(stats.transactionCount)} wpisów`,
+            title: `${stats.transactionCount} wpisów`,
+          })}
+          {renderMetric({
+            iconKey: "system-income",
+            label: "przychody",
+            percent: stats.incomeTotal > 0 ? 100 : 0,
+            detail: formatCompactCurrency(stats.incomeTotal),
+            tone: "success",
+            title: formatCurrency(stats.incomeTotal),
+          })}
+          {renderMetric({
+            iconKey: "system-expense",
+            label: "wydatki",
+            percent: stats.expenseTotal > 0 ? 100 : 0,
+            detail: formatCompactCurrency(stats.expenseTotal),
+            tone: "danger",
+            title: formatCurrency(stats.expenseTotal),
+          })}
+        </div>
+
+        <div data-ui-record-details-list="true">
+          <strong>Transakcje tego źródła</strong>
+          <span>Lista transakcji zostanie podłączona po przekazaniu wpisów i splitów płatności do panelu.</span>
+        </div>
+      </section>
     );
   };
 
@@ -863,26 +963,30 @@ export default function PaymentSourcesPanel({
             </div>
           }
         />
-        <div data-ui-large-record-list="true">
-          {(activeList === "active" ? activeSources : archivedSources)
-            .length === 0 ? (
-            <EmptyState>
-              {activeList === "active"
-                ? "Brak aktywnych źródeł płatności."
-                : "Brak archiwalnych źródeł płatności."}
-            </EmptyState>
-          ) : (
-            (activeList === "active" ? activeSources : archivedSources).map(
-              (source) =>
-                renderSourceCard(
-                  source,
-                  activeList === "active"
-                    ? activeSourceTotals
-                    : archivedSourceTotals,
-                ),
-            )
-          )}
-        </div>
+        {selectedSourceDetails ? (
+          renderSourceDetails(selectedSourceDetails)
+        ) : (
+          <div data-ui-large-record-list="true">
+            {(activeList === "active" ? activeSources : archivedSources)
+              .length === 0 ? (
+              <EmptyState>
+                {activeList === "active"
+                  ? "Brak aktywnych źródeł płatności."
+                  : "Brak archiwalnych źródeł płatności."}
+              </EmptyState>
+            ) : (
+              (activeList === "active" ? activeSources : archivedSources).map(
+                (source) =>
+                  renderSourceCard(
+                    source,
+                    activeList === "active"
+                      ? activeSourceTotals
+                      : archivedSourceTotals,
+                  ),
+              )
+            )}
+          </div>
+        )}
       </section>
 
       {isFormOpen && (
