@@ -213,6 +213,27 @@ const buildPaymentSourceTotals = (
   );
 };
 
+const sortPaymentSourcesByUsage = (
+  sources: PaymentSource[],
+  statsById: Record<string, PaymentSourceStats>,
+) => {
+  return [...sources].sort((firstSource, secondSource) => {
+    const firstStats = statsById[firstSource.id];
+    const secondStats = statsById[secondSource.id];
+    const usageDifference =
+      Math.max(0, secondStats?.transactionCount || 0) -
+      Math.max(0, firstStats?.transactionCount || 0);
+
+    if (usageDifference !== 0) {
+      return usageDifference;
+    }
+
+    return firstSource.name.localeCompare(secondSource.name, "pl-PL", {
+      sensitivity: "base",
+    });
+  });
+};
+
 const normalizeName = (value: string) =>
   value.trim().toLocaleLowerCase("pl-PL");
 
@@ -249,9 +270,9 @@ export default function PaymentSourcesPanel({
   const [duplicateSourceId, setDuplicateSourceId] = useState<string | null>(
     null,
   );
-  const [selectedSourceDetailsId, setSelectedSourceDetailsId] = useState<string | null>(
-    null,
-  );
+  const [selectedSourceDetailsId, setSelectedSourceDetailsId] = useState<
+    string | null
+  >(null);
   const previousOpenCreateRequestRef = useRef(openCreateRequest);
 
   useEffect(() => {
@@ -269,12 +290,20 @@ export default function PaymentSourcesPanel({
   }, [paymentSourceStats]);
 
   const activeSources = useMemo(
-    () => paymentSources.filter((source) => !source.archived_at),
-    [paymentSources],
+    () =>
+      sortPaymentSourcesByUsage(
+        paymentSources.filter((source) => !source.archived_at),
+        statsById,
+      ),
+    [paymentSources, statsById],
   );
   const archivedSources = useMemo(
-    () => paymentSources.filter((source) => Boolean(source.archived_at)),
-    [paymentSources],
+    () =>
+      sortPaymentSourcesByUsage(
+        paymentSources.filter((source) => Boolean(source.archived_at)),
+        statsById,
+      ),
+    [paymentSources, statsById],
   );
 
   const incomeSources = activeSources.filter(
@@ -812,9 +841,23 @@ export default function PaymentSourcesPanel({
     );
   };
 
+  if (selectedSourceDetails) {
+    return (
+      <section
+        data-ui-payment-sources-shell="true"
+        data-ui-payment-sources-mode="details"
+        data-ui-large-module="true"
+        data-ui-utility-modal-size="xl"
+      >
+        {renderSourceDetails(selectedSourceDetails)}
+      </section>
+    );
+  }
+
   return (
     <section
       data-ui-payment-sources-shell="true"
+      data-ui-payment-sources-mode="list"
       data-ui-large-module="true"
       data-ui-utility-modal-size="xl"
     >
@@ -963,30 +1006,26 @@ export default function PaymentSourcesPanel({
             </div>
           }
         />
-        {selectedSourceDetails ? (
-          renderSourceDetails(selectedSourceDetails)
-        ) : (
-          <div data-ui-large-record-list="true">
-            {(activeList === "active" ? activeSources : archivedSources)
-              .length === 0 ? (
-              <EmptyState>
-                {activeList === "active"
-                  ? "Brak aktywnych źródeł płatności."
-                  : "Brak archiwalnych źródeł płatności."}
-              </EmptyState>
-            ) : (
-              (activeList === "active" ? activeSources : archivedSources).map(
-                (source) =>
-                  renderSourceCard(
-                    source,
-                    activeList === "active"
-                      ? activeSourceTotals
-                      : archivedSourceTotals,
-                  ),
-              )
-            )}
-          </div>
-        )}
+        <div data-ui-large-record-list="true">
+          {(activeList === "active" ? activeSources : archivedSources).length ===
+          0 ? (
+            <EmptyState>
+              {activeList === "active"
+                ? "Brak aktywnych źródeł płatności."
+                : "Brak archiwalnych źródeł płatności."}
+            </EmptyState>
+          ) : (
+            (activeList === "active" ? activeSources : archivedSources).map(
+              (source) =>
+                renderSourceCard(
+                  source,
+                  activeList === "active"
+                    ? activeSourceTotals
+                    : archivedSourceTotals,
+                ),
+            )
+          )}
+        </div>
       </section>
 
       {isFormOpen && (
