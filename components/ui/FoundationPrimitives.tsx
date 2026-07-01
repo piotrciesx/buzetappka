@@ -1,6 +1,6 @@
 'use client'
 
-import { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode, useState } from 'react'
+import { ButtonHTMLAttributes, HTMLAttributes, InputHTMLAttributes, ReactNode, useState } from 'react'
 
 type FoundationDensity = 'compact' | 'regular' | 'comfort'
 type FoundationTone = 'default' | 'danger' | 'success' | 'neutral-accent-1' | 'neutral-accent-2' | 'neutral-accent-3' | 'neutral-accent-4' | 'neutral-accent-5' | 'neutral-accent-6' | string
@@ -221,7 +221,7 @@ export function IconAction({ children, type = 'button', disabled, onClick, ariaL
 }
 
 
-type CreatorModalProps = {
+type CreatorModalProps = HTMLAttributes<HTMLElement> & {
   size?: 'compact' | 'standard' | 'wide'
   density?: FoundationDensity
   children: ReactNode
@@ -231,9 +231,11 @@ export function CreatorModal({
   size = 'standard',
   density = 'comfort',
   children,
+  ...sectionProps
 }: CreatorModalProps) {
   return (
     <section
+      {...sectionProps}
       data-ui-modal-surface="true"
       data-ui-modal-size="creator"
       data-ui-density={density}
@@ -261,7 +263,7 @@ export function FormField({
   size = 'comfortable',
 }: FormFieldProps) {
   return (
-    <label data-ui-field="true" data-ui-field-size={size}>
+    <label data-ui-field="true" data-ui-form-field="true" data-ui-field-size={size}>
       <span data-ui-title-with-help="true">
         <span>{label}</span>
         {help}
@@ -285,7 +287,7 @@ export function MoneyField({
   return (
     <span data-ui-amount-shell="true" data-ui-input-affix="true">
       {leading && <span data-ui-input-leading="true" aria-hidden="true">{leading}</span>}
-      <input inputMode="decimal" {...inputProps} />
+      <input className="ui-amount-field" data-input-variant="creator" inputMode="decimal" {...inputProps} />
       <span data-ui-amount-currency="true" aria-hidden="true">{currency}</span>
     </span>
   )
@@ -307,19 +309,23 @@ export function MonthField({
     <span data-ui-input-affix="true" data-ui-month-shell="true" data-empty={isEmpty ? 'true' : 'false'}>
       {leading && <span data-ui-input-leading="true" aria-hidden="true">{leading}</span>}
       <span data-ui-month-value="true" aria-hidden="true">{displayValue}</span>
-      <input type="month" {...inputProps} />
+      <input className="ui-input" data-input-variant="creator" type="month" {...inputProps} />
     </span>
   )
 }
 
 type CreatorSummaryCardProps = {
   kind?: string
+  layout?: string
+  recordType?: string
   tone?: FoundationTone
   children: ReactNode
 }
 
 export function CreatorSummaryCard({
   kind = 'default',
+  layout,
+  recordType,
   tone = 'neutral-accent-1',
   children,
 }: CreatorSummaryCardProps) {
@@ -327,6 +333,8 @@ export function CreatorSummaryCard({
     <div
       data-ui-creator-preview-card="true"
       data-ui-creator-preview-kind={kind}
+      data-ui-creator-preview-layout={layout}
+      data-ui-record-type={recordType}
       data-ui-tone={tone}
     >
       {children}

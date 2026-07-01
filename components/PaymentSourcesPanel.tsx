@@ -25,6 +25,8 @@ import FoundationIconPicker from "./ui/FoundationIconPicker";
 import { EmptyState } from "./utility-panels/utilityPanelPrimitives";
 import {
   CollapsibleSecondarySection,
+  CreatorModal,
+  CreatorSummaryCard,
   DangerAction,
   HeroHeader,
   IconAction,
@@ -881,12 +883,8 @@ export default function PaymentSourcesPanel({
 
       {isFormOpen && (
         <div data-ui-overlay="true" onClick={closeForm}>
-          <section
-            data-ui-modal-surface="true"
-            data-ui-modal-size="creator"
-            data-ui-density="comfort"
-            data-ui-creator-modal="true"
-            data-ui-creator-variant="compact"
+          <CreatorModal
+            size="compact"
             onClick={(event) => {
               event.stopPropagation();
               if (activePicker) {
@@ -1131,7 +1129,7 @@ export default function PaymentSourcesPanel({
                   <span>Tak będzie wyglądało źródło na Twojej liście.</span>
                 </header>
 
-                <div data-ui-creator-summary-card="true" data-ui-creator-preview-kind="payment-source" data-ui-tone={draft.color}>
+                <CreatorSummaryCard kind="payment-source" tone={draft.color}>
                   <span
                     data-ui-icon-tile="true"
                     data-ui-icon-role="creator-summary"
@@ -1150,7 +1148,7 @@ export default function PaymentSourcesPanel({
                     {renderAvailability("Przychody", draft.isIncomeSource)}
                     {renderAvailability("Wydatki", draft.isExpenseSource)}
                   </div>
-                </div>
+                </CreatorSummaryCard>
 
                 <div data-ui-info-banner="true" data-ui-info-banner-variant="module-guidance">
                   <CategoryIcon iconKey="info" size="small" />
@@ -1182,7 +1180,7 @@ export default function PaymentSourcesPanel({
                     : "Zapisz źródło"}
               </PrimaryAction>
             </footer>
-          </section>
+          </CreatorModal>
         </div>
       )}
     </section>

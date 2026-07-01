@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 import CategoryIcon from '../CategoryIcon'
-import { HeroHeader, IconAction } from '../ui/FoundationPrimitives'
+import { CreatorModal, HeroHeader, IconAction } from '../ui/FoundationPrimitives'
 import FinancialGoalForm from './FinancialGoalForm'
 import type { FormState } from './financialGoalsPanelTypes'
 
@@ -31,15 +31,11 @@ export default function FinancialGoalEditModal({
 
   return (
     <div data-ui-overlay="true" onClick={onClose}>
-      <section
+      <CreatorModal
+        size="standard"
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        data-ui-modal-surface="true"
-        data-ui-modal-size="creator"
-        data-ui-density="comfort"
-        data-ui-creator-modal="true"
-        data-ui-creator-variant="standard"
         onClick={(event) => event.stopPropagation()}
       >
         <HeroHeader
@@ -65,7 +61,7 @@ export default function FinancialGoalEditModal({
           onSubmit={onSave}
           onCancel={onClose}
         />
-      </section>
+      </CreatorModal>
     </div>
   )
 }

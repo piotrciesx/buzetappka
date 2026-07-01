@@ -3,7 +3,6 @@
 
 import type { CSSProperties } from "react";
 import { useState } from "react";
-import { uiInputApi } from "../../lib/uiFoundation";
 import {
   UI_COLOR_OPTIONS,
   getUiColor,
@@ -14,6 +13,10 @@ import {
 import CategoryIcon from "../CategoryIcon";
 import FoundationIconPicker from "../ui/FoundationIconPicker";
 import {
+  CreatorSummaryCard,
+  FormField,
+  MoneyField,
+  MonthField,
   PrimaryAction,
   SecondaryAction,
 } from "../ui/FoundationPrimitives";
@@ -53,15 +56,6 @@ const SUGGESTED_GOAL_ICON_KEYS = [
 
 const DEFAULT_GOAL_ICON = "system-goals";
 const DEFAULT_GOAL_COLOR = "blue";
-
-const HelpHint = ({ label }: { label: string }) => (
-  <span
-    data-ui-help="true"
-    tabIndex={0}
-    aria-label={label}
-    data-tooltip={label}
-  />
-);
 
 const resolveGoalIconKey = (formState: FormState) => {
   const appearance = formState as GoalFormAppearance;
@@ -247,21 +241,18 @@ export default function FinancialGoalForm({
             </span>
             <div data-ui-creator-step-content="true">
               <header data-ui-creator-step-header="true">
-                <span data-ui-title-with-help="true">
-                  <strong>Nazwa i kwota docelowa</strong>
-                  <HelpHint label="Określ nazwę celu, kwotę do zebrania, miesiąc startu i opcjonalny deadline." />
-                </span>
+                <strong>Nazwa i kwota docelowa</strong>
+                <span>Określ nazwę celu, kwotę do zebrania i ramy czasowe.</span>
               </header>
 
               <div data-ui-form-shell="true" data-ui-form-density="comfortable">
                 <div data-ui-form-grid="two" data-ui-form-grid-role="goal-primary">
-                  <label data-ui-field="true" data-ui-field-size="comfortable">
-                    Nazwa celu
+                  <FormField label="Nazwa celu">
                     <span data-ui-input-affix="true" data-ui-input-affix-tone="name">
                       <span data-ui-input-leading="true" aria-hidden="true">Aa</span>
                       <input
-                        className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
-                        data-input-width={uiInputApi.width.full}
+                        className="ui-input"
+                        data-input-width="full"
                         data-input-variant="creator"
                         placeholder="np. Wycieczka, laptop, poduszka finansowa"
                         value={formState.name}
@@ -273,90 +264,54 @@ export default function FinancialGoalForm({
                         }
                       />
                     </span>
-                  </label>
+                  </FormField>
 
-                  <label
-                    data-ui-field="true"
-                    data-ui-field-size="comfortable"
-                    data-ui-creator-hero-field="amount"
-                  >
-                    Kwota docelowa
-                    <span
-                      data-ui-amount-shell="true"
-                      data-ui-input-affix="true"
-                      data-ui-amount-variant="hero"
-                      data-ui-creator-hero-amount="true"
-                    >
-                      <span data-ui-input-leading="true" aria-hidden="true">
-                        <CategoryIcon iconKey="system-goals" size="small" />
-                      </span>
-                      <input
-                        className={uiInputApi.classNames.amountField}
-                        data-input-width={uiInputApi.width.full}
-                        data-input-variant="creator"
-                        placeholder="0,00"
-                        inputMode="decimal"
-                        value={formState.targetAmount}
-                        onChange={(event) =>
-                          onFormStateChange({
-                            ...formState,
-                            targetAmount: event.target.value,
-                          })
-                        }
-                      />
-                      <span data-ui-amount-currency="true" aria-hidden="true">zł</span>
-                    </span>
-                  </label>
+                  <FormField label="Kwota docelowa">
+                    <MoneyField
+                      leading={<CategoryIcon iconKey="system-goals" size="small" />}
+                      placeholder="0,00"
+                      value={formState.targetAmount}
+                      onChange={(event) =>
+                        onFormStateChange({
+                          ...formState,
+                          targetAmount: event.target.value,
+                        })
+                      }
+                    />
+                  </FormField>
                 </div>
 
                 <div data-ui-form-grid="two" data-ui-form-grid-role="period">
-                  <label data-ui-field="true" data-ui-field-size="comfortable">
-                    Miesiąc startu
-                    <span data-ui-input-affix="true" data-ui-month-shell="true" data-empty="false">
-                      <span data-ui-input-leading="true" aria-hidden="true">
-                        <CategoryIcon iconKey="calendar" size="small" />
-                      </span>
-                      <span data-ui-month-value="true" aria-hidden="true">{startMonthFieldLabel}</span>
-                      <input
-                        className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
-                        data-input-width={uiInputApi.width.full}
-                        data-input-variant="creator"
-                        type="month"
-                        aria-label="Miesiąc startu"
-                        value={formState.startMonth}
-                        onChange={(event) =>
-                          onFormStateChange({
-                            ...formState,
-                            startMonth: event.target.value,
-                          })
-                        }
-                      />
-                    </span>
-                  </label>
+                  <FormField label="Miesiąc startu">
+                    <MonthField
+                      leading={<CategoryIcon iconKey="calendar" size="small" />}
+                      displayValue={startMonthFieldLabel}
+                      aria-label="Miesiąc startu"
+                      value={formState.startMonth}
+                      onChange={(event) =>
+                        onFormStateChange({
+                          ...formState,
+                          startMonth: event.target.value,
+                        })
+                      }
+                    />
+                  </FormField>
 
-                  <label data-ui-field="true" data-ui-field-size="comfortable">
-                    Deadline (opcjonalnie)
-                    <span data-ui-input-affix="true" data-ui-month-shell="true" data-empty={formState.deadlineMonth ? "false" : "true"}>
-                      <span data-ui-input-leading="true" aria-hidden="true">
-                        <CategoryIcon iconKey="calendar" size="small" />
-                      </span>
-                      <span data-ui-month-value="true" aria-hidden="true">{deadlineMonthFieldLabel}</span>
-                      <input
-                        className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputM}`}
-                        data-input-width={uiInputApi.width.full}
-                        data-input-variant="creator"
-                        type="month"
-                        aria-label="Deadline"
-                        value={formState.deadlineMonth}
-                        onChange={(event) =>
-                          onFormStateChange({
-                            ...formState,
-                            deadlineMonth: event.target.value,
-                          })
-                        }
-                      />
-                    </span>
-                  </label>
+                  <FormField label="Deadline (opcjonalnie)">
+                    <MonthField
+                      leading={<CategoryIcon iconKey="calendar" size="small" />}
+                      displayValue={deadlineMonthFieldLabel}
+                      isEmpty={!formState.deadlineMonth}
+                      aria-label="Deadline"
+                      value={formState.deadlineMonth}
+                      onChange={(event) =>
+                        onFormStateChange({
+                          ...formState,
+                          deadlineMonth: event.target.value,
+                        })
+                      }
+                    />
+                  </FormField>
                 </div>
               </div>
             </div>
@@ -401,12 +356,11 @@ export default function FinancialGoalForm({
             <span>Sprawdź najważniejsze dane celu przed zapisaniem.</span>
           </header>
 
-          <div
-            data-ui-creator-preview-card="true"
-            data-ui-creator-preview-kind="goal"
-            data-ui-creator-preview-layout="summary-list"
-            data-ui-record-type="goal"
-            data-ui-tone={selectedColor.tone}
+          <CreatorSummaryCard
+            kind="goal"
+            layout="summary-list"
+            recordType="goal"
+            tone={selectedColor.tone}
           >
             <div data-ui-creator-preview-identity="true">
               <span
@@ -472,7 +426,7 @@ export default function FinancialGoalForm({
                 <span data-ui-large-record-progress-fill="true" />
               </span>
             </div>
-          </div>
+          </CreatorSummaryCard>
 
         </aside>
       </div>
