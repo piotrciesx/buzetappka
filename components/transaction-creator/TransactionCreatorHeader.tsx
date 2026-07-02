@@ -25,7 +25,7 @@ export default function TransactionCreatorHeader({
       <HeroHeader
         variant="creator"
         density="comfort"
-        tone="neutral-accent-1"
+        tone="brand-primary"
         icon={<CategoryIcon iconKey="pen" />}
         title="Nowy wpis"
         description={`Miesiąc zapisu: ${selectedMonth}`}

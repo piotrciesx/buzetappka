@@ -145,8 +145,7 @@ const formatNoteDate = (value: string) =>
   }).format(new Date(value));
 
 const resolveToneOption = (tone?: string) =>
-  UI_COLOR_OPTIONS.find((option) => option.tone === tone) ||
-  UI_COLOR_OPTIONS[0];
+  getUiColor(tone);
 
 const resolveIconOption = (icon?: string) =>
   getUiIcon(icon) ||
@@ -785,7 +784,7 @@ export default function ProfileMonthNotePanel({
         <HeroHeader
           variant="module"
           density="regular"
-          tone="neutral-accent-1"
+          tone="support-blue"
           icon={<CategoryIcon iconKey="note" />}
           title={`Notatki miesiąca ${selectedMonth}`}
           description="Wspólne notatki, przypomnienia i informacje dla bieżącego miesiąca."
@@ -955,7 +954,7 @@ export default function ProfileMonthNotePanel({
         <HeroHeader
           variant="compact"
           density="compact"
-          tone="neutral-accent-1"
+          tone="support-blue"
           icon={<CategoryIcon iconKey="note" />}
           title="Notatki miesiąca"
           description={isLoading ? "Ładowanie..." : noteCountLabel}

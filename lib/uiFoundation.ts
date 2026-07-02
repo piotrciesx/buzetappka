@@ -1714,38 +1714,46 @@ export type UiOverlayKind = keyof typeof uiOverlayContracts;
 export type UiOverlayPrimitive = keyof typeof uiOverlayPrimitives;
 
 // Foundation large module public API v1 — visual rules and contracts.
-export const uiNeutralAccentTokens = {
-  accent1: {
-    surface: "var(--ui-neutral-accent-1-surface)",
-    border: "var(--ui-neutral-accent-1-border)",
-    text: "var(--ui-neutral-accent-1-text)",
+export const uiSupportingTokens = {
+  blue: {
+    surface: "var(--ui-support-blue-surface)",
+    border: "var(--ui-support-blue-border)",
+    text: "var(--ui-support-blue-text)",
   },
-  accent2: {
-    surface: "var(--ui-neutral-accent-2-surface)",
-    border: "var(--ui-neutral-accent-2-border)",
-    text: "var(--ui-neutral-accent-2-text)",
+  sky: {
+    surface: "var(--ui-support-sky-surface)",
+    border: "var(--ui-support-sky-border)",
+    text: "var(--ui-support-sky-text)",
   },
-  accent3: {
-    surface: "var(--ui-neutral-accent-3-surface)",
-    border: "var(--ui-neutral-accent-3-border)",
-    text: "var(--ui-neutral-accent-3-text)",
+  cyan: {
+    surface: "var(--ui-support-cyan-surface)",
+    border: "var(--ui-support-cyan-border)",
+    text: "var(--ui-support-cyan-text)",
   },
-  accent4: {
-    surface: "var(--ui-neutral-accent-4-surface)",
-    border: "var(--ui-neutral-accent-4-border)",
-    text: "var(--ui-neutral-accent-4-text)",
+  teal: {
+    surface: "var(--ui-support-teal-surface)",
+    border: "var(--ui-support-teal-border)",
+    text: "var(--ui-support-teal-text)",
   },
-  accent5: {
-    surface: "var(--ui-neutral-accent-5-surface)",
-    border: "var(--ui-neutral-accent-5-border)",
-    text: "var(--ui-neutral-accent-5-text)",
+  mint: {
+    surface: "var(--ui-support-mint-surface)",
+    border: "var(--ui-support-mint-border)",
+    text: "var(--ui-support-mint-text)",
   },
-  accent6: {
-    surface: "var(--ui-neutral-accent-6-surface)",
-    border: "var(--ui-neutral-accent-6-border)",
-    text: "var(--ui-neutral-accent-6-text)",
+  olive: {
+    surface: "var(--ui-support-olive-surface)",
+    border: "var(--ui-support-olive-border)",
+    text: "var(--ui-support-olive-text)",
+  },
+  slate: {
+    surface: "var(--ui-support-slate-surface)",
+    border: "var(--ui-support-slate-border)",
+    text: "var(--ui-support-slate-text)",
   },
 } as const;
+
+/** @deprecated Use uiSupportingTokens. Kept as a source-compatibility bridge. */
+export const uiNeutralAccentTokens = uiSupportingTokens;
 
 export const uiCollapsibleSecondarySectionApi = {
   attributes: {
@@ -1808,12 +1816,13 @@ export const uiLargeModuleApi = {
 } as const;
 
 export const uiMetricToneApi = {
-  neutralAccent1: "neutral-accent-1",
-  neutralAccent2: "neutral-accent-2",
-  neutralAccent3: "neutral-accent-3",
-  neutralAccent4: "neutral-accent-4",
-  neutralAccent5: "neutral-accent-5",
-  neutralAccent6: "neutral-accent-6",
+  supportBlue: "support-blue",
+  supportSky: "support-sky",
+  supportCyan: "support-cyan",
+  supportTeal: "support-teal",
+  supportMint: "support-mint",
+  supportOlive: "support-olive",
+  supportSlate: "support-slate",
   success: "success",
   danger: "danger",
 } as const;
@@ -1826,7 +1835,9 @@ export const uiHelpPatternApi = {
   statusBanner: "Visible success, warning, danger or info state feedback.",
 } as const;
 
-export type UiNeutralAccentToken = keyof typeof uiNeutralAccentTokens;
+export type UiSupportingToken = keyof typeof uiSupportingTokens;
+/** @deprecated Use UiSupportingToken. */
+export type UiNeutralAccentToken = UiSupportingToken;
 export type UiMetricTone = keyof typeof uiMetricToneApi;
 export type UiLargeModuleApiKey = keyof typeof uiLargeModuleApi;
 export type UiCreatorApiKey = keyof typeof uiCreatorApi;

@@ -14,18 +14,13 @@ type FoundationTone =
   | "danger"
   | "success"
   | "brand-primary"
-  | "supporting-1"
-  | "supporting-2"
-  | "supporting-3"
-  | "supporting-4"
-  | "supporting-5"
-  | "supporting-6"
-  | "neutral-accent-1"
-  | "neutral-accent-2"
-  | "neutral-accent-3"
-  | "neutral-accent-4"
-  | "neutral-accent-5"
-  | "neutral-accent-6"
+  | "support-blue"
+  | "support-sky"
+  | "support-cyan"
+  | "support-teal"
+  | "support-mint"
+  | "support-olive"
+  | "support-slate"
   | "information-steel"
   | "information-blue"
   | "information-cyan"
@@ -105,7 +100,7 @@ export function SectionHeader({
   title,
   description,
   help,
-  tone = "supporting-1",
+  tone = "support-blue",
   density = "regular",
   trailing,
 }: SectionHeaderProps) {
@@ -159,7 +154,7 @@ export function CollapsibleSecondarySection({
   title,
   description,
   help,
-  tone = "supporting-1",
+  tone = "support-blue",
   density = "regular",
   defaultCollapsed = true,
   collapsed,

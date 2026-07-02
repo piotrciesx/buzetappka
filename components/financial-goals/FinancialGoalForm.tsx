@@ -235,7 +235,7 @@ export default function FinancialGoalForm({
         }}
       >
         <div data-ui-creator-main="true">
-          <section data-ui-creator-step="true" data-ui-tone="neutral-accent-1">
+          <section data-ui-creator-step="true" data-ui-tone="support-blue">
             <span data-ui-creator-step-icon="true" aria-hidden="true">
               1
             </span>
@@ -317,7 +317,7 @@ export default function FinancialGoalForm({
             </div>
           </section>
 
-          <section data-ui-creator-step="true" data-ui-tone="neutral-accent-2">
+          <section data-ui-creator-step="true" data-ui-tone="support-sky">
             <span data-ui-creator-step-icon="true" aria-hidden="true">
               2
             </span>
@@ -391,7 +391,7 @@ export default function FinancialGoalForm({
             </div>
 
             <div data-ui-creator-preview-metrics="true" data-ui-summary-metrics-layout="clean-list">
-              <div data-ui-creator-preview-metric="true" data-ui-tone="neutral-accent-1">
+              <div data-ui-creator-preview-metric="true" data-ui-tone="support-blue">
                 <span><CategoryIcon iconKey="system-goals" size="small" /> Kwota docelowa</span>
                 <strong>{targetAmountLabel}</strong>
               </div>
@@ -403,7 +403,7 @@ export default function FinancialGoalForm({
                 <span><CategoryIcon iconKey="warning" size="small" /> Brakuje do celu</span>
                 <strong>{remainingAmountLabel}</strong>
               </div>
-              <div data-ui-creator-preview-metric="true" data-ui-tone="neutral-accent-2">
+              <div data-ui-creator-preview-metric="true" data-ui-tone="support-sky">
                 <span><CategoryIcon iconKey="more" size="small" /> Priorytet</span>
                 <strong>—</strong>
               </div>
@@ -414,7 +414,7 @@ export default function FinancialGoalForm({
               style={
                 {
                   "--ui-goal-progress": "0%",
-                  "--ui-goal-progress-color": "var(--ui-neutral-accent-2-text)",
+                  "--ui-goal-progress-color": "var(--ui-support-sky-text)",
                 } as CSSProperties
               }
             >

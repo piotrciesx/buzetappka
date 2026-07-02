@@ -90,7 +90,7 @@ export default function BudgetPageMainPanels({
 
   const selectedPaymentSourceTone = selectedPaymentSource
     ? getPaymentSourceColorTone(selectedPaymentSource)
-    : 'neutral-accent-1'
+    : 'brand-primary'
 
   const handleCloseUtilityPanel = () => {
     setPaymentSourceDetailsId(null)
@@ -196,7 +196,7 @@ export default function BudgetPageMainPanels({
             <HeroHeader
               variant={selectedPaymentSource ? 'context' : 'module'}
               density={selectedPaymentSource ? 'comfort' : 'regular'}
-              tone={selectedPaymentSource ? selectedPaymentSourceTone : 'neutral-accent-1'}
+              tone={selectedPaymentSource ? selectedPaymentSourceTone : 'brand-primary'}
               icon={
                 <CategoryIcon
                   iconKey={selectedPaymentSourceIcon || utilityPanelIcon}

@@ -5,8 +5,8 @@ import {
   TransactionPaymentSplit,
 } from './budgetPageTypes'
 import {
-  isUiColorKey,
   isUiIconKey,
+  normalizeUiColorKey,
   type UiColorKey,
   type UiIconKey,
 } from './userAppearance'
@@ -30,8 +30,8 @@ export const DEFAULT_PAYMENT_SOURCE_EMOJI = DEFAULT_PAYMENT_SOURCE_ICON
 export const DEFAULT_PAYMENT_SOURCE_COLOR: Record<PaymentSource['type'], UiColorKey> = {
   cash: 'green',
   card: 'blue',
-  account: 'violet',
-  other: 'neutral',
+  account: 'teal',
+  other: 'slate',
 }
 
 export type PaymentSourceStats = {
@@ -75,7 +75,7 @@ export const getPaymentSourceIconKey = (source: PaymentSource): UiIconKey => {
 }
 
 export const getPaymentSourceColorTone = (source: PaymentSource): UiColorKey => {
-  return isUiColorKey(source.color) ? source.color : DEFAULT_PAYMENT_SOURCE_COLOR[source.type]
+  return normalizeUiColorKey(source.color, DEFAULT_PAYMENT_SOURCE_COLOR[source.type])
 }
 
 export const getPaymentSourceEmoji = getPaymentSourceIconKey
@@ -95,7 +95,7 @@ export const normalizePaymentSourceEmoji = (value: string, type: PaymentSource['
 }
 
 export const normalizePaymentSourceColor = (value: string, type: PaymentSource['type']) => {
-  return isUiColorKey(value.trim()) ? value.trim() : DEFAULT_PAYMENT_SOURCE_COLOR[type]
+  return normalizeUiColorKey(value, DEFAULT_PAYMENT_SOURCE_COLOR[type])
 }
 
 export const isPaymentSourceVisibleForKind = (

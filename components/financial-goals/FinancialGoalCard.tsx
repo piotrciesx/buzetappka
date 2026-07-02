@@ -4,6 +4,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { getGoalProgressBarColor } from "../../lib/financialGoals";
+import { normalizeUiColorKey } from "../../lib/userAppearance";
 import CategoryIcon from "../CategoryIcon";
 import {
   DangerAction,
@@ -62,7 +63,7 @@ const getGoalTone = (goal: GoalCardBaseProps["goal"]) => {
     color_tone?: string | null;
   };
 
-  return goalWithAppearance.color_tone || goalWithAppearance.color || "blue";
+  return normalizeUiColorKey(goalWithAppearance.color_tone || goalWithAppearance.color);
 };
 
 type GoalCardExtraProps = {
@@ -156,7 +157,7 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
         data-ui-metric-columns="4"
         data-ui-metric-variant="goal-card"
       >
-        <div data-ui-metric-card="true" data-ui-tone="neutral-accent-1">
+        <div data-ui-metric-card="true" data-ui-tone="support-blue">
           <span data-ui-metric-card-label="true">
             <CategoryIcon iconKey="system-goals" size="small" />
             Docelowa
@@ -194,7 +195,7 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
           <span data-ui-metric-card-detail="true">Do realizacji</span>
         </div>
 
-        <div data-ui-metric-card="true" data-ui-tone="neutral-accent-2">
+        <div data-ui-metric-card="true" data-ui-tone="support-sky">
           <span data-ui-metric-card-label="true">
             <CategoryIcon iconKey="allocation" size="small" />
             {modeLabel}

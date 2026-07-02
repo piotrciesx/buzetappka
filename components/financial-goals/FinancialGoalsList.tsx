@@ -260,7 +260,7 @@ export default function FinancialGoalsList({
   return (
     <section data-ui-section="true" data-ui-large-section="true" data-financial-goals-current-list="true">
       <SectionHeader
-        tone={isCurrentList ? 'neutral-accent-2' : 'neutral-accent-3'}
+        tone={isCurrentList ? 'support-sky' : 'support-cyan'}
         icon={<CategoryIcon iconKey={isCurrentList ? 'system-goals' : 'calendar'} size="small" />}
         title={isCurrentList ? 'Cele aktualne' : 'Cele historyczne'}
         description={`${visibleGoals.length} ${isCurrentList ? 'aktywnych' : 'historycznych'}`}

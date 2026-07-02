@@ -36,12 +36,36 @@ export const UI_COLOR_OPTIONS = [
   { tone: 'mint', label: 'Miętowy' },
   { tone: 'green', label: 'Zielony' },
   { tone: 'olive', label: 'Oliwkowy' },
-  { tone: 'amber', label: 'Bursztynowy' },
   { tone: 'coral', label: 'Koralowy' },
-  { tone: 'navy', label: 'Granatowy' },
+  { tone: 'slate', label: 'Łupkowy' },
 ] as const
 
 export type UiColorKey = (typeof UI_COLOR_OPTIONS)[number]['tone']
+
+const LEGACY_UI_COLOR_MAP: Readonly<Record<string, UiColorKey>> = {
+  violet: 'teal',
+  purple: 'teal',
+  lavender: 'sky',
+  lilac: 'sky',
+  orchid: 'teal',
+  magenta: 'coral',
+  brown: 'olive',
+  cocoa: 'olive',
+  sand: 'olive',
+  stone: 'slate',
+  neutral: 'slate',
+  graphite: 'slate',
+  amber: 'olive',
+  navy: 'blue',
+  'information-plum': 'sky',
+  'information-clay': 'olive',
+  'neutral-accent-1': 'blue',
+  'neutral-accent-2': 'sky',
+  'neutral-accent-3': 'cyan',
+  'neutral-accent-4': 'teal',
+  'neutral-accent-5': 'mint',
+  'neutral-accent-6': 'olive',
+}
 
 type LegacyUiIconKey =
   | 'note'
@@ -435,8 +459,23 @@ export const getUiIcon = (iconKey?: string | null) =>
 
 export const getCategoryIcon = getUiIcon
 
-export const getUiColor = (tone?: string | null) =>
-  UI_COLOR_OPTIONS.find((color) => color.tone === tone) || UI_COLOR_OPTIONS[0]
+export const normalizeUiColorKey = (
+  value: string | null | undefined,
+  fallback: UiColorKey = 'blue',
+): UiColorKey => {
+  const normalizedValue = value?.trim().toLowerCase()
+
+  if (isUiColorKey(normalizedValue)) {
+    return normalizedValue
+  }
+
+  return (normalizedValue && LEGACY_UI_COLOR_MAP[normalizedValue]) || fallback
+}
+
+export const getUiColor = (tone?: string | null) => {
+  const normalizedTone = normalizeUiColorKey(tone)
+  return UI_COLOR_OPTIONS.find((color) => color.tone === normalizedTone) || UI_COLOR_OPTIONS[0]
+}
 
 export const isUiIconKey = (value: string | null | undefined): value is UiIconKey =>
   Boolean(value && INTERNAL_ICON_OPTIONS.some((icon) => icon.key === value))

@@ -33,8 +33,8 @@ export default function FinancialGoalsSummary({
         </div>
       </div>
 
-      <div data-ui-summary-card="true" data-ui-summary-tone="information-plum">
-        <span data-ui-summary-icon="true" data-ui-tone="information-plum" aria-hidden="true">
+      <div data-ui-summary-card="true" data-ui-summary-tone="support-sky">
+        <span data-ui-summary-icon="true" data-ui-tone="support-sky" aria-hidden="true">
           <CategoryIcon iconKey="investments" size="summary" />
         </span>
         <div data-ui-summary-copy="true">
