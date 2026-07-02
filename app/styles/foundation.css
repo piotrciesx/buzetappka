@@ -1100,9 +1100,9 @@
   --ui-neutral-accent-2-surface: #ede9fe;
   --ui-neutral-accent-2-border: #ddd6fe;
   --ui-neutral-accent-2-text: #6d28d9;
-  --ui-neutral-accent-3-surface: #e6f7ff;
-  --ui-neutral-accent-3-border: #b9e7f7;
-  --ui-neutral-accent-3-text: #087ea4;
+  --ui-neutral-accent-3-surface: #ddf7f4;
+  --ui-neutral-accent-3-border: #9ee3dd;
+  --ui-neutral-accent-3-text: #0f766e;
   --ui-neutral-accent-4-surface: #e0e7ff;
   --ui-neutral-accent-4-border: #c7d2fe;
   --ui-neutral-accent-4-text: #4338ca;
@@ -5567,13 +5567,14 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 [data-ui-checkbox-group-size="comfortable"] {
-  justify-content: center;
+  justify-content: start;
   gap: var(--ui-space-6);
 }
 
 [data-ui-checkbox-group-size="comfortable"] [data-ui-checkbox="true"][data-checkbox-variant="neutral-card"] {
   min-height: 38px;
   justify-content: center;
+  gap: var(--ui-space-5);
   font-size: var(--ui-type-t4);
 }
 
@@ -9691,9 +9692,13 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 [data-ui-modal-surface="true"][data-ui-modal-size="creator"] [data-ui-creator-step="true"] [data-ui-help="true"] {
-  border-color: color-mix(in srgb, var(--ui-creator-section-accent, var(--ui-color-primary-navy)) 28%, transparent);
-  background: color-mix(in srgb, var(--ui-creator-section-surface, var(--ui-color-soft-blue)) 72%, var(--ui-surface-card));
-  color: var(--ui-creator-section-accent, var(--ui-color-primary-navy));
+  border-color: rgba(8, 44, 122, 0.22);
+  background: var(--ui-color-card-background);
+  color: var(--ui-color-secondary-text);
+}
+
+[data-ui-modal-surface="true"][data-ui-modal-size="creator"] [data-ui-creator-step="true"] [data-ui-help="true"]::before {
+  color: var(--ui-color-secondary-text);
 }
 
 [data-ui-form-shell="true"] {
@@ -10018,4 +10023,20 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   [data-ui-picker-row="true"] {
     grid-template-columns: 1fr;
   }
+}
+/* Payment Sources Creator final polish: keep help neutral, section titles accented, availability left-aligned. */
+[data-ui-modal-surface="true"][data-ui-modal-size="creator"] [data-ui-creator-step-header="true"] [data-ui-title-with-help="true"] > strong {
+  color: var(--ui-creator-section-accent, var(--ui-color-primary-navy));
+}
+
+[data-ui-modal-surface="true"][data-ui-modal-size="creator"] [data-ui-creator-step="true"] [data-ui-help="true"],
+[data-ui-modal-surface="true"][data-ui-modal-size="creator"] [data-ui-creator-step="true"] [data-ui-help="true"]:hover,
+[data-ui-modal-surface="true"][data-ui-modal-size="creator"] [data-ui-creator-step="true"] [data-ui-help="true"]:focus-visible {
+  border-color: rgba(8, 44, 122, 0.22);
+  background: var(--ui-color-card-background);
+  color: var(--ui-color-secondary-text);
+}
+
+[data-ui-modal-surface="true"][data-ui-modal-size="creator"] [data-ui-creator-step="true"] [data-ui-help="true"]::before {
+  color: var(--ui-color-secondary-text);
 }
