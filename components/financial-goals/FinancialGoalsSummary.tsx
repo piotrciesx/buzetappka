@@ -9,6 +9,12 @@ type Props = {
 
 const formatAmount = (value: number) => `${value.toFixed(2)} zł`
 
+const getBalanceState = (value: number) => {
+  if (value > 0) return 'positive'
+  if (value < 0) return 'negative'
+  return 'zero'
+}
+
 export default function FinancialGoalsSummary({
   selectedMonth,
   monthBalance,
@@ -23,7 +29,7 @@ export default function FinancialGoalsSummary({
         </span>
         <div data-ui-summary-copy="true">
           <span>Bilans miesiąca</span>
-          <strong>{formatAmount(monthBalance)}</strong>
+          <strong data-ui-financial-state={getBalanceState(monthBalance)}>{formatAmount(monthBalance)}</strong>
         </div>
       </div>
 

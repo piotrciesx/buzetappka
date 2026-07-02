@@ -10976,32 +10976,42 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 /* ========================================================================== */
-/* Foundation v5.4.1 — Financial Goals spacing + two-record viewport polish    */
+/* Foundation v5.4.2 — Financial Goals final spacing polish                   */
 /* ========================================================================== */
 
-/* Give the main goals panel more breathing room between macro sections. */
+/* The goals panel must not become its own scroll container: the utility modal owns scrolling. */
 [data-financial-goals-panel="true"] {
-  --ui-large-module-gap: var(--ui-space-12);
-  max-block-size: min(590px, calc(100dvh - 320px));
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-gutter: stable;
-  padding-inline-end: var(--ui-space-4);
+  --ui-large-module-gap: var(--ui-space-10);
+  max-block-size: none;
+  overflow: visible;
+  overscroll-behavior: auto;
+  scrollbar-gutter: auto;
+  padding-inline-end: 0;
 }
 
-/* Summary cards are a complete block; separate them clearly from the goal list. */
+/* Give summary cards and the list section a clean, readable separation without pushing records down too far. */
 [data-financial-goals-panel="true"] > [data-financial-goals-summary="true"] {
-  margin-block-end: var(--ui-space-4);
+  margin-block-end: var(--ui-space-2);
 }
 
-/* The list section needs a little more air between its header and records. */
 [data-financial-goals-panel="true"] [data-financial-goals-current-list="true"] {
-  --ui-large-section-gap: var(--ui-space-10);
+  --ui-large-section-gap: var(--ui-space-8);
 }
 
-/* Keep the two-record viewport comfortable on shorter screens without clipping cards. */
-@media (max-height: 820px) {
-  [data-financial-goals-panel="true"] {
-    max-block-size: min(560px, calc(100dvh - 300px));
-  }
+[data-financial-goals-panel="true"] [data-financial-goals-current-list="true"] > [data-ui-section-header-v5="true"] {
+  margin-block-end: var(--ui-space-2);
 }
+
+/* Financial balance is semantic: positive green, negative red, zero informational blue. */
+[data-financial-goals-panel="true"] [data-ui-summary-copy="true"] > strong[data-ui-financial-state="positive"] {
+  color: var(--ui-financial-income);
+}
+
+[data-financial-goals-panel="true"] [data-ui-summary-copy="true"] > strong[data-ui-financial-state="negative"] {
+  color: var(--ui-financial-expense);
+}
+
+[data-financial-goals-panel="true"] [data-ui-summary-copy="true"] > strong[data-ui-financial-state="zero"] {
+  color: var(--ui-information-steel-text);
+}
+
