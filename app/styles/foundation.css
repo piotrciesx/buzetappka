@@ -11015,3 +11015,42 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   color: var(--ui-information-steel-text);
 }
 
+/* ========================================================================== */
+/* Foundation v5.4.3 — Financial Goals final section rhythm and viewport       */
+/* ========================================================================== */
+
+/* The module hero keeps the main product blue; summary tiles use helper colors. */
+[data-ui-summary-card="true"][data-ui-summary-tone="information-slate"] {
+  --ui-tone-surface: var(--ui-information-slate-surface);
+  --ui-tone-border: var(--ui-information-slate-border);
+  --ui-tone-text: var(--ui-information-slate-text);
+}
+
+/* More readable separation between overview cards and the next content section. */
+[data-financial-goals-panel="true"] {
+  --ui-large-module-gap: var(--ui-space-9);
+}
+
+[data-financial-goals-panel="true"] > [data-financial-goals-summary="true"],
+[data-financial-goals-panel="true"] > [data-ui-summary-grid="true"] {
+  margin-block-end: var(--ui-space-8);
+}
+
+[data-financial-goals-panel="true"] [data-financial-goals-current-list="true"] {
+  --ui-large-section-gap: var(--ui-space-8);
+}
+
+[data-financial-goals-panel="true"] [data-financial-goals-current-list="true"] > [data-ui-section-header-v5="true"] {
+  margin-block-end: var(--ui-space-5);
+}
+
+/* Goals modal: keep the initial viewport visually closed after two full records. */
+[data-ui-modal-surface="true"]:has([data-financial-goals-panel="true"]) {
+  max-height: min(76dvh, 690px);
+}
+
+@media (max-height: 820px) {
+  [data-ui-modal-surface="true"]:has([data-financial-goals-panel="true"]) {
+    max-height: min(74dvh, 660px);
+  }
+}

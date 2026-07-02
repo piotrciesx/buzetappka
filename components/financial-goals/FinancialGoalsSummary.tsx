@@ -23,8 +23,8 @@ export default function FinancialGoalsSummary({
 }: Props) {
   return (
     <div data-financial-goals-summary="true" data-ui-summary-grid="true">
-      <div data-ui-summary-card="true" data-ui-summary-tone="information-steel">
-        <span data-ui-summary-icon="true" data-ui-tone="information-steel" aria-hidden="true">
+      <div data-ui-summary-card="true" data-ui-summary-tone="information-slate">
+        <span data-ui-summary-icon="true" data-ui-tone="information-slate" aria-hidden="true">
           <CategoryIcon iconKey="card" size="summary" />
         </span>
         <div data-ui-summary-copy="true">
