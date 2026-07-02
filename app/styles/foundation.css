@@ -11054,3 +11054,35 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
     max-height: min(74dvh, 660px);
   }
 }
+
+
+/* ========================================================================== */
+/* Foundation v5.4.4 — Financial Goals local section rhythm                    */
+/* ========================================================================== */
+/* Local composition rhythm for the Goals panel. The generic LargeModule gap
+   stays modest, while the Summary -> Current goals boundary gets a clear
+   section break owned by this module. */
+[data-financial-goals-panel="true"] {
+  --ui-large-module-gap: var(--ui-space-9);
+  max-block-size: none;
+  overflow: visible;
+}
+
+[data-financial-goals-panel="true"] > [data-financial-goals-summary="true"],
+[data-financial-goals-panel="true"] > [data-ui-summary-grid="true"] {
+  margin-block-end: var(--ui-space-12);
+}
+
+[data-financial-goals-panel="true"] [data-financial-goals-current-list="true"] {
+  --ui-large-section-gap: var(--ui-space-8);
+}
+
+[data-financial-goals-panel="true"] [data-financial-goals-current-list="true"] > [data-ui-section-header-v5="true"] {
+  margin-block-end: var(--ui-space-4);
+}
+
+/* Retire the old ineffective modal-surface target for this utility panel.
+   The real height owner is app-shell: data-budget-utility-panel. */
+[data-ui-modal-surface="true"]:has([data-financial-goals-panel="true"]) {
+  max-height: revert;
+}

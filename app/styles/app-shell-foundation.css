@@ -1431,3 +1431,20 @@ body {
   }
 
 }
+
+
+/* ========================================================================== */
+/* App Shell — Financial Goals local viewport contract                         */
+/* ========================================================================== */
+/* Local only: Financial Goals needs a shorter utility panel so the initial
+   scroll position closes on two full records, not on a clipped third one.
+   This intentionally does not change the global XL modal height. */
+[data-budget-utility-panel="true"][data-utility-panel-kind="financialGoals"] {
+  max-height: min(76dvh, 690px);
+}
+
+@media (max-height: 820px) {
+  [data-budget-utility-panel="true"][data-utility-panel-kind="financialGoals"] {
+    max-height: min(74dvh, 660px);
+  }
+}
