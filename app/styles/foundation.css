@@ -655,9 +655,9 @@
   --ui-record-card-bg: rgba(255, 255, 255, 0.92);
   --ui-record-card-bg-hover: rgba(247, 251, 255, 0.96);
   --ui-record-card-shadow: 0 8px 22px rgba(8, 44, 122, 0.045);
-  --ui-record-card-flat-tint-bg: #f2f7ff;
-  --ui-record-card-flat-tint-bg-hover: #edf4ff;
-  --ui-record-card-flat-tint-border: rgba(8, 44, 122, 0.10);
+  --ui-record-card-flat-tint-bg: #f3f8ff;
+  --ui-record-card-flat-tint-bg-hover: #eef5ff;
+  --ui-record-card-flat-tint-border: rgba(8, 44, 122, 0.095);
   --ui-record-card-padding: var(--ui-space-8);
   --ui-record-card-gap: var(--ui-space-8);
   --ui-creator-section-gap: var(--ui-space-10);
