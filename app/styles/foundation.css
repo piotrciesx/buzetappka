@@ -10974,3 +10974,34 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 [data-ui-info-banner="true"] > svg {
   color: var(--ui-information-slate-text);
 }
+
+/* ========================================================================== */
+/* Foundation v5.4.1 — Financial Goals spacing + two-record viewport polish    */
+/* ========================================================================== */
+
+/* Give the main goals panel more breathing room between macro sections. */
+[data-financial-goals-panel="true"] {
+  --ui-large-module-gap: var(--ui-space-12);
+  max-block-size: min(590px, calc(100dvh - 320px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding-inline-end: var(--ui-space-4);
+}
+
+/* Summary cards are a complete block; separate them clearly from the goal list. */
+[data-financial-goals-panel="true"] > [data-financial-goals-summary="true"] {
+  margin-block-end: var(--ui-space-4);
+}
+
+/* The list section needs a little more air between its header and records. */
+[data-financial-goals-panel="true"] [data-financial-goals-current-list="true"] {
+  --ui-large-section-gap: var(--ui-space-10);
+}
+
+/* Keep the two-record viewport comfortable on shorter screens without clipping cards. */
+@media (max-height: 820px) {
+  [data-financial-goals-panel="true"] {
+    max-block-size: min(560px, calc(100dvh - 300px));
+  }
+}
