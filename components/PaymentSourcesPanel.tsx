@@ -329,6 +329,10 @@ export default function PaymentSourcesPanel({
     ? paymentSources.find((source) => source.id === selectedSourceDetailsId) || null
     : null;
 
+  const paymentSourcesShellStyle = {
+    "--ui-payment-sources-list-max-height": "424px",
+  } as CSSProperties;
+
   const closeForm = () => {
     setDraft(DEFAULT_DRAFT);
     setActivePicker(null);
@@ -784,60 +788,69 @@ export default function PaymentSourcesPanel({
     };
 
     return (
-      <section data-ui-record-details="true" data-ui-tone={color.tone}>
-        <header data-ui-record-details-header="true">
-          <div data-ui-large-record-identity="true">
-            <span
-              data-ui-icon-tile="true"
-              data-ui-icon-role="large-record-hero"
-              data-ui-tone={color.tone}
-              aria-hidden="true"
-            >
-              <CategoryIcon iconKey={iconKey} size="large" />
+      <>
+        <HeroHeader
+          variant="module"
+          density="comfort"
+          tone={color.tone}
+          icon={<CategoryIcon iconKey={iconKey} />}
+          title={source.name}
+          description={
+            <span data-ui-status-pill-group="true">
+              {renderAvailability("Przychody", source.is_income_source !== false)}
+              {renderAvailability("Wydatki", source.is_expense_source !== false)}
             </span>
-            <div data-ui-large-record-identity-copy="true">
-              <strong data-ui-large-record-title="true">{source.name}</strong>
-              <div data-ui-status-pill-group="true">
-                {renderAvailability("Przychody", source.is_income_source !== false)}
-                {renderAvailability("Wydatki", source.is_expense_source !== false)}
-              </div>
-            </div>
+          }
+          primaryAction={
+            <SecondaryAction onClick={closeSourceDetails}>
+              Wróć do listy
+            </SecondaryAction>
+          }
+          closeAction={
+            <IconAction
+              ariaLabel="Zamknij"
+              onClick={closeSourceDetails}
+              density="comfort"
+            >
+              <CategoryIcon iconKey="close" />
+            </IconAction>
+          }
+        />
+
+        <section data-ui-record-details="true" data-ui-tone={color.tone}>
+          <div data-ui-record-details-metrics="true">
+            {renderMetric({
+              iconKey: "system-records",
+              label: "wpisy",
+              tone: "neutral-accent-1",
+              percent: stats.transactionCount > 0 ? 100 : 0,
+              detail: `${formatCompactNumber(stats.transactionCount)} wpisów`,
+              title: `${stats.transactionCount} wpisów`,
+            })}
+            {renderMetric({
+              iconKey: "system-income",
+              label: "przychody",
+              percent: stats.incomeTotal > 0 ? 100 : 0,
+              detail: formatCompactCurrency(stats.incomeTotal),
+              tone: "success",
+              title: formatCurrency(stats.incomeTotal),
+            })}
+            {renderMetric({
+              iconKey: "system-expense",
+              label: "wydatki",
+              percent: stats.expenseTotal > 0 ? 100 : 0,
+              detail: formatCompactCurrency(stats.expenseTotal),
+              tone: "danger",
+              title: formatCurrency(stats.expenseTotal),
+            })}
           </div>
-          <SecondaryAction onClick={closeSourceDetails}>Wróć do listy</SecondaryAction>
-        </header>
 
-        <div data-ui-record-details-metrics="true">
-          {renderMetric({
-            iconKey: "system-records",
-            label: "wpisy",
-            tone: "neutral-accent-1",
-            percent: stats.transactionCount > 0 ? 100 : 0,
-            detail: `${formatCompactNumber(stats.transactionCount)} wpisów`,
-            title: `${stats.transactionCount} wpisów`,
-          })}
-          {renderMetric({
-            iconKey: "system-income",
-            label: "przychody",
-            percent: stats.incomeTotal > 0 ? 100 : 0,
-            detail: formatCompactCurrency(stats.incomeTotal),
-            tone: "success",
-            title: formatCurrency(stats.incomeTotal),
-          })}
-          {renderMetric({
-            iconKey: "system-expense",
-            label: "wydatki",
-            percent: stats.expenseTotal > 0 ? 100 : 0,
-            detail: formatCompactCurrency(stats.expenseTotal),
-            tone: "danger",
-            title: formatCurrency(stats.expenseTotal),
-          })}
-        </div>
-
-        <div data-ui-record-details-list="true">
-          <strong>Transakcje tego źródła</strong>
-          <span>Lista transakcji zostanie podłączona po przekazaniu wpisów i splitów płatności do panelu.</span>
-        </div>
-      </section>
+          <div data-ui-record-details-list="true">
+            <strong>Transakcje tego źródła</strong>
+            <span>Lista transakcji zostanie podłączona po przekazaniu wpisów i splitów płatności do panelu.</span>
+          </div>
+        </section>
+      </>
     );
   };
 
@@ -848,6 +861,7 @@ export default function PaymentSourcesPanel({
         data-ui-payment-sources-mode="details"
         data-ui-large-module="true"
         data-ui-utility-modal-size="xl"
+        style={paymentSourcesShellStyle}
       >
         {renderSourceDetails(selectedSourceDetails)}
       </section>
@@ -860,6 +874,7 @@ export default function PaymentSourcesPanel({
       data-ui-payment-sources-mode="list"
       data-ui-large-module="true"
       data-ui-utility-modal-size="xl"
+      style={paymentSourcesShellStyle}
     >
       <CollapsibleSecondarySection
         tone="neutral-accent-1"
@@ -1006,25 +1021,34 @@ export default function PaymentSourcesPanel({
             </div>
           }
         />
-        <div data-ui-large-record-list="true">
-          {(activeList === "active" ? activeSources : archivedSources).length ===
-          0 ? (
-            <EmptyState>
-              {activeList === "active"
-                ? "Brak aktywnych źródeł płatności."
-                : "Brak archiwalnych źródeł płatności."}
-            </EmptyState>
-          ) : (
-            (activeList === "active" ? activeSources : archivedSources).map(
-              (source) =>
-                renderSourceCard(
-                  source,
-                  activeList === "active"
-                    ? activeSourceTotals
-                    : archivedSourceTotals,
-                ),
-            )
-          )}
+        <div
+          data-ui-payment-sources-list-window="true"
+          style={{
+            maxHeight: "var(--ui-payment-sources-list-max-height)",
+            overflowY: "auto",
+            paddingInlineEnd: "var(--ui-space-2)",
+          }}
+        >
+          <div data-ui-large-record-list="true">
+            {(activeList === "active" ? activeSources : archivedSources).length ===
+            0 ? (
+              <EmptyState>
+                {activeList === "active"
+                  ? "Brak aktywnych źródeł płatności."
+                  : "Brak archiwalnych źródeł płatności."}
+              </EmptyState>
+            ) : (
+              (activeList === "active" ? activeSources : archivedSources).map(
+                (source) =>
+                  renderSourceCard(
+                    source,
+                    activeList === "active"
+                      ? activeSourceTotals
+                      : archivedSourceTotals,
+                  ),
+              )
+            )}
+          </div>
         </div>
       </section>
 
