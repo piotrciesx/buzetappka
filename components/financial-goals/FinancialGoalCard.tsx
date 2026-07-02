@@ -108,7 +108,13 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
     <>
       <div data-ui-large-record-identity="true" data-ui-record-kind="goal">
         {dragHandle && (
-          <span data-ui-record-drag-handle="true">{dragHandle}</span>
+          <span
+            data-ui-record-drag-handle="true"
+            onClick={(event) => event.stopPropagation()}
+            onKeyDown={(event) => event.stopPropagation()}
+          >
+            {dragHandle}
+          </span>
         )}
 
         <span
@@ -198,7 +204,12 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
         </div>
       </div>
 
-      <div data-ui-action-group="true" data-ui-action-stack="record">
+      <div
+        data-ui-action-group="true"
+        data-ui-action-stack="record"
+        onClick={(event) => event.stopPropagation()}
+        onKeyDown={(event) => event.stopPropagation()}
+      >
         <SecondaryAction onClick={() => onEdit(goal)}>Edytuj</SecondaryAction>
         <DangerAction onClick={() => onDelete(goal.id)}>Usuń</DangerAction>
       </div>
@@ -244,7 +255,10 @@ export function SortableGoalCard(
     <article
       ref={setNodeRef}
       data-ui-large-record="true"
+      data-ui-record-card="true"
       data-ui-record-type="goal"
+      data-ui-record-surface="flat-tint"
+      data-ui-record-interactive="true"
       data-ui-tone={goalTone}
       data-dragging={isDragging ? "true" : "false"}
       style={{
@@ -281,7 +295,10 @@ export function StaticGoalCard(
   return (
     <article
       data-ui-large-record="true"
+      data-ui-record-card="true"
       data-ui-record-type="goal"
+      data-ui-record-surface="flat-tint"
+      data-ui-record-interactive="true"
       data-ui-tone={goalTone}
     >
       <GoalCardContent

@@ -10040,3 +10040,179 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 [data-ui-modal-surface="true"][data-ui-modal-size="creator"] [data-ui-creator-step="true"] [data-ui-help="true"]::before {
   color: var(--ui-color-secondary-text);
 }
+
+
+/* ========================================================================== */
+/* Foundation v5.2 — Financial Goals main panel Foundation reset               */
+/* ========================================================================== */
+
+/* SummaryCard: shared neutral summary primitive for module overview cards. */
+[data-ui-summary-grid="true"] {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ui-space-6);
+}
+
+[data-ui-summary-card="true"] {
+  --ui-summary-surface: color-mix(in srgb, var(--ui-tone-surface, var(--ui-neutral-accent-1-surface)) 32%, var(--ui-surface-card));
+  --ui-summary-border: color-mix(in srgb, var(--ui-tone-border, var(--ui-neutral-accent-1-border)) 58%, transparent);
+  min-width: 0;
+  min-height: 96px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--ui-space-6);
+  padding: var(--ui-space-7) var(--ui-space-8);
+  border: 1px solid var(--ui-summary-border);
+  border-radius: var(--ui-radius-3xl);
+  background: var(--ui-summary-surface);
+  box-shadow: none;
+}
+
+[data-ui-summary-card="true"][data-ui-summary-tone="neutral-accent-1"] {
+  --ui-tone-surface: var(--ui-neutral-accent-1-surface);
+  --ui-tone-border: var(--ui-neutral-accent-1-border);
+  --ui-tone-text: var(--ui-neutral-accent-1-text);
+}
+
+[data-ui-summary-card="true"][data-ui-summary-tone="neutral-accent-2"] {
+  --ui-tone-surface: var(--ui-neutral-accent-2-surface);
+  --ui-tone-border: var(--ui-neutral-accent-2-border);
+  --ui-tone-text: var(--ui-neutral-accent-2-text);
+}
+
+[data-ui-summary-card="true"][data-ui-summary-tone="neutral-accent-3"] {
+  --ui-tone-surface: var(--ui-neutral-accent-3-surface);
+  --ui-tone-border: var(--ui-neutral-accent-3-border);
+  --ui-tone-text: var(--ui-neutral-accent-3-text);
+}
+
+[data-ui-summary-icon="true"] {
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--ui-tone-border, var(--ui-neutral-accent-1-border));
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-tone-surface, var(--ui-neutral-accent-1-surface));
+  color: var(--ui-tone-text, var(--ui-neutral-accent-1-text));
+}
+
+[data-ui-summary-icon="true"] [data-category-icon-glyph="true"],
+[data-ui-summary-icon="true"] [data-letter-icon="true"] {
+  width: 22px;
+  height: 22px;
+  color: currentColor;
+}
+
+[data-ui-summary-copy="true"] {
+  min-width: 0;
+  display: grid;
+  align-content: center;
+  gap: var(--ui-space-2);
+}
+
+[data-ui-summary-copy="true"] > span {
+  color: var(--ui-tone-text, var(--ui-neutral-accent-1-text));
+  font-size: var(--ui-type-t4);
+  font-weight: var(--ui-font-weight-semibold);
+  line-height: var(--ui-line-height-compact);
+}
+
+[data-ui-summary-copy="true"] > strong {
+  color: var(--ui-tone-text, var(--ui-neutral-accent-1-text));
+  font-size: var(--ui-type-t2);
+  font-weight: var(--ui-font-weight-bold);
+  line-height: var(--ui-line-height-compact);
+  letter-spacing: -0.02em;
+}
+
+/* Backward compatibility: old goal summary contract now resolves to SummaryCard. */
+[data-ui-goal-summary-card="true"] {
+  box-shadow: none;
+}
+
+[data-financial-goals-panel="true"] [data-ui-summary-card="true"] {
+  box-shadow: none;
+}
+
+/* Goal RecordCard: use the same flat-tint surface as frozen Payment Sources. */
+[data-ui-large-record="true"][data-ui-record-type="goal"][data-ui-record-surface="flat-tint"] {
+  background: var(--ui-record-card-flat-tint-bg);
+  border-color: var(--ui-record-card-flat-tint-border);
+  box-shadow: none;
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"][data-ui-record-surface="flat-tint"]:hover {
+  background: var(--ui-record-card-flat-tint-bg-hover);
+  border-color: rgba(8, 44, 122, 0.14);
+  box-shadow: none;
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"][data-ui-record-surface="flat-tint"][data-ui-record-interactive="true"]:active {
+  background: var(--ui-record-card-flat-tint-bg-hover);
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* RecordIdentity for goals: one coherent identity block instead of loose lines. */
+[data-ui-large-record-identity="true"][data-ui-record-kind="goal"] {
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--ui-space-6);
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-large-record-identity-copy="true"] {
+  min-width: 0;
+  display: grid;
+  align-content: center;
+  gap: var(--ui-space-2);
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-status-inline="true"],
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-record-period="true"] {
+  margin: 0;
+}
+
+[data-ui-record-period="true"] {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  width: fit-content;
+  color: var(--ui-text-secondary);
+  font-size: var(--ui-type-t5);
+  font-weight: var(--ui-font-weight-medium);
+  line-height: var(--ui-line-height-compact);
+}
+
+[data-ui-record-period="true"] [data-category-icon="true"],
+[data-ui-record-period="true"] [data-category-icon-glyph="true"] {
+  color: currentColor;
+}
+
+/* Drag handle: stronger, still compact, without changing global IconAction. */
+[data-ui-record-drag-handle="true"] > button {
+  opacity: 1;
+  border-color: rgba(8, 44, 122, 0.18);
+  background: rgba(255, 255, 255, 0.76);
+  color: rgba(8, 44, 122, 0.72);
+}
+
+[data-ui-record-drag-handle="true"] > button:hover {
+  border-color: rgba(8, 44, 122, 0.28);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ui-color-primary-navy);
+}
+
+@container ui-large-record-list (max-width: 42rem) {
+  [data-ui-large-record-identity="true"][data-ui-record-kind="goal"] {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+}
+
+@container ui-large-module (max-width: 56rem) {
+  [data-ui-summary-grid="true"] {
+    grid-template-columns: 1fr;
+  }
+}

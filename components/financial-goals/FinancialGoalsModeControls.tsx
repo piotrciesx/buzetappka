@@ -12,7 +12,7 @@ export default function FinancialGoalsModeControls({
   onModeChange,
 }: FinancialGoalsModeControlsProps) {
   return (
-    <div data-ui-goal-tabs="true" data-financial-goals-mode-controls="true">
+    <div data-ui-list-switch="true" data-financial-goals-mode-controls="true" role="group" aria-label="Tryb rozliczania celów">
       <button
         type="button"
         data-active={effectiveMode === 'priority' ? 'true' : 'false'}
