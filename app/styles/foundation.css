@@ -10785,122 +10785,215 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 
 
 /* ========================================================================== */
-/* Foundation v5.4 — final calm palette and no-banner financial goals polish */
+/* Foundation v6.0 — BudzAppka Color Foundation System                         */
 /* ========================================================================== */
 
 :root {
-  /* Information Palette v1.1: lighter steel blue and calm business accents. */
-  --ui-information-steel-surface: #eef6ff;
-  --ui-information-steel-border: #d8e8f7;
-  --ui-information-steel-text: #4f789f;
+  /*
+   * COLOR FOUNDATION v1.0
+   *
+   * Roles:
+   * - Primary Brand: hero, module titles, CTA, active controls.
+   * - Supporting Palette: calm section/summary accents. No purple, brown,
+   *   warm gray or heavy decorative surfaces.
+   * - Accent Palette: small interactive accents in dropdowns, chips and pickers.
+   * - Semantic Palette: financial/business meaning; never decorative.
+   * - Record Palette: user-selected object color; only icon/tile/dot, not text.
+   */
 
-  --ui-information-plum-surface: #f2edf5;
-  --ui-information-plum-border: #e4d7e8;
-  --ui-information-plum-text: #8a668f;
+  /* Primary Brand Layer — app identity, not helper color. */
+  --ui-brand-primary-surface: var(--ui-color-primary-navy);
+  --ui-brand-primary-text: var(--ui-color-primary-navy);
+  --ui-brand-primary-action: var(--ui-color-primary-navy);
+  --ui-brand-primary-action-hover: #0b3b9c;
+  --ui-brand-accent: var(--ui-color-primary-blue);
+  --ui-brand-soft-surface: #f5f9ff;
+  --ui-brand-soft-border: rgba(8, 44, 122, 0.14);
 
-  --ui-information-teal-surface: #eef6f5;
-  --ui-information-teal-border: #d6e7e4;
-  --ui-information-teal-text: #5f9a96;
+  /* Supporting Palette — cool, quiet, section-level colors. */
+  --ui-supporting-1-surface: #eef7ff;
+  --ui-supporting-1-border: #d8eafb;
+  --ui-supporting-1-text: #4f7ea7;
 
-  --ui-information-sage-surface: #f0f6ef;
-  --ui-information-sage-border: #dcead8;
-  --ui-information-sage-text: #6f936f;
+  --ui-supporting-2-surface: #eaf8ff;
+  --ui-supporting-2-border: #d2edf8;
+  --ui-supporting-2-text: #397fa4;
 
-  --ui-information-clay-surface: #f8efec;
-  --ui-information-clay-border: #ead7d1;
-  --ui-information-clay-text: #b8796d;
+  --ui-supporting-3-surface: #eafbf9;
+  --ui-supporting-3-border: #cdeeea;
+  --ui-supporting-3-text: #2f8f88;
 
-  --ui-information-slate-surface: #f4f6f8;
-  --ui-information-slate-border: #e0e6ed;
-  --ui-information-slate-text: #6b7786;
+  --ui-supporting-4-surface: #effaf4;
+  --ui-supporting-4-border: #d3efdf;
+  --ui-supporting-4-text: #3f916e;
 
-  /* Compatibility: old neutral-accent names now ARE the information palette. */
-  --ui-neutral-accent-1-surface: var(--ui-information-steel-surface);
-  --ui-neutral-accent-1-border: var(--ui-information-steel-border);
-  --ui-neutral-accent-1-text: var(--ui-information-steel-text);
-  --ui-neutral-accent-2-surface: var(--ui-information-plum-surface);
-  --ui-neutral-accent-2-border: var(--ui-information-plum-border);
-  --ui-neutral-accent-2-text: var(--ui-information-plum-text);
-  --ui-neutral-accent-3-surface: var(--ui-information-teal-surface);
-  --ui-neutral-accent-3-border: var(--ui-information-teal-border);
-  --ui-neutral-accent-3-text: var(--ui-information-teal-text);
-  --ui-neutral-accent-4-surface: var(--ui-information-sage-surface);
-  --ui-neutral-accent-4-border: var(--ui-information-sage-border);
-  --ui-neutral-accent-4-text: var(--ui-information-sage-text);
-  --ui-neutral-accent-5-surface: var(--ui-information-clay-surface);
-  --ui-neutral-accent-5-border: var(--ui-information-clay-border);
-  --ui-neutral-accent-5-text: var(--ui-information-clay-text);
-  --ui-neutral-accent-6-surface: var(--ui-information-slate-surface);
-  --ui-neutral-accent-6-border: var(--ui-information-slate-border);
-  --ui-neutral-accent-6-text: var(--ui-information-slate-text);
+  --ui-supporting-5-surface: #ecf8ff;
+  --ui-supporting-5-border: #d2eefa;
+  --ui-supporting-5-text: #3f84a8;
+
+  --ui-supporting-6-surface: #f1f6ff;
+  --ui-supporting-6-border: #dce8fb;
+  --ui-supporting-6-text: #5e79b7;
+
+  /* Accent Palette — small interaction accents, never large surfaces. */
+  --ui-accent-blue: #2f72f6;
+  --ui-accent-cyan: #18b7c8;
+  --ui-accent-teal: #14a891;
+  --ui-accent-green: #22a85a;
+  --ui-accent-orange: #f59e0b;
+  --ui-accent-coral: #f05f64;
+  --ui-accent-indigo: #5567e8;
+
+  --ui-accent-blue-soft: #edf5ff;
+  --ui-accent-cyan-soft: #eafbfd;
+  --ui-accent-teal-soft: #e8faf6;
+  --ui-accent-green-soft: #ecfaf2;
+  --ui-accent-orange-soft: #fff7e8;
+  --ui-accent-coral-soft: #fff1f2;
+  --ui-accent-indigo-soft: #f1f3ff;
+
+  /* Information aliases now point to the Supporting Palette. */
+  --ui-information-steel-surface: var(--ui-supporting-1-surface);
+  --ui-information-steel-border: var(--ui-supporting-1-border);
+  --ui-information-steel-text: var(--ui-supporting-1-text);
+
+  --ui-information-plum-surface: var(--ui-supporting-2-surface);
+  --ui-information-plum-border: var(--ui-supporting-2-border);
+  --ui-information-plum-text: var(--ui-supporting-2-text);
+
+  --ui-information-teal-surface: var(--ui-supporting-3-surface);
+  --ui-information-teal-border: var(--ui-supporting-3-border);
+  --ui-information-teal-text: var(--ui-supporting-3-text);
+
+  --ui-information-sage-surface: var(--ui-supporting-4-surface);
+  --ui-information-sage-border: var(--ui-supporting-4-border);
+  --ui-information-sage-text: var(--ui-supporting-4-text);
+
+  --ui-information-clay-surface: var(--ui-supporting-5-surface);
+  --ui-information-clay-border: var(--ui-supporting-5-border);
+  --ui-information-clay-text: var(--ui-supporting-5-text);
+
+  --ui-information-slate-surface: var(--ui-supporting-6-surface);
+  --ui-information-slate-border: var(--ui-supporting-6-border);
+  --ui-information-slate-text: var(--ui-supporting-6-text);
+
+  /* Compatibility: old neutral-accent names now ARE the Supporting Palette. */
+  --ui-neutral-accent-1-surface: var(--ui-supporting-1-surface);
+  --ui-neutral-accent-1-border: var(--ui-supporting-1-border);
+  --ui-neutral-accent-1-text: var(--ui-supporting-1-text);
+  --ui-neutral-accent-2-surface: var(--ui-supporting-2-surface);
+  --ui-neutral-accent-2-border: var(--ui-supporting-2-border);
+  --ui-neutral-accent-2-text: var(--ui-supporting-2-text);
+  --ui-neutral-accent-3-surface: var(--ui-supporting-3-surface);
+  --ui-neutral-accent-3-border: var(--ui-supporting-3-border);
+  --ui-neutral-accent-3-text: var(--ui-supporting-3-text);
+  --ui-neutral-accent-4-surface: var(--ui-supporting-4-surface);
+  --ui-neutral-accent-4-border: var(--ui-supporting-4-border);
+  --ui-neutral-accent-4-text: var(--ui-supporting-4-text);
+  --ui-neutral-accent-5-surface: var(--ui-supporting-5-surface);
+  --ui-neutral-accent-5-border: var(--ui-supporting-5-border);
+  --ui-neutral-accent-5-text: var(--ui-supporting-5-text);
+  --ui-neutral-accent-6-surface: var(--ui-supporting-6-surface);
+  --ui-neutral-accent-6-border: var(--ui-supporting-6-border);
+  --ui-neutral-accent-6-text: var(--ui-supporting-6-text);
 }
 
-/* Keep user-selected classic blue calm and closer to the new steel accent. */
+/* User-selected classic blue remains a record color, not the module hero. */
 [data-ui-tone="blue"] {
-  --ui-tone-surface: var(--ui-information-steel-surface);
-  --ui-tone-bg: var(--ui-information-steel-surface);
-  --ui-tone-border: var(--ui-information-steel-border);
-  --ui-tone-text: var(--ui-information-steel-text);
+  --ui-tone-surface: var(--ui-supporting-1-surface);
+  --ui-tone-bg: var(--ui-supporting-1-surface);
+  --ui-tone-border: var(--ui-supporting-1-border);
+  --ui-tone-text: var(--ui-supporting-1-text);
 }
 
-[data-ui-tone="information-steel"] {
-  --ui-tone-surface: var(--ui-information-steel-surface);
-  --ui-tone-bg: var(--ui-information-steel-surface);
-  --ui-tone-border: var(--ui-information-steel-border);
-  --ui-tone-text: var(--ui-information-steel-text);
+[data-ui-tone="information-steel"],
+[data-ui-tone="supporting-1"] {
+  --ui-tone-surface: var(--ui-supporting-1-surface);
+  --ui-tone-bg: var(--ui-supporting-1-surface);
+  --ui-tone-border: var(--ui-supporting-1-border);
+  --ui-tone-text: var(--ui-supporting-1-text);
 }
 
-[data-ui-tone="information-plum"] {
-  --ui-tone-surface: var(--ui-information-plum-surface);
-  --ui-tone-bg: var(--ui-information-plum-surface);
-  --ui-tone-border: var(--ui-information-plum-border);
-  --ui-tone-text: var(--ui-information-plum-text);
+[data-ui-tone="information-plum"],
+[data-ui-tone="supporting-2"] {
+  --ui-tone-surface: var(--ui-supporting-2-surface);
+  --ui-tone-bg: var(--ui-supporting-2-surface);
+  --ui-tone-border: var(--ui-supporting-2-border);
+  --ui-tone-text: var(--ui-supporting-2-text);
 }
 
-[data-ui-tone="information-teal"] {
-  --ui-tone-surface: var(--ui-information-teal-surface);
-  --ui-tone-bg: var(--ui-information-teal-surface);
-  --ui-tone-border: var(--ui-information-teal-border);
-  --ui-tone-text: var(--ui-information-teal-text);
+[data-ui-tone="information-teal"],
+[data-ui-tone="supporting-3"] {
+  --ui-tone-surface: var(--ui-supporting-3-surface);
+  --ui-tone-bg: var(--ui-supporting-3-surface);
+  --ui-tone-border: var(--ui-supporting-3-border);
+  --ui-tone-text: var(--ui-supporting-3-text);
 }
 
-[data-ui-tone="information-sage"] {
-  --ui-tone-surface: var(--ui-information-sage-surface);
-  --ui-tone-bg: var(--ui-information-sage-surface);
-  --ui-tone-border: var(--ui-information-sage-border);
-  --ui-tone-text: var(--ui-information-sage-text);
+[data-ui-tone="information-sage"],
+[data-ui-tone="supporting-4"] {
+  --ui-tone-surface: var(--ui-supporting-4-surface);
+  --ui-tone-bg: var(--ui-supporting-4-surface);
+  --ui-tone-border: var(--ui-supporting-4-border);
+  --ui-tone-text: var(--ui-supporting-4-text);
 }
 
-[data-ui-tone="information-clay"] {
-  --ui-tone-surface: var(--ui-information-clay-surface);
-  --ui-tone-bg: var(--ui-information-clay-surface);
-  --ui-tone-border: var(--ui-information-clay-border);
-  --ui-tone-text: var(--ui-information-clay-text);
+[data-ui-tone="information-clay"],
+[data-ui-tone="supporting-5"] {
+  --ui-tone-surface: var(--ui-supporting-5-surface);
+  --ui-tone-bg: var(--ui-supporting-5-surface);
+  --ui-tone-border: var(--ui-supporting-5-border);
+  --ui-tone-text: var(--ui-supporting-5-text);
 }
 
-[data-ui-tone="information-slate"] {
-  --ui-tone-surface: var(--ui-information-slate-surface);
-  --ui-tone-bg: var(--ui-information-slate-surface);
-  --ui-tone-border: var(--ui-information-slate-border);
-  --ui-tone-text: var(--ui-information-slate-text);
+[data-ui-tone="information-slate"],
+[data-ui-tone="supporting-6"] {
+  --ui-tone-surface: var(--ui-supporting-6-surface);
+  --ui-tone-bg: var(--ui-supporting-6-surface);
+  --ui-tone-border: var(--ui-supporting-6-border);
+  --ui-tone-text: var(--ui-supporting-6-text);
 }
 
-[data-ui-summary-card="true"][data-ui-summary-tone="information-steel"] {
-  --ui-tone-surface: var(--ui-information-steel-surface);
-  --ui-tone-border: var(--ui-information-steel-border);
-  --ui-tone-text: var(--ui-information-steel-text);
+[data-ui-summary-card="true"][data-ui-summary-tone="information-steel"],
+[data-ui-summary-card="true"][data-ui-summary-tone="supporting-1"] {
+  --ui-tone-surface: var(--ui-supporting-1-surface);
+  --ui-tone-border: var(--ui-supporting-1-border);
+  --ui-tone-text: var(--ui-supporting-1-text);
 }
 
-[data-ui-summary-card="true"][data-ui-summary-tone="information-plum"] {
-  --ui-tone-surface: var(--ui-information-plum-surface);
-  --ui-tone-border: var(--ui-information-plum-border);
-  --ui-tone-text: var(--ui-information-plum-text);
+[data-ui-summary-card="true"][data-ui-summary-tone="information-plum"],
+[data-ui-summary-card="true"][data-ui-summary-tone="supporting-2"] {
+  --ui-tone-surface: var(--ui-supporting-2-surface);
+  --ui-tone-border: var(--ui-supporting-2-border);
+  --ui-tone-text: var(--ui-supporting-2-text);
 }
 
-[data-ui-summary-card="true"][data-ui-summary-tone="information-sage"] {
-  --ui-tone-surface: var(--ui-information-sage-surface);
-  --ui-tone-border: var(--ui-information-sage-border);
-  --ui-tone-text: var(--ui-information-sage-text);
+[data-ui-summary-card="true"][data-ui-summary-tone="information-teal"],
+[data-ui-summary-card="true"][data-ui-summary-tone="supporting-3"] {
+  --ui-tone-surface: var(--ui-supporting-3-surface);
+  --ui-tone-border: var(--ui-supporting-3-border);
+  --ui-tone-text: var(--ui-supporting-3-text);
+}
+
+[data-ui-summary-card="true"][data-ui-summary-tone="information-sage"],
+[data-ui-summary-card="true"][data-ui-summary-tone="supporting-4"] {
+  --ui-tone-surface: var(--ui-supporting-4-surface);
+  --ui-tone-border: var(--ui-supporting-4-border);
+  --ui-tone-text: var(--ui-supporting-4-text);
+}
+
+[data-ui-summary-card="true"][data-ui-summary-tone="information-clay"],
+[data-ui-summary-card="true"][data-ui-summary-tone="supporting-5"] {
+  --ui-tone-surface: var(--ui-supporting-5-surface);
+  --ui-tone-border: var(--ui-supporting-5-border);
+  --ui-tone-text: var(--ui-supporting-5-text);
+}
+
+[data-ui-summary-card="true"][data-ui-summary-tone="information-slate"],
+[data-ui-summary-card="true"][data-ui-summary-tone="supporting-6"] {
+  --ui-tone-surface: var(--ui-supporting-6-surface);
+  --ui-tone-border: var(--ui-supporting-6-border);
+  --ui-tone-text: var(--ui-supporting-6-text);
 }
 
 /* Financial Goals: pure white record cards; no blue surface tint. */
@@ -11142,4 +11235,24 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 /* Retire old modal-surface targeting for this utility-panel based module. */
 [data-ui-modal-surface="true"]:has([data-financial-goals-panel="true"]) {
   max-height: revert;
+}
+
+
+/* ========================================================================== */
+/* Foundation v6.0 — Color role guards                                        */
+/* ========================================================================== */
+/* Primary text and module/section titles stay brand-navy. Supporting colors
+   are carried by icon tiles, step numbers and small accents — not by hero text. */
+[data-ui-large-section-header-copy="true"] > strong,
+[data-ui-section-header-v5-title="true"],
+[data-ui-hero-title="true"] {
+  color: var(--ui-color-primary-navy);
+}
+
+/* Controls remain white surfaces. Accent/supporting color is only an inner
+   swatch/icon/chip, never the whole dropdown/input field. */
+[data-ui-picker-trigger="true"],
+[data-ui-select-trigger="true"],
+[data-ui-dropdown-trigger="true"] {
+  background: var(--ui-surface-card);
 }
