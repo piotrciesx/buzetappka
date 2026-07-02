@@ -215,6 +215,7 @@ export default function FinancialGoalsList({
           <SortableContext items={activeGoals.map((goal) => goal.id)} strategy={verticalListSortingStrategy}>
             <div
               data-ui-large-record-list="true"
+              data-financial-goals-list-viewport="true"
             >
               {activeGoals.map((goal, index) => (
                 <SortableGoalCard
@@ -237,6 +238,7 @@ export default function FinancialGoalsList({
     return (
       <div
         data-ui-large-record-list="true"
+        data-financial-goals-list-viewport="true"
       >
         {visibleGoals.map((goal, index) => (
           <StaticGoalCard

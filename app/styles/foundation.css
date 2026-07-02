@@ -11044,6 +11044,14 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   margin-block-end: var(--ui-space-5);
 }
 
+/* Measured desktop viewport: two goal records and one list gap occupy 317.78px. */
+[data-financial-goals-list-viewport="true"] {
+  block-size: 318px;
+  max-block-size: 318px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
 /* Goals modal: keep the initial viewport visually closed after two full records. */
 [data-ui-modal-surface="true"]:has([data-financial-goals-panel="true"]) {
   max-height: min(76dvh, 690px);
