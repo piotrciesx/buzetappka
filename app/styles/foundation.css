@@ -10318,3 +10318,152 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
     grid-row: span 2;
   }
 }
+
+
+/* ========================================================================== */
+/* Foundation v5.2.2 — Financial Goals final main-panel layout                 */
+/* ========================================================================== */
+
+/* Summary cards: calm, uniform cards; accent belongs only to icon tiles. */
+[data-financial-goals-panel="true"] [data-ui-summary-grid="true"] {
+  gap: var(--ui-space-6);
+}
+
+[data-financial-goals-panel="true"] [data-ui-summary-card="true"],
+[data-financial-goals-panel="true"] [data-ui-goal-summary-card="true"] {
+  min-height: 86px;
+  padding: var(--ui-space-6) var(--ui-space-7);
+  border: 1px solid rgba(8, 44, 122, 0.12);
+  border-radius: var(--ui-radius-2xl);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: none;
+}
+
+[data-financial-goals-panel="true"] [data-ui-summary-card="true"]:hover,
+[data-financial-goals-panel="true"] [data-ui-goal-summary-card="true"]:hover {
+  background: rgba(248, 251, 255, 0.94);
+  border-color: rgba(8, 44, 122, 0.16);
+}
+
+[data-financial-goals-panel="true"] [data-ui-summary-copy="true"] > span,
+[data-financial-goals-panel="true"] [data-ui-summary-copy="true"] > strong,
+[data-financial-goals-panel="true"] [data-ui-goal-summary-copy="true"] > span,
+[data-financial-goals-panel="true"] [data-ui-goal-summary-copy="true"] > strong {
+  color: var(--ui-color-primary-navy);
+}
+
+/* Mode switch: content-sized control, never a full-width bar. */
+[data-financial-goals-mode-controls="true"] {
+  justify-self: start;
+  align-self: start;
+  inline-size: fit-content;
+  width: fit-content;
+  max-width: 100%;
+  flex: 0 0 auto;
+}
+
+[data-financial-goals-mode-controls="true"] > button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* Goal RecordIdentity: DnD + icon + copy behave as one coherent block. */
+[data-ui-large-record-identity="true"][data-ui-record-kind="goal"] {
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--ui-space-5);
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-icon-tile="true"][data-ui-icon-role="large-record-hero"] {
+  width: 48px;
+  min-width: 48px;
+  height: 48px;
+  min-height: 48px;
+  border-radius: var(--ui-radius-xl);
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-icon-tile="true"][data-ui-icon-role="large-record-hero"] svg,
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-icon-tile="true"][data-ui-icon-role="large-record-hero"] [data-category-icon="true"] svg,
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-icon-tile="true"][data-ui-icon-role="large-record-hero"] [data-category-icon-glyph="true"] {
+  width: 24px;
+  height: 24px;
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-large-record-identity-copy="true"] {
+  min-width: 0;
+  display: grid;
+  align-content: center;
+  gap: var(--ui-space-3);
+  line-height: var(--ui-line-height-compact);
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-large-record-title="true"] {
+  margin: 0;
+  color: var(--ui-color-primary-blue);
+  font-size: clamp(20px, 1.38vw, 23px);
+  font-weight: var(--ui-font-weight-bold);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-record-meta="true"] {
+  display: grid;
+  justify-items: start;
+  align-items: start;
+  gap: var(--ui-space-3);
+  margin: 0;
+  min-width: 0;
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-status-inline="true"][data-ui-status-badge="true"] {
+  min-height: 22px;
+  padding: 0 var(--ui-space-4);
+  border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  border-radius: var(--ui-radius-pill);
+  background: color-mix(in srgb, currentColor 9%, #ffffff 91%);
+  box-shadow: 0 8px 18px color-mix(in srgb, currentColor 10%, transparent);
+  font-size: var(--ui-type-t5);
+  font-weight: var(--ui-font-weight-bold);
+  line-height: 1;
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-status-inline="true"][data-ui-status-badge="true"] > span[aria-hidden="true"] {
+  width: 7px;
+  height: 7px;
+  box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 14%, transparent);
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-record-period="true"] {
+  max-width: 100%;
+  color: var(--ui-text-secondary);
+  font-size: var(--ui-type-t5);
+  font-weight: var(--ui-font-weight-semibold);
+  line-height: 1.1;
+}
+
+[data-ui-record-drag-handle="true"] {
+  align-self: center;
+}
+
+[data-ui-record-drag-handle="true"] > button {
+  opacity: 1;
+  border-color: rgba(8, 44, 122, 0.18);
+  background: rgba(255, 255, 255, 0.78);
+  color: rgba(8, 44, 122, 0.72);
+}
+
+[data-ui-record-drag-handle="true"] > button:hover {
+  border-color: rgba(8, 44, 122, 0.30);
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--ui-color-primary-navy);
+}
+
+@container ui-large-record-list (max-width: 42rem) {
+  [data-ui-large-record-identity="true"][data-ui-record-kind="goal"] {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  [data-ui-record-drag-handle="true"] {
+    grid-row: span 2;
+  }
+}

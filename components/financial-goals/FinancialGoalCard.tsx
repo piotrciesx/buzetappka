@@ -132,6 +132,7 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
           <span data-ui-record-meta="true">
             <span
               data-ui-status-inline="true"
+              data-ui-status-badge="true"
               data-ui-tone={getStatusTone(statusLabel)}
             >
               <span aria-hidden="true" />
@@ -145,7 +146,7 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
           </span>
 
           {waitingForLockedMonth && (
-            <span data-ui-status-inline="true" data-ui-tone="warning">
+            <span data-ui-status-inline="true" data-ui-status-badge="true" data-ui-tone="warning">
               <span aria-hidden="true" />
               Oczekuje na zamknięcie miesiąca
             </span>
