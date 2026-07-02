@@ -29,20 +29,31 @@ const formatMonthLabel = (value: string) => {
     .replace(".", "");
 };
 
+
+const formatMonthShortLabel = (value: string) => {
+  if (!value) return "bieżący";
+
+  const [year, month] = value.split("-").map(Number);
+
+  if (!year || !month) return value;
+
+  return `${String(month).padStart(2, "0")}-${String(year).slice(-2)}`;
+};
+
 const getGoalPeriodLabel = (startMonth: string, deadlineMonth: string | null) => {
-  const startLabel = formatMonthLabel(startMonth);
+  const startLabel = formatMonthShortLabel(startMonth);
 
   if (!deadlineMonth) {
     return `od ${startLabel}`;
   }
 
-  return `${startLabel} → ${formatMonthLabel(deadlineMonth)}`;
+  return `${startLabel} → ${formatMonthShortLabel(deadlineMonth)}`;
 };
 
 const getStatusTone = (statusLabel: string) => {
   if (statusLabel === "zrealizowany") return "success";
   if (statusLabel === "niezrealizowany") return "danger";
-  return "active";
+  return "record";
 };
 
 const getGoalIconKey = (goal: GoalCardBaseProps["goal"]) => {
@@ -132,12 +143,13 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
           <span data-ui-record-meta="true">
             <span
               data-ui-status-inline="true"
-              data-ui-status-badge="true"
               data-ui-tone={getStatusTone(statusLabel)}
             >
               <span aria-hidden="true" />
               {statusLabel}
             </span>
+
+            <span data-ui-record-meta-separator="true" aria-hidden="true">•</span>
 
             <span data-ui-record-period="true">
               <CategoryIcon iconKey="calendar" size="small" />
@@ -146,7 +158,7 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
           </span>
 
           {waitingForLockedMonth && (
-            <span data-ui-status-inline="true" data-ui-status-badge="true" data-ui-tone="warning">
+            <span data-ui-status-inline="true" data-ui-tone="warning">
               <span aria-hidden="true" />
               Oczekuje na zamknięcie miesiąca
             </span>
@@ -260,7 +272,7 @@ export function SortableGoalCard(
       data-ui-large-record="true"
       data-ui-record-card="true"
       data-ui-record-type="goal"
-      data-ui-record-surface="flat-tint"
+      data-ui-record-surface="white"
       data-ui-record-interactive="true"
       data-ui-tone={goalTone}
       data-dragging={isDragging ? "true" : "false"}
@@ -300,7 +312,7 @@ export function StaticGoalCard(
       data-ui-large-record="true"
       data-ui-record-card="true"
       data-ui-record-type="goal"
-      data-ui-record-surface="flat-tint"
+      data-ui-record-surface="white"
       data-ui-record-interactive="true"
       data-ui-tone={goalTone}
     >
