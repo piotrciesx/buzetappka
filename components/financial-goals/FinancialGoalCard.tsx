@@ -14,21 +14,6 @@ import type { GoalCardBaseProps } from "./financialGoalsPanelTypes";
 
 const formatAmount = (value: number) => `${value.toFixed(2)} zł`;
 
-const formatMonthLabel = (value: string) => {
-  if (!value) return "bieżący miesiąc";
-
-  const [year, month] = value.split("-").map(Number);
-
-  if (!year || !month) return value;
-
-  return new Intl.DateTimeFormat("pl-PL", {
-    month: "short",
-    year: "numeric",
-  })
-    .format(new Date(year, month - 1, 1))
-    .replace(".", "");
-};
-
 
 const formatMonthShortLabel = (value: string) => {
   if (!value) return "bieżący";

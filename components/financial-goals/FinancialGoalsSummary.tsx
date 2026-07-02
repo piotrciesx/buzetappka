@@ -17,8 +17,8 @@ export default function FinancialGoalsSummary({
 }: Props) {
   return (
     <div data-financial-goals-summary="true" data-ui-summary-grid="true">
-      <div data-ui-summary-card="true" data-ui-summary-tone="neutral-accent-1">
-        <span data-ui-summary-icon="true" data-ui-tone="neutral-accent-1" aria-hidden="true">
+      <div data-ui-summary-card="true" data-ui-summary-tone="information-steel">
+        <span data-ui-summary-icon="true" data-ui-tone="information-steel" aria-hidden="true">
           <CategoryIcon iconKey="card" size="summary" />
         </span>
         <div data-ui-summary-copy="true">
@@ -27,8 +27,8 @@ export default function FinancialGoalsSummary({
         </div>
       </div>
 
-      <div data-ui-summary-card="true" data-ui-summary-tone="neutral-accent-2">
-        <span data-ui-summary-icon="true" data-ui-tone="neutral-accent-2" aria-hidden="true">
+      <div data-ui-summary-card="true" data-ui-summary-tone="information-plum">
+        <span data-ui-summary-icon="true" data-ui-tone="information-plum" aria-hidden="true">
           <CategoryIcon iconKey="investments" size="summary" />
         </span>
         <div data-ui-summary-copy="true">
@@ -37,8 +37,8 @@ export default function FinancialGoalsSummary({
         </div>
       </div>
 
-      <div data-ui-summary-card="true" data-ui-summary-tone="neutral-accent-3">
-        <span data-ui-summary-icon="true" data-ui-tone="neutral-accent-3" aria-hidden="true">
+      <div data-ui-summary-card="true" data-ui-summary-tone="information-sage">
+        <span data-ui-summary-icon="true" data-ui-tone="information-sage" aria-hidden="true">
           <CategoryIcon iconKey="calendar" size="summary" />
         </span>
         <div data-ui-summary-copy="true">

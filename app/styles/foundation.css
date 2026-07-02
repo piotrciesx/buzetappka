@@ -10783,3 +10783,194 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   }
 }
 
+
+/* ========================================================================== */
+/* Foundation v5.4 — final calm palette and no-banner financial goals polish */
+/* ========================================================================== */
+
+:root {
+  /* Information Palette v1.1: lighter steel blue and calm business accents. */
+  --ui-information-steel-surface: #eef6ff;
+  --ui-information-steel-border: #d8e8f7;
+  --ui-information-steel-text: #4f789f;
+
+  --ui-information-plum-surface: #f2edf5;
+  --ui-information-plum-border: #e4d7e8;
+  --ui-information-plum-text: #8a668f;
+
+  --ui-information-teal-surface: #eef6f5;
+  --ui-information-teal-border: #d6e7e4;
+  --ui-information-teal-text: #5f9a96;
+
+  --ui-information-sage-surface: #f0f6ef;
+  --ui-information-sage-border: #dcead8;
+  --ui-information-sage-text: #6f936f;
+
+  --ui-information-clay-surface: #f8efec;
+  --ui-information-clay-border: #ead7d1;
+  --ui-information-clay-text: #b8796d;
+
+  --ui-information-slate-surface: #f4f6f8;
+  --ui-information-slate-border: #e0e6ed;
+  --ui-information-slate-text: #6b7786;
+
+  /* Compatibility: old neutral-accent names now ARE the information palette. */
+  --ui-neutral-accent-1-surface: var(--ui-information-steel-surface);
+  --ui-neutral-accent-1-border: var(--ui-information-steel-border);
+  --ui-neutral-accent-1-text: var(--ui-information-steel-text);
+  --ui-neutral-accent-2-surface: var(--ui-information-plum-surface);
+  --ui-neutral-accent-2-border: var(--ui-information-plum-border);
+  --ui-neutral-accent-2-text: var(--ui-information-plum-text);
+  --ui-neutral-accent-3-surface: var(--ui-information-teal-surface);
+  --ui-neutral-accent-3-border: var(--ui-information-teal-border);
+  --ui-neutral-accent-3-text: var(--ui-information-teal-text);
+  --ui-neutral-accent-4-surface: var(--ui-information-sage-surface);
+  --ui-neutral-accent-4-border: var(--ui-information-sage-border);
+  --ui-neutral-accent-4-text: var(--ui-information-sage-text);
+  --ui-neutral-accent-5-surface: var(--ui-information-clay-surface);
+  --ui-neutral-accent-5-border: var(--ui-information-clay-border);
+  --ui-neutral-accent-5-text: var(--ui-information-clay-text);
+  --ui-neutral-accent-6-surface: var(--ui-information-slate-surface);
+  --ui-neutral-accent-6-border: var(--ui-information-slate-border);
+  --ui-neutral-accent-6-text: var(--ui-information-slate-text);
+}
+
+/* Keep user-selected classic blue calm and closer to the new steel accent. */
+[data-ui-tone="blue"] {
+  --ui-tone-surface: var(--ui-information-steel-surface);
+  --ui-tone-bg: var(--ui-information-steel-surface);
+  --ui-tone-border: var(--ui-information-steel-border);
+  --ui-tone-text: var(--ui-information-steel-text);
+}
+
+[data-ui-tone="information-steel"] {
+  --ui-tone-surface: var(--ui-information-steel-surface);
+  --ui-tone-bg: var(--ui-information-steel-surface);
+  --ui-tone-border: var(--ui-information-steel-border);
+  --ui-tone-text: var(--ui-information-steel-text);
+}
+
+[data-ui-tone="information-plum"] {
+  --ui-tone-surface: var(--ui-information-plum-surface);
+  --ui-tone-bg: var(--ui-information-plum-surface);
+  --ui-tone-border: var(--ui-information-plum-border);
+  --ui-tone-text: var(--ui-information-plum-text);
+}
+
+[data-ui-tone="information-teal"] {
+  --ui-tone-surface: var(--ui-information-teal-surface);
+  --ui-tone-bg: var(--ui-information-teal-surface);
+  --ui-tone-border: var(--ui-information-teal-border);
+  --ui-tone-text: var(--ui-information-teal-text);
+}
+
+[data-ui-tone="information-sage"] {
+  --ui-tone-surface: var(--ui-information-sage-surface);
+  --ui-tone-bg: var(--ui-information-sage-surface);
+  --ui-tone-border: var(--ui-information-sage-border);
+  --ui-tone-text: var(--ui-information-sage-text);
+}
+
+[data-ui-tone="information-clay"] {
+  --ui-tone-surface: var(--ui-information-clay-surface);
+  --ui-tone-bg: var(--ui-information-clay-surface);
+  --ui-tone-border: var(--ui-information-clay-border);
+  --ui-tone-text: var(--ui-information-clay-text);
+}
+
+[data-ui-tone="information-slate"] {
+  --ui-tone-surface: var(--ui-information-slate-surface);
+  --ui-tone-bg: var(--ui-information-slate-surface);
+  --ui-tone-border: var(--ui-information-slate-border);
+  --ui-tone-text: var(--ui-information-slate-text);
+}
+
+[data-ui-summary-card="true"][data-ui-summary-tone="information-steel"] {
+  --ui-tone-surface: var(--ui-information-steel-surface);
+  --ui-tone-border: var(--ui-information-steel-border);
+  --ui-tone-text: var(--ui-information-steel-text);
+}
+
+[data-ui-summary-card="true"][data-ui-summary-tone="information-plum"] {
+  --ui-tone-surface: var(--ui-information-plum-surface);
+  --ui-tone-border: var(--ui-information-plum-border);
+  --ui-tone-text: var(--ui-information-plum-text);
+}
+
+[data-ui-summary-card="true"][data-ui-summary-tone="information-sage"] {
+  --ui-tone-surface: var(--ui-information-sage-surface);
+  --ui-tone-border: var(--ui-information-sage-border);
+  --ui-tone-text: var(--ui-information-sage-text);
+}
+
+/* Financial Goals: pure white record cards; no blue surface tint. */
+[data-ui-large-record="true"][data-ui-record-type="goal"],
+[data-ui-large-record="true"][data-ui-record-type="goal"][data-ui-record-surface="white"],
+[data-ui-large-record="true"][data-ui-record-type="goal"][data-ui-record-surface="flat-tint"] {
+  border-color: rgba(8, 44, 122, 0.11);
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(8, 44, 122, 0.032);
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"]:hover,
+[data-ui-large-record="true"][data-ui-record-type="goal"][data-ui-record-surface="white"]:hover,
+[data-ui-large-record="true"][data-ui-record-type="goal"][data-ui-record-surface="flat-tint"]:hover {
+  border-color: rgba(8, 44, 122, 0.17);
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(8, 44, 122, 0.045);
+}
+
+/* RecordIdentity: status dot is neutral by default; object color stays on icon. */
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-status-inline="true"][data-ui-tone="record"] {
+  color: var(--ui-text-secondary);
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-status-inline="true"][data-ui-tone="record"] > span[aria-hidden="true"] {
+  background: #9aa6b2;
+  box-shadow: 0 0 0 3px rgba(154, 166, 178, 0.12);
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-record-meta="true"] {
+  color: var(--ui-text-secondary);
+}
+
+/* Drag handle stays larger but lighter and less button-like. */
+[data-ui-record-drag-handle="true"] > button {
+  border-color: rgba(8, 44, 122, 0.14);
+  background: rgba(255, 255, 255, 0.94);
+  color: rgba(75, 86, 102, 0.78);
+}
+
+[data-ui-record-drag-handle="true"] > button:hover {
+  border-color: rgba(8, 44, 122, 0.24);
+  background: #ffffff;
+  color: var(--ui-color-primary-navy);
+}
+
+/* Summary cards: no colored panels; only icon tiles carry informational color. */
+[data-financial-goals-panel="true"] [data-ui-summary-card="true"],
+[data-financial-goals-panel="true"] [data-ui-goal-summary-card="true"] {
+  border-color: rgba(8, 44, 122, 0.10);
+  background: #ffffff;
+  box-shadow: none;
+}
+
+[data-financial-goals-panel="true"] [data-ui-summary-card="true"]:hover,
+[data-financial-goals-panel="true"] [data-ui-goal-summary-card="true"]:hover {
+  border-color: rgba(8, 44, 122, 0.14);
+  background: #ffffff;
+}
+
+/* Keep InfoBanner calm globally for other modules, even though Goals no longer renders it. */
+[data-ui-info-banner="true"],
+[data-ui-info-banner="true"][data-ui-info-banner-variant="module-guidance"] {
+  border-color: rgba(102, 114, 128, 0.16);
+  background: #ffffff;
+  color: var(--ui-text-secondary);
+  box-shadow: none;
+}
+
+[data-ui-info-banner="true"] > [data-category-icon="true"],
+[data-ui-info-banner="true"] > svg {
+  color: var(--ui-information-slate-text);
+}

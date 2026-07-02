@@ -19,6 +19,12 @@ type FoundationTone =
   | "neutral-accent-4"
   | "neutral-accent-5"
   | "neutral-accent-6"
+  | "information-steel"
+  | "information-plum"
+  | "information-teal"
+  | "information-sage"
+  | "information-clay"
+  | "information-slate"
   | string;
 
 type HeroHeaderProps = {

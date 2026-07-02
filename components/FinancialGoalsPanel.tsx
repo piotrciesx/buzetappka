@@ -629,18 +629,6 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         lockedMonthsSet={lockedMonthsSet}
       />
 
-      <div data-ui-info-banner="true" data-ui-tone="info" data-ui-info-banner-variant="module-guidance">
-        <CategoryIcon iconKey="info" size="small" />
-        <span>
-          {effectiveMode === "allocation"
-            ? "W trybie alokacji ustawiasz procentowy podział nadwyżki między aktywne cele."
-            : `Przeciągnij cele, aby ustawić priorytet realizacji dla miesiąca ${selectedMonth}.`}
-          {isReordering ? " Zapisywanie nowej kolejności..." : ""}
-          {isModeSaving ? " Zapisywanie trybu..." : ""}
-          {isAllocationSaving ? " Zapisywanie alokacji..." : ""}
-        </span>
-      </div>
-
       <FinancialGoalsList
         activeGoals={activeGoals}
         archivedGoals={archivedGoals}
