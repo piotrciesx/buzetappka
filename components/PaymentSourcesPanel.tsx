@@ -86,6 +86,8 @@ type Props = {
     targetKind: PaymentSourceListKind,
   ) => Promise<void>;
   openCreateRequest?: number;
+  selectedSourceDetailsId?: string | null;
+  onSelectedSourceDetailsIdChange?: (sourceId: string | null) => void;
   styles: Record<string, CSSProperties>;
 };
 
@@ -255,6 +257,8 @@ export default function PaymentSourcesPanel({
   onRestore,
   onSetDefault,
   openCreateRequest,
+  selectedSourceDetailsId: controlledSelectedSourceDetailsId,
+  onSelectedSourceDetailsIdChange,
 }: Props) {
   const [draft, setDraft] = useState<PaymentSourceDraft>(DEFAULT_DRAFT);
   const [settingsDraft, setSettingsDraft] = useState(paymentSourceSettings);
@@ -270,9 +274,20 @@ export default function PaymentSourcesPanel({
   const [duplicateSourceId, setDuplicateSourceId] = useState<string | null>(
     null,
   );
-  const [selectedSourceDetailsId, setSelectedSourceDetailsId] = useState<
+  const [internalSelectedSourceDetailsId, setInternalSelectedSourceDetailsId] = useState<
     string | null
   >(null);
+  const selectedSourceDetailsId =
+    controlledSelectedSourceDetailsId !== undefined
+      ? controlledSelectedSourceDetailsId
+      : internalSelectedSourceDetailsId;
+
+  const setSelectedSourceDetailsId = (sourceId: string | null) => {
+    if (controlledSelectedSourceDetailsId === undefined) {
+      setInternalSelectedSourceDetailsId(sourceId);
+    }
+    onSelectedSourceDetailsIdChange?.(sourceId);
+  };
   const previousOpenCreateRequestRef = useRef(openCreateRequest);
 
   useEffect(() => {
@@ -674,6 +689,7 @@ export default function PaymentSourcesPanel({
         data-ui-large-record="true"
         data-ui-record-card="true"
         data-ui-record-variant="metric"
+        data-ui-record-surface="flat-tint"
         data-ui-record-interactive="true"
         data-ui-indent-level="record"
         data-ui-tone={color.tone}
@@ -777,7 +793,6 @@ export default function PaymentSourcesPanel({
   };
 
   const renderSourceDetails = (source: PaymentSource) => {
-    const iconKey = getPaymentSourceIconKey(source);
     const colorTone = getPaymentSourceColorTone(source);
     const color = getUiColor(colorTone);
     const stats = statsById[source.id] || {
@@ -788,36 +803,7 @@ export default function PaymentSourcesPanel({
     };
 
     return (
-      <>
-        <HeroHeader
-          variant="module"
-          density="comfort"
-          tone={color.tone}
-          icon={<CategoryIcon iconKey={iconKey} />}
-          title={source.name}
-          description={
-            <span data-ui-status-pill-group="true">
-              {renderAvailability("Przychody", source.is_income_source !== false)}
-              {renderAvailability("Wydatki", source.is_expense_source !== false)}
-            </span>
-          }
-          primaryAction={
-            <SecondaryAction onClick={closeSourceDetails}>
-              Wróć do listy
-            </SecondaryAction>
-          }
-          closeAction={
-            <IconAction
-              ariaLabel="Zamknij"
-              onClick={closeSourceDetails}
-              density="comfort"
-            >
-              <CategoryIcon iconKey="close" />
-            </IconAction>
-          }
-        />
-
-        <section data-ui-record-details="true" data-ui-tone={color.tone}>
+      <section data-ui-record-details="true" data-ui-tone={color.tone}>
           <div data-ui-record-details-metrics="true">
             {renderMetric({
               iconKey: "system-records",
@@ -849,8 +835,7 @@ export default function PaymentSourcesPanel({
             <strong>Transakcje tego źródła</strong>
             <span>Lista transakcji zostanie podłączona po przekazaniu wpisów i splitów płatności do panelu.</span>
           </div>
-        </section>
-      </>
+      </section>
     );
   };
 

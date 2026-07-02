@@ -1,11 +1,11 @@
 'use client'
 
-import { ComponentPropsWithRef, useState } from 'react'
+import { ComponentPropsWithRef, useEffect, useState } from 'react'
 import BudgetTreeSection from './BudgetTreeSection'
 import BulkActionsBar from './BulkActionsBar'
 import CategoryMigrationPrompt from './CategoryMigrationPrompt'
 import CategoryIcon from './CategoryIcon'
-import { HeroHeader, IconAction, PrimaryAction } from './ui/FoundationPrimitives'
+import { HeroHeader, IconAction, PrimaryAction, SecondaryAction } from './ui/FoundationPrimitives'
 import DraftsPanel from './DraftsPanel'
 import FinancialGoalsContainer from './FinancialGoalsContainer'
 import HiddenCategoriesPanel from './HiddenCategoriesPanel'
@@ -17,6 +17,7 @@ import SearchPanel from './SearchPanel'
 import TrashPanel from './TrashPanel'
 import UndoBanner from './UndoBanner'
 import type { AppModuleVisibility } from '../lib/useAppModuleVisibility'
+import { getPaymentSourceColorTone, getPaymentSourceIconKey } from '../lib/paymentSources'
 
 export type BudgetUtilityPanel =
   | 'drafts'
@@ -70,6 +71,43 @@ export default function BudgetPageMainPanels({
   trashPanelProps,
 }: Props) {
   const [paymentSourceCreateRequest, setPaymentSourceCreateRequest] = useState(0)
+  const [paymentSourceDetailsId, setPaymentSourceDetailsId] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (activeUtilityPanel !== 'paymentSources') {
+      setPaymentSourceDetailsId(null)
+    }
+  }, [activeUtilityPanel])
+
+  const selectedPaymentSource =
+    activeUtilityPanel === 'paymentSources' && paymentSourceDetailsId
+      ? paymentSourcesPanelProps.paymentSources.find((source) => source.id === paymentSourceDetailsId) || null
+      : null
+
+  const selectedPaymentSourceIcon = selectedPaymentSource
+    ? getPaymentSourceIconKey(selectedPaymentSource)
+    : null
+
+  const selectedPaymentSourceTone = selectedPaymentSource
+    ? getPaymentSourceColorTone(selectedPaymentSource)
+    : 'neutral-accent-1'
+
+  const handleCloseUtilityPanel = () => {
+    setPaymentSourceDetailsId(null)
+    onCloseUtilityPanel()
+  }
+
+  const renderPaymentSourceAvailability = (label: string, isActive: boolean) => (
+    <span
+      data-ui-status-pill="true"
+      data-ui-pill-shape="soft-rect"
+      data-ui-tone={isActive ? 'success' : 'danger'}
+      data-active={isActive ? 'true' : 'false'}
+    >
+      <span aria-hidden="true">{isActive ? '✓' : '×'}</span>
+      {label}
+    </span>
+  )
 
   const utilityPanelTitle =
     activeUtilityPanel === 'drafts'
@@ -148,7 +186,7 @@ export default function BudgetPageMainPanels({
             type="button"
             aria-label="Zamknij panel"
             data-budget-utility-backdrop="true"
-            onClick={onCloseUtilityPanel}
+            onClick={handleCloseUtilityPanel}
           />
           <aside
             data-budget-utility-panel="true"
@@ -156,14 +194,36 @@ export default function BudgetPageMainPanels({
             aria-label={utilityPanelTitle}
           >
             <HeroHeader
-              variant="module"
-              density="regular"
-              tone="neutral-accent-1"
-              icon={<CategoryIcon iconKey={utilityPanelIcon} />}
-              title={utilityPanelTitle}
-              description={utilityPanelDescription}
+              variant={selectedPaymentSource ? 'context' : 'module'}
+              density={selectedPaymentSource ? 'comfort' : 'regular'}
+              tone={selectedPaymentSource ? selectedPaymentSourceTone : 'neutral-accent-1'}
+              icon={
+                <CategoryIcon
+                  iconKey={selectedPaymentSourceIcon || utilityPanelIcon}
+                />
+              }
+              title={selectedPaymentSource ? selectedPaymentSource.name : utilityPanelTitle}
+              description={selectedPaymentSource ? null : utilityPanelDescription}
+              metadata={
+                selectedPaymentSource ? (
+                  <span data-ui-status-pill-group="true">
+                    {renderPaymentSourceAvailability(
+                      'Przychody',
+                      selectedPaymentSource.is_income_source !== false,
+                    )}
+                    {renderPaymentSourceAvailability(
+                      'Wydatki',
+                      selectedPaymentSource.is_expense_source !== false,
+                    )}
+                  </span>
+                ) : null
+              }
               primaryAction={
-                activeUtilityPanel === 'paymentSources' ? (
+                selectedPaymentSource ? (
+                  <SecondaryAction onClick={() => setPaymentSourceDetailsId(null)}>
+                    Wróć do listy
+                  </SecondaryAction>
+                ) : activeUtilityPanel === 'paymentSources' ? (
                   <PrimaryAction onClick={() => setPaymentSourceCreateRequest((value) => value + 1)}>
                     <CategoryIcon iconKey="system-add" size="small" />
                     Dodaj źródło
@@ -176,7 +236,7 @@ export default function BudgetPageMainPanels({
                 ) : null
               }
               closeAction={
-                <IconAction ariaLabel="Zamknij panel" onClick={onCloseUtilityPanel}>
+                <IconAction ariaLabel="Zamknij panel" onClick={handleCloseUtilityPanel}>
                   <CategoryIcon iconKey="close" />
                 </IconAction>
               }
@@ -191,6 +251,8 @@ export default function BudgetPageMainPanels({
                 <PaymentSourcesPanel
                   {...paymentSourcesPanelProps}
                   openCreateRequest={paymentSourceCreateRequest}
+                  selectedSourceDetailsId={paymentSourceDetailsId}
+                  onSelectedSourceDetailsIdChange={setPaymentSourceDetailsId}
                 />
               )}
               {activeUtilityPanel === 'financialGoals' && visibleModules.financialGoals && (

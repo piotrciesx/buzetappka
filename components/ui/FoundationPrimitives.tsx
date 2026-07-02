@@ -26,8 +26,9 @@ type HeroHeaderProps = {
   title: ReactNode;
   description?: ReactNode;
   tone?: FoundationTone;
-  variant?: "module" | "creator" | "compact";
+  variant?: "module" | "creator" | "compact" | "context";
   density?: FoundationDensity;
+  metadata?: ReactNode;
   primaryAction?: ReactNode;
   closeAction?: ReactNode;
   children?: ReactNode;
@@ -37,6 +38,7 @@ export function HeroHeader({
   icon,
   title,
   description,
+  metadata,
   tone = "neutral-accent-1",
   variant = "module",
   density = "regular",
@@ -60,6 +62,7 @@ export function HeroHeader({
         <div data-ui-hero-copy="true">
           <strong>{title}</strong>
           {description && <span>{description}</span>}
+          {metadata && <div data-ui-hero-metadata="true">{metadata}</div>}
         </div>
       </div>
 

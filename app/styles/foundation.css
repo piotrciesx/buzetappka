@@ -652,6 +652,9 @@
   --ui-record-card-bg: rgba(255, 255, 255, 0.92);
   --ui-record-card-bg-hover: rgba(247, 251, 255, 0.96);
   --ui-record-card-shadow: 0 8px 22px rgba(8, 44, 122, 0.045);
+  --ui-record-card-flat-tint-bg: #eef4ff;
+  --ui-record-card-flat-tint-bg-hover: #e9f1ff;
+  --ui-record-card-flat-tint-border: rgba(8, 44, 122, 0.11);
   --ui-record-card-padding: var(--ui-space-8);
   --ui-record-card-gap: var(--ui-space-8);
   --ui-creator-section-gap: var(--ui-space-10);
@@ -5552,6 +5555,11 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   padding: var(--ui-space-8) var(--ui-space-8) var(--ui-space-6);
 }
 
+[data-ui-hero-header="true"][data-ui-hero-variant="context"] {
+  padding-top: var(--ui-space-12);
+  padding-bottom: var(--ui-space-10);
+}
+
 [data-ui-hero-main="true"] {
   display: flex;
   align-items: center;
@@ -5605,12 +5613,33 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   font-size: var(--ui-font-size-section);
 }
 
+[data-ui-hero-header="true"][data-ui-hero-variant="context"] [data-ui-hero-copy="true"] > strong {
+  color: var(--ui-tone-text, var(--ui-color-primary-navy));
+}
+
 [data-ui-hero-copy="true"] > span,
 [data-ui-hero-copy="true"] > small {
   color: var(--ui-text-secondary);
   font-size: var(--ui-font-size-body-sm);
   font-weight: var(--ui-font-weight-medium);
   line-height: var(--ui-line-height-body);
+}
+
+[data-ui-hero-metadata="true"] {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-4);
+  flex-wrap: wrap;
+}
+
+[data-ui-hero-header="true"][data-ui-hero-variant="context"] [data-ui-hero-icon="true"] {
+  box-shadow: none;
+}
+
+[data-ui-hero-header="true"][data-ui-hero-variant="context"] [data-ui-hero-actions="true"] [data-ui-action="secondary"],
+[data-ui-hero-header="true"][data-ui-hero-variant="context"] [data-ui-hero-actions="true"] [data-ui-action="icon"] {
+  color: var(--ui-color-primary-navy);
 }
 
 [data-ui-hero-actions="true"] {
@@ -6648,6 +6677,24 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   box-shadow: 0 10px 24px rgba(8, 44, 122, 0.052);
 }
 
+[data-ui-record-card="true"][data-ui-record-surface="flat-tint"] {
+  background: var(--ui-record-card-flat-tint-bg);
+  border-color: var(--ui-record-card-flat-tint-border);
+  box-shadow: none;
+}
+
+[data-ui-record-card="true"][data-ui-record-surface="flat-tint"]:hover {
+  background: var(--ui-record-card-flat-tint-bg-hover);
+  border-color: rgba(8, 44, 122, 0.14);
+  box-shadow: none;
+}
+
+[data-ui-record-card="true"][data-ui-record-surface="flat-tint"][data-ui-record-interactive="true"]:active {
+  background: var(--ui-record-card-flat-tint-bg-hover);
+  transform: translateY(0);
+  box-shadow: none;
+}
+
 [data-ui-large-record="true"][data-ui-record-interactive="true"] {
   cursor: pointer;
   transition:
@@ -6661,6 +6708,10 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   outline: none;
   border-color: rgba(8, 44, 122, 0.28);
   box-shadow: var(--ui-color-focus-ring), 0 14px 32px rgba(8, 44, 122, 0.08);
+}
+
+[data-ui-large-record="true"][data-ui-record-interactive="true"][data-ui-record-surface="flat-tint"]:focus-visible {
+  box-shadow: var(--ui-color-focus-ring);
 }
 
 [data-ui-payment-sources-shell="true"] [data-ui-large-record="true"]:hover {
@@ -6718,9 +6769,10 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
   gap: var(--ui-space-8);
   padding: var(--ui-space-8);
   border: var(--ui-record-card-border);
+  border-color: var(--ui-record-card-flat-tint-border);
   border-radius: var(--ui-record-card-radius);
-  background: rgba(248, 251, 255, 0.72);
-  box-shadow: var(--ui-record-card-shadow);
+  background: var(--ui-record-card-flat-tint-bg);
+  box-shadow: none;
 }
 
 [data-ui-record-details-header="true"] {
