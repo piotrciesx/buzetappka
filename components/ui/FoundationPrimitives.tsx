@@ -376,20 +376,29 @@ type CreatorSectionProps = {
   children: ReactNode;
 };
 
+const getNeutralAccentToneForStep = (step: number): FoundationTone => {
+  const normalizedStep = Number.isFinite(step) ? Math.max(1, Math.floor(step)) : 1;
+  const accentIndex = ((normalizedStep - 1) % 6) + 1;
+
+  return `neutral-accent-${accentIndex}`;
+};
+
 export function CreatorSection({
   step,
   title,
   description,
   help,
-  tone = "neutral-accent-1",
+  tone,
   variant = "separated",
   children,
 }: CreatorSectionProps) {
+  const resolvedTone = tone || getNeutralAccentToneForStep(step);
+
   return (
     <section
       data-ui-creator-step="true"
       data-ui-creator-section-variant={variant}
-      data-ui-tone={tone}
+      data-ui-tone={resolvedTone}
     >
       <span data-ui-creator-step-icon="true" aria-hidden="true">
         {step}

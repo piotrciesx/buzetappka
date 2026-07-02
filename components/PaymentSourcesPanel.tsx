@@ -1077,7 +1077,6 @@ export default function PaymentSourcesPanel({
                 <CreatorSection
                   step={1}
                   title="Nazwa źródła"
-                  tone="neutral-accent-1"
                   help={<HelpHint label="To nazwa widoczna w aplikacji." />}
                 >
                   <FormField
@@ -1177,7 +1176,6 @@ export default function PaymentSourcesPanel({
                 <CreatorSection
                   step={2}
                   title="Wygląd"
-                  tone="neutral-accent-2"
                   help={
                     <HelpHint label="Wybierz kolor i ikonę reprezentujące to źródło." />
                   }
@@ -1200,7 +1198,6 @@ export default function PaymentSourcesPanel({
                 <CreatorSection
                   step={3}
                   title="Dostępność"
-                  tone="neutral-accent-3"
                   help={
                     <HelpHint label="Określ, do jakich typów operacji ma być dostępne to źródło." />
                   }
@@ -1211,9 +1208,9 @@ export default function PaymentSourcesPanel({
                   >
                     <label
                       data-ui-checkbox="true"
-                      data-checkbox-variant="field"
+                      data-checkbox-variant="neutral-card"
                       data-checkbox-density="comfortable"
-                      data-checkbox-align="field"
+                      data-checkbox-align="center"
                       data-checked={draft.isIncomeSource ? "true" : "false"}
                     >
                       <input
@@ -1231,9 +1228,9 @@ export default function PaymentSourcesPanel({
                     </label>
                     <label
                       data-ui-checkbox="true"
-                      data-checkbox-variant="field"
+                      data-checkbox-variant="neutral-card"
                       data-checkbox-density="comfortable"
-                      data-checkbox-align="field"
+                      data-checkbox-align="center"
                       data-checked={draft.isExpenseSource ? "true" : "false"}
                     >
                       <input
