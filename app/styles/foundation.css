@@ -11094,3 +11094,52 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 [data-ui-modal-surface="true"]:has([data-financial-goals-panel="true"]) {
   max-height: revert;
 }
+
+/* ========================================================================== */
+/* Foundation v5.4.5 — Financial Goals fixed header + local list scroll        */
+/* ========================================================================== */
+/* Financial Goals owns a local record-list viewport. The utility body no
+   longer scrolls for this module; only the list window scrolls. */
+[data-financial-goals-panel="true"] {
+  --ui-large-module-gap: var(--ui-space-9);
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  min-block-size: 0;
+  block-size: 100%;
+  max-block-size: none;
+  overflow: hidden;
+  overscroll-behavior: contain;
+  padding-inline-end: 0;
+}
+
+[data-financial-goals-panel="true"] > [data-financial-goals-summary="true"],
+[data-financial-goals-panel="true"] > [data-ui-summary-grid="true"] {
+  margin-block-end: var(--ui-space-10);
+}
+
+[data-financial-goals-panel="true"] [data-financial-goals-current-list="true"] {
+  --ui-large-section-gap: var(--ui-space-8);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-block-size: 0;
+  overflow: hidden;
+}
+
+[data-financial-goals-panel="true"] [data-financial-goals-current-list="true"] > [data-ui-section-header-v5="true"] {
+  margin-block-end: var(--ui-space-4);
+}
+
+[data-financial-goals-list-viewport="true"] {
+  min-block-size: 0;
+  block-size: 318px;
+  max-block-size: 318px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+/* Retire old modal-surface targeting for this utility-panel based module. */
+[data-ui-modal-surface="true"]:has([data-financial-goals-panel="true"]) {
+  max-height: revert;
+}

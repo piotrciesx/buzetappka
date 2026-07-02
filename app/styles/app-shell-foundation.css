@@ -1448,3 +1448,19 @@ body {
     max-height: min(76dvh, 692px);
   }
 }
+
+/* ========================================================================== */
+/* App Shell — Financial Goals single-scroll contract                          */
+/* ========================================================================== */
+/* Local only: keep the Financial Goals utility body fixed and let only the
+   goals record list viewport scroll. This mirrors the behavior of Payment
+   Sources without changing other utility panels. */
+[data-budget-utility-panel="true"][data-utility-panel-kind="financialGoals"] {
+  max-height: var(--ui-modal-max-height-xl);
+}
+
+[data-budget-utility-panel="true"][data-utility-panel-kind="financialGoals"] > [data-budget-utility-body="true"] {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
+}
