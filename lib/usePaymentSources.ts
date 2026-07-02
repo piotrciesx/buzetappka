@@ -17,6 +17,7 @@ import {
   normalizePaymentSourceEmoji,
   PaymentSourceListKind,
 } from './paymentSources'
+import { TRANSACTION_SELECT_COLUMNS } from './transactionScope'
 
 type ProfileFinanceSettingsRow = {
   profile_id: string
@@ -47,8 +48,6 @@ type PaymentSourceSettings = {
 
 type UsePaymentSourcesParams = {
   profileId: string
-  transactions: Transaction[]
-  transactionPaymentSplitsMap?: Record<string, TransactionPaymentSplit[]>
   categoriesById: Record<string, Category>
   incomeLevel1Id: string | null
   expenseLevel1Id: string | null
@@ -66,10 +65,64 @@ const DEFAULT_SETTINGS: PaymentSourceSettings = {
   showExpensePaymentSource: true,
 }
 
+const PAYMENT_SOURCE_HISTORY_PAGE_SIZE = 1000
+const PAYMENT_SOURCE_SPLIT_CHUNK_SIZE = 500
+
+const fetchPaymentSourceHistory = async (profileId: string) => {
+  const transactions: Transaction[] = []
+
+  for (let from = 0; ; from += PAYMENT_SOURCE_HISTORY_PAGE_SIZE) {
+    const { data, error } = await supabase
+      .from('transactions')
+      .select(TRANSACTION_SELECT_COLUMNS)
+      .eq('profile_id', profileId)
+      .eq('is_deleted', false)
+      .order('date', { ascending: false })
+      .range(from, from + PAYMENT_SOURCE_HISTORY_PAGE_SIZE - 1)
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    const page = (data || []) as Transaction[]
+    transactions.push(...page)
+
+    if (page.length < PAYMENT_SOURCE_HISTORY_PAGE_SIZE) {
+      break
+    }
+  }
+
+  const transactionPaymentSplitsMap: Record<string, TransactionPaymentSplit[]> = {}
+  const transactionIds = transactions.map((transaction) => transaction.id)
+
+  for (let index = 0; index < transactionIds.length; index += PAYMENT_SOURCE_SPLIT_CHUNK_SIZE) {
+    const transactionIdChunk = transactionIds.slice(index, index + PAYMENT_SOURCE_SPLIT_CHUNK_SIZE)
+    const { data, error } = await supabase
+      .from('transaction_payment_splits')
+      .select('id, transaction_id, payment_source_id, amount, created_at')
+      .in('transaction_id', transactionIdChunk)
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    ;((data || []) as TransactionPaymentSplit[]).forEach((split) => {
+      if (!transactionPaymentSplitsMap[split.transaction_id]) {
+        transactionPaymentSplitsMap[split.transaction_id] = []
+      }
+
+      transactionPaymentSplitsMap[split.transaction_id].push({
+        ...split,
+        amount: Number(split.amount),
+      })
+    })
+  }
+
+  return { transactions, transactionPaymentSplitsMap }
+}
+
 export function usePaymentSources({
   profileId,
-  transactions,
-  transactionPaymentSplitsMap = {},
   categoriesById,
   incomeLevel1Id,
   expenseLevel1Id,
@@ -80,17 +133,25 @@ export function usePaymentSources({
   onDeletedSelectedPaymentSource,
 }: UsePaymentSourcesParams) {
   const [paymentSources, setPaymentSources] = useState<PaymentSource[]>([])
+  const [historyTransactions, setHistoryTransactions] = useState<Transaction[]>([])
+  const [historyPaymentSplitsMap, setHistoryPaymentSplitsMap] = useState<
+    Record<string, TransactionPaymentSplit[]>
+  >({})
   const [paymentSourceSettings, setPaymentSourceSettings] =
     useState<PaymentSourceSettings>(DEFAULT_SETTINGS)
 
   useEffect(() => {
     setPaymentSources([])
+    setHistoryTransactions([])
+    setHistoryPaymentSplitsMap({})
     setPaymentSourceSettings(DEFAULT_SETTINGS)
   }, [profileId])
 
   const loadPaymentSources = useCallback(async () => {
     if (!isPaymentSourcesEnabled) {
       setPaymentSources([])
+      setHistoryTransactions([])
+      setHistoryPaymentSplitsMap({})
       setPaymentSourceSettings(DEFAULT_SETTINGS)
       return
     }
@@ -119,6 +180,10 @@ export function usePaymentSources({
     })
 
     setPaymentSources(mappedSources)
+
+    const history = await fetchPaymentSourceHistory(profileId)
+    setHistoryTransactions(history.transactions)
+    setHistoryPaymentSplitsMap(history.transactionPaymentSplitsMap)
 
     const { data: settingsData, error: settingsError } = await supabase
       .from('profile_finance_settings')
@@ -214,10 +279,10 @@ export function usePaymentSources({
         return
       }
 
-      const hasTransactionHistory = transactions.some(
+      const hasTransactionHistory = historyTransactions.some(
         (transaction) => transaction.payment_source_id === paymentSourceId
       )
-      const hasSplitHistory = Object.values(transactionPaymentSplitsMap).some((splits) =>
+      const hasSplitHistory = Object.values(historyPaymentSplitsMap).some((splits) =>
         splits.some((split) => split.payment_source_id === paymentSourceId)
       )
       const hasHistory = hasTransactionHistory || hasSplitHistory
@@ -277,8 +342,8 @@ export function usePaymentSources({
       onDeletedSelectedPaymentSource,
       paymentSourceSettings,
       profileId,
-      transactionPaymentSplitsMap,
-      transactions,
+      historyPaymentSplitsMap,
+      historyTransactions,
     ]
   )
 
@@ -412,14 +477,14 @@ export function usePaymentSources({
   const paymentSourceStats = useMemo(() => {
     return buildPaymentSourceStats({
       paymentSources,
-      transactions,
+      transactions: historyTransactions,
       categoriesById,
       incomeLevel1Id,
       expenseLevel1Id,
       getRootLevel1IdForCategory,
       getAmountNumber,
       getSignedAmountForTransaction,
-      transactionPaymentSplitsMap,
+      transactionPaymentSplitsMap: historyPaymentSplitsMap,
       isPaymentSourcesEnabled,
     })
   }, [
@@ -431,8 +496,8 @@ export function usePaymentSources({
     incomeLevel1Id,
     isPaymentSourcesEnabled,
     paymentSources,
-    transactionPaymentSplitsMap,
-    transactions,
+    historyPaymentSplitsMap,
+    historyTransactions,
   ])
 
   return {

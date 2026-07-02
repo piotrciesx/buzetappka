@@ -11,8 +11,6 @@ type Params = Record<string, any>
 export function useBudgetAppPaymentSourcesBridge(ctx: Params) {
   const paymentSourcesApi = usePaymentSources({
     profileId: ctx.profileId,
-    transactions: ctx.scopedTransactions,
-    transactionPaymentSplitsMap: ctx.transactionPaymentSplitsMap,
     categoriesById: ctx.categoriesById,
     incomeLevel1Id: ctx.incomeLevel1Id,
     expenseLevel1Id: ctx.expenseLevel1Id,
