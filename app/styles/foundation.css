@@ -10054,8 +10054,9 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 [data-ui-summary-card="true"] {
-  --ui-summary-surface: color-mix(in srgb, var(--ui-tone-surface, var(--ui-neutral-accent-1-surface)) 32%, var(--ui-surface-card));
-  --ui-summary-border: color-mix(in srgb, var(--ui-tone-border, var(--ui-neutral-accent-1-border)) 58%, transparent);
+  --ui-summary-surface: rgba(255, 255, 255, 0.94);
+  --ui-summary-border: rgba(8, 44, 122, 0.12);
+  --ui-summary-copy-color: var(--ui-text-primary);
   min-width: 0;
   min-height: 96px;
   display: grid;
@@ -10114,14 +10115,14 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 }
 
 [data-ui-summary-copy="true"] > span {
-  color: var(--ui-tone-text, var(--ui-neutral-accent-1-text));
+  color: var(--ui-summary-copy-color, var(--ui-text-primary));
   font-size: var(--ui-type-t4);
   font-weight: var(--ui-font-weight-semibold);
   line-height: var(--ui-line-height-compact);
 }
 
 [data-ui-summary-copy="true"] > strong {
-  color: var(--ui-tone-text, var(--ui-neutral-accent-1-text));
+  color: var(--ui-summary-copy-color, var(--ui-color-primary-navy));
   font-size: var(--ui-type-t2);
   font-weight: var(--ui-font-weight-bold);
   line-height: var(--ui-line-height-compact);
@@ -10135,6 +10136,18 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 
 [data-financial-goals-panel="true"] [data-ui-summary-card="true"] {
   box-shadow: none;
+}
+
+
+[data-financial-goals-mode-controls="true"] {
+  justify-self: start;
+  align-self: start;
+  width: max-content;
+  max-width: 100%;
+}
+
+[data-financial-goals-mode-controls="true"] > button {
+  flex: 0 0 auto;
 }
 
 /* Goal RecordCard: use the same flat-tint surface as frozen Payment Sources. */
@@ -10214,5 +10227,94 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 @container ui-large-module (max-width: 56rem) {
   [data-ui-summary-grid="true"] {
     grid-template-columns: 1fr;
+  }
+}
+
+
+/* ========================================================================== */
+/* Foundation v5.2.1 — Financial Goals corrections after visual review         */
+/* ========================================================================== */
+
+/* Summary cards stay calm and uniform; accent is limited to the icon tile. */
+[data-financial-goals-panel="true"] [data-ui-summary-card="true"] {
+  --ui-summary-surface: rgba(255, 255, 255, 0.95);
+  --ui-summary-border: rgba(8, 44, 122, 0.12);
+  --ui-summary-copy-color: var(--ui-color-primary-navy);
+  background: var(--ui-summary-surface);
+  border-color: var(--ui-summary-border);
+  box-shadow: none;
+}
+
+[data-financial-goals-panel="true"] [data-ui-summary-card="true"]:hover {
+  background: rgba(248, 251, 255, 0.92);
+  border-color: rgba(8, 44, 122, 0.16);
+}
+
+[data-financial-goals-panel="true"] [data-ui-summary-copy="true"] > span,
+[data-financial-goals-panel="true"] [data-ui-summary-copy="true"] > strong {
+  color: var(--ui-summary-copy-color);
+}
+
+/* The mode switch must remain content-sized, not stretched across the panel. */
+[data-financial-goals-mode-controls="true"] {
+  justify-self: start;
+  align-self: start;
+  width: fit-content;
+  max-width: 100%;
+}
+
+[data-financial-goals-mode-controls="true"] > button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* Goal identity: drag + icon + copy are one compact, coherent row. */
+[data-ui-large-record-identity="true"][data-ui-record-kind="goal"] {
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--ui-space-4);
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-large-record-identity-copy="true"] {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--ui-space-1);
+  line-height: var(--ui-line-height-compact);
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-large-record-title="true"] {
+  margin: 0;
+  color: var(--ui-color-primary-blue);
+  font-size: clamp(18px, 1.2vw, 20px);
+  line-height: 1.05;
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-record-meta="true"] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-3);
+  margin: 0;
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-status-inline="true"],
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-record-period="true"] {
+  margin: 0;
+  line-height: 1.12;
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-record-period="true"] {
+  color: var(--ui-text-secondary);
+}
+
+@container ui-large-record-list (max-width: 42rem) {
+  [data-ui-large-record-identity="true"][data-ui-record-kind="goal"] {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  [data-ui-record-drag-handle="true"] {
+    grid-row: span 2;
   }
 }

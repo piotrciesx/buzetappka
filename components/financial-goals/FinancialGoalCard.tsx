@@ -129,17 +129,19 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
         <div data-ui-large-record-identity-copy="true">
           <strong data-ui-large-record-title="true">{goal.name}</strong>
 
-          <span
-            data-ui-status-inline="true"
-            data-ui-tone={getStatusTone(statusLabel)}
-          >
-            <span aria-hidden="true" />
-            {statusLabel}
-          </span>
+          <span data-ui-record-meta="true">
+            <span
+              data-ui-status-inline="true"
+              data-ui-tone={getStatusTone(statusLabel)}
+            >
+              <span aria-hidden="true" />
+              {statusLabel}
+            </span>
 
-          <span data-ui-record-period="true">
-            <CategoryIcon iconKey="calendar" size="small" />
-            <span>{getGoalPeriodLabel(goal.start_month, deadlineMonth)}</span>
+            <span data-ui-record-period="true">
+              <CategoryIcon iconKey="calendar" size="small" />
+              <span>{getGoalPeriodLabel(goal.start_month, deadlineMonth)}</span>
+            </span>
           </span>
 
           {waitingForLockedMonth && (
