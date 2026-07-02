@@ -11256,3 +11256,206 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 [data-ui-dropdown-trigger="true"] {
   background: var(--ui-surface-card);
 }
+
+/* ========================================================================== */
+/* Foundation Color System v2 — real token owners and live picker palette       */
+/* ========================================================================== */
+
+:root {
+  /* Primary Brand: module identity, Hero, CTA, active controls. */
+  --ui-brand-primary-surface: var(--ui-color-primary-navy);
+  --ui-brand-primary-text: var(--ui-color-primary-navy);
+  --ui-brand-primary-action: var(--ui-color-primary-navy);
+  --ui-brand-primary-action-hover: #0b3b9c;
+  --ui-brand-accent: var(--ui-color-primary-blue);
+  --ui-brand-soft-surface: #f5f9ff;
+  --ui-brand-soft-border: rgba(8, 44, 122, 0.14);
+
+  /* Supporting Palette: cool section-level accents, no purple/brown/gray-brown. */
+  --ui-supporting-1-surface: #eef7ff;
+  --ui-supporting-1-border: #d8eafb;
+  --ui-supporting-1-text: #386fa4;
+  --ui-supporting-2-surface: #edf5ff;
+  --ui-supporting-2-border: #d6e6fb;
+  --ui-supporting-2-text: #4a78ba;
+  --ui-supporting-3-surface: #eafbfd;
+  --ui-supporting-3-border: #cdeff4;
+  --ui-supporting-3-text: #2d8da0;
+  --ui-supporting-4-surface: #eafbf8;
+  --ui-supporting-4-border: #cbeee8;
+  --ui-supporting-4-text: #2f8f82;
+  --ui-supporting-5-surface: #effaf4;
+  --ui-supporting-5-border: #d3efdf;
+  --ui-supporting-5-text: #3f916e;
+  --ui-supporting-6-surface: #f1f6ff;
+  --ui-supporting-6-border: #dce8fb;
+  --ui-supporting-6-text: #5e79b7;
+
+  /* Accent Palette: lively but small accents for dropdowns/pickers/chips. */
+  --ui-accent-blue: #2f72f6;
+  --ui-accent-sky: #3d9fe6;
+  --ui-accent-cyan: #18b7c8;
+  --ui-accent-teal: #14a891;
+  --ui-accent-mint: #2dbf91;
+  --ui-accent-green: #22a85a;
+  --ui-accent-olive: #88a83d;
+  --ui-accent-amber: #f2a72b;
+  --ui-accent-coral: #f05f64;
+  --ui-accent-navy: var(--ui-color-primary-navy);
+
+  --ui-accent-blue-soft: #edf5ff;
+  --ui-accent-sky-soft: #eaf7ff;
+  --ui-accent-cyan-soft: #eafbfd;
+  --ui-accent-teal-soft: #e8faf6;
+  --ui-accent-mint-soft: #e9fbf5;
+  --ui-accent-green-soft: #ecfaf2;
+  --ui-accent-olive-soft: #f3f8e7;
+  --ui-accent-amber-soft: #fff7e8;
+  --ui-accent-coral-soft: #fff1f2;
+  --ui-accent-navy-soft: #eef3ff;
+
+  /* Backward compatibility: old neutral accents now point to Supporting. */
+  --ui-neutral-accent-1-surface: var(--ui-supporting-1-surface);
+  --ui-neutral-accent-1-border: var(--ui-supporting-1-border);
+  --ui-neutral-accent-1-text: var(--ui-supporting-1-text);
+  --ui-neutral-accent-2-surface: var(--ui-supporting-2-surface);
+  --ui-neutral-accent-2-border: var(--ui-supporting-2-border);
+  --ui-neutral-accent-2-text: var(--ui-supporting-2-text);
+  --ui-neutral-accent-3-surface: var(--ui-supporting-3-surface);
+  --ui-neutral-accent-3-border: var(--ui-supporting-3-border);
+  --ui-neutral-accent-3-text: var(--ui-supporting-3-text);
+  --ui-neutral-accent-4-surface: var(--ui-supporting-4-surface);
+  --ui-neutral-accent-4-border: var(--ui-supporting-4-border);
+  --ui-neutral-accent-4-text: var(--ui-supporting-4-text);
+  --ui-neutral-accent-5-surface: var(--ui-supporting-5-surface);
+  --ui-neutral-accent-5-border: var(--ui-supporting-5-border);
+  --ui-neutral-accent-5-text: var(--ui-supporting-5-text);
+  --ui-neutral-accent-6-surface: var(--ui-supporting-6-surface);
+  --ui-neutral-accent-6-border: var(--ui-supporting-6-border);
+  --ui-neutral-accent-6-text: var(--ui-supporting-6-text);
+}
+
+[data-ui-tone="brand-primary"] {
+  --ui-tone-surface: var(--ui-brand-soft-surface);
+  --ui-tone-bg: var(--ui-brand-soft-surface);
+  --ui-tone-border: var(--ui-brand-soft-border);
+  --ui-tone-text: var(--ui-brand-primary-text);
+}
+
+[data-ui-tone="supporting-1"],
+[data-ui-tone="information-steel"] {
+  --ui-tone-surface: var(--ui-supporting-1-surface);
+  --ui-tone-bg: var(--ui-supporting-1-surface);
+  --ui-tone-border: var(--ui-supporting-1-border);
+  --ui-tone-text: var(--ui-supporting-1-text);
+}
+
+[data-ui-tone="supporting-2"],
+[data-ui-tone="information-blue"],
+[data-ui-tone="information-plum"] {
+  --ui-tone-surface: var(--ui-supporting-2-surface);
+  --ui-tone-bg: var(--ui-supporting-2-surface);
+  --ui-tone-border: var(--ui-supporting-2-border);
+  --ui-tone-text: var(--ui-supporting-2-text);
+}
+
+[data-ui-tone="supporting-3"],
+[data-ui-tone="information-cyan"] {
+  --ui-tone-surface: var(--ui-supporting-3-surface);
+  --ui-tone-bg: var(--ui-supporting-3-surface);
+  --ui-tone-border: var(--ui-supporting-3-border);
+  --ui-tone-text: var(--ui-supporting-3-text);
+}
+
+[data-ui-tone="supporting-4"],
+[data-ui-tone="information-teal"] {
+  --ui-tone-surface: var(--ui-supporting-4-surface);
+  --ui-tone-bg: var(--ui-supporting-4-surface);
+  --ui-tone-border: var(--ui-supporting-4-border);
+  --ui-tone-text: var(--ui-supporting-4-text);
+}
+
+[data-ui-tone="supporting-5"],
+[data-ui-tone="information-mint"],
+[data-ui-tone="information-sage"] {
+  --ui-tone-surface: var(--ui-supporting-5-surface);
+  --ui-tone-bg: var(--ui-supporting-5-surface);
+  --ui-tone-border: var(--ui-supporting-5-border);
+  --ui-tone-text: var(--ui-supporting-5-text);
+}
+
+[data-ui-tone="supporting-6"],
+[data-ui-tone="information-indigo"],
+[data-ui-tone="information-clay"],
+[data-ui-tone="information-slate"] {
+  --ui-tone-surface: var(--ui-supporting-6-surface);
+  --ui-tone-bg: var(--ui-supporting-6-surface);
+  --ui-tone-border: var(--ui-supporting-6-border);
+  --ui-tone-text: var(--ui-supporting-6-text);
+}
+
+/* Record/Accent tones used by UI_COLOR_OPTIONS. */
+[data-ui-tone="blue"] { --ui-tone-surface: var(--ui-accent-blue-soft); --ui-tone-bg: var(--ui-accent-blue-soft); --ui-tone-border: #cfe0ff; --ui-tone-text: var(--ui-accent-blue); }
+[data-ui-tone="sky"] { --ui-tone-surface: var(--ui-accent-sky-soft); --ui-tone-bg: var(--ui-accent-sky-soft); --ui-tone-border: #cce9fb; --ui-tone-text: var(--ui-accent-sky); }
+[data-ui-tone="cyan"] { --ui-tone-surface: var(--ui-accent-cyan-soft); --ui-tone-bg: var(--ui-accent-cyan-soft); --ui-tone-border: #bfedf3; --ui-tone-text: var(--ui-accent-cyan); }
+[data-ui-tone="teal"] { --ui-tone-surface: var(--ui-accent-teal-soft); --ui-tone-bg: var(--ui-accent-teal-soft); --ui-tone-border: #bfeee4; --ui-tone-text: var(--ui-accent-teal); }
+[data-ui-tone="mint"] { --ui-tone-surface: var(--ui-accent-mint-soft); --ui-tone-bg: var(--ui-accent-mint-soft); --ui-tone-border: #c7efdf; --ui-tone-text: var(--ui-accent-mint); }
+[data-ui-tone="green"] { --ui-tone-surface: var(--ui-accent-green-soft); --ui-tone-bg: var(--ui-accent-green-soft); --ui-tone-border: #c8efd8; --ui-tone-text: var(--ui-accent-green); }
+[data-ui-tone="olive"] { --ui-tone-surface: var(--ui-accent-olive-soft); --ui-tone-bg: var(--ui-accent-olive-soft); --ui-tone-border: #dcebbd; --ui-tone-text: var(--ui-accent-olive); }
+[data-ui-tone="amber"] { --ui-tone-surface: var(--ui-accent-amber-soft); --ui-tone-bg: var(--ui-accent-amber-soft); --ui-tone-border: #f8ddb0; --ui-tone-text: var(--ui-accent-amber); }
+[data-ui-tone="coral"] { --ui-tone-surface: var(--ui-accent-coral-soft); --ui-tone-bg: var(--ui-accent-coral-soft); --ui-tone-border: #f8cbd0; --ui-tone-text: var(--ui-accent-coral); }
+[data-ui-tone="navy"] { --ui-tone-surface: var(--ui-accent-navy-soft); --ui-tone-bg: var(--ui-accent-navy-soft); --ui-tone-border: #cfdaf4; --ui-tone-text: var(--ui-accent-navy); }
+
+/* Retire old warm/purple/gray tones visually by mapping them to cool supporting tones. */
+[data-ui-tone="violet"],
+[data-ui-tone="purple"],
+[data-ui-tone="lavender"],
+[data-ui-tone="lilac"],
+[data-ui-tone="orchid"],
+[data-ui-tone="magenta"],
+[data-ui-tone="brown"],
+[data-ui-tone="cocoa"],
+[data-ui-tone="sand"],
+[data-ui-tone="stone"],
+[data-ui-tone="graphite"],
+[data-ui-tone="neutral"] {
+  --ui-tone-surface: var(--ui-supporting-6-surface);
+  --ui-tone-bg: var(--ui-supporting-6-surface);
+  --ui-tone-border: var(--ui-supporting-6-border);
+  --ui-tone-text: var(--ui-supporting-6-text);
+}
+
+/* Brand guards: Hero/module titles stay in Primary, not in supporting colors. */
+[data-ui-hero-header="true"] [data-ui-hero-copy="true"] > strong,
+[data-ui-modal-header="true"] [data-ui-title-copy="true"] strong,
+[data-ui-popup-header="true"] [data-ui-title-copy="true"] strong {
+  color: var(--ui-brand-primary-text);
+}
+
+[data-ui-hero-icon="true"][data-ui-tone="brand-primary"] {
+  background: var(--ui-brand-soft-surface);
+  border-color: var(--ui-brand-soft-border);
+  color: var(--ui-brand-primary-text);
+}
+
+/* Creator picker menus open downward inside creator modals to avoid top-edge clipping. */
+[data-ui-modal-shell="true"][data-ui-size="creator"] [data-ui-picker-control="true"][data-ui-picker-variant="gallery"] [data-ui-picker-menu="true"] {
+  top: calc(100% + var(--ui-space-5));
+  bottom: auto;
+  z-index: var(--ui-z-popover);
+}
+
+[data-ui-modal-shell="true"][data-ui-size="creator"] [data-ui-picker-control="true"][data-ui-picker-variant="gallery"] [data-ui-picker-menu="true"][data-layout="icons"] {
+  max-height: min(360px, calc(100dvh - 180px));
+}
+
+/* Picker controls stay neutral; only the swatch/tile carries color. */
+[data-ui-picker-trigger="true"] {
+  background: var(--ui-color-card-background);
+}
+
+[data-ui-color-swatch="true"],
+[data-ui-icon-tile="true"] {
+  color: var(--ui-tone-text);
+}
+

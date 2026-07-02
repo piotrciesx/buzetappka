@@ -568,19 +568,19 @@ export default function PaymentSourcesPanel({
     detail: string;
     tone?:
       | "neutral"
-      | "neutral-accent-1"
-      | "neutral-accent-2"
-      | "neutral-accent-3"
-      | "neutral-accent-4"
-      | "neutral-accent-5"
-      | "neutral-accent-6"
+      | "supporting-1"
+      | "supporting-2"
+      | "supporting-3"
+      | "supporting-4"
+      | "supporting-5"
+      | "supporting-6"
       | "success"
       | "danger";
     title?: string;
   }) => (
     <span
       data-ui-metric-card="true"
-      data-ui-tone={input.tone || "neutral-accent-1"}
+      data-ui-tone={input.tone || "supporting-1"}
       title={input.title}
       style={{ "--ui-metric-progress": `${input.percent}%` } as CSSProperties}
     >
@@ -737,7 +737,7 @@ export default function PaymentSourcesPanel({
           {renderMetric({
             iconKey: "system-records",
             label: "wpisy",
-            tone: "neutral-accent-1",
+            tone: "supporting-1",
             percent: calculateShare(
               stats.transactionCount,
               totals.transactionCount,
@@ -812,7 +812,7 @@ export default function PaymentSourcesPanel({
             {renderMetric({
               iconKey: "system-records",
               label: "wpisy",
-              tone: "neutral-accent-1",
+              tone: "supporting-1",
               percent: stats.transactionCount > 0 ? 100 : 0,
               detail: `${formatCompactNumber(stats.transactionCount)} wpisów`,
               title: `${stats.transactionCount} wpisów`,
@@ -866,7 +866,7 @@ export default function PaymentSourcesPanel({
       style={paymentSourcesShellStyle}
     >
       <CollapsibleSecondarySection
-        tone="neutral-accent-1"
+        tone="supporting-1"
         icon={<CategoryIcon iconKey="system-payment-sources" size="small" />}
         title="Domyślne źródła płatności"
         help={
@@ -977,7 +977,7 @@ export default function PaymentSourcesPanel({
 
       <section data-ui-payment-section="sources" data-ui-large-section="true">
         <SectionHeader
-          tone="neutral-accent-2"
+          tone="supporting-2"
           icon={<CategoryIcon iconKey="system-records" size="small" />}
           title="Twoje źródła"
           help={
@@ -1082,7 +1082,7 @@ export default function PaymentSourcesPanel({
                   <FormField
                     label={<span data-ui-visually-hidden="true">Nazwa</span>}
                     emphasis="hero"
-                    tone="neutral-accent-1"
+                    tone="supporting-1"
                   >
                     <span data-ui-input-affix="true">
                       <span data-ui-input-leading="true" aria-hidden="true">

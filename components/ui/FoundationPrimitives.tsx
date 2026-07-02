@@ -13,6 +13,13 @@ type FoundationTone =
   | "default"
   | "danger"
   | "success"
+  | "brand-primary"
+  | "supporting-1"
+  | "supporting-2"
+  | "supporting-3"
+  | "supporting-4"
+  | "supporting-5"
+  | "supporting-6"
   | "neutral-accent-1"
   | "neutral-accent-2"
   | "neutral-accent-3"
@@ -20,11 +27,11 @@ type FoundationTone =
   | "neutral-accent-5"
   | "neutral-accent-6"
   | "information-steel"
-  | "information-plum"
+  | "information-blue"
+  | "information-cyan"
   | "information-teal"
-  | "information-sage"
-  | "information-clay"
-  | "information-slate"
+  | "information-mint"
+  | "information-indigo"
   | string;
 
 type HeroHeaderProps = {
@@ -45,7 +52,7 @@ export function HeroHeader({
   title,
   description,
   metadata,
-  tone = "neutral-accent-1",
+  tone = "brand-primary",
   variant = "module",
   density = "regular",
   primaryAction,
@@ -98,7 +105,7 @@ export function SectionHeader({
   title,
   description,
   help,
-  tone = "neutral-accent-1",
+  tone = "supporting-1",
   density = "regular",
   trailing,
 }: SectionHeaderProps) {
@@ -152,7 +159,7 @@ export function CollapsibleSecondarySection({
   title,
   description,
   help,
-  tone = "neutral-accent-1",
+  tone = "supporting-1",
   density = "regular",
   defaultCollapsed = true,
   collapsed,
@@ -382,11 +389,11 @@ type CreatorSectionProps = {
   children: ReactNode;
 };
 
-const getNeutralAccentToneForStep = (step: number): FoundationTone => {
+const getSupportingToneForStep = (step: number): FoundationTone => {
   const normalizedStep = Number.isFinite(step) ? Math.max(1, Math.floor(step)) : 1;
   const accentIndex = ((normalizedStep - 1) % 6) + 1;
 
-  return `neutral-accent-${accentIndex}`;
+  return `supporting-${accentIndex}`;
 };
 
 export function CreatorSection({
@@ -398,7 +405,7 @@ export function CreatorSection({
   variant = "separated",
   children,
 }: CreatorSectionProps) {
-  const resolvedTone = tone || getNeutralAccentToneForStep(step);
+  const resolvedTone = tone || getSupportingToneForStep(step);
 
   return (
     <section
@@ -540,7 +547,7 @@ export function CreatorSummaryCard({
   kind = "default",
   layout,
   recordType,
-  tone = "neutral-accent-1",
+  tone = "supporting-1",
   children,
 }: CreatorSummaryCardProps) {
   return (
