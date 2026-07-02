@@ -264,6 +264,8 @@ export default function PaymentSourcesPanel({
   const [settingsDraft, setSettingsDraft] = useState(paymentSourceSettings);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [activeList, setActiveList] = useState<"active" | "archived">("active");
+  const [isDefaultSourcesCollapsed, setIsDefaultSourcesCollapsed] =
+    useState(true);
   const [activePicker, setActivePicker] = useState<"color" | "icon" | null>(
     null,
   );
@@ -345,7 +347,9 @@ export default function PaymentSourcesPanel({
     : null;
 
   const paymentSourcesShellStyle = {
-    "--ui-payment-sources-list-max-height": "424px",
+    "--ui-payment-sources-list-max-height": isDefaultSourcesCollapsed
+      ? "424px"
+      : "296px",
   } as CSSProperties;
 
   const closeForm = () => {
@@ -869,6 +873,8 @@ export default function PaymentSourcesPanel({
           <HelpHint label="Ustaw źródła, które będą podpowiadane przy nowych wpisach." />
         }
         defaultCollapsed
+        collapsed={isDefaultSourcesCollapsed}
+        onCollapsedChange={setIsDefaultSourcesCollapsed}
       >
         <div data-ui-settings-strip="true">
           <div
