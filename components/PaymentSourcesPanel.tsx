@@ -1071,6 +1071,7 @@ export default function PaymentSourcesPanel({
                 <CreatorSection
                   step={1}
                   title="Nazwa źródła"
+                  description="Nadaj nazwę, która najlepiej opisuje to źródło."
                   help={<HelpHint label="To nazwa widoczna w aplikacji." />}
                 >
                   <FormField
@@ -1170,6 +1171,7 @@ export default function PaymentSourcesPanel({
                 <CreatorSection
                   step={2}
                   title="Wygląd"
+                  description="Wybierz kolor i ikonę, aby łatwo rozpoznawać źródło."
                   help={
                     <HelpHint label="Wybierz kolor i ikonę reprezentujące to źródło." />
                   }
@@ -1192,6 +1194,7 @@ export default function PaymentSourcesPanel({
                 <CreatorSection
                   step={3}
                   title="Dostępność"
+                  description="Określ, gdzie to źródło ma być dostępne."
                   help={
                     <HelpHint label="Określ, do jakich typów operacji ma być dostępne to źródło." />
                   }
@@ -1300,11 +1303,16 @@ export default function PaymentSourcesPanel({
                   (!draft.isIncomeSource && !draft.isExpenseSource)
                 }
               >
-                {isSaving
+                <span>{isSaving
                   ? "Zapisywanie..."
                   : draft.id
                     ? "Zapisz zmiany"
-                    : "Zapisz źródło"}
+                    : "Zapisz źródło"}</span>
+                {!isSaving && (
+                  <span data-ui-action-trailing-icon="true" aria-hidden="true">
+                    →
+                  </span>
+                )}
               </PrimaryAction>
             </footer>
           </CreatorModal>

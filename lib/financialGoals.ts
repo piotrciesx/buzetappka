@@ -368,6 +368,90 @@ export const getGoalProgressBarColor = (percentage: number) => {
   return `hsl(${hue}, 78%, 46%)`
 }
 
+type FinancialGoalLedgerEntry = {
+  goalId: string
+  remainingAmount: number
+  allocationWeight: number
+}
+
+type FinancialGoalLedgerBatch = {
+  month: string
+  mode: FinancialGoalAllocationMode
+  entries: FinancialGoalLedgerEntry[]
+}
+
+const getLedgerBatchAmount = (batch: FinancialGoalLedgerBatch) =>
+  roundToTwo(batch.entries.reduce((sum, entry) => sum + entry.remainingAmount, 0))
+
+const addLedgerAllocation = (
+  batch: FinancialGoalLedgerBatch,
+  goalId: string,
+  amount: number,
+  allocationWeight: number
+) => {
+  const existingEntry = batch.entries.find((entry) => entry.goalId === goalId)
+
+  if (existingEntry) {
+    existingEntry.remainingAmount = roundToTwo(existingEntry.remainingAmount + amount)
+    return
+  }
+
+  batch.entries.push({ goalId, remainingAmount: amount, allocationWeight })
+}
+
+const consumePriorityBatch = (batch: FinancialGoalLedgerBatch, requestedAmount: number) => {
+  let remainingAmount = requestedAmount
+
+  for (let index = batch.entries.length - 1; index >= 0 && remainingAmount > 0; index -= 1) {
+    const entry = batch.entries[index]
+    const consumedAmount = Math.min(entry.remainingAmount, remainingAmount)
+    entry.remainingAmount = roundToTwo(entry.remainingAmount - consumedAmount)
+    remainingAmount = roundToTwo(remainingAmount - consumedAmount)
+  }
+
+  return roundToTwo(requestedAmount - remainingAmount)
+}
+
+const consumeAllocationBatch = (batch: FinancialGoalLedgerBatch, requestedAmount: number) => {
+  const amountToConsume = Math.min(requestedAmount, getLedgerBatchAmount(batch))
+  let remainingAmount = amountToConsume
+  let eligibleEntries = batch.entries.filter((entry) => entry.remainingAmount > 0)
+
+  while (remainingAmount > 0 && eligibleEntries.length > 0) {
+    const totalWeight = eligibleEntries.reduce(
+      (sum, entry) => sum + Math.max(entry.allocationWeight, 0),
+      0
+    )
+    const fallbackWeight = totalWeight > 0 ? 0 : 1
+    let consumedInPass = 0
+
+    eligibleEntries.forEach((entry, index) => {
+      const weight = totalWeight > 0 ? Math.max(entry.allocationWeight, 0) : fallbackWeight
+      const weightTotal = totalWeight > 0 ? totalWeight : eligibleEntries.length
+      const isLastEntry = index === eligibleEntries.length - 1
+      const proportionalAmount = isLastEntry
+        ? roundToTwo(remainingAmount - consumedInPass)
+        : roundToTwo((remainingAmount * weight) / weightTotal)
+      const consumedAmount = Math.min(entry.remainingAmount, proportionalAmount)
+
+      entry.remainingAmount = roundToTwo(entry.remainingAmount - consumedAmount)
+      consumedInPass = roundToTwo(consumedInPass + consumedAmount)
+    })
+
+    if (consumedInPass <= 0) {
+      const fallbackEntry = eligibleEntries[eligibleEntries.length - 1]
+      const consumedAmount = Math.min(fallbackEntry.remainingAmount, remainingAmount)
+      fallbackEntry.remainingAmount = roundToTwo(fallbackEntry.remainingAmount - consumedAmount)
+      consumedInPass = consumedAmount
+    }
+
+    remainingAmount = roundToTwo(remainingAmount - consumedInPass)
+    eligibleEntries = eligibleEntries.filter((entry) => entry.remainingAmount > 0)
+  }
+
+  return roundToTwo(amountToConsume - remainingAmount)
+}
+
 export const buildFinancialGoalsPlan = ({
   goals = [],
   priorities = [],
@@ -399,13 +483,22 @@ export const buildFinancialGoalsPlan = ({
   }, {})
 
   const monthlySurplus: Record<string, number> = {}
-  const collectedByGoalId = Object.fromEntries(baseGoals.map((goal) => [goal.id, 0]))
-  const allocationsByGoalId = Object.fromEntries(
-    baseGoals.map((goal) => [goal.id, {} as Record<string, number>])
-  )
-  const completionMonthByGoalId = Object.fromEntries(
-    baseGoals.map((goal) => [goal.id, null as string | null])
-  )
+  const ledger: FinancialGoalLedgerBatch[] = []
+  let unresolvedLoss = 0
+
+  const getCollectedByGoalId = () => {
+    const collected = Object.fromEntries(baseGoals.map((goal) => [goal.id, 0]))
+
+    ledger.forEach((batch) => {
+      batch.entries.forEach((entry) => {
+        collected[entry.goalId] = roundToTwo(
+          (collected[entry.goalId] || 0) + entry.remainingAmount
+        )
+      })
+    })
+
+    return collected
+  }
 
   const firstGoalMonth = baseGoals.length > 0 ? baseGoals[0].start_month : selectedMonth
   const timelineStartMonth = baseGoals.reduce((lowest, goal) => {
@@ -424,17 +517,35 @@ export const buildFinancialGoalsPlan = ({
     const mode = getFinancialGoalModeForMonth(month, monthConfigs)
     monthlySurplus[month] = monthSurplus
 
-    let remainingSurplus = monthSurplus
+    if (monthBalance < 0) {
+      let remainingLoss = roundToTwo(Math.abs(monthBalance))
+
+      for (let index = ledger.length - 1; index >= 0 && remainingLoss > 0; index -= 1) {
+        const batch = ledger[index]
+        const consumedAmount = batch.mode === 'allocation'
+          ? consumeAllocationBatch(batch, remainingLoss)
+          : consumePriorityBatch(batch, remainingLoss)
+        remainingLoss = roundToTwo(remainingLoss - consumedAmount)
+      }
+
+      unresolvedLoss = roundToTwo(unresolvedLoss + remainingLoss)
+      return
+    }
+
+    const lossPayment = Math.min(monthSurplus, unresolvedLoss)
+    unresolvedLoss = roundToTwo(unresolvedLoss - lossPayment)
+    let remainingSurplus = roundToTwo(monthSurplus - lossPayment)
+    const allocatableSurplus = remainingSurplus
+    const collectedByGoalId = getCollectedByGoalId()
+    const batch: FinancialGoalLedgerBatch = { month, mode, entries: [] }
 
     const activeGoals = baseGoals.filter((goal) => {
       if (compareMonths(goal.start_month, month) > 0) {
         return false
       }
 
-      const completionMonth = completionMonthByGoalId[goal.id]
-
-      if (completionMonth) {
-        return compareMonths(completionMonth, month) >= 0
+      if ((collectedByGoalId[goal.id] || 0) >= goal.target_amount) {
+        return false
       }
 
       if (goal.deadline_month && compareMonths(goal.deadline_month, month) < 0) {
@@ -464,7 +575,7 @@ export const buildFinancialGoalsPlan = ({
         }
 
         const allocationPercent = allocationByGoalId[goal.id] || 0
-        const allocatedAmount = roundToTwo((monthSurplus * allocationPercent) / FULL_PERCENT)
+        const allocatedAmount = roundToTwo((allocatableSurplus * allocationPercent) / FULL_PERCENT)
         const appliedAmount = Math.min(allocatedAmount, missingAmount, remainingSurplus)
 
         if (appliedAmount <= 0) {
@@ -472,17 +583,8 @@ export const buildFinancialGoalsPlan = ({
         }
 
         collectedByGoalId[goal.id] = roundToTwo(currentCollected + appliedAmount)
-        allocationsByGoalId[goal.id][month] = roundToTwo(
-          (allocationsByGoalId[goal.id][month] || 0) + appliedAmount
-        )
+        addLedgerAllocation(batch, goal.id, appliedAmount, allocationPercent)
         remainingSurplus = roundToTwo(remainingSurplus - appliedAmount)
-
-        if (
-          collectedByGoalId[goal.id] >= goal.target_amount &&
-          !completionMonthByGoalId[goal.id]
-        ) {
-          completionMonthByGoalId[goal.id] = month
-        }
       })
 
       if (remainingSurplus > 0) {
@@ -513,20 +615,19 @@ export const buildFinancialGoalsPlan = ({
           }
 
           collectedByGoalId[goal.id] = roundToTwo(currentCollected + appliedAmount)
-          allocationsByGoalId[goal.id][month] = roundToTwo(
-            (allocationsByGoalId[goal.id][month] || 0) + appliedAmount
+          addLedgerAllocation(
+            batch,
+            goal.id,
+            appliedAmount,
+            allocationByGoalId[goal.id] || 0
           )
           remainingSurplus = roundToTwo(remainingSurplus - appliedAmount)
-
-          if (
-            collectedByGoalId[goal.id] >= goal.target_amount &&
-            !completionMonthByGoalId[goal.id]
-          ) {
-            completionMonthByGoalId[goal.id] = month
-          }
         })
       }
 
+      if (batch.entries.length > 0) {
+        ledger.push(batch)
+      }
       return
     }
 
@@ -557,19 +658,53 @@ export const buildFinancialGoalsPlan = ({
       }
 
       collectedByGoalId[goal.id] = roundToTwo(currentCollected + appliedAmount)
-      allocationsByGoalId[goal.id][month] = roundToTwo(
-        (allocationsByGoalId[goal.id][month] || 0) + appliedAmount
-      )
+      addLedgerAllocation(batch, goal.id, appliedAmount, 0)
       remainingSurplus = roundToTwo(remainingSurplus - appliedAmount)
+    })
 
-      if (
-        collectedByGoalId[goal.id] >= goal.target_amount &&
-        !completionMonthByGoalId[goal.id]
-      ) {
-        completionMonthByGoalId[goal.id] = month
+    if (batch.entries.length > 0) {
+      ledger.push(batch)
+    }
+  })
+
+  const collectedByGoalId = getCollectedByGoalId()
+  const allocationsByGoalId = Object.fromEntries(
+    baseGoals.map((goal) => [goal.id, {} as Record<string, number>])
+  )
+
+  ledger.forEach((batch) => {
+    batch.entries.forEach((entry) => {
+      if (entry.remainingAmount <= 0) {
+        return
       }
+
+      allocationsByGoalId[entry.goalId][batch.month] = roundToTwo(
+        (allocationsByGoalId[entry.goalId][batch.month] || 0) + entry.remainingAmount
+      )
     })
   })
+
+  const completionMonthByGoalId = Object.fromEntries(
+    baseGoals.map((goal) => {
+      let runningTotal = 0
+      let completionMonth: string | null = null
+
+      for (const batch of ledger) {
+        runningTotal = roundToTwo(
+          runningTotal + batch.entries
+            .filter((entry) => entry.goalId === goal.id)
+            .reduce((sum, entry) => sum + entry.remainingAmount, 0)
+        )
+
+        if (runningTotal >= goal.target_amount) {
+          completionMonth = batch.month
+          break
+        }
+      }
+
+      return [goal.id, completionMonth]
+    })
+  )
 
   const orderedGoals = getFinancialGoalPriorityItemsForMonth({
     goals: baseGoals,
@@ -580,10 +715,12 @@ export const buildFinancialGoalsPlan = ({
 
   const progressByGoalId = Object.fromEntries(
     baseGoals.map((goal) => {
-      const collectedAmount = roundToTwo(collectedByGoalId[goal.id] || 0)
+      const collectedAmount = roundToTwo(Math.max(collectedByGoalId[goal.id] || 0, 0))
       const remainingAmount = roundToTwo(Math.max(goal.target_amount - collectedAmount, 0))
       const percentage =
-        goal.target_amount > 0 ? Math.min((collectedAmount / goal.target_amount) * 100, 100) : 0
+        goal.target_amount > 0
+          ? Math.max(0, Math.min((collectedAmount / goal.target_amount) * 100, 100))
+          : 0
       const completionMonth = completionMonthByGoalId[goal.id]
       const isCompletionMonthLocked = Boolean(completionMonth && lockedMonthsSet.has(completionMonth))
       const isCompleted = Boolean(completionMonth && isCompletionMonthLocked)
