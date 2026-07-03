@@ -33,7 +33,7 @@ export default function FoundationIconPicker({
   onOpenChange,
   onChange,
 }: FoundationIconPickerProps) {
-  const [isExpanded, setIsExpanded] = useState(false)
+  void moreLabel
   const [search, setSearch] = useState('')
   const [menuPosition, setMenuPosition] = useState({ left: 12, top: 12 })
   const triggerRef = useRef<HTMLButtonElement>(null)
@@ -42,7 +42,7 @@ export default function FoundationIconPicker({
   const selectedIconOptionRef = useScrollSelectedIconIntoView({
     isOpen,
     selectedKey: value,
-    scrollSignal: isExpanded,
+    scrollSignal: isOpen,
   })
 
   const orderedIcons = useMemo(() => {
@@ -57,12 +57,9 @@ export default function FoundationIconPicker({
   }, [suggestedIconKeys])
 
   const normalizedSearch = search.trim().toLocaleLowerCase('pl-PL')
-  const baseIcons = isExpanded
-    ? orderedIcons
-    : orderedIcons.filter((option) => suggestedIconKeys.includes(option.key))
   const visibleIcons = normalizedSearch
     ? orderedIcons.filter((option) => getUiIconSearchText(option).includes(normalizedSearch))
-    : baseIcons
+    : orderedIcons
 
   useLayoutEffect(() => {
     if (!isOpen) return
@@ -101,7 +98,7 @@ export default function FoundationIconPicker({
       window.removeEventListener('resize', updatePosition)
       window.removeEventListener('scroll', updatePosition, true)
     }
-  }, [isExpanded, isOpen, normalizedSearch])
+  }, [isOpen, normalizedSearch])
 
   const pickerMenu = (
     <div data-ui-picker-menu="true" data-layout="icons">
@@ -138,11 +135,6 @@ export default function FoundationIconPicker({
           </button>
         ))}
       </div>
-      {!isExpanded && !normalizedSearch && (
-        <button type="button" data-ui-picker-more="true" onClick={() => setIsExpanded(true)}>
-          {moreLabel}
-        </button>
-      )}
       {visibleIcons.length === 0 && (
         <div data-ui-picker-empty="true">Brak ikon dla tej nazwy.</div>
       )}

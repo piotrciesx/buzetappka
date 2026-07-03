@@ -382,15 +382,24 @@ type CreatorSectionProps = {
   help?: ReactNode;
   tone?: FoundationTone;
   variant?: "separated" | "grouped";
-  state?: "active" | "idle" | "done";
   children: ReactNode;
 };
 
-const getSupportingToneForStep = (step: number): FoundationTone => {
-  const normalizedStep = Number.isFinite(step) ? Math.max(1, Math.floor(step)) : 1;
-  const accentIndex = ((normalizedStep - 1) % 6) + 1;
+const STEP_TONES: FoundationTone[] = [
+  "blue",
+  "lavender",
+  "mint",
+  "coral",
+  "olive",
+  "slate",
+];
 
-  return `supporting-${accentIndex}`;
+const getSupportingToneForStep = (step: number): FoundationTone => {
+  const normalizedStep = Number.isFinite(step)
+    ? Math.max(1, Math.floor(step))
+    : 1;
+
+  return STEP_TONES[(normalizedStep - 1) % STEP_TONES.length];
 };
 
 export function CreatorSection({
@@ -400,17 +409,14 @@ export function CreatorSection({
   help,
   tone,
   variant = "separated",
-  state,
   children,
 }: CreatorSectionProps) {
   const resolvedTone = tone || getSupportingToneForStep(step);
-  const resolvedState = state || (step === 1 ? "active" : "idle");
 
   return (
     <section
       data-ui-creator-step="true"
       data-ui-creator-section-variant={variant}
-      data-ui-creator-step-state={resolvedState}
       data-ui-tone={resolvedTone}
     >
       <span data-ui-creator-step-icon="true" aria-hidden="true">

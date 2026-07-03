@@ -1071,6 +1071,7 @@ export default function PaymentSourcesPanel({
                 <CreatorSection
                   step={1}
                   title="Nazwa źródła"
+                  description="Nadaj nazwę, która najlepiej opisuje to źródło."
                   help={<HelpHint label="To nazwa widoczna w aplikacji." />}
                 >
                   <FormField
@@ -1170,6 +1171,7 @@ export default function PaymentSourcesPanel({
                 <CreatorSection
                   step={2}
                   title="Wygląd"
+                  description="Wybierz kolor i ikonę, aby łatwo rozpoznawać źródło."
                   help={
                     <HelpHint label="Wybierz kolor i ikonę reprezentujące to źródło." />
                   }
@@ -1192,6 +1194,7 @@ export default function PaymentSourcesPanel({
                 <CreatorSection
                   step={3}
                   title="Dostępność"
+                  description="Określ, gdzie to źródło ma być dostępne."
                   help={
                     <HelpHint label="Określ, do jakich typów operacji ma być dostępne to źródło." />
                   }
@@ -1202,7 +1205,6 @@ export default function PaymentSourcesPanel({
                   >
                     <label
                       data-ui-checkbox="true"
-                      data-ui-availability-option="income"
                       data-checkbox-variant="neutral-card"
                       data-checkbox-density="comfortable"
                       data-checkbox-align="center"
@@ -1219,15 +1221,17 @@ export default function PaymentSourcesPanel({
                           }))
                         }
                       />
-                      <span data-ui-checkbox-visual="true" aria-hidden="true" />
-                      <span data-ui-availability-icon="true" data-ui-tone="success" aria-hidden="true">
-                        <CategoryIcon iconKey="system-income" size="small" />
+                      <span
+                        data-ui-checkbox-support-icon="true"
+                        data-ui-tone="success"
+                        aria-hidden="true"
+                      >
+                        ↑
                       </span>
                       <span className="ui-checkbox__label">Przychody</span>
                     </label>
                     <label
                       data-ui-checkbox="true"
-                      data-ui-availability-option="expense"
                       data-checkbox-variant="neutral-card"
                       data-checkbox-density="comfortable"
                       data-checkbox-align="center"
@@ -1244,9 +1248,12 @@ export default function PaymentSourcesPanel({
                           }))
                         }
                       />
-                      <span data-ui-checkbox-visual="true" aria-hidden="true" />
-                      <span data-ui-availability-icon="true" data-ui-tone="danger" aria-hidden="true">
-                        <CategoryIcon iconKey="system-expense" size="small" />
+                      <span
+                        data-ui-checkbox-support-icon="true"
+                        data-ui-tone="danger"
+                        aria-hidden="true"
+                      >
+                        ↓
                       </span>
                       <span className="ui-checkbox__label">Wydatki</span>
                     </label>
@@ -1259,13 +1266,16 @@ export default function PaymentSourcesPanel({
                 aria-label="Podsumowanie źródła"
               >
                 <header data-ui-creator-summary-header="true">
-                  <span data-ui-summary-header-icon="true" aria-hidden="true">
-                    <CategoryIcon iconKey="idea" size="small" />
-                  </span>
-                  <span data-ui-summary-header-copy="true">
+                  <span data-ui-creator-summary-heading="true">
+                    <span
+                      data-ui-creator-summary-header-icon="true"
+                      aria-hidden="true"
+                    >
+                      ✦
+                    </span>
                     <strong>Podsumowanie źródła</strong>
-                    <span>Tak będzie wyglądało źródło na Twojej liście.</span>
                   </span>
+                  <span>Tak będzie wyglądało źródło na Twojej liście.</span>
                 </header>
 
                 <CreatorSummaryCard kind="payment-source" tone={draft.color}>
@@ -1293,9 +1303,7 @@ export default function PaymentSourcesPanel({
                   data-ui-info-banner="true"
                   data-ui-info-banner-variant="module-guidance"
                 >
-                  <span data-ui-info-banner-icon="true" aria-hidden="true">
-                    <CategoryIcon iconKey="info" size="small" />
-                  </span>
+                  <CategoryIcon iconKey="info" size="small" />
                   <span>
                     Podsumowanie aktualizuje się na bieżąco wraz ze zmianami.
                   </span>
@@ -1317,11 +1325,11 @@ export default function PaymentSourcesPanel({
                   (!draft.isIncomeSource && !draft.isExpenseSource)
                 }
               >
-                <span>{isSaving
+                {isSaving
                   ? "Zapisywanie..."
                   : draft.id
                     ? "Zapisz zmiany"
-                    : "Zapisz źródło"}</span>
+                    : "Zapisz źródło"}
               </PrimaryAction>
             </footer>
           </CreatorModal>
