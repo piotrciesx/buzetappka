@@ -567,20 +567,14 @@ export default function PaymentSourcesPanel({
     percent: number;
     detail: string;
     tone?:
-      | "neutral"
-      | "supporting-1"
-      | "supporting-2"
-      | "supporting-3"
-      | "supporting-4"
-      | "supporting-5"
-      | "supporting-6"
+      | "neutral-blue"
       | "success"
       | "danger";
     title?: string;
   }) => (
     <span
       data-ui-metric-card="true"
-      data-ui-tone={input.tone || "supporting-1"}
+      data-ui-tone={input.tone || "neutral-blue"}
       title={input.title}
       style={{ "--ui-metric-progress": `${input.percent}%` } as CSSProperties}
     >
@@ -693,7 +687,7 @@ export default function PaymentSourcesPanel({
         data-ui-large-record="true"
         data-ui-record-card="true"
         data-ui-record-variant="metric"
-        data-ui-record-surface="flat-tint"
+        data-ui-record-surface="white"
         data-ui-record-interactive="true"
         data-ui-indent-level="record"
         data-ui-tone={color.tone}
@@ -737,7 +731,7 @@ export default function PaymentSourcesPanel({
           {renderMetric({
             iconKey: "system-records",
             label: "wpisy",
-            tone: "supporting-1",
+            tone: "neutral-blue",
             percent: calculateShare(
               stats.transactionCount,
               totals.transactionCount,
@@ -812,7 +806,7 @@ export default function PaymentSourcesPanel({
             {renderMetric({
               iconKey: "system-records",
               label: "wpisy",
-              tone: "supporting-1",
+              tone: "neutral-blue",
               percent: stats.transactionCount > 0 ? 100 : 0,
               detail: `${formatCompactNumber(stats.transactionCount)} wpisów`,
               title: `${stats.transactionCount} wpisów`,
@@ -866,7 +860,7 @@ export default function PaymentSourcesPanel({
       style={paymentSourcesShellStyle}
     >
       <CollapsibleSecondarySection
-        tone="supporting-1"
+        tone="neutral-blue"
         icon={<CategoryIcon iconKey="system-payment-sources" size="small" />}
         title="Domyślne źródła płatności"
         help={
@@ -977,7 +971,7 @@ export default function PaymentSourcesPanel({
 
       <section data-ui-payment-section="sources" data-ui-large-section="true">
         <SectionHeader
-          tone="supporting-2"
+          tone="neutral-blue"
           icon={<CategoryIcon iconKey="system-records" size="small" />}
           title="Twoje źródła"
           help={
@@ -1057,7 +1051,7 @@ export default function PaymentSourcesPanel({
             <HeroHeader
               variant="creator"
               density="comfort"
-              tone={draft.color}
+              tone="brand-primary"
               icon={<CategoryIcon iconKey={draft.icon} />}
               title={draft.id ? "Edytuj źródło" : "Nowe źródło"}
               description="Utwórz źródło płatności lub przychodów i określ, gdzie ma być dostępne."
@@ -1082,7 +1076,7 @@ export default function PaymentSourcesPanel({
                   <FormField
                     label={<span data-ui-visually-hidden="true">Nazwa</span>}
                     emphasis="hero"
-                    tone="supporting-1"
+                    tone="neutral-blue"
                   >
                     <span data-ui-input-affix="true">
                       <span data-ui-input-leading="true" aria-hidden="true">

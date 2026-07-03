@@ -11524,3 +11524,154 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"] svg {
 [data-ui-icon-tile="true"] {
   color: var(--ui-tone-text);
 }
+
+
+/* ========================================================================== */
+/* Foundation Color v4 — semantic color language and neutral blue information  */
+/* ========================================================================== */
+
+:root {
+  --ui-neutral-blue-surface: #eef6ff;
+  --ui-neutral-blue-surface-strong: #e5f0ff;
+  --ui-neutral-blue-border: rgba(68, 113, 177, 0.22);
+  --ui-neutral-blue-text: #426a9f;
+  --ui-neutral-blue-text-strong: #234f8f;
+  --ui-brand-primary-surface: #edf4ff;
+  --ui-brand-primary-border: rgba(8, 44, 122, 0.20);
+  --ui-brand-primary-text: var(--ui-color-primary-navy);
+}
+
+[data-ui-tone="brand-primary"] {
+  --ui-tone-surface: var(--ui-brand-primary-surface);
+  --ui-tone-bg: var(--ui-brand-primary-surface);
+  --ui-tone-border: var(--ui-brand-primary-border);
+  --ui-tone-text: var(--ui-brand-primary-text);
+}
+
+[data-ui-tone="neutral-blue"],
+[data-ui-summary-tone="neutral-blue"] {
+  --ui-tone-surface: var(--ui-neutral-blue-surface);
+  --ui-tone-bg: var(--ui-neutral-blue-surface);
+  --ui-tone-border: var(--ui-neutral-blue-border);
+  --ui-tone-text: var(--ui-neutral-blue-text);
+}
+
+[data-ui-summary-card="true"] {
+  --ui-summary-surface: rgba(255, 255, 255, 0.96);
+  --ui-summary-border: rgba(8, 44, 122, 0.12);
+  --ui-summary-copy-color: var(--ui-text-primary);
+  background: var(--ui-summary-surface);
+  border-color: var(--ui-summary-border);
+}
+
+[data-ui-summary-card="true"][data-ui-summary-tone="neutral-blue"] {
+  --ui-summary-surface: rgba(255, 255, 255, 0.96);
+  --ui-summary-border: rgba(8, 44, 122, 0.12);
+  --ui-tone-surface: var(--ui-neutral-blue-surface);
+  --ui-tone-border: var(--ui-neutral-blue-border);
+  --ui-tone-text: var(--ui-neutral-blue-text);
+}
+
+[data-ui-summary-icon="true"][data-ui-tone="neutral-blue"] {
+  background: var(--ui-neutral-blue-surface);
+  border-color: var(--ui-neutral-blue-border);
+  color: var(--ui-neutral-blue-text-strong);
+}
+
+[data-ui-summary-copy="true"] > strong[data-ui-financial-state="positive"] { color: var(--ui-financial-income); }
+[data-ui-summary-copy="true"] > strong[data-ui-financial-state="negative"] { color: var(--ui-financial-expense); }
+[data-ui-summary-copy="true"] > strong[data-ui-financial-state="zero"] { color: var(--ui-neutral-blue-text-strong); }
+
+[data-ui-summary-status="true"] {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  min-width: 0;
+  color: var(--ui-neutral-blue-text);
+  font-size: var(--ui-type-t5);
+  font-weight: var(--ui-font-weight-semibold);
+  line-height: var(--ui-line-height-compact);
+}
+
+[data-ui-summary-status="true"] > span[aria-hidden="true"] {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  border-radius: var(--ui-radius-pill);
+  background: currentColor;
+  box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 14%, transparent);
+}
+
+[data-ui-summary-status="true"][data-ui-status-tone="positive"] { color: var(--ui-financial-income); }
+[data-ui-summary-status="true"][data-ui-status-tone="negative"] { color: var(--ui-financial-expense); }
+[data-ui-summary-status="true"][data-ui-status-tone="zero"],
+[data-ui-summary-status="true"][data-ui-status-tone="neutral-blue"] { color: var(--ui-neutral-blue-text-strong); }
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-status-inline="true"] {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 var(--ui-space-5);
+  border: 1px solid var(--ui-tone-border, var(--ui-neutral-blue-border));
+  border-radius: var(--ui-radius-pill);
+  background: color-mix(in srgb, var(--ui-tone-surface, var(--ui-neutral-blue-surface)) 82%, #ffffff 18%);
+  color: var(--ui-tone-text, var(--ui-neutral-blue-text-strong));
+  font-size: var(--ui-type-t5);
+  font-weight: var(--ui-font-weight-semibold);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ui-tone-text, var(--ui-neutral-blue-text)) 8%, transparent);
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-status-inline="true"] > span[aria-hidden="true"] { display: none; }
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-status-inline="true"][data-ui-tone="success"] {
+  --ui-tone-surface: var(--ui-status-success-soft);
+  --ui-tone-border: rgba(31, 169, 113, 0.24);
+  --ui-tone-text: var(--ui-status-success);
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-status-inline="true"][data-ui-tone="danger"] {
+  --ui-tone-surface: var(--ui-status-error-soft);
+  --ui-tone-border: rgba(215, 38, 61, 0.22);
+  --ui-tone-text: var(--ui-financial-expense);
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-status-inline="true"][data-ui-tone="warning"] {
+  --ui-tone-surface: var(--ui-status-warning-soft);
+  --ui-tone-border: rgba(245, 158, 11, 0.24);
+  --ui-tone-text: var(--ui-status-warning);
+}
+
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-record-period="true"] { color: var(--ui-neutral-blue-text); }
+[data-ui-large-record="true"][data-ui-record-type="goal"] [data-ui-record-period="true"] [data-category-icon="true"] { color: var(--ui-neutral-blue-text-strong); }
+
+[data-ui-metric-card="true"][data-ui-tone="neutral-blue"] {
+  --ui-tone-surface: var(--ui-neutral-blue-surface);
+  --ui-tone-bg: var(--ui-neutral-blue-surface);
+  --ui-tone-border: var(--ui-neutral-blue-border);
+  --ui-tone-text: var(--ui-neutral-blue-text-strong);
+}
+
+[data-ui-section-header-v5="true"][data-ui-tone="neutral-blue"] [data-ui-section-header-icon-v5="true"] {
+  background: var(--ui-neutral-blue-surface);
+  border-color: var(--ui-neutral-blue-border);
+  color: var(--ui-neutral-blue-text-strong);
+}
+
+[data-ui-filter-pill="true"] [data-ui-filter-pill-icon="true"][data-ui-tone="neutral-blue"],
+[data-ui-filter-pill="true"][data-ui-tone="neutral-blue"] [data-ui-filter-pill-icon="true"] { color: var(--ui-neutral-blue-text-strong); }
+[data-ui-filter-pill="true"][data-ui-tone="warning"] [data-ui-filter-pill-icon="true"] { color: var(--ui-status-warning); }
+[data-ui-filter-pill="true"][data-ui-tone="danger"] [data-ui-filter-pill-icon="true"] { color: var(--ui-financial-expense); }
+[data-ui-filter-pill="true"][data-ui-tone="success"] [data-ui-filter-pill-icon="true"] { color: var(--ui-financial-income); }
+
+.ui-button--icon[data-button-tone="info"],
+.ui-button--utility[data-button-tone="info"] {
+  color: var(--ui-neutral-blue-text-strong);
+  border-color: var(--ui-neutral-blue-border);
+  background: var(--ui-surface-card);
+}
+
+.ui-button--icon[data-button-tone="info"]:hover,
+.ui-button--utility[data-button-tone="info"]:hover { background: var(--ui-neutral-blue-surface); }
+
+[data-ui-large-record="true"][data-ui-record-surface="white"],
+[data-ui-record-card="true"][data-ui-record-surface="white"] { background: rgba(255, 255, 255, 0.96); }

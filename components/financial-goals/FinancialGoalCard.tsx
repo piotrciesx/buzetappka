@@ -39,7 +39,7 @@ const getGoalPeriodLabel = (startMonth: string, deadlineMonth: string | null) =>
 const getStatusTone = (statusLabel: string) => {
   if (statusLabel === "zrealizowany") return "success";
   if (statusLabel === "niezrealizowany") return "danger";
-  return "record";
+  return "neutral-blue";
 };
 
 const getGoalIconKey = (goal: GoalCardBaseProps["goal"]) => {
@@ -157,7 +157,7 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
         data-ui-metric-columns="4"
         data-ui-metric-variant="goal-card"
       >
-        <div data-ui-metric-card="true" data-ui-tone="support-blue">
+        <div data-ui-metric-card="true" data-ui-tone="neutral-blue">
           <span data-ui-metric-card-label="true">
             <CategoryIcon iconKey="system-goals" size="small" />
             Docelowa
@@ -195,7 +195,7 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
           <span data-ui-metric-card-detail="true">Do realizacji</span>
         </div>
 
-        <div data-ui-metric-card="true" data-ui-tone="support-sky">
+        <div data-ui-metric-card="true" data-ui-tone="neutral-blue">
           <span data-ui-metric-card-label="true">
             <CategoryIcon iconKey="allocation" size="small" />
             {modeLabel}

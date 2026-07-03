@@ -31,6 +31,7 @@ type MonthNoteTone = UiColorKey;
 type MonthNoteIcon = UiIconKey;
 type MonthNoteCategory = "Notatka" | "Przypomnienie" | "Informacja";
 type MonthNoteDetailsFilter = "all" | MonthNoteCategory;
+type FoundationSemanticTone = "neutral-blue" | "success" | "danger" | "warning";
 
 type MonthNoteItem = {
   id: string;
@@ -80,11 +81,12 @@ const DETAILS_FILTER_OPTIONS: Array<{
   label: string;
   icon: UiIconKey;
   category?: MonthNoteCategory;
+  tone: FoundationSemanticTone;
 }> = [
-  { key: "all", label: "Wszystkie", icon: "all" },
-  { key: "Notatka", label: "Notatki", icon: "note", category: "Notatka" },
-  { key: "Przypomnienie", label: "Przypomnienia", icon: "calendar", category: "Przypomnienie" },
-  { key: "Informacja", label: "Informacje", icon: "info", category: "Informacja" },
+  { key: "all", label: "Wszystkie", icon: "all", tone: "neutral-blue" },
+  { key: "Notatka", label: "Notatki", icon: "note", category: "Notatka", tone: "neutral-blue" },
+  { key: "Przypomnienie", label: "Przypomnienia", icon: "calendar", category: "Przypomnienie", tone: "warning" },
+  { key: "Informacja", label: "Informacje", icon: "info", category: "Informacja", tone: "neutral-blue" },
 ];
 
 const NoteIcon = ({ name }: { name: NoteIconName }) => {
@@ -599,6 +601,7 @@ export default function ProfileMonthNotePanel({
             <button
               type="button"
               className="ui-button--icon"
+              data-button-tone="info"
               aria-label="Edytuj notatkę"
               title="Edytuj"
               onClick={(event) => handleNoteActionClick(event, () => editNote(note))}
@@ -784,7 +787,7 @@ export default function ProfileMonthNotePanel({
         <HeroHeader
           variant="module"
           density="regular"
-          tone="support-blue"
+          tone="brand-primary"
           icon={<CategoryIcon iconKey="note" />}
           title={`Notatki miesiąca ${selectedMonth}`}
           description="Wspólne notatki, przypomnienia i informacje dla bieżącego miesiąca."
@@ -807,11 +810,12 @@ export default function ProfileMonthNotePanel({
               key={filterOption.key}
               type="button"
               data-ui-filter-pill="true"
+              data-ui-tone={filterOption.tone}
               data-active={detailsFilter === filterOption.key ? "true" : undefined}
               aria-pressed={detailsFilter === filterOption.key}
               onClick={() => setDetailsFilter(filterOption.key)}
             >
-              <span data-ui-filter-pill-icon="true" aria-hidden="true">
+              <span data-ui-filter-pill-icon="true" data-ui-tone={filterOption.tone} aria-hidden="true">
                 <CategoryIcon iconKey={filterOption.icon} size="small" />
               </span>
               {filterOption.label} {detailNoteCounts[filterOption.key]}
@@ -954,7 +958,7 @@ export default function ProfileMonthNotePanel({
         <HeroHeader
           variant="compact"
           density="compact"
-          tone="support-blue"
+          tone="brand-primary"
           icon={<CategoryIcon iconKey="note" />}
           title="Notatki miesiąca"
           description={isLoading ? "Ładowanie..." : noteCountLabel}

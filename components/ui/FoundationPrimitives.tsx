@@ -14,6 +14,7 @@ type FoundationTone =
   | "danger"
   | "success"
   | "brand-primary"
+  | "neutral-blue"
   | "support-blue"
   | "support-sky"
   | "support-cyan"
@@ -100,7 +101,7 @@ export function SectionHeader({
   title,
   description,
   help,
-  tone = "support-blue",
+  tone = "neutral-blue",
   density = "regular",
   trailing,
 }: SectionHeaderProps) {
@@ -154,7 +155,7 @@ export function CollapsibleSecondarySection({
   title,
   description,
   help,
-  tone = "support-blue",
+  tone = "neutral-blue",
   density = "regular",
   defaultCollapsed = true,
   collapsed,
@@ -542,7 +543,7 @@ export function CreatorSummaryCard({
   kind = "default",
   layout,
   recordType,
-  tone = "supporting-1",
+  tone = "neutral-blue",
   children,
 }: CreatorSummaryCardProps) {
   return (
