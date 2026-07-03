@@ -382,6 +382,7 @@ type CreatorSectionProps = {
   help?: ReactNode;
   tone?: FoundationTone;
   variant?: "separated" | "grouped";
+  state?: "active" | "idle" | "done";
   children: ReactNode;
 };
 
@@ -399,14 +400,17 @@ export function CreatorSection({
   help,
   tone,
   variant = "separated",
+  state,
   children,
 }: CreatorSectionProps) {
   const resolvedTone = tone || getSupportingToneForStep(step);
+  const resolvedState = state || (step === 1 ? "active" : "idle");
 
   return (
     <section
       data-ui-creator-step="true"
       data-ui-creator-section-variant={variant}
+      data-ui-creator-step-state={resolvedState}
       data-ui-tone={resolvedTone}
     >
       <span data-ui-creator-step-icon="true" aria-hidden="true">
@@ -451,6 +455,7 @@ export function FormField({
       data-ui-form-field="true"
       data-ui-field-size={size}
       data-ui-field-emphasis={emphasis}
+      data-ui-emphasis={emphasis}
       data-ui-tone={tone}
     >
       <span data-ui-title-with-help="true">
@@ -549,6 +554,7 @@ export function CreatorSummaryCard({
   return (
     <div
       data-ui-creator-preview-card="true"
+      data-ui-creator-summary-card="true"
       data-ui-creator-preview-kind={kind}
       data-ui-creator-preview-layout={layout}
       data-ui-record-type={recordType}
