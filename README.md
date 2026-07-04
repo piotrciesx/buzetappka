@@ -34,3 +34,14 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Supabase auth redirects
+
+In Supabase Dashboard, under **Authentication → URL Configuration → Redirect URLs**, allow the
+production URL, local development URL, and Vercel preview wildcard:
+
+- `https://your-production-domain.example/**`
+- `http://localhost:3000/**`
+- `https://*-<vercel-team-or-account-slug>.vercel.app/**`
+
+The application sends the current browser origin as the auth redirect, so a user returns to the
+same production, preview, or local deployment that initiated authentication.

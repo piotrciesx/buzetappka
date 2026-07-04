@@ -31,11 +31,7 @@ const getAuthRedirectUrl = () => {
     return undefined
   }
 
-  const url = new URL(window.location.href)
-  url.hash = ''
-  url.searchParams.delete('code')
-
-  return `${url.origin}${url.pathname}${url.search}`
+  return window.location.origin
 }
 
 const getActiveProfileStorageKey = (userId: string) => `${ACTIVE_PROFILE_STORAGE_PREFIX}:${userId}`
