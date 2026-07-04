@@ -178,7 +178,7 @@ export default function FoundationIconPicker({
           style={{
             left: menuPosition.left,
             top: menuPosition.top,
-            zIndex: 'var(--ui-z-popover)',
+            zIndex: 'var(--ui-z-modal-popover, 4200)',
           } as CSSProperties}
           onClick={(event) => event.stopPropagation()}
         >

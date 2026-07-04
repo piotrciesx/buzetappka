@@ -8,6 +8,7 @@ export const uiZIndex = {
   panel: 2600,
   drawer: 2600,
   modal: 3000,
+  modalPopover: 4200,
   toast: 12000,
   criticalOverlay: 130000,
 
