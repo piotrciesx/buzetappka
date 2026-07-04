@@ -28,7 +28,6 @@ type Props = {
       | PaymentSplitInput[]
       | ((prev: PaymentSplitInput[]) => PaymentSplitInput[]),
   ) => void;
-  styles: Record<string, CSSProperties>;
 };
 
 const splitWrapStyle: CSSProperties = {
@@ -66,7 +65,6 @@ export default function PaymentSplitEditor({
   paymentSourceOptions,
   paymentSplitItems,
   setPaymentSplitItems,
-  styles,
 }: Props) {
   if (!isVisible) {
     return null;

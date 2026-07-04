@@ -576,7 +576,6 @@ export default function TransactionCreatorModal(
                       paymentSourceOptions={paymentSourceOptions}
                       paymentSplitItems={paymentSplitItems}
                       setPaymentSplitItems={setPaymentSplitItems}
-                      styles={styles}
                     />
                   </div>
                 )}

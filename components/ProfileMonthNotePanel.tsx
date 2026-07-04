@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  CSSProperties,
   useCallback,
   useEffect,
   useMemo,
@@ -11,7 +10,6 @@ import {
 import { createPortal } from "react-dom";
 import CategoryIcon from "./CategoryIcon";
 import {
-  UI_COLOR_OPTIONS,
   getUiColor,
   getUiIcon,
   type UiColorKey,
@@ -19,6 +17,7 @@ import {
 } from "../lib/userAppearance";
 import { supabase } from "../lib/supabaseClient";
 import { StatusBox } from "./utility-panels/utilityPanelPrimitives";
+import FoundationColorPicker from "./ui/FoundationColorPicker";
 import FoundationIconPicker from "./ui/FoundationIconPicker";
 import { HeroHeader, IconAction, PrimaryAction } from "./ui/FoundationPrimitives";
 
@@ -47,7 +46,6 @@ type ProfileMonthNotePanelProps = {
   profileId: string;
   userId: string;
   selectedMonth: string;
-  styles: Record<string, CSSProperties>;
 };
 
 type NoteIconName = "plus" | "edit" | "trash" | "close" | "expand" | "info";
@@ -124,10 +122,6 @@ const NoteIcon = ({ name }: { name: NoteIconName }) => {
     </svg>
   );
 };
-
-const HelpHint = ({ label }: { label: string }) => (
-  <span data-ui-help="true" tabIndex={0} aria-label={label} data-tooltip={label} />
-)
 
 const createNoteId = () => {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -235,16 +229,12 @@ export default function ProfileMonthNotePanel({
   profileId,
   userId,
   selectedMonth,
-  styles: _styles,
 }: ProfileMonthNotePanelProps) {
-  void _styles;
-
   const [hasMounted, setHasMounted] = useState(false);
   const [noteId, setNoteId] = useState<string | null>(null);
   const [draft, setDraft] = useState(createEmptyDraft);
   const [savedNotes, setSavedNotes] = useState<MonthNoteItem[]>([]);
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
-  const [expandedNoteIds, setExpandedNoteIds] = useState<string[]>([]);
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [detailsFilter, setDetailsFilter] = useState<MonthNoteDetailsFilter>("all");
@@ -289,7 +279,6 @@ export default function ProfileMonthNotePanel({
       setDraft(createEmptyDraft());
       setSavedNotes(parseSavedNotes(noteRow?.note || ""));
       setEditingNoteId(null);
-      setExpandedNoteIds([]);
       setSelectedNoteId(null);
       setDetailsFilter("all");
       setActivePicker(null);
@@ -526,14 +515,6 @@ export default function ProfileMonthNotePanel({
     void persistNotes(nextNotes, "Usunięto notatkę.");
   };
 
-  const toggleExpandedNote = (noteIdToToggle: string) => {
-    setExpandedNoteIds((previousValue) =>
-      previousValue.includes(noteIdToToggle)
-        ? previousValue.filter((id) => id !== noteIdToToggle)
-        : [...previousValue, noteIdToToggle],
-    );
-  };
-
   const openNotePreview = (note: MonthNoteItem) => {
     setSelectedNoteId(note.id);
     setStatusText("");
@@ -673,50 +654,13 @@ export default function ProfileMonthNotePanel({
   };
 
   const renderColorPicker = () => {
-    const selectedTone = resolveToneOption(draft.tone);
-    const isOpen = activePicker === "color";
-
     return (
-      <div
-        data-ui-picker-control="true"
-        data-ui-picker-variant="rich"
-        data-open={isOpen ? "true" : "false"}
-        onClick={(event) => event.stopPropagation()}
-      >
-        <button
-          type="button"
-          data-ui-picker-trigger="true"
-          aria-expanded={isOpen}
-          onClick={() => setActivePicker(isOpen ? null : "color")}
-        >
-          <span data-ui-picker-value="true">
-            <span data-ui-color-swatch="true" data-ui-tone={selectedTone.tone} />
-            {selectedTone.label}
-          </span>
-          <span data-ui-picker-chevron="true" aria-hidden="true" />
-        </button>
-        {isOpen && (
-          <div data-ui-picker-menu="true" data-layout="colors">
-            {UI_COLOR_OPTIONS.map((option) => (
-              <button
-                key={option.tone}
-                type="button"
-                data-ui-color-option="true"
-                data-ui-tone={option.tone}
-                data-active={draft.tone === option.tone}
-                aria-label={`Wybierz kolor: ${option.label}`}
-                title={option.label}
-                onClick={() => {
-                  updateDraftTone(option.tone);
-                  setActivePicker(null);
-                }}
-              >
-                <span data-ui-color-swatch="true" data-ui-tone={option.tone} />
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+      <FoundationColorPicker
+        value={draft.tone}
+        isOpen={activePicker === "color"}
+        onOpenChange={(isOpen) => setActivePicker(isOpen ? "color" : null)}
+        onChange={updateDraftTone}
+      />
     );
   };
 
@@ -730,7 +674,6 @@ export default function ProfileMonthNotePanel({
         isOpen={activePicker === "icon"}
         suggestedIconKeys={SUGGESTED_NOTE_ICONS}
         fallbackLabel="Ikona notatki"
-        moreLabel="Wybierz więcej ikon"
         onOpenChange={(isOpen) => setActivePicker(isOpen ? "icon" : null)}
         onChange={updateDraftIcon}
       />

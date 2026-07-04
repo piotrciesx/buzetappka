@@ -331,7 +331,6 @@ export default function MonthCalendarTransactionCard({
             paymentSourceOptions={paymentSourceOptions}
             paymentSplitItems={editPaymentSplitItems}
             setPaymentSplitItems={setEditPaymentSplitItems}
-            styles={styles}
           />
         </div>
       ) : isMovingCurrent ? (

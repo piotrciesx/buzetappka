@@ -10,7 +10,6 @@ import {
 } from "react";
 import { PaymentSource, PaymentSourceType } from "../lib/budgetPageTypes";
 import {
-  UI_COLOR_OPTIONS,
   getUiColor,
   type UiColorKey,
   type UiIconKey,
@@ -21,6 +20,7 @@ import {
   PaymentSourceListKind,
 } from "../lib/paymentSources";
 import CategoryIcon from "./CategoryIcon";
+import FoundationColorPicker from "./ui/FoundationColorPicker";
 import FoundationIconPicker from "./ui/FoundationIconPicker";
 import { EmptyState } from "./utility-panels/utilityPanelPrimitives";
 import {
@@ -385,10 +385,6 @@ export default function PaymentSourcesPanel({
     setSelectedSourceDetailsId(source.id);
   };
 
-  const closeSourceDetails = () => {
-    setSelectedSourceDetailsId(null);
-  };
-
   const openEditForm = (source: PaymentSource) => {
     setDraft({
       id: source.id,
@@ -591,56 +587,15 @@ export default function PaymentSourcesPanel({
   );
 
   const renderColorPicker = () => {
-    const selectedColor = getUiColor(draft.color);
-    const isOpen = activePicker === "color";
-
     return (
-      <div
-        data-ui-picker-control="true"
-        data-ui-picker-variant="gallery"
-        data-open={isOpen ? "true" : "false"}
-        onClick={(event) => event.stopPropagation()}
-      >
-        <button
-          type="button"
-          data-ui-picker-trigger="true"
-          aria-expanded={isOpen}
-          onClick={() => setActivePicker(isOpen ? null : "color")}
-        >
-          <span data-ui-picker-value="true">
-            <span
-              data-ui-color-swatch="true"
-              data-ui-tone={selectedColor.tone}
-            />
-            {selectedColor.label}
-          </span>
-          <span data-ui-picker-chevron="true" aria-hidden="true" />
-        </button>
-        {isOpen && (
-          <div data-ui-picker-menu="true" data-layout="colors">
-            {UI_COLOR_OPTIONS.map((option) => (
-              <button
-                key={option.tone}
-                type="button"
-                data-ui-color-option="true"
-                data-ui-tone={option.tone}
-                data-active={draft.color === option.tone}
-                aria-label={`Wybierz kolor: ${option.label}`}
-                title={option.label}
-                onClick={() => {
-                  setDraft((currentDraft) => ({
-                    ...currentDraft,
-                    color: option.tone,
-                  }));
-                  setActivePicker(null);
-                }}
-              >
-                <span data-ui-color-swatch="true" data-ui-tone={option.tone} />
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+      <FoundationColorPicker
+        value={draft.color}
+        isOpen={activePicker === "color"}
+        onOpenChange={(isOpen) => setActivePicker(isOpen ? "color" : null)}
+        onChange={(color) =>
+          setDraft((currentDraft) => ({ ...currentDraft, color }))
+        }
+      />
     );
   };
 
@@ -652,7 +607,6 @@ export default function PaymentSourcesPanel({
         isOpen={activePicker === "icon"}
         suggestedIconKeys={SUGGESTED_PAYMENT_SOURCE_ICONS}
         fallbackLabel="Ikona"
-        moreLabel="Wybierz więcej ikon"
         onOpenChange={(isOpen) => setActivePicker(isOpen ? "icon" : null)}
         onChange={(iconKey) => {
           setDraft((currentDraft) => ({
@@ -1070,6 +1024,7 @@ export default function PaymentSourcesPanel({
               <div data-ui-creator-main="true">
                 <CreatorSection
                   step={1}
+                  variant="hero"
                   title="Nazwa źródła"
                   help={<HelpHint label="To nazwa widoczna w aplikacji." />}
                 >

@@ -445,7 +445,6 @@ export default function Level3InlineAddForm({
             paymentSourceOptions={paymentSourceOptions}
             paymentSplitItems={inlinePaymentSplitItems}
             setPaymentSplitItems={setInlinePaymentSplitItems}
-            styles={styles}
           />
 
           {paymentSourceOptions.length === 0 && (

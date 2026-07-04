@@ -4,13 +4,13 @@
 import type { CSSProperties } from "react";
 import { useState } from "react";
 import {
-  UI_COLOR_OPTIONS,
   getUiColor,
   getUiIcon,
   type UiColorKey,
   type UiIconKey,
 } from "../../lib/userAppearance";
 import CategoryIcon from "../CategoryIcon";
+import FoundationColorPicker from "../ui/FoundationColorPicker";
 import FoundationIconPicker from "../ui/FoundationIconPicker";
 import {
   CreatorSummaryCard,
@@ -143,55 +143,15 @@ export default function FinancialGoalForm({
   };
 
   const renderColorPicker = () => {
-    const isOpen = activePicker === "color";
-
     return (
-      <div
-        data-ui-picker-control="true"
-        data-ui-picker-variant="gallery"
-        data-open={isOpen ? "true" : "false"}
-        onClick={(event) => event.stopPropagation()}
-      >
-        <button
-          type="button"
-          data-ui-picker-trigger="true"
-          aria-expanded={isOpen}
-          onClick={() => setActivePicker(isOpen ? null : "color")}
-        >
-          <span data-ui-picker-value="true">
-            <span
-              data-ui-color-swatch="true"
-              data-ui-tone={selectedColor.tone}
-            />
-            {selectedColor.label}
-          </span>
-          <span data-ui-picker-chevron="true" aria-hidden="true" />
-        </button>
-        {isOpen && (
-          <div data-ui-picker-menu="true" data-layout="colors">
-            {UI_COLOR_OPTIONS.map((option) => (
-              <button
-                key={option.tone}
-                type="button"
-                data-ui-color-option="true"
-                data-ui-tone={option.tone}
-                data-active={selectedColorKey === option.tone}
-                aria-label={`Wybierz kolor: ${option.label}`}
-                title={option.label}
-                onClick={() => {
-                  updateAppearance({
-                    color: option.tone,
-                    color_tone: option.tone,
-                  });
-                  setActivePicker(null);
-                }}
-              >
-                <span data-ui-color-swatch="true" data-ui-tone={option.tone} />
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+      <FoundationColorPicker
+        value={selectedColorKey as UiColorKey}
+        isOpen={activePicker === "color"}
+        onOpenChange={(isOpen) => setActivePicker(isOpen ? "color" : null)}
+        onChange={(color) =>
+          updateAppearance({ color, color_tone: color })
+        }
+      />
     );
   };
 

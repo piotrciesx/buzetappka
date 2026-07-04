@@ -381,7 +381,7 @@ type CreatorSectionProps = {
   description?: ReactNode;
   help?: ReactNode;
   tone?: FoundationTone;
-  variant?: "separated" | "grouped";
+  variant?: "separated" | "grouped" | "hero";
   children: ReactNode;
 };
 
@@ -461,7 +461,6 @@ export function FormField({
       data-ui-form-field="true"
       data-ui-field-size={size}
       data-ui-field-emphasis={emphasis}
-      data-ui-emphasis={emphasis}
       data-ui-tone={tone}
     >
       <span data-ui-title-with-help="true">
@@ -560,7 +559,6 @@ export function CreatorSummaryCard({
   return (
     <div
       data-ui-creator-preview-card="true"
-      data-ui-creator-summary-card="true"
       data-ui-creator-preview-kind={kind}
       data-ui-creator-preview-layout={layout}
       data-ui-record-type={recordType}

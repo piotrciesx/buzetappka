@@ -360,7 +360,6 @@ export default function Level3TransactionRow({
               paymentSourceOptions={getPaymentSourceOptions(transaction.category_id)}
               paymentSplitItems={editPaymentSplitItems}
               setPaymentSplitItems={setEditPaymentSplitItems}
-              styles={styles}
             />
           </div>
         ) : isMovingCurrent && !isSelectedMonthLocked ? (

@@ -18,7 +18,6 @@ type FoundationIconPickerProps = {
   isOpen: boolean
   suggestedIconKeys: readonly string[]
   fallbackLabel: string
-  moreLabel?: string
   onOpenChange: (isOpen: boolean) => void
   onChange: (iconKey: UiIconKey) => void
 }
@@ -29,11 +28,9 @@ export default function FoundationIconPicker({
   isOpen,
   suggestedIconKeys,
   fallbackLabel,
-  moreLabel = 'Pokaż więcej ikon',
   onOpenChange,
   onChange,
 }: FoundationIconPickerProps) {
-  void moreLabel
   const [search, setSearch] = useState('')
   const [menuPosition, setMenuPosition] = useState({ left: 12, top: 12 })
   const triggerRef = useRef<HTMLButtonElement>(null)

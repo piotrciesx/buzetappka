@@ -78,20 +78,8 @@ export const UI_COLOR_OPTIONS = [
 export type UiColorKey = (typeof UI_COLOR_OPTIONS)[number]['tone']
 
 const LEGACY_UI_COLOR_MAP: Readonly<Record<string, UiColorKey>> = {
-  violet: 'violet',
-  purple: 'purple',
-  lavender: 'lavender',
-  lilac: 'lilac',
-  orchid: 'orchid',
-  magenta: 'magenta',
-  brown: 'brown',
-  cocoa: 'cocoa',
-  sand: 'sand',
-  stone: 'stone',
+  // Legacy persisted values kept only where the stored key is no longer public.
   neutral: 'slate',
-  graphite: 'graphite',
-  amber: 'amber',
-  navy: 'navy',
   'information-plum': 'violet',
   'information-clay': 'olive',
   'neutral-accent-1': 'blue',

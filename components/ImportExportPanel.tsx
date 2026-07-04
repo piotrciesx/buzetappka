@@ -669,7 +669,6 @@ export default function ImportExportPanel({
                                     typeof value === 'function' ? value(row.paymentSplitItems) : value,
                                 })
                               }
-                              styles={styles}
                             />
                           </div>
                         )}

@@ -728,7 +728,6 @@ export default function BudgetPageStatusPanels({
                   profileId={profileId}
                   userId={userId}
                   selectedMonth={selectedMonth}
-                  styles={styles}
                 />
               </DropdownShell>
             </div>

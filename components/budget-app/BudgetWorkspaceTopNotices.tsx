@@ -211,7 +211,6 @@ export default function BudgetWorkspaceTopNotices({
                 profileId={profileId}
                 userId={userId}
                 selectedMonth={selectedMonth}
-                styles={styles}
               />
             </div>
           )}
