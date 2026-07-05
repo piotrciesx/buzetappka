@@ -34,6 +34,38 @@ Moduł nie może:
 - traktować ostrzeżenia jako walidacji zapisu;
 - tworzyć własnego scope transakcji poza centralnym kontraktem.
 
+„Limity budżetowe” są osobnym modułem i panelem zarządzania, należącym do tej samej rodziny modułów zarządzania co Źródła płatności, Cele finansowe i Płatności cykliczne. Nie są wyłącznie alertami przy kategoriach, paskiem na drzewie kategorii ani rozszerzeniem samego drzewa.
+
+Główne miejsce tworzenia, przeglądania, edytowania, analizowania i archiwizowania limitów stanowi moduł „Limity budżetowe”. Drzewo kategorii i inne powierzchnie aplikacji mogą być punktami wejścia oraz skróconym podglądem, ale nie przejmują odpowiedzialności modułu.
+
+## Granica odpowiedzialności
+
+### Drzewo kategorii
+
+Drzewo kategorii odpowiada za:
+
+- szybkie utworzenie limitu dla konkretnej kategorii przez akcję typu „Dodaj limit” lub „Ustaw limit”;
+- otwarcie edycji istniejącego limitu;
+- skrócony podgląd stanu limitu;
+- przejście do właściwego limitu albo jego szczegółów w module.
+
+Skrócony podgląd może logicznie zawierać mały pasek wykorzystania, ikonę statusu, krótką informację o przekroczeniu albo minimalny status/link. Nie jest źródłem pełnej analizy ani historii.
+
+### Moduł „Limity budżetowe”
+
+Osobny moduł odpowiada za:
+
+- pełne zarządzanie wszystkimi limitami;
+- listę aktywnych i archiwalnych limitów;
+- analizę wykorzystania i tempa wydawania;
+- szczegóły oraz historię okresów;
+- progi, alerty, odczyt i wyciszenie;
+- wersje kwoty i zakresu limitu;
+- transakcje wchodzące do limitu;
+- porównanie planu z realnym wydaniem.
+
+Pełne szczegóły limitu zawsze należą do modułu „Limity budżetowe”, niezależnie od tego, z którego miejsca użytkownik otworzył limit.
+
 ## 3. Finalne typy limitów
 
 Docelowa domena obsługuje:
@@ -156,6 +188,8 @@ Polityka, czy bieżący dzień wchodzi jednocześnie do `daysElapsed` i `daysLef
 
 ## 8. Alerty
 
+Alerty budżetowe nie są osobnym, niezależnym modułem. Są częścią konkretnego limitu i konkretnej instancji okresu. Limit posiada status wykorzystania, konfigurację progów, bieżący stan alertów, historię alertów oraz możliwość oznaczania ich jako przeczytane lub wyciszone.
+
 ### Progi
 
 Wersja limitu przechowuje uporządkowane, unikalne progi ostrzegawcze, np. 50%, 80% i 90%. Przekroczenie 100% jest osobnym progiem krytycznym.
@@ -192,6 +226,44 @@ Alert jest przypisany do konkretnego planu i instancji okresu. Przechowuje co na
 - kilka nakładających się limitów może wygenerować osobne alerty, ale każdy musi wskazać nazwę i zakres konkretnego limitu.
 
 Alerty limitów nie są reminder lifecycle płatności cyklicznych i nie mogą korzystać z jego statusów jako własnego źródła prawdy.
+
+## Logiczny rekord modułu i szczegóły limitu
+
+### Karta/rekord aktywnego limitu
+
+Każdy aktywny limit jest reprezentowany w module jako osobny logiczny rekord. Rekord udostępnia co najmniej:
+
+- nazwę limitu;
+- zakres: L2, L3, grupa kategorii albo wszystkie wydatki;
+- kwotę limitu;
+- kwotę wydaną;
+- kwotę pozostałą albo wartość przekroczenia;
+- procent wykorzystania;
+- status `safe | warning | exceeded`;
+- wynik prognozy: bezpiecznie, ryzyko przekroczenia albo przekroczenie prawdopodobne;
+- wartość potrzebną do przedstawienia paska wykorzystania;
+- informację o instancji okresu, np. miesiącu.
+
+Jest to kontrakt danych i zachowania rekordu, nie specyfikacja wyglądu, układu ani komponentu.
+
+### Szczegóły limitu
+
+Otwarcie rekordu prowadzi do szczegółów konkretnego limitu. Model szczegółów może obejmować:
+
+- historię miesiąc po miesiącu lub okres po okresie;
+- wykorzystanie w kolejnych instancjach okresu;
+- listę kwalifikowanych transakcji wraz z wyjaśnieniem ich przynależności do scope;
+- tempo wydawania i dni pozostałe;
+- prognozę końca okresu;
+- progi, bieżące alerty i historię alertów;
+- historię zmian kwoty, zakresu i wersji;
+- porównanie planu z realnym wydaniem.
+
+Lista transakcji w szczegółach korzysta z tego samego centralnego kalkulatora i scope co wynik limitu. Nie może ponownie filtrować danych według lokalnych reguł komponentu.
+
+### Nawigacja kontekstowa
+
+Kliknięcie limitu, paska, statusu albo alertu przy kategorii powinno przekazać stabilne `planId` oraz opcjonalne `periodId` do modułu „Limity budżetowe”, otworzyć ten moduł i wskazać właściwy rekord lub szczegóły. Nawigacja nie może identyfikować limitu wyłącznie przez `category_id`, ponieważ jeden zakres może mieć wiele historycznych wersji albo świadomie równoległych planów.
 
 ## 9. Zasady liczenia
 
@@ -346,6 +418,13 @@ Pierwsze wdrożenie nowego kontraktu musi zawierać:
 16. Adapter obecnej tabeli `budget_limits` bez usuwania legacy podczas przejścia.
 17. Feature toggle, profile scope, RLS, backup/reset i centralne kontrakty transakcji.
 18. Testy pieniędzy, progów, scope, historii, nakładania, dayless i zamkniętych miesięcy.
+19. Osobny moduł/panel zarządzania jako główne miejsce pracy z limitami.
+20. Rekordy aktywnych limitów z nazwą, zakresem, okresem, statusem, kwotami i procentem.
+21. Dane paska wykorzystania oraz podstawowy wynik prognozy dla każdego aktywnego limitu.
+22. Szczegóły limitu otwierane z rekordu modułu.
+23. Listę transakcji kwalifikowanych do limitu, opartą na centralnym scope.
+24. Historię wykorzystania miesiąc po miesiącu.
+25. Nawigację z drzewa kategorii do właściwego limitu/szczegółów w module.
 
 MVP nie musi zawierać date-range ani custom cycle. Model nie może jednak uniemożliwiać ich późniejszego dodania.
 
@@ -405,6 +484,8 @@ Odłożone funkcje wymagają rozszerzenia kontraktu, a nie lokalnej łatki w kal
 
 - dopiero po stabilizacji domeny i migracji;
 - zgodnie z `UI_FOUNDATION_CONTRACT.md`;
+- jako osobny moduł zarządzania z rekordami aktywnych limitów i szczegółami;
+- z drzewem kategorii pełniącym rolę szybkiego wejścia i skróconego podglądu;
 - bez lokalnego dublowania kalkulacji, statusów i alertów w komponentach.
 
 ### Etap 6 — cleanup legacy
@@ -475,5 +556,7 @@ Poniższe kwestie wymagają danych produkcyjnych albo jawnej decyzji produktowej
 38. Jakie limity wydajności obowiązują dla liczby aktywnych planów i historii okresów?
 39. Czy moduł pozostaje domyślnie włączony dla istniejących i nowych profili?
 40. Które mutacje wymagają atomowego RPC Supabase?
+41. Czy drzewo kategorii pokazuje skrócony pasek wykorzystania, czy wyłącznie minimalny status/link?
+42. Czy szczegóły limitu otwierają się jako widok wewnątrz modułu, panel szczegółów czy inna powierzchnia zgodna z rodziną modułów zarządzania?
 
 Do czasu rozstrzygnięcia tych punktów Etap 1 może powstać jako czysta, testowalna domena. Etap 2 nie powinien wykonywać nieodwracalnego backfillu ani przełączać istniejącej aplikacji bez osobnego potwierdzenia.
