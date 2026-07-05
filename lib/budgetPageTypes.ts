@@ -60,12 +60,21 @@ export type TransactionTag = {
 }
 
 export type PaymentSourceType = 'cash' | 'card' | 'account' | 'other'
+export type PaymentMethodType =
+  | 'cash'
+  | 'card'
+  | 'bank_transfer'
+  | 'quick_payment'
+  | 'gift_card'
+  | 'app_wallet'
+  | 'other'
 
 export type PaymentSource = {
   id: string
   profile_id: string
   name: string
   type: PaymentSourceType
+  payment_method_type?: PaymentMethodType | null
   is_income_source?: boolean
   is_expense_source?: boolean
   emoji?: string | null

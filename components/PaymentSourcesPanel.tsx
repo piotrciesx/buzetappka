@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { PaymentSource, PaymentSourceType } from "../lib/budgetPageTypes";
+import { PaymentMethodType, PaymentSource, PaymentSourceType, Transaction } from "../lib/budgetPageTypes";
 import {
   getUiColor,
   type UiColorKey,
@@ -17,6 +17,10 @@ import {
 import {
   getPaymentSourceColorTone,
   getPaymentSourceIconKey,
+  getPaymentMethodTypeOption,
+  PAYMENT_METHOD_TYPE_OPTIONS,
+  PAYMENT_SOURCE_SORT_OPTIONS,
+  PaymentSourceSortMode,
   PaymentSourceListKind,
 } from "../lib/paymentSources";
 import CategoryIcon from "./CategoryIcon";
@@ -42,6 +46,7 @@ type PaymentSourceStats = {
   incomeTotal: number;
   expenseTotal: number;
   transactionCount: number;
+  lastUsedAt: string | null;
 };
 
 type PaymentSourceTotals = {
@@ -61,11 +66,13 @@ type Props = {
   paymentSources: PaymentSource[];
   paymentSourceStats: PaymentSourceStats[];
   paymentSourceSettings: PaymentSourceSettings;
+  paymentSourceTransactionsById: Record<string, Transaction[]>;
   onSave: (input: {
     id?: string;
     allowArchivedDuplicateName?: boolean;
     name: string;
     type: PaymentSourceType;
+    paymentMethodType: PaymentMethodType;
     emoji: string;
     color: string;
     isIncomeSource: boolean;
@@ -95,6 +102,7 @@ type PaymentSourceDraft = {
   id?: string;
   name: string;
   type: PaymentSourceType;
+  paymentMethodType: PaymentMethodType;
   icon: UiIconKey;
   color: UiColorKey;
   isIncomeSource: boolean;
@@ -104,6 +112,7 @@ type PaymentSourceDraft = {
 const DEFAULT_DRAFT: PaymentSourceDraft = {
   name: "",
   type: "card",
+  paymentMethodType: "other",
   icon: "card",
   color: "blue",
   isIncomeSource: true,
@@ -215,16 +224,26 @@ const buildPaymentSourceTotals = (
   );
 };
 
-const sortPaymentSourcesByUsage = (
+const sortPaymentSources = (
   sources: PaymentSource[],
   statsById: Record<string, PaymentSourceStats>,
+  mode: PaymentSourceSortMode,
 ) => {
+  if (mode === "manual") return [...sources];
+
   return [...sources].sort((firstSource, secondSource) => {
     const firstStats = statsById[firstSource.id];
     const secondStats = statsById[secondSource.id];
     const usageDifference =
-      Math.max(0, secondStats?.transactionCount || 0) -
-      Math.max(0, firstStats?.transactionCount || 0);
+      mode === "transactions_count_desc"
+        ? (secondStats?.transactionCount || 0) - (firstStats?.transactionCount || 0)
+        : mode === "expenses_amount_desc"
+          ? (secondStats?.expenseTotal || 0) - (firstStats?.expenseTotal || 0)
+          : mode === "income_amount_desc"
+            ? (secondStats?.incomeTotal || 0) - (firstStats?.incomeTotal || 0)
+            : mode === "last_used_desc"
+              ? (secondStats?.lastUsedAt || "").localeCompare(firstStats?.lastUsedAt || "")
+              : 0;
 
     if (usageDifference !== 0) {
       return usageDifference;
@@ -252,6 +271,7 @@ export default function PaymentSourcesPanel({
   paymentSources,
   paymentSourceStats,
   paymentSourceSettings,
+  paymentSourceTransactionsById,
   onSave,
   onDelete,
   onRestore,
@@ -264,6 +284,9 @@ export default function PaymentSourcesPanel({
   const [settingsDraft, setSettingsDraft] = useState(paymentSourceSettings);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [activeList, setActiveList] = useState<"active" | "archived">("active");
+  const [methodFilter, setMethodFilter] = useState<PaymentMethodType | "all">("all");
+  const [availabilityFilter, setAvailabilityFilter] = useState<"all" | "income" | "expense">("all");
+  const [sortMode, setSortMode] = useState<PaymentSourceSortMode>("manual");
   const [isDefaultSourcesCollapsed, setIsDefaultSourcesCollapsed] =
     useState(true);
   const [activePicker, setActivePicker] = useState<"color" | "icon" | null>(
@@ -308,19 +331,26 @@ export default function PaymentSourcesPanel({
 
   const activeSources = useMemo(
     () =>
-      sortPaymentSourcesByUsage(
-        paymentSources.filter((source) => !source.archived_at),
+      sortPaymentSources(
+        paymentSources
+          .filter((source) => !source.archived_at)
+          .filter((source) => methodFilter === "all" || (source.payment_method_type || "other") === methodFilter)
+          .filter((source) => availabilityFilter === "all" || (availabilityFilter === "income" ? source.is_income_source !== false : source.is_expense_source !== false)),
         statsById,
+        sortMode,
       ),
-    [paymentSources, statsById],
+    [availabilityFilter, methodFilter, paymentSources, sortMode, statsById],
   );
   const archivedSources = useMemo(
     () =>
-      sortPaymentSourcesByUsage(
-        paymentSources.filter((source) => Boolean(source.archived_at)),
+      sortPaymentSources(
+        paymentSources
+          .filter((source) => Boolean(source.archived_at))
+          .filter((source) => methodFilter === "all" || (source.payment_method_type || "other") === methodFilter),
         statsById,
+        sortMode,
       ),
-    [paymentSources, statsById],
+    [methodFilter, paymentSources, sortMode, statsById],
   );
 
   const incomeSources = activeSources.filter(
@@ -390,6 +420,7 @@ export default function PaymentSourcesPanel({
       id: source.id,
       name: source.name,
       type: source.type,
+      paymentMethodType: source.payment_method_type || "other",
       icon: getPaymentSourceIconKey(source),
       color: getPaymentSourceColorTone(source),
       isIncomeSource: source.is_income_source !== false,
@@ -473,6 +504,7 @@ export default function PaymentSourcesPanel({
         allowArchivedDuplicateName,
         name: trimmedName,
         type: draft.type,
+        paymentMethodType: draft.paymentMethodType,
         emoji: draft.icon,
         color: draft.color,
         isIncomeSource: draft.isIncomeSource,
@@ -631,6 +663,7 @@ export default function PaymentSourcesPanel({
       incomeTotal: 0,
       expenseTotal: 0,
       transactionCount: 0,
+      lastUsedAt: null,
     };
     const isArchived = Boolean(source.archived_at);
     const hasHistory = stats.transactionCount > 0;
@@ -668,6 +701,7 @@ export default function PaymentSourcesPanel({
 
           <div data-ui-large-record-identity-copy="true">
             <strong data-ui-large-record-title="true">{source.name}</strong>
+            <span>{getPaymentMethodTypeOption(source.payment_method_type).label}</span>
             <div data-ui-status-pill-group="true">
               {renderAvailability(
                 "Przychody",
@@ -752,6 +786,7 @@ export default function PaymentSourcesPanel({
       incomeTotal: 0,
       expenseTotal: 0,
       transactionCount: 0,
+      lastUsedAt: null,
     };
 
     return (
@@ -783,9 +818,27 @@ export default function PaymentSourcesPanel({
             })}
           </div>
 
+          <p>Typ płatności: {getPaymentMethodTypeOption(source.payment_method_type).label}</p>
+          <p>Ostatnie użycie: {stats.lastUsedAt || "brak"}</p>
+
           <div data-ui-record-details-list="true">
             <strong>Transakcje tego źródła</strong>
-            <span>Lista transakcji zostanie podłączona po przekazaniu wpisów i splitów płatności do panelu.</span>
+            {(paymentSourceTransactionsById[source.id] || []).length === 0 ? (
+              <span>Brak transakcji.</span>
+            ) : (
+              (paymentSourceTransactionsById[source.id] || []).map((transaction) => (
+                <span key={transaction.id}>
+                  {transaction.date} · {transaction.description || "Bez opisu"} · {formatCurrency(Number(transaction.amount))}
+                </span>
+              ))
+            )}
+          </div>
+          <div data-ui-action-group="true">
+            <SecondaryAction onClick={() => openEditForm(source)}>Edytuj</SecondaryAction>
+            {!source.archived_at && <DangerAction onClick={() => void deleteSource(source)}>Archiwizuj / usuń</DangerAction>}
+            {source.archived_at && <SecondaryAction onClick={() => void restoreSource(source)}>Przywróć</SecondaryAction>}
+            <SecondaryAction onClick={() => void onSetDefault("expense", source.id)}>Domyślne dla wydatków</SecondaryAction>
+            <SecondaryAction onClick={() => void onSetDefault("income", source.id)}>Domyślne dla przychodów</SecondaryAction>
           </div>
       </section>
     );
@@ -960,6 +1013,31 @@ export default function PaymentSourcesPanel({
             </div>
           }
         />
+        <div data-ui-settings-strip="true">
+          <label>
+            Typ płatności
+            <select value={methodFilter} onChange={(event) => setMethodFilter(event.target.value as PaymentMethodType | "all")}>
+              <option value="all">Wszystkie typy</option>
+              {PAYMENT_METHOD_TYPE_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+            </select>
+          </label>
+          {activeList === "active" && (
+            <label>
+              Dostępność
+              <select value={availabilityFilter} onChange={(event) => setAvailabilityFilter(event.target.value as "all" | "income" | "expense")}>
+                <option value="all">Wszystkie</option>
+                <option value="expense">Do wydatków</option>
+                <option value="income">Do przychodów</option>
+              </select>
+            </label>
+          )}
+          <label>
+            Sortowanie
+            <select value={sortMode} onChange={(event) => setSortMode(event.target.value as PaymentSourceSortMode)}>
+              {PAYMENT_SOURCE_SORT_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+            </select>
+          </label>
+        </div>
         <div
           data-ui-payment-sources-list-window="true"
           style={{
@@ -1120,6 +1198,22 @@ export default function PaymentSourcesPanel({
                       )}
                     </div>
                   )}
+                  <FormField label="Typ płatności">
+                    <select
+                      className="ui-select"
+                      value={draft.paymentMethodType}
+                      onChange={(event) => setDraft((currentDraft) => ({
+                        ...currentDraft,
+                        paymentMethodType: event.target.value as PaymentMethodType,
+                      }))}
+                    >
+                      {PAYMENT_METHOD_TYPE_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label} — {option.description}
+                        </option>
+                      ))}
+                    </select>
+                  </FormField>
                 </CreatorSection>
 
                 <CreatorSection

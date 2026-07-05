@@ -5,6 +5,7 @@ import { supabase } from './supabaseClient'
 import {
   Category,
   PaymentSource,
+  PaymentMethodType,
   PaymentSourceType,
   Transaction,
   TransactionPaymentSplit,
@@ -15,6 +16,7 @@ import {
   isPaymentSourceVisibleForKind,
   normalizePaymentSourceColor,
   normalizePaymentSourceEmoji,
+  normalizePaymentMethodType,
   PaymentSourceListKind,
 } from './paymentSources'
 import { TRANSACTION_SELECT_COLUMNS } from './transactionScope'
@@ -33,6 +35,7 @@ type SavePaymentSourceInput = {
   allowArchivedDuplicateName?: boolean
   name: string
   type: PaymentSourceType
+  paymentMethodType: PaymentMethodType
   emoji: string
   color: string
   isIncomeSource: boolean
@@ -141,10 +144,13 @@ export function usePaymentSources({
     useState<PaymentSourceSettings>(DEFAULT_SETTINGS)
 
   useEffect(() => {
-    setPaymentSources([])
-    setHistoryTransactions([])
-    setHistoryPaymentSplitsMap({})
-    setPaymentSourceSettings(DEFAULT_SETTINGS)
+    const task = window.setTimeout(() => {
+      setPaymentSources([])
+      setHistoryTransactions([])
+      setHistoryPaymentSplitsMap({})
+      setPaymentSourceSettings(DEFAULT_SETTINGS)
+    }, 0)
+    return () => window.clearTimeout(task)
   }, [profileId])
 
   const loadPaymentSources = useCallback(async () => {
@@ -176,6 +182,7 @@ export function usePaymentSources({
         emoji: source.emoji || null,
         color: source.color || null,
         archived_at: source.archived_at || null,
+        payment_method_type: normalizePaymentMethodType(source.payment_method_type),
       }
     })
 
@@ -252,6 +259,7 @@ export function usePaymentSources({
         profile_id: profileId,
         name: trimmedName,
         type: input.type,
+        payment_method_type: normalizePaymentMethodType(input.paymentMethodType),
         emoji: normalizePaymentSourceEmoji(input.emoji, input.type),
         color: normalizePaymentSourceColor(input.color, input.type),
         is_income_source: input.isIncomeSource,
@@ -500,12 +508,28 @@ export function usePaymentSources({
     historyTransactions,
   ])
 
+  const paymentSourceTransactionsById = useMemo(() => {
+    const result = paymentSources.reduce<Record<string, Transaction[]>>((acc, source) => {
+      acc[source.id] = []
+      return acc
+    }, {})
+    historyTransactions.forEach((transaction) => {
+      const sourceIds = new Set([
+        transaction.payment_source_id,
+        ...(historyPaymentSplitsMap[transaction.id] || []).map((split) => split.payment_source_id),
+      ].filter((value): value is string => Boolean(value)))
+      sourceIds.forEach((sourceId) => result[sourceId]?.push(transaction))
+    })
+    return result
+  }, [historyPaymentSplitsMap, historyTransactions, paymentSources])
+
   return {
     paymentSources,
     paymentSourceOptions,
     incomePaymentSourceOptions,
     expensePaymentSourceOptions,
     paymentSourceStats,
+    paymentSourceTransactionsById,
     paymentSourceSettings,
     loadPaymentSources,
     savePaymentSource,

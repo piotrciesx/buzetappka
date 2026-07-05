@@ -153,6 +153,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     paymentSourceOptions,
     paymentSourceSettings,
     paymentSourceStats,
+    paymentSourceTransactionsById,
     paymentSources,
     prev,
     profileId,
@@ -354,6 +355,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     paymentSourcesPanelProps: {
           paymentSources,
           paymentSourceStats,
+          paymentSourceTransactionsById,
           paymentSourceSettings,
           onSave: async (input: any) => {
             try {

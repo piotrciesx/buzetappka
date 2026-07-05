@@ -1,6 +1,7 @@
 import {
   Category,
   PaymentSource,
+  PaymentMethodType,
   Transaction,
   TransactionPaymentSplit,
 } from './budgetPageTypes'
@@ -17,6 +18,29 @@ export const PAYMENT_SOURCE_TYPE_LABELS = {
   account: 'Konto',
   other: 'Inne',
 } as const
+
+export const PAYMENT_METHOD_TYPE_OPTIONS: ReadonlyArray<{
+  value: PaymentMethodType
+  label: string
+  description: string
+  iconKey: UiIconKey
+}> = [
+  { value: 'cash', label: 'Gotówka', description: 'Płatności gotówkowe.', iconKey: 'cash' },
+  { value: 'card', label: 'Karta', description: 'Karta fizyczna, mobilna, online i subskrypcje.', iconKey: 'card' },
+  { value: 'bank_transfer', label: 'Przelew / konto bankowe', description: 'Przelewy i płatności bezpośrednio z konta.', iconKey: 'bank' },
+  { value: 'quick_payment', label: 'BLIK / szybka płatność', description: 'BLIK, PayU, Przelewy24 i podobne płatności.', iconKey: 'exchange' },
+  { value: 'gift_card', label: 'Karta podarunkowa / voucher', description: 'Bony, vouchery i karty podarunkowe.', iconKey: 'gift' },
+  { value: 'app_wallet', label: 'Aplikacja / portfel', description: 'Saldo aplikacji albo portfela.', iconKey: 'wallet' },
+  { value: 'other', label: 'Inne', description: 'Inna forma płatności.', iconKey: 'more' },
+]
+
+export const normalizePaymentMethodType = (value: unknown): PaymentMethodType =>
+  PAYMENT_METHOD_TYPE_OPTIONS.some((option) => option.value === value)
+    ? (value as PaymentMethodType)
+    : 'other'
+
+export const getPaymentMethodTypeOption = (value: unknown) =>
+  PAYMENT_METHOD_TYPE_OPTIONS.find((option) => option.value === normalizePaymentMethodType(value))!
 
 export const DEFAULT_PAYMENT_SOURCE_ICON: Record<PaymentSource['type'], UiIconKey> = {
   cash: 'cash',
@@ -39,6 +63,51 @@ export type PaymentSourceStats = {
   incomeTotal: number
   expenseTotal: number
   transactionCount: number
+  lastUsedAt: string | null
+}
+
+export type PaymentSourceSortMode =
+  | 'manual'
+  | 'transactions_count_desc'
+  | 'expenses_amount_desc'
+  | 'income_amount_desc'
+  | 'last_used_desc'
+  | 'name_asc'
+
+export const PAYMENT_SOURCE_SORT_OPTIONS: ReadonlyArray<{ value: PaymentSourceSortMode; label: string }> = [
+  { value: 'manual', label: 'Moja kolejność' },
+  { value: 'transactions_count_desc', label: 'Najczęściej używane' },
+  { value: 'expenses_amount_desc', label: 'Największe wydatki' },
+  { value: 'income_amount_desc', label: 'Największe przychody' },
+  { value: 'last_used_desc', label: 'Ostatnio używane' },
+  { value: 'name_asc', label: 'Nazwa A-Z' },
+]
+
+export type PaymentSourceViewModel = {
+  source: PaymentSource
+  method: ReturnType<typeof getPaymentMethodTypeOption>
+  stats: PaymentSourceStats
+  transactionSharePercent: number
+  expenseSharePercent: number
+  incomeSharePercent: number
+  isArchived: boolean
+}
+
+export const buildPaymentSourceViewModel = ({ source, stats, totals }: {
+  source: PaymentSource
+  stats: PaymentSourceStats
+  totals: Pick<PaymentSourceStats, 'incomeTotal' | 'expenseTotal' | 'transactionCount'>
+}): PaymentSourceViewModel => {
+  const share = (value: number, total: number) => total > 0 ? (value / total) * 100 : 0
+  return {
+    source,
+    method: getPaymentMethodTypeOption(source.payment_method_type),
+    stats,
+    transactionSharePercent: share(stats.transactionCount, totals.transactionCount),
+    expenseSharePercent: share(stats.expenseTotal, totals.expenseTotal),
+    incomeSharePercent: share(stats.incomeTotal, totals.incomeTotal),
+    isArchived: Boolean(source.archived_at),
+  }
 }
 
 export type PaymentSourceListKind = 'income' | 'expense'
@@ -282,6 +351,7 @@ export const buildPaymentSourceStats = ({
       incomeTotal: 0,
       expenseTotal: 0,
       transactionCount: 0,
+      lastUsedAt: null,
     }
     return acc
   }, {})
@@ -303,6 +373,9 @@ export const buildPaymentSourceStats = ({
 
       const stats = statsById[sourceId]
       stats.transactionCount += 1
+      if (!stats.lastUsedAt || transaction.date > stats.lastUsedAt) {
+        stats.lastUsedAt = transaction.date
+      }
 
       if (rootLevel1Id && incomeLevel1Id && rootLevel1Id === incomeLevel1Id) {
         stats.incomeTotal += partialAmount
