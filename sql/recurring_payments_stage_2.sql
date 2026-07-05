@@ -107,7 +107,12 @@ create index if not exists recurring_occurrence_transactions_transaction_idx on 
 
 alter table public.transactions add column if not exists recurring_occurrence_id uuid null;
 do $$ begin
-  if not exists (select 1 from pg_constraint where conname = 'transactions_recurring_occurrence_id_fkey') then
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'transactions_recurring_occurrence_id_fkey'
+      and conrelid = 'public.transactions'::regclass
+  ) then
     alter table public.transactions add constraint transactions_recurring_occurrence_id_fkey foreign key (recurring_occurrence_id)
       references public.recurring_payment_occurrences(id) on delete set null;
   end if;
@@ -139,11 +144,21 @@ end $$;
 -- remains explicitly labelled instead of being guessed as paid or skipped.
 insert into public.recurring_payment_occurrences(profile_id, plan_id, sequence_number, due_date, planned_amount, status, completed_at, legacy_source, legacy_source_id)
 select s.profile_id, s.reminder_id,
-  1000000 + (extract(year from s.month)::int * 12 + extract(month from s.month)::int),
-  (s.month + (greatest(least(coalesce(extract(day from r.start_date)::int,1),28),1)-1) * interval '1 day')::date,
+  1000000 + (
+    extract(year from legacy_month.month_start)::int * 12
+    + extract(month from legacy_month.month_start)::int
+  ),
+  (
+    legacy_month.month_start
+    + (greatest(least(coalesce(extract(day from r.start_date::date)::int, 1), 28), 1) - 1)
+  )::date,
   r.amount, case when s.status='linked' then 'completed_with_transaction' else 'completed_without_transaction' end,
   s.updated_at, case when s.status='read' then 'legacy_unknown_handled' else 'legacy_linked' end, s.id
 from public.recurring_reminder_month_statuses s join public.recurring_transactions r on r.id=s.reminder_id
+cross join lateral (
+  select to_date(left(s.month::text, 7), 'YYYY-MM') as month_start
+) legacy_month
+where s.month::text ~ '^[0-9]{4}-(0[1-9]|1[0-2])(-[0-9]{2})?$'
 on conflict (plan_id, sequence_number) do nothing;
 
 insert into public.recurring_occurrence_transactions(profile_id, occurrence_id, transaction_id)

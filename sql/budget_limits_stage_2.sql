@@ -79,14 +79,23 @@ select b.profile_id,case when b.category_id is null then 'Wszystkie wydatki' els
 from public.budget_limits b on conflict(legacy_budget_limit_id) do nothing;
 insert into public.budget_limit_versions(profile_id,plan_id,effective_from,effective_to,limit_amount,scope_type,category_id,alert_thresholds,forecast_alert_enabled)
 select b.profile_id,p.id,(b.start_month||'-01')::date,
-  case when b.end_month is null then null else (date_trunc('month',(b.end_month||'-01')::date)+interval '1 month-1 day')::date end,
+  case
+    when b.end_month is null then null
+    else (
+      date_trunc('month', (b.end_month || '-01')::date)
+      + interval '1 month'
+      - interval '1 day'
+    )::date
+  end,
   b.amount,case when b.category_id is null then 'global_expenses' else coalesce(case c.level when 2 then 'category_l2' when 3 then 'category_l3' end,'category_l3') end,
   b.category_id,case when b.mode='strict' then '{}'::integer[] else '{80,90}'::integer[] end,true
 from public.budget_limits b join public.budget_limit_plans p on p.legacy_budget_limit_id=b.id left join public.categories c on c.id=b.category_id
 where not exists(select 1 from public.budget_limit_versions v where v.plan_id=p.id);
 
 insert into public.budget_limit_periods(profile_id,plan_id,version_id,period_start,period_end,limit_amount_snapshot,status)
-select p.profile_id,p.id,v.id,month_start::date,(month_start+interval '1 month'-interval '1 day')::date,v.limit_amount,
+select p.profile_id,p.id,v.id,month_start::date,
+  (month_start + interval '1 month' - interval '1 day')::date,
+  v.limit_amount,
   case when month_start < date_trunc('month',current_date) then 'closed' else 'open' end
 from public.budget_limit_plans p join public.budget_limit_versions v on v.plan_id=p.id
 cross join lateral generate_series(v.effective_from::timestamp,least(coalesce(v.effective_to,current_date),current_date)::timestamp,interval '1 month') month_start
@@ -109,7 +118,14 @@ declare v_plan uuid;v_old public.budget_limit_versions;v_version uuid;v_start da
     if v_old.id is not null then update public.budget_limit_versions set replaced_by_version_id=v_version where id=v_old.id;end if;
   end if;
   insert into public.budget_limit_periods(profile_id,plan_id,version_id,period_start,period_end,limit_amount_snapshot)
-    values(auth.uid(),v_plan,v_version,v_start,(v_start+interval '1 month-1 day')::date,p_limit_amount) on conflict(plan_id,period_start) do update set version_id=excluded.version_id,limit_amount_snapshot=excluded.limit_amount_snapshot,updated_at=now();
+    values(
+      auth.uid(),
+      v_plan,
+      v_version,
+      v_start,
+      (v_start + interval '1 month' - interval '1 day')::date,
+      p_limit_amount
+    ) on conflict(plan_id,period_start) do update set version_id=excluded.version_id,limit_amount_snapshot=excluded.limit_amount_snapshot,updated_at=now();
   return v_plan;end $$;
 
 create or replace function public.ensure_budget_limit_period_v1(p_plan_id uuid,p_month text) returns uuid language plpgsql security invoker as $$
@@ -117,4 +133,11 @@ declare v_start date;v_version public.budget_limit_versions;v_id uuid;begin v_st
   select * into v_version from public.budget_limit_versions where plan_id=p_plan_id and profile_id=auth.uid() and effective_from<=v_start and (effective_to is null or effective_to>=v_start) order by effective_from desc limit 1;
   if v_version.id is null then return null;end if;
   insert into public.budget_limit_periods(profile_id,plan_id,version_id,period_start,period_end,limit_amount_snapshot)
-    values(auth.uid(),p_plan_id,v_version.id,v_start,(v_start+interval '1 month-1 day')::date,v_version.limit_amount) on conflict(plan_id,period_start) do update set updated_at=now() returning id into v_id;return v_id;end $$;
+    values(
+      auth.uid(),
+      p_plan_id,
+      v_version.id,
+      v_start,
+      (v_start + interval '1 month' - interval '1 day')::date,
+      v_version.limit_amount
+    ) on conflict(plan_id,period_start) do update set updated_at=now() returning id into v_id;return v_id;end $$;
