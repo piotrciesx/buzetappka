@@ -201,6 +201,8 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
     setMigrationPromptState,
     setNewSubcategoryIconKey,
     setNewSubcategoryName,
+    setNewAmount,
+    setNewDescription,
     setNewTransactionDate,
     setOpenAddSubcategoryFor,
     setPaymentSourceFieldVisibility,
@@ -451,6 +453,12 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
           },
           onSnoozeRecurring: handleSnoozeRecurringReminder,
           onOpenCreateFromRecurring: openReminderTransactionCreator,
+          onOpenCreateFromOccurrence: (recurring: any, occurrence: any) => {
+            openReminderTransactionCreator(recurring)
+            setNewAmount(occurrence.planned_amount === null ? '' : String(occurrence.planned_amount))
+            setNewDescription(recurring.description || recurring.name)
+            setNewTransactionDate(occurrence.due_date)
+          },
           onOpenCreateFromExecution: (recurring: any, execution: any) => {
             openReminderTransactionCreator(recurring)
             setNewTransactionDate(execution.generated_for_date)

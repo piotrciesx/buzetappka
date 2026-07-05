@@ -1,6 +1,8 @@
 'use client'
 
 import { useCallback } from 'react'
+import { clearRecurringOccurrenceLinkIntent, peekRecurringOccurrenceLinkIntent } from '../../lib/recurring-payments/occurrenceLinkIntent'
+import { supabase } from '../../lib/supabaseClient'
 import type { Transaction } from '../../lib/budgetPageTypes'
 import {
   getMonthCycleDate,
@@ -129,6 +131,16 @@ export function useBudgetAppTransactionCreatorBridge(ctx: Params) {
 
   const handleTransactionSavedWithReminderStatus = useCallback(
     async (transaction: Transaction) => {
+      const occurrenceIntent = peekRecurringOccurrenceLinkIntent()
+      if (occurrenceIntent) {
+        const { error: occurrenceLinkError } = await supabase.rpc(
+          'link_transaction_to_recurring_occurrence',
+          { p_occurrence_id: occurrenceIntent.occurrenceId, p_transaction_id: transaction.id },
+        )
+        if (occurrenceLinkError) throw occurrenceLinkError
+        clearRecurringOccurrenceLinkIntent()
+      }
+
       if (!ctx.effectiveVisibleModules.recurringTransactions) {
         return
       }

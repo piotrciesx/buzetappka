@@ -51,6 +51,10 @@ export type RecurringTransactionsPanelProps = {
   onDeleteRecurringTransaction: (recurring: RecurringTransaction) => Promise<void>
   onSnoozeRecurring?: (recurring: RecurringTransaction) => void
   onOpenCreateFromRecurring: (recurring: RecurringTransaction) => void
+  onOpenCreateFromOccurrence?: (
+    recurring: RecurringTransaction,
+    occurrence: { id: string; due_date: string; planned_amount: number | null }
+  ) => void
   onOpenCreateFromExecution?: (
     recurring: RecurringTransaction,
     execution: RecurringTransactionExecution

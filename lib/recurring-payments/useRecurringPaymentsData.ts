@@ -1,19 +1,129 @@
 'use client'
+
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../supabaseClient'
-import type { RecurringOccurrenceRow, RecurringPlanDraft, RecurringPlanRow } from './data'
+import { calculateInstallmentPurchase } from './installments'
+import { parseGrosze } from './money'
+import type { RecurringScheduleDecision } from './actionPolicies'
+import type {
+  InstallmentPurchaseTerms,
+  LoanTerms,
+  RecurringOccurrenceRow,
+  RecurringOccurrenceTransactionLink,
+  RecurringPlanDraft,
+  RecurringPlanHistoryRow,
+  RecurringPlanRow,
+} from './data'
 
-export function useRecurringPaymentsData(profileId:string, enabled=true) {
-  const [plans,setPlans]=useState<RecurringPlanRow[]>([]); const [occurrences,setOccurrences]=useState<RecurringOccurrenceRow[]>([])
-  const [loading,setLoading]=useState(false); const [error,setError]=useState<string|null>(null)
-  const load=useCallback(async()=>{ if(!enabled||!profileId){setPlans([]);setOccurrences([]);return} setLoading(true);setError(null)
-    const [p,o]=await Promise.all([supabase.from('recurring_transactions').select('*').eq('profile_id',profileId).order('created_at',{ascending:false}),supabase.from('recurring_payment_occurrences').select('*').eq('profile_id',profileId).order('due_date')])
-    setLoading(false); if(p.error||o.error){setError((p.error||o.error)?.message||'Nie udało się pobrać danych');return}
-    setPlans((p.data||[]) as RecurringPlanRow[]);setOccurrences((o.data||[]) as RecurringOccurrenceRow[])
-  },[enabled,profileId])
-  useEffect(()=>{void load()},[load])
-  const savePlan=useCallback(async(draft:RecurringPlanDraft)=>{ const payload={...draft,profile_id:profileId,kind:draft.plan_type==='installment_purchase'?'installment':'open',frequency:draft.cadence_unit==='year'?'yearly':draft.cadence_unit==='month'&&draft.cadence_interval>1?'custom':'monthly',custom_interval_months:draft.cadence_unit==='month'?draft.cadence_interval:null,use_amount_when_creating:draft.amount!==null,updated_at:new Date().toISOString()}; const q=draft.id?supabase.from('recurring_transactions').update(payload).eq('id',draft.id).eq('profile_id',profileId):supabase.from('recurring_transactions').insert(payload); const {error}=await q;if(error)throw error;await load()},[load,profileId])
-  const mutate=useCallback(async(id:string,status:'pending'|'completed_without_transaction'|'skipped',snooze?:string|null)=>{const {error}=await supabase.rpc('set_recurring_occurrence_status',{p_occurrence_id:id,p_status:status,p_snoozed_until:snooze||null});if(error)throw error;await load()},[load])
-  const linkTransaction=useCallback(async(occurrenceId:string,transactionId:string)=>{const {error}=await supabase.rpc('link_transaction_to_recurring_occurrence',{p_occurrence_id:occurrenceId,p_transaction_id:transactionId});if(error)throw error;await load()},[load])
-  return {plans,occurrences,loading,error,load,createPlan:savePlan,updatePlan:savePlan,completeWithoutTransaction:(id:string)=>mutate(id,'completed_without_transaction'),skip:(id:string)=>mutate(id,'skipped'),snooze:(id:string,until:string)=>mutate(id,'pending',until),linkTransaction}
+export function useRecurringPaymentsData(profileId: string, enabled = true) {
+  const [plans, setPlans] = useState<RecurringPlanRow[]>([])
+  const [occurrences, setOccurrences] = useState<RecurringOccurrenceRow[]>([])
+  const [installmentTerms, setInstallmentTerms] = useState<InstallmentPurchaseTerms[]>([])
+  const [loanTerms, setLoanTerms] = useState<LoanTerms[]>([])
+  const [links, setLinks] = useState<RecurringOccurrenceTransactionLink[]>([])
+  const [history, setHistory] = useState<RecurringPlanHistoryRow[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const load = useCallback(async () => {
+    if (!enabled || !profileId) return
+    setLoading(true)
+    setError(null)
+    const [p, o, i, l, x, h] = await Promise.all([
+      supabase.from('recurring_transactions').select('*').eq('profile_id', profileId).order('created_at', { ascending: false }),
+      supabase.from('recurring_payment_occurrences').select('*').eq('profile_id', profileId).order('due_date'),
+      supabase.from('recurring_installment_purchase_terms').select('*').eq('profile_id', profileId),
+      supabase.from('recurring_loan_terms').select('*').eq('profile_id', profileId),
+      supabase.from('recurring_occurrence_transactions').select('*').eq('profile_id', profileId),
+      supabase.from('recurring_payment_history').select('*').eq('profile_id', profileId).order('created_at', { ascending: false }),
+    ])
+    setLoading(false)
+    const failure = [p, o, i, l, x, h].find((result) => result.error)?.error
+    if (failure) return setError(failure.message)
+    setPlans((p.data || []) as RecurringPlanRow[])
+    setOccurrences((o.data || []) as RecurringOccurrenceRow[])
+    setInstallmentTerms((i.data || []) as InstallmentPurchaseTerms[])
+    setLoanTerms((l.data || []) as LoanTerms[])
+    setLinks((x.data || []) as RecurringOccurrenceTransactionLink[])
+    setHistory((h.data || []) as RecurringPlanHistoryRow[])
+  }, [enabled, profileId])
+
+  useEffect(() => {
+    const task = window.setTimeout(() => { void load() }, 0)
+    return () => window.clearTimeout(task)
+  }, [load])
+
+  const savePlan = useCallback(async (draft: RecurringPlanDraft) => {
+    const { installment_terms, loan_terms, ...plan } = draft
+    const payload = {
+      ...plan,
+      profile_id: profileId,
+      kind: plan.plan_type === 'installment_purchase' ? 'installment' : 'open',
+      frequency: plan.cadence_unit === 'year' ? 'yearly' : plan.cadence_unit === 'month' && plan.cadence_interval > 1 ? 'custom' : 'monthly',
+      custom_interval_months: plan.cadence_unit === 'month' ? plan.cadence_interval : null,
+      installment_total_count: installment_terms?.declared_installment_count || loan_terms?.installment_count || null,
+      use_amount_when_creating: plan.amount !== null,
+      updated_at: new Date().toISOString(),
+    }
+    const result = draft.id
+      ? await supabase.from('recurring_transactions').update(payload).eq('id', draft.id).eq('profile_id', profileId).select('id').single()
+      : await supabase.from('recurring_transactions').insert(payload).select('id').single()
+    if (result.error) throw result.error
+    const planId = result.data.id
+    if (installment_terms) {
+      const { error } = await supabase.from('recurring_installment_purchase_terms').upsert({ ...installment_terms, plan_id: planId, profile_id: profileId, updated_at: new Date().toISOString() })
+      if (error) throw error
+      const calculation = calculateInstallmentPurchase({
+        purchaseAmountGrosze: parseGrosze(installment_terms.purchase_amount),
+        downPaymentAmountGrosze: parseGrosze(installment_terms.down_payment_amount),
+        installmentCount: installment_terms.declared_installment_count,
+        installmentAmountGrosze: installment_terms.default_installment_amount
+          ? parseGrosze(installment_terms.default_installment_amount)
+          : null,
+        pricingMode: installment_terms.pricing_mode,
+      })
+      const { error: scheduleError } = await supabase.rpc('sync_installment_occurrence_amounts', {
+        p_plan_id: planId,
+        p_amounts: calculation.installmentsGrosze.map((amount) => amount / 100),
+      })
+      if (scheduleError) throw scheduleError
+    }
+    if (loan_terms) {
+      const { error } = await supabase.from('recurring_loan_terms').upsert({ ...loan_terms, plan_id: planId, profile_id: profileId, updated_at: new Date().toISOString() })
+      if (error) throw error
+    }
+    await load()
+  }, [load, profileId])
+
+  const setStatus = useCallback(async (id: string, status: 'pending' | 'completed_without_transaction' | 'skipped', snoozedUntil?: string | null) => {
+    const { error: actionError } = await supabase.rpc('set_recurring_occurrence_status', { p_occurrence_id: id, p_status: status, p_snoozed_until: snoozedUntil || null })
+    if (actionError) throw actionError
+    await load()
+  }, [load])
+
+  const applyDecision = useCallback(async (occurrenceId: string, decision: RecurringScheduleDecision) => {
+    const { error: decisionError } = await supabase.rpc('apply_recurring_schedule_decision', {
+      p_occurrence_id: occurrenceId,
+      p_kind: decision.kind,
+      p_decision: decision.decision,
+      p_actual_amount: 'actualAmount' in decision ? decision.actualAmount : null,
+    })
+    if (decisionError) throw decisionError
+    await load()
+  }, [load])
+
+  const linkTransaction = useCallback(async (occurrenceId: string, transactionId: string) => {
+    const { error: linkError } = await supabase.rpc('link_transaction_to_recurring_occurrence', { p_occurrence_id: occurrenceId, p_transaction_id: transactionId })
+    if (linkError) throw linkError
+    await load()
+  }, [load])
+
+  return {
+    plans, occurrences, installmentTerms, loanTerms, links, history, loading, error, load,
+    createPlan: savePlan, updatePlan: savePlan,
+    completeWithoutTransaction: (id: string) => setStatus(id, 'completed_without_transaction'),
+    skip: (id: string) => setStatus(id, 'skipped'),
+    snooze: (id: string, until: string) => setStatus(id, 'pending', until),
+    linkTransaction, applyDecision,
+  }
 }

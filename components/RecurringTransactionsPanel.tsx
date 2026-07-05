@@ -34,6 +34,7 @@ import {
   ReminderStatusBadge,
 } from './reminder-calendar/reminderCalendarPrimitives'
 import RecurringPaymentsStage2Panel from './recurring-transactions/RecurringPaymentsStage2Panel'
+import { setRecurringOccurrenceLinkIntent } from '../lib/recurring-payments/occurrenceLinkIntent'
 
 export default function RecurringTransactionsPanel(props: RecurringTransactionsPanelProps) {
   const {
@@ -50,6 +51,7 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
     onDeleteRecurringTransaction,
     onSnoozeRecurring,
     onOpenCreateFromRecurring,
+    onOpenCreateFromOccurrence,
     styles,
   } = props
 
@@ -204,6 +206,14 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
         categoryOptions={categoryOptions}
         paymentSources={paymentSources}
         transactions={transactions}
+        onAddEntry={(plan, occurrence) => {
+          const legacyPlan = recurringTransactions.find((item) => item.id === plan.id)
+          if (legacyPlan) {
+            setRecurringOccurrenceLinkIntent({ occurrenceId: occurrence.id, planId: plan.id, plannedAmount: occurrence.planned_amount })
+            if (onOpenCreateFromOccurrence) onOpenCreateFromOccurrence(legacyPlan, occurrence)
+            else onOpenCreateFromRecurring(legacyPlan)
+          }
+        }}
       />
 
       <ReminderActionRow style={introRowStyle}>
