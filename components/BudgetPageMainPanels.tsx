@@ -2,6 +2,7 @@
 
 import { ComponentPropsWithRef, useEffect, useState } from 'react'
 import BudgetTreeSection from './BudgetTreeSection'
+import BudgetLimitsV1Panel from './BudgetLimitsV1Panel'
 import BulkActionsBar from './BulkActionsBar'
 import CategoryMigrationPrompt from './CategoryMigrationPrompt'
 import CategoryIcon from './CategoryIcon'
@@ -25,6 +26,7 @@ export type BudgetUtilityPanel =
   | 'paymentSources'
   | 'financialGoals'
   | 'recurringTransactions'
+  | 'budgetLimits'
   | 'search'
   | 'monthCalendar'
   | 'hiddenCategories'
@@ -44,6 +46,7 @@ type Props = {
   paymentSourcesPanelProps: ComponentPropsWithRef<typeof PaymentSourcesPanel>
   financialGoalsContainerProps: ComponentPropsWithRef<typeof FinancialGoalsContainer>
   recurringTransactionsPanelProps: ComponentPropsWithRef<typeof RecurringTransactionsPanel>
+  budgetLimitsPanelProps: ComponentPropsWithRef<typeof BudgetLimitsV1Panel>
   searchPanelProps: ComponentPropsWithRef<typeof SearchPanel>
   monthCalendarPanelProps: ComponentPropsWithRef<typeof MonthCalendarPanel>
   budgetTreeSectionProps: ComponentPropsWithRef<typeof BudgetTreeSection>
@@ -64,6 +67,7 @@ export default function BudgetPageMainPanels({
   paymentSourcesPanelProps,
   financialGoalsContainerProps,
   recurringTransactionsPanelProps,
+  budgetLimitsPanelProps,
   searchPanelProps,
   monthCalendarPanelProps,
   budgetTreeSectionProps,
@@ -75,7 +79,8 @@ export default function BudgetPageMainPanels({
 
   useEffect(() => {
     if (activeUtilityPanel !== 'paymentSources') {
-      setPaymentSourceDetailsId(null)
+      const task = window.setTimeout(() => setPaymentSourceDetailsId(null), 0)
+      return () => window.clearTimeout(task)
     }
   }, [activeUtilityPanel])
 
@@ -120,6 +125,8 @@ export default function BudgetPageMainPanels({
             ? 'Cele finansowe'
             : activeUtilityPanel === 'recurringTransactions'
               ? 'Stałe płatności'
+              : activeUtilityPanel === 'budgetLimits'
+                ? 'Limity budżetowe'
               : activeUtilityPanel === 'search'
                 ? 'Wyszukiwarka'
                 : activeUtilityPanel === 'monthCalendar'
@@ -141,6 +148,8 @@ export default function BudgetPageMainPanels({
             ? 'system-goals'
             : activeUtilityPanel === 'recurringTransactions'
               ? 'calendar'
+              : activeUtilityPanel === 'budgetLimits'
+                ? 'alert'
               : activeUtilityPanel === 'search'
                 ? 'info'
                 : activeUtilityPanel === 'monthCalendar'
@@ -162,6 +171,8 @@ export default function BudgetPageMainPanels({
             ? 'Śledź cele, postęp i planowane oszczędności.'
             : activeUtilityPanel === 'recurringTransactions'
               ? 'Kontroluj stałe płatności, raty i cykliczne operacje.'
+              : activeUtilityPanel === 'budgetLimits'
+                ? 'Twórz limity wydatków, kontroluj wykorzystanie, alerty i historię.'
               : activeUtilityPanel === 'search'
                 ? 'Szukaj wpisów, kategorii i informacji w budżecie.'
                 : activeUtilityPanel === 'monthCalendar'
@@ -262,6 +273,9 @@ export default function BudgetPageMainPanels({
                 visibleModules.recurringTransactions && (
                   <RecurringTransactionsPanel {...recurringTransactionsPanelProps} />
                 )}
+              {activeUtilityPanel === 'budgetLimits' && visibleModules.budgetLimits && (
+                <BudgetLimitsV1Panel {...budgetLimitsPanelProps} />
+              )}
               {activeUtilityPanel === 'search' && <SearchPanel {...searchPanelProps} />}
               {activeUtilityPanel === 'monthCalendar' && (
                 <MonthCalendarPanel {...monthCalendarPanelProps} />

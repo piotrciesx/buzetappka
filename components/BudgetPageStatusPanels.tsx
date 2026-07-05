@@ -369,8 +369,8 @@ export default function BudgetPageStatusPanels({
       id: 'budget-limits',
       label: 'Budżety i limity',
       icon: 'alert',
-      active: false,
-      onClick: () => window.dispatchEvent(new CustomEvent('budget-close-floating-ui')),
+      active: activeUtilityPanel === 'budgetLimits',
+      onClick: () => openPanel('budgetLimits'),
     },
     {
       id: 'recurring',

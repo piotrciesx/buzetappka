@@ -465,6 +465,15 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
           },
           styles,
         },
+    budgetLimitsPanelProps: {
+          profileId,
+          selectedMonth,
+          categoriesById,
+          expenseLevel1Id,
+          transactions: scopedTransactions,
+          budgetStartDate,
+          getSignedAmountForTransaction,
+        },
     searchPanelProps: {
           ref: searchPanelRef,
           isOpen: isBankSearchOpen,
