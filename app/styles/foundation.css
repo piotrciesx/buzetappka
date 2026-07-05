@@ -5696,3 +5696,319 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   [data-ui-management-split-list="true"] { max-height: 280px; }
   [data-ui-record-details-metrics="true"], [data-ui-management-details-metrics="true"] { grid-template-columns: 1fr; }
 }
+
+
+/* Management modules — mobile skeleton contract v1.
+   This layer intentionally defines only responsive structure for the shared management-module family.
+   Local module content remains unchanged. */
+@media (max-width: 720px) {
+  [data-budget-utility-overlay="true"] {
+    align-items: stretch;
+    justify-content: stretch;
+    padding: 0;
+  }
+
+  [data-budget-utility-backdrop="true"] {
+    opacity: 0.72;
+  }
+
+  [data-budget-utility-panel="true"] {
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    box-shadow: none;
+  }
+
+  [data-budget-utility-panel="true"] > [data-ui-hero-header="true"] {
+    position: sticky;
+    top: 0;
+    z-index: 8;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 14px 10px;
+    border-bottom: 1px solid rgba(8, 44, 122, 0.08);
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(14px);
+  }
+
+  [data-budget-utility-body="true"] {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    padding: 12px 14px 22px;
+  }
+
+  [data-ui-management-shell="true"],
+  [data-ui-payment-sources-shell="true"],
+  [data-recurring-stage2],
+  [data-budget-limits-view] {
+    display: grid;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  [data-ui-management-header="true"] {
+    align-items: center;
+    gap: 10px;
+  }
+
+  [data-ui-management-header-copy="true"] > h2,
+  [data-ui-management-header-copy="true"] > h3 {
+    font-size: 1.34rem;
+    letter-spacing: -0.025em;
+  }
+
+  [data-ui-management-header-copy="true"] > p {
+    font-size: .84rem;
+    line-height: 1.32;
+  }
+
+  [data-ui-management-header-actions="true"] {
+    gap: 8px;
+  }
+
+  [data-ui-management-header-actions="true"] button,
+  [data-ui-management-header-actions="true"] a {
+    min-height: 38px;
+  }
+
+  [data-ui-management-auxiliary="true"],
+  [data-ui-management-summary-strip="true"],
+  [data-ui-management-collapsible="true"],
+  [data-ui-payment-sources-shell="true"] [data-ui-collapsible-secondary="true"],
+  [data-ui-payment-sources-shell="true"] [data-ui-settings-strip="true"][data-ui-management-strip="true"] {
+    border-radius: 14px;
+  }
+
+  [data-ui-management-strip-inner="true"] {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  [data-ui-management-strip-item="true"] {
+    padding: 12px;
+  }
+
+  [data-ui-management-strip-item="true"] + [data-ui-management-strip-item="true"] {
+    border-left: 0;
+    border-top: 1px solid rgba(8, 44, 122, 0.08);
+  }
+
+  [data-ui-management-strip-item="true"]:nth-child(2) {
+    border-top: 0;
+    border-left: 1px solid rgba(8, 44, 122, 0.08);
+  }
+
+  [data-ui-management-toolbar="true"] {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    width: 100%;
+  }
+
+  [data-ui-management-toolbar-group="true"] {
+    width: 100%;
+    grid-template-rows: auto var(--ui-management-control-height, 38px);
+  }
+
+  [data-ui-management-toolbar-label="true"],
+  [data-ui-management-toolbar-label="empty"] {
+    min-height: 14px;
+    font-size: .72rem;
+  }
+
+  [data-ui-management-toolbar-group="true"] select,
+  [data-ui-management-select="true"],
+  [data-ui-management-sort="true"] {
+    width: 100%;
+    min-width: 0;
+    font-size: .9rem;
+  }
+
+  [data-ui-list-switch="true"][data-ui-management-switch="true"] {
+    width: 100%;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+  }
+
+  [data-ui-list-switch="true"][data-ui-management-switch="true"] button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  [data-ui-management-list="true"],
+  [data-ui-large-record-list="true"] {
+    gap: 10px;
+  }
+
+  [data-ui-large-record="true"],
+  [data-ui-record-card="true"],
+  [data-ui-card="true"] {
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    padding: 13px;
+    border-radius: 14px;
+  }
+
+  [data-ui-record-identity="true"],
+  [data-ui-large-record-identity="true"],
+  [data-ui-card-identity="true"] {
+    min-width: 0;
+  }
+
+  [data-ui-metric-group="true"],
+  [data-ui-record-metrics="true"] {
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  [data-ui-metric-card="true"],
+  [data-ui-record-metric="true"] {
+    min-width: 0;
+  }
+
+  [data-ui-large-record="true"] [data-ui-action-group="true"][data-ui-action-stack="record"],
+  [data-ui-management-action-column="true"] {
+    min-width: 0;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: stretch;
+  }
+
+  [data-ui-large-record="true"] [data-ui-action-group="true"][data-ui-action-stack="record"] button,
+  [data-ui-management-action-column="true"] button {
+    min-height: 36px;
+  }
+
+  [data-ui-large-record-progress="true"],
+  [data-ui-management-progress="true"],
+  [data-ui-record-progress="true"] {
+    width: 100%;
+  }
+
+  [data-ui-management-footer="true"] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    padding: 10px 0 0;
+    font-size: .84rem;
+  }
+
+  /* Mobile selected-record state: details become the screen, compact list is hidden. */
+  [data-ui-management-split="true"] {
+    display: block;
+  }
+
+  [data-ui-management-split-list="true"] {
+    display: none;
+  }
+
+  [data-ui-management-details-panel="true"],
+  [data-ui-record-details="true"] {
+    min-height: calc(100dvh - 120px);
+    border-radius: 16px;
+    padding: 14px;
+    box-shadow: none;
+  }
+
+  [data-ui-management-details-header="true"],
+  [data-ui-record-details-header="true"] {
+    position: sticky;
+    top: 0;
+    z-index: 6;
+    margin: -14px -14px 0;
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(8, 44, 122, 0.08);
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(14px);
+  }
+
+  [data-ui-management-details-close="true"],
+  [data-ui-details-close="true"] {
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+  }
+
+  [data-ui-management-details-metrics="true"],
+  [data-ui-record-details-metrics="true"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  [data-ui-management-details-section="true"],
+  [data-ui-record-details-list="true"] {
+    border-radius: 14px;
+    padding: 12px;
+    border: 1px solid rgba(8, 44, 122, 0.08);
+    background: rgba(255,255,255,.72);
+  }
+
+  [data-ui-detail-row="true"] {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  [data-ui-transaction-row="true"] {
+    align-items: flex-start;
+  }
+
+  [data-ui-transaction-row="true"] > strong {
+    white-space: normal;
+    text-align: right;
+  }
+
+  [data-ui-details-action-bar="true"] {
+    position: sticky;
+    bottom: 0;
+    z-index: 7;
+    margin: 0 -14px -14px;
+    padding: 10px 14px max(10px, env(safe-area-inset-bottom));
+    border-top: 1px solid rgba(8, 44, 122, 0.08);
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(14px);
+  }
+
+  [data-ui-details-action-bar="true"] button,
+  [data-ui-details-action-bar="true"] a {
+    flex: 1 1 0;
+    min-height: 38px;
+  }
+}
+
+@media (max-width: 420px) {
+  [data-budget-utility-body="true"] {
+    padding-inline: 10px;
+  }
+
+  [data-ui-management-strip-inner="true"] {
+    grid-template-columns: 1fr;
+  }
+
+  [data-ui-management-strip-item="true"]:nth-child(2) {
+    border-left: 0;
+    border-top: 1px solid rgba(8, 44, 122, 0.08);
+  }
+
+  [data-ui-metric-group="true"],
+  [data-ui-record-metrics="true"],
+  [data-ui-management-details-metrics="true"],
+  [data-ui-record-details-metrics="true"] {
+    grid-template-columns: 1fr;
+  }
+
+  [data-ui-management-header-actions="true"] {
+    gap: 6px;
+  }
+}
