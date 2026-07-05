@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { closestCenter, DndContext, DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { FinancialGoal, FinancialGoalAllocationMode } from '../../lib/budgetPageTypes'
 import CategoryIcon from '../CategoryIcon'
-import { SectionHeader } from '../ui/FoundationPrimitives'
+import { DangerAction, SecondaryAction, SectionHeader } from '../ui/FoundationPrimitives'
 import { SortableGoalCard, StaticGoalCard } from './FinancialGoalCard'
 
 type ProgressByGoalId = Record<
@@ -91,6 +91,7 @@ export default function FinancialGoalsList({
   const [activeList, setActiveList] = useState<'current' | 'archived'>('current')
   const [isAllocationMenuOpen, setIsAllocationMenuOpen] = useState(false)
   const [archiveFilter, setArchiveFilter] = useState<'all' | 'completed' | 'not_completed'>('all')
+  const [selectedGoalId, setSelectedGoalId] = useState<string | null>(null)
   const allocationMenuRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -125,6 +126,11 @@ export default function FinancialGoalsList({
           ? goal.status === 'archived_completed' || progressByGoalId[goal.id]?.statusLabel === 'zrealizowany'
           : goal.status === 'archived_not_completed' || progressByGoalId[goal.id]?.statusLabel === 'niezrealizowany'))
   const isCurrentList = activeList === 'current'
+  const selectedGoal = visibleGoals.find((goal) => goal.id === selectedGoalId) || null
+
+  useEffect(() => {
+    setSelectedGoalId(null)
+  }, [activeList, archiveFilter, effectiveMode])
 
   const renderAllocationManager = () => {
     if (effectiveMode !== 'allocation' || !isCurrentList || allocationGoals.length === 0) {
@@ -220,6 +226,80 @@ export default function FinancialGoalsList({
       )
     }
 
+    if (selectedGoal) {
+      const progress = getProgressProps(selectedGoal, progressByGoalId, lockedMonthsSet)
+      const allocationPercent = pendingAllocationByGoalId[selectedGoal.id] ?? null
+
+      return (
+        <div data-ui-management-split="true">
+          <div data-ui-management-split-list="true">
+            {visibleGoals.map((goal, index) => (
+              <StaticGoalCard
+                key={goal.id}
+                goal={goal}
+                {...getProgressProps(goal, progressByGoalId, lockedMonthsSet)}
+                allocationPercent={pendingAllocationByGoalId[goal.id] ?? null}
+                isAllocationMode={isCurrentList && effectiveMode === 'allocation'}
+                priorityPosition={index + 1}
+                isSelected={goal.id === selectedGoal.id}
+                isCompact
+                onOpen={(goal) => setSelectedGoalId(goal.id)}
+                onEdit={openEditModal}
+                onDelete={(goalId) => void onDeleteGoal(goalId)}
+                onSetStatus={(goalId, status) => void onSetGoalStatus(goalId, status)}
+              />
+            ))}
+          </div>
+
+          <section data-ui-management-details-panel="true">
+            <header data-ui-management-details-header="true">
+              <div data-ui-large-record-identity="true">
+                <span data-ui-icon-tile="true" data-ui-icon-role="large-record-hero" data-ui-tone="blue" aria-hidden="true">
+                  <CategoryIcon iconKey="system-goals" size="large" />
+                </span>
+                <div data-ui-large-record-identity-copy="true">
+                  <strong data-ui-large-record-title="true">{selectedGoal.name}</strong>
+                  <span data-ui-record-meta="true">{progress.deadlineMonth ? `do ${progress.deadlineMonth}` : 'bez terminu'} · {isCurrentList ? 'cel bieżący' : 'cel historyczny'}</span>
+                  <span data-ui-status-pill="true" data-ui-tone={progress.statusLabel === 'zrealizowany' ? 'success' : progress.statusLabel === 'niezrealizowany' ? 'danger' : selectedGoal.status === 'paused' ? 'warning' : 'neutral-blue'}>{progress.statusLabel}</span>
+                </div>
+              </div>
+              <button type="button" data-ui-management-details-close="true" aria-label="Zamknij szczegóły" onClick={() => setSelectedGoalId(null)}>
+                <CategoryIcon iconKey="close" size="small" />
+              </button>
+            </header>
+
+            <div data-ui-management-details-metrics="true">
+              <div data-ui-metric-card="true"><span data-ui-metric-card-label="true">Cel</span><strong data-ui-metric-card-value="true">{formatAmount(selectedGoal.target_amount)}</strong></div>
+              <div data-ui-metric-card="true" data-ui-tone="success"><span data-ui-metric-card-label="true">Uzbierano</span><strong data-ui-metric-card-value="true">{formatAmount(progress.collectedAmount)}</strong></div>
+              <div data-ui-metric-card="true" data-ui-tone="danger"><span data-ui-metric-card-label="true">Brakuje</span><strong data-ui-metric-card-value="true">{formatAmount(progress.remainingAmount)}</strong></div>
+              <div data-ui-metric-card="true"><span data-ui-metric-card-label="true">{effectiveMode === 'allocation' ? 'Alokacja' : 'Priorytet'}</span><strong data-ui-metric-card-value="true">{effectiveMode === 'allocation' ? `${allocationPercent ?? 0}%` : '—'}</strong></div>
+            </div>
+
+            <section data-ui-management-details-section="true">
+              <h4>Postęp celu</h4>
+              <div data-ui-large-record-progress="true" style={{ '--ui-goal-progress': `${Math.min(progress.percentage, 100)}%` } as CSSProperties}>
+                <div data-ui-large-record-progress-header="true"><span>Realizacja</span><strong>{progress.percentage.toFixed(0)}%</strong></div>
+                <span data-ui-large-record-progress-track="true" aria-hidden="true"><span data-ui-large-record-progress-fill="true" /></span>
+              </div>
+            </section>
+
+            <section data-ui-management-details-section="true">
+              <h4>Historia / momentum</h4>
+              <p>Tu moduł lokalnie pokaże historię celu, momentum oraz operacje związane z celem.</p>
+            </section>
+
+            <footer data-ui-action-group="true" data-ui-details-action-bar="true">
+              <SecondaryAction onClick={() => openEditModal(selectedGoal)}>Edytuj</SecondaryAction>
+              {(selectedGoal.status === 'active' || !selectedGoal.status) && <SecondaryAction onClick={() => void onSetGoalStatus(selectedGoal.id, 'paused')}>Wstrzymaj</SecondaryAction>}
+              {selectedGoal.status === 'paused' && <SecondaryAction onClick={() => void onSetGoalStatus(selectedGoal.id, 'active')}>Wznów</SecondaryAction>}
+              {(selectedGoal.status === 'active' || selectedGoal.status === 'paused' || !selectedGoal.status) && <SecondaryAction onClick={() => void onSetGoalStatus(selectedGoal.id, 'archived_completed')}>Zrealizuj</SecondaryAction>}
+              {(selectedGoal.status === 'active' || selectedGoal.status === 'paused' || !selectedGoal.status) && <DangerAction onClick={() => void onSetGoalStatus(selectedGoal.id, 'archived_not_completed')}>Archiwizuj bez realizacji</DangerAction>}
+            </footer>
+          </section>
+        </div>
+      )
+    }
+
     if (isCurrentList && effectiveMode === 'priority') {
       return (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
@@ -236,6 +316,8 @@ export default function FinancialGoalsList({
                   allocationPercent={pendingAllocationByGoalId[goal.id] ?? null}
                   isAllocationMode={false}
                   priorityPosition={index + 1}
+                  onOpen={(goal) => setSelectedGoalId(goal.id)}
+                  isSelected={goal.id === selectedGoalId}
                   onEdit={openEditModal}
                   onDelete={(goalId) => void onDeleteGoal(goalId)}
                   onSetStatus={(goalId, status) => void onSetGoalStatus(goalId, status)}
@@ -248,6 +330,8 @@ export default function FinancialGoalsList({
                   {...getProgressProps(goal, progressByGoalId, lockedMonthsSet)}
                   allocationPercent={null}
                   isAllocationMode={false}
+                  onOpen={(goal) => setSelectedGoalId(goal.id)}
+                  isSelected={goal.id === selectedGoalId}
                   onEdit={openEditModal}
                   onDelete={(goalId) => void onDeleteGoal(goalId)}
                   onSetStatus={(goalId, status) => void onSetGoalStatus(goalId, status)}
@@ -273,6 +357,8 @@ export default function FinancialGoalsList({
             isAllocationMode={isCurrentList && effectiveMode === 'allocation'}
             priorityPosition={index + 1}
             showInactiveDragHandle={isCurrentList && effectiveMode === 'allocation'}
+            onOpen={(goal) => setSelectedGoalId(goal.id)}
+            isSelected={goal.id === selectedGoalId}
             onEdit={openEditModal}
             onDelete={(goalId) => void onDeleteGoal(goalId)}
             onSetStatus={(goalId, status) => void onSetGoalStatus(goalId, status)}
@@ -293,7 +379,7 @@ export default function FinancialGoalsList({
           <>
             {renderAllocationManager()}
 
-            <div data-ui-list-switch="true" role="group" aria-label="Zakres celów">
+            <div data-ui-list-switch="true" data-ui-management-switch="true" role="group" aria-label="Zakres celów">
               <button
                 type="button"
                 data-active={activeList === 'current' ? 'true' : undefined}
@@ -321,7 +407,7 @@ export default function FinancialGoalsList({
 
       {renderGoalList()}
       {activeList === 'archived' && (
-        <div data-ui-list-switch="true" role="group" aria-label="Wynik archiwizacji">
+        <div data-ui-list-switch="true" data-ui-management-switch="true" role="group" aria-label="Wynik archiwizacji">
           <button type="button" data-active={archiveFilter === 'all' ? 'true' : undefined} onClick={() => setArchiveFilter('all')}>Wszystkie archiwalne</button>
           <button type="button" data-active={archiveFilter === 'completed' ? 'true' : undefined} onClick={() => setArchiveFilter('completed')}>Zrealizowane</button>
           <button type="button" data-active={archiveFilter === 'not_completed' ? 'true' : undefined} onClick={() => setArchiveFilter('not_completed')}>Niezrealizowane</button>

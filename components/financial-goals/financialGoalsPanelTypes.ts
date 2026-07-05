@@ -57,4 +57,7 @@ export type GoalCardBaseProps = {
   onEdit: (goal: FinancialGoal) => void
   onDelete: (goalId: string) => void
   onSetStatus: (goalId: string, status: NonNullable<FinancialGoal['status']>) => void
+  onOpen?: (goal: FinancialGoal) => void
+  isSelected?: boolean
+  isCompact?: boolean
 }

@@ -274,7 +274,18 @@ export function SortableGoalCard(
       data-ui-record-surface="white"
       data-ui-record-interactive="true"
       data-ui-tone={goalTone}
+      data-ui-selected={props.isSelected ? "true" : undefined}
+      data-ui-record-compact={props.isCompact ? "true" : undefined}
       data-dragging={isDragging ? "true" : "false"}
+      role={props.onOpen ? "button" : undefined}
+      tabIndex={props.onOpen ? 0 : undefined}
+      onClick={() => props.onOpen?.(goal)}
+      onKeyDown={(event) => {
+        if (props.onOpen && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault();
+          props.onOpen(goal);
+        }
+      }}
       style={{
         transform: CSS.Transform.toString(transform),
         transition,
@@ -314,6 +325,17 @@ export function StaticGoalCard(
       data-ui-record-surface="white"
       data-ui-record-interactive="true"
       data-ui-tone={goalTone}
+      data-ui-selected={props.isSelected ? "true" : undefined}
+      data-ui-record-compact={props.isCompact ? "true" : undefined}
+      role={props.onOpen ? "button" : undefined}
+      tabIndex={props.onOpen ? 0 : undefined}
+      onClick={() => props.onOpen?.(props.goal)}
+      onKeyDown={(event) => {
+        if (props.onOpen && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault();
+          props.onOpen(props.goal);
+        }
+      }}
     >
       <GoalCardContent
         {...props}

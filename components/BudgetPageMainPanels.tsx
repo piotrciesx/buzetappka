@@ -244,6 +244,16 @@ export default function BudgetPageMainPanels({
                     <CategoryIcon iconKey="system-add" size="small" />
                     Dodaj cel
                   </PrimaryAction>
+                ) : activeUtilityPanel === 'recurringTransactions' ? (
+                  <PrimaryAction onClick={() => window.dispatchEvent(new CustomEvent('budget-open-recurring-payment-create'))}>
+                    <CategoryIcon iconKey="system-add" size="small" />
+                    Dodaj płatność
+                  </PrimaryAction>
+                ) : activeUtilityPanel === 'budgetLimits' ? (
+                  <PrimaryAction onClick={() => window.dispatchEvent(new CustomEvent('budget-open-budget-limit-create'))}>
+                    <CategoryIcon iconKey="system-add" size="small" />
+                    Dodaj limit
+                  </PrimaryAction>
                 ) : null
               }
               closeAction={
