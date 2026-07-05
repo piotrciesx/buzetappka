@@ -432,6 +432,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
           styles,
         },
     recurringTransactionsPanelProps: {
+          profileId,
           selectedMonth,
           isSelectedMonthLocked,
           recurringTransactions: isRecurringTransactionsModuleEnabled ? recurringTransactions : [],

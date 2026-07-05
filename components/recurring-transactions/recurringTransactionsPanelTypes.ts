@@ -30,6 +30,7 @@ export type RecurringTransactionFormState = {
 }
 
 export type RecurringTransactionsPanelProps = {
+  profileId: string
   selectedMonth: string
   isSelectedMonthLocked: boolean
   recurringTransactions: RecurringTransaction[]

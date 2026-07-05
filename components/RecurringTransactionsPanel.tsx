@@ -33,6 +33,7 @@ import {
   ReminderActionRow,
   ReminderStatusBadge,
 } from './reminder-calendar/reminderCalendarPrimitives'
+import RecurringPaymentsStage2Panel from './recurring-transactions/RecurringPaymentsStage2Panel'
 
 export default function RecurringTransactionsPanel(props: RecurringTransactionsPanelProps) {
   const {
@@ -196,6 +197,14 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
   return (
     <CalendarSurface data-recurring-panel="true" style={panelStyle}>
       <style>{responsiveStyle}</style>
+
+      <RecurringPaymentsStage2Panel
+        profileId={props.profileId}
+        categoriesById={categoriesById}
+        categoryOptions={categoryOptions}
+        paymentSources={paymentSources}
+        transactions={transactions}
+      />
 
       <ReminderActionRow style={introRowStyle}>
         <p style={mutedTextStyle}>
