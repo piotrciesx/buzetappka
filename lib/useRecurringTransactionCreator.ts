@@ -11,6 +11,7 @@ import {
   getReminderMonthForTransactionLink,
   ReminderMonthLifecycleStatus,
 } from './recurringTransactions'
+import { clearRecurringOccurrenceLinkIntent } from './recurring-payments/occurrenceLinkIntent'
 
 type UseRecurringTransactionCreatorParams = {
   recurringTransactions: RecurringTransaction[]
@@ -88,6 +89,7 @@ export function useRecurringTransactionCreator({
   restoreDescriptionSuggestion,
 }: UseRecurringTransactionCreatorParams) {
   const resetTransactionCreator = useCallback(() => {
+    clearRecurringOccurrenceLinkIntent()
     setIsTransactionCreatorOpen(false)
     setTransactionCreatorSuggestionId(null)
     setTransactionCreatorLockedLevel1Id(null)

@@ -21,6 +21,7 @@ export type Transaction = {
   day_is_null?: boolean
   payment_source_id?: string | null
   recurring_transaction_id?: string | null
+  recurring_occurrence_id?: string | null
   created_at?: string
   is_deleted?: boolean
   deleted_at?: string | null
