@@ -581,11 +581,14 @@ export default function PaymentSourcesPanel({
     <span
       data-ui-status-pill="true"
       data-ui-pill-shape="soft-rect"
+      data-ui-compact="icon-only"
       data-ui-tone={isActive ? "success" : "danger"}
       data-active={isActive ? "true" : "false"}
+      aria-label={label}
+      title={label}
     >
-      <span aria-hidden="true">{isActive ? "✓" : "×"}</span>
-      {label}
+      <span aria-hidden="true">{isActive ? "↑" : "↓"}</span>
+      <span data-ui-visually-hidden="true">{label}</span>
     </span>
   );
 
@@ -679,6 +682,7 @@ export default function PaymentSourcesPanel({
         data-ui-indent-level="record"
         data-ui-tone={color.tone}
         data-ui-record-state={isArchived ? "archived" : "active"}
+        data-ui-selected={selectedSourceDetailsId === source.id ? "true" : undefined}
         role="button"
         tabIndex={0}
         onClick={() => openSourceDetails(source)}
@@ -779,6 +783,7 @@ export default function PaymentSourcesPanel({
   };
 
   const renderSourceDetails = (source: PaymentSource) => {
+    const iconKey = getPaymentSourceIconKey(source);
     const colorTone = getPaymentSourceColorTone(source);
     const color = getUiColor(colorTone);
     const stats = statsById[source.id] || {
@@ -788,63 +793,128 @@ export default function PaymentSourcesPanel({
       transactionCount: 0,
       lastUsedAt: null,
     };
+    const transactions = paymentSourceTransactionsById[source.id] || [];
 
     return (
       <section data-ui-record-details="true" data-ui-tone={color.tone}>
-          <div data-ui-record-details-metrics="true">
-            {renderMetric({
-              iconKey: "system-records",
-              label: "wpisy",
-              tone: "neutral-blue",
-              percent: stats.transactionCount > 0 ? 100 : 0,
-              detail: `${formatCompactNumber(stats.transactionCount)} wpisów`,
-              title: `${stats.transactionCount} wpisów`,
-            })}
-            {renderMetric({
-              iconKey: "system-income",
-              label: "przychody",
-              percent: stats.incomeTotal > 0 ? 100 : 0,
-              detail: formatCompactCurrency(stats.incomeTotal),
-              tone: "success",
-              title: formatCurrency(stats.incomeTotal),
-            })}
-            {renderMetric({
-              iconKey: "system-expense",
-              label: "wydatki",
-              percent: stats.expenseTotal > 0 ? 100 : 0,
-              detail: formatCompactCurrency(stats.expenseTotal),
-              tone: "danger",
-              title: formatCurrency(stats.expenseTotal),
-            })}
+        <div data-ui-record-details-header="true">
+          <div data-ui-large-record-identity="true">
+            <span
+              data-ui-icon-tile="true"
+              data-ui-icon-role="large-record-hero"
+              data-ui-tone={color.tone}
+              aria-hidden="true"
+            >
+              <CategoryIcon iconKey={iconKey} size="large" />
+            </span>
+            <div data-ui-large-record-identity-copy="true">
+              <strong data-ui-large-record-title="true">{source.name}</strong>
+              <span>{getPaymentMethodTypeOption(source.payment_method_type).label}</span>
+              <div data-ui-status-pill-group="true">
+                {renderAvailability(
+                  "Przychody",
+                  source.is_income_source !== false && !source.archived_at,
+                )}
+                {renderAvailability(
+                  "Wydatki",
+                  source.is_expense_source !== false && !source.archived_at,
+                )}
+              </div>
+            </div>
           </div>
+          <button
+            type="button"
+            data-ui-details-close="true"
+            aria-label="Zamknij szczegóły źródła"
+            onClick={() => setSelectedSourceDetailsId(null)}
+          >
+            <CategoryIcon iconKey="close" size="small" />
+          </button>
+        </div>
 
-          <p>Typ płatności: {getPaymentMethodTypeOption(source.payment_method_type).label}</p>
-          <p>Ostatnie użycie: {stats.lastUsedAt || "brak"}</p>
+        <div data-ui-record-details-metrics="true">
+          {renderMetric({
+            iconKey: "system-records",
+            label: "wpisy",
+            tone: "neutral-blue",
+            percent: stats.transactionCount > 0 ? 100 : 0,
+            detail: `${formatCompactNumber(stats.transactionCount)} wpisów`,
+            title: `${stats.transactionCount} wpisów`,
+          })}
+          {renderMetric({
+            iconKey: "system-income",
+            label: "przychody",
+            percent: stats.incomeTotal > 0 ? 100 : 0,
+            detail: formatCompactCurrency(stats.incomeTotal),
+            tone: "success",
+            title: formatCurrency(stats.incomeTotal),
+          })}
+          {renderMetric({
+            iconKey: "system-expense",
+            label: "wydatki",
+            percent: stats.expenseTotal > 0 ? 100 : 0,
+            detail: formatCompactCurrency(stats.expenseTotal),
+            tone: "danger",
+            title: formatCurrency(stats.expenseTotal),
+          })}
+        </div>
 
-          <div data-ui-record-details-list="true">
-            <strong>Transakcje tego źródła</strong>
-            {(paymentSourceTransactionsById[source.id] || []).length === 0 ? (
-              <span>Brak transakcji.</span>
-            ) : (
-              (paymentSourceTransactionsById[source.id] || []).map((transaction) => (
-                <span key={transaction.id}>
-                  {transaction.date} · {transaction.description || "Bez opisu"} · {formatCurrency(Number(transaction.amount))}
+        <div data-ui-record-details-list="true">
+          <strong>Informacje o źródle</strong>
+          <span>Typ płatności: {getPaymentMethodTypeOption(source.payment_method_type).label}</span>
+          <span>Ostatnie użycie: {stats.lastUsedAt || "brak"}</span>
+        </div>
+
+        <div data-ui-record-details-list="true">
+          <strong>Transakcje tego źródła</strong>
+          {transactions.length === 0 ? (
+            <span>Brak transakcji.</span>
+          ) : (
+            transactions.map((transaction) => {
+              const amount = Number(transaction.amount);
+              const isIncome = amount >= 0;
+
+              return (
+                <span
+                  key={transaction.id}
+                  data-ui-transaction-row="true"
+                  data-ui-tone={isIncome ? "success" : "danger"}
+                >
+                  <span>{transaction.date} · {transaction.description || "Bez opisu"}</span>
+                  <strong>{formatCurrency(amount)}</strong>
                 </span>
-              ))
-            )}
-          </div>
-          <div data-ui-action-group="true">
-            <SecondaryAction onClick={() => openEditForm(source)}>Edytuj</SecondaryAction>
-            {!source.archived_at && <DangerAction onClick={() => void deleteSource(source)}>Archiwizuj / usuń</DangerAction>}
-            {source.archived_at && <SecondaryAction onClick={() => void restoreSource(source)}>Przywróć</SecondaryAction>}
-            <SecondaryAction onClick={() => void onSetDefault("expense", source.id)}>Domyślne dla wydatków</SecondaryAction>
-            <SecondaryAction onClick={() => void onSetDefault("income", source.id)}>Domyślne dla przychodów</SecondaryAction>
-          </div>
+              );
+            })
+          )}
+        </div>
+
+        <div data-ui-action-group="true">
+          <SecondaryAction onClick={() => openEditForm(source)}>Edytuj</SecondaryAction>
+          {!source.archived_at && (
+            <DangerAction onClick={() => void deleteSource(source)}>
+              Archiwizuj / usuń
+            </DangerAction>
+          )}
+          {source.archived_at && (
+            <SecondaryAction onClick={() => void restoreSource(source)}>
+              Przywróć
+            </SecondaryAction>
+          )}
+          <SecondaryAction onClick={() => void onSetDefault("expense", source.id)}>
+            Domyślne dla wydatków
+          </SecondaryAction>
+          <SecondaryAction onClick={() => void onSetDefault("income", source.id)}>
+            Domyślne dla przychodów
+          </SecondaryAction>
+        </div>
       </section>
     );
   };
 
   if (selectedSourceDetails) {
+    const detailsSources = activeList === "active" ? activeSources : archivedSources;
+    const detailsTotals = activeList === "active" ? activeSourceTotals : archivedSourceTotals;
+
     return (
       <section
         data-ui-payment-sources-shell="true"
@@ -853,7 +923,12 @@ export default function PaymentSourcesPanel({
         data-ui-utility-modal-size="xl"
         style={paymentSourcesShellStyle}
       >
-        {renderSourceDetails(selectedSourceDetails)}
+        <div data-ui-management-split="true">
+          <div data-ui-management-split-list="true">
+            {detailsSources.map((source) => renderSourceCard(source, detailsTotals))}
+          </div>
+          {renderSourceDetails(selectedSourceDetails)}
+        </div>
       </section>
     );
   }
@@ -990,9 +1065,13 @@ export default function PaymentSourcesPanel({
               }
             />
           }
-          trailing={
+        />
+        <div data-ui-management-toolbar="true">
+          <div data-ui-management-toolbar-group="true">
+            <span data-ui-management-toolbar-label="empty">Tryb</span>
             <div
               data-ui-list-switch="true"
+              data-ui-management-switch="true"
               role="group"
               aria-label="Zakres źródeł płatności"
             >
@@ -1001,42 +1080,45 @@ export default function PaymentSourcesPanel({
                 data-active={activeList === "active" ? "true" : undefined}
                 onClick={() => setActiveList("active")}
               >
-                Źródła aktywne
+                Aktywne
               </button>
               <button
                 type="button"
                 data-active={activeList === "archived" ? "true" : undefined}
                 onClick={() => setActiveList("archived")}
               >
-                Źródła archiwalne
+                Archiwalne
               </button>
             </div>
-          }
-        />
-        <div data-ui-settings-strip="true">
-          <label>
-            Typ płatności
+          </div>
+
+          <div data-ui-management-toolbar-group="true">
+            <span data-ui-management-toolbar-label="true">Dostępność</span>
+            <select
+              value={availabilityFilter}
+              disabled={activeList !== "active"}
+              onChange={(event) => setAvailabilityFilter(event.target.value as "all" | "income" | "expense")}
+            >
+              <option value="all">Wszystkie</option>
+              <option value="expense">Do wydatków</option>
+              <option value="income">Do przychodów</option>
+            </select>
+          </div>
+
+          <div data-ui-management-toolbar-group="true">
+            <span data-ui-management-toolbar-label="true">Typ metody płatności</span>
             <select value={methodFilter} onChange={(event) => setMethodFilter(event.target.value as PaymentMethodType | "all")}>
               <option value="all">Wszystkie typy</option>
               {PAYMENT_METHOD_TYPE_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
             </select>
-          </label>
-          {activeList === "active" && (
-            <label>
-              Dostępność
-              <select value={availabilityFilter} onChange={(event) => setAvailabilityFilter(event.target.value as "all" | "income" | "expense")}>
-                <option value="all">Wszystkie</option>
-                <option value="expense">Do wydatków</option>
-                <option value="income">Do przychodów</option>
-              </select>
-            </label>
-          )}
-          <label>
-            Sortowanie
+          </div>
+
+          <div data-ui-management-toolbar-group="true">
+            <span data-ui-management-toolbar-label="true">Sortowanie</span>
             <select value={sortMode} onChange={(event) => setSortMode(event.target.value as PaymentSourceSortMode)}>
               {PAYMENT_SOURCE_SORT_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
             </select>
-          </label>
+          </div>
         </div>
         <div
           data-ui-payment-sources-list-window="true"
