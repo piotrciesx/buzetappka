@@ -277,8 +277,6 @@ export default function PaymentSourcesPanel({
   onRestore,
   onSetDefault,
   openCreateRequest,
-  selectedSourceDetailsId: controlledSelectedSourceDetailsId,
-  onSelectedSourceDetailsIdChange,
 }: Props) {
   const [draft, setDraft] = useState<PaymentSourceDraft>(DEFAULT_DRAFT);
   const [settingsDraft, setSettingsDraft] = useState(paymentSourceSettings);
@@ -299,20 +297,7 @@ export default function PaymentSourcesPanel({
   const [duplicateSourceId, setDuplicateSourceId] = useState<string | null>(
     null,
   );
-  const [internalSelectedSourceDetailsId, setInternalSelectedSourceDetailsId] = useState<
-    string | null
-  >(null);
-  const selectedSourceDetailsId =
-    controlledSelectedSourceDetailsId !== undefined
-      ? controlledSelectedSourceDetailsId
-      : internalSelectedSourceDetailsId;
-
-  const setSelectedSourceDetailsId = (sourceId: string | null) => {
-    if (controlledSelectedSourceDetailsId === undefined) {
-      setInternalSelectedSourceDetailsId(sourceId);
-    }
-    onSelectedSourceDetailsIdChange?.(sourceId);
-  };
+  const [selectedSourceDetailsId, setSelectedSourceDetailsId] = useState<string | null>(null);
   const previousOpenCreateRequestRef = useRef(openCreateRequest);
 
   useEffect(() => {
@@ -793,7 +778,7 @@ export default function PaymentSourcesPanel({
       transactionCount: 0,
       lastUsedAt: null,
     };
-    const transactions = paymentSourceTransactionsById[source.id] || [];
+    const transactions = (paymentSourceTransactionsById || {})[source.id] || [];
 
     return (
       <section data-ui-record-details="true" data-ui-tone={color.tone}>
