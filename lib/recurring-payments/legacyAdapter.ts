@@ -40,7 +40,6 @@ export const adaptLegacyRecurringTransaction = (
     endDate: recurring.end_date || null,
     defaultPlannedAmountGrosze:
       recurring.amount === null ? null : parseGrosze(recurring.amount),
-    status: recurring.status,
+    status: recurring.status === 'completed' ? 'archived' : recurring.status,
   }
 }
-

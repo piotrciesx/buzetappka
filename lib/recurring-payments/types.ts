@@ -41,6 +41,5 @@ export type RecurringPaymentPlan = {
   startDate: string | null
   endDate: string | null
   defaultPlannedAmountGrosze: Grosze | null
-  status: 'active' | 'paused' | 'completed' | 'archived'
+  status: 'active' | 'paused' | 'archived'
 }
-

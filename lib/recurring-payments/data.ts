@@ -6,7 +6,8 @@ export type RecurringPlanRow = {
   plan_type: RecurringPaymentPlanType; amount_mode: 'fixed' | 'variable' | 'reminder_only'
   cadence_unit: RecurringCadenceUnit; cadence_interval: number
   start_date: string | null; end_date: string | null
-  status: 'active' | 'paused' | 'completed' | 'archived'; created_at: string; updated_at: string
+  status: 'active' | 'paused' | 'archived'; paused_at: string | null; archived_at: string | null
+  resume_from_date: string | null; created_at: string; updated_at: string
 }
 
 export type RecurringOccurrenceRow = {

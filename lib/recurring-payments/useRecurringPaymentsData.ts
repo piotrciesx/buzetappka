@@ -15,6 +15,11 @@ import type {
   RecurringPlanRow,
 } from './data'
 
+export type RecurringPlanNameConflict = {
+  kind: 'blocking' | 'archived'
+  plan: RecurringPlanRow
+}
+
 export function useRecurringPaymentsData(profileId: string, enabled = true) {
   const [plans, setPlans] = useState<RecurringPlanRow[]>([])
   const [occurrences, setOccurrences] = useState<RecurringOccurrenceRow[]>([])
@@ -40,7 +45,10 @@ export function useRecurringPaymentsData(profileId: string, enabled = true) {
     setLoading(false)
     const failure = [p, o, i, l, x, h].find((result) => result.error)?.error
     if (failure) return setError(failure.message)
-    setPlans((p.data || []) as RecurringPlanRow[])
+    setPlans(((p.data || []) as Array<Omit<RecurringPlanRow, 'status'> & { status: string }>).map((plan) => ({
+      ...plan,
+      status: plan.status === 'completed' ? 'archived' : plan.status,
+    })) as RecurringPlanRow[])
     setOccurrences((o.data || []) as RecurringOccurrenceRow[])
     setInstallmentTerms((i.data || []) as InstallmentPurchaseTerms[])
     setLoanTerms((l.data || []) as LoanTerms[])
@@ -95,6 +103,29 @@ export function useRecurringPaymentsData(profileId: string, enabled = true) {
     await load()
   }, [load, profileId])
 
+  const findNameConflict = useCallback((name: string, excludeId?: string): RecurringPlanNameConflict | null => {
+    const normalizedName = name.trim().toLocaleLowerCase('pl-PL')
+    const matches = plans.filter((plan) => plan.id !== excludeId && plan.name.trim().toLocaleLowerCase('pl-PL') === normalizedName)
+    const blocking = matches.find((plan) => plan.status === 'active' || plan.status === 'paused')
+    if (blocking) return { kind: 'blocking', plan: blocking }
+    const archived = matches.find((plan) => plan.status === 'archived')
+    return archived ? { kind: 'archived', plan: archived } : null
+  }, [plans])
+
+  const setPlanStatus = useCallback(async (
+    planId: string,
+    status: 'active' | 'paused' | 'archived',
+    restartDate?: string
+  ) => {
+    const { error: statusError } = await supabase.rpc('set_recurring_payment_plan_status', {
+      p_plan_id: planId,
+      p_status: status,
+      p_restart_date: status === 'active' ? (restartDate || new Date().toISOString().slice(0, 10)) : null,
+    })
+    if (statusError) throw statusError
+    await load()
+  }, [load])
+
   const setStatus = useCallback(async (id: string, status: 'pending' | 'completed_without_transaction' | 'skipped', snoozedUntil?: string | null) => {
     const { error: actionError } = await supabase.rpc('set_recurring_occurrence_status', { p_occurrence_id: id, p_status: status, p_snoozed_until: snoozedUntil || null })
     if (actionError) throw actionError
@@ -124,6 +155,6 @@ export function useRecurringPaymentsData(profileId: string, enabled = true) {
     completeWithoutTransaction: (id: string) => setStatus(id, 'completed_without_transaction'),
     skip: (id: string) => setStatus(id, 'skipped'),
     snooze: (id: string, until: string) => setStatus(id, 'pending', until),
-    linkTransaction, applyDecision,
+    linkTransaction, applyDecision, findNameConflict, setPlanStatus,
   }
 }
