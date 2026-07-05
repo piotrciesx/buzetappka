@@ -12,7 +12,7 @@ export type BudgetLimitUsageStatus = 'safe' | 'warning' | 'exceeded'
 
 export type BudgetLimitAlertStatus = 'none' | 'unread' | 'read' | 'muted'
 
-export type BudgetLimitPlanStatus = 'active' | 'paused' | 'archived'
+export type BudgetLimitPlanStatus = 'active' | 'inactive'
 
 export type BudgetLimitChangeMode = 'only_this_period' | 'from_next_period' | 'from_now'
 
@@ -153,4 +153,3 @@ export type BudgetLimitTransactionCandidate = {
   isDeleted?: boolean
   semanticType?: BudgetLimitTransactionSemanticType
 }
-
