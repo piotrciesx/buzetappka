@@ -21,6 +21,7 @@ type ProgressByGoalId = Record<
 
 type Props = {
   activeGoals: FinancialGoal[]
+  allocationGoals: FinancialGoal[]
   archivedGoals: FinancialGoal[]
   effectiveMode: FinancialGoalAllocationMode
   progressByGoalId: ProgressByGoalId
@@ -38,6 +39,7 @@ type Props = {
   isAllocationSaving: boolean
   openEditModal: (goal: FinancialGoal) => void
   onDeleteGoal: (goalId: string) => Promise<void>
+  onSetGoalStatus: (goalId: string, status: NonNullable<FinancialGoal['status']>) => Promise<void>
 }
 
 const formatAmount = (value: number) => `${value.toFixed(2)} zł`
@@ -66,6 +68,7 @@ const getProgressProps = (
 
 export default function FinancialGoalsList({
   activeGoals,
+  allocationGoals,
   archivedGoals,
   effectiveMode,
   progressByGoalId,
@@ -83,9 +86,11 @@ export default function FinancialGoalsList({
   isAllocationSaving,
   openEditModal,
   onDeleteGoal,
+  onSetGoalStatus,
 }: Props) {
   const [activeList, setActiveList] = useState<'current' | 'archived'>('current')
   const [isAllocationMenuOpen, setIsAllocationMenuOpen] = useState(false)
+  const [archiveFilter, setArchiveFilter] = useState<'all' | 'completed' | 'not_completed'>('all')
   const allocationMenuRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -112,11 +117,17 @@ export default function FinancialGoalsList({
     }
   }, [isAllocationMenuOpen])
 
-  const visibleGoals = activeList === 'current' ? activeGoals : archivedGoals
+  const visibleGoals = activeList === 'current'
+    ? activeGoals
+    : archivedGoals.filter((goal) =>
+        archiveFilter === 'all' ||
+        (archiveFilter === 'completed'
+          ? goal.status === 'archived_completed' || progressByGoalId[goal.id]?.statusLabel === 'zrealizowany'
+          : goal.status === 'archived_not_completed' || progressByGoalId[goal.id]?.statusLabel === 'niezrealizowany'))
   const isCurrentList = activeList === 'current'
 
   const renderAllocationManager = () => {
-    if (effectiveMode !== 'allocation' || !isCurrentList || activeGoals.length === 0) {
+    if (effectiveMode !== 'allocation' || !isCurrentList || allocationGoals.length === 0) {
       return null
     }
 
@@ -151,7 +162,7 @@ export default function FinancialGoalsList({
             </header>
 
             <div data-financial-goals-allocation-rows="true">
-              {activeGoals.map((goal) => {
+              {allocationGoals.map((goal) => {
                 const value = pendingAllocationByGoalId[goal.id] ?? 0
                 const isLocked = lockedAllocationGoalIds.has(goal.id)
 
@@ -212,12 +223,12 @@ export default function FinancialGoalsList({
     if (isCurrentList && effectiveMode === 'priority') {
       return (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext items={activeGoals.map((goal) => goal.id)} strategy={verticalListSortingStrategy}>
+          <SortableContext items={allocationGoals.map((goal) => goal.id)} strategy={verticalListSortingStrategy}>
             <div
               data-ui-large-record-list="true"
               data-financial-goals-list-viewport="true"
             >
-              {activeGoals.map((goal, index) => (
+              {allocationGoals.map((goal, index) => (
                 <SortableGoalCard
                   key={goal.id}
                   goal={goal}
@@ -227,6 +238,19 @@ export default function FinancialGoalsList({
                   priorityPosition={index + 1}
                   onEdit={openEditModal}
                   onDelete={(goalId) => void onDeleteGoal(goalId)}
+                  onSetStatus={(goalId, status) => void onSetGoalStatus(goalId, status)}
+                />
+              ))}
+              {activeGoals.filter((goal) => goal.status === 'paused').map((goal) => (
+                <StaticGoalCard
+                  key={goal.id}
+                  goal={goal}
+                  {...getProgressProps(goal, progressByGoalId, lockedMonthsSet)}
+                  allocationPercent={null}
+                  isAllocationMode={false}
+                  onEdit={openEditModal}
+                  onDelete={(goalId) => void onDeleteGoal(goalId)}
+                  onSetStatus={(goalId, status) => void onSetGoalStatus(goalId, status)}
                 />
               ))}
             </div>
@@ -251,6 +275,7 @@ export default function FinancialGoalsList({
             showInactiveDragHandle={isCurrentList && effectiveMode === 'allocation'}
             onEdit={openEditModal}
             onDelete={(goalId) => void onDeleteGoal(goalId)}
+            onSetStatus={(goalId, status) => void onSetGoalStatus(goalId, status)}
           />
         ))}
       </div>
@@ -295,6 +320,13 @@ export default function FinancialGoalsList({
       />
 
       {renderGoalList()}
+      {activeList === 'archived' && (
+        <div data-ui-list-switch="true" role="group" aria-label="Wynik archiwizacji">
+          <button type="button" data-active={archiveFilter === 'all' ? 'true' : undefined} onClick={() => setArchiveFilter('all')}>Wszystkie archiwalne</button>
+          <button type="button" data-active={archiveFilter === 'completed' ? 'true' : undefined} onClick={() => setArchiveFilter('completed')}>Zrealizowane</button>
+          <button type="button" data-active={archiveFilter === 'not_completed' ? 'true' : undefined} onClick={() => setArchiveFilter('not_completed')}>Niezrealizowane</button>
+        </div>
+      )}
     </section>
   )
 }

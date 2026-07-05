@@ -9,6 +9,7 @@ import { getTransactionMonth } from './transactionDomain'
 
 export type FinancialGoalComputedStatus =
   | 'w trakcie'
+  | 'wstrzymany'
   | 'oczekuje na zamknięcie miesiąca'
   | 'zrealizowany'
   | 'niezrealizowany'
@@ -31,6 +32,108 @@ export type FinancialGoalPlan = {
   progressByGoalId: Record<string, FinancialGoalProgress>
   monthlyBalances: Record<string, number>
   monthlySurplus: Record<string, number>
+}
+
+export type FinancialGoalCardViewModel = {
+  id: string
+  name: string
+  status: 'active' | 'paused' | 'archived'
+  archiveOutcome: 'completed' | 'not_completed' | null
+  deadlineMonth: string | null
+  targetAmount: number
+  collectedAmount: number
+  remainingAmount: number
+  percentage: number
+  allocationPercent: number | null
+}
+
+export type FinancialGoalDetailsViewModel = FinancialGoalCardViewModel & {
+  goal: FinancialGoal
+  monthlyHistory: Array<{ month: string; netAllocation: number }>
+  balance: number
+  linkedTransactions: Transaction[]
+}
+
+export type FinancialGoalsMomentum = {
+  depositsThisMonth: number
+  withdrawalsThisMonth: number
+  netChangeThisMonth: number
+  totalCollected: number
+  totalRemaining: number
+  isWithdrawalHistoryComplete: boolean
+}
+
+export const buildFinancialGoalCardViewModel = (
+  goal: FinancialGoal,
+  progress: FinancialGoalProgress,
+  allocationPercent: number | null = null
+): FinancialGoalCardViewModel => ({
+  id: goal.id,
+  name: goal.name,
+  status: isFinancialGoalArchived(goal) ? 'archived' : goal.status === 'paused' ? 'paused' : 'active',
+  archiveOutcome: goal.status === 'archived_completed'
+    ? 'completed'
+    : goal.status === 'archived_not_completed'
+      ? 'not_completed'
+      : null,
+  deadlineMonth: goal.deadline_month || null,
+  targetAmount: goal.target_amount,
+  collectedAmount: progress.collectedAmount,
+  remainingAmount: progress.remainingAmount,
+  percentage: progress.percentage,
+  allocationPercent,
+})
+
+export const buildFinancialGoalDetailsViewModel = ({ goal, progress, transactions = [] }: {
+  goal: FinancialGoal
+  progress: FinancialGoalProgress
+  transactions?: Transaction[]
+}): FinancialGoalDetailsViewModel => ({
+  ...buildFinancialGoalCardViewModel(goal, progress, goal.allocation_percent ?? null),
+  goal,
+  monthlyHistory: Object.entries(progress.allocationsByMonth)
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([month, netAllocation]) => ({ month, netAllocation })),
+  balance: progress.collectedAmount,
+  linkedTransactions: transactions,
+})
+
+export const buildFinancialGoalsMomentum = (
+  goals: FinancialGoal[],
+  progressByGoalId: Record<string, FinancialGoalProgress>,
+  month: string
+): FinancialGoalsMomentum => {
+  const depositsThisMonth = goals.reduce(
+    (sum, goal) => sum + Math.max(progressByGoalId[goal.id]?.allocationsByMonth[month] || 0, 0),
+    0
+  )
+  const totalCollected = goals.reduce(
+    (sum, goal) => sum + (progressByGoalId[goal.id]?.collectedAmount || 0),
+    0
+  )
+  const totalRemaining = goals.reduce(
+    (sum, goal) => sum + (progressByGoalId[goal.id]?.remainingAmount || goal.target_amount),
+    0
+  )
+  return {
+    depositsThisMonth,
+    withdrawalsThisMonth: 0,
+    netChangeThisMonth: depositsThisMonth,
+    totalCollected,
+    totalRemaining,
+    isWithdrawalHistoryComplete: false,
+  }
+}
+
+export const isFinancialGoalArchived = (goal: Pick<FinancialGoal, 'status'>) =>
+  goal.status === 'archived_completed' || goal.status === 'archived_not_completed'
+
+export const isFinancialGoalActiveInMonth = (
+  goal: Pick<FinancialGoal, 'status' | 'status_changed_month'>,
+  month: string
+) => {
+  if (!goal.status || goal.status === 'active') return true
+  return Boolean(goal.status_changed_month && month < goal.status_changed_month)
 }
 
 const FULL_PERCENT = 100
@@ -183,7 +286,7 @@ export const getFinancialGoalAllocationPercentagesForMonth = ({
   goals?: FinancialGoal[]
   priorities?: FinancialGoalMonthPriority[]
 }) => {
-  const sortedGoals = sortGoalsByBaseOrder(goals)
+  const sortedGoals = sortGoalsByBaseOrder(goals.filter((goal) => goal.status === 'active' || !goal.status))
   const goalIds = sortedGoals.map((goal) => goal.id)
   const effectivePriorityRows = getEffectiveMonthPriorityRowsForMonth(month, priorities)
   const priorityRowMap = Object.fromEntries(
@@ -322,9 +425,20 @@ export const mapFinancialGoalRow = (row: Record<string, unknown>): FinancialGoal
     icon_key: typeof row.icon_key === 'string' && row.icon_key ? row.icon_key : null,
     color_tone: typeof row.color_tone === 'string' && row.color_tone ? row.color_tone : null,
     status:
-      row.status === 'completed' || row.status === 'cancelled' || row.status === 'active'
+      row.status === 'paused' ||
+      row.status === 'archived_completed' ||
+      row.status === 'archived_not_completed' ||
+      row.status === 'active'
         ? row.status
-        : 'active',
+        : row.status === 'completed'
+          ? 'archived_completed'
+          : row.status === 'cancelled'
+            ? 'archived_not_completed'
+            : 'active',
+    status_changed_month:
+      typeof row.status_changed_month === 'string' ? row.status_changed_month.slice(0, 7) : null,
+    paused_at: typeof row.paused_at === 'string' ? row.paused_at : null,
+    archived_at: typeof row.archived_at === 'string' ? row.archived_at : null,
     completed_at: typeof row.completed_at === 'string' ? row.completed_at : null,
     created_at: typeof row.created_at === 'string' ? row.created_at : undefined,
   }
@@ -540,6 +654,9 @@ export const buildFinancialGoalsPlan = ({
     const batch: FinancialGoalLedgerBatch = { month, mode, entries: [] }
 
     const activeGoals = baseGoals.filter((goal) => {
+      if (!isFinancialGoalActiveInMonth(goal, month)) {
+        return false
+      }
       if (compareMonths(goal.start_month, month) > 0) {
         return false
       }
@@ -739,13 +856,15 @@ export const buildFinancialGoalsPlan = ({
       const isArchived =
         isCompleted ||
         Boolean(isFailedDeadlineClosed) ||
-        goal.status === 'completed' ||
-        goal.status === 'cancelled'
+        goal.status === 'archived_completed' ||
+        goal.status === 'archived_not_completed'
 
-      const statusLabel: FinancialGoalComputedStatus = isCompleted || goal.status === 'completed'
+      const statusLabel: FinancialGoalComputedStatus = isCompleted || goal.status === 'archived_completed'
         ? 'zrealizowany'
-        : isFailedDeadlineClosed || goal.status === 'cancelled'
+        : isFailedDeadlineClosed || goal.status === 'archived_not_completed'
           ? 'niezrealizowany'
+          : goal.status === 'paused'
+            ? 'wstrzymany'
           : waitingForLockedMonth
             ? 'oczekuje na zamknięcie miesiąca'
             : 'w trakcie'

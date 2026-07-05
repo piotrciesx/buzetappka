@@ -150,7 +150,10 @@ export type FinancialGoal = {
   allocation_percent?: number | null
   icon_key?: string | null
   color_tone?: string | null
-  status?: 'active' | 'completed' | 'cancelled'
+  status?: 'active' | 'paused' | 'archived_completed' | 'archived_not_completed'
+  status_changed_month?: string | null
+  paused_at?: string | null
+  archived_at?: string | null
   completed_at?: string | null
   created_at?: string
 }

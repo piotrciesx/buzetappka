@@ -37,8 +37,8 @@ const hasStoredGoalAmountOrFinalStatus = (row: Record<string, unknown> | null | 
 
   return (
     (Number.isFinite(currentAmount) && currentAmount > 0) ||
-    status === 'completed' ||
-    status === 'cancelled' ||
+    status === 'archived_completed' ||
+    status === 'archived_not_completed' ||
     Boolean(row.completed_at)
   )
 }
@@ -49,9 +49,13 @@ export function useFinancialGoals({ profileId, isEnabled = true }: UseFinancialG
   const [financialGoalMonthConfigs, setFinancialGoalMonthConfigs] = useState<FinancialGoalMonthConfig[]>([])
 
   useEffect(() => {
-    setFinancialGoals([])
-    setFinancialGoalPriorities([])
-    setFinancialGoalMonthConfigs([])
+    const resetState = window.setTimeout(() => {
+      setFinancialGoals([])
+      setFinancialGoalPriorities([])
+      setFinancialGoalMonthConfigs([])
+    }, 0)
+
+    return () => window.clearTimeout(resetState)
   }, [profileId])
 
   const loadFinancialGoals = useCallback(async () => {
@@ -418,6 +422,32 @@ export function useFinancialGoals({ profileId, isEnabled = true }: UseFinancialG
     [isEnabled, loadFinancialGoals, profileId]
   )
 
+  const setFinancialGoalStatus = useCallback(
+    async (
+      goalId: string,
+      status: 'active' | 'paused' | 'archived_completed' | 'archived_not_completed',
+      effectiveMonth: string
+    ) => {
+      if (!isEnabled) return
+      const now = new Date().toISOString()
+      const isArchived = status === 'archived_completed' || status === 'archived_not_completed'
+      const { error } = await supabase
+        .from('financial_goals')
+        .update({
+          status,
+          status_changed_month: status === 'active' ? null : effectiveMonth,
+          paused_at: status === 'paused' ? now : null,
+          archived_at: isArchived ? now : null,
+          completed_at: status === 'archived_completed' ? now : null,
+        })
+        .eq('id', goalId)
+        .eq('profile_id', profileId)
+      if (error) throw new Error(error.message)
+      await loadFinancialGoals()
+    },
+    [isEnabled, loadFinancialGoals, profileId]
+  )
+
   return {
     financialGoals,
     financialGoalPriorities,
@@ -425,6 +455,7 @@ export function useFinancialGoals({ profileId, isEnabled = true }: UseFinancialG
     loadFinancialGoals,
     saveFinancialGoal,
     deleteFinancialGoal,
+    setFinancialGoalStatus,
     setGoalModeForMonth,
     saveGoalPrioritiesForMonth,
     saveGoalAllocationsForMonth,

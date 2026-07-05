@@ -84,6 +84,7 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
     isAllocationMode,
     onEdit,
     onDelete,
+    onSetStatus,
     dragHandle,
     priorityPosition,
   } = props;
@@ -212,7 +213,19 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
         onKeyDown={(event) => event.stopPropagation()}
       >
         <SecondaryAction onClick={() => onEdit(goal)}>Edytuj</SecondaryAction>
-        <DangerAction onClick={() => onDelete(goal.id)}>Usuń</DangerAction>
+        {(goal.status === 'active' || !goal.status) && (
+          <SecondaryAction onClick={() => onSetStatus(goal.id, 'paused')}>Wstrzymaj cel</SecondaryAction>
+        )}
+        {goal.status === 'paused' && (
+          <SecondaryAction onClick={() => onSetStatus(goal.id, 'active')}>Wznów cel</SecondaryAction>
+        )}
+        {(goal.status === 'active' || goal.status === 'paused' || !goal.status) && (
+          <>
+            <SecondaryAction onClick={() => onSetStatus(goal.id, 'archived_completed')}>Oznacz jako zrealizowany</SecondaryAction>
+            <DangerAction onClick={() => onSetStatus(goal.id, 'archived_not_completed')}>Archiwizuj bez realizacji</DangerAction>
+          </>
+        )}
+        {!goal.status && <DangerAction onClick={() => onDelete(goal.id)}>Usuń</DangerAction>}
       </div>
 
       <div

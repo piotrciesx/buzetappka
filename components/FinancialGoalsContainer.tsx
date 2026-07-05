@@ -22,6 +22,7 @@ type Props = {
   getSignedAmountForTransaction: (transaction: Transaction) => number
   onSaveGoal: (input: Omit<FinancialGoal, 'id' | 'profile_id' | 'created_at'>) => Promise<void>
   onDeleteGoal: (goalId: string) => Promise<void>
+  onSetGoalStatus: (goalId: string, status: NonNullable<FinancialGoal['status']>, month: string) => Promise<void>
   onSetGoalModeForMonth: (month: string, mode: FinancialGoalAllocationMode) => Promise<void>
   onSaveGoalAllocationsForMonth: (
     month: string,
@@ -43,6 +44,7 @@ export default function FinancialGoalsContainer({
   getSignedAmountForTransaction,
   onSaveGoal,
   onDeleteGoal,
+  onSetGoalStatus,
   onSetGoalModeForMonth,
   onSaveGoalAllocationsForMonth,
   onReorderGoalsForMonth,
@@ -61,6 +63,7 @@ export default function FinancialGoalsContainer({
       getSignedAmountForTransaction={getSignedAmountForTransaction}
       onSaveGoal={onSaveGoal}
       onDeleteGoal={onDeleteGoal}
+      onSetGoalStatus={onSetGoalStatus}
       onSetGoalModeForMonth={onSetGoalModeForMonth}
       onSaveGoalAllocationsForMonth={onSaveGoalAllocationsForMonth}
       onReorderGoalsForMonth={onReorderGoalsForMonth}

@@ -10,6 +10,7 @@ import {
 } from "../lib/budgetPageTypes";
 import {
   buildFinancialGoalsPlan,
+  buildFinancialGoalsMomentum,
   getEffectiveMonthPriorityRowsForMonth,
   getFinancialGoalAllocationPercentagesForMonth,
   getFinancialGoalFirstProtectedMonth,
@@ -50,6 +51,7 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
     getSignedAmountForTransaction,
     onSaveGoal,
     onDeleteGoal,
+    onSetGoalStatus,
     onSetGoalModeForMonth,
     onSaveGoalAllocationsForMonth,
     onReorderGoalsForMonth,
@@ -196,7 +198,9 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
 
   const baseActiveGoals = useMemo(() => {
     return orderedGoalsFromStoredData.filter(
-      (goal) => !storedPlan.progressByGoalId[goal.id]?.isArchived,
+      (goal) =>
+        !storedPlan.progressByGoalId[goal.id]?.isArchived &&
+        (goal.status === 'active' || !goal.status),
     );
   }, [orderedGoalsFromStoredData, storedPlan.progressByGoalId]);
 
@@ -374,7 +378,9 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
 
   const activeGoals = useMemo(() => {
     const currentActiveGoals = orderedGoals.filter(
-      (goal) => !plan.progressByGoalId[goal.id]?.isArchived,
+      (goal) =>
+        !plan.progressByGoalId[goal.id]?.isArchived &&
+        (goal.status === 'active' || !goal.status),
     );
 
     if (effectiveMode !== "allocation") {
@@ -405,8 +411,22 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
     plan.progressByGoalId,
   ]);
 
+  const currentGoals = useMemo(
+    () => [
+      ...activeGoals,
+      ...orderedGoals.filter(
+        (goal) => goal.status === 'paused' && !plan.progressByGoalId[goal.id]?.isArchived,
+      ),
+    ],
+    [activeGoals, orderedGoals, plan.progressByGoalId],
+  );
+
   const monthBalance = plan.monthlyBalances[selectedMonth] || 0;
   const monthSurplus = plan.monthlySurplus[selectedMonth] || 0;
+  const momentum = useMemo(
+    () => buildFinancialGoalsMomentum(goals, plan.progressByGoalId, selectedMonth),
+    [goals, plan.progressByGoalId, selectedMonth],
+  );
 
   const allocationGoalIds = baseActiveGoalIds;
 
@@ -629,8 +649,13 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         lockedMonthsSet={lockedMonthsSet}
       />
 
+      <div data-financial-goals-momentum="true">
+        Wpłaty: {momentum.depositsThisMonth.toFixed(2)} zł · wypłaty: {momentum.withdrawalsThisMonth.toFixed(2)} zł · netto: {momentum.netChangeThisMonth.toFixed(2)} zł · uzbierano: {momentum.totalCollected.toFixed(2)} zł · brakuje: {momentum.totalRemaining.toFixed(2)} zł
+      </div>
+
       <FinancialGoalsList
-        activeGoals={activeGoals}
+        activeGoals={currentGoals}
+        allocationGoals={activeGoals}
         archivedGoals={archivedGoals}
         effectiveMode={effectiveMode}
         progressByGoalId={plan.progressByGoalId}
@@ -648,6 +673,7 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         isAllocationSaving={isAllocationSaving}
         openEditModal={openEditModal}
         onDeleteGoal={onDeleteGoal}
+        onSetGoalStatus={(goalId, status) => onSetGoalStatus(goalId, status, selectedMonth)}
       />
 
       {isCreateFormOpen && (

@@ -26,6 +26,7 @@ export type FinancialGoalsPanelProps = {
     input: Omit<FinancialGoal, 'id' | 'profile_id' | 'created_at'> & { id?: string }
   ) => Promise<void>
   onDeleteGoal: (goalId: string) => Promise<void>
+  onSetGoalStatus: (goalId: string, status: NonNullable<FinancialGoal['status']>, month: string) => Promise<void>
   onSetGoalModeForMonth: (month: string, mode: FinancialGoalAllocationMode) => Promise<void>
   onSaveGoalAllocationsForMonth: (
     month: string,
@@ -55,4 +56,5 @@ export type GoalCardBaseProps = {
   onToggleAllocationLock?: (goalId: string) => void
   onEdit: (goal: FinancialGoal) => void
   onDelete: (goalId: string) => void
+  onSetStatus: (goalId: string, status: NonNullable<FinancialGoal['status']>) => void
 }
