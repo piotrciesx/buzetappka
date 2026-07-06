@@ -38,7 +38,11 @@ begin
   if v_version.id is null then return null;end if;
   insert into public.budget_limit_periods(profile_id,plan_id,version_id,period_start,period_end,limit_amount_snapshot,is_active_snapshot)
     values(auth.uid(),p_plan_id,v_version.id,v_start,(v_start+interval '1 month'-interval '1 day')::date,v_version.limit_amount,v_version.is_active)
-  on conflict(plan_id,period_start) do update set updated_at=now()
+  on conflict(plan_id,period_start) do update set
+    version_id=excluded.version_id,
+    limit_amount_snapshot=excluded.limit_amount_snapshot,
+    is_active_snapshot=excluded.is_active_snapshot,
+    updated_at=now()
   returning id into v_id;
   return v_id;
 end $$;

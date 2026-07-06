@@ -62,25 +62,30 @@ export function useRecurringPaymentsData(profileId: string, enabled = true) {
   }, [load])
 
   const savePlan = useCallback(async (draft: RecurringPlanDraft) => {
-    const { installment_terms, loan_terms, ...plan } = draft
+    const { id, installment_terms, loan_terms, ...plan } = draft
+    const planId = id || crypto.randomUUID()
+    const normalizedAmount = plan.amount && plan.amount > 0 ? plan.amount : null
     const payload = {
       ...plan,
       profile_id: profileId,
+      amount: normalizedAmount,
       kind: plan.plan_type === 'installment_purchase' ? 'installment' : 'open',
       frequency: plan.cadence_unit === 'year' ? 'yearly' : plan.cadence_unit === 'month' && plan.cadence_interval > 1 ? 'custom' : 'monthly',
       custom_interval_months: plan.cadence_unit === 'month' ? plan.cadence_interval : null,
       installment_total_count: installment_terms?.declared_installment_count || loan_terms?.installment_count || null,
-      use_amount_when_creating: plan.amount !== null,
+      use_amount_when_creating: normalizedAmount !== null,
       updated_at: new Date().toISOString(),
     }
-    const result = draft.id
-      ? await supabase.from('recurring_transactions').update(payload).eq('id', draft.id).eq('profile_id', profileId).select('id').single()
-      : await supabase.from('recurring_transactions').insert(payload).select('id').single()
-    if (result.error) throw result.error
-    const planId = result.data.id
+    const result = id
+      ? await supabase.from('recurring_transactions').update(payload).eq('id', id).eq('profile_id', profileId)
+      : await supabase.from('recurring_transactions').insert({ ...payload, id: planId })
+    if (result.error) {
+      console.error('[recurring-payments] Nie udało się zapisać planu.', { operation: id ? 'update' : 'insert', planId, error: result.error })
+      throw new Error(result.error.message)
+    }
     if (installment_terms) {
       const { error } = await supabase.from('recurring_installment_purchase_terms').upsert({ ...installment_terms, plan_id: planId, profile_id: profileId, updated_at: new Date().toISOString() })
-      if (error) throw error
+      if (error) throw new Error(error.message)
       const calculation = calculateInstallmentPurchase({
         purchaseAmountGrosze: parseGrosze(installment_terms.purchase_amount),
         downPaymentAmountGrosze: parseGrosze(installment_terms.down_payment_amount),
@@ -94,11 +99,11 @@ export function useRecurringPaymentsData(profileId: string, enabled = true) {
         p_plan_id: planId,
         p_amounts: calculation.installmentsGrosze.map((amount) => amount / 100),
       })
-      if (scheduleError) throw scheduleError
+      if (scheduleError) throw new Error(scheduleError.message)
     }
     if (loan_terms) {
       const { error } = await supabase.from('recurring_loan_terms').upsert({ ...loan_terms, plan_id: planId, profile_id: profileId, updated_at: new Date().toISOString() })
-      if (error) throw error
+      if (error) throw new Error(error.message)
     }
     await load()
   }, [load, profileId])

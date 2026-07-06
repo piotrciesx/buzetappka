@@ -126,6 +126,7 @@ export default function RecurringPaymentsStage2Panel({
       await (draft.id ? data.updatePlan(draft) : data.createPlan(draft))
       setDraft(null)
     } catch (error) {
+      console.error('[recurring-payments] Zapis planu zakończył się błędem.', error)
       setNotice(error instanceof Error ? error.message : 'Nie udało się zapisać planu.')
     } finally {
       setBusy(false)
