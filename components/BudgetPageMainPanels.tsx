@@ -5,8 +5,6 @@ import BudgetTreeSection from './BudgetTreeSection'
 import BudgetLimitsV1Panel from './BudgetLimitsV1Panel'
 import BulkActionsBar from './BulkActionsBar'
 import CategoryMigrationPrompt from './CategoryMigrationPrompt'
-import CategoryIcon from './CategoryIcon'
-import { HeroHeader, IconAction, PrimaryAction, SecondaryAction } from './ui/FoundationPrimitives'
 import DraftsPanel from './DraftsPanel'
 import FinancialGoalsContainer from './FinancialGoalsContainer'
 import HiddenCategoriesPanel from './HiddenCategoriesPanel'
@@ -18,7 +16,6 @@ import SearchPanel from './SearchPanel'
 import TrashPanel from './TrashPanel'
 import UndoBanner from './UndoBanner'
 import type { AppModuleVisibility } from '../lib/useAppModuleVisibility'
-import { getPaymentSourceColorTone, getPaymentSourceIconKey } from '../lib/paymentSources'
 
 export type BudgetUtilityPanel =
   | 'drafts'
@@ -84,35 +81,34 @@ export default function BudgetPageMainPanels({
     }
   }, [activeUtilityPanel])
 
-  const selectedPaymentSource =
-    activeUtilityPanel === 'paymentSources' && paymentSourceDetailsId
-      ? paymentSourcesPanelProps.paymentSources.find((source) => source.id === paymentSourceDetailsId) || null
-      : null
+  const handleUtilityPanelAdd = () => {
+    if (activeUtilityPanel === 'paymentSources') {
+      setPaymentSourceCreateRequest((value) => value + 1)
+      return
+    }
 
-  const selectedPaymentSourceIcon = selectedPaymentSource
-    ? getPaymentSourceIconKey(selectedPaymentSource)
-    : null
+    if (activeUtilityPanel === 'financialGoals') {
+      window.dispatchEvent(new CustomEvent('budget-open-financial-goal-create'))
+      return
+    }
 
-  const selectedPaymentSourceTone = selectedPaymentSource
-    ? getPaymentSourceColorTone(selectedPaymentSource)
-    : 'brand-primary'
+    if (activeUtilityPanel === 'recurringTransactions') {
+      window.dispatchEvent(new CustomEvent('budget-open-recurring-payment-create'))
+      return
+    }
 
-  const handleCloseUtilityPanel = () => {
-    setPaymentSourceDetailsId(null)
-    onCloseUtilityPanel()
+    if (activeUtilityPanel === 'budgetLimits') {
+      window.dispatchEvent(new CustomEvent('budget-open-budget-limit-create'))
+    }
   }
 
-  const renderPaymentSourceAvailability = (label: string, isActive: boolean) => (
-    <span
-      data-ui-status-pill="true"
-      data-ui-pill-shape="soft-rect"
-      data-ui-tone={isActive ? 'success' : 'danger'}
-      data-active={isActive ? 'true' : 'false'}
-    >
-      <span aria-hidden="true">{isActive ? '✓' : '×'}</span>
-      {label}
-    </span>
-  )
+  const getUtilityPanelAddLabel = () => {
+    if (activeUtilityPanel === 'paymentSources') return 'Dodaj źródło'
+    if (activeUtilityPanel === 'financialGoals') return 'Dodaj cel'
+    if (activeUtilityPanel === 'recurringTransactions') return 'Dodaj płatność'
+    if (activeUtilityPanel === 'budgetLimits') return 'Dodaj limit'
+    return null
+  }
 
   const utilityPanelTitle =
     activeUtilityPanel === 'drafts'
@@ -136,29 +132,6 @@ export default function BudgetPageMainPanels({
                     : activeUtilityPanel === 'trash'
                       ? 'Kosz'
                       : ''
-
-  const utilityPanelIcon =
-    activeUtilityPanel === 'drafts'
-      ? 'note'
-      : activeUtilityPanel === 'importExport'
-        ? 'exchange'
-        : activeUtilityPanel === 'paymentSources'
-          ? 'card'
-          : activeUtilityPanel === 'financialGoals'
-            ? 'system-goals'
-            : activeUtilityPanel === 'recurringTransactions'
-              ? 'calendar'
-              : activeUtilityPanel === 'budgetLimits'
-                ? 'alert'
-              : activeUtilityPanel === 'search'
-                ? 'info'
-                : activeUtilityPanel === 'monthCalendar'
-                  ? 'calendar'
-                  : activeUtilityPanel === 'hiddenCategories'
-                    ? 'other'
-                    : activeUtilityPanel === 'trash'
-                      ? 'trash'
-                      : 'info'
 
   const utilityPanelDescription =
     activeUtilityPanel === 'drafts'
@@ -204,64 +177,33 @@ export default function BudgetPageMainPanels({
             data-utility-panel-kind={activeUtilityPanel}
             aria-label={utilityPanelTitle}
           >
-            <HeroHeader
-              variant={selectedPaymentSource ? 'context' : 'module'}
-              density={selectedPaymentSource ? 'comfort' : 'regular'}
-              tone={selectedPaymentSource ? selectedPaymentSourceTone : 'brand-primary'}
-              icon={
-                <CategoryIcon
-                  iconKey={selectedPaymentSourceIcon || utilityPanelIcon}
-                />
-              }
-              title={selectedPaymentSource ? selectedPaymentSource.name : utilityPanelTitle}
-              description={selectedPaymentSource ? null : utilityPanelDescription}
-              metadata={
-                selectedPaymentSource ? (
-                  <span data-ui-status-pill-group="true">
-                    {renderPaymentSourceAvailability(
-                      'Przychody',
-                      selectedPaymentSource.is_income_source !== false,
-                    )}
-                    {renderPaymentSourceAvailability(
-                      'Wydatki',
-                      selectedPaymentSource.is_expense_source !== false,
-                    )}
-                  </span>
-                ) : null
-              }
-              primaryAction={
-                selectedPaymentSource ? (
-                  <SecondaryAction onClick={() => setPaymentSourceDetailsId(null)}>
-                    Wróć do listy
-                  </SecondaryAction>
-                ) : activeUtilityPanel === 'paymentSources' ? (
-                  <PrimaryAction onClick={() => setPaymentSourceCreateRequest((value) => value + 1)}>
-                    <CategoryIcon iconKey="system-add" size="small" />
-                    Dodaj źródło
-                  </PrimaryAction>
-                ) : activeUtilityPanel === 'financialGoals' ? (
-                  <PrimaryAction onClick={() => window.dispatchEvent(new CustomEvent('budget-open-financial-goal-create'))}>
-                    <CategoryIcon iconKey="system-add" size="small" />
-                    Dodaj cel
-                  </PrimaryAction>
-                ) : activeUtilityPanel === 'recurringTransactions' ? (
-                  <PrimaryAction onClick={() => window.dispatchEvent(new CustomEvent('budget-open-recurring-payment-create'))}>
-                    <CategoryIcon iconKey="system-add" size="small" />
-                    Dodaj płatność
-                  </PrimaryAction>
-                ) : activeUtilityPanel === 'budgetLimits' ? (
-                  <PrimaryAction onClick={() => window.dispatchEvent(new CustomEvent('budget-open-budget-limit-create'))}>
-                    <CategoryIcon iconKey="system-add" size="small" />
-                    Dodaj limit
-                  </PrimaryAction>
-                ) : null
-              }
-              closeAction={
-                <IconAction ariaLabel="Zamknij panel" onClick={handleCloseUtilityPanel}>
-                  <CategoryIcon iconKey="close" />
-                </IconAction>
-              }
-            />
+            <header data-management-module-header="true">
+              <div data-management-module-header-copy="true">
+                <h2>{utilityPanelTitle}</h2>
+                {utilityPanelDescription && <p>{utilityPanelDescription}</p>}
+              </div>
+
+              <div data-management-module-header-actions="true">
+                {getUtilityPanelAddLabel() && (
+                  <button
+                    type="button"
+                    data-management-module-add="true"
+                    onClick={handleUtilityPanelAdd}
+                  >
+                    <span aria-hidden="true" data-management-module-add-icon="true">+</span>
+                    <span>{getUtilityPanelAddLabel()}</span>
+                  </button>
+                )}
+                <button
+                  type="button"
+                  aria-label="Zamknij panel"
+                  data-management-module-close="true"
+                  onClick={handleCloseUtilityPanel}
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+            </header>
 
             <div data-budget-utility-body="true">
               {activeUtilityPanel === 'drafts' && <DraftsPanel {...draftsPanelProps} />}
