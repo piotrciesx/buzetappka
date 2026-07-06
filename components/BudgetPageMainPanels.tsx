@@ -170,7 +170,7 @@ export default function BudgetPageMainPanels({
             type="button"
             aria-label="Zamknij panel"
             data-budget-utility-backdrop="true"
-            onClick={handleCloseUtilityPanel}
+            onClick={onCloseUtilityPanel}
           />
           <aside
             data-budget-utility-panel="true"
@@ -198,7 +198,7 @@ export default function BudgetPageMainPanels({
                   type="button"
                   aria-label="Zamknij panel"
                   data-management-module-close="true"
-                  onClick={handleCloseUtilityPanel}
+                  onClick={onCloseUtilityPanel}
                 >
                   <span aria-hidden="true">×</span>
                 </button>
