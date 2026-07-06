@@ -10,12 +10,13 @@ create policy recurring_payment_occurrences_insert_own
   for insert
   to authenticated
   with check (
-    auth.uid() = profile_id
+    public.is_profile_member(profile_id)
     and exists (
       select 1
       from public.recurring_transactions plan
       where plan.id = recurring_payment_occurrences.plan_id
-        and plan.profile_id = auth.uid()
+        and plan.profile_id = recurring_payment_occurrences.profile_id
+        and public.is_profile_member(plan.profile_id)
     )
   );
 
@@ -26,26 +27,25 @@ security definer
 set search_path = pg_catalog, public
 as $$
 declare
-  caller_profile_id uuid := auth.uid();
   i integer;
   v_count integer;
   v_due date;
 begin
-  if caller_profile_id is null or new.profile_id <> caller_profile_id then
+  if auth.uid() is null or not public.is_profile_member(new.profile_id) then
     raise exception using
       errcode = '42501',
-      message = 'Cannot create recurring payment occurrences for another profile';
+      message = 'Cannot create recurring payment occurrences for a profile without membership';
   end if;
 
   if not exists (
     select 1
     from public.recurring_transactions plan
     where plan.id = new.id
-      and plan.profile_id = caller_profile_id
+      and plan.profile_id = new.profile_id
   ) then
     raise exception using
       errcode = '42501',
-      message = 'Recurring payment plan does not belong to the authenticated profile';
+      message = 'Recurring payment plan profile mismatch';
   end if;
 
   if new.start_date is null or new.status <> 'active' then
@@ -76,7 +76,7 @@ begin
       due_date,
       planned_amount
     ) values (
-      caller_profile_id,
+      new.profile_id,
       new.id,
       i + 1,
       v_due,
