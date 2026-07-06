@@ -6307,3 +6307,680 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
     min-width: 0;
   }
 }
+
+/* =========================================================
+   MANAGEMENT MODULES — VISUAL RESET V2
+   Manual pass after desktop/mobile foundation-only audit.
+   Goal: calmer premium UI, flatter controls, less radius, one scroll,
+   compact mobile app-screen instead of squeezed desktop window.
+   ========================================================= */
+:root {
+  --mgmt-v2-blue: #0f57d6;
+  --mgmt-v2-blue-dark: #0b2f78;
+  --mgmt-v2-blue-soft: #eef5ff;
+  --mgmt-v2-ink: #0b2254;
+  --mgmt-v2-muted: #5e6b86;
+  --mgmt-v2-border: rgba(15, 48, 120, 0.14);
+  --mgmt-v2-border-soft: rgba(15, 48, 120, 0.09);
+  --mgmt-v2-selected: rgba(15, 87, 214, 0.34);
+  --mgmt-v2-surface: rgba(255, 255, 255, 0.98);
+  --mgmt-v2-surface-soft: #f7faff;
+  --mgmt-v2-shell-radius: 16px;
+  --mgmt-v2-card-radius: 12px;
+  --mgmt-v2-control-radius: 9px;
+  --mgmt-v2-control-height: 38px;
+  --mgmt-v2-shadow-shell: 0 22px 54px rgba(10, 34, 84, 0.12);
+  --mgmt-v2-shadow-card: 0 8px 22px rgba(10, 34, 84, 0.045);
+}
+
+/* The management family is a surface with one internal scroll, not a page plus nested scrolls. */
+[data-budget-utility-overlay="true"] {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  overflow: hidden;
+}
+
+[data-budget-utility-panel="true"] {
+  width: min(1040px, calc(100vw - 56px));
+  max-height: min(820px, calc(100dvh - 56px));
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid rgba(15, 48, 120, 0.18);
+  border-radius: var(--mgmt-v2-shell-radius) !important;
+  background: var(--mgmt-v2-surface);
+  box-shadow: var(--mgmt-v2-shadow-shell) !important;
+}
+
+[data-budget-utility-panel="true"] > [data-ui-hero-header="true"] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 22px;
+  padding: 28px 34px 18px !important;
+  border-bottom: 0 !important;
+  background: #fff !important;
+}
+
+[data-budget-utility-panel="true"] > [data-ui-hero-header="true"] [data-ui-hero-icon="true"] {
+  display: none !important;
+}
+
+[data-budget-utility-panel="true"] > [data-ui-hero-header="true"] [data-ui-hero-copy="true"] > strong {
+  color: var(--mgmt-v2-blue-dark) !important;
+  font-size: clamp(1.42rem, 1.2rem + 0.55vw, 1.78rem) !important;
+  font-weight: 720 !important;
+  letter-spacing: -0.026em !important;
+  line-height: 1.06 !important;
+}
+
+[data-budget-utility-panel="true"] > [data-ui-hero-header="true"] [data-ui-hero-copy="true"] > span {
+  color: var(--mgmt-v2-muted) !important;
+  font-size: 0.94rem !important;
+  line-height: 1.38 !important;
+  font-weight: 520 !important;
+  max-width: 620px;
+}
+
+[data-budget-utility-panel="true"] > [data-ui-hero-header="true"] [data-ui-hero-actions="true"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+[data-budget-utility-panel="true"] > [data-ui-hero-header="true"] [data-ui-hero-actions="true"] button,
+[data-budget-utility-panel="true"] [data-ui-action="primary"],
+[data-budget-utility-panel="true"] [data-ui-action="secondary"],
+[data-budget-utility-panel="true"] [data-ui-action="danger"] {
+  font-family: var(--ui-font-family-app);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  box-shadow: none !important;
+}
+
+[data-budget-utility-panel="true"] > [data-ui-hero-header="true"] [data-ui-action="primary"] {
+  min-height: 40px !important;
+  height: 40px;
+  border-radius: var(--mgmt-v2-control-radius) !important;
+  padding-inline: 17px !important;
+  border: 1px solid rgba(15, 87, 214, 0.22) !important;
+  background: var(--mgmt-v2-blue) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+[data-budget-utility-panel="true"] > [data-ui-hero-header="true"] [data-ui-action="primary"]:hover {
+  background: #0b4bc0 !important;
+}
+
+[data-budget-utility-panel="true"] > [data-ui-hero-header="true"] [data-ui-action="icon"] {
+  width: 40px !important;
+  min-width: 40px !important;
+  height: 40px !important;
+  border-radius: var(--mgmt-v2-control-radius) !important;
+  border: 1px solid rgba(15, 48, 120, 0.14) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: var(--mgmt-v2-blue-dark) !important;
+  box-shadow: none !important;
+}
+
+[data-budget-utility-panel="true"] > [data-ui-hero-header="true"] [data-ui-action="icon"]:hover {
+  background: var(--mgmt-v2-surface-soft) !important;
+  border-color: rgba(15, 48, 120, 0.22) !important;
+}
+
+[data-budget-utility-body="true"] {
+  min-height: 0;
+  overflow: auto;
+  padding: 10px 34px 30px !important;
+  background: #fff !important;
+}
+
+/* Layout rhythm: no hard header separator; content gets spacing instead. */
+[data-ui-management-shell="true"],
+[data-ui-payment-sources-shell="true"],
+[data-financial-goals-panel="true"],
+[data-recurring-stage2],
+[data-budget-limits-view] {
+  gap: 16px !important;
+}
+
+/* Helper / summary strips: flat, calm, no gradientoza. */
+[data-ui-management-summary-strip="true"],
+[data-ui-management-auxiliary="true"],
+[data-ui-management-collapsible="true"],
+[data-ui-payment-sources-shell="true"] [data-ui-collapsible-secondary="true"],
+[data-ui-payment-sources-shell="true"] [data-ui-settings-strip="true"][data-ui-management-strip="true"],
+[data-financial-goals-momentum="true"],
+[data-financial-goals-summary="true"] {
+  width: 100%;
+  border: 1px solid rgba(15, 87, 214, 0.16) !important;
+  border-radius: var(--mgmt-v2-card-radius) !important;
+  background: var(--mgmt-v2-surface-soft) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+[data-ui-management-strip-item="true"] + [data-ui-management-strip-item="true"] {
+  border-color: rgba(15, 48, 120, 0.10) !important;
+}
+
+/* Toolbars are compact. Labels reserve space but do not push controls into separators. */
+[data-ui-management-toolbar="true"],
+[data-ui-payment-sources-shell="true"] [data-ui-settings-strip="true"][data-ui-management-toolbar="true"] {
+  display: flex !important;
+  align-items: end !important;
+  gap: 12px !important;
+  row-gap: 10px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-ui-management-toolbar-group="true"] {
+  grid-template-rows: 16px var(--mgmt-v2-control-height) !important;
+  gap: 5px !important;
+}
+
+[data-ui-management-toolbar-label="true"],
+[data-ui-management-toolbar-label="empty"] {
+  min-height: 16px !important;
+  color: var(--mgmt-v2-muted) !important;
+  font-size: 0.72rem !important;
+  line-height: 1 !important;
+  font-weight: 650 !important;
+}
+
+/* Selects/dropdowns: closed state premium. Native option popup cannot be fully styled, but default black focus is softened where the browser allows it. */
+[data-ui-management-toolbar-group="true"] select,
+[data-ui-management-select="true"],
+[data-ui-management-sort="true"],
+[data-ui-payment-sources-shell="true"] select,
+[data-recurring-stage2] select,
+[data-budget-limits-view] select,
+[data-financial-goals-panel="true"] select {
+  appearance: none;
+  min-height: var(--mgmt-v2-control-height) !important;
+  height: var(--mgmt-v2-control-height) !important;
+  border: 1px solid rgba(15, 48, 120, 0.14) !important;
+  border-radius: var(--mgmt-v2-control-radius) !important;
+  background-color: #fff !important;
+  background-image: linear-gradient(45deg, transparent 50%, var(--mgmt-v2-blue-dark) 50%), linear-gradient(135deg, var(--mgmt-v2-blue-dark) 50%, transparent 50%) !important;
+  background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50% !important;
+  background-size: 5px 5px, 5px 5px !important;
+  background-repeat: no-repeat !important;
+  color: var(--mgmt-v2-blue-dark) !important;
+  font-size: 0.9rem !important;
+  font-weight: 620 !important;
+  padding: 0 34px 0 13px !important;
+  box-shadow: none !important;
+}
+
+[data-ui-management-toolbar-group="true"] select:focus,
+[data-ui-management-select="true"]:focus,
+[data-ui-management-sort="true"]:focus {
+  outline: 2px solid rgba(15, 87, 214, 0.16) !important;
+  outline-offset: 2px;
+  border-color: rgba(15, 87, 214, 0.32) !important;
+}
+
+[data-ui-management-toolbar-group="true"] select option:checked,
+[data-ui-management-select="true"] option:checked,
+[data-ui-management-sort="true"] option:checked {
+  background: #eaf2ff !important;
+  color: var(--mgmt-v2-blue-dark) !important;
+}
+
+/* Segments / switches: less pill, flatter, more app-like. */
+[data-ui-list-switch="true"],
+[data-ui-list-switch="true"][data-ui-management-switch="true"] {
+  min-height: var(--mgmt-v2-control-height) !important;
+  padding: 2px !important;
+  border-radius: var(--mgmt-v2-control-radius) !important;
+  border: 1px solid rgba(15, 48, 120, 0.14) !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+
+[data-ui-list-switch="true"] button,
+[data-ui-management-filter-button="true"] {
+  min-height: calc(var(--mgmt-v2-control-height) - 6px) !important;
+  border-radius: calc(var(--mgmt-v2-control-radius) - 2px) !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--mgmt-v2-blue-dark) !important;
+  font-size: 0.84rem !important;
+  font-weight: 650 !important;
+  padding: 0 14px !important;
+  box-shadow: none !important;
+}
+
+[data-ui-list-switch="true"] button[data-active="true"],
+[data-ui-list-switch="true"] button[aria-pressed="true"],
+[data-ui-management-filter-button="true"][data-active="true"] {
+  background: var(--mgmt-v2-blue) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+/* Cards: records remain the hero, with a subtle premium surface. */
+[data-ui-large-record="true"],
+[data-ui-record-card="true"],
+[data-ui-card="true"] {
+  border-radius: var(--mgmt-v2-card-radius) !important;
+  border: 1px solid var(--mgmt-v2-border-soft) !important;
+  background: #fff !important;
+  box-shadow: var(--mgmt-v2-shadow-card) !important;
+}
+
+[data-ui-large-record="true"]:hover,
+[data-ui-record-card="true"]:hover,
+[data-ui-card="true"]:hover {
+  border-color: rgba(15, 87, 214, 0.22) !important;
+  box-shadow: 0 10px 24px rgba(10, 34, 84, 0.06) !important;
+}
+
+[data-ui-large-record="true"][data-ui-selected="true"],
+[data-ui-record-card="true"][data-ui-selected="true"],
+[data-ui-card="true"][data-ui-selected="true"] {
+  border-color: var(--mgmt-v2-selected) !important;
+  box-shadow: none !important;
+  background: #fbfdff !important;
+}
+
+[data-ui-large-record="true"][data-ui-selected="true"]::before,
+[data-ui-record-card="true"][data-ui-selected="true"]::before,
+[data-ui-card="true"][data-ui-selected="true"]::before {
+  content: "";
+  position: absolute;
+  inset-block: 10px;
+  inset-inline-start: 0;
+  width: 3px;
+  border-radius: 999px;
+  background: rgba(15, 87, 214, 0.42);
+}
+
+[data-ui-icon-tile="true"][data-ui-icon-role="large-record-hero"] {
+  border-radius: 11px !important;
+  box-shadow: none !important;
+}
+
+[data-ui-large-record-title="true"] {
+  color: var(--mgmt-v2-blue-dark) !important;
+  font-weight: 720 !important;
+  letter-spacing: -0.014em;
+}
+
+[data-ui-record-meta="true"] {
+  color: var(--mgmt-v2-muted) !important;
+  font-weight: 560 !important;
+}
+
+[data-ui-status-pill="true"],
+[data-ui-status-inline="true"],
+[data-ui-pill-shape="soft-rect"] {
+  border-radius: 7px !important;
+  min-height: 22px !important;
+  padding: 2px 7px !important;
+  font-weight: 680 !important;
+  box-shadow: none !important;
+}
+
+/* Action buttons: flat, consistent, not puffy. */
+[data-budget-utility-panel="true"] button:not([data-ui-action="primary"]):not([data-ui-action="icon"]),
+[data-ui-action-group="true"] button,
+[data-ui-details-action-bar="true"] button {
+  border-radius: var(--mgmt-v2-control-radius) !important;
+  border: 1px solid rgba(15, 48, 120, 0.12) !important;
+  background: #fff !important;
+  color: var(--mgmt-v2-ink) !important;
+  box-shadow: none !important;
+  font-weight: 600 !important;
+}
+
+[data-budget-utility-panel="true"] button:not([data-ui-action="primary"]):not([data-ui-action="icon"]):hover,
+[data-ui-action-group="true"] button:hover,
+[data-ui-details-action-bar="true"] button:hover {
+  border-color: rgba(15, 87, 214, 0.22) !important;
+  background: #f9fbff !important;
+}
+
+[data-budget-utility-panel="true"] button[data-ui-tone="danger"],
+[data-ui-action-group="true"] button[data-ui-tone="danger"],
+[data-ui-details-action-bar="true"] button[data-ui-tone="danger"] {
+  color: #c72525 !important;
+  border-color: rgba(220, 38, 38, 0.18) !important;
+}
+
+/* Details panel and sections. */
+[data-ui-record-details="true"],
+[data-ui-management-details-panel="true"] {
+  border-radius: var(--mgmt-v2-card-radius) !important;
+  border: 1px solid var(--mgmt-v2-border-soft) !important;
+  background: #fff !important;
+  box-shadow: 0 10px 26px rgba(10, 34, 84, 0.05) !important;
+}
+
+[data-ui-management-details-section="true"],
+[data-ui-record-details-list="true"] {
+  border-radius: var(--mgmt-v2-card-radius) !important;
+  border: 1px solid rgba(15, 48, 120, 0.09) !important;
+  background: var(--mgmt-v2-surface-soft) !important;
+}
+
+[data-ui-details-close="true"],
+[data-ui-management-details-close="true"] {
+  border-radius: var(--mgmt-v2-control-radius) !important;
+  box-shadow: none !important;
+}
+
+/* Avoid double scroll in list views. Split lists may scroll; normal lists use the modal body. */
+[data-ui-payment-sources-list-window="true"] {
+  max-height: none !important;
+  overflow: visible !important;
+  padding-inline-end: 0 !important;
+}
+
+[data-ui-management-split-list="true"] {
+  max-height: min(620px, calc(100dvh - 220px)) !important;
+  overflow: auto !important;
+}
+
+/* Desktop details view: local top navigation is hidden, the record + details area becomes the hero. */
+[data-ui-foundation-only="true"][data-recurring-stage2="details"] > :not([data-ui-management-split="true"]),
+[data-ui-foundation-only="true"][data-budget-limits-view="details"] > :not([data-ui-management-split="true"]),
+[data-ui-payment-sources-shell="true"][data-ui-payment-sources-mode="details"] > :not([data-ui-management-split="true"]) {
+  display: none !important;
+}
+
+/* Mobile: real app screen. Navigation/helper controls are compact and records appear before the fold. */
+@media (max-width: 760px) {
+  [data-budget-utility-overlay="true"] {
+    position: fixed !important;
+    inset: 0 !important;
+    display: block !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    background: #fff !important;
+  }
+
+  [data-budget-utility-backdrop="true"] {
+    display: none !important;
+  }
+
+  [data-budget-utility-panel="true"] {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100dvw !important;
+    max-width: none !important;
+    height: 100dvh !important;
+    max-height: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+    display: grid !important;
+    grid-template-rows: auto minmax(0, 1fr) !important;
+  }
+
+  [data-budget-utility-panel="true"] > [data-ui-hero-header="true"] {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 30 !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: max(12px, env(safe-area-inset-top)) 14px 10px !important;
+    border-bottom: 0 !important;
+    background: #fff !important;
+    backdrop-filter: none !important;
+  }
+
+  [data-budget-utility-panel="true"] > [data-ui-hero-header="true"] [data-ui-hero-main="true"] {
+    min-width: 0 !important;
+    display: block !important;
+  }
+
+  [data-budget-utility-panel="true"] > [data-ui-hero-header="true"] [data-ui-hero-copy="true"] {
+    gap: 4px !important;
+  }
+
+  [data-budget-utility-panel="true"] > [data-ui-hero-header="true"] [data-ui-hero-copy="true"] > strong {
+    font-size: clamp(1.18rem, 6.4vw, 1.45rem) !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.022em !important;
+  }
+
+  [data-budget-utility-panel="true"] > [data-ui-hero-header="true"] [data-ui-hero-copy="true"] > span {
+    font-size: 0.78rem !important;
+    line-height: 1.28 !important;
+    max-width: 230px !important;
+  }
+
+  [data-budget-utility-panel="true"] > [data-ui-hero-header="true"] [data-ui-hero-actions="true"] {
+    gap: 7px !important;
+  }
+
+  [data-budget-utility-panel="true"] > [data-ui-hero-header="true"] [data-ui-action="primary"] {
+    height: 36px !important;
+    min-height: 36px !important;
+    padding-inline: 11px !important;
+    border-radius: 9px !important;
+    font-size: 0.78rem !important;
+  }
+
+  [data-budget-utility-panel="true"] > [data-ui-hero-header="true"] [data-ui-action="primary"] [data-ui-icon],
+  [data-budget-utility-panel="true"] > [data-ui-hero-header="true"] [data-ui-action="primary"] svg {
+    display: none !important;
+  }
+
+  [data-budget-utility-panel="true"] > [data-ui-hero-header="true"] [data-ui-action="icon"] {
+    width: 36px !important;
+    min-width: 36px !important;
+    height: 36px !important;
+    border-radius: 9px !important;
+  }
+
+  [data-budget-utility-body="true"] {
+    height: 100% !important;
+    min-height: 0 !important;
+    overflow: auto !important;
+    padding: 8px 14px max(22px, env(safe-area-inset-bottom)) !important;
+  }
+
+  [data-ui-management-shell="true"],
+  [data-ui-payment-sources-shell="true"],
+  [data-financial-goals-panel="true"],
+  [data-recurring-stage2],
+  [data-budget-limits-view] {
+    gap: 12px !important;
+  }
+
+  /* Mobile list: helper strips are compact; filters are horizontal chips/selects, not a vertical wall. */
+  [data-ui-management-summary-strip="true"],
+  [data-ui-management-auxiliary="true"],
+  [data-ui-management-collapsible="true"],
+  [data-ui-payment-sources-shell="true"] [data-ui-collapsible-secondary="true"],
+  [data-financial-goals-summary="true"],
+  [data-financial-goals-momentum="true"] {
+    border-radius: 11px !important;
+    padding: 10px !important;
+    max-height: 92px;
+    overflow: hidden;
+  }
+
+  [data-ui-management-strip-inner="true"] {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  [data-ui-management-strip-item="true"] {
+    padding: 8px 10px !important;
+  }
+
+  [data-ui-management-strip-item="true"] + [data-ui-management-strip-item="true"] {
+    border-left: 0 !important;
+    border-top: 1px solid rgba(15, 48, 120, 0.08) !important;
+  }
+
+  [data-ui-foundation-only="true"] [data-ui-management-toolbar="true"],
+  [data-ui-management-toolbar="true"] {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    gap: 8px !important;
+    padding-bottom: 2px !important;
+    scrollbar-width: none;
+  }
+
+  [data-ui-management-toolbar="true"]::-webkit-scrollbar { display: none; }
+
+  [data-ui-management-toolbar-group="true"] {
+    flex: 0 0 auto !important;
+    min-width: 148px !important;
+    grid-template-rows: auto 36px !important;
+    gap: 4px !important;
+  }
+
+  [data-ui-management-toolbar-label="true"],
+  [data-ui-management-toolbar-label="empty"] {
+    min-height: 0 !important;
+    font-size: 0.68rem !important;
+  }
+
+  [data-ui-management-toolbar-group="true"] select,
+  [data-ui-management-select="true"],
+  [data-ui-management-sort="true"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    font-size: 0.82rem !important;
+  }
+
+  [data-ui-list-switch="true"],
+  [data-ui-list-switch="true"][data-ui-management-switch="true"] {
+    min-height: 36px !important;
+  }
+
+  [data-ui-list-switch="true"] button,
+  [data-ui-management-filter-button="true"] {
+    min-height: 30px !important;
+    font-size: 0.78rem !important;
+    padding-inline: 10px !important;
+  }
+
+  /* Mobile cards are compact cards, not desktop columns. */
+  [data-ui-large-record="true"],
+  [data-ui-record-card="true"],
+  [data-ui-card="true"] {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+    min-height: 0 !important;
+    padding: 13px !important;
+    border-radius: 12px !important;
+  }
+
+  [data-ui-large-record-identity="true"] {
+    align-items: center !important;
+    gap: 11px !important;
+  }
+
+  [data-ui-icon-tile="true"][data-ui-icon-role="large-record-hero"] {
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    border-radius: 10px !important;
+  }
+
+  [data-ui-large-record-title="true"] {
+    font-size: 1rem !important;
+  }
+
+  [data-ui-record-meta="true"] {
+    font-size: 0.78rem !important;
+  }
+
+  [data-ui-status-pill-group="true"] {
+    gap: 5px !important;
+  }
+
+  [data-ui-action-group="true"][data-ui-action-stack="record"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  [data-ui-action-group="true"][data-ui-action-stack="record"] button {
+    min-height: 34px !important;
+    font-size: 0.82rem !important;
+  }
+
+  [data-ui-management-footer="true"] {
+    justify-content: start !important;
+    font-size: 0.78rem !important;
+  }
+
+  /* Mobile details: separate screen state. No mini-list, no split. */
+  [data-ui-management-split="true"] {
+    display: block !important;
+  }
+
+  [data-ui-management-split-list="true"] {
+    display: none !important;
+  }
+
+  [data-ui-record-details="true"],
+  [data-ui-management-details-panel="true"] {
+    min-height: calc(100dvh - 112px) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 8px 0 82px !important;
+    background: transparent !important;
+  }
+
+  [data-ui-record-details-header="true"],
+  [data-ui-management-details-header="true"] {
+    position: static !important;
+    margin: 0 0 12px !important;
+    padding: 0 0 12px !important;
+    border-bottom: 1px solid rgba(15, 48, 120, 0.08) !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+  }
+
+  [data-ui-record-details-list="true"],
+  [data-ui-management-details-section="true"] {
+    border-radius: 12px !important;
+    padding: 14px !important;
+    background: var(--mgmt-v2-surface-soft) !important;
+  }
+
+  [data-ui-details-action-bar="true"] {
+    position: sticky !important;
+    bottom: 0 !important;
+    z-index: 20 !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+    margin: 16px -14px max(-22px, calc(env(safe-area-inset-bottom) * -1)) !important;
+    padding: 10px 14px max(12px, env(safe-area-inset-bottom)) !important;
+    border-top: 1px solid rgba(15, 48, 120, 0.08) !important;
+    background: #fff !important;
+  }
+
+  [data-ui-details-action-bar="true"] button {
+    width: 100% !important;
+    min-height: 38px !important;
+    font-size: 0.84rem !important;
+  }
+}
+
