@@ -904,6 +904,7 @@ export default function PaymentSourcesPanel({
       <section
         data-ui-payment-sources-shell="true"
         data-ui-payment-sources-mode="details"
+        data-ui-foundation-only="true"
         data-ui-large-module="true"
         data-ui-utility-modal-size="xl"
         style={paymentSourcesShellStyle}
@@ -922,6 +923,7 @@ export default function PaymentSourcesPanel({
     <section
       data-ui-payment-sources-shell="true"
       data-ui-payment-sources-mode="list"
+      data-ui-foundation-only="true"
       data-ui-large-module="true"
       data-ui-utility-modal-size="xl"
       style={paymentSourcesShellStyle}

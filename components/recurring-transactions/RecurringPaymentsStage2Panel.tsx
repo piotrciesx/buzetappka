@@ -344,7 +344,7 @@ export default function RecurringPaymentsStage2Panel({
 
   if (selected && selectedVm) {
     return (
-      <section data-recurring-stage2="details" data-ui-management-shell="true" data-ui-utility-modal-size="xl">
+      <section data-recurring-stage2="details" data-ui-management-shell="true" data-ui-foundation-only="true" data-ui-utility-modal-size="xl">
         {listContent}
         <div data-ui-management-split="true">
           <div data-ui-management-split-list="true">
@@ -442,7 +442,7 @@ export default function RecurringPaymentsStage2Panel({
   }
 
   return (
-    <section data-recurring-stage2="list" data-ui-management-shell="true" data-ui-utility-modal-size="xl">
+    <section data-recurring-stage2="list" data-ui-management-shell="true" data-ui-foundation-only="true" data-ui-utility-modal-size="xl">
       {listContent}
       {notice && <p role="status" data-ui-management-inline-notice="true">{notice}</p>}
       <div data-ui-management-list="true" data-ui-large-record-list="true">

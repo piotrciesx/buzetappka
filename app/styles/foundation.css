@@ -6012,3 +6012,298 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
     gap: 6px;
   }
 }
+
+/* =========================================================
+   MANAGEMENT MODULES — FOUNDATION-ONLY REVIEW MODE
+   Temporary visual mode for reviewing global skeleton on desktop and mobile.
+   It keeps module titles, section labels, filters and named action buttons,
+   while hiding local metrics, statistics and domain-specific record content.
+   ========================================================= */
+[data-ui-foundation-only="true"] {
+  --foundation-only-muted-line: rgba(148, 163, 184, 0.34);
+  --foundation-only-muted-block: rgba(226, 232, 240, 0.72);
+  --foundation-only-radius: 10px;
+}
+
+/* In details view the upper local helper/toolbars collapse; details become the focus. */
+[data-ui-foundation-only="true"][data-recurring-stage2="details"] > :not([data-ui-management-split="true"]),
+[data-ui-foundation-only="true"][data-budget-limits-view="details"] > :not([data-ui-management-split="true"]) {
+  display: none !important;
+}
+
+[data-financial-goals-panel="true"][data-ui-foundation-only="true"]:has([data-ui-management-split="true"]) > [data-financial-goals-mode-controls="true"],
+[data-financial-goals-panel="true"][data-ui-foundation-only="true"]:has([data-ui-management-split="true"]) > [data-financial-goals-summary="true"],
+[data-financial-goals-panel="true"][data-ui-foundation-only="true"]:has([data-ui-management-split="true"]) > [data-financial-goals-momentum="true"] {
+  display: none !important;
+}
+
+[data-financial-goals-panel="true"][data-ui-foundation-only="true"] [data-financial-goals-current-list="true"]:has(> [data-ui-management-split="true"]) > :not([data-ui-management-split="true"]) {
+  display: none !important;
+}
+
+/* Keep the reusable strip shape but mute local numeric/statistical values. */
+[data-ui-foundation-only="true"] [data-ui-management-strip-item="true"] > span,
+[data-ui-foundation-only="true"] [data-financial-goals-summary="true"] strong,
+[data-ui-foundation-only="true"] [data-financial-goals-summary="true"] small,
+[data-ui-foundation-only="true"] [data-financial-goals-momentum="true"] {
+  color: transparent !important;
+  user-select: none;
+}
+
+[data-ui-foundation-only="true"] [data-ui-management-strip-item="true"] > span::before,
+[data-ui-foundation-only="true"] [data-financial-goals-summary="true"] strong::before,
+[data-ui-foundation-only="true"] [data-financial-goals-summary="true"] small::before,
+[data-ui-foundation-only="true"] [data-financial-goals-momentum="true"]::before {
+  content: "";
+  display: block;
+  width: min(140px, 72%);
+  height: 0.7rem;
+  border-radius: var(--foundation-only-radius);
+  background: linear-gradient(90deg, var(--foundation-only-muted-line), rgba(226, 232, 240, 0.34));
+}
+
+[data-ui-foundation-only="true"] [data-financial-goals-momentum="true"] {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  padding: 16px 18px;
+}
+
+/* Cards: leave identity, labels and action buttons; hide module-specific metrics and statistical bars. */
+[data-ui-foundation-only="true"] [data-ui-large-record="true"] {
+  grid-template-columns: minmax(240px, 1fr) auto;
+  min-height: 116px;
+}
+
+[data-ui-foundation-only="true"] [data-ui-large-record="true"] [data-ui-metric-group="true"],
+[data-ui-foundation-only="true"] [data-ui-large-record="true"] [data-ui-large-record-progress="true"],
+[data-ui-foundation-only="true"] [data-ui-record-metrics="true"],
+[data-ui-foundation-only="true"] [data-ui-record-progress="true"] {
+  display: none !important;
+}
+
+[data-ui-foundation-only="true"] [data-ui-large-record-identity-copy="true"] {
+  gap: 7px;
+}
+
+[data-ui-foundation-only="true"] [data-ui-status-pill-group="true"],
+[data-ui-foundation-only="true"] [data-ui-record-meta="true"] {
+  min-height: 24px;
+}
+
+[data-ui-foundation-only="true"] [data-ui-status-pill="true"],
+[data-ui-foundation-only="true"] [data-ui-status-inline="true"] {
+  max-width: max-content;
+}
+
+[data-ui-foundation-only="true"] [data-ui-management-split-list="true"] [data-ui-large-record="true"],
+[data-ui-foundation-only="true"] [data-ui-large-record="true"][data-ui-record-compact="true"] {
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 94px;
+}
+
+/* Details: keep the panel, header, section titles and action buttons. Remove domain body content. */
+[data-ui-foundation-only="true"] [data-ui-management-details-metrics="true"],
+[data-ui-foundation-only="true"] [data-ui-record-details-metrics="true"] {
+  display: none !important;
+}
+
+[data-ui-foundation-only="true"] [data-ui-management-details-section="true"],
+[data-ui-foundation-only="true"] [data-ui-record-details-list="true"] {
+  min-height: 68px;
+  border: 1px solid rgba(8, 44, 122, 0.08);
+  border-radius: 14px;
+  padding: 14px;
+  background: rgba(248, 251, 255, 0.72);
+}
+
+[data-ui-foundation-only="true"] [data-ui-management-details-section="true"] > :not(h4),
+[data-ui-foundation-only="true"] [data-ui-record-details-list="true"] > :not(strong):not(h4),
+[data-ui-foundation-only="true"] [data-ui-detail-row="true"],
+[data-ui-foundation-only="true"] [data-ui-transaction-row="true"] {
+  display: none !important;
+}
+
+[data-ui-foundation-only="true"] [data-ui-management-details-section="true"] > h4,
+[data-ui-foundation-only="true"] [data-ui-record-details-list="true"] > strong,
+[data-ui-foundation-only="true"] [data-ui-record-details-list="true"] > h4 {
+  margin: 0;
+  color: var(--ui-color-primary-navy, #082c7a);
+  font-size: 0.95rem;
+  font-weight: var(--ui-font-weight-bold);
+}
+
+[data-ui-foundation-only="true"] [data-ui-details-action-bar="true"],
+[data-ui-foundation-only="true"] [data-ui-action-group="true"]:not([data-ui-action-stack="record"]) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Empty/list states remain visible because they test global empty-state styling. */
+[data-ui-foundation-only="true"] [data-ui-empty-block="true"],
+[data-ui-foundation-only="true"] [data-ui-empty-state="true"] {
+  min-height: 70px;
+  display: grid;
+  place-items: center;
+}
+
+/* Mobile foundation-only review: true app-screen, not squeezed desktop modal. */
+@media (max-width: 720px) {
+  [data-budget-utility-panel="true"]:has([data-ui-foundation-only="true"]) {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+    border: 0;
+    box-shadow: none;
+    overflow: hidden;
+  }
+
+  [data-budget-utility-panel="true"]:has([data-ui-foundation-only="true"]) > [data-ui-hero-header="true"] {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    padding: max(14px, env(safe-area-inset-top)) 14px 12px;
+    border-bottom: 1px solid rgba(8, 44, 122, 0.08);
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(16px);
+  }
+
+  [data-budget-utility-panel="true"]:has([data-ui-foundation-only="true"]) > [data-ui-hero-header="true"] [data-ui-hero-copy="true"] > strong {
+    font-size: clamp(1.28rem, 8vw, 1.65rem);
+    line-height: 1.03;
+    letter-spacing: -0.02em;
+  }
+
+  [data-budget-utility-panel="true"]:has([data-ui-foundation-only="true"]) > [data-ui-hero-header="true"] [data-ui-hero-copy="true"] > span {
+    font-size: 0.84rem;
+    line-height: 1.35;
+  }
+
+  [data-budget-utility-panel="true"]:has([data-ui-foundation-only="true"]) > [data-ui-hero-header="true"] [data-ui-hero-actions="true"] {
+    align-items: start;
+    gap: 8px;
+  }
+
+  [data-budget-utility-panel="true"]:has([data-ui-foundation-only="true"]) > [data-ui-hero-header="true"] [data-ui-hero-actions="true"] button:not([data-ui-action="icon"]) {
+    min-height: 38px;
+    padding-inline: 12px;
+    border-radius: 10px;
+    font-size: 0.84rem;
+  }
+
+  [data-budget-utility-panel="true"]:has([data-ui-foundation-only="true"]) > [data-ui-hero-header="true"] [data-ui-action="icon"] {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+  }
+
+  [data-budget-utility-panel="true"]:has([data-ui-foundation-only="true"]) [data-budget-utility-body="true"] {
+    height: calc(100dvh - 76px);
+    overflow: auto;
+    padding: 12px 12px max(18px, env(safe-area-inset-bottom));
+  }
+
+  [data-ui-foundation-only="true"] {
+    gap: 12px;
+  }
+
+  [data-ui-foundation-only="true"] [data-ui-management-toolbar="true"] {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  [data-ui-foundation-only="true"] [data-ui-management-toolbar-group="true"] {
+    width: 100%;
+    grid-template-rows: auto var(--mgmt-control-height, 42px);
+  }
+
+  [data-ui-foundation-only="true"] [data-ui-management-toolbar-group="true"] select,
+  [data-ui-foundation-only="true"] [data-ui-list-switch="true"][data-ui-management-switch="true"] {
+    width: 100%;
+    min-width: 0;
+  }
+
+  [data-ui-foundation-only="true"] [data-ui-list-switch="true"][data-ui-management-switch="true"] {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+  }
+
+  [data-ui-foundation-only="true"] [data-ui-large-record="true"] {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 112px;
+    padding: 14px;
+  }
+
+  [data-ui-foundation-only="true"] [data-ui-icon-tile="true"][data-ui-icon-role="large-record-hero"] {
+    width: 48px;
+    min-width: 48px;
+    height: 48px;
+    min-height: 48px;
+  }
+
+  [data-ui-foundation-only="true"] [data-ui-large-record="true"] [data-ui-action-group="true"][data-ui-action-stack="record"] {
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  [data-ui-foundation-only="true"] [data-ui-management-split="true"] {
+    display: block;
+  }
+
+  [data-ui-foundation-only="true"] [data-ui-management-split-list="true"] {
+    display: none !important;
+  }
+
+  [data-ui-foundation-only="true"] [data-ui-management-details-panel="true"],
+  [data-ui-foundation-only="true"] [data-ui-record-details="true"] {
+    min-height: calc(100dvh - 112px);
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 14px 0 72px;
+    background: transparent;
+  }
+
+  [data-ui-foundation-only="true"] [data-ui-management-details-header="true"],
+  [data-ui-foundation-only="true"] [data-ui-record-details-header="true"] {
+    position: sticky;
+    top: 0;
+    z-index: 12;
+    margin: -14px 0 0;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(8, 44, 122, 0.08);
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(16px);
+  }
+
+  [data-ui-foundation-only="true"] [data-ui-management-details-section="true"],
+  [data-ui-foundation-only="true"] [data-ui-record-details-list="true"] {
+    margin-inline: 0;
+  }
+
+  [data-ui-foundation-only="true"] [data-ui-details-action-bar="true"] {
+    position: sticky;
+    bottom: 0;
+    z-index: 15;
+    margin: 0 -12px max(-18px, calc(env(safe-area-inset-bottom) * -1));
+    padding: 10px 12px max(10px, env(safe-area-inset-bottom));
+    border-top: 1px solid rgba(8, 44, 122, 0.08);
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(16px);
+  }
+
+  [data-ui-foundation-only="true"] [data-ui-details-action-bar="true"] button {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}

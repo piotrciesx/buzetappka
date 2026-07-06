@@ -634,6 +634,8 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
       data-ui-section="true"
       data-ui-large-module="true"
       data-ui-utility-modal-size="xl"
+      data-ui-management-shell="true"
+      data-ui-foundation-only="true"
       data-financial-goals-panel="true"
     >
       <FinancialGoalsModeControls
