@@ -4857,19 +4857,19 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   --mgmt-action-font-size: 0.86rem;
   --mgmt-action-font-weight: 600;
 
-  --mgmt-action-primary-bg: #1d5fbf;
-  --mgmt-action-primary-bg-hover: #174fa4;
-  --mgmt-action-primary-border: #174fa4;
+  --mgmt-action-primary-bg: #155fd3;
+  --mgmt-action-primary-bg-hover: #0f4fb8;
+  --mgmt-action-primary-border: #0f4fb8;
   --mgmt-action-primary-text: #ffffff;
-  --mgmt-action-primary-disabled-bg: linear-gradient(0deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.26)), #1a4f9d;
-  --mgmt-action-primary-disabled-border: #16498f;
+  --mgmt-action-primary-disabled-bg: linear-gradient(0deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.24)), #155fd3;
+  --mgmt-action-primary-disabled-border: #0f4fb8;
   --mgmt-action-primary-disabled-text: #ffffff;
 
   --mgmt-action-neutral-bg: #ffffff;
   --mgmt-action-neutral-bg-hover: #f8fbff;
-  --mgmt-action-neutral-border: #3d74d8;
-  --mgmt-action-neutral-border-hover: #2d65c9;
-  --mgmt-action-neutral-text: #1a56ad;
+  --mgmt-action-neutral-border: #5f95e8;
+  --mgmt-action-neutral-border-hover: #3f7fe0;
+  --mgmt-action-neutral-text: #155fd3;
 
   --mgmt-action-warning-bg: #ffffff;
   --mgmt-action-warning-bg-hover: #fff8ef;
