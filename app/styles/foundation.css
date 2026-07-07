@@ -423,9 +423,9 @@
   --ui-button-disabled-text: var(--ui-color-muted-text);
 
   /* Full button primitive contracts */
-  --ui-button-confirm-bg: var(--ui-color-primary-navy);
-  --ui-button-confirm-bg-hover: #0b3b9c;
-  --ui-button-confirm-border: var(--ui-color-primary-navy);
+  --ui-button-confirm-bg: #1d5fbf;
+  --ui-button-confirm-bg-hover: #174fa4;
+  --ui-button-confirm-border: #174fa4;
   --ui-button-confirm-text: var(--ui-color-white-text);
   --ui-button-cancel-bg: var(--ui-color-card-background);
   --ui-button-cancel-bg-hover: var(--ui-color-error-soft);
@@ -443,8 +443,8 @@
   --ui-button-close-radius: var(--ui-button-radius);
   --ui-button-close-bg: var(--ui-color-card-background);
   --ui-button-close-bg-hover: var(--ui-color-hover-background);
-  --ui-button-close-border: var(--ui-button-border);
-  --ui-button-close-text: var(--ui-color-primary-navy);
+  --ui-button-close-border: rgba(29, 95, 191, 0.26);
+  --ui-button-close-text: #174f9f;
   --ui-header-primary-action-height: var(--ui-button-height-standard);
   --ui-header-primary-action-padding: var(--ui-button-padding-standard);
   --ui-header-primary-action-gap: var(--ui-space-5);
@@ -4857,19 +4857,19 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   --mgmt-action-font-size: 0.86rem;
   --mgmt-action-font-weight: 600;
 
-  --mgmt-action-primary-bg: #0b3b95;
-  --mgmt-action-primary-bg-hover: #0a327f;
-  --mgmt-action-primary-border: #0a327f;
+  --mgmt-action-primary-bg: #1d5fbf;
+  --mgmt-action-primary-bg-hover: #174fa4;
+  --mgmt-action-primary-border: #174fa4;
   --mgmt-action-primary-text: #ffffff;
-  --mgmt-action-primary-disabled-bg: linear-gradient(0deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.28)), #0b3b95;
-  --mgmt-action-primary-disabled-border: #0a327f;
+  --mgmt-action-primary-disabled-bg: linear-gradient(0deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.26)), #1a4f9d;
+  --mgmt-action-primary-disabled-border: #16498f;
   --mgmt-action-primary-disabled-text: #ffffff;
 
   --mgmt-action-neutral-bg: #ffffff;
   --mgmt-action-neutral-bg-hover: #f8fbff;
-  --mgmt-action-neutral-border: #2e63d4;
-  --mgmt-action-neutral-border-hover: #1f54ca;
-  --mgmt-action-neutral-text: #0b3b95;
+  --mgmt-action-neutral-border: #3d74d8;
+  --mgmt-action-neutral-border-hover: #2d65c9;
+  --mgmt-action-neutral-text: #1a56ad;
 
   --mgmt-action-warning-bg: #ffffff;
   --mgmt-action-warning-bg-hover: #fff8ef;
@@ -4988,9 +4988,9 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   justify-content: center;
   gap: 12px;
   padding: 0 21px;
-  border: 1px solid #0a327f;
+  border: 1px solid #174fa4;
   border-radius: 8px;
-  background: #0b3b95;
+  background: #1d5fbf;
   color: #ffffff;
   font-size: 0.96rem;
   font-weight: 560;
@@ -4999,13 +4999,13 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
 }
 
 [data-management-module-add="true"]:hover {
-  background: #0a327f;
-  border-color: #082b70;
+  background: #174fa4;
+  border-color: #134690;
 }
 
 [data-management-module-add="true"]:focus-visible,
 [data-management-module-close="true"]:focus-visible {
-  outline: 2px solid rgba(11, 59, 149, 0.24);
+  outline: 2px solid rgba(29, 95, 191, 0.24);
   outline-offset: 3px;
 }
 
@@ -5032,10 +5032,10 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   align-items: center;
   justify-content: center;
   padding: 0;
-  border: 1px solid #cbd5e5;
+  border: 1px solid rgba(29, 95, 191, 0.24);
   border-radius: 8px;
   background: #ffffff;
-  color: #0a2f78;
+  color: #174f9f;
   font-size: 1.76rem;
   font-weight: 340;
   cursor: pointer;
@@ -5048,7 +5048,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
 
 [data-management-module-close="true"]:hover {
   background: #f8fbff;
-  border-color: #b8c5da;
+  border-color: rgba(29, 95, 191, 0.36);
 }
 
 [data-budget-utility-body="true"] {
@@ -5356,7 +5356,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
 [data-ui-action="secondary"]:focus-visible,
 [data-ui-action="danger"]:focus-visible,
 [data-ui-management-action-column="true"] button:focus-visible {
-  outline: 2px solid rgba(11, 59, 149, 0.18);
+  outline: 2px solid rgba(29, 95, 191, 0.18);
   outline-offset: 2px;
 }
 
@@ -5462,7 +5462,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(46, 99, 212, 0.24);
+  border: 1px solid rgba(29, 95, 191, 0.24);
   border-radius: var(--mgmt-radius-control);
   background: #fff;
   color: var(--mgmt-navy);
