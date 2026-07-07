@@ -5,6 +5,7 @@ import {
   HTMLAttributes,
   InputHTMLAttributes,
   ReactNode,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -388,8 +389,77 @@ export function ManagementSelect<Value extends string = string>({
   placeholder = "Wybierz",
 }: ManagementSelectProps<Value>) {
   const [isOpen, setIsOpen] = useState(false);
+  const [canScrollUp, setCanScrollUp] = useState(false);
+  const [canScrollDown, setCanScrollDown] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const scrollAnimationRef = useRef<number | null>(null);
   const selectedOption = options.find((option) => option.value === value);
+
+  const stopScrollAnimation = useCallback(() => {
+    if (scrollAnimationRef.current !== null) {
+      window.cancelAnimationFrame(scrollAnimationRef.current);
+      scrollAnimationRef.current = null;
+    }
+  }, []);
+
+  const updateScrollState = useCallback(() => {
+    const viewport = viewportRef.current;
+
+    if (!viewport) {
+      setCanScrollUp(false);
+      setCanScrollDown(false);
+      return;
+    }
+
+    const tolerance = 1;
+    const nextCanScrollUp = viewport.scrollTop > tolerance;
+    const nextCanScrollDown =
+      viewport.scrollTop + viewport.clientHeight < viewport.scrollHeight - tolerance;
+
+    setCanScrollUp(nextCanScrollUp);
+    setCanScrollDown(nextCanScrollDown);
+  }, []);
+
+  const startScrollAnimation = useCallback(
+    (direction: -1 | 1) => {
+      stopScrollAnimation();
+
+      let previousTimestamp = 0;
+
+      const tick = (timestamp: number) => {
+        const viewport = viewportRef.current;
+
+        if (!viewport) {
+          stopScrollAnimation();
+          return;
+        }
+
+        if (previousTimestamp === 0) {
+          previousTimestamp = timestamp;
+        }
+
+        const elapsed = Math.min(timestamp - previousTimestamp, 32);
+        previousTimestamp = timestamp;
+        viewport.scrollTop += direction * Math.max(1.5, elapsed * 0.18);
+        updateScrollState();
+
+        const isAtTop = viewport.scrollTop <= 1;
+        const isAtBottom =
+          viewport.scrollTop + viewport.clientHeight >= viewport.scrollHeight - 1;
+
+        if ((direction === -1 && isAtTop) || (direction === 1 && isAtBottom)) {
+          stopScrollAnimation();
+          return;
+        }
+
+        scrollAnimationRef.current = window.requestAnimationFrame(tick);
+      };
+
+      scrollAnimationRef.current = window.requestAnimationFrame(tick);
+    },
+    [stopScrollAnimation, updateScrollState],
+  );
 
   useEffect(() => {
     if (!isOpen) return;
@@ -420,6 +490,31 @@ export function ManagementSelect<Value extends string = string>({
       setIsOpen(false);
     }
   }, [disabled]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      stopScrollAnimation();
+      setCanScrollUp(false);
+      setCanScrollDown(false);
+      return;
+    }
+
+    const viewport = viewportRef.current;
+
+    if (!viewport) return;
+
+    const animationFrame = window.requestAnimationFrame(updateScrollState);
+
+    viewport.addEventListener("scroll", updateScrollState, { passive: true });
+    window.addEventListener("resize", updateScrollState);
+
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      viewport.removeEventListener("scroll", updateScrollState);
+      window.removeEventListener("resize", updateScrollState);
+      stopScrollAnimation();
+    };
+  }, [isOpen, options.length, stopScrollAnimation, updateScrollState]);
 
   return (
     <div
@@ -453,32 +548,58 @@ export function ManagementSelect<Value extends string = string>({
 
       {isOpen && (
         <div data-ui-management-select-menu="true" role="listbox" aria-labelledby={id}>
-          {options.map((option) => {
-            const isSelected = option.value === value;
+          {canScrollUp && (
+            <div
+              data-ui-management-select-scroll-zone="up"
+              aria-hidden="true"
+              onPointerEnter={() => startScrollAnimation(-1)}
+              onPointerLeave={stopScrollAnimation}
+              onPointerCancel={stopScrollAnimation}
+            >
+              <span data-ui-management-select-scroll-icon="true" />
+            </div>
+          )}
 
-            return (
-              <button
-                key={option.value}
-                type="button"
-                role="option"
-                aria-selected={isSelected}
-                data-ui-management-select-option="true"
-                data-selected={isSelected ? "true" : undefined}
-                disabled={option.disabled}
-                onClick={() => {
-                  onChange(option.value);
-                  setIsOpen(false);
-                }}
-              >
-                <span>{option.label}</span>
-                {isSelected && (
-                  <span data-ui-management-select-check="true" aria-hidden="true">
-                    ✓
-                  </span>
-                )}
-              </button>
-            );
-          })}
+          <div ref={viewportRef} data-ui-management-select-viewport="true">
+            {options.map((option) => {
+              const isSelected = option.value === value;
+
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  role="option"
+                  aria-selected={isSelected}
+                  data-ui-management-select-option="true"
+                  data-selected={isSelected ? "true" : undefined}
+                  disabled={option.disabled}
+                  onClick={() => {
+                    onChange(option.value);
+                    setIsOpen(false);
+                  }}
+                >
+                  <span data-ui-management-select-option-label="true">{option.label}</span>
+                  {isSelected && (
+                    <span data-ui-management-select-check="true" aria-hidden="true">
+                      ✓
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {canScrollDown && (
+            <div
+              data-ui-management-select-scroll-zone="down"
+              aria-hidden="true"
+              onPointerEnter={() => startScrollAnimation(1)}
+              onPointerLeave={stopScrollAnimation}
+              onPointerCancel={stopScrollAnimation}
+            >
+              <span data-ui-management-select-scroll-icon="true" />
+            </div>
+          )}
         </div>
       )}
     </div>
