@@ -4850,46 +4850,49 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   --mgmt-shadow-shell: 0 22px 54px rgba(10, 34, 84, 0.12);
   --mgmt-shadow-card: 0 8px 22px rgba(10, 34, 84, 0.045);
 
-  --mgmt-action-height: 36px;
+  --mgmt-action-height: 38px;
   --mgmt-action-radius: 8px;
-  --mgmt-action-padding: 0 14px;
+  --mgmt-action-padding: 0 15px;
   --mgmt-action-gap: 8px;
   --mgmt-action-font-size: 0.86rem;
-  --mgmt-action-font-weight: 580;
+  --mgmt-action-font-weight: 600;
 
   --mgmt-action-primary-bg: #0b3b95;
   --mgmt-action-primary-bg-hover: #0a327f;
   --mgmt-action-primary-border: #0a327f;
   --mgmt-action-primary-text: #ffffff;
+  --mgmt-action-primary-disabled-bg: linear-gradient(0deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.28)), #0b3b95;
+  --mgmt-action-primary-disabled-border: #0a327f;
+  --mgmt-action-primary-disabled-text: #ffffff;
 
   --mgmt-action-neutral-bg: #ffffff;
   --mgmt-action-neutral-bg-hover: #f8fbff;
-  --mgmt-action-neutral-border: #d7dee9;
-  --mgmt-action-neutral-border-hover: #c4cfdf;
-  --mgmt-action-neutral-text: #0b2f78;
+  --mgmt-action-neutral-border: #2e63d4;
+  --mgmt-action-neutral-border-hover: #1f54ca;
+  --mgmt-action-neutral-text: #0b3b95;
 
-  --mgmt-action-warning-bg: #fff8ed;
-  --mgmt-action-warning-bg-hover: #fff2dc;
-  --mgmt-action-warning-border: #f2bd7a;
-  --mgmt-action-warning-border-hover: #e9a453;
-  --mgmt-action-warning-text: #a45205;
+  --mgmt-action-warning-bg: #ffffff;
+  --mgmt-action-warning-bg-hover: #fff8ef;
+  --mgmt-action-warning-border: #f1a23f;
+  --mgmt-action-warning-border-hover: #e18b1c;
+  --mgmt-action-warning-text: #c76a00;
 
-  --mgmt-action-danger-bg: #fff7f7;
-  --mgmt-action-danger-bg-hover: #fff0f0;
-  --mgmt-action-danger-border: #f2aaaa;
-  --mgmt-action-danger-border-hover: #e48787;
-  --mgmt-action-danger-text: #c92c2c;
+  --mgmt-action-danger-bg: #ffffff;
+  --mgmt-action-danger-bg-hover: #fff7f8;
+  --mgmt-action-danger-border: #ff8f98;
+  --mgmt-action-danger-border-hover: #ff727d;
+  --mgmt-action-danger-text: #ea3038;
 
-  --mgmt-action-restore-bg: #f5faf7;
-  --mgmt-action-restore-bg-hover: #eff7f2;
-  --mgmt-action-restore-border: #b8d6c3;
-  --mgmt-action-restore-border-hover: #98c4a8;
-  --mgmt-action-restore-text: #4e6659;
+  --mgmt-action-restore-bg: #ffffff;
+  --mgmt-action-restore-bg-hover: #f5faf7;
+  --mgmt-action-restore-border: #9ec9af;
+  --mgmt-action-restore-border-hover: #84b898;
+  --mgmt-action-restore-text: #2d7b52;
 
-  --mgmt-action-success-bg: #f3fbf6;
-  --mgmt-action-success-bg-hover: #eaf8ef;
-  --mgmt-action-success-border: #aad8ba;
-  --mgmt-action-success-border-hover: #88c99f;
+  --mgmt-action-success-bg: #ffffff;
+  --mgmt-action-success-bg-hover: #f3fbf6;
+  --mgmt-action-success-border: #8dcba8;
+  --mgmt-action-success-border-hover: #74bc92;
   --mgmt-action-success-text: #13824a;
 }
 
@@ -5362,7 +5365,14 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
 [data-ui-action="danger"]:disabled,
 [data-ui-management-action-column="true"] button:disabled {
   cursor: not-allowed;
-  opacity: 0.56;
+  opacity: 0.58;
+}
+
+[data-ui-action="primary"]:disabled {
+  opacity: 1;
+  border-color: var(--mgmt-action-primary-disabled-border);
+  background: var(--mgmt-action-primary-disabled-bg);
+  color: var(--mgmt-action-primary-disabled-text);
 }
 
 [data-ui-action-width="full"],
@@ -5452,7 +5462,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--mgmt-border-soft);
+  border: 1px solid rgba(46, 99, 212, 0.24);
   border-radius: var(--mgmt-radius-control);
   background: #fff;
   color: var(--mgmt-navy);
