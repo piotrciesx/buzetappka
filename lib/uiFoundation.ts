@@ -218,6 +218,7 @@ export const uiPrimitiveContracts = {
   button: ["hero", "standard", "utility", "icon"],
   buttonState: ["active"],
   buttonTone: ["default", "danger", "success"],
+  buttonIntent: ["neutral", "warning", "danger", "restore", "success"],
   buttonWidth: ["auto", "equal", "full"],
   buttonDensity: ["compact", "normal"],
   iconButton: ["default", "subtle", "danger", "active"],
@@ -572,6 +573,7 @@ export const uiButtonApi = {
   attributes: {
     state: "data-button-state",
     tone: "data-button-tone",
+    intent: "data-ui-action-intent",
     width: "data-button-width",
     density: "data-button-density",
   },

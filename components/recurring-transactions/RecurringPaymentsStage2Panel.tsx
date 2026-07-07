@@ -253,10 +253,10 @@ export default function RecurringPaymentsStage2Panel({
             data.loanTerms.find((term) => term.plan_id === plan.id),
           ).draft)
         }}>Edytuj</SecondaryAction>
-        <DangerAction disabled={busy} onClick={() => {
+        <SecondaryAction intent={listMode === 'archived' ? 'restore' : 'warning'} disabled={busy} onClick={() => {
           const plan = data.plans.find((item) => item.id === card.id)
-          if (plan) void changePlanStatus(plan, 'archived')
-        }}>{listMode === 'archived' ? 'Przywróć' : 'Zakończ'}</DangerAction>
+          if (plan) void changePlanStatus(plan, listMode === 'archived' ? 'active' : 'archived')
+        }}>{listMode === 'archived' ? 'Przywróć' : 'Zakończ'}</SecondaryAction>
       </div>
     </article>
   )
@@ -281,7 +281,7 @@ export default function RecurringPaymentsStage2Panel({
             <p>Możesz przywrócić istniejącą płatność albo utworzyć nową mimo to.</p>
             <PrimaryAction disabled={busy} onClick={() => void restoreConflict()}>Przywróć istniejącą</PrimaryAction>
             <SecondaryAction disabled={busy} onClick={() => void save(true)}>Utwórz nową mimo to</SecondaryAction>
-            <SecondaryAction onClick={() => { setNameConflict(null); setNotice('') }}>Anuluj</SecondaryAction>
+            <DangerAction intent="danger" onClick={() => { setNameConflict(null); setNotice('') }}>Anuluj</DangerAction>
           </div>
         )}
       </section>
@@ -381,11 +381,11 @@ export default function RecurringPaymentsStage2Panel({
                     <div data-ui-action-group="true">
                       <PrimaryAction disabled={busy} onClick={() => onAddEntry(selected, occurrence)}>Dodaj wpis</PrimaryAction>
                       <SecondaryAction disabled={busy} onClick={() => void act(() => data.completeWithoutTransaction(occurrence.id))}>Wykonane bez wpisu</SecondaryAction>
-                      <SecondaryAction disabled={busy} onClick={() => selected.plan_type === 'fixed_payment' ? void act(() => data.skip(occurrence.id)) : setDecision({ kind: 'skip', occurrence })}>Pomiń</SecondaryAction>
-                      <SecondaryAction disabled={busy} onClick={() => void act(() => data.snooze(occurrence.id, new Date(Date.now() + 86400000).toISOString()))}>Odłóż</SecondaryAction>
+                      <SecondaryAction intent="warning" disabled={busy} onClick={() => selected.plan_type === 'fixed_payment' ? void act(() => data.skip(occurrence.id)) : setDecision({ kind: 'skip', occurrence })}>Pomiń</SecondaryAction>
+                      <SecondaryAction intent="warning" disabled={busy} onClick={() => void act(() => data.snooze(occurrence.id, new Date(Date.now() + 86400000).toISOString()))}>Odłóż</SecondaryAction>
                     </div>
                   )}
-                  {occurrence.scheduleDecisionRequired && <button type="button" onClick={() => setDecision({ kind: 'amount', occurrence, actualAmount: occurrence.actualAmount, overpayment: occurrence.planned_amount !== null && occurrence.actualAmount > occurrence.planned_amount })}>Rozstrzygnij nadpłatę / harmonogram</button>}
+                  {occurrence.scheduleDecisionRequired && <button type="button" data-ui-action="secondary" data-ui-action-intent="warning" onClick={() => setDecision({ kind: 'amount', occurrence, actualAmount: occurrence.actualAmount, overpayment: occurrence.planned_amount !== null && occurrence.actualAmount > occurrence.planned_amount })}>Rozstrzygnij nadpłatę / harmonogram</button>}
                   {occurrence.linkedTransactions.map((transaction) => <small key={transaction.id}>Wpis: {transaction.description || transaction.date} ({Number(transaction.amount).toFixed(2)})</small>)}
                 </article>
               ))}
@@ -403,10 +403,10 @@ export default function RecurringPaymentsStage2Panel({
 
             <footer data-ui-action-group="true" data-ui-details-action-bar="true">
               <SecondaryAction onClick={() => setDraft(buildRecurringPaymentCreatorViewModel(selected, data.installmentTerms.find((term) => term.plan_id === selected.id), data.loanTerms.find((term) => term.plan_id === selected.id)).draft)}>Edytuj</SecondaryAction>
-              {selected.status === 'active' && <SecondaryAction disabled={busy} onClick={() => void changePlanStatus(selected, 'paused')}>Wstrzymaj</SecondaryAction>}
-              {selected.status === 'paused' && <SecondaryAction disabled={busy} onClick={() => void changePlanStatus(selected, 'active')}>Wznów od dziś</SecondaryAction>}
-              {selected.status !== 'archived' && <DangerAction disabled={busy} onClick={() => void changePlanStatus(selected, 'archived')}>Zakończ</DangerAction>}
-              {selected.status === 'archived' && <PrimaryAction disabled={busy} onClick={() => void changePlanStatus(selected, 'active')}>Przywróć od dziś</PrimaryAction>}
+              {selected.status === 'active' && <SecondaryAction intent="warning" disabled={busy} onClick={() => void changePlanStatus(selected, 'paused')}>Wstrzymaj</SecondaryAction>}
+              {selected.status === 'paused' && <SecondaryAction intent="restore" disabled={busy} onClick={() => void changePlanStatus(selected, 'active')}>Wznów od dziś</SecondaryAction>}
+              {selected.status !== 'archived' && <SecondaryAction intent="warning" disabled={busy} onClick={() => void changePlanStatus(selected, 'archived')}>Zakończ</SecondaryAction>}
+              {selected.status === 'archived' && <SecondaryAction intent="restore" disabled={busy} onClick={() => void changePlanStatus(selected, 'active')}>Przywróć od dziś</SecondaryAction>}
             </footer>
             {notice && <p role="status" data-ui-management-inline-notice="true">{notice}</p>}
           </section>
@@ -414,20 +414,20 @@ export default function RecurringPaymentsStage2Panel({
         {decision?.kind === 'skip' && (
           <div role="dialog" data-ui-management-soft-warning="true">
             <strong>Co zrobić z pominiętą ratą?</strong>
-            <button onClick={() => void chooseSkip('append_at_end')}>Dodaj ratę na koniec</button>
-            <button onClick={() => void chooseSkip('keep_schedule')}>Zostaw harmonogram</button>
-            <button onClick={() => void chooseSkip('manual_schedule')}>Edytuj ręcznie</button>
+            <button type="button" data-ui-action="secondary" data-ui-action-intent="neutral" onClick={() => void chooseSkip('append_at_end')}>Dodaj ratę na koniec</button>
+            <button type="button" data-ui-action="secondary" data-ui-action-intent="neutral" onClick={() => void chooseSkip('keep_schedule')}>Zostaw harmonogram</button>
+            <button type="button" data-ui-action="secondary" data-ui-action-intent="warning" onClick={() => void chooseSkip('manual_schedule')}>Edytuj ręcznie</button>
           </div>
         )}
         {decision?.kind === 'amount' && (
           <div role="dialog" data-ui-management-soft-warning="true">
             <strong>{decision.overpayment ? 'Jak rozliczyć nadpłatę?' : 'Kwota różni się od planowanej'}</strong>
-            <button onClick={() => void chooseAmount('this_occurrence_only')}>Tylko to wystąpienie</button>
+            <button type="button" data-ui-action="secondary" data-ui-action-intent="neutral" onClick={() => void chooseAmount('this_occurrence_only')}>Tylko to wystąpienie</button>
             {decision.overpayment ? (
               <>
-                <button onClick={() => void chooseAmount('shorten_schedule')}>Skróć harmonogram</button>
-                <button onClick={() => void chooseAmount('reduce_future_installments')}>Zmniejsz przyszłe raty</button>
-                <button onClick={() => void chooseAmount('manual_schedule')}>Edytuj ręcznie</button>
+                <button type="button" data-ui-action="secondary" data-ui-action-intent="warning" onClick={() => void chooseAmount('shorten_schedule')}>Skróć harmonogram</button>
+                <button type="button" data-ui-action="secondary" data-ui-action-intent="neutral" onClick={() => void chooseAmount('reduce_future_installments')}>Zmniejsz przyszłe raty</button>
+                <button type="button" data-ui-action="secondary" data-ui-action-intent="warning" onClick={() => void chooseAmount('manual_schedule')}>Edytuj ręcznie</button>
               </>
             ) : (
               <>

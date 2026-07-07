@@ -224,6 +224,8 @@ export function CollapsibleSecondarySection({
   );
 }
 
+type ActionIntent = "neutral" | "warning" | "danger" | "restore" | "success";
+
 type ActionProps = {
   children: ReactNode;
   type?: "button" | "submit" | "reset";
@@ -233,6 +235,7 @@ type ActionProps = {
   title?: string;
   width?: "auto" | "wide" | "full";
   density?: FoundationDensity;
+  intent?: ActionIntent;
 };
 
 export function PrimaryAction({
@@ -270,11 +273,13 @@ export function SecondaryAction({
   title,
   width = "auto",
   density = "regular",
+  intent = "neutral",
 }: ActionProps) {
   return (
     <button
       type={type}
       data-ui-action="secondary"
+      data-ui-action-intent={intent}
       data-ui-action-width={width}
       data-ui-density={density}
       disabled={disabled}
@@ -296,11 +301,13 @@ export function DangerAction({
   title,
   width = "auto",
   density = "regular",
+  intent = "danger",
 }: ActionProps) {
   return (
     <button
       type={type}
       data-ui-action="danger"
+      data-ui-action-intent={intent}
       data-ui-action-width={width}
       data-ui-density={density}
       disabled={disabled}

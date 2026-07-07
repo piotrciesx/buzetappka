@@ -290,10 +290,10 @@ export default function FinancialGoalsList({
 
             <footer data-ui-action-group="true" data-ui-details-action-bar="true">
               <SecondaryAction onClick={() => openEditModal(selectedGoal)}>Edytuj</SecondaryAction>
-              {(selectedGoal.status === 'active' || !selectedGoal.status) && <SecondaryAction onClick={() => void onSetGoalStatus(selectedGoal.id, 'paused')}>Wstrzymaj</SecondaryAction>}
-              {selectedGoal.status === 'paused' && <SecondaryAction onClick={() => void onSetGoalStatus(selectedGoal.id, 'active')}>Wznów</SecondaryAction>}
+              {(selectedGoal.status === 'active' || !selectedGoal.status) && <SecondaryAction intent="warning" onClick={() => void onSetGoalStatus(selectedGoal.id, 'paused')}>Wstrzymaj</SecondaryAction>}
+              {selectedGoal.status === 'paused' && <SecondaryAction intent="restore" onClick={() => void onSetGoalStatus(selectedGoal.id, 'active')}>Wznów</SecondaryAction>}
               {(selectedGoal.status === 'active' || selectedGoal.status === 'paused' || !selectedGoal.status) && <SecondaryAction onClick={() => void onSetGoalStatus(selectedGoal.id, 'archived_completed')}>Zrealizuj</SecondaryAction>}
-              {(selectedGoal.status === 'active' || selectedGoal.status === 'paused' || !selectedGoal.status) && <DangerAction onClick={() => void onSetGoalStatus(selectedGoal.id, 'archived_not_completed')}>Archiwizuj bez realizacji</DangerAction>}
+              {(selectedGoal.status === 'active' || selectedGoal.status === 'paused' || !selectedGoal.status) && <DangerAction intent="danger" onClick={() => void onSetGoalStatus(selectedGoal.id, 'archived_not_completed')}>Archiwizuj bez realizacji</DangerAction>}
             </footer>
           </section>
         </div>

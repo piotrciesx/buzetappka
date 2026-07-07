@@ -4849,7 +4849,50 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   --mgmt-control-height: 38px;
   --mgmt-shadow-shell: 0 22px 54px rgba(10, 34, 84, 0.12);
   --mgmt-shadow-card: 0 8px 22px rgba(10, 34, 84, 0.045);
+
+  --mgmt-action-height: 36px;
+  --mgmt-action-radius: 8px;
+  --mgmt-action-padding: 0 14px;
+  --mgmt-action-gap: 8px;
+  --mgmt-action-font-size: 0.86rem;
+  --mgmt-action-font-weight: 580;
+
+  --mgmt-action-primary-bg: #0b3b95;
+  --mgmt-action-primary-bg-hover: #0a327f;
+  --mgmt-action-primary-border: #0a327f;
+  --mgmt-action-primary-text: #ffffff;
+
+  --mgmt-action-neutral-bg: #ffffff;
+  --mgmt-action-neutral-bg-hover: #f8fbff;
+  --mgmt-action-neutral-border: #d7dee9;
+  --mgmt-action-neutral-border-hover: #c4cfdf;
+  --mgmt-action-neutral-text: #0b2f78;
+
+  --mgmt-action-warning-bg: #fff8ed;
+  --mgmt-action-warning-bg-hover: #fff2dc;
+  --mgmt-action-warning-border: #f2bd7a;
+  --mgmt-action-warning-border-hover: #e9a453;
+  --mgmt-action-warning-text: #a45205;
+
+  --mgmt-action-danger-bg: #fff7f7;
+  --mgmt-action-danger-bg-hover: #fff0f0;
+  --mgmt-action-danger-border: #f2aaaa;
+  --mgmt-action-danger-border-hover: #e48787;
+  --mgmt-action-danger-text: #c92c2c;
+
+  --mgmt-action-restore-bg: #f5faf7;
+  --mgmt-action-restore-bg-hover: #eff7f2;
+  --mgmt-action-restore-border: #b8d6c3;
+  --mgmt-action-restore-border-hover: #98c4a8;
+  --mgmt-action-restore-text: #4e6659;
+
+  --mgmt-action-success-bg: #f3fbf6;
+  --mgmt-action-success-bg-hover: #eaf8ef;
+  --mgmt-action-success-border: #aad8ba;
+  --mgmt-action-success-border-hover: #88c99f;
+  --mgmt-action-success-text: #13824a;
 }
+
 
 [data-budget-utility-overlay="true"] {
   position: fixed;
@@ -5199,23 +5242,150 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   justify-items: stretch;
 }
 
-[data-ui-action-group="true"][data-ui-action-stack="record"] button,
-[data-ui-management-action-column="true"] button,
-[data-ui-details-action-bar="true"] button,
-[data-budget-utility-panel="true"] button:not([data-management-module-add="true"]):not([data-management-module-close="true"]):not([data-budget-utility-backdrop="true"]) {
-  border: 1px solid var(--mgmt-border-soft);
-  border-radius: var(--mgmt-radius-control);
-  background: #fff;
-  color: var(--mgmt-ink);
+[data-ui-action="primary"],
+[data-ui-action="secondary"],
+[data-ui-action="danger"],
+[data-ui-management-action-column="true"] button {
+  min-height: var(--mgmt-action-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mgmt-action-gap);
+  padding: var(--mgmt-action-padding);
+  border: 1px solid var(--mgmt-action-neutral-border);
+  border-radius: var(--mgmt-action-radius);
+  background: var(--mgmt-action-neutral-bg);
+  color: var(--mgmt-action-neutral-text);
   box-shadow: none;
   font-family: var(--ui-font-family-app, inherit);
+  font-size: var(--mgmt-action-font-size);
+  font-weight: var(--mgmt-action-font-weight);
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
 }
 
-[data-ui-action-group="true"][data-ui-action-stack="record"] button:hover,
-[data-ui-management-action-column="true"] button:hover,
-[data-ui-details-action-bar="true"] button:hover {
-  border-color: rgba(21, 87, 214, 0.20);
-  background: var(--mgmt-surface-soft);
+[data-ui-action="primary"] {
+  border-color: var(--mgmt-action-primary-border);
+  background: var(--mgmt-action-primary-bg);
+  color: var(--mgmt-action-primary-text);
+}
+
+[data-ui-action="secondary"][data-ui-action-intent="neutral"],
+[data-ui-management-action-column="true"] button {
+  border-color: var(--mgmt-action-neutral-border);
+  background: var(--mgmt-action-neutral-bg);
+  color: var(--mgmt-action-neutral-text);
+}
+
+[data-ui-action="secondary"][data-ui-action-intent="warning"] {
+  border-color: var(--mgmt-action-warning-border);
+  background: var(--mgmt-action-warning-bg);
+  color: var(--mgmt-action-warning-text);
+}
+
+[data-ui-action="secondary"][data-ui-action-intent="restore"] {
+  border-color: var(--mgmt-action-restore-border);
+  background: var(--mgmt-action-restore-bg);
+  color: var(--mgmt-action-restore-text);
+}
+
+[data-ui-action="secondary"][data-ui-action-intent="success"] {
+  border-color: var(--mgmt-action-success-border);
+  background: var(--mgmt-action-success-bg);
+  color: var(--mgmt-action-success-text);
+}
+
+[data-ui-action="danger"],
+[data-ui-action="secondary"][data-ui-action-intent="danger"],
+[data-ui-action="danger"][data-ui-action-intent="danger"] {
+  border-color: var(--mgmt-action-danger-border);
+  background: var(--mgmt-action-danger-bg);
+  color: var(--mgmt-action-danger-text);
+}
+
+[data-ui-action="primary"]:hover:not(:disabled) {
+  border-color: var(--mgmt-action-primary-border);
+  background: var(--mgmt-action-primary-bg-hover);
+  color: var(--mgmt-action-primary-text);
+}
+
+[data-ui-action="secondary"][data-ui-action-intent="neutral"]:hover:not(:disabled),
+[data-ui-management-action-column="true"] button:hover:not(:disabled) {
+  border-color: var(--mgmt-action-neutral-border-hover);
+  background: var(--mgmt-action-neutral-bg-hover);
+  color: var(--mgmt-action-neutral-text);
+}
+
+[data-ui-action="secondary"][data-ui-action-intent="warning"]:hover:not(:disabled) {
+  border-color: var(--mgmt-action-warning-border-hover);
+  background: var(--mgmt-action-warning-bg-hover);
+  color: var(--mgmt-action-warning-text);
+}
+
+[data-ui-action="secondary"][data-ui-action-intent="restore"]:hover:not(:disabled) {
+  border-color: var(--mgmt-action-restore-border-hover);
+  background: var(--mgmt-action-restore-bg-hover);
+  color: var(--mgmt-action-restore-text);
+}
+
+[data-ui-action="secondary"][data-ui-action-intent="success"]:hover:not(:disabled) {
+  border-color: var(--mgmt-action-success-border-hover);
+  background: var(--mgmt-action-success-bg-hover);
+  color: var(--mgmt-action-success-text);
+}
+
+[data-ui-action="danger"]:hover:not(:disabled),
+[data-ui-action="secondary"][data-ui-action-intent="danger"]:hover:not(:disabled) {
+  border-color: var(--mgmt-action-danger-border-hover);
+  background: var(--mgmt-action-danger-bg-hover);
+  color: var(--mgmt-action-danger-text);
+}
+
+[data-ui-action="primary"]:focus-visible,
+[data-ui-action="secondary"]:focus-visible,
+[data-ui-action="danger"]:focus-visible,
+[data-ui-management-action-column="true"] button:focus-visible {
+  outline: 2px solid rgba(11, 59, 149, 0.18);
+  outline-offset: 2px;
+}
+
+[data-ui-action="primary"]:disabled,
+[data-ui-action="secondary"]:disabled,
+[data-ui-action="danger"]:disabled,
+[data-ui-management-action-column="true"] button:disabled {
+  cursor: not-allowed;
+  opacity: 0.56;
+}
+
+[data-ui-action-width="full"],
+[data-ui-action-group="true"][data-ui-action-stack="record"] [data-ui-action],
+[data-ui-details-action-bar="true"] [data-ui-action] {
+  width: 100%;
+}
+
+[data-ui-action-width="wide"] {
+  min-width: 150px;
+}
+
+[data-ui-density="compact"][data-ui-action],
+[data-ui-action][data-ui-density="compact"] {
+  min-height: 32px;
+  padding-inline: 11px;
+  font-size: 0.8rem;
+}
+
+[data-ui-action-group="true"][data-ui-action-stack="record"] button,
+[data-ui-management-action-column="true"] button,
+[data-ui-details-action-bar="true"] button {
+  width: 100%;
 }
 
 [data-ui-management-footer="true"] {

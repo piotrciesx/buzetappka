@@ -214,18 +214,18 @@ function GoalCardContent(props: GoalCardBaseProps & GoalCardExtraProps) {
       >
         <SecondaryAction onClick={() => onEdit(goal)}>Edytuj</SecondaryAction>
         {(goal.status === 'active' || !goal.status) && (
-          <SecondaryAction onClick={() => onSetStatus(goal.id, 'paused')}>Wstrzymaj cel</SecondaryAction>
+          <SecondaryAction intent="warning" onClick={() => onSetStatus(goal.id, 'paused')}>Wstrzymaj cel</SecondaryAction>
         )}
         {goal.status === 'paused' && (
-          <SecondaryAction onClick={() => onSetStatus(goal.id, 'active')}>Wznów cel</SecondaryAction>
+          <SecondaryAction intent="restore" onClick={() => onSetStatus(goal.id, 'active')}>Wznów cel</SecondaryAction>
         )}
         {(goal.status === 'active' || goal.status === 'paused' || !goal.status) && (
           <>
             <SecondaryAction onClick={() => onSetStatus(goal.id, 'archived_completed')}>Oznacz jako zrealizowany</SecondaryAction>
-            <DangerAction onClick={() => onSetStatus(goal.id, 'archived_not_completed')}>Archiwizuj bez realizacji</DangerAction>
+            <DangerAction intent="danger" onClick={() => onSetStatus(goal.id, 'archived_not_completed')}>Archiwizuj bez realizacji</DangerAction>
           </>
         )}
-        {!goal.status && <DangerAction onClick={() => onDelete(goal.id)}>Usuń</DangerAction>}
+        {!goal.status && <DangerAction intent="danger" onClick={() => onDelete(goal.id)}>Usuń</DangerAction>}
       </div>
 
       <div
