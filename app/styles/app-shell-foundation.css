@@ -14,7 +14,7 @@
   --app-shell-panel-border: var(--ui-frame-border-color);
   --app-shell-frame-border: var(--ui-frame-border);
   --app-shell-frame-shadow: var(--ui-frame-shadow);
-  --app-shell-support-border: 1px solid rgba(8, 44, 122, 0.16);
+  --app-shell-support-border: 1px solid var(--ui-day-accent-border-subtle);
   --app-shell-support-background: color-mix(in srgb, var(--ui-surface-card) 68%, transparent);
   --app-shell-support-shadow: var(--ui-shadow-none);
   --app-shell-background: var(--ui-surface-app);
@@ -499,17 +499,17 @@ body {
 }
 
 [data-level1-card-shell="true"][data-drag-state="dragging"] {
-  outline-color: rgba(8, 44, 122, 0.42);
+  outline-color: rgba(20, 84, 212, 0.42);
   border-radius: var(--ui-radius-xl);
   background: color-mix(in srgb, var(--ui-color-primary-navy) 4%, #ffffff);
 }
 
 [data-level1-card-shell="true"][data-drag-state="dragging"] > [data-level1-block="true"] {
-  box-shadow: 0 14px 26px rgba(8, 44, 122, 0.16), var(--ui-frame-ring);
+  box-shadow: 0 14px 26px rgba(20, 84, 212, 0.16), var(--ui-frame-ring);
 }
 
 [data-level1-card-shell="true"][data-drag-state="over"] {
-  outline-color: rgba(8, 44, 122, 0.34);
+  outline-color: rgba(20, 84, 212, 0.34);
   border-radius: var(--ui-radius-xl);
   background: color-mix(in srgb, var(--ui-color-primary-navy) 3%, #ffffff);
 }

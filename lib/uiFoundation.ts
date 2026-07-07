@@ -65,7 +65,7 @@ export const uiZIndex = {
 
 export const uiColorTokens = {
   primaryNavy: "#082C7A",
-  primaryBlue: "#215DFF",
+  primaryBlue: "#1454D4",
   softBlue: "#EAF1FF",
   lightBlueBorder: "#D6E4FF",
   extraLightBlue: "#F7FAFF",
