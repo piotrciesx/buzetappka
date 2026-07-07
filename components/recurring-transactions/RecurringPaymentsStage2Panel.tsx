@@ -339,7 +339,7 @@ export default function RecurringPaymentsStage2Panel({
             value={sortMode}
             onChange={(value) => setSortMode(value)}
             options={[
-              { value: 'operational', label: 'Domyślne operacyjne' },
+              { value: 'operational', label: 'Domyślne' },
               { value: 'date', label: 'Najbliższy termin' },
               { value: 'amount_desc', label: 'Największa kwota' },
               { value: 'name', label: 'Nazwa A-Z' },
