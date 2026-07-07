@@ -5,6 +5,8 @@ import {
   HTMLAttributes,
   InputHTMLAttributes,
   ReactNode,
+  useEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -353,6 +355,133 @@ export function IconAction({
     >
       {children}
     </button>
+  );
+}
+
+
+
+type ManagementSelectOption<Value extends string = string> = {
+  value: Value;
+  label: ReactNode;
+  disabled?: boolean;
+};
+
+type ManagementSelectProps<Value extends string = string> = {
+  id?: string;
+  value: Value;
+  options: ManagementSelectOption<Value>[];
+  onChange: (value: Value) => void;
+  disabled?: boolean;
+  ariaLabel?: string;
+  width?: "auto" | "full";
+  placeholder?: ReactNode;
+};
+
+export function ManagementSelect<Value extends string = string>({
+  id,
+  value,
+  options,
+  onChange,
+  disabled = false,
+  ariaLabel,
+  width = "auto",
+  placeholder = "Wybierz",
+}: ManagementSelectProps<Value>) {
+  const [isOpen, setIsOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const selectedOption = options.find((option) => option.value === value);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (disabled) {
+      setIsOpen(false);
+    }
+  }, [disabled]);
+
+  return (
+    <div
+      ref={rootRef}
+      data-ui-management-select-control="true"
+      data-ui-management-select-width={width}
+      data-open={isOpen ? "true" : "false"}
+      data-disabled={disabled ? "true" : undefined}
+    >
+      <button
+        id={id}
+        type="button"
+        data-ui-management-select-trigger="true"
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        aria-label={ariaLabel}
+        disabled={disabled}
+        onClick={() => setIsOpen((current) => !current)}
+        onKeyDown={(event) => {
+          if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setIsOpen(true);
+          }
+        }}
+      >
+        <span data-ui-management-select-value="true">
+          {selectedOption?.label ?? placeholder}
+        </span>
+        <span data-ui-picker-chevron="true" aria-hidden="true" />
+      </button>
+
+      {isOpen && (
+        <div data-ui-management-select-menu="true" role="listbox" aria-labelledby={id}>
+          {options.map((option) => {
+            const isSelected = option.value === value;
+
+            return (
+              <button
+                key={option.value}
+                type="button"
+                role="option"
+                aria-selected={isSelected}
+                data-ui-management-select-option="true"
+                data-selected={isSelected ? "true" : undefined}
+                disabled={option.disabled}
+                onClick={() => {
+                  onChange(option.value);
+                  setIsOpen(false);
+                }}
+              >
+                <span>{option.label}</span>
+                {isSelected && (
+                  <span data-ui-management-select-check="true" aria-hidden="true">
+                    ✓
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
   );
 }
 

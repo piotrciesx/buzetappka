@@ -36,6 +36,7 @@ import {
   FormField,
   HeroHeader,
   IconAction,
+  ManagementSelect,
   PrimaryAction,
   SecondaryAction,
   SectionHeader,
@@ -950,31 +951,26 @@ export default function PaymentSourcesPanel({
             >
               Domyślne źródło przychodów
             </label>
-            <span
-              data-ui-settings-strip-control="true"
-              data-ui-select-shell="true"
-            >
-              <select
+            <span data-ui-settings-strip-control="true">
+              <ManagementSelect
                 id="default-income-payment-source"
-                className="ui-select"
-                data-input-width="full"
                 value={settingsDraft.defaultIncomePaymentSourceId || ""}
                 disabled={isConfigSaving}
-                onChange={(event) =>
+                width="full"
+                options={[
+                  { value: "", label: "Brak domyślnego źródła" },
+                  ...incomeSources.map((source) => ({
+                    value: source.id,
+                    label: source.name,
+                  })),
+                ]}
+                onChange={(value) =>
                   setSettingsDraft((currentDraft) => ({
                     ...currentDraft,
-                    defaultIncomePaymentSourceId: event.target.value || null,
+                    defaultIncomePaymentSourceId: value || null,
                   }))
                 }
-              >
-                <option value="">Brak domyślnego źródła</option>
-                {incomeSources.map((source) => (
-                  <option key={source.id} value={source.id}>
-                    {source.name}
-                  </option>
-                ))}
-              </select>
-              <span data-ui-picker-chevron="true" aria-hidden="true" />
+              />
             </span>
           </div>
           <div
@@ -987,31 +983,26 @@ export default function PaymentSourcesPanel({
             >
               Domyślne źródło wydatków
             </label>
-            <span
-              data-ui-settings-strip-control="true"
-              data-ui-select-shell="true"
-            >
-              <select
+            <span data-ui-settings-strip-control="true">
+              <ManagementSelect
                 id="default-expense-payment-source"
-                className="ui-select"
-                data-input-width="full"
                 value={settingsDraft.defaultExpensePaymentSourceId || ""}
                 disabled={isConfigSaving}
-                onChange={(event) =>
+                width="full"
+                options={[
+                  { value: "", label: "Brak domyślnego źródła" },
+                  ...expenseSources.map((source) => ({
+                    value: source.id,
+                    label: source.name,
+                  })),
+                ]}
+                onChange={(value) =>
                   setSettingsDraft((currentDraft) => ({
                     ...currentDraft,
-                    defaultExpensePaymentSourceId: event.target.value || null,
+                    defaultExpensePaymentSourceId: value || null,
                   }))
                 }
-              >
-                <option value="">Brak domyślnego źródła</option>
-                {expenseSources.map((source) => (
-                  <option key={source.id} value={source.id}>
-                    {source.name}
-                  </option>
-                ))}
-              </select>
-              <span data-ui-picker-chevron="true" aria-hidden="true" />
+              />
             </span>
           </div>
           <div data-ui-settings-strip-actions="true">
@@ -1081,30 +1072,43 @@ export default function PaymentSourcesPanel({
 
           <div data-ui-management-toolbar-group="true">
             <span data-ui-management-toolbar-label="true">Dostępność</span>
-            <select
+            <ManagementSelect<"all" | "income" | "expense">
               value={availabilityFilter}
               disabled={activeList !== "active"}
-              onChange={(event) => setAvailabilityFilter(event.target.value as "all" | "income" | "expense")}
-            >
-              <option value="all">Wszystkie</option>
-              <option value="expense">Do wydatków</option>
-              <option value="income">Do przychodów</option>
-            </select>
+              onChange={(value) => setAvailabilityFilter(value)}
+              options={[
+                { value: "all", label: "Wszystkie" },
+                { value: "expense", label: "Do wydatków" },
+                { value: "income", label: "Do przychodów" },
+              ]}
+            />
           </div>
 
           <div data-ui-management-toolbar-group="true">
             <span data-ui-management-toolbar-label="true">Typ metody płatności</span>
-            <select value={methodFilter} onChange={(event) => setMethodFilter(event.target.value as PaymentMethodType | "all")}>
-              <option value="all">Wszystkie typy</option>
-              {PAYMENT_METHOD_TYPE_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-            </select>
+            <ManagementSelect<PaymentMethodType | "all">
+              value={methodFilter}
+              onChange={(value) => setMethodFilter(value)}
+              options={[
+                { value: "all", label: "Wszystkie typy" },
+                ...PAYMENT_METHOD_TYPE_OPTIONS.map((option) => ({
+                  value: option.value,
+                  label: option.label,
+                })),
+              ]}
+            />
           </div>
 
           <div data-ui-management-toolbar-group="true">
             <span data-ui-management-toolbar-label="true">Sortowanie</span>
-            <select value={sortMode} onChange={(event) => setSortMode(event.target.value as PaymentSourceSortMode)}>
-              {PAYMENT_SOURCE_SORT_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-            </select>
+            <ManagementSelect<PaymentSourceSortMode>
+              value={sortMode}
+              onChange={(value) => setSortMode(value)}
+              options={PAYMENT_SOURCE_SORT_OPTIONS.map((option) => ({
+                value: option.value,
+                label: option.label,
+              }))}
+            />
           </div>
         </div>
         <div
@@ -1268,20 +1272,18 @@ export default function PaymentSourcesPanel({
                     </div>
                   )}
                   <FormField label="Typ płatności">
-                    <select
-                      className="ui-select"
+                    <ManagementSelect<PaymentMethodType>
                       value={draft.paymentMethodType}
-                      onChange={(event) => setDraft((currentDraft) => ({
+                      width="full"
+                      onChange={(value) => setDraft((currentDraft) => ({
                         ...currentDraft,
-                        paymentMethodType: event.target.value as PaymentMethodType,
+                        paymentMethodType: value,
                       }))}
-                    >
-                      {PAYMENT_METHOD_TYPE_OPTIONS.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label} — {option.description}
-                        </option>
-                      ))}
-                    </select>
+                      options={PAYMENT_METHOD_TYPE_OPTIONS.map((option) => ({
+                        value: option.value,
+                        label: `${option.label} — ${option.description}`,
+                      }))}
+                    />
                   </FormField>
                 </CreatorSection>
 

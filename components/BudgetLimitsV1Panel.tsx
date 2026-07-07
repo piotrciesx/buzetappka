@@ -16,7 +16,7 @@ import {
   type BudgetLimitStatusFilter,
 } from '../lib/budget-limits/viewModels'
 import CategoryIcon from './CategoryIcon'
-import { DangerAction, PrimaryAction, SecondaryAction } from './ui/FoundationPrimitives'
+import { DangerAction, ManagementSelect, PrimaryAction, SecondaryAction } from './ui/FoundationPrimitives'
 
 type Props = {
   profileId: string
@@ -239,9 +239,52 @@ export default function BudgetLimitsV1Panel(props: Props) {
             <button type="button" data-active={listMode === 'inactive' ? 'true' : undefined} onClick={() => setListMode('inactive')}>Nieaktywne</button>
           </div>
         </div>
-        <div data-ui-management-toolbar-group="true"><span data-ui-management-toolbar-label="true">Poziom</span><select value={levelFilter} onChange={(event) => setLevelFilter(event.target.value as BudgetLimitLevelFilter)}><option value="all">Wszystkie</option><option value="l1">L1</option><option value="l2">L2</option><option value="l3">L3</option><option value="global">Globalne</option></select></div>
-        <div data-ui-management-toolbar-group="true"><span data-ui-management-toolbar-label="true">Status</span><select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as BudgetLimitStatusFilter)}><option value="all">Wszystkie</option><option value="safe">Bezpieczne</option><option value="warning">Uwaga</option><option value="exceeded">Przekroczone</option></select></div>
-        <div data-ui-management-toolbar-group="true"><span data-ui-management-toolbar-label="true">Sortowanie</span><select value={sort} onChange={(event) => setSort(event.target.value as BudgetLimitSort)}><option value="manual">Moja kolejność</option><option value="usage_desc">Wykorzystanie malejąco</option><option value="usage_asc">Wykorzystanie rosnąco</option><option value="limit_desc">Największy limit</option><option value="limit_asc">Najmniejszy limit</option><option value="spent_desc">Największe wydatki</option><option value="exceeded_desc">Najbardziej przekroczone</option><option value="level_asc">Poziom L1 → L3</option><option value="level_desc">Poziom L3 → L1</option><option value="name_asc">Nazwa A-Z</option></select></div>
+        <div data-ui-management-toolbar-group="true">
+          <span data-ui-management-toolbar-label="true">Poziom</span>
+          <ManagementSelect<BudgetLimitLevelFilter>
+            value={levelFilter}
+            onChange={(value) => setLevelFilter(value)}
+            options={[
+              { value: 'all', label: 'Wszystkie' },
+              { value: 'l1', label: 'L1' },
+              { value: 'l2', label: 'L2' },
+              { value: 'l3', label: 'L3' },
+              { value: 'global', label: 'Globalne' },
+            ]}
+          />
+        </div>
+        <div data-ui-management-toolbar-group="true">
+          <span data-ui-management-toolbar-label="true">Status</span>
+          <ManagementSelect<BudgetLimitStatusFilter>
+            value={statusFilter}
+            onChange={(value) => setStatusFilter(value)}
+            options={[
+              { value: 'all', label: 'Wszystkie' },
+              { value: 'safe', label: 'Bezpieczne' },
+              { value: 'warning', label: 'Uwaga' },
+              { value: 'exceeded', label: 'Przekroczone' },
+            ]}
+          />
+        </div>
+        <div data-ui-management-toolbar-group="true">
+          <span data-ui-management-toolbar-label="true">Sortowanie</span>
+          <ManagementSelect<BudgetLimitSort>
+            value={sort}
+            onChange={(value) => setSort(value)}
+            options={[
+              { value: 'manual', label: 'Moja kolejność' },
+              { value: 'usage_desc', label: 'Wykorzystanie malejąco' },
+              { value: 'usage_asc', label: 'Wykorzystanie rosnąco' },
+              { value: 'limit_desc', label: 'Największy limit' },
+              { value: 'limit_asc', label: 'Najmniejszy limit' },
+              { value: 'spent_desc', label: 'Największe wydatki' },
+              { value: 'exceeded_desc', label: 'Najbardziej przekroczone' },
+              { value: 'level_asc', label: 'Poziom L1 → L3' },
+              { value: 'level_desc', label: 'Poziom L3 → L1' },
+              { value: 'name_asc', label: 'Nazwa A-Z' },
+            ]}
+          />
+        </div>
       </div>
       {notice && <p role="status" data-ui-management-inline-notice="true">{notice}</p>}
     </>

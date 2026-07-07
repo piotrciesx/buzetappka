@@ -8,7 +8,7 @@ import type { RecurringPlanNameConflict } from '../../lib/recurring-payments/use
 import { useRecurringPaymentsData } from '../../lib/recurring-payments/useRecurringPaymentsData'
 import { buildRecurringPaymentCardViewModel, buildRecurringPaymentCreatorViewModel, buildRecurringPaymentDetailsViewModel } from '../../lib/recurring-payments/viewModels'
 import CategoryIcon from '../CategoryIcon'
-import { DangerAction, PrimaryAction, SecondaryAction } from '../ui/FoundationPrimitives'
+import { DangerAction, ManagementSelect, PrimaryAction, SecondaryAction } from '../ui/FoundationPrimitives'
 import RecurringPaymentPlanForm from './RecurringPaymentPlanForm'
 
 type Props = {
@@ -322,21 +322,29 @@ export default function RecurringPaymentsStage2Panel({
         </div>
         <div data-ui-management-toolbar-group="true">
           <span data-ui-management-toolbar-label="true">Typ płatności</span>
-          <select value={typeFilter} onChange={(event) => setTypeFilter(event.target.value as typeof typeFilter)}>
-            <option value="all">Wszystkie typy</option>
-            <option value="fixed_payment">Stałe</option>
-            <option value="installment_purchase">Raty</option>
-            <option value="loan">Kredyty / pożyczki</option>
-          </select>
+          <ManagementSelect<'all' | 'fixed_payment' | 'installment_purchase' | 'loan'>
+            value={typeFilter}
+            onChange={(value) => setTypeFilter(value)}
+            options={[
+              { value: 'all', label: 'Wszystkie typy' },
+              { value: 'fixed_payment', label: 'Stałe' },
+              { value: 'installment_purchase', label: 'Raty' },
+              { value: 'loan', label: 'Kredyty / pożyczki' },
+            ]}
+          />
         </div>
         <div data-ui-management-toolbar-group="true">
           <span data-ui-management-toolbar-label="true">Sortowanie</span>
-          <select value={sortMode} onChange={(event) => setSortMode(event.target.value as typeof sortMode)}>
-            <option value="operational">Domyślne operacyjne</option>
-            <option value="date">Najbliższy termin</option>
-            <option value="amount_desc">Największa kwota</option>
-            <option value="name">Nazwa A-Z</option>
-          </select>
+          <ManagementSelect<'operational' | 'name' | 'amount_desc' | 'date'>
+            value={sortMode}
+            onChange={(value) => setSortMode(value)}
+            options={[
+              { value: 'operational', label: 'Domyślne operacyjne' },
+              { value: 'date', label: 'Najbliższy termin' },
+              { value: 'amount_desc', label: 'Największa kwota' },
+              { value: 'name', label: 'Nazwa A-Z' },
+            ]}
+          />
         </div>
       </div>
     </>
