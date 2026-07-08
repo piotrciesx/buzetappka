@@ -963,6 +963,7 @@ export default function PaymentSourcesPanel({
         tone="neutral-blue"
         icon={<CategoryIcon iconKey="system-payment-sources" size="small" />}
         title="Domyślne źródła płatności"
+        description="Ustaw źródła podpowiadane przy nowych przychodach i wydatkach."
         help={
           <HelpHint label="Ustaw źródła, które będą podpowiadane przy nowych wpisach." />
         }

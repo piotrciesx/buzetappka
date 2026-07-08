@@ -6336,3 +6336,183 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
     min-height: 38px;
   }
 }
+
+/* Management support sections — canonical collapsible helper block. */
+[data-ui-collapsible-secondary-section="true"] {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--ui-day-accent-border-subtle);
+  border-radius: var(--mgmt-radius-card);
+  background: #ffffff;
+  box-shadow: none;
+  overflow: visible;
+}
+
+[data-ui-collapsible-secondary-trigger="true"] {
+  width: 100%;
+  min-width: 0;
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-6);
+  padding: 14px 18px;
+  border: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(245, 249, 255, 0.92), rgba(250, 252, 255, 0.96));
+  color: var(--mgmt-navy);
+  text-align: left;
+  cursor: pointer;
+}
+
+[data-ui-collapsible-secondary-trigger="true"]:hover {
+  background: linear-gradient(180deg, rgba(240, 246, 255, 0.96), rgba(248, 251, 255, 0.98));
+}
+
+[data-ui-collapsible-secondary-main="true"] {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-5);
+}
+
+[data-ui-collapsible-secondary-icon="true"] {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--ui-day-accent-border-subtle);
+  border-radius: 10px;
+  background: rgba(239, 246, 255, 0.92);
+  color: var(--mgmt-blue);
+}
+
+[data-ui-collapsible-secondary-copy="true"] {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+[data-ui-collapsible-secondary-copy="true"] strong {
+  color: var(--mgmt-navy);
+  font-size: 0.98rem;
+  font-weight: 680;
+  line-height: 1.2;
+}
+
+[data-ui-collapsible-secondary-copy="true"] small {
+  color: var(--mgmt-muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+[data-ui-collapsible-secondary-chevron="true"] {
+  width: 11px;
+  min-width: 11px;
+  height: 11px;
+  display: inline-block;
+  margin-inline: 4px 2px;
+  border-right: 2px solid var(--mgmt-blue);
+  border-bottom: 2px solid var(--mgmt-blue);
+  transform: rotate(-135deg) translateY(-1px);
+  transform-origin: center;
+  transition: transform 160ms ease;
+}
+
+[data-ui-collapsible-secondary-section="true"][data-ui-collapsed="true"]
+  [data-ui-collapsible-secondary-chevron="true"] {
+  transform: rotate(45deg) translateY(-2px);
+}
+
+[data-ui-collapsible-secondary-content="true"] {
+  border-top: 1px solid rgba(15, 48, 120, 0.10);
+}
+
+[data-ui-collapsible-secondary-section="true"][data-ui-collapsed="true"]
+  [data-ui-collapsible-secondary-content="true"] {
+  display: none;
+}
+
+[data-ui-collapsible-secondary-content-clip="true"],
+[data-ui-collapsible-secondary-content-inner="true"] {
+  overflow: visible;
+}
+
+[data-ui-collapsible-secondary-content-inner="true"] {
+  padding: 18px 18px 20px;
+}
+
+[data-ui-collapsible-secondary-content-inner="true"] [data-ui-settings-strip="true"] {
+  align-items: end;
+}
+
+[data-ui-collapsible-secondary-content-inner="true"] [data-ui-settings-strip-label="true"] {
+  color: var(--mgmt-navy);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+@media (max-width: 760px) {
+  [data-ui-collapsible-secondary-trigger="true"] {
+    min-height: 58px;
+    padding: 12px 14px;
+  }
+
+  [data-ui-collapsible-secondary-main="true"] {
+    gap: 10px;
+  }
+
+  [data-ui-collapsible-secondary-icon="true"] {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+  }
+
+  [data-ui-collapsible-secondary-copy="true"] strong {
+    font-size: 0.92rem;
+  }
+
+  [data-ui-collapsible-secondary-copy="true"] small {
+    font-size: 0.72rem;
+  }
+
+  [data-ui-collapsible-secondary-content-inner="true"] {
+    padding: 14px;
+  }
+
+  [data-ui-collapsible-secondary-content-inner="true"] [data-ui-settings-strip="true"] {
+    grid-template-areas:
+      "primary"
+      "secondary"
+      "actions";
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  [data-ui-collapsible-secondary-content-inner="true"] [data-ui-settings-strip-field="true"] {
+    display: grid;
+    gap: 5px;
+  }
+
+  [data-ui-collapsible-secondary-content-inner="true"]
+    [data-ui-settings-strip-field="true"][data-ui-settings-position="primary"] {
+    grid-area: primary;
+  }
+
+  [data-ui-collapsible-secondary-content-inner="true"]
+    [data-ui-settings-strip-field="true"][data-ui-settings-position="secondary"] {
+    grid-area: secondary;
+  }
+
+  [data-ui-collapsible-secondary-content-inner="true"] [data-ui-settings-strip-actions="true"] {
+    grid-area: actions;
+    justify-content: stretch;
+  }
+
+  [data-ui-collapsible-secondary-content-inner="true"] [data-ui-settings-strip-actions="true"] button {
+    width: 100%;
+  }
+}
