@@ -1,5 +1,15 @@
 'use client'
 
+/**
+ * LEGACY LIMITS MODEL.
+ *
+ * This hook reads from and writes to the old `budget_limits` table. It is kept
+ * only for migration, backup, and legacy references. Active Budget Limits
+ * flows use Stage 2 via `lib/budget-limits/useBudgetLimitsData`.
+ *
+ * Do not use this hook for new writes or UI flows.
+ */
+
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type {
   BudgetLimit,
@@ -251,6 +261,7 @@ export const getBudgetLimitUsageAmount = ({
   }, 0)
 }
 
+/** @deprecated Use `lib/budget-limits/useBudgetLimitsData` for active Budget Limits flows. */
 export function useBudgetLimits({
   profileId,
   selectedMonth,

@@ -1,6 +1,6 @@
 'use client'
 
-import { ComponentPropsWithRef, useEffect, useState } from 'react'
+import { ComponentPropsWithRef, useState } from 'react'
 import BudgetTreeSection from './BudgetTreeSection'
 import BudgetLimitsV1Panel from './BudgetLimitsV1Panel'
 import BulkActionsBar from './BulkActionsBar'
@@ -72,14 +72,6 @@ export default function BudgetPageMainPanels({
   trashPanelProps,
 }: Props) {
   const [paymentSourceCreateRequest, setPaymentSourceCreateRequest] = useState(0)
-  const [paymentSourceDetailsId, setPaymentSourceDetailsId] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (activeUtilityPanel !== 'paymentSources') {
-      const task = window.setTimeout(() => setPaymentSourceDetailsId(null), 0)
-      return () => window.clearTimeout(task)
-    }
-  }, [activeUtilityPanel])
 
   const handleUtilityPanelAdd = () => {
     if (activeUtilityPanel === 'paymentSources') {
@@ -214,8 +206,7 @@ export default function BudgetPageMainPanels({
                 <PaymentSourcesPanel
                   {...paymentSourcesPanelProps}
                   openCreateRequest={paymentSourceCreateRequest}
-                  selectedSourceDetailsId={paymentSourceDetailsId}
-                  onSelectedSourceDetailsIdChange={setPaymentSourceDetailsId}
+                  onCloseModule={onCloseUtilityPanel}
                 />
               )}
               {activeUtilityPanel === 'financialGoals' && visibleModules.financialGoals && (

@@ -1,5 +1,15 @@
 'use client'
 
+/**
+ * LEGACY LIMITS UI.
+ *
+ * This editor targets the old `budget_limits` model and is not part of the
+ * active UI flow. New and edited limits must use the Stage 2 creator exposed
+ * by `BudgetLimitsV1Panel`.
+ *
+ * Do not import this component into active UI flows.
+ */
+
 import type { CSSProperties } from 'react'
 import { useEffect, useState } from 'react'
 import type { BudgetLimit, BudgetLimitMode } from '../lib/budgetPageTypes'
@@ -116,6 +126,7 @@ const secondaryButtonStyle: CSSProperties = {
   cursor: uiControlPrimitives.button.secondary.cursor,
 }
 
+/** @deprecated Use the Stage 2 creator in `BudgetLimitsV1Panel`. */
 export default function BudgetLimitEditorModal({
   isOpen,
   categoryId,

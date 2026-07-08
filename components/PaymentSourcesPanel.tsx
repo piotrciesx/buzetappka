@@ -26,6 +26,8 @@ import {
 import CategoryIcon from "./CategoryIcon";
 import FoundationColorPicker from "./ui/FoundationColorPicker";
 import FoundationIconPicker from "./ui/FoundationIconPicker";
+import ManagementModuleShell from "./ui/ManagementModuleShell";
+import { useManagementScreenStack } from "./ui/useManagementScreenStack";
 import { EmptyState } from "./utility-panels/utilityPanelPrimitives";
 import {
   CollapsibleSecondarySection,
@@ -94,8 +96,7 @@ type Props = {
     targetKind: PaymentSourceListKind,
   ) => Promise<void>;
   openCreateRequest?: number;
-  selectedSourceDetailsId?: string | null;
-  onSelectedSourceDetailsIdChange?: (sourceId: string | null) => void;
+  onCloseModule?: () => void;
   styles: Record<string, CSSProperties>;
 };
 
@@ -278,10 +279,10 @@ export default function PaymentSourcesPanel({
   onRestore,
   onSetDefault,
   openCreateRequest,
+  onCloseModule = () => undefined,
 }: Props) {
   const [draft, setDraft] = useState<PaymentSourceDraft>(DEFAULT_DRAFT);
   const [settingsDraft, setSettingsDraft] = useState(paymentSourceSettings);
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [activeList, setActiveList] = useState<"active" | "archived">("active");
   const [methodFilter, setMethodFilter] = useState<PaymentMethodType | "all">("all");
   const [availabilityFilter, setAvailabilityFilter] = useState<"all" | "income" | "expense">("all");
@@ -298,8 +299,15 @@ export default function PaymentSourcesPanel({
   const [duplicateSourceId, setDuplicateSourceId] = useState<string | null>(
     null,
   );
-  const [selectedSourceDetailsId, setSelectedSourceDetailsId] = useState<string | null>(null);
   const previousOpenCreateRequestRef = useRef(openCreateRequest);
+  const {
+    currentScreen: screen,
+    canGoBack,
+    pushScreen,
+    goBack,
+  } = useManagementScreenStack();
+  const isFormOpen = screen.name === "create" || screen.name === "edit";
+  const selectedSourceDetailsId = screen.name === "details" ? screen.recordId : null;
 
   useEffect(() => {
     setSettingsDraft(paymentSourceSettings);
@@ -371,9 +379,9 @@ export default function PaymentSourcesPanel({
   const closeForm = () => {
     setDraft(DEFAULT_DRAFT);
     setActivePicker(null);
-    setIsFormOpen(false);
     setErrorText("");
     setDuplicateSourceId(null);
+    goBack();
   };
 
   const openNewForm = useCallback(() => {
@@ -382,8 +390,8 @@ export default function PaymentSourcesPanel({
     setErrorText("");
     setDuplicateSourceId(null);
     setActivePicker(null);
-    setIsFormOpen(true);
-  }, []);
+    pushScreen({ name: "create" });
+  }, [pushScreen]);
 
   useEffect(() => {
     if (
@@ -398,7 +406,7 @@ export default function PaymentSourcesPanel({
   }, [openCreateRequest, openNewForm]);
 
   const openSourceDetails = (source: PaymentSource) => {
-    setSelectedSourceDetailsId(source.id);
+    pushScreen({ name: "details", recordId: source.id });
   };
 
   const openEditForm = (source: PaymentSource) => {
@@ -416,7 +424,17 @@ export default function PaymentSourcesPanel({
     setErrorText("");
     setDuplicateSourceId(null);
     setActivePicker(null);
-    setIsFormOpen(true);
+    pushScreen({ name: "edit", recordId: source.id });
+  };
+
+  const handleScreenBack = () => {
+    if (isFormOpen) {
+      setDraft(DEFAULT_DRAFT);
+      setActivePicker(null);
+      setErrorText("");
+      setDuplicateSourceId(null);
+    }
+    goBack();
   };
 
   const isSettingsDirty =
@@ -671,7 +689,10 @@ export default function PaymentSourcesPanel({
         data-ui-selected={selectedSourceDetailsId === source.id ? "true" : undefined}
         role="button"
         tabIndex={0}
-        onClick={() => openSourceDetails(source)}
+        onClick={(event) => {
+          if (event.target instanceof Element && event.target.closest("button")) return;
+          openSourceDetails(source);
+        }}
         onKeyDown={(event) => {
           if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
@@ -812,7 +833,7 @@ export default function PaymentSourcesPanel({
             type="button"
             data-ui-details-close="true"
             aria-label="Zamknij szczegóły źródła"
-            onClick={() => setSelectedSourceDetailsId(null)}
+            onClick={handleScreenBack}
           >
             <CategoryIcon iconKey="close" size="small" />
           </button>
@@ -902,6 +923,13 @@ export default function PaymentSourcesPanel({
     const detailsTotals = activeList === "active" ? activeSourceTotals : archivedSourceTotals;
 
     return (
+      <ManagementModuleShell
+        screen={screen}
+        title={selectedSourceDetails.name}
+        canGoBack={canGoBack}
+        onBack={handleScreenBack}
+        onClose={onCloseModule}
+      >
       <section
         data-ui-payment-sources-shell="true"
         data-ui-payment-sources-mode="details"
@@ -917,10 +945,20 @@ export default function PaymentSourcesPanel({
           {renderSourceDetails(selectedSourceDetails)}
         </div>
       </section>
+      </ManagementModuleShell>
     );
   }
 
   return (
+    <ManagementModuleShell
+      screen={screen}
+      title={screen.name === "edit" ? "Edytuj źródło" : screen.name === "create" ? "Nowe źródło" : "Źródła płatności"}
+      canGoBack={canGoBack}
+      onBack={handleScreenBack}
+      onClose={onCloseModule}
+      onAdd={openNewForm}
+      addLabel="Dodaj"
+    >
     <section
       data-ui-payment-sources-shell="true"
       data-ui-payment-sources-mode="list"
@@ -1453,5 +1491,6 @@ export default function PaymentSourcesPanel({
         </div>
       )}
     </section>
+    </ManagementModuleShell>
   );
 }
