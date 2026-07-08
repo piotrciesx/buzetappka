@@ -17,7 +17,7 @@ import {
   type BudgetLimitStatusFilter,
 } from '../lib/budget-limits/viewModels'
 import CategoryIcon from './CategoryIcon'
-import { AuxiliarySummaryItem, AuxiliarySummaryStrip, DangerAction, ManagementSelect, PrimaryAction, SecondaryAction } from './ui/FoundationPrimitives'
+import { DangerAction, ManagementSelect, PrimaryAction, SecondaryAction } from './ui/FoundationPrimitives'
 
 type Props = {
   profileId: string
@@ -258,36 +258,14 @@ export default function BudgetLimitsV1Panel(props: Props) {
 
   const topContent = (
     <>
-      <AuxiliarySummaryStrip columns={4}>
-        <AuxiliarySummaryItem
-          tone="information-blue"
-          icon={<CategoryIcon iconKey="budget" size="summary" />}
-          label="Aktywne limity"
-          value={allCards.filter((card) => card.active).length}
-          description="Limity działające"
-        />
-        <AuxiliarySummaryItem
-          tone="information-teal"
-          icon={<CategoryIcon iconKey="warning" size="summary" />}
-          label="Wymaga uwagi"
-          value={attention.exceededCount + attention.warningCount}
-          description="Przekroczone lub bliskie limitu"
-        />
-        <AuxiliarySummaryItem
-          tone="information-indigo"
-          icon={<CategoryIcon iconKey="investments" size="summary" />}
-          label="Prognozowane"
-          value={attention.projectedExceededCount}
-          description="Przewidywane przekroczenia"
-        />
-        <AuxiliarySummaryItem
-          tone="information-mint"
-          icon={<CategoryIcon iconKey="card" size="summary" />}
-          label="Średnie wykorzystanie"
-          value={`${attention.averageUsagePercent.toFixed(0)}%`}
-          description="Wszystkie aktywne limity"
-        />
-      </AuxiliarySummaryStrip>
+      <div data-ui-management-summary-strip="true">
+        <div data-ui-management-strip-inner="true">
+          <div data-ui-management-strip-item="true"><strong>Aktywne limity</strong><span>{allCards.filter((card) => card.active).length}</span></div>
+          <div data-ui-management-strip-item="true"><strong>Wymaga uwagi</strong><span>{attention.exceededCount + attention.warningCount}</span></div>
+          <div data-ui-management-strip-item="true"><strong>Prognozowane</strong><span>{attention.projectedExceededCount}</span></div>
+          <div data-ui-management-strip-item="true"><strong>Średnie wykorzystanie</strong><span>{attention.averageUsagePercent.toFixed(0)}%</span></div>
+        </div>
+      </div>
 
       <div data-ui-management-toolbar="true">
         <div data-ui-management-toolbar-group="true">

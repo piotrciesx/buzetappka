@@ -1,85 +1,92 @@
 import CategoryIcon from '../CategoryIcon'
-import { AuxiliarySummaryItem, AuxiliarySummaryStrip } from '../ui/FoundationPrimitives'
-import type { FinancialGoalAllocationMode } from '../../lib/budgetPageTypes'
 
 type Props = {
   selectedMonth: string
   monthBalance: number
   monthSurplus: number
   lockedMonthsSet: Set<string>
-  activeGoalsCount: number
-  effectiveMode: FinancialGoalAllocationMode
-  totalRemaining: number
 }
 
-const formatAmount = (value: number) =>
-  new Intl.NumberFormat('pl-PL', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value) + ' zł'
+const formatAmount = (value: number) => `${value.toFixed(2)} zł`
 
-const getBalanceDescription = (value: number) => {
-  if (value > 0) return 'Bilans dodatni w tym miesiącu'
-  if (value < 0) return 'Bilans ujemny w tym miesiącu'
-  return 'Bilans neutralny w tym miesiącu'
+const getBalanceState = (value: number) => {
+  if (value > 0) return 'positive'
+  if (value < 0) return 'negative'
+  return 'zero'
 }
 
-const getSurplusDescription = (value: number) => {
-  if (value > 0) return 'Środki dostępne do finansowania celów'
-  return 'Brak wolnych środków do alokacji'
+const getBalanceStatusLabel = (value: number) => {
+  if (value > 0) return 'Bilans dodatni'
+  if (value < 0) return 'Bilans ujemny'
+  return 'Bilans neutralny'
 }
 
-const getModeLabel = (mode: FinancialGoalAllocationMode) =>
-  mode === 'allocation' ? 'Tryb alokacja' : 'Tryb priorytet'
+const getSurplusState = (value: number) => {
+  if (value > 0) return 'positive'
+  return 'negative'
+}
 
-const getModeDescription = (mode: FinancialGoalAllocationMode) =>
-  mode === 'allocation'
-    ? 'Finansowanie według procentów'
-    : 'Wyższe priorytety finansowane jako pierwsze'
+const getSurplusStatusLabel = (value: number) => {
+  if (value > 0) return 'Środki do alokacji'
+  return 'Brak środków do alokacji'
+}
+
+const getMonthState = (isLocked: boolean) => isLocked ? 'negative' : 'positive'
+const getMonthStatusLabel = (isLocked: boolean) => isLocked ? 'Zamknięty' : 'Otwarty'
 
 export default function FinancialGoalsSummary({
   selectedMonth,
   monthBalance,
   monthSurplus,
   lockedMonthsSet,
-  activeGoalsCount,
-  effectiveMode,
-  totalRemaining,
 }: Props) {
   const isMonthLocked = lockedMonthsSet.has(selectedMonth)
+  const surplusState = getSurplusState(monthSurplus)
+  const monthState = getMonthState(isMonthLocked)
 
   return (
-    <div data-financial-goals-summary="true">
-      <AuxiliarySummaryStrip columns={4}>
-        <AuxiliarySummaryItem
-          tone="information-blue"
-          icon={<CategoryIcon iconKey="card" size="summary" />}
-          label="Bilans miesiąca"
-          value={formatAmount(monthBalance)}
-          description={getBalanceDescription(monthBalance)}
-        />
-        <AuxiliarySummaryItem
-          tone="information-mint"
-          icon={<CategoryIcon iconKey="investments" size="summary" />}
-          label="Dostępne dla celów"
-          value={formatAmount(monthSurplus)}
-          description={getSurplusDescription(monthSurplus)}
-        />
-        <AuxiliarySummaryItem
-          tone="information-indigo"
-          icon={<CategoryIcon iconKey="system-goals" size="summary" />}
-          label="Aktywne cele"
-          value={activeGoalsCount}
-          description={`Pozostało łącznie ${formatAmount(totalRemaining)}`}
-        />
-        <AuxiliarySummaryItem
-          tone="information-steel"
-          icon={<CategoryIcon iconKey="allocation" size="summary" />}
-          label={isMonthLocked ? 'Miesiąc zamknięty' : 'Tryb pracy'}
-          value={isMonthLocked ? 'Zamknięty' : getModeLabel(effectiveMode)}
-          description={isMonthLocked ? selectedMonth : getModeDescription(effectiveMode)}
-        />
-      </AuxiliarySummaryStrip>
+    <div data-financial-goals-summary="true" data-ui-summary-grid="true">
+      <div data-ui-summary-card="true" data-ui-summary-tone="neutral-blue">
+        <span data-ui-summary-icon="true" data-ui-tone="neutral-blue" aria-hidden="true">
+          <CategoryIcon iconKey="card" size="summary" />
+        </span>
+        <div data-ui-summary-copy="true">
+          <span>Bilans miesiąca</span>
+          <strong data-ui-financial-state={getBalanceState(monthBalance)}>{formatAmount(monthBalance)}</strong>
+          <small data-ui-summary-status="true" data-ui-status-tone={getBalanceState(monthBalance)}>
+            <span aria-hidden="true" />
+            {getBalanceStatusLabel(monthBalance)}
+          </small>
+        </div>
+      </div>
+
+      <div data-ui-summary-card="true" data-ui-summary-tone="neutral-blue">
+        <span data-ui-summary-icon="true" data-ui-tone="neutral-blue" aria-hidden="true">
+          <CategoryIcon iconKey="investments" size="summary" />
+        </span>
+        <div data-ui-summary-copy="true">
+          <span>Dostępne dla celów</span>
+          <strong data-ui-financial-state={surplusState}>{formatAmount(monthSurplus)}</strong>
+          <small data-ui-summary-status="true" data-ui-status-tone={surplusState}>
+            <span aria-hidden="true" />
+            {getSurplusStatusLabel(monthSurplus)}
+          </small>
+        </div>
+      </div>
+
+      <div data-ui-summary-card="true" data-ui-summary-tone="neutral-blue">
+        <span data-ui-summary-icon="true" data-ui-tone="neutral-blue" aria-hidden="true">
+          <CategoryIcon iconKey="calendar" size="summary" />
+        </span>
+        <div data-ui-summary-copy="true">
+          <span>Miesiąc</span>
+          <strong data-ui-financial-state={monthState}>{getMonthStatusLabel(isMonthLocked)}</strong>
+          <small data-ui-summary-status="true" data-ui-status-tone={monthState}>
+            <span aria-hidden="true" />
+            {selectedMonth}
+          </small>
+        </div>
+      </div>
     </div>
   )
 }

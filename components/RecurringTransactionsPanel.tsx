@@ -4,7 +4,6 @@ import { useMemo, useState } from 'react'
 import { RecurringTransaction, Transaction } from '../lib/budgetPageTypes'
 import { getRecurringLifecycleEffectiveStatus } from '../lib/recurringTransactions'
 import { isTransactionInMonth } from '../lib/transactionDomain'
-import CategoryIcon from './CategoryIcon'
 import RecurringTransactionCard from './recurring-transactions/RecurringTransactionCard'
 import RecurringTransactionForm from './recurring-transactions/RecurringTransactionForm'
 import {
@@ -35,7 +34,6 @@ import {
   ReminderStatusBadge,
 } from './reminder-calendar/reminderCalendarPrimitives'
 import RecurringPaymentsStage2Panel from './recurring-transactions/RecurringPaymentsStage2Panel'
-import { CollapsibleSupportSection } from './ui/FoundationPrimitives'
 import { setRecurringOccurrenceLinkIntent } from '../lib/recurring-payments/occurrenceLinkIntent'
 
 export default function RecurringTransactionsPanel(props: RecurringTransactionsPanelProps) {
@@ -60,7 +58,6 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
   const [formState, setFormState] = useState<RecurringTransactionFormState>(getInitialFormState)
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
-  const [areActiveRemindersCollapsed, setAreActiveRemindersCollapsed] = useState(false)
 
   const linkedTransactionsByReminderId = useMemo(() => {
     return transactions.reduce<Record<string, Transaction[]>>((acc, transaction) => {
@@ -254,26 +251,14 @@ export default function RecurringTransactionsPanel(props: RecurringTransactionsP
         />
       )}
 
-      <CollapsibleSupportSection
-        tone="neutral-blue"
-        icon={<CategoryIcon iconKey="calendar" size="small" />}
-        title="Aktywne przypomnienia"
-        description={
-          activeRecurring.length === 0
-            ? 'Brak aktywnych terminów wymagających obsługi.'
-            : `${activeRecurring.length} aktywnych terminów wymagających obsługi.`
-        }
-        collapsed={areActiveRemindersCollapsed}
-        onCollapsedChange={setAreActiveRemindersCollapsed}
-      >
-        <div data-ui-support-reminder-list="true">
-          {activeRecurring.length === 0 ? (
-            <div style={styles.emptyStateCard}>Brak aktywnych przypomnień i planów.</div>
-          ) : (
-            activeRecurring.map((recurring) => renderReminderCard(recurring, 'active'))
-          )}
-        </div>
-      </CollapsibleSupportSection>
+      <section style={listStyle}>
+        <div style={sectionTitleStyle}>Aktywne przypomnienia</div>
+        {activeRecurring.length === 0 ? (
+          <div style={styles.emptyStateCard}>Brak aktywnych przypomnień i planów.</div>
+        ) : (
+          activeRecurring.map((recurring) => renderReminderCard(recurring, 'active'))
+        )}
+      </section>
 
       {archivedRecurring.length > 0 && (
         <section style={listStyle}>

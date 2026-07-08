@@ -649,11 +649,11 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         monthBalance={monthBalance}
         monthSurplus={monthSurplus}
         lockedMonthsSet={lockedMonthsSet}
-        activeGoalsCount={activeGoals.length}
-        effectiveMode={effectiveMode}
-        totalRemaining={momentum.totalRemaining}
       />
 
+      <div data-financial-goals-momentum="true">
+        Wpłaty: {momentum.depositsThisMonth.toFixed(2)} zł · wypłaty: {momentum.withdrawalsThisMonth.toFixed(2)} zł · netto: {momentum.netChangeThisMonth.toFixed(2)} zł · uzbierano: {momentum.totalCollected.toFixed(2)} zł · brakuje: {momentum.totalRemaining.toFixed(2)} zł
+      </div>
 
       <FinancialGoalsList
         activeGoals={currentGoals}

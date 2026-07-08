@@ -180,7 +180,6 @@ export function CollapsibleSecondarySection({
   return (
     <section
       data-ui-collapsible-secondary-section="true"
-      data-ui-collapsible-support="true"
       data-ui-density={density}
       data-ui-tone={tone}
       data-ui-indent-level="section"
@@ -189,22 +188,20 @@ export function CollapsibleSecondarySection({
       <button
         type="button"
         data-ui-collapsible-secondary-trigger="true"
-        data-ui-collapsible-support-trigger="true"
         aria-expanded={!isCollapsed}
         onClick={toggleCollapsed}
       >
-        <span data-ui-collapsible-secondary-main="true" data-ui-collapsible-support-main="true">
+        <span data-ui-collapsible-secondary-main="true">
           {icon && (
             <span
               data-ui-collapsible-secondary-icon="true"
-              data-ui-collapsible-support-icon="true"
               data-ui-tone={tone}
               aria-hidden="true"
             >
               {icon}
             </span>
           )}
-          <span data-ui-collapsible-secondary-copy="true" data-ui-collapsible-support-copy="true">
+          <span data-ui-collapsible-secondary-copy="true">
             <span data-ui-title-with-help="true">
               <strong>{title}</strong>
               {help}
@@ -212,82 +209,21 @@ export function CollapsibleSecondarySection({
             {description && <small>{description}</small>}
           </span>
         </span>
-        <span data-ui-collapsible-secondary-chevron="true" data-ui-collapsible-support-chevron="true" aria-hidden="true" />
+        <span data-ui-collapsible-secondary-chevron="true" aria-hidden="true" />
       </button>
 
       <div
         data-ui-collapsible-secondary-content="true"
-        data-ui-collapsible-support-content="true"
         aria-hidden={isCollapsed}
         inert={isCollapsed}
       >
-        <div data-ui-collapsible-secondary-content-clip="true" data-ui-collapsible-support-content-clip="true">
-          <div data-ui-collapsible-secondary-content-inner="true" data-ui-collapsible-support-content-inner="true">
+        <div data-ui-collapsible-secondary-content-clip="true">
+          <div data-ui-collapsible-secondary-content-inner="true">
             {children}
           </div>
         </div>
       </div>
     </section>
-  );
-}
-
-
-export function CollapsibleSupportSection(props: CollapsibleSecondarySectionProps) {
-  return <CollapsibleSecondarySection {...props} />;
-}
-
-type AuxiliarySummaryStripProps = {
-  children: ReactNode;
-  columns?: 2 | 3 | 4;
-  density?: FoundationDensity;
-};
-
-export function AuxiliarySummaryStrip({
-  children,
-  columns = 4,
-  density = "regular",
-}: AuxiliarySummaryStripProps) {
-  return (
-    <section
-      data-ui-auxiliary-summary="true"
-      data-ui-auxiliary-summary-columns={columns}
-      data-ui-density={density}
-    >
-      <div data-ui-auxiliary-summary-grid="true">{children}</div>
-    </section>
-  );
-}
-
-type AuxiliarySummaryItemProps = {
-  icon?: ReactNode;
-  label: ReactNode;
-  value: ReactNode;
-  description?: ReactNode;
-  tone?: FoundationTone;
-};
-
-export function AuxiliarySummaryItem({
-  icon,
-  label,
-  value,
-  description,
-  tone = "neutral-blue",
-}: AuxiliarySummaryItemProps) {
-  return (
-    <article data-ui-auxiliary-summary-item="true" data-ui-tone={tone}>
-      {icon && (
-        <span data-ui-auxiliary-summary-icon="true" data-ui-tone={tone} aria-hidden="true">
-          {icon}
-        </span>
-      )}
-      <div data-ui-auxiliary-summary-copy="true">
-        <span data-ui-auxiliary-summary-label="true">{label}</span>
-        <strong data-ui-auxiliary-summary-value="true">{value}</strong>
-        {description && (
-          <small data-ui-auxiliary-summary-description="true">{description}</small>
-        )}
-      </div>
-    </article>
   );
 }
 
