@@ -1153,7 +1153,8 @@ export default function PaymentSourcesPanel({
         <div
           data-ui-payment-sources-list-window="true"
           style={{
-            maxHeight: "var(--ui-payment-sources-list-max-height)",
+            minHeight: 0,
+            maxHeight: "none",
             overflowY: "auto",
             paddingInlineEnd: "var(--ui-space-2)",
           }}

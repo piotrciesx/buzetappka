@@ -2670,9 +2670,9 @@
 }
 
 [data-financial-goals-summary="true"] {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--ui-space-5);
+  width: 100%;
+  min-width: 0;
+  display: block;
 }
 
 [data-ui-list-switch="true"] {
@@ -6037,6 +6037,73 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   padding-inline-end: 0;
 }
 
+
+
+/* Auxiliary panels hotfix: keep management chrome fixed and scroll only record lists. */
+[data-budget-utility-body="true"]:has(> [data-ui-payment-sources-shell="true"]),
+[data-budget-utility-body="true"]:has(> [data-financial-goals-panel="true"]),
+[data-budget-utility-body="true"]:has(> [data-budget-limits-view]) {
+  overflow: hidden;
+}
+
+[data-ui-payment-sources-shell="true"],
+[data-financial-goals-panel="true"],
+[data-budget-limits-view] {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+[data-ui-payment-sources-shell="true"] > [data-ui-payment-sources-list-window="true"],
+[data-budget-limits-view="list"] > [data-ui-management-list="true"] {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+[data-financial-goals-panel="true"] > [data-financial-goals-current-list="true"] {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+[data-financial-goals-current-list="true"] > [data-financial-goals-list-viewport="true"] {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding-inline-end: var(--ui-space-2);
+}
+
+
+/* Expanded support sections must not clip dropdown menus. Collapsed state remains clipped for animation. */
+[data-ui-collapsible-support="true"] {
+  position: relative;
+}
+
+[data-ui-collapsible-support="true"][data-ui-collapsed="false"] {
+  overflow: visible;
+  z-index: 2;
+}
+
+[data-ui-collapsible-support="true"][data-ui-collapsed="false"] [data-ui-collapsible-support-content="true"],
+[data-ui-collapsible-support="true"][data-ui-collapsed="false"] [data-ui-collapsible-support-content-clip="true"] {
+  overflow: visible;
+}
+
+[data-ui-collapsible-support="true"]:has([data-ui-management-select-control="true"][data-open="true"]) {
+  z-index: 10;
+}
+
 /* Foundation-only review mode: global skeleton visible, local numbers/metrics muted. */
 [data-ui-foundation-only="true"] {
   --foundation-only-muted-line: rgba(148, 163, 184, 0.32);
@@ -6328,12 +6395,15 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   [data-ui-management-summary-strip="true"],
   [data-ui-management-auxiliary="true"],
   [data-ui-management-collapsible="true"],
-  [data-ui-payment-sources-shell="true"] [data-ui-collapsible-secondary="true"],
   [data-financial-goals-momentum="true"] {
     border-radius: 11px;
     padding: 10px;
     max-height: 92px;
     overflow: hidden;
+  }
+
+  [data-ui-payment-sources-shell="true"] [data-ui-collapsible-support="true"] {
+    border-radius: 11px;
   }
 
   [data-ui-management-strip-inner="true"] {
