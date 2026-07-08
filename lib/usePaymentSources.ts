@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { supabase } from './supabaseClient'
 import {
   Category,
@@ -142,23 +142,29 @@ export function usePaymentSources({
   >({})
   const [paymentSourceSettings, setPaymentSourceSettings] =
     useState<PaymentSourceSettings>(DEFAULT_SETTINGS)
+  const paymentSourceSettingsRef = useRef<PaymentSourceSettings>(DEFAULT_SETTINGS)
+
+  const commitPaymentSourceSettings = useCallback((settings: PaymentSourceSettings) => {
+    paymentSourceSettingsRef.current = settings
+    setPaymentSourceSettings(settings)
+  }, [])
 
   useEffect(() => {
     const task = window.setTimeout(() => {
       setPaymentSources([])
       setHistoryTransactions([])
       setHistoryPaymentSplitsMap({})
-      setPaymentSourceSettings(DEFAULT_SETTINGS)
+      commitPaymentSourceSettings(DEFAULT_SETTINGS)
     }, 0)
     return () => window.clearTimeout(task)
-  }, [profileId])
+  }, [commitPaymentSourceSettings, profileId])
 
   const loadPaymentSources = useCallback(async () => {
     if (!isPaymentSourcesEnabled) {
       setPaymentSources([])
       setHistoryTransactions([])
       setHistoryPaymentSplitsMap({})
-      setPaymentSourceSettings(DEFAULT_SETTINGS)
+      commitPaymentSourceSettings(DEFAULT_SETTINGS)
       return
     }
 
@@ -206,7 +212,7 @@ export function usePaymentSources({
         normalizedMessage.includes('could not find') ||
         normalizedMessage.includes('schema cache')
       ) {
-        setPaymentSourceSettings(DEFAULT_SETTINGS)
+        commitPaymentSourceSettings(DEFAULT_SETTINGS)
         return
       }
 
@@ -216,13 +222,13 @@ export function usePaymentSources({
     const settings = settingsData as ProfileFinanceSettingsRow | null
     const legacyDefault = settings?.default_payment_source_id || null
 
-    setPaymentSourceSettings({
+    commitPaymentSourceSettings({
       defaultIncomePaymentSourceId: settings?.default_income_payment_source_id || legacyDefault,
       defaultExpensePaymentSourceId: settings?.default_expense_payment_source_id || legacyDefault,
       showIncomePaymentSource: settings?.show_income_payment_source !== false,
       showExpensePaymentSource: settings?.show_expense_payment_source !== false,
     })
-  }, [isPaymentSourcesEnabled, profileId])
+  }, [commitPaymentSourceSettings, isPaymentSourcesEnabled, profileId])
 
   const savePaymentSource = useCallback(
     async (input: SavePaymentSourceInput) => {
@@ -387,7 +393,7 @@ export function usePaymentSources({
       }
 
       const mergedSettings = {
-        ...paymentSourceSettings,
+        ...paymentSourceSettingsRef.current,
         ...nextSettings,
       }
 
@@ -404,9 +410,9 @@ export function usePaymentSources({
         throw new Error(error.message)
       }
 
-      setPaymentSourceSettings(mergedSettings)
+      commitPaymentSourceSettings(mergedSettings)
     },
-    [isPaymentSourcesEnabled, paymentSourceSettings, profileId]
+    [commitPaymentSourceSettings, isPaymentSourcesEnabled, profileId]
   )
 
   const setDefaultPaymentSource = useCallback(

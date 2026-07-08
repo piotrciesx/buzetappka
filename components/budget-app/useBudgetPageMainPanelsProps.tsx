@@ -4,6 +4,7 @@ import type { ComponentProps } from 'react'
 import BudgetPageMainPanels from '../BudgetPageMainPanels'
 import MainWorkspaceBottomDeck from '../MainWorkspaceBottomDeck'
 import { getHiddenCategoryLabel } from '../../lib/categoryUtils'
+import type { PaymentSourceListKind } from '../../lib/paymentSources'
 
 export type BudgetPageMainPanelsPropsContext = Record<string, any>
 
@@ -380,7 +381,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
             }
           },
           onRestore: restorePaymentSource,
-          onSetDefault: async (kind: any, paymentSourceId: string | null) => {
+          onSetDefault: async (kind: PaymentSourceListKind, paymentSourceId: string | null) => {
             try {
               await setDefaultPaymentSource(kind, paymentSourceId)
               if (
