@@ -370,12 +370,6 @@ export default function PaymentSourcesPanel({
     ? paymentSources.find((source) => source.id === selectedSourceDetailsId) || null
     : null;
 
-  const paymentSourcesShellStyle = {
-    "--ui-payment-sources-list-max-height": isDefaultSourcesCollapsed
-      ? "424px"
-      : "296px",
-  } as CSSProperties;
-
   const closeForm = () => {
     setDraft(DEFAULT_DRAFT);
     setActivePicker(null);
@@ -936,7 +930,6 @@ export default function PaymentSourcesPanel({
         data-ui-foundation-only="true"
         data-ui-large-module="true"
         data-ui-utility-modal-size="xl"
-        style={paymentSourcesShellStyle}
       >
         <div data-ui-management-split="true">
           <div data-ui-management-split-list="true">
@@ -965,7 +958,6 @@ export default function PaymentSourcesPanel({
       data-ui-foundation-only="true"
       data-ui-large-module="true"
       data-ui-utility-modal-size="xl"
-      style={paymentSourcesShellStyle}
     >
       <CollapsibleSecondarySection
         tone="neutral-blue"
@@ -1152,8 +1144,6 @@ export default function PaymentSourcesPanel({
         <div
           data-ui-payment-sources-list-window="true"
           style={{
-            maxHeight: "var(--ui-payment-sources-list-max-height)",
-            overflowY: "auto",
             paddingInlineEnd: "var(--ui-space-2)",
           }}
         >

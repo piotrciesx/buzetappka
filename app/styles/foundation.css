@@ -5207,9 +5207,18 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
 
 [data-budget-utility-body="true"] {
   min-height: 0;
-  overflow: auto;
+  overflow: hidden;
   padding: 10px 34px 30px;
   background: var(--mgmt-surface);
+}
+
+[data-budget-utility-body="true"] > [data-ui-management-shell="true"],
+[data-budget-utility-body="true"] > [data-ui-payment-sources-shell="true"],
+[data-budget-utility-body="true"] > [data-financial-goals-panel="true"],
+[data-budget-utility-body="true"] > [data-recurring-stage2],
+[data-budget-utility-body="true"] > [data-budget-limits-view] {
+  height: 100%;
+  min-height: 0;
 }
 
 [data-management-module-shell="true"],
@@ -5227,8 +5236,61 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
 [data-recurring-stage2],
 [data-budget-limits-view] {
   min-width: 0;
+  min-height: 0;
   display: grid;
   gap: 16px;
+}
+
+[data-ui-payment-sources-shell="true"],
+[data-financial-goals-panel="true"],
+[data-recurring-stage2],
+[data-budget-limits-view] {
+  display: flex;
+  flex-direction: column;
+}
+
+[data-ui-payment-section="sources"],
+[data-ui-payment-sources-list-window="true"],
+[data-financial-goals-current-list="true"],
+[data-financial-goals-list-viewport="true"],
+[data-ui-payment-sources-shell="true"][data-ui-payment-sources-mode="details"] [data-ui-management-split="true"],
+[data-recurring-stage2="details"] [data-ui-management-split="true"],
+[data-budget-limits-view="details"] [data-ui-management-split="true"],
+[data-recurring-stage2="list"] > [data-ui-management-list="true"],
+[data-budget-limits-view="list"] > [data-ui-management-list="true"] {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+[data-ui-payment-section="sources"],
+[data-financial-goals-current-list="true"] {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+[data-financial-goals-current-list="true"] > [data-ui-list-switch="true"] {
+  flex: 0 0 auto;
+  margin-top: 10px;
+}
+
+[data-financial-goals-list-viewport="true"],
+[data-budget-limits-view="list"] > [data-ui-management-list="true"],
+[data-recurring-stage2="list"] > [data-ui-management-list="true"] {
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding-inline-end: 6px;
+}
+
+[data-budget-limits-view="details"] [data-ui-management-details-panel="true"],
+[data-recurring-stage2="details"] [data-ui-management-details-panel="true"],
+[data-ui-payment-sources-shell="true"][data-ui-payment-sources-mode="details"] [data-ui-management-details-panel="true"],
+[data-ui-payment-sources-shell="true"][data-ui-payment-sources-mode="details"] [data-ui-record-details="true"] {
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
 }
 
 [data-ui-management-summary-strip="true"],
@@ -5745,11 +5807,14 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
 
 [data-ui-management-split-list="true"] {
   min-width: 0;
+  min-height: 0;
   display: grid;
+  align-content: start;
   gap: 10px;
-  max-height: min(620px, calc(100dvh - 220px));
+  max-height: none;
   overflow: auto;
   padding-right: 6px;
+  overscroll-behavior: contain;
 }
 
 [data-ui-management-split-list="true"] [data-ui-large-record="true"] {
@@ -5836,9 +5901,12 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
 }
 
 [data-ui-payment-sources-list-window="true"] {
+  min-height: 0;
   max-height: none;
-  overflow: visible;
-  padding-inline-end: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding-inline-end: 6px;
 }
 
 /* Foundation-only review mode: global skeleton visible, local numbers/metrics muted. */
