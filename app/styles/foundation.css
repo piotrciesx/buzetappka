@@ -6429,16 +6429,40 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
 
 [data-ui-collapsible-secondary-content="true"] {
   border-top: 1px solid rgba(15, 48, 120, 0.10);
+  overflow: visible;
+  opacity: 1;
+  transition:
+    max-height 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 180ms ease,
+    border-color 180ms ease;
+  will-change: max-height;
+}
+
+[data-ui-collapsible-secondary-section="true"][data-ui-collapsible-animating="true"]
+  [data-ui-collapsible-secondary-content="true"],
+[data-ui-collapsible-secondary-section="true"][data-ui-collapsed="true"]
+  [data-ui-collapsible-secondary-content="true"] {
+  overflow: hidden;
 }
 
 [data-ui-collapsible-secondary-section="true"][data-ui-collapsed="true"]
   [data-ui-collapsible-secondary-content="true"] {
-  display: none;
+  border-top-color: rgba(15, 48, 120, 0);
+  opacity: 0;
+  pointer-events: none;
 }
 
 [data-ui-collapsible-secondary-content-clip="true"],
 [data-ui-collapsible-secondary-content-inner="true"] {
+  min-height: 0;
   overflow: visible;
+}
+
+[data-ui-collapsible-secondary-section="true"][data-ui-collapsible-animating="true"]
+  [data-ui-collapsible-secondary-content-clip="true"],
+[data-ui-collapsible-secondary-section="true"][data-ui-collapsed="true"]
+  [data-ui-collapsible-secondary-content-clip="true"] {
+  overflow: hidden;
 }
 
 [data-ui-collapsible-secondary-content-inner="true"] {

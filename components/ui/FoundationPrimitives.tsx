@@ -166,16 +166,68 @@ export function CollapsibleSecondarySection({
   children,
 }: CollapsibleSecondarySectionProps) {
   const [internalCollapsed, setInternalCollapsed] = useState(defaultCollapsed);
+  const [contentHeight, setContentHeight] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const contentInnerRef = useRef<HTMLDivElement | null>(null);
+  const animationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isControlled = collapsed !== undefined;
   const isCollapsed = isControlled ? collapsed : internalCollapsed;
 
+  const measureContent = useCallback(() => {
+    const nextHeight = contentInnerRef.current?.scrollHeight ?? 0;
+    setContentHeight(nextHeight);
+  }, []);
+
+  const startContentAnimation = useCallback(() => {
+    if (animationTimerRef.current) {
+      clearTimeout(animationTimerRef.current);
+    }
+
+    setIsAnimating(true);
+    animationTimerRef.current = setTimeout(() => {
+      setIsAnimating(false);
+      animationTimerRef.current = null;
+    }, 260);
+  }, []);
+
   const toggleCollapsed = () => {
+    measureContent();
+    startContentAnimation();
+
     const nextCollapsed = !isCollapsed;
     if (!isControlled) {
       setInternalCollapsed(nextCollapsed);
     }
     onCollapsedChange?.(nextCollapsed);
   };
+
+  useEffect(() => {
+    measureContent();
+
+    const node = contentInnerRef.current;
+    if (!node || typeof ResizeObserver === "undefined") {
+      return undefined;
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      measureContent();
+    });
+    resizeObserver.observe(node);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [children, measureContent]);
+
+  useEffect(() => {
+    return () => {
+      if (animationTimerRef.current) {
+        clearTimeout(animationTimerRef.current);
+      }
+    };
+  }, []);
+
+  const animatedHeight = isCollapsed ? 0 : Math.max(contentHeight, 1);
 
   return (
     <section
@@ -184,6 +236,7 @@ export function CollapsibleSecondarySection({
       data-ui-tone={tone}
       data-ui-indent-level="section"
       data-ui-collapsed={isCollapsed ? "true" : "false"}
+      data-ui-collapsible-animating={isAnimating ? "true" : "false"}
     >
       <button
         type="button"
@@ -216,8 +269,9 @@ export function CollapsibleSecondarySection({
         data-ui-collapsible-secondary-content="true"
         aria-hidden={isCollapsed}
         inert={isCollapsed}
+        style={{ maxHeight: animatedHeight }}
       >
-        <div data-ui-collapsible-secondary-content-clip="true">
+        <div data-ui-collapsible-secondary-content-clip="true" ref={contentInnerRef}>
           <div data-ui-collapsible-secondary-content-inner="true">
             {children}
           </div>
