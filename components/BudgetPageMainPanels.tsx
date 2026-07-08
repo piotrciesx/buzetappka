@@ -15,6 +15,7 @@ import RecurringTransactionsPanel from './RecurringTransactionsPanel'
 import SearchPanel from './SearchPanel'
 import TrashPanel from './TrashPanel'
 import UndoBanner from './UndoBanner'
+import ManagementWorkspaceShell from './ui/ManagementWorkspaceShell'
 import type { AppModuleVisibility } from '../lib/useAppModuleVisibility'
 
 export type BudgetUtilityPanel =
@@ -29,6 +30,26 @@ export type BudgetUtilityPanel =
   | 'hiddenCategories'
   | 'trash'
   | null
+
+export const USE_MANAGEMENT_WORKSPACE = true
+
+export type ManagementWorkspacePanel = Extract<
+  BudgetUtilityPanel,
+  'paymentSources' | 'financialGoals' | 'budgetLimits' | 'recurringTransactions'
+>
+
+const MANAGEMENT_WORKSPACE_PANELS = new Set<ManagementWorkspacePanel>([
+  'paymentSources',
+  'financialGoals',
+  'budgetLimits',
+  'recurringTransactions',
+])
+
+export function isManagementWorkspacePanel(
+  panel: BudgetUtilityPanel
+): panel is ManagementWorkspacePanel {
+  return USE_MANAGEMENT_WORKSPACE && panel !== null && MANAGEMENT_WORKSPACE_PANELS.has(panel as ManagementWorkspacePanel)
+}
 
 type Props = {
   visibleModules: AppModuleVisibility
@@ -102,6 +123,40 @@ export default function BudgetPageMainPanels({
     return null
   }
 
+  const renderActiveUtilityPanelContent = () => (
+    <>
+      {activeUtilityPanel === 'drafts' && <DraftsPanel {...draftsPanelProps} />}
+      {activeUtilityPanel === 'importExport' && (
+        <ImportExportPanel {...importExportPanelProps} />
+      )}
+      {activeUtilityPanel === 'paymentSources' && visibleModules.paymentSources && (
+        <PaymentSourcesPanel
+          {...paymentSourcesPanelProps}
+          openCreateRequest={paymentSourceCreateRequest}
+          onCloseModule={onCloseUtilityPanel}
+        />
+      )}
+      {activeUtilityPanel === 'financialGoals' && visibleModules.financialGoals && (
+        <FinancialGoalsContainer {...financialGoalsContainerProps} />
+      )}
+      {activeUtilityPanel === 'recurringTransactions' &&
+        visibleModules.recurringTransactions && (
+          <RecurringTransactionsPanel {...recurringTransactionsPanelProps} />
+        )}
+      {activeUtilityPanel === 'budgetLimits' && visibleModules.budgetLimits && (
+        <BudgetLimitsV1Panel {...budgetLimitsPanelProps} />
+      )}
+      {activeUtilityPanel === 'search' && <SearchPanel {...searchPanelProps} />}
+      {activeUtilityPanel === 'monthCalendar' && (
+        <MonthCalendarPanel {...monthCalendarPanelProps} />
+      )}
+      {activeUtilityPanel === 'hiddenCategories' && (
+        <HiddenCategoriesPanel {...hiddenCategoriesPanelProps} />
+      )}
+      {activeUtilityPanel === 'trash' && <TrashPanel {...trashPanelProps} />}
+    </>
+  )
+
   const utilityPanelTitle =
     activeUtilityPanel === 'drafts'
       ? 'Szkice'
@@ -156,7 +211,20 @@ export default function BudgetPageMainPanels({
 
       {canCreateTransactions && bulkActionsBarProps && <BulkActionsBar {...bulkActionsBarProps} />}
 
-      {activeUtilityPanel && (
+      {activeUtilityPanel && isManagementWorkspacePanel(activeUtilityPanel) && (
+        <ManagementWorkspaceShell
+          title={utilityPanelTitle}
+          description={utilityPanelDescription}
+          onBackToBudget={onCloseUtilityPanel}
+          primaryActionLabel={getUtilityPanelAddLabel()}
+          onPrimaryAction={handleUtilityPanelAdd}
+          panelKind={activeUtilityPanel}
+        >
+          {renderActiveUtilityPanelContent()}
+        </ManagementWorkspaceShell>
+      )}
+
+      {activeUtilityPanel && !isManagementWorkspacePanel(activeUtilityPanel) && (
         <div data-budget-utility-overlay="true">
           <button
             type="button"
@@ -198,41 +266,15 @@ export default function BudgetPageMainPanels({
             </header>
 
             <div data-budget-utility-body="true">
-              {activeUtilityPanel === 'drafts' && <DraftsPanel {...draftsPanelProps} />}
-              {activeUtilityPanel === 'importExport' && (
-                <ImportExportPanel {...importExportPanelProps} />
-              )}
-              {activeUtilityPanel === 'paymentSources' && visibleModules.paymentSources && (
-                <PaymentSourcesPanel
-                  {...paymentSourcesPanelProps}
-                  openCreateRequest={paymentSourceCreateRequest}
-                  onCloseModule={onCloseUtilityPanel}
-                />
-              )}
-              {activeUtilityPanel === 'financialGoals' && visibleModules.financialGoals && (
-                <FinancialGoalsContainer {...financialGoalsContainerProps} />
-              )}
-              {activeUtilityPanel === 'recurringTransactions' &&
-                visibleModules.recurringTransactions && (
-                  <RecurringTransactionsPanel {...recurringTransactionsPanelProps} />
-                )}
-              {activeUtilityPanel === 'budgetLimits' && visibleModules.budgetLimits && (
-                <BudgetLimitsV1Panel {...budgetLimitsPanelProps} />
-              )}
-              {activeUtilityPanel === 'search' && <SearchPanel {...searchPanelProps} />}
-              {activeUtilityPanel === 'monthCalendar' && (
-                <MonthCalendarPanel {...monthCalendarPanelProps} />
-              )}
-              {activeUtilityPanel === 'hiddenCategories' && (
-                <HiddenCategoriesPanel {...hiddenCategoriesPanelProps} />
-              )}
-              {activeUtilityPanel === 'trash' && <TrashPanel {...trashPanelProps} />}
+              {renderActiveUtilityPanelContent()}
             </div>
           </aside>
         </div>
       )}
 
-      <BudgetTreeSection {...budgetTreeSectionProps} />
+      {!isManagementWorkspacePanel(activeUtilityPanel) && (
+        <BudgetTreeSection {...budgetTreeSectionProps} />
+      )}
     </>
   )
 }

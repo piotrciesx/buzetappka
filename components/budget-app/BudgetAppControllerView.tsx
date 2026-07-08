@@ -1,7 +1,7 @@
 'use client'
 
 import type { ComponentProps } from 'react'
-import BudgetPageMainPanels from '../BudgetPageMainPanels'
+import BudgetPageMainPanels, { isManagementWorkspacePanel } from '../BudgetPageMainPanels'
 import BudgetAppOverlaySection from './BudgetAppOverlaySection'
 import BudgetDashboardDrawer from './BudgetDashboardDrawer'
 import BudgetPageStatusPanelsContainer from './BudgetPageStatusPanelsContainer'
@@ -14,7 +14,7 @@ type BudgetAppControllerViewProps = {
     calculatedLimitCount: number
     activeAlertCount: number
   }
-  statusPanelsCtx: Record<string, any>
+  statusPanelsCtx: ComponentProps<typeof BudgetPageStatusPanelsContainer>['ctx']
   rightRailProps: ComponentProps<typeof BudgetWorkspaceShell>['rightRailProps']
   mainPanelsProps: ComponentProps<typeof BudgetPageMainPanels>
   dashboardDrawerProps: ComponentProps<typeof BudgetDashboardDrawer>
@@ -30,10 +30,14 @@ export default function BudgetAppControllerView({
   dashboardDrawerProps,
   overlaySectionProps,
 }: BudgetAppControllerViewProps) {
+  const isManagementWorkspaceMode = isManagementWorkspacePanel(mainPanelsProps.activeUtilityPanel)
+
   return (
     <main
       style={styles.page}
       data-budget-app="true"
+      data-app-shell-mode={isManagementWorkspaceMode ? 'management-workspace' : undefined}
+      data-sidebar-variant={isManagementWorkspaceMode ? 'rail' : undefined}
       data-budget-limit-count={budgetLimitDataSnapshot.activeLimitCount}
       data-budget-limit-calculated-count={budgetLimitDataSnapshot.calculatedLimitCount}
       data-budget-limit-alert-count={budgetLimitDataSnapshot.activeAlertCount}
