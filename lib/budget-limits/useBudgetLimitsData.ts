@@ -28,3 +28,5 @@ export function useBudgetLimitsData({profileId,selectedMonth,categoriesById,expe
  const persistAlert=useCallback(async(alert:BudgetLimitAlertRow,mode:'read'|'muted')=>{const payload={...alert,id:alert.id.includes(':')?undefined:alert.id,profile_id:profileId,read_at:mode==='read'?new Date().toISOString():alert.read_at,muted_for_period:mode==='muted'?true:alert.muted_for_period};const{error:alertError}=await supabase.from('budget_limit_alerts').upsert(payload,{onConflict:'period_id,kind,threshold_percent'});if(alertError)throw alertError;await load()},[load,profileId])
  return{plans,versions,periods,alerts,calculated,loading,error,load,createPlan:savePlan,updatePlan:savePlan,setPlanActive,markAlertRead:(alert:BudgetLimitAlertRow)=>persistAlert(alert,'read'),muteAlert:(alert:BudgetLimitAlertRow)=>persistAlert(alert,'muted')}
 }
+
+export type ReturnTypeOfUseBudgetLimitsData = ReturnType<typeof useBudgetLimitsData>

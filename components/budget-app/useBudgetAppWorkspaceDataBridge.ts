@@ -3,7 +3,7 @@
 import { useEffect, useMemo } from 'react'
 import { useBankSearch } from '../../lib/useBankSearch'
 import { useBudgetCategoryTreeData } from '../../lib/useBudgetCategoryTreeData'
-import { useBudgetLimits } from '../../lib/useBudgetLimits'
+import { useBudgetLimitsData } from '../../lib/budget-limits/useBudgetLimitsData'
 import { useBudgetTreeMetrics } from '../../lib/useBudgetTreeMetrics'
 import { useBudgetTreeUiState } from '../../lib/useBudgetTreeUiState'
 import { useHeatmap } from '../../lib/useHeatmap'
@@ -12,6 +12,7 @@ import { useOpenSearchForTag } from '../../lib/useOpenSearchForTag'
 import { useSelectedMonthTransactions } from '../../lib/useSelectedMonthTransactions'
 import { useTransactionShortcutData } from '../../lib/useTransactionShortcutData'
 import { useTransactionCategorySelection } from './useTransactionCategorySelection'
+import { buildBudgetLimitViews } from './useBudgetLimitViews'
 
 type Params = Record<string, any>
 
@@ -48,16 +49,17 @@ export function useBudgetAppWorkspaceDataBridge(ctx: Params) {
     setHeatmapInverted: ctx.setHeatmapInverted,
   })
 
-  const budgetLimits = useBudgetLimits({
+  const budgetLimitsData = useBudgetLimitsData({
     profileId: ctx.profileId,
     selectedMonth: ctx.selectedMonth,
-    isEnabled: ctx.isBudgetLimitsModuleEnabled,
+    enabled: ctx.isBudgetLimitsModuleEnabled,
     categoriesById: treeData.categoriesById,
     expenseLevel1Id: treeData.expenseLevel1Id,
     transactions: ctx.scopedTransactions,
     budgetStartDate: ctx.budgetStartDate,
     getSignedAmountForTransaction: heatmap.getSignedAmountForTransaction,
   })
+  const budgetLimitViews = buildBudgetLimitViews(budgetLimitsData, ctx.selectedMonth)
 
   const bankSearch = useBankSearch({
     profileId: ctx.profileId,
@@ -120,10 +122,10 @@ export function useBudgetAppWorkspaceDataBridge(ctx: Params) {
     ...treeData,
     ...treeUi,
     ...heatmap,
-    activeBudgetLimitAlerts: budgetLimits.activeAlerts,
-    activeBudgetLimits: budgetLimits.activeLimits,
-    activeLimitStates: budgetLimits.activeLimitStates,
-    addBudgetLimit: budgetLimits.addBudgetLimit,
+    activeBudgetLimitAlerts: budgetLimitViews.filter((view) => view.alertState.level !== 'none'),
+    activeBudgetLimits: budgetLimitsData.plans.filter((plan) => plan.status === 'active'),
+    activeLimitStates: budgetLimitViews,
+    budgetLimitsData,
     applyTransactionCategorySelection,
     bankSearchCategoryOptions: bankSearch.categoryOptions,
     bankSearchResults: bankSearch.results,
@@ -131,7 +133,6 @@ export function useBudgetAppWorkspaceDataBridge(ctx: Params) {
     bankSearchSummary: bankSearch.summary,
     bankSearchTagOptions: bankSearch.tagOptions,
     baseDescriptionSuggestions: shortcutData.descriptionSuggestions,
-    deleteBudgetLimit: budgetLimits.deleteBudgetLimit,
     descriptionSuggestions: hiddenDescriptionSuggestions.descriptionSuggestions,
     getCategoryCountForSelectedMonth: treeMetrics.getCategoryCountForSelectedMonth,
     getCountForLevel2ForSelectedMonth: treeMetrics.getCountForLevel2ForSelectedMonth,
@@ -145,7 +146,7 @@ export function useBudgetAppWorkspaceDataBridge(ctx: Params) {
     handleDeleteDescriptionSuggestion: hiddenDescriptionSuggestions.handleDeleteDescriptionSuggestion,
     handleOpenSearchForTag,
     isBankSearchOpen: bankSearch.isPanelOpen,
-    loadBudgetLimits: budgetLimits.loadBudgetLimits,
+    loadBudgetLimits: budgetLimitsData.load,
     recentTransactionShortcutCategoriesByType:
       shortcutData.recentTransactionShortcutCategoriesByType,
     resetBankSearch: bankSearch.resetSearch,
@@ -155,6 +156,5 @@ export function useBudgetAppWorkspaceDataBridge(ctx: Params) {
     topTransactionShortcutCategoriesByType: shortcutData.topTransactionShortcutCategoriesByType,
     transactionCategoryPathLabels: shortcutData.transactionCategoryPathLabels,
     addableTransactionCategoryIds: shortcutData.addableTransactionCategoryIds,
-    updateBudgetLimit: budgetLimits.updateBudgetLimit,
   }
 }

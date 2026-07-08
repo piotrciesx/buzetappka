@@ -66,7 +66,7 @@ export default function BudgetAppController({
     activeUtilityPanel,
     activeScopeTransactions,
     amountInputRef,
-    budgetLimitEditorCategoryId,
+    budgetLimitCreatorRequest,
     categories,
     descriptionInputRef,
     errorText,
@@ -80,7 +80,7 @@ export default function BudgetAppController({
     setActiveSidebarPrimaryPanel,
     setActiveUtilityPanel,
     setActiveScopeTransactions,
-    setBudgetLimitEditorCategoryId,
+    setBudgetLimitCreatorRequest,
     setCategories,
     setErrorText,
     setIsDashboardPanelOpen,
@@ -249,7 +249,6 @@ export default function BudgetAppController({
     activeBudgetLimitAlerts,
     activeBudgetLimits,
     activeLimitStates,
-    addBudgetLimit,
     addableTransactionCategoryIds,
     applyTransactionCategorySelection,
     bankSearchCategoryOptions,
@@ -258,7 +257,6 @@ export default function BudgetAppController({
     bankSearchSummary,
     bankSearchTagOptions,
     categoriesById,
-    deleteBudgetLimit,
     descriptionSuggestions,
     expenseLevel1Id,
     getCalendarHeatmapVariantForLevel1Id,
@@ -302,7 +300,7 @@ export default function BudgetAppController({
     toggleLevel2,
     toggleLevel3,
     transactionCategoryPathLabels,
-    updateBudgetLimit,
+    budgetLimitsData,
     visibleCategories,
   } = useBudgetAppWorkspaceDataBridge({
     profileId,
@@ -749,7 +747,7 @@ export default function BudgetAppController({
     categoriesById,
     isEnabled: effectiveVisibleModules.recurringTransactions,
   })
-  const getBudgetLimitView = useBudgetLimitViews(activeLimitStates)
+  const getBudgetLimitView = useBudgetLimitViews(budgetLimitsData, selectedMonth)
 
   const {
     budgetLimitDataSnapshot,
@@ -774,7 +772,7 @@ export default function BudgetAppController({
     openLevel1CalendarIds, openLevel1Ids, openLevel2Ids, openLevel3Ids, openReminderTransactionCreator, openTransactionCreator, paymentSourceOptions, paymentSourceSettings, paymentSourceStats, paymentSources,
     previousMonthCloseReminder, profileId, recurringExecutions, recurringTransactions, reorderingLevel1Id, reorderingLevel2Id, resetBankSearch, saveDraft, saveFinancialGoal, saveGoalAllocationsForMonth, saveGoalPrioritiesForMonth, setFinancialGoalStatus,
     restorePaymentSource, savePaymentSource, saveRecurringExecution, saveRecurringTransaction, scopedTransactions, searchPanelRef, selectedMonth, selectedMonthTransactions, selectedPaymentSourceId, selectedTransactionCategoryId, selectedTransactionIds,
-    selectedTransactions, setActiveUtilityPanel, setBudgetLimitEditorCategoryId, setBulkActionErrorText, setBulkMoveTargetCategoryId, setDefaultPaymentSource, setGoalModeForMonth, setHeatmapInverted, setHeatmapMode, setIsBankSearchOpen,
+    selectedTransactions, setActiveUtilityPanel, setBudgetLimitCreatorRequest, setBulkActionErrorText, setBulkMoveTargetCategoryId, setDefaultPaymentSource, setGoalModeForMonth, setHeatmapInverted, setHeatmapMode, setIsBankSearchOpen,
     setIsPreviousMonthCloseReminderHidden, setLevel2SortDirection, setLevel2SortMode, setLevel3SortDirection, setLevel3SortMode, setMigrationPromptState, setNewSubcategoryIconKey, setNewSubcategoryName, setNewTransactionDate, setOpenAddSubcategoryFor, setPaymentSourceFieldVisibility,
     setSelectedPaymentSourceId, showHiddenCategories, sortedLevel1, status, styles, supabase, toggleLevel1, toggleLevel1Calendar, toggleLevel2, toggleLevel3,
     toggleTransactionSelection, transactionCategoryPathLabels, transactionPaymentSplitsMap, transactionTagsMap, transactions, trashedTransactions, trashedTransactionsById, userId, visibleModules, autoExcludePartialMonths,
@@ -783,11 +781,11 @@ export default function BudgetAppController({
     isInvitationWorking, isNextMonthNavigationBlocked, isPrevMonthNavigationBlocked, isSavingMonthNavigationSettings, activeSidebarPrimaryPanel, isSettingsPanelVisible, isUpdatingSelectedMonthLock, maxAllowedMonth, minAllowedMonth, moduleVisibilitySaveStatusText, monthNavigationErrorText,
     onCurrentUserLeftProfile, resetDraftVisibleModules, saveVisibleModules, setActiveSidebarPrimaryPanel, setAutoExcludePartialMonths, setBudgetStartDate, setCalendarHeatmapVariant, setDraftModuleVisibility, setInviteEmail, setIsDashboardPanelOpen, setIsFutureMonthNavigationLocked,
     setIsSettingsPanelVisible, setMonthNavigationErrorText, setMonthNavigationStartMonth, setSelectedMonth, setShowHiddenCategories, setSimpleMode, signOut, simpleMode, userEmail, visibleCategories,
-    addBudgetLimit, amountInputRef, applyTransactionCategorySelection, budgetLimitEditorCategoryId, currentTransactionCreatorPaymentSourceOptions, deleteBudgetLimit, descriptionInputRef, draftPromptState, excludedMonthsSet, handleSaveTransaction,
+    amountInputRef, applyTransactionCategorySelection, budgetLimitCreatorRequest, budgetLimitsData, currentTransactionCreatorPaymentSourceOptions, descriptionInputRef, draftPromptState, excludedMonthsSet, handleSaveTransaction,
     incomePaymentSourceOptions, isQuickDayModeEnabled, isSaving, isSerialTransactionCreatorEnabled, isTransactionCreatorOpen, level1, newAmount, newDescription, newTransactionDate, openFloatingTransactionCreator,
     pinnedCategoryIds, pinnedTransactionShortcutCategoriesByType, recentTransactionShortcutCategoriesByType, recurringOptionItems, recurringSuggestionItems, resetTransactionCreator, selectedLevel2Id, selectedPaymentSplitItems, selectedRecurringTransactionId, selectedTagNames,
     selectedTransactionTypeId, setDraftPromptState, setErrorText, setIsQuickDayModeEnabled, setIsSerialTransactionCreatorEnabled, setNewAmount, setNewDescription, setQuickDayDate, setSelectedLevel2Id, setSelectedPaymentSplitItems,
-    setSelectedRecurringTransactionId, setSelectedTagNames, setSelectedTransactionCategoryId, setSelectedTransactionTypeIdWithPaymentSource, sortedLevel2ByParentIdForModal, sortedLevel3ByParentIdForModal, topTransactionShortcutCategoriesByType, togglePinnedCategory, updateBudgetLimit, activeLimitStates,
+    setSelectedRecurringTransactionId, setSelectedTagNames, setSelectedTransactionCategoryId, setSelectedTransactionTypeIdWithPaymentSource, sortedLevel2ByParentIdForModal, sortedLevel3ByParentIdForModal, topTransactionShortcutCategoriesByType, togglePinnedCategory, activeLimitStates,
     transactionCreatorLockedLevel1Id, transactionCreatorSuggestionId,
   })
   return (

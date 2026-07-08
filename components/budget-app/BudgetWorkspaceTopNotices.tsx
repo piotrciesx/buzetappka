@@ -5,7 +5,7 @@ import BudgetLimitAlertsPanel from '../BudgetLimitAlertsPanel'
 import ProfileMonthNotePanel from '../ProfileMonthNotePanel'
 import type { PinnedWorkspaceCategory } from '../../lib/budgetAppSummary'
 import type { Category } from '../../lib/budgetPageTypes'
-import type { BudgetLimitUsageState } from '../../lib/useBudgetLimits'
+import type { BudgetLimitView } from '../BudgetLimitIndicator'
 
 type OpenedNotice = 'alert' | 'note' | 'sort' | null
 
@@ -16,7 +16,7 @@ type BudgetWorkspaceTopNoticesProps = {
   selectedMonth: string
   isBudgetLimitsVisible: boolean
   activeBudgetLimitsCount: number
-  activeBudgetLimitAlerts: BudgetLimitUsageState[]
+  activeBudgetLimitAlerts: BudgetLimitView[]
   categoriesById: Record<string, Category>
   pinnedWorkspaceCategories: PinnedWorkspaceCategory[]
   styles: Record<string, CSSProperties>

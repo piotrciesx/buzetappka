@@ -1,13 +1,11 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import type { SaveBudgetLimitInput } from '../../lib/useBudgetLimits'
-import { getCategoryPathLabel } from '../../lib/budgetPageHelpers'
+import { buildBudgetLimitCreatorRequest } from '../../lib/budget-limits/treeBridge'
 import { getPendingRecurringTransactions } from '../../lib/recurringTransactions'
 import { buildFinancialGoalsPlan } from '../../lib/financialGoals'
 import { getEffectiveTransactionScope } from '../../lib/transactionScope'
 import { getProfileStorageKey, readProfileStorageValue } from '../../lib/profileStorage'
-import type { BudgetLimitView } from '../BudgetLimitIndicator'
 import { useBudgetOverlayProps } from './useBudgetOverlayProps'
 import { useBudgetPageMainPanelsProps } from './useBudgetPageMainPanelsProps'
 import { useBudgetWorkspaceSummary } from './useBudgetWorkspaceSummary'
@@ -15,9 +13,6 @@ import { useUserPublicProfile } from '../../lib/useUserPublicProfile'
 
 type BudgetAppControllerViewPropsContext = Record<string, any>
 
-const GLOBAL_BUDGET_LIMIT_KEY = '__global__'
-
-const getBudgetLimitKey = (categoryId: string | null) => categoryId || GLOBAL_BUDGET_LIMIT_KEY
 const getSnoozeStorageKey = (profileId: string, month: string) =>
   `budget-recurring-snooze:${profileId}:${month}`
 const getScopedSnoozeStorageKey = (userId: string, profileId: string, month: string) =>
@@ -49,18 +44,16 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     activeBudgetLimitAlerts,
     activeBudgetLimits,
     activeLimitStates,
-    addBudgetLimit,
-    budgetLimitEditorCategoryId,
+    budgetLimitCreatorRequest,
+    budgetLimitsData,
     categoriesById,
-    deleteBudgetLimit,
     editedBudgetLimitView: ignoredEditedBudgetLimitView,
     effectiveVisibleModules,
     getBudgetLimitView,
     isBudgetLimitsModuleEnabled,
     selectedMonth,
-    setBudgetLimitEditorCategoryId,
-    setErrorText,
-    updateBudgetLimit,
+    setActiveUtilityPanel,
+    setBudgetLimitCreatorRequest,
   } = ctx
 
   void ignoredEditedBudgetLimitView
@@ -109,14 +102,6 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     [ctx.profileId, ctx.userId, recurringSnoozes, selectedMonth]
   )
 
-  const editedBudgetLimitView = useMemo(() => {
-    if (budgetLimitEditorCategoryId === undefined) {
-      return null
-    }
-
-    return getBudgetLimitView(budgetLimitEditorCategoryId)
-  }, [budgetLimitEditorCategoryId, getBudgetLimitView])
-
   const {
     getSignedAmountForTransaction,
     getRootLevel1IdForCategory,
@@ -124,60 +109,19 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     getCategoryCountForSelectedMonth,
   } = ctx
 
-  const editedBudgetLimitCategoryLabel = useMemo(() => {
-    if (budgetLimitEditorCategoryId === null) {
-      return 'Wydatki'
-    }
+  const openBudgetLimitCreator = useCallback((categoryId: string | null) => {
+    const category = categoryId ? categoriesById[categoryId] : null
+    if (categoryId && category?.level !== 2 && category?.level !== 3) return
 
-    if (!budgetLimitEditorCategoryId) {
-      return ''
-    }
-
-    return getCategoryPathLabel(budgetLimitEditorCategoryId, categoriesById)
-  }, [budgetLimitEditorCategoryId, categoriesById])
-
-  const saveBudgetLimit = useCallback(
-    async (input: SaveBudgetLimitInput) => {
-      try {
-        if (editedBudgetLimitView) {
-          await updateBudgetLimit({
-            ...input,
-            id: editedBudgetLimitView.limit.id,
-          })
-        } else {
-          await addBudgetLimit(input)
-        }
-      } catch (error) {
-        setErrorText(error instanceof Error ? error.message : 'Nie udało się zapisać limitu.')
-        throw error
-      }
-    },
-    [addBudgetLimit, editedBudgetLimitView, setErrorText, updateBudgetLimit]
-  )
-
-  const removeBudgetLimit = useCallback(
-    async (limitId: string) => {
-      try {
-        await deleteBudgetLimit(limitId)
-      } catch (error) {
-        setErrorText(error instanceof Error ? error.message : 'Nie udało się usunąć limitu.')
-        throw error
-      }
-    },
-    [deleteBudgetLimit, setErrorText]
-  )
-
-  const disableEditedBudgetLimit = useCallback(
-    async (limitId: string) => {
-      try {
-        await deleteBudgetLimit(limitId, selectedMonth)
-      } catch (error) {
-        setErrorText(error instanceof Error ? error.message : 'Nie udało się wyłączyć limitu.')
-        throw error
-      }
-    },
-    [deleteBudgetLimit, selectedMonth, setErrorText]
-  )
+    const existingPlanId = getBudgetLimitView(categoryId)?.planId
+    setBudgetLimitCreatorRequest(buildBudgetLimitCreatorRequest(
+      categoryId,
+      category?.level ?? null,
+      selectedMonth,
+      existingPlanId
+    ))
+    setActiveUtilityPanel('budgetLimits')
+  }, [categoriesById, getBudgetLimitView, selectedMonth, setActiveUtilityPanel, setBudgetLimitCreatorRequest])
 
   const budgetLimitDataSnapshot = useMemo(
     () => ({
@@ -222,6 +166,10 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     getSumForCategoryForSelectedMonth,
     getCategoryCountForSelectedMonth,
     handleSnoozeRecurringReminder,
+    openBudgetLimitCreator,
+    budgetLimitCreatorRequest,
+    budgetLimitsData,
+    setBudgetLimitCreatorRequest,
   }
   const activeScopeTransactions = Array.isArray(ctx.activeScopeTransactions)
     ? ctx.activeScopeTransactions
@@ -556,20 +504,7 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
     },
   }
 
-  const overlaySectionProps = {
-    overlayProps: budgetPageOverlayProps,
-    budgetLimitEditorModalProps: {
-      isOpen: effectiveVisibleModules.budgetLimits && budgetLimitEditorCategoryId !== undefined,
-      categoryId: budgetLimitEditorCategoryId ?? null,
-      categoryLabel: editedBudgetLimitCategoryLabel,
-      selectedMonth,
-      existingLimit: (editedBudgetLimitView as BudgetLimitView | null)?.limit ?? null,
-      onClose: () => setBudgetLimitEditorCategoryId(undefined),
-      onSave: saveBudgetLimit,
-      onDelete: removeBudgetLimit,
-      onDisable: disableEditedBudgetLimit,
-    },
-  }
+  const overlaySectionProps = { overlayProps: budgetPageOverlayProps }
 
   return {
     budgetLimitDataSnapshot,

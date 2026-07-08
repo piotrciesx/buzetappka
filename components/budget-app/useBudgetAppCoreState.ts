@@ -10,6 +10,7 @@ import type {
   Transaction,
   TransactionPaymentSplit,
 } from '../../lib/budgetPageTypes'
+import type { BudgetLimitCreatorRequest } from '../../lib/budget-limits/treeBridge'
 
 export type MigrationPromptState = {
   categoryId: string
@@ -34,9 +35,8 @@ export function useBudgetAppCoreState() {
   const [migrationPromptState, setMigrationPromptState] = useState<MigrationPromptState | null>(
     null
   )
-  const [budgetLimitEditorCategoryId, setBudgetLimitEditorCategoryId] = useState<
-    string | null | undefined
-  >(undefined)
+  const [budgetLimitCreatorRequest, setBudgetLimitCreatorRequest] =
+    useState<BudgetLimitCreatorRequest | null>(null)
 
   const [openAddSubcategoryFor, setOpenAddSubcategoryFor] = useState<string | null>(null)
   const [newSubcategoryName, setNewSubcategoryName] = useState('')
@@ -61,7 +61,7 @@ export function useBudgetAppCoreState() {
     activeUtilityPanel,
     activeScopeTransactions,
     amountInputRef,
-    budgetLimitEditorCategoryId,
+    budgetLimitCreatorRequest,
     categories,
     descriptionInputRef,
     errorText,
@@ -75,7 +75,7 @@ export function useBudgetAppCoreState() {
     setActiveSidebarPrimaryPanel,
     setActiveUtilityPanel,
     setActiveScopeTransactions,
-    setBudgetLimitEditorCategoryId,
+    setBudgetLimitCreatorRequest,
     setCategories,
     setErrorText,
     setIsDashboardPanelOpen,

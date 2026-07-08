@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import type { Category, Transaction } from '../lib/budgetPageTypes'
 import type { BudgetLimitPlanDraft } from '../lib/budget-limits/data'
-import { useBudgetLimitsData } from '../lib/budget-limits/useBudgetLimitsData'
+import type { ReturnTypeOfUseBudgetLimitsData } from '../lib/budget-limits/useBudgetLimitsData'
+import type { BudgetLimitCreatorRequest } from '../lib/budget-limits/treeBridge'
 import {
   buildBudgetLimitCreatorViewModel,
   buildBudgetLimitDetailsViewModel,
@@ -26,6 +27,9 @@ type Props = {
   transactions: Transaction[]
   budgetStartDate?: string | null
   getSignedAmountForTransaction: (transaction: Transaction) => number
+  data: ReturnTypeOfUseBudgetLimitsData
+  creatorRequest: BudgetLimitCreatorRequest | null
+  onCreatorRequestHandled: () => void
 }
 
 const normalizeThresholds = (text: string) =>
@@ -54,7 +58,7 @@ const usageColor = (status: BudgetLimitCardViewModel['status']) => {
 }
 
 export default function BudgetLimitsV1Panel(props: Props) {
-  const data = useBudgetLimitsData({ ...props })
+  const { creatorRequest, data, onCreatorRequestHandled } = props
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [draft, setDraft] = useState<BudgetLimitPlanDraft | null>(null)
   const [busy, setBusy] = useState(false)
@@ -69,6 +73,39 @@ export default function BudgetLimitsV1Panel(props: Props) {
     window.addEventListener('budget-open-budget-limit-create', openCreate)
     return () => window.removeEventListener('budget-open-budget-limit-create', openCreate)
   }, [props.selectedMonth])
+
+  useEffect(() => {
+    const request = creatorRequest
+    if (!request) return
+
+    const plan = request.existingPlanId
+      ? data.plans.find((item) => item.id === request.existingPlanId)
+      : undefined
+    const version = plan
+      ? data.versions
+        .filter((item) => item.plan_id === plan.id && item.effective_from <= `${request.effectiveMonth}-01`)
+        .at(-1)
+      : undefined
+    const creator = buildBudgetLimitCreatorViewModel(request.effectiveMonth, plan, version)
+    const categoryName = request.categoryId ? props.categoriesById[request.categoryId]?.name : null
+
+    setDraft({
+      ...creator.draft,
+      name: categoryName || 'Wszystkie wydatki',
+      scope_type: request.scopeType,
+      category_id: request.categoryId,
+      effective_month: request.effectiveMonth,
+    })
+    setSelectedId(plan?.id ?? null)
+    onCreatorRequestHandled()
+  }, [creatorRequest, data.plans, data.versions, onCreatorRequestHandled, props.categoriesById])
+
+  const getTechnicalName = (draftValue: BudgetLimitPlanDraft) =>
+    draftValue.scope_type === 'global_expenses'
+      ? 'Wszystkie wydatki'
+      : draftValue.category_id
+        ? props.categoriesById[draftValue.category_id]?.name || 'Limit kategorii'
+        : 'Limit kategorii'
 
   const selected = data.plans.find((plan) => plan.id === selectedId) || null
   const selectedVersion = selected
@@ -187,7 +224,6 @@ export default function BudgetLimitsV1Panel(props: Props) {
           </div>
         </div>
         <div data-ui-management-form="true">
-          <label>Nazwa<input value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} /></label>
           <label>Typ<select value={draft.scope_type} onChange={(event) => setDraft({ ...draft, scope_type: event.target.value as BudgetLimitPlanDraft['scope_type'], category_id: event.target.value === 'global_expenses' ? null : draft.category_id })}><option value="category_l2">Miesięczny L2</option><option value="category_l3">Miesięczny L3</option><option value="global_expenses">Globalny Wydatki</option></select></label>
           {draft.scope_type !== 'global_expenses' && <label>Kategoria<select value={draft.category_id || ''} onChange={(event) => setDraft({ ...draft, category_id: event.target.value || null })}><option value="">Wybierz</option>{categoryOptions.filter((category) => category.level === (draft.scope_type === 'category_l2' ? 2 : 3)).map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select></label>}
           <label>Kwota limitu<input type="number" min="0.01" step="0.01" value={draft.limit_amount || ''} onChange={(event) => setDraft({ ...draft, limit_amount: Number(event.target.value) })} /></label>
@@ -197,7 +233,7 @@ export default function BudgetLimitsV1Panel(props: Props) {
           <label>Status<select value={draft.status} onChange={(event) => setDraft({ ...draft, status: event.target.value as BudgetLimitPlanDraft['status'] })}><option value="active">Aktywny</option><option value="inactive">Nieaktywny</option></select></label>
           {notice && <p role="status" data-ui-management-inline-notice="true">{notice}</p>}
           <div data-ui-action-group="true">
-            <PrimaryAction disabled={busy || !draft.name.trim() || draft.limit_amount <= 0 || (draft.scope_type !== 'global_expenses' && !draft.category_id)} onClick={() => void run(async () => { await (draft.id ? data.updatePlan(draft) : data.createPlan(draft)); setDraft(null) })}>{draft.id ? 'Zapisz wersję' : 'Dodaj limit'}</PrimaryAction>
+            <PrimaryAction disabled={busy || draft.limit_amount <= 0 || (draft.scope_type !== 'global_expenses' && !draft.category_id)} onClick={() => void run(async () => { const normalizedDraft = { ...draft, name: getTechnicalName(draft) }; await (draft.id ? data.updatePlan(normalizedDraft) : data.createPlan(normalizedDraft)); setDraft(null) })}>{draft.id ? 'Zapisz wersję' : 'Dodaj limit'}</PrimaryAction>
             <SecondaryAction onClick={() => setDraft(null)}>Anuluj</SecondaryAction>
           </div>
         </div>

@@ -1,11 +1,13 @@
 'use client'
 
 import type { CSSProperties } from 'react'
-import type { BudgetLimit, BudgetLimitAlertState } from '../lib/budgetPageTypes'
+import type { BudgetLimitAlertState } from '../lib/budgetPageTypes'
 import { uiTypographyTokens } from '../lib/uiFoundation'
 
 export type BudgetLimitView = {
-  limit: BudgetLimit
+  planId: string
+  categoryId: string | null
+  amount: number
   usageAmount: number
   usagePercent: number
   alertState: BudgetLimitAlertState
@@ -78,7 +80,7 @@ export default function BudgetLimitIndicator({ view, variant = 'default' }: Prop
   if (variant === 'level1') {
     return (
       <div style={wrapStyle} data-budget-limit-indicator="level1">
-        <span data-budget-limit-text="true">Limit miesięczny: {formatMoney(view.limit.amount)}</span>
+        <span data-budget-limit-text="true">Limit miesięczny: {formatMoney(view.amount)}</span>
         <div data-budget-limit-level1-progress="true">
           <span style={barStyle} data-budget-limit-bar="true">
             <span
@@ -111,7 +113,7 @@ export default function BudgetLimitIndicator({ view, variant = 'default' }: Prop
         </span>
       )}
       <span data-budget-limit-text="true">
-        {formatMoney(view.usageAmount)} / {formatMoney(view.limit.amount)}
+        {formatMoney(view.usageAmount)} / {formatMoney(view.amount)}
       </span>
       <strong
         style={{ color, fontWeight: uiTypographyTokens.weight.semibold }}

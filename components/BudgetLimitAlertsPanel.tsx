@@ -6,7 +6,7 @@ import {
   uiControlPrimitives,
   uiTypographyTokens,
 } from '../lib/uiFoundation'
-import type { BudgetLimitUsageState } from '../lib/useBudgetLimits'
+import type { BudgetLimitView } from './BudgetLimitIndicator'
 import {
   ReminderCard,
   ReminderStatusBadge,
@@ -14,7 +14,7 @@ import {
 import DropdownShell from './dropdown/DropdownShell'
 
 type Props = {
-  alerts: BudgetLimitUsageState[]
+  alerts: BudgetLimitView[]
   categoriesById: Record<string, Category>
   styles: Record<string, CSSProperties>
   onOpenLimit: (categoryId: string | null) => void
@@ -70,7 +70,7 @@ const getCategoryLabel = (
   return categoriesById[categoryId]?.name || 'Kategoria usunięta'
 }
 
-const getAlertMessage = (alert: BudgetLimitUsageState) => {
+const getAlertMessage = (alert: BudgetLimitView) => {
   if (alert.alertState.level === 'exceeded') {
     return 'Przekroczono limit'
   }
@@ -126,15 +126,15 @@ export default function BudgetLimitAlertsPanel({
             <div style={styles.emptyText}>Brak aktywnych alertów limitów w tym miesiącu.</div>
           ) : (
             sortedAlerts.map((alert) => {
-              const categoryLabel = getCategoryLabel(alert.limit.category_id, categoriesById)
+              const categoryLabel = getCategoryLabel(alert.categoryId, categoriesById)
 
               return (
                 <button
-                  key={alert.limit.id}
+                  key={alert.planId}
                   type="button"
                   style={itemButtonStyle}
                   onClick={() => {
-                    onOpenLimit(alert.limit.category_id)
+                    onOpenLimit(alert.categoryId)
                     setIsOpen(false)
                   }}
                 >
@@ -143,7 +143,7 @@ export default function BudgetLimitAlertsPanel({
                       {categoryLabel}
                     </div>
                     <div style={metaStyle}>
-                    {formatMoney(alert.usageAmount)} / {formatMoney(alert.limit.amount)} ·{' '}
+                    {formatMoney(alert.usageAmount)} / {formatMoney(alert.amount)} ·{' '}
                     {alert.usagePercent.toFixed(1)}%
                     </div>
                     <ReminderStatusBadge

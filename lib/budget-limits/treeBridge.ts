@@ -1,12 +1,24 @@
-export type BudgetLimitTreeOpenRequest = {
+export type BudgetLimitCreatorRequest = {
+  requestId: number
+  scopeType: 'global_expenses' | 'category_l2' | 'category_l3'
   categoryId: string | null
-  planId?: string
+  effectiveMonth: string
+  existingPlanId?: string
 }
 
-export const buildBudgetLimitTreeOpenRequest = (
+export const buildBudgetLimitCreatorRequest = (
   categoryId: string | null,
-  planId?: string
-): BudgetLimitTreeOpenRequest => ({ categoryId, planId })
-
-// TODO(budget-limits-v1): replace the legacy category editor entry with planId navigation
-// after production has the stage-2 migration and legacy/new writes are dual-written.
+  categoryLevel: number | null,
+  effectiveMonth: string,
+  existingPlanId?: string
+): BudgetLimitCreatorRequest => ({
+  requestId: Date.now(),
+  scopeType: categoryId === null
+    ? 'global_expenses'
+    : categoryLevel === 2
+      ? 'category_l2'
+      : 'category_l3',
+  categoryId,
+  effectiveMonth,
+  existingPlanId,
+})
