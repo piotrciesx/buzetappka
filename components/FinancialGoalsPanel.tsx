@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { DragEndEvent } from "@dnd-kit/core";
@@ -10,7 +10,6 @@ import {
 } from "../lib/budgetPageTypes";
 import {
   buildFinancialGoalsPlan,
-  buildFinancialGoalsMomentum,
   getEffectiveMonthPriorityRowsForMonth,
   getFinancialGoalAllocationPercentagesForMonth,
   getFinancialGoalFirstProtectedMonth,
@@ -21,7 +20,6 @@ import FinancialGoalEditModal from "./financial-goals/FinancialGoalEditModal";
 import FinancialGoalsList from "./financial-goals/FinancialGoalsList";
 import FinancialGoalsModeControls from "./financial-goals/FinancialGoalsModeControls";
 import FinancialGoalsSummary from "./financial-goals/FinancialGoalsSummary";
-import CategoryIcon from "./CategoryIcon";
 import type {
   FinancialGoalsPanelProps,
   FormState,
@@ -423,11 +421,6 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
 
   const monthBalance = plan.monthlyBalances[selectedMonth] || 0;
   const monthSurplus = plan.monthlySurplus[selectedMonth] || 0;
-  const momentum = useMemo(
-    () => buildFinancialGoalsMomentum(goals, plan.progressByGoalId, selectedMonth),
-    [goals, plan.progressByGoalId, selectedMonth],
-  );
-
   const allocationGoalIds = baseActiveGoalIds;
 
   const totalPercent = allocationGoalIds.reduce(
@@ -649,11 +642,9 @@ export default function FinancialGoalsPanel(props: FinancialGoalsPanelProps) {
         monthBalance={monthBalance}
         monthSurplus={monthSurplus}
         lockedMonthsSet={lockedMonthsSet}
+        activeGoalsCount={currentGoals.length}
+        effectiveMode={effectiveMode}
       />
-
-      <div data-financial-goals-momentum="true">
-        Wpłaty: {momentum.depositsThisMonth.toFixed(2)} zł · wypłaty: {momentum.withdrawalsThisMonth.toFixed(2)} zł · netto: {momentum.netChangeThisMonth.toFixed(2)} zł · uzbierano: {momentum.totalCollected.toFixed(2)} zł · brakuje: {momentum.totalRemaining.toFixed(2)} zł
-      </div>
 
       <FinancialGoalsList
         activeGoals={currentGoals}

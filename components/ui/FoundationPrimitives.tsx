@@ -140,6 +140,64 @@ export function SectionHeader({
   );
 }
 
+
+
+type AuxiliarySummaryStripProps = HTMLAttributes<HTMLDivElement> & {
+  children: ReactNode;
+  density?: FoundationDensity;
+  columns?: 3 | 4 | "auto";
+};
+
+export function AuxiliarySummaryStrip({
+  children,
+  density = "regular",
+  columns = "auto",
+  ...props
+}: AuxiliarySummaryStripProps) {
+  return (
+    <div
+      {...props}
+      data-ui-auxiliary-summary="true"
+      data-ui-density={density}
+      data-ui-auxiliary-summary-columns={columns}
+    >
+      <div data-ui-auxiliary-summary-grid="true">{children}</div>
+    </div>
+  );
+}
+
+type AuxiliarySummaryItemProps = HTMLAttributes<HTMLElement> & {
+  icon?: ReactNode;
+  label: ReactNode;
+  value: ReactNode;
+  description?: ReactNode;
+  tone?: FoundationTone;
+};
+
+export function AuxiliarySummaryItem({
+  icon,
+  label,
+  value,
+  description,
+  tone = "neutral-blue",
+  ...props
+}: AuxiliarySummaryItemProps) {
+  return (
+    <article {...props} data-ui-auxiliary-summary-item="true" data-ui-tone={tone}>
+      {icon && (
+        <span data-ui-auxiliary-summary-icon="true" data-ui-tone={tone} aria-hidden="true">
+          {icon}
+        </span>
+      )}
+      <span data-ui-auxiliary-summary-copy="true">
+        <span data-ui-auxiliary-summary-label="true">{label}</span>
+        <strong data-ui-auxiliary-summary-value="true">{value}</strong>
+        {description && <small data-ui-auxiliary-summary-description="true">{description}</small>}
+      </span>
+    </article>
+  );
+}
+
 type CollapsibleSecondarySectionProps = {
   icon?: ReactNode;
   title: ReactNode;

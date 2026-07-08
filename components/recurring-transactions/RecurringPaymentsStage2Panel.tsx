@@ -8,7 +8,7 @@ import type { RecurringPlanNameConflict } from '../../lib/recurring-payments/use
 import { useRecurringPaymentsData } from '../../lib/recurring-payments/useRecurringPaymentsData'
 import { buildRecurringPaymentCardViewModel, buildRecurringPaymentCreatorViewModel, buildRecurringPaymentDetailsViewModel } from '../../lib/recurring-payments/viewModels'
 import CategoryIcon from '../CategoryIcon'
-import { DangerAction, ManagementSelect, PrimaryAction, SecondaryAction } from '../ui/FoundationPrimitives'
+import { AuxiliarySummaryItem, AuxiliarySummaryStrip, DangerAction, ManagementSelect, PrimaryAction, SecondaryAction } from '../ui/FoundationPrimitives'
 import RecurringPaymentPlanForm from './RecurringPaymentPlanForm'
 
 type Props = {
@@ -303,14 +303,36 @@ export default function RecurringPaymentsStage2Panel({
 
   const listContent = (
     <>
-      <div data-ui-management-auxiliary="true">
-        <div data-ui-management-strip-inner="true">
-          <div data-ui-management-strip-item="true"><strong>Wymaga reakcji</strong><span>Zaległe: {attention.overdue}</span></div>
-          <div data-ui-management-strip-item="true"><strong>Dzisiaj</strong><span>{attention.today}</span></div>
-          <div data-ui-management-strip-item="true"><strong>Nadchodzące</strong><span>{attention.upcoming}</span></div>
-          <div data-ui-management-strip-item="true"><strong>Wstrzymane</strong><span>{attention.paused}</span></div>
-        </div>
-      </div>
+      <AuxiliarySummaryStrip columns={4}>
+        <AuxiliarySummaryItem
+          tone="information-indigo"
+          icon={<CategoryIcon iconKey="bell" size="summary" />}
+          label="Wymaga reakcji"
+          value={attention.overdue}
+          description="Zaległe wystąpienia"
+        />
+        <AuxiliarySummaryItem
+          tone="information-blue"
+          icon={<CategoryIcon iconKey="calendar" size="summary" />}
+          label="Dzisiaj"
+          value={attention.today}
+          description={attention.today === 1 ? 'płatność' : 'płatności'}
+        />
+        <AuxiliarySummaryItem
+          tone="information-cyan"
+          icon={<CategoryIcon iconKey="clock" size="summary" />}
+          label="Nadchodzące"
+          value={attention.upcoming}
+          description="Najbliższe terminy"
+        />
+        <AuxiliarySummaryItem
+          tone="information-teal"
+          icon={<CategoryIcon iconKey="pause" size="summary" />}
+          label="Wstrzymane"
+          value={attention.paused}
+          description="Plany w pauzie"
+        />
+      </AuxiliarySummaryStrip>
 
       <div data-ui-management-toolbar="true">
         <div data-ui-management-toolbar-group="true">
