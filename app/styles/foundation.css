@@ -996,6 +996,203 @@
   color: var(--ui-financial-expense);
 }
 
+
+/* Auxiliary Summary Strip: shared calm metric strip for management modules. */
+[data-ui-auxiliary-summary="true"] {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--ui-day-accent-border-subtle);
+  border-radius: var(--mgmt-radius-card);
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,251,255,0.94));
+  box-shadow: none;
+}
+
+[data-financial-goals-summary="true"] {
+  width: 100%;
+}
+
+[data-ui-auxiliary-summary-grid="true"] {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+[data-ui-auxiliary-summary-columns="3"] [data-ui-auxiliary-summary-grid="true"] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+[data-ui-auxiliary-summary-columns="2"] [data-ui-auxiliary-summary-grid="true"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+[data-ui-auxiliary-summary-item="true"] {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--ui-space-5);
+  padding: 18px 22px;
+}
+
+[data-ui-auxiliary-summary-item="true"] + [data-ui-auxiliary-summary-item="true"] {
+  border-inline-start: 1px solid rgba(15, 48, 120, 0.11);
+}
+
+[data-ui-auxiliary-summary-icon="true"] {
+  display: grid;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  border: 1px solid var(--ui-tone-border, rgba(8, 44, 122, 0.14));
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-tone-surface, rgba(237, 244, 255, 0.96));
+  color: var(--ui-tone-text, var(--ui-color-primary-navy));
+}
+
+[data-ui-auxiliary-summary-copy="true"] {
+  min-width: 0;
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+[data-ui-auxiliary-summary-label="true"] {
+  color: var(--ui-text-secondary);
+  font-size: var(--ui-type-t5);
+  font-weight: var(--ui-font-weight-semibold);
+  line-height: var(--ui-line-height-compact);
+}
+
+[data-ui-auxiliary-summary-value="true"] {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--ui-color-primary-navy);
+  font-size: clamp(1.05rem, 1.1vw, 1.3rem);
+  font-weight: var(--ui-font-weight-bold);
+  line-height: var(--ui-line-height-heading);
+}
+
+[data-ui-auxiliary-summary-description="true"] {
+  color: var(--ui-text-secondary);
+  font-size: var(--ui-type-t5);
+  font-weight: var(--ui-font-weight-medium);
+  line-height: var(--ui-line-height-body);
+}
+
+/* Collapsible Support Section: shared helper/settings section. */
+[data-ui-collapsible-support="true"] {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--ui-day-accent-border-subtle);
+  border-radius: var(--mgmt-radius-card);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: none;
+}
+
+[data-ui-collapsible-support-trigger="true"] {
+  width: 100%;
+  min-height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-6);
+  padding: 16px 20px;
+  border: 0;
+  border-radius: 0;
+  background: linear-gradient(180deg, rgba(248, 251, 255, 0.98), rgba(241, 247, 255, 0.86));
+  color: var(--ui-color-primary-navy);
+  text-align: left;
+  cursor: pointer;
+}
+
+[data-ui-collapsible-support-trigger="true"]:hover {
+  background: rgba(241, 247, 255, 0.98);
+}
+
+[data-ui-collapsible-support-main="true"] {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-5);
+}
+
+[data-ui-collapsible-support-icon="true"] {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  inline-size: 42px;
+  block-size: 42px;
+  border: 1px solid var(--ui-tone-border, rgba(8, 44, 122, 0.14));
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-tone-surface, rgba(237, 244, 255, 0.94));
+  color: var(--ui-tone-text, var(--ui-color-primary-navy));
+}
+
+[data-ui-collapsible-support-copy="true"] {
+  min-width: 0;
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+[data-ui-collapsible-support-copy="true"] strong {
+  color: var(--ui-color-primary-navy);
+  font-size: var(--ui-type-t2);
+  font-weight: var(--ui-font-weight-bold);
+  line-height: var(--ui-line-height-heading);
+}
+
+[data-ui-collapsible-support-copy="true"] small {
+  color: var(--ui-text-secondary);
+  font-size: var(--ui-type-t4);
+  font-weight: var(--ui-font-weight-medium);
+  line-height: var(--ui-line-height-body);
+}
+
+[data-ui-collapsible-support-chevron="true"] {
+  flex: 0 0 auto;
+  inline-size: 12px;
+  block-size: 12px;
+  border-inline-end: 2px solid var(--ui-day-accent);
+  border-block-end: 2px solid var(--ui-day-accent);
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 180ms ease;
+}
+
+[data-ui-collapsible-support="true"][data-ui-collapsed="false"] [data-ui-collapsible-support-chevron="true"] {
+  transform: rotate(225deg) translateY(-2px);
+}
+
+[data-ui-collapsible-support-content="true"] {
+  display: grid;
+  grid-template-rows: 1fr;
+  border-block-start: 1px solid rgba(15, 48, 120, 0.10);
+  transition: grid-template-rows 220ms ease, opacity 180ms ease;
+}
+
+[data-ui-collapsible-support="true"][data-ui-collapsed="true"] [data-ui-collapsible-support-content="true"] {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  border-block-start-color: transparent;
+}
+
+[data-ui-collapsible-support-content-clip="true"] {
+  min-height: 0;
+  overflow: hidden;
+}
+
+[data-ui-collapsible-support-content-inner="true"] {
+  padding: 20px;
+}
+
+[data-ui-collapsible-support="true"][data-ui-collapsed="true"] [data-ui-collapsible-support-content-inner="true"] {
+  padding-block: 0;
+}
+
+[data-ui-support-reminder-list="true"] {
+  display: grid;
+  gap: var(--ui-space-5);
+}
+
 /* Action Group */
 [data-ui-action-group="true"] {
   justify-self: end;
@@ -5236,7 +5433,6 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
 [data-ui-management-collapsible="true"],
 [data-ui-payment-sources-shell="true"] [data-ui-collapsible-secondary="true"],
 [data-ui-payment-sources-shell="true"] [data-ui-settings-strip="true"][data-ui-management-strip="true"],
-[data-financial-goals-summary="true"],
 [data-financial-goals-momentum="true"] {
   width: 100%;
   border: 1px solid var(--ui-day-accent-border-subtle);
@@ -5857,16 +6053,12 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
 }
 
 [data-ui-foundation-only="true"] [data-ui-management-strip-item="true"] > span,
-[data-ui-foundation-only="true"] [data-financial-goals-summary="true"] strong,
-[data-ui-foundation-only="true"] [data-financial-goals-summary="true"] small,
 [data-ui-foundation-only="true"] [data-financial-goals-momentum="true"] {
   color: transparent;
   user-select: none;
 }
 
 [data-ui-foundation-only="true"] [data-ui-management-strip-item="true"] > span::before,
-[data-ui-foundation-only="true"] [data-financial-goals-summary="true"] strong::before,
-[data-ui-foundation-only="true"] [data-financial-goals-summary="true"] small::before,
 [data-ui-foundation-only="true"] [data-financial-goals-momentum="true"]::before {
   content: "";
   display: block;
@@ -6137,7 +6329,6 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   [data-ui-management-auxiliary="true"],
   [data-ui-management-collapsible="true"],
   [data-ui-payment-sources-shell="true"] [data-ui-collapsible-secondary="true"],
-  [data-financial-goals-summary="true"],
   [data-financial-goals-momentum="true"] {
     border-radius: 11px;
     padding: 10px;
@@ -6157,6 +6348,55 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   [data-ui-management-strip-item="true"] + [data-ui-management-strip-item="true"] {
     border-left: 0;
     border-top: 1px solid rgba(15, 48, 120, 0.08);
+  }
+
+
+  [data-ui-auxiliary-summary-grid="true"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  [data-ui-auxiliary-summary-columns="3"] [data-ui-auxiliary-summary-grid="true"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-ui-auxiliary-summary-item="true"] {
+    padding: 12px 14px;
+    column-gap: 10px;
+  }
+
+  [data-ui-auxiliary-summary-item="true"] + [data-ui-auxiliary-summary-item="true"] {
+    border-inline-start: 0;
+  }
+
+  [data-ui-auxiliary-summary-item="true"]:nth-child(even) {
+    border-inline-start: 1px solid rgba(15, 48, 120, 0.08);
+  }
+
+  [data-ui-auxiliary-summary-item="true"]:nth-child(n + 3) {
+    border-block-start: 1px solid rgba(15, 48, 120, 0.08);
+  }
+
+  [data-ui-auxiliary-summary-icon="true"] {
+    inline-size: 38px;
+    block-size: 38px;
+  }
+
+  [data-ui-auxiliary-summary-value="true"] {
+    font-size: 1rem;
+  }
+
+  [data-ui-collapsible-support-trigger="true"] {
+    min-height: 64px;
+    padding: 13px 14px;
+  }
+
+  [data-ui-collapsible-support-icon="true"] {
+    inline-size: 38px;
+    block-size: 38px;
+  }
+
+  [data-ui-collapsible-support-content-inner="true"] {
+    padding: 14px;
   }
 
   [data-ui-management-toolbar="true"] {

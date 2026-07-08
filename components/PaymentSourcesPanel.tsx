@@ -30,7 +30,7 @@ import ManagementModuleShell from "./ui/ManagementModuleShell";
 import { useManagementScreenStack } from "./ui/useManagementScreenStack";
 import { EmptyState } from "./utility-panels/utilityPanelPrimitives";
 import {
-  CollapsibleSecondarySection,
+  CollapsibleSupportSection,
   CreatorModal,
   CreatorSection,
   CreatorSummaryCard,
@@ -967,10 +967,11 @@ export default function PaymentSourcesPanel({
       data-ui-utility-modal-size="xl"
       style={paymentSourcesShellStyle}
     >
-      <CollapsibleSecondarySection
+      <CollapsibleSupportSection
         tone="neutral-blue"
         icon={<CategoryIcon iconKey="system-payment-sources" size="small" />}
         title="Domyślne źródła płatności"
+        description="Ustaw źródła podpowiadane przy nowych przychodach i wydatkach."
         help={
           <HelpHint label="Ustaw źródła, które będą podpowiadane przy nowych wpisach." />
         }
@@ -1052,7 +1053,7 @@ export default function PaymentSourcesPanel({
             </PrimaryAction>
           </div>
         </div>
-      </CollapsibleSecondarySection>
+      </CollapsibleSupportSection>
 
       {statusText && (
         <div data-ui-status-banner="true" data-ui-tone="success">
