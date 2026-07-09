@@ -350,7 +350,7 @@ export default function BudgetLimitsV1Panel(props: Props) {
 
   if (details) {
     return (
-      <section data-budget-limits-view="details" data-ui-management-shell="true" data-ui-foundation-only="true" data-ui-utility-modal-size="xl">
+      <section data-budget-limits-view="details" data-ui-management-shell="true" data-ui-utility-modal-size="xl">
         {topContent}
         <div data-ui-management-split="true">
           <div data-ui-management-split-list="true">
@@ -423,7 +423,7 @@ export default function BudgetLimitsV1Panel(props: Props) {
   }
 
   return (
-    <section data-budget-limits-view="list" data-ui-management-shell="true" data-ui-foundation-only="true" data-ui-utility-modal-size="xl">
+    <section data-budget-limits-view="list" data-ui-management-shell="true" data-ui-utility-modal-size="xl">
       {topContent}
       <div data-ui-management-list="true" data-ui-large-record-list="true">
         {data.loading ? <p>Ładowanie…</p> : cards.length === 0 ? <p data-ui-empty-block="true">Brak limitów w tym miesiącu.</p> : cards.map((card) => renderCard(card))}

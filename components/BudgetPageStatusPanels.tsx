@@ -7,7 +7,7 @@ import ProfileMonthNotePanel from './ProfileMonthNotePanel'
 import UserProfileMenu from './UserProfileMenu'
 import UserAvatar from './UserAvatar'
 import DropdownShell from './dropdown/DropdownShell'
-import type { BudgetUtilityPanel } from './BudgetPageMainPanels'
+import { isManagementWorkspacePanel, type BudgetUtilityPanel } from './BudgetPageMainPanels'
 import type { AppModuleVisibility } from '../lib/useAppModuleVisibility'
 import { uiInputApi } from '../lib/uiFoundation'
 
@@ -232,6 +232,7 @@ export default function BudgetPageStatusPanels({
   const [topbarSearchText, setTopbarSearchText] = useState('')
   const topbarActionsRef = useRef<HTMLDivElement | null>(null)
   const topbarSearchInputRef = useRef<HTMLInputElement | null>(null)
+  const isManagementWorkspaceMode = isManagementWorkspacePanel(activeUtilityPanel)
   const pinnedCategoryParts = pinnedCategories.map((category) => ({
     id: category.id,
     parts: category.label
@@ -509,6 +510,7 @@ export default function BudgetPageStatusPanels({
       </aside>
 
       <div data-budget-shell-content="true">
+        {!isManagementWorkspaceMode && (
         <div data-budget-header-row="true">
           <div data-budget-brand="true">
             <img
@@ -736,7 +738,7 @@ export default function BudgetPageStatusPanels({
               data-topbar-action="notifications"
               aria-label="Powiadomienia"
               title="Powiadomienia"
-              data-active={activeUtilityPanel === 'recurringTransactions' ? 'true' : 'false'}
+              data-active="false"
               disabled={!visibleModules.recurringTransactions}
               onClick={() => openPanel('recurringTransactions')}
             >
@@ -755,6 +757,7 @@ export default function BudgetPageStatusPanels({
             </button>
           </div>
         </div>
+        )}
 
         {activeSidebarPrimaryPanel && (
           <button

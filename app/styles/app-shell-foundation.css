@@ -56,7 +56,7 @@ body {
 }
 
 [data-budget-header-row="true"] {
-  grid-column: 1 / -1;
+  grid-column: 2;
   grid-row: 1;
   position: relative;
   z-index: var(--ui-z-popover);
@@ -248,14 +248,14 @@ body {
 
 [data-budget-sidebar="true"] {
   grid-column: 1;
-  grid-row: 2;
+  grid-row: 1 / -1;
   position: relative;
   z-index: var(--ui-z-raised);
   display: flex;
   min-width: 0;
   min-height: 0;
   width: 100%;
-  height: var(--app-shell-content-height);
+  height: 100%;
   margin: 0;
   padding: var(--ui-space-9) var(--ui-spacing-xl);
   overflow: hidden;
@@ -1307,11 +1307,6 @@ body {
   max-height: var(--ui-modal-max-height-xl);
 }
 
-[data-budget-utility-panel="true"][data-utility-panel-kind="financialGoals"] {
-  max-width: min(1180px, calc(100vw - 48px));
-  max-height: var(--ui-modal-max-height-xl);
-}
-
 /* Utility Modal XL: the shell owns modal sizing; module content never does. */
 [data-budget-utility-panel="true"][data-ui-utility-modal-size="xl"],
 [data-budget-utility-panel="true"]:has([data-ui-utility-modal-size="xl"]),
@@ -1346,6 +1341,7 @@ body {
    Rollback is owned by USE_MANAGEMENT_WORKSPACE in BudgetPageMainPanels.tsx. */
 [data-budget-app="true"][data-app-shell-mode="management-workspace"] {
   grid-template-columns: 84px minmax(0, 1fr);
+  grid-template-rows: minmax(0, calc(100dvh - var(--app-shell-page-y) - var(--ui-space-9)));
 }
 
 [data-budget-app="true"][data-app-shell-mode="management-workspace"] [data-budget-header-row="true"] {
@@ -1405,7 +1401,10 @@ body {
 }
 
 [data-budget-app="true"][data-app-shell-mode="management-workspace"] [data-budget-workspace="true"] {
+  grid-column: 2;
+  grid-row: 1;
   grid-template-columns: minmax(0, 1fr);
+  height: 100%;
 }
 
 [data-budget-app="true"][data-app-shell-mode="management-workspace"] [data-budget-context-rail="true"] {
@@ -1413,6 +1412,7 @@ body {
 }
 
 [data-budget-app="true"][data-app-shell-mode="management-workspace"] [data-budget-workspace-main="true"] {
+  height: 100%;
   padding: 0;
   overflow: hidden;
 }
@@ -1435,22 +1435,23 @@ body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: var(--ui-spacing-toolbar-gap);
+  gap: var(--ui-space-6);
   min-width: 0;
-  padding: var(--ui-space-8) var(--ui-space-9) var(--ui-space-7);
+  min-height: 68px;
+  padding: var(--ui-space-4) var(--ui-space-7);
   border-bottom: 1px solid var(--app-shell-panel-border);
   background: var(--mgmt-surface, var(--app-shell-panel));
 }
 
 [data-management-workspace-heading="true"] {
   display: grid;
-  gap: var(--ui-space-4);
+  gap: var(--ui-space-2);
   min-width: 0;
 }
 
 [data-management-workspace-back="true"] {
   justify-self: start;
-  min-height: 32px;
+  min-height: 18px;
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -1467,31 +1468,34 @@ body {
 
 [data-management-workspace-copy="true"] {
   display: grid;
-  gap: var(--ui-space-3);
+  gap: var(--ui-space-1);
   min-width: 0;
 }
 
 [data-management-workspace-copy="true"] > h1 {
   margin: 0;
   color: var(--mgmt-navy, var(--app-shell-navy));
-  font-size: clamp(1.8rem, 1.52rem + 0.64vw, 2.24rem);
+  font-size: clamp(1.38rem, 1.18rem + 0.42vw, 1.62rem);
   font-weight: 620;
   letter-spacing: -0.026em;
   line-height: 1.08;
 }
 
 [data-management-workspace-copy="true"] > p {
-  max-width: 820px;
+  max-width: 760px;
   margin: 0;
   color: var(--ui-text-secondary);
-  font-size: var(--ui-type-body-sm);
-  line-height: var(--ui-line-height-body);
+  font-size: 0.84rem;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 [data-management-workspace-body="true"] {
   min-width: 0;
   min-height: 0;
-  padding: var(--ui-space-7) var(--ui-space-9) var(--ui-space-9);
+  padding: var(--ui-space-5) var(--ui-space-7) var(--ui-space-7);
   overflow: hidden;
   background: var(--mgmt-surface, var(--app-shell-panel));
 }
@@ -1718,37 +1722,4 @@ body {
     z-index: var(--ui-z-local-header);
   }
 
-}
-
-
-/* ========================================================================== */
-/* App Shell — Financial Goals local viewport contract                         */
-/* ========================================================================== */
-/* Local only: Financial Goals uses a local utility-panel height so the initial
-   scroll position closes on two full records, without showing the third one.
-   This intentionally does not change the global XL modal height. */
-[data-budget-utility-panel="true"][data-utility-panel-kind="financialGoals"] {
-  max-height: min(78dvh, 718px);
-}
-
-@media (max-height: 820px) {
-  [data-budget-utility-panel="true"][data-utility-panel-kind="financialGoals"] {
-    max-height: min(76dvh, 692px);
-  }
-}
-
-/* ========================================================================== */
-/* App Shell — Financial Goals single-scroll contract                          */
-/* ========================================================================== */
-/* Local only: keep the Financial Goals utility body fixed and let only the
-   goals record list viewport scroll. This mirrors the behavior of Payment
-   Sources without changing other utility panels. */
-[data-budget-utility-panel="true"][data-utility-panel-kind="financialGoals"] {
-  max-height: var(--ui-modal-max-height-xl);
-}
-
-[data-budget-utility-panel="true"][data-utility-panel-kind="financialGoals"] > [data-budget-utility-body="true"] {
-  display: grid;
-  grid-template-rows: minmax(0, 1fr);
-  overflow: hidden;
 }

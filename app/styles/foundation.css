@@ -1181,213 +1181,6 @@
 }
 
 
-/* Foundation visual rules v1 â€” large modules final polish. */
-:root {
-  --ui-text-technical: var(--ui-text-secondary);
-  /* Neutral Accent Palette: only non-semantic, cool UI accents.
-     Green/red/yellow/orange remain reserved for semantic states and balance maps. */
-  --ui-neutral-accent-1-surface: #e0f2fe;
-  --ui-neutral-accent-1-border: #bae6fd;
-  --ui-neutral-accent-1-text: #0369a1;
-  --ui-neutral-accent-2-surface: #ede9fe;
-  --ui-neutral-accent-2-border: #ddd6fe;
-  --ui-neutral-accent-2-text: #6d28d9;
-  --ui-neutral-accent-3-surface: #ecfeff;
-  --ui-neutral-accent-3-border: #a5f3fc;
-  --ui-neutral-accent-3-text: #06b6d4;
-  --ui-neutral-accent-4-surface: #e0e7ff;
-  --ui-neutral-accent-4-border: #c7d2fe;
-  --ui-neutral-accent-4-text: #4338ca;
-  --ui-neutral-accent-5-surface: #edf4ff;
-  --ui-neutral-accent-5-border: #d7e3f4;
-  --ui-neutral-accent-5-text: #3f5f7c;
-  --ui-neutral-accent-6-surface: #f3f0ff;
-  --ui-neutral-accent-6-border: #e4def8;
-  --ui-neutral-accent-6-text: #5b5b89;
-  --ui-large-section-icon-size: 42px;
-  --ui-large-section-icon-glyph-size: 20px;
-  --ui-large-record-hero-icon-size: var(--ui-icon-tile-size-goal);
-  --ui-large-record-hero-glyph-size: var(--ui-icon-glyph-size-goal);
-  --ui-large-record-hero-radius: var(--ui-icon-radius-goal);
-  --ui-metric-card-detail-min-height: 34px;
-  --ui-metric-progress-height: 6px;
-  --ui-metric-progress-track: rgba(8, 44, 122, 0.08);
-}
-
-[data-ui-tone="neutral-accent-1"] {
-  --ui-tone-surface: var(--ui-neutral-accent-1-surface);
-  --ui-tone-bg: var(--ui-neutral-accent-1-surface);
-  --ui-tone-border: var(--ui-neutral-accent-1-border);
-  --ui-tone-text: var(--ui-neutral-accent-1-text);
-}
-
-[data-ui-tone="neutral-accent-2"] {
-  --ui-tone-surface: var(--ui-neutral-accent-2-surface);
-  --ui-tone-bg: var(--ui-neutral-accent-2-surface);
-  --ui-tone-border: var(--ui-neutral-accent-2-border);
-  --ui-tone-text: var(--ui-neutral-accent-2-text);
-}
-
-[data-ui-tone="neutral-accent-3"] {
-  --ui-tone-surface: var(--ui-neutral-accent-3-surface);
-  --ui-tone-bg: var(--ui-neutral-accent-3-surface);
-  --ui-tone-border: var(--ui-neutral-accent-3-border);
-  --ui-tone-text: var(--ui-neutral-accent-3-text);
-}
-
-[data-ui-tone="neutral-accent-4"] {
-  --ui-tone-surface: var(--ui-neutral-accent-4-surface);
-  --ui-tone-bg: var(--ui-neutral-accent-4-surface);
-  --ui-tone-border: var(--ui-neutral-accent-4-border);
-  --ui-tone-text: var(--ui-neutral-accent-4-text);
-}
-
-[data-ui-tone="neutral-accent-5"] {
-  --ui-tone-surface: var(--ui-neutral-accent-5-surface);
-  --ui-tone-bg: var(--ui-neutral-accent-5-surface);
-  --ui-tone-border: var(--ui-neutral-accent-5-border);
-  --ui-tone-text: var(--ui-neutral-accent-5-text);
-}
-
-[data-ui-tone="neutral-accent-6"] {
-  --ui-tone-surface: var(--ui-neutral-accent-6-surface);
-  --ui-tone-bg: var(--ui-neutral-accent-6-surface);
-  --ui-tone-border: var(--ui-neutral-accent-6-border);
-  --ui-tone-text: var(--ui-neutral-accent-6-text);
-}
-
-[data-ui-large-module="true"] {
-  align-content: start;
-}
-
-[data-ui-payment-sources-shell="true"] {
-  padding-block-start: var(--ui-space-4);
-}
-
-[data-ui-large-section-header-icon="true"] {
-  inline-size: var(--ui-large-section-icon-size);
-  block-size: var(--ui-large-section-icon-size);
-  background: var(--ui-tone-surface, var(--ui-surface-hover));
-  border-color: var(--ui-tone-border, rgba(8, 44, 122, 0.12));
-  color: var(--ui-tone-text, var(--ui-color-primary-navy));
-}
-
-[data-ui-large-section-header-icon="true"] svg,
-[data-ui-large-section-header-icon="true"] [data-category-icon="true"] svg,
-[data-ui-large-section-header-icon="true"] [data-category-icon-glyph="true"] {
-  width: var(--ui-large-section-icon-glyph-size);
-  height: var(--ui-large-section-icon-glyph-size);
-}
-
-[data-ui-large-section-header-copy="true"] [data-ui-title-with-help="true"] {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ui-space-4);
-  min-width: 0;
-}
-
-[data-ui-large-section-header-copy="true"] [data-ui-title-with-help="true"]>strong {
-  color: var(--ui-text-primary);
-  font-size: var(--ui-type-t2);
-  font-weight: var(--ui-font-weight-bold);
-  line-height: var(--ui-line-height-heading);
-}
-
-[data-ui-icon-tile="true"][data-ui-icon-role="large-record-hero"] {
-  width: var(--ui-large-record-hero-icon-size);
-  min-width: var(--ui-large-record-hero-icon-size);
-  height: var(--ui-large-record-hero-icon-size);
-  min-height: var(--ui-large-record-hero-icon-size);
-  border-radius: var(--ui-large-record-hero-radius);
-}
-
-[data-ui-icon-tile="true"][data-ui-icon-role="large-record-hero"] svg,
-[data-ui-icon-tile="true"][data-ui-icon-role="large-record-hero"] [data-category-icon="true"] svg,
-[data-ui-icon-tile="true"][data-ui-icon-role="large-record-hero"] [data-category-icon-glyph="true"] {
-  width: var(--ui-large-record-hero-glyph-size);
-  height: var(--ui-large-record-hero-glyph-size);
-}
-
-[data-ui-metric-card="true"] {
-  --ui-metric-accent: var(--ui-neutral-accent-1-text);
-  --ui-metric-accent-soft: var(--ui-neutral-accent-1-surface);
-  color: var(--ui-metric-accent);
-}
-
-[data-ui-metric-card="true"][data-ui-tone="neutral"],
-[data-ui-metric-card="true"][data-ui-tone="neutral-accent-1"] {
-  --ui-metric-accent: var(--ui-neutral-accent-1-text);
-  --ui-metric-accent-soft: var(--ui-neutral-accent-1-surface);
-}
-
-[data-ui-metric-card="true"][data-ui-tone="neutral-accent-2"] {
-  --ui-metric-accent: var(--ui-neutral-accent-2-text);
-  --ui-metric-accent-soft: var(--ui-neutral-accent-2-surface);
-}
-
-[data-ui-metric-card="true"][data-ui-tone="neutral-accent-3"] {
-  --ui-metric-accent: var(--ui-neutral-accent-3-text);
-  --ui-metric-accent-soft: var(--ui-neutral-accent-3-surface);
-}
-
-[data-ui-metric-card="true"][data-ui-tone="neutral-accent-4"] {
-  --ui-metric-accent: var(--ui-neutral-accent-4-text);
-  --ui-metric-accent-soft: var(--ui-neutral-accent-4-surface);
-}
-
-[data-ui-metric-card="true"][data-ui-tone="neutral-accent-5"] {
-  --ui-metric-accent: var(--ui-neutral-accent-5-text);
-  --ui-metric-accent-soft: var(--ui-neutral-accent-5-surface);
-}
-
-[data-ui-metric-card="true"][data-ui-tone="neutral-accent-6"] {
-  --ui-metric-accent: var(--ui-neutral-accent-6-text);
-  --ui-metric-accent-soft: var(--ui-neutral-accent-6-surface);
-}
-
-[data-ui-metric-card="true"][data-ui-tone="success"] {
-  --ui-metric-accent: var(--ui-financial-income);
-  --ui-metric-accent-soft: var(--ui-financial-income-soft);
-}
-
-[data-ui-metric-card="true"][data-ui-tone="danger"] {
-  --ui-metric-accent: var(--ui-financial-expense);
-  --ui-metric-accent-soft: var(--ui-financial-expense-soft);
-}
-
-[data-ui-metric-card-label="true"],
-[data-ui-metric-card-value="true"] {
-  color: var(--ui-metric-accent);
-}
-
-[data-ui-metric-card-detail="true"] {
-  min-block-size: var(--ui-metric-card-detail-min-height);
-  color: var(--ui-text-technical);
-}
-
-[data-ui-metric-card-progress="true"] {
-  block-size: var(--ui-metric-progress-height);
-  background: var(--ui-metric-accent-soft);
-  color: var(--ui-metric-accent);
-}
-
-[data-ui-large-record="true"]>[data-ui-action-group="true"][data-ui-action-stack="record"] {
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: center;
-  min-width: 96px;
-}
-
-[data-ui-large-record="true"]>[data-ui-action-group="true"][data-ui-action-stack="record"]>button {
-  width: 100%;
-  min-height: 36px;
-  justify-content: center;
-  padding-inline: var(--ui-space-6);
-  border-radius: var(--ui-radius-md);
-}
-
-
-
 .ui-surface {
   min-width: 0;
   box-sizing: border-box;
@@ -2811,21 +2604,6 @@
   backdrop-filter: blur(8px);
 }
 
-[data-ui-modal-shell="true"] {
-  width: min(var(--ui-modal-width, 820px), calc(100vw - 48px));
-  max-height: min(820px, calc(100dvh - 48px));
-  min-width: 0;
-  display: grid;
-  gap: var(--ui-space-8);
-  overflow: auto;
-  padding: var(--ui-space-10);
-  border: 1px solid rgba(8, 44, 122, 0.18);
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.98);
-  color: var(--ui-text-primary);
-  box-shadow: 0 28px 80px rgba(8, 44, 122, 0.18);
-}
-
 [data-ui-filter-row="true"] {
   min-width: 0;
   display: flex;
@@ -2921,12 +2699,6 @@
 
 @media (max-width: 820px) {
   [data-ui-overlay="true"] {
-    padding: var(--ui-space-8);
-  }
-
-  [data-ui-modal-shell="true"] {
-    width: calc(100vw - 24px);
-    max-height: calc(100dvh - 24px);
     padding: var(--ui-space-8);
   }
 
@@ -3042,10 +2814,6 @@
 
 
 /* Picker base. */
-[data-ui-modal-shell="true"] {
-  overflow: visible;
-}
-
 [data-ui-picker-control="true"] {
   position: relative;
   min-width: 0;
@@ -3437,41 +3205,6 @@
   transform: translateX(-50%) translateY(0);
 }
 
-/* BudĹĽAppka â€” overlay-safe help hints.
-   When a modal overlay is open, help icons from the blurred/background layer
-   must not punch through above the active window. The active overlay keeps its
-   own help icons visible. */
-body:has([data-ui-overlay="true"]) [data-ui-help="true"] {
-  visibility: hidden;
-}
-
-body:has([data-ui-overlay="true"]) [data-ui-overlay="true"] [data-ui-help="true"] {
-  visibility: visible;
-}
-
-body:has([data-ui-overlay="true"]) [data-ui-overlay="true"] [data-ui-help="true"]::after {
-  visibility: visible;
-}
-
-/* BudĹĽAppka â€” final overlay and chevron guard.
-   This is intentionally placed at the end of foundation.css to normalize the
-   shared primitives without touching module logic. */
-body:has([data-ui-modal-shell="true"]) [data-ui-help="true"] {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-help="true"] {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-help="true"]::before,
-body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-help="true"]::after {
-  visibility: visible;
-}
 
 [data-ui-picker-control="true"][data-open="true"] [data-ui-picker-chevron="true"]::before {
   transform: rotate(225deg) translate(-1px, -1px);
@@ -3790,21 +3523,6 @@ body:has([data-ui-modal-shell="true"]) [data-ui-modal-shell="true"] [data-ui-hel
   --ui-tone-text: var(--ui-neutral-blue-text);
 }
 
-[data-ui-summary-card="true"] {
-  --ui-summary-surface: rgba(255, 255, 255, 0.96);
-  --ui-summary-border: rgba(8, 44, 122, 0.12);
-  --ui-summary-copy-color: var(--ui-text-primary);
-  background: var(--ui-summary-surface);
-  border-color: var(--ui-summary-border);
-}
-
-[data-ui-summary-card="true"][data-ui-summary-tone="neutral-blue"] {
-  --ui-summary-surface: rgba(255, 255, 255, 0.96);
-  --ui-summary-border: rgba(8, 44, 122, 0.12);
-  --ui-tone-surface: var(--ui-neutral-blue-surface);
-  --ui-tone-border: var(--ui-neutral-blue-border);
-  --ui-tone-text: var(--ui-neutral-blue-text);
-}
 
 [data-ui-summary-icon="true"][data-ui-tone="neutral-blue"] {
   background: var(--ui-neutral-blue-surface);
@@ -4843,142 +4561,6 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
 }
 
 
-/* Foundation Creator final polish â€” target mockup alignment */
-[data-ui-picker-control="true"][data-ui-picker-variant="gallery"] [data-ui-picker-menu="true"]::-webkit-scrollbar {
-  width: 8px;
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="gallery"] [data-ui-picker-menu="true"]::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="gallery"] [data-ui-picker-menu="true"]::-webkit-scrollbar-thumb {
-  border: 2px solid #fff;
-  border-radius: 999px;
-  background: rgba(8, 44, 122, 0.24);
-}
-
-[data-ui-modal-surface="true"][data-ui-creator-modal="true"] [data-ui-field-emphasis="hero"] [data-ui-input-affix="true"] > input::placeholder {
-  color: #6f7f9d;
-  font-size: 15px;
-  font-weight: 500;
-}
-
-/* Foundation Creator target polish â€” precise final overrides inside the canonical contract scope. */
-[data-ui-modal-surface="true"][data-ui-creator-modal="true"] [data-ui-picker-chevron="true"] {
-  position: relative;
-  inline-size: 18px;
-  block-size: 18px;
-  flex: 0 0 auto;
-  border: 0;
-  transform: none;
-  opacity: 0.72;
-}
-
-[data-ui-modal-surface="true"][data-ui-creator-modal="true"] [data-ui-picker-chevron="true"]::before,
-[data-ui-picker-control="true"][data-ui-picker-variant="gallery"][data-ui-picker-portal="true"] [data-ui-picker-chevron="true"]::before {
-  content: "";
-  position: absolute;
-  inset-inline-start: 5px;
-  inset-block-start: 4px;
-  inline-size: 7px;
-  block-size: 7px;
-  border-inline-end: 1.5px solid currentColor;
-  border-block-end: 1.5px solid currentColor;
-  transform: rotate(45deg);
-}
-
-[data-ui-modal-surface="true"][data-ui-creator-modal="true"] [data-ui-picker-chevron="true"]::after,
-[data-ui-picker-control="true"][data-ui-picker-variant="gallery"][data-ui-picker-portal="true"] [data-ui-picker-chevron="true"]::after {
-  content: none;
-  display: none;
-}
-
-[data-ui-modal-surface="true"][data-ui-creator-modal="true"] [data-ui-picker-control="true"][data-open="true"] [data-ui-picker-chevron="true"]::before,
-[data-ui-picker-control="true"][data-ui-picker-variant="gallery"][data-ui-picker-portal="true"][data-open="true"] [data-ui-picker-chevron="true"]::before,
-[data-ui-modal-surface="true"][data-ui-creator-modal="true"] button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
-  inset-block-start: 7px;
-  transform: rotate(225deg);
-}
-
-[data-ui-modal-surface="true"][data-ui-creator-modal="true"] [data-ui-field-emphasis="hero"] [data-ui-input-affix="true"] {
-  min-height: 56px;
-  height: 56px;
-  gap: 14px;
-  padding-inline: 16px 18px;
-}
-
-[data-ui-modal-surface="true"][data-ui-creator-modal="true"] [data-ui-creator-section-variant="hero"] [data-ui-creator-step-content="true"]::before {
-  inset: -34px -52px -42px -44px;
-  border-radius: 0;
-  background:
-    radial-gradient(90% 130% at 38% 42%,
-      rgba(33, 93, 255, 0.090) 0%,
-      rgba(33, 93, 255, 0.055) 34%,
-      rgba(247, 251, 255, 0.32) 56%,
-      rgba(255, 255, 255, 0) 82%);
-}
-
-[data-ui-modal-surface="true"][data-ui-creator-modal="true"] [data-ui-picker-control="true"][data-ui-picker-variant="gallery"] [data-ui-picker-menu="true"][data-layout="colors"] {
-  grid-template-columns: repeat(10, 32px);
-  grid-auto-rows: 32px;
-  gap: 8px;
-}
-
-[data-ui-modal-surface="true"][data-ui-creator-modal="true"] [data-ui-picker-control="true"][data-ui-picker-variant="gallery"] [data-ui-color-option="true"] {
-  inline-size: 32px;
-  block-size: 32px;
-  border-radius: 11px;
-  box-shadow: none;
-}
-
-[data-ui-modal-surface="true"][data-ui-creator-modal="true"] [data-ui-picker-control="true"][data-ui-picker-variant="gallery"] [data-ui-color-option="true"] [data-ui-color-swatch="true"] {
-  inline-size: 21px;
-  block-size: 21px;
-  box-shadow: none;
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="gallery"][data-ui-picker-portal="true"] {
-  width: min(330px, calc(100vw - 24px));
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="gallery"][data-ui-picker-portal="true"] [data-ui-picker-menu="true"][data-layout="icons"] [data-ui-picker-menu-grid="true"] {
-  grid-template-columns: repeat(5, 42px);
-  justify-content: start;
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="gallery"][data-ui-picker-portal="true"] [data-ui-icon-select-option="true"] {
-  inline-size: 42px;
-  block-size: 42px;
-  min-height: 42px;
-  display: grid;
-  place-items: center;
-  padding: 0;
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="gallery"][data-ui-picker-portal="true"] [data-ui-icon-select-option="true"] > span:not([data-ui-icon-tile="true"]) {
-  display: none;
-}
-
-[data-ui-picker-control="true"][data-ui-picker-variant="gallery"][data-ui-picker-portal="true"] [data-ui-icon-select-option="true"] [data-ui-icon-tile="true"] {
-  inline-size: 30px;
-  block-size: 30px;
-  min-inline-size: 30px;
-}
-
-[data-ui-modal-surface="true"][data-ui-creator-modal="true"] [data-ui-checkbox-support-icon="true"] {
-  inline-size: 22px;
-  block-size: 22px;
-  min-inline-size: 22px;
-  font-size: 14px;
-}
-
-[data-ui-modal-surface="true"][data-ui-creator-modal="true"] [data-ui-creator-footer="true"] {
-  border-top: 0;
-  border-radius: 0 0 22px 22px;
-}
-
-
 /* =========================================================
    MANAGEMENT MODULES — CLEAN FOUNDATION LAYER
    Clean replacement layer. No legacy HeroHeader overrides, no.
@@ -5293,38 +4875,6 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   overscroll-behavior: contain;
 }
 
-[data-ui-management-summary-strip="true"],
-[data-ui-management-auxiliary="true"],
-[data-ui-management-collapsible="true"],
-[data-ui-payment-sources-shell="true"] [data-ui-collapsible-secondary="true"],
-[data-ui-payment-sources-shell="true"] [data-ui-settings-strip="true"][data-ui-management-strip="true"],
-[data-financial-goals-summary="true"],
-[data-financial-goals-momentum="true"] {
-  width: 100%;
-  border: 1px solid var(--ui-day-accent-border-subtle);
-  border-radius: var(--mgmt-radius-card);
-  background: var(--mgmt-surface-soft);
-  background-image: none;
-  box-shadow: none;
-}
-
-[data-ui-management-strip-inner="true"] {
-  display: flex;
-  align-items: stretch;
-  gap: 0;
-}
-
-[data-ui-management-strip-item="true"] {
-  min-width: 0;
-  flex: 1 1 0;
-  display: grid;
-  gap: 6px;
-  padding: 14px 18px;
-}
-
-[data-ui-management-strip-item="true"] + [data-ui-management-strip-item="true"] {
-  border-left: 1px solid rgba(15, 48, 120, 0.10);
-}
 
 [data-ui-management-toolbar="true"],
 [data-ui-payment-sources-shell="true"] [data-ui-settings-strip="true"][data-ui-management-toolbar="true"] {
@@ -5799,10 +5349,46 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
 
 [data-ui-management-split="true"] {
   min-width: 0;
+  min-height: 0;
   display: grid;
-  grid-template-columns: minmax(320px, 0.82fr) minmax(420px, 1.18fr);
+  grid-template-columns: clamp(420px, 38vw, 580px) minmax(0, 1fr);
   gap: 20px;
-  align-items: start;
+  align-items: stretch;
+}
+
+[data-ui-payment-sources-shell="true"][data-ui-payment-sources-mode="list"]
+  > [data-ui-management-split="true"],
+[data-ui-payment-sources-shell="true"][data-ui-payment-sources-mode="details"]
+  > [data-ui-management-split="true"] {
+  flex: 1 1 auto;
+  height: 100%;
+}
+
+[data-management-workspace-left-pane="true"],
+[data-management-workspace-right-pane="true"] {
+  min-width: 0;
+  min-height: 0;
+}
+
+[data-management-workspace-left-pane="true"] {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
+}
+
+[data-management-workspace-right-pane="true"] {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding-inline-end: 4px;
+}
+
+[data-ui-payment-sources-search="true"] [data-ui-management-toolbar-group-wide="true"] {
+  width: 100%;
 }
 
 [data-ui-management-split-list="true"] {
@@ -5811,7 +5397,7 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   display: grid;
   align-content: start;
   gap: 10px;
-  max-height: none;
+  max-height: 100%;
   overflow: auto;
   padding-right: 6px;
   overscroll-behavior: contain;
@@ -5907,61 +5493,6 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   overflow-x: hidden;
   overscroll-behavior: contain;
   padding-inline-end: 6px;
-}
-
-/* Foundation-only review mode: global skeleton visible, local numbers/metrics muted. */
-[data-ui-foundation-only="true"] {
-  --foundation-only-muted-line: rgba(148, 163, 184, 0.32);
-  --foundation-only-muted-block: rgba(226, 232, 240, 0.70);
-}
-
-[data-ui-foundation-only="true"][data-recurring-stage2="details"] > :not([data-ui-management-split="true"]),
-[data-ui-foundation-only="true"][data-budget-limits-view="details"] > :not([data-ui-management-split="true"]),
-[data-ui-payment-sources-shell="true"][data-ui-payment-sources-mode="details"] > :not([data-ui-management-split="true"]),
-[data-financial-goals-panel="true"][data-ui-foundation-only="true"]:has([data-ui-management-split="true"]) > [data-financial-goals-mode-controls="true"],
-[data-financial-goals-panel="true"][data-ui-foundation-only="true"]:has([data-ui-management-split="true"]) > [data-financial-goals-summary="true"],
-[data-financial-goals-panel="true"][data-ui-foundation-only="true"]:has([data-ui-management-split="true"]) > [data-financial-goals-momentum="true"] {
-  display: none;
-}
-
-[data-ui-foundation-only="true"] [data-ui-management-strip-item="true"] > span,
-[data-ui-foundation-only="true"] [data-financial-goals-summary="true"] strong,
-[data-ui-foundation-only="true"] [data-financial-goals-summary="true"] small,
-[data-ui-foundation-only="true"] [data-financial-goals-momentum="true"] {
-  color: transparent;
-  user-select: none;
-}
-
-[data-ui-foundation-only="true"] [data-ui-management-strip-item="true"] > span::before,
-[data-ui-foundation-only="true"] [data-financial-goals-summary="true"] strong::before,
-[data-ui-foundation-only="true"] [data-financial-goals-summary="true"] small::before,
-[data-ui-foundation-only="true"] [data-financial-goals-momentum="true"]::before {
-  content: "";
-  display: block;
-  width: min(140px, 72%);
-  height: 0.7rem;
-  border-radius: 8px;
-  background: linear-gradient(90deg, var(--foundation-only-muted-line), rgba(226, 232, 240, 0.34));
-}
-
-[data-ui-foundation-only="true"] [data-ui-large-record="true"] {
-  grid-template-columns: minmax(240px, 1fr) auto;
-}
-
-[data-ui-foundation-only="true"] [data-ui-large-record="true"] [data-ui-metric-group="true"],
-[data-ui-foundation-only="true"] [data-ui-large-record="true"] [data-ui-large-record-progress="true"],
-[data-ui-foundation-only="true"] [data-ui-record-metrics="true"],
-[data-ui-foundation-only="true"] [data-ui-record-progress="true"],
-[data-ui-foundation-only="true"] [data-ui-management-details-metrics="true"],
-[data-ui-foundation-only="true"] [data-ui-record-details-metrics="true"] {
-  display: none;
-}
-
-[data-ui-foundation-only="true"] [data-ui-management-details-section="true"] > :not(h4),
-[data-ui-foundation-only="true"] [data-ui-record-details-list="true"] > :not(strong):not(h4),
-[data-ui-foundation-only="true"] [data-ui-detail-row="true"],
-[data-ui-foundation-only="true"] [data-ui-transaction-row="true"] {
-  display: none;
 }
 
 @media (max-width: 760px) {
@@ -6201,31 +5732,6 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
     gap: 12px;
   }
 
-  [data-ui-management-summary-strip="true"],
-  [data-ui-management-auxiliary="true"],
-  [data-ui-management-collapsible="true"],
-  [data-ui-payment-sources-shell="true"] [data-ui-collapsible-secondary="true"],
-  [data-financial-goals-summary="true"],
-  [data-financial-goals-momentum="true"] {
-    border-radius: 11px;
-    padding: 10px;
-    max-height: 92px;
-    overflow: hidden;
-  }
-
-  [data-ui-management-strip-inner="true"] {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-
-  [data-ui-management-strip-item="true"] {
-    padding: 8px 10px;
-  }
-
-  [data-ui-management-strip-item="true"] + [data-ui-management-strip-item="true"] {
-    border-left: 0;
-    border-top: 1px solid rgba(15, 48, 120, 0.08);
-  }
 
   [data-ui-management-toolbar="true"] {
     display: flex;
@@ -6234,6 +5740,10 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
     gap: 8px;
     padding-bottom: 2px;
     scrollbar-width: none;
+  }
+
+  [data-ui-payment-sources-search="true"] {
+    display: none;
   }
 
   [data-ui-management-toolbar="true"]::-webkit-scrollbar {
@@ -6293,6 +5803,17 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
 
   [data-ui-management-split="true"] {
     display: block;
+  }
+
+  [data-ui-payment-sources-shell="true"][data-ui-payment-sources-mode="list"]
+    [data-management-workspace-right-pane="true"] {
+    display: none;
+  }
+
+  [data-management-workspace-left-pane="true"],
+  [data-management-workspace-right-pane="true"] {
+    overflow: visible;
+    padding-inline-end: 0;
   }
 
   [data-ui-management-split-list="true"] {
@@ -6651,25 +6172,6 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   display: block;
   grid-template-columns: none;
   gap: 0;
-}
-
-[data-financial-goals-panel="true"][data-ui-foundation-only="true"]:has([data-ui-management-split="true"]) > [data-financial-goals-summary="true"][data-ui-auxiliary-summary="true"] {
-  display: block;
-}
-
-[data-ui-foundation-only="true"] [data-ui-auxiliary-summary="true"] [data-ui-auxiliary-summary-value="true"] {
-  color: var(--ui-color-primary-navy);
-  user-select: auto;
-}
-
-[data-ui-foundation-only="true"] [data-ui-auxiliary-summary="true"] [data-ui-auxiliary-summary-description="true"] {
-  color: var(--ui-text-secondary);
-  user-select: auto;
-}
-
-[data-ui-foundation-only="true"] [data-ui-auxiliary-summary="true"] [data-ui-auxiliary-summary-value="true"]::before,
-[data-ui-foundation-only="true"] [data-ui-auxiliary-summary="true"] [data-ui-auxiliary-summary-description="true"]::before {
-  content: none;
 }
 
 @media (max-width: 900px) {

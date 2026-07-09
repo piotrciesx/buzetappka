@@ -284,6 +284,7 @@ export default function PaymentSourcesPanel({
   const [draft, setDraft] = useState<PaymentSourceDraft>(DEFAULT_DRAFT);
   const [settingsDraft, setSettingsDraft] = useState(paymentSourceSettings);
   const [activeList, setActiveList] = useState<"active" | "archived">("active");
+  const [searchTerm, setSearchTerm] = useState("");
   const [methodFilter, setMethodFilter] = useState<PaymentMethodType | "all">("all");
   const [availabilityFilter, setAvailabilityFilter] = useState<"all" | "income" | "expense">("all");
   const [sortMode, setSortMode] = useState<PaymentSourceSortMode>("manual");
@@ -345,6 +346,32 @@ export default function PaymentSourcesPanel({
         sortMode,
       ),
     [methodFilter, paymentSources, sortMode, statsById],
+  );
+
+  const normalizedSearchTerm = searchTerm.trim().toLocaleLowerCase("pl-PL");
+  const matchesSearchTerm = useCallback(
+    (source: PaymentSource) => {
+      if (!normalizedSearchTerm) {
+        return true;
+      }
+
+      return [
+        source.name,
+        getPaymentMethodTypeOption(source.payment_method_type).label,
+      ]
+        .join(" ")
+        .toLocaleLowerCase("pl-PL")
+        .includes(normalizedSearchTerm);
+    },
+    [normalizedSearchTerm],
+  );
+  const visibleActiveSources = useMemo(
+    () => activeSources.filter(matchesSearchTerm),
+    [activeSources, matchesSearchTerm],
+  );
+  const visibleArchivedSources = useMemo(
+    () => archivedSources.filter(matchesSearchTerm),
+    [archivedSources, matchesSearchTerm],
   );
 
   const incomeSources = activeSources.filter(
@@ -912,8 +939,113 @@ export default function PaymentSourcesPanel({
     );
   };
 
+  const renderWorkspaceOverview = () => {
+    const defaultIncomeSource = paymentSourceSettings.defaultIncomePaymentSourceId
+      ? paymentSources.find(
+          (source) =>
+            source.id === paymentSourceSettings.defaultIncomePaymentSourceId,
+        ) || null
+      : null;
+    const defaultExpenseSource = paymentSourceSettings.defaultExpensePaymentSourceId
+      ? paymentSources.find(
+          (source) =>
+            source.id === paymentSourceSettings.defaultExpensePaymentSourceId,
+        ) || null
+      : null;
+    const recentlyUsedSources = activeSources
+      .filter((source) => statsById[source.id]?.lastUsedAt)
+      .sort((firstSource, secondSource) =>
+        String(statsById[secondSource.id]?.lastUsedAt || "").localeCompare(
+          String(statsById[firstSource.id]?.lastUsedAt || ""),
+        ),
+      )
+      .slice(0, 4);
+
+    return (
+      <aside
+        data-management-workspace-right-pane="true"
+        data-management-workspace-overview="true"
+        aria-label="Przegląd źródeł płatności"
+      >
+        <section data-ui-record-details="true">
+          <header data-ui-record-details-header="true">
+            <div data-ui-large-record-identity-copy="true">
+              <strong data-ui-large-record-title="true">
+                Przegląd źródeł
+              </strong>
+              <span>Domyślne źródła, liczby i szybkie skróty.</span>
+            </div>
+          </header>
+
+          <div data-ui-record-details-metrics="true">
+            {renderMetric({
+              iconKey: "system-payment-sources",
+              label: "aktywne",
+              tone: "neutral-blue",
+              percent: activeSources.length > 0 ? 100 : 0,
+              detail: formatCompactNumber(activeSources.length),
+              title: `${activeSources.length} aktywnych źródeł`,
+            })}
+            {renderMetric({
+              iconKey: "system-trash",
+              label: "archiwalne",
+              tone: "danger",
+              percent:
+                paymentSources.length > 0
+                  ? calculateShare(archivedSources.length, paymentSources.length)
+                  : 0,
+              detail: formatCompactNumber(archivedSources.length),
+              title: `${archivedSources.length} archiwalnych źródeł`,
+            })}
+            {renderMetric({
+              iconKey: "system-records",
+              label: "wpisy",
+              tone: "neutral-blue",
+              percent: activeSourceTotals.transactionCount > 0 ? 100 : 0,
+              detail: formatCompactNumber(activeSourceTotals.transactionCount),
+              title: `${activeSourceTotals.transactionCount} wpisów`,
+            })}
+          </div>
+
+          <div data-ui-record-details-list="true">
+            <strong>Domyślne źródła</strong>
+            <span>
+              Przychody: {defaultIncomeSource?.name || "brak domyślnego źródła"}
+            </span>
+            <span>
+              Wydatki: {defaultExpenseSource?.name || "brak domyślnego źródła"}
+            </span>
+          </div>
+
+          <div data-ui-record-details-list="true">
+            <strong>Ostatnio używane</strong>
+            {recentlyUsedSources.length === 0 ? (
+              <span>Brak ostatnio używanych źródeł.</span>
+            ) : (
+              recentlyUsedSources.map((source) => (
+                <span key={source.id}>
+                  {source.name} · {statsById[source.id]?.lastUsedAt}
+                </span>
+              ))
+            )}
+          </div>
+
+          <div data-ui-action-group="true">
+            <PrimaryAction onClick={openNewForm}>Dodaj źródło</PrimaryAction>
+            <SecondaryAction onClick={() => setActiveList("active")}>
+              Pokaż aktywne
+            </SecondaryAction>
+            <SecondaryAction onClick={() => setActiveList("archived")}>
+              Pokaż archiwalne
+            </SecondaryAction>
+          </div>
+        </section>
+      </aside>
+    );
+  };
+
   if (selectedSourceDetails) {
-    const detailsSources = activeList === "active" ? activeSources : archivedSources;
+    const detailsSources = activeList === "active" ? visibleActiveSources : visibleArchivedSources;
     const detailsTotals = activeList === "active" ? activeSourceTotals : archivedSourceTotals;
 
     return (
@@ -927,15 +1059,16 @@ export default function PaymentSourcesPanel({
       <section
         data-ui-payment-sources-shell="true"
         data-ui-payment-sources-mode="details"
-        data-ui-foundation-only="true"
         data-ui-large-module="true"
         data-ui-utility-modal-size="xl"
       >
-        <div data-ui-management-split="true">
-          <div data-ui-management-split-list="true">
+        <div data-ui-management-split="true" data-management-workspace-details="true">
+          <div data-ui-management-split-list="true" data-management-workspace-left-pane="true">
             {detailsSources.map((source) => renderSourceCard(source, detailsTotals))}
           </div>
-          {renderSourceDetails(selectedSourceDetails)}
+          <aside data-management-workspace-right-pane="true">
+            {renderSourceDetails(selectedSourceDetails)}
+          </aside>
         </div>
       </section>
       </ManagementModuleShell>
@@ -955,10 +1088,11 @@ export default function PaymentSourcesPanel({
     <section
       data-ui-payment-sources-shell="true"
       data-ui-payment-sources-mode="list"
-      data-ui-foundation-only="true"
       data-ui-large-module="true"
       data-ui-utility-modal-size="xl"
     >
+      <div data-ui-management-split="true" data-management-workspace-overview="true">
+        <div data-management-workspace-left-pane="true">
       <CollapsibleSecondarySection
         tone="neutral-blue"
         icon={<CategoryIcon iconKey="system-payment-sources" size="small" />}
@@ -1075,6 +1209,20 @@ export default function PaymentSourcesPanel({
             />
           }
         />
+        <div data-ui-management-toolbar="true" data-ui-payment-sources-search="true">
+          <div data-ui-management-toolbar-group="true" data-ui-management-toolbar-group-wide="true">
+            <span data-ui-management-toolbar-label="true">Szukaj</span>
+            <input
+              className="ui-input"
+              data-input-width="full"
+              data-input-density="compact"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              placeholder="Szukaj źródła..."
+              aria-label="Szukaj źródła płatności"
+            />
+          </div>
+        </div>
         <div data-ui-management-toolbar="true">
           <div data-ui-management-toolbar-group="true">
             <span data-ui-management-toolbar-label="empty">Tryb</span>
@@ -1149,15 +1297,17 @@ export default function PaymentSourcesPanel({
           }}
         >
           <div data-ui-large-record-list="true">
-            {(activeList === "active" ? activeSources : archivedSources).length ===
+            {(activeList === "active" ? visibleActiveSources : visibleArchivedSources).length ===
             0 ? (
               <EmptyState>
-                {activeList === "active"
+                {searchTerm.trim()
+                  ? "Brak źródeł pasujących do wyszukiwania."
+                  : activeList === "active"
                   ? "Brak aktywnych źródeł płatności."
                   : "Brak archiwalnych źródeł płatności."}
               </EmptyState>
             ) : (
-              (activeList === "active" ? activeSources : archivedSources).map(
+              (activeList === "active" ? visibleActiveSources : visibleArchivedSources).map(
                 (source) =>
                   renderSourceCard(
                     source,
@@ -1170,6 +1320,10 @@ export default function PaymentSourcesPanel({
           </div>
         </div>
       </section>
+        </div>
+
+        {renderWorkspaceOverview()}
+      </div>
 
       {isFormOpen && (
         <div data-ui-overlay="true" onClick={closeForm}>

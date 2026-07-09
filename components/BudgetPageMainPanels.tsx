@@ -48,7 +48,11 @@ const MANAGEMENT_WORKSPACE_PANELS = new Set<ManagementWorkspacePanel>([
 export function isManagementWorkspacePanel(
   panel: BudgetUtilityPanel
 ): panel is ManagementWorkspacePanel {
-  return USE_MANAGEMENT_WORKSPACE && panel !== null && MANAGEMENT_WORKSPACE_PANELS.has(panel as ManagementWorkspacePanel)
+  return (
+    USE_MANAGEMENT_WORKSPACE &&
+    panel !== null &&
+    MANAGEMENT_WORKSPACE_PANELS.has(panel as ManagementWorkspacePanel)
+  )
 }
 
 type Props = {

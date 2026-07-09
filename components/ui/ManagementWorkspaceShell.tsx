@@ -24,6 +24,7 @@ export default function ManagementWorkspaceShell({
   return (
     <section
       data-management-workspace-shell="true"
+      data-management-workspace-layout="split"
       data-management-workspace-panel={panelKind}
       aria-label={title}
     >
