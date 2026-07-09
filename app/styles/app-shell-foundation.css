@@ -232,6 +232,12 @@ body {
   color: var(--ui-text-secondary) !important;
 }
 
+[data-topbar-action="search"][data-active="true"] {
+  border-color: var(--ui-day-accent-border-strong) !important;
+  background: var(--ui-color-soft-blue) !important;
+  color: var(--ui-day-accent) !important;
+}
+
 [data-topbar-action="month-note"],
 [data-topbar-action="month-alert"],
 [data-topbar-action="notifications"],
@@ -1300,11 +1306,28 @@ body {
   box-shadow: var(--ui-shadow-modal), var(--ui-frame-ring);
 }
 
-[data-budget-utility-panel="true"][data-utility-panel-kind="importExport"],
 [data-budget-utility-panel="true"][data-utility-panel-kind="monthCalendar"],
 [data-budget-utility-panel="true"][data-utility-panel-kind="search"] {
   max-width: var(--ui-modal-max-width-xl);
   max-height: var(--ui-modal-max-height-xl);
+}
+
+[data-budget-utility-panel="true"][data-utility-panel-kind="monthCalendar"],
+[data-budget-utility-panel="true"][data-utility-panel-kind="search"] {
+  width: min(1240px, calc(100vw - 44px));
+  height: min(820px, calc(100dvh - 44px));
+}
+
+[data-budget-utility-panel="true"][data-utility-panel-kind="trash"],
+[data-budget-utility-panel="true"][data-utility-panel-kind="importExport"] {
+  width: min(820px, calc(100vw - 44px));
+  max-width: min(820px, calc(100vw - 44px));
+  max-height: min(720px, calc(100dvh - 44px));
+}
+
+[data-budget-utility-panel="true"][data-utility-panel-kind="trash"] {
+  width: min(700px, calc(100vw - 44px));
+  max-width: min(700px, calc(100vw - 44px));
 }
 
 /* Utility Modal XL: the shell owns modal sizing; module content never does. */
@@ -1546,6 +1569,287 @@ body {
 [data-dropdown-shell="true"] [data-category-icon-picker-trigger="true"][data-active="true"] {
   background: var(--ui-dropdown-item-active-background);
   color: var(--ui-dropdown-text);
+}
+
+[data-month-calendar-toolbar-controls="true"] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-6);
+  margin: var(--ui-space-6) 0 var(--ui-space-5);
+}
+
+[data-month-calendar-toolbar-controls="true"] [data-ui-action="secondary"] {
+  min-height: var(--foundation-control-height-sm);
+  padding-inline: var(--ui-space-6);
+  font-size: var(--ui-font-size-meta);
+}
+
+[data-category-entries-popup-backdrop="true"] {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ui-z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ui-overlay-modal-padding);
+  background: var(--ui-overlay-backdrop);
+  backdrop-filter: blur(var(--ui-overlay-backdrop-blur-standard));
+}
+
+[data-category-entries-popup="true"] {
+  width: min(1080px, calc(100vw - 44px));
+  max-height: min(780px, calc(100dvh - 44px));
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+  border: var(--ui-dropdown-border);
+  border-radius: var(--ui-modal-radius);
+  background: var(--ui-surface-modal);
+  box-shadow: var(--ui-shadow-modal), var(--ui-frame-ring);
+}
+
+[data-category-entries-popup-header="true"] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-7);
+  min-width: 0;
+  padding: var(--ui-modal-header-padding);
+  border-bottom: 1px solid var(--ui-border-divider);
+}
+
+[data-category-entries-popup-header="true"] > div {
+  min-width: 0;
+  display: grid;
+  gap: var(--ui-space-2);
+}
+
+[data-category-entries-popup-header="true"] strong {
+  color: var(--app-shell-navy);
+  font-size: var(--ui-type-t2);
+  font-weight: var(--ui-font-weight-bold);
+  line-height: var(--ui-line-height-heading);
+}
+
+[data-category-entries-popup-header="true"] span {
+  color: var(--ui-text-secondary);
+  font-size: var(--ui-type-helper);
+  line-height: var(--ui-line-height-body);
+}
+
+[data-category-entries-popup-header="true"] button {
+  min-height: var(--foundation-control-height-md);
+  padding: 0 var(--ui-space-7);
+  border: 1px solid var(--ui-day-accent-border-strong);
+  border-radius: var(--foundation-radius-md);
+  background: #ffffff;
+  color: var(--ui-day-accent);
+  font-size: var(--ui-font-size-body-sm);
+  font-weight: var(--ui-font-weight-bold);
+}
+
+[data-category-entries-popup-body="true"] {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--ui-modal-body-padding);
+}
+
+[data-entries-tree-view="true"] {
+  display: grid;
+  gap: var(--ui-space-7);
+  min-width: 0;
+}
+
+[data-entries-workspace-summary="true"] {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ui-space-6);
+}
+
+[data-entries-workspace-metric] {
+  min-width: 0;
+  display: grid;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-7);
+  border: 1px solid var(--ui-day-accent-border-subtle);
+  border-radius: var(--foundation-radius-md);
+  background: linear-gradient(180deg, #ffffff, var(--ui-color-extra-light-blue));
+}
+
+[data-entries-workspace-metric] span {
+  color: var(--ui-text-secondary);
+  font-size: var(--ui-font-size-meta);
+  font-weight: var(--ui-font-weight-bold);
+}
+
+[data-entries-workspace-metric] strong {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--app-shell-navy);
+  font-size: var(--ui-type-financial-value);
+  font-weight: var(--ui-font-weight-bold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-entries-workspace-metric] [data-financial-state="positive"] {
+  color: var(--ui-financial-income);
+}
+
+[data-entries-workspace-metric] [data-financial-state="negative"] {
+  color: var(--ui-financial-expense);
+}
+
+[data-entries-workspace-filters="true"] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--ui-space-6);
+  min-width: 0;
+  padding: var(--ui-space-5);
+  border: 1px solid var(--ui-day-accent-border-subtle);
+  border-radius: var(--foundation-radius-md);
+  background: #ffffff;
+}
+
+[data-entries-filter-static="true"] {
+  min-height: var(--foundation-control-height-sm);
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--ui-space-6);
+  border: 1px solid var(--ui-border-soft);
+  border-radius: var(--foundation-radius-md);
+  color: var(--app-shell-navy);
+  font-size: var(--ui-font-size-meta);
+  font-weight: var(--ui-font-weight-bold);
+}
+
+[data-entries-payment-source-filter="true"] {
+  min-width: 190px;
+  display: grid;
+  gap: var(--ui-space-2);
+  color: var(--ui-text-secondary);
+  font-size: var(--ui-font-size-meta);
+  font-weight: var(--ui-font-weight-bold);
+}
+
+[data-entries-group="true"],
+[data-entries-subgroup="true"],
+[data-entries-no-day-section="true"] {
+  min-width: 0;
+  display: grid;
+  gap: var(--ui-space-5);
+}
+
+[data-entries-group-header="true"],
+[data-entries-subgroup-header="true"] {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-5);
+  padding: 0 var(--ui-space-5);
+  border-bottom: 1px solid var(--ui-border-divider);
+  color: var(--app-shell-navy);
+  font-size: var(--ui-font-size-body-sm);
+  font-weight: var(--ui-font-weight-bold);
+}
+
+[data-entries-feed="true"],
+[data-entries-day-feed="true"] {
+  display: grid;
+  gap: var(--ui-space-4);
+  min-width: 0;
+}
+
+[data-entries-day-group="true"] {
+  display: grid;
+  gap: var(--ui-space-4);
+  min-width: 0;
+}
+
+[data-entries-day-label="true"] {
+  color: var(--ui-text-secondary);
+  font-size: var(--ui-font-size-meta);
+  font-weight: var(--ui-font-weight-bold);
+}
+
+[data-entries-transaction-row="true"] {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--ui-space-5);
+  min-height: 42px;
+  padding: var(--ui-space-5) var(--ui-space-6);
+  border: 1px solid var(--ui-border-soft);
+  border-radius: var(--foundation-radius-md);
+  background: #ffffff;
+}
+
+[data-entries-transaction-row="true"] > strong {
+  color: var(--ui-financial-income);
+  font-size: var(--ui-font-size-body-sm);
+  font-weight: var(--ui-font-weight-bold);
+  white-space: nowrap;
+}
+
+[data-entries-transaction-row="true"][data-entries-transaction-kind="expense"] > strong {
+  color: var(--ui-financial-expense);
+}
+
+[data-entries-transaction-copy="true"] {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--app-shell-navy);
+  font-size: var(--ui-font-size-body-sm);
+  font-weight: var(--ui-font-weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-entries-transaction-select="true"] {
+  display: none;
+}
+
+[data-entries-no-day-section="true"] {
+  margin-top: var(--ui-space-6);
+  padding-top: var(--ui-space-6);
+  border-top: 1px solid var(--ui-border-divider);
+}
+
+[data-bank-search-workspace="true"] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
+  gap: var(--ui-space-7);
+  min-width: 0;
+  align-items: start;
+}
+
+[data-bank-search-results-column="true"],
+[data-bank-search-summary-panel="true"] {
+  min-width: 0;
+}
+
+[data-bank-search-results-column="true"] {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+[data-bank-search-summary-panel="true"] {
+  grid-column: 2;
+  grid-row: 1;
+  position: sticky;
+  top: 0;
+  display: grid;
+  gap: var(--ui-space-5);
+}
+
+[data-bank-search-summary-panel="true"] [data-bank-search-stats="true"] {
+  grid-template-columns: minmax(0, 1fr) !important;
+  margin-bottom: 0 !important;
 }
 
 @media (max-width: 1100px) {

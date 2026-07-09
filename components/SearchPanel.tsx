@@ -1,6 +1,6 @@
 'use client'
 
-import { CSSProperties, forwardRef } from 'react'
+import { CSSProperties, forwardRef, useMemo, useState } from 'react'
 import { Category, Tag, TransactionPaymentSplit } from '../lib/budgetPageTypes'
 import { getCategoryPathLabel } from '../lib/budgetPageHelpers'
 import { uiInputApi, uiListRowApi, uiTypographyTokens } from '../lib/uiFoundation'
@@ -68,6 +68,9 @@ import {
   transactionTagBadgeStyle,
   emptyStateStyle,
 } from './search-panel/searchPanelStyles'
+import { FoundationSegmentedControl } from './ui/FoundationPrimitives'
+
+type SearchTypeFilter = 'all' | 'income' | 'expense' | 'no-day'
 
 const formatMoney = (value: number) => `${value.toFixed(2)} zł`
 
@@ -91,7 +94,6 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
     onToggleTagId,
     onReset,
     results,
-    summary,
     categoryOptions,
     paymentSourceOptions,
     tagOptions,
@@ -102,6 +104,52 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
     styles,
   } = props
   const hasActiveFilters = hasActiveSearchFilters(searchState)
+  const [typeFilter, setTypeFilter] = useState<SearchTypeFilter>('all')
+
+  const displayResults = useMemo(() => {
+    if (typeFilter === 'all') {
+      return results
+    }
+
+    return results.filter(({ transaction, effectiveSignedAmount }) => {
+      if (typeFilter === 'income') {
+        return effectiveSignedAmount > 0
+      }
+
+      if (typeFilter === 'expense') {
+        return effectiveSignedAmount < 0
+      }
+
+      return isDaylessTransaction(transaction)
+    })
+  }, [results, typeFilter])
+
+  const displaySummary = useMemo(
+    () =>
+      displayResults.reduce(
+        (acc, item) => {
+          acc.count += 1
+
+          if (item.effectiveSignedAmount > 0) {
+            acc.incomeTotal += item.effectiveSignedAmount
+          }
+
+          if (item.effectiveSignedAmount < 0) {
+            acc.expenseTotal += Math.abs(item.effectiveSignedAmount)
+          }
+
+          acc.balance += item.effectiveSignedAmount
+          return acc
+        },
+        {
+          count: 0,
+          incomeTotal: 0,
+          expenseTotal: 0,
+          balance: 0,
+        }
+      ),
+    [displayResults]
+  )
 
   return (
     <div ref={ref} style={panelStyle}>
@@ -119,6 +167,23 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                 placeholder="np. biedronka, czynsz, premia"
                 className={uiInputApi.classNames.searchField}
                 data-input-width={uiInputApi.width.full}
+              />
+            </div>
+
+            <div data-search-filter-field="regular" style={regularFilterFieldStyle}>
+              <label style={styles.sortLabel}>Typ wpisu</label>
+              <FoundationSegmentedControl<SearchTypeFilter>
+                value={typeFilter}
+                ariaLabel="Typ wpisu"
+                density="compact"
+                width="full"
+                options={[
+                  { value: 'all', label: 'Wszystkie' },
+                  { value: 'income', label: 'Przychody' },
+                  { value: 'expense', label: 'Wydatki' },
+                  { value: 'no-day', label: 'Bez dnia' },
+                ]}
+                onChange={setTypeFilter}
               />
             </div>
 
@@ -278,32 +343,36 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
             </div>
           )}
 
+          <div data-bank-search-workspace="true">
+          <aside data-bank-search-summary-panel="true">
           <div data-bank-search-stats="true" style={statsGridStyle}>
             <div style={incomeStatCardStyle}>
               <div style={statLabelStyle}>Przychody</div>
-              <div style={{ ...statValueStyle, color: 'var(--ui-color-income)' }}>{formatMoney(summary.incomeTotal)}</div>
+              <div style={{ ...statValueStyle, color: 'var(--ui-color-income)' }}>{formatMoney(displaySummary.incomeTotal)}</div>
             </div>
             <div style={expenseStatCardStyle}>
               <div style={statLabelStyle}>Wydatki</div>
-              <div style={{ ...statValueStyle, color: 'var(--ui-color-expense)' }}>{formatMoney(summary.expenseTotal)}</div>
+              <div style={{ ...statValueStyle, color: 'var(--ui-color-expense)' }}>{formatMoney(displaySummary.expenseTotal)}</div>
             </div>
             <div style={balanceStatCardStyle}>
               <div style={statLabelStyle}>Bilans</div>
               <div
                 style={{
                   ...statValueStyle,
-                  color: summary.balance >= 0 ? 'var(--ui-color-primary-blue)' : 'var(--ui-color-expense)',
+                  color: displaySummary.balance >= 0 ? 'var(--ui-color-primary-blue)' : 'var(--ui-color-expense)',
                 }}
               >
-                {formatSignedMoney(summary.balance)}
+                {formatSignedMoney(displaySummary.balance)}
               </div>
             </div>
             <div style={statCardStyle}>
               <div style={statLabelStyle}>Liczba wyników</div>
-              <div style={statValueStyle}>{summary.count}</div>
+              <div style={statValueStyle}>{displaySummary.count}</div>
             </div>
           </div>
+          </aside>
 
+          <section data-bank-search-results-column="true">
           <div data-bank-search-history="true" style={historyWrapStyle}>
             <div
               className={historyHeaderClassName}
@@ -320,10 +389,10 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
 
             {!hasActiveFilters ? (
               <div style={emptyStateStyle}>Wpisz opis albo ustaw filtr, aby zobaczyć wyniki.</div>
-            ) : results.length === 0 ? (
+            ) : displayResults.length === 0 ? (
               <div style={emptyStateStyle}>Brak wyników dla obecnych filtrów.</div>
             ) : (
-              results.map(({ transaction, effectiveSignedAmount, matchedPaymentSourceId }) => {
+              displayResults.map(({ transaction, effectiveSignedAmount, matchedPaymentSourceId }) => {
                 const categoryLabel = categoriesById[transaction.category_id]
                   ? getCategoryPathLabel(transaction.category_id, categoriesById)
                   : 'Kategoria niedostępna'
@@ -391,6 +460,8 @@ const SearchPanel = forwardRef<HTMLDivElement, Props>(function SearchPanel(props
                 )
               })
             )}
+          </div>
+          </section>
           </div>
         </>
     </div>

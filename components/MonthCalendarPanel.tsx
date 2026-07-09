@@ -16,6 +16,7 @@ import {
   createPaymentSplitItemsFromStoredSplits,
   PaymentSplitInput,
 } from '../lib/paymentSplitUtils'
+import { FoundationSegmentedControl } from './ui/FoundationPrimitives'
 
 import type {
   HeatmapMode,
@@ -620,21 +621,18 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
       notices={
         <>
           <div style={quickFilterBarStyle}>
-            {[
-              ['all', 'wszystko'],
-              ['income', 'tylko przychody'],
-              ['expense', 'tylko wydatki'],
-              ['no-day', 'bez dnia'],
-            ].map(([value, label]) => (
-              <button
-                key={value}
-                type="button"
-                style={quickFilter === value ? styles.primaryButton : styles.secondaryButton}
-                onClick={() => setQuickFilter(value as MonthQuickFilter)}
-              >
-                {label}
-              </button>
-            ))}
+            <FoundationSegmentedControl<MonthQuickFilter>
+              value={quickFilter}
+              ariaLabel="Zakres wpisów kalendarza"
+              density="compact"
+              options={[
+                { value: 'all', label: 'Wszystkie' },
+                { value: 'income', label: 'Przychody' },
+                { value: 'expense', label: 'Wydatki' },
+                { value: 'no-day', label: 'Bez dnia' },
+              ]}
+              onChange={setQuickFilter}
+            />
           </div>
           {isSelectedMonthPartial && (
             <div style={{ ...styles.infoBox, marginBottom: 10 }}>

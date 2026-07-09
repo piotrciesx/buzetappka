@@ -20,6 +20,7 @@ export type CategoryEntriesPopupViewModel = {
   canInlineAdd: boolean
   inlineAddTargetCategoryId: string | null
   descendantCategoryIds: string[]
+  allEntries: Transaction[]
   directEntries: Transaction[]
   children: CategoryEntriesPopupChildGroup[]
   groupedChildren: CategoryEntriesPopupChildGroup[]
@@ -89,6 +90,15 @@ export function buildCategoryEntriesPopupViewModel({
     ]
     const hasChildren = level2Groups.length > 0
 
+    const directEntries = getTransactionsForCategoryAndMonth(level1Category.id)
+    const allEntries = [
+      ...directEntries,
+      ...level2Groups.flatMap((group) => [
+        ...group.directEntries,
+        ...group.children.flatMap((child) => child.directEntries),
+      ]),
+    ]
+
     return {
       clickedCategory: level1Category,
       clickedCategoryLevel: 1,
@@ -98,7 +108,8 @@ export function buildCategoryEntriesPopupViewModel({
       canInlineAdd: !hasChildren,
       inlineAddTargetCategoryId: hasChildren ? null : level1Category.id,
       descendantCategoryIds,
-      directEntries: getTransactionsForCategoryAndMonth(level1Category.id),
+      allEntries,
+      directEntries,
       children: level2Groups,
       groupedChildren: level2Groups,
       title: level1Category.name,
@@ -125,6 +136,12 @@ export function buildCategoryEntriesPopupViewModel({
       }))
       const hasChildren = level3Groups.length > 0
 
+      const directEntries = getTransactionsForCategoryAndMonth(level2Category.id)
+      const allEntries = [
+        ...directEntries,
+        ...level3Groups.flatMap((group) => group.directEntries),
+      ]
+
       return {
         clickedCategory: level2Category,
         clickedCategoryLevel: 2,
@@ -137,7 +154,8 @@ export function buildCategoryEntriesPopupViewModel({
           level2Category.id,
           ...level3Groups.map((group) => group.category.id),
         ],
-        directEntries: getTransactionsForCategoryAndMonth(level2Category.id),
+        allEntries,
+        directEntries,
         children: level3Groups,
         groupedChildren: level3Groups,
         title: level2Category.name,
@@ -166,6 +184,8 @@ export function buildCategoryEntriesPopupViewModel({
           return null
         }
 
+        const directEntries = getTransactionsForCategoryAndMonth(level3Category.id)
+
         return {
           clickedCategory: level3Category,
           clickedCategoryLevel,
@@ -175,7 +195,8 @@ export function buildCategoryEntriesPopupViewModel({
           canInlineAdd: true,
           inlineAddTargetCategoryId: level3Category.id,
           descendantCategoryIds: [level3Category.id],
-          directEntries: getTransactionsForCategoryAndMonth(level3Category.id),
+          allEntries: directEntries,
+          directEntries,
           children: [],
           groupedChildren: [],
           title: level3Category.name,

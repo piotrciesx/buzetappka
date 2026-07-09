@@ -1,17 +1,18 @@
 import {
+  useMemo,
   useRef,
   useState,
   type FormEvent,
   type KeyboardEvent,
 } from 'react'
 import type { CSSProperties } from 'react'
-import type { BudgetLimitView } from '../BudgetLimitIndicator'
 import type { HeatmapMode } from '../month-calendar/monthCalendarTypes'
 import type { Tag, TransactionPaymentSplit } from '../../lib/budgetPageTypes'
 import type { PaymentSplitInput } from '../../lib/paymentSplitUtils'
 import type { DescriptionSuggestion } from '../../lib/suggestionUtils'
 import type { TransactionDraft } from '../../lib/draftUtils'
 import { uiInputApi } from '../../lib/uiFoundation'
+import { FoundationSegmentedControl } from '../ui/FoundationPrimitives'
 import {
   buildDateFromDayInput,
   getDayInputFromDate,
@@ -124,6 +125,8 @@ const formatMoney = (value: number) =>
     minimumFractionDigits: Number.isInteger(value) ? 0 : 2,
   })} zł`
 
+type EntryScopeFilter = 'all' | 'income' | 'expense' | 'no-day'
+
 const groupTransactionsByDate = (transactions: Transaction[]) => {
   const grouped = new Map<string, Transaction[]>()
 
@@ -187,14 +190,77 @@ export default function CategoryEntriesTreeView({
   const [moveTargetCategoryId, setMoveTargetCategoryId] = useState('')
   const [isMoving, setIsMoving] = useState(false)
   const [openEntriesMenu, setOpenEntriesMenu] = useState<string | null>(null)
+  const [entryScopeFilter, setEntryScopeFilter] = useState<EntryScopeFilter>('all')
+  const [paymentSourceFilter, setPaymentSourceFilter] = useState('')
 
-  const hasAnyEntries =
-    viewModel.directEntries.length > 0 ||
-    viewModel.groupedChildren.some(
-      (group) =>
-        group.directEntries.length > 0 ||
-        group.children.some((child) => child.directEntries.length > 0)
-    )
+  const paymentSourceFilterOptions = useMemo(() => {
+    if (!getPaymentSourceOptionsForCategoryId) {
+      return []
+    }
+
+    const optionMap = new Map<string, string>()
+
+    viewModel.allEntries.forEach((transaction) => {
+      const paymentSourceId = transaction.payment_source_id
+
+      if (!paymentSourceId || optionMap.has(paymentSourceId)) {
+        return
+      }
+
+      const option = getPaymentSourceOptionsForCategoryId(transaction.category_id).find(
+        (item) => item.id === paymentSourceId
+      )
+
+      optionMap.set(paymentSourceId, option?.optionLabel || option?.name || paymentSourceId)
+    })
+
+    return Array.from(optionMap.entries())
+      .map(([id, label]) => ({ id, label }))
+      .sort((a, b) => a.label.localeCompare(b.label, 'pl'))
+  }, [getPaymentSourceOptionsForCategoryId, viewModel.allEntries])
+
+  const filteredAllEntries = useMemo(() => {
+    return viewModel.allEntries.filter((transaction) => {
+      const signedAmount = getSignedAmountForTransaction(transaction)
+
+      if (entryScopeFilter === 'income' && signedAmount <= 0) {
+        return false
+      }
+
+      if (entryScopeFilter === 'expense' && signedAmount >= 0) {
+        return false
+      }
+
+      if (entryScopeFilter === 'no-day' && !isDaylessTransaction(transaction)) {
+        return false
+      }
+
+      if (paymentSourceFilter && transaction.payment_source_id !== paymentSourceFilter) {
+        return false
+      }
+
+      return true
+    })
+  }, [entryScopeFilter, getSignedAmountForTransaction, paymentSourceFilter, viewModel.allEntries])
+
+  const filteredEntryIds = useMemo(
+    () => new Set(filteredAllEntries.map((transaction) => transaction.id)),
+    [filteredAllEntries]
+  )
+
+  const daylessEntries = useMemo(
+    () => filteredAllEntries.filter((transaction) => isDaylessTransaction(transaction)),
+    [filteredAllEntries]
+  )
+
+  const filteredEntriesTotal = filteredAllEntries.reduce(
+    (total, transaction) => total + getSignedAmountForTransaction(transaction),
+    0
+  )
+  const [selectedYear, selectedMonthNumber] = selectedMonth.split('-').map(Number)
+  const daysInSelectedMonth =
+    selectedYear && selectedMonthNumber ? new Date(selectedYear, selectedMonthNumber, 0).getDate() : 30
+  const dailyAverage = daysInSelectedMonth > 0 ? filteredEntriesTotal / daysInSelectedMonth : 0
 
   const startEditingTransaction = (transaction: Transaction) => {
     setMovingTransactionId(null)
@@ -684,7 +750,14 @@ export default function CategoryEntriesTreeView({
   }
 
   const renderTransactionFeed = (transactions: Transaction[]) => {
-    const groupedTransactions = groupTransactionsByDate(transactions)
+    const visibleTransactions = transactions.filter(
+      (transaction) => filteredEntryIds.has(transaction.id) && !isDaylessTransaction(transaction)
+    )
+    const groupedTransactions = groupTransactionsByDate(visibleTransactions)
+
+    if (visibleTransactions.length === 0) {
+      return null
+    }
 
     return (
       <div data-entries-feed="true">
@@ -757,13 +830,64 @@ export default function CategoryEntriesTreeView({
   }
 
   const shouldRenderDirectSection = viewModel.canInlineAdd || viewModel.directEntries.length > 0
-  const shouldShowEmptyState = !hasAnyEntries && !viewModel.canInlineAdd
+  const shouldShowEmptyState = filteredAllEntries.length === 0 && !viewModel.canInlineAdd
 
   return (
     <div
       data-entries-tree-view="true"
       data-entries-final-level={viewModel.canInlineAdd ? 'true' : 'false'}
     >
+      <section data-entries-workspace-summary="true">
+        <div data-entries-workspace-metric="sum">
+          <span>Suma</span>
+          <strong data-financial-state={filteredEntriesTotal < 0 ? 'negative' : filteredEntriesTotal > 0 ? 'positive' : 'zero'}>
+            {formatMoney(filteredEntriesTotal)}
+          </strong>
+        </div>
+        <div data-entries-workspace-metric="count">
+          <span>Liczba wpisów</span>
+          <strong>{filteredAllEntries.length}</strong>
+        </div>
+        <div data-entries-workspace-metric="average">
+          <span>Średnio dziennie</span>
+          <strong>{formatMoney(dailyAverage)}</strong>
+        </div>
+      </section>
+
+      <section data-entries-workspace-filters="true">
+        <span data-entries-filter-static="true">Miesiąc: {selectedMonth}</span>
+        <FoundationSegmentedControl<EntryScopeFilter>
+          value={entryScopeFilter}
+          ariaLabel="Zakres wpisów kategorii"
+          density="compact"
+          options={[
+            { value: 'all', label: 'Wszystkie' },
+            { value: 'income', label: 'Przychody' },
+            { value: 'expense', label: 'Wydatki' },
+            { value: 'no-day', label: 'Bez dnia' },
+          ]}
+          onChange={setEntryScopeFilter}
+        />
+        {paymentSourceFilterOptions.length > 0 && (
+          <label data-entries-payment-source-filter="true">
+            <span>Źródło</span>
+            <select
+              className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputS}`}
+              data-input-density={uiInputApi.density.compact}
+              value={paymentSourceFilter}
+              onChange={(event) => setPaymentSourceFilter(event.target.value)}
+            >
+              <option value="">Wszystkie źródła</option>
+              {paymentSourceFilterOptions.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+      </section>
+
       {shouldRenderDirectSection &&
         renderSubgroup(
           viewModel.clickedCategory,
@@ -776,8 +900,19 @@ export default function CategoryEntriesTreeView({
 
       {shouldShowEmptyState && (
         <div data-entries-empty="true" style={styles.emptyText}>
-          Brak wpisów w tym miesiącu
+          Brak wpisów dla obecnych filtrów
         </div>
+      )}
+
+      {daylessEntries.length > 0 && (
+        <section data-entries-no-day-section="true">
+          <div data-entries-subgroup-header="true" data-entries-subgroup-tone="direct">
+            <span>Wpisy bez dnia</span>
+          </div>
+          <div data-entries-day-feed="true">
+            {daylessEntries.map(renderTransactionRow)}
+          </div>
+        </section>
       )}
     </div>
   )

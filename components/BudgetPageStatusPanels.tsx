@@ -9,7 +9,6 @@ import UserAvatar from './UserAvatar'
 import DropdownShell from './dropdown/DropdownShell'
 import { isManagementWorkspacePanel, type BudgetUtilityPanel } from './BudgetPageMainPanels'
 import type { AppModuleVisibility } from '../lib/useAppModuleVisibility'
-import { uiInputApi } from '../lib/uiFoundation'
 
 type SidebarPrimaryPanel = 'profile' | 'settings' | null
 
@@ -227,11 +226,9 @@ export default function BudgetPageStatusPanels({
 }: Props) {
   const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false)
   const [openedTopbarPanel, setOpenedTopbarPanel] = useState<
-    'alert' | 'add' | 'note' | 'pinned' | 'search' | null
+    'alert' | 'add' | 'note' | 'pinned' | null
   >(null)
-  const [topbarSearchText, setTopbarSearchText] = useState('')
   const topbarActionsRef = useRef<HTMLDivElement | null>(null)
-  const topbarSearchInputRef = useRef<HTMLInputElement | null>(null)
   const isManagementWorkspaceMode = isManagementWorkspacePanel(activeUtilityPanel)
   const pinnedCategoryParts = pinnedCategories.map((category) => ({
     id: category.id,
@@ -268,12 +265,6 @@ export default function BudgetPageStatusPanels({
     }
   }, [activeSidebarPrimaryPanel, onClosePrimaryPanel])
 
-  useEffect(() => {
-    if (openedTopbarPanel === 'search') {
-      topbarSearchInputRef.current?.focus()
-    }
-  }, [openedTopbarPanel])
-
   const openPanel = (panel: BudgetUtilityPanel) => {
     window.dispatchEvent(new CustomEvent('budget-close-floating-ui'))
     onOpenUtilityPanel(activeUtilityPanel === panel ? null : panel)
@@ -292,18 +283,6 @@ export default function BudgetPageStatusPanels({
     const title = path && pinnedLeafCounts[leaf] > 1 ? parts.join(' ') : leaf
 
     return { title, path }
-  }
-
-  const submitTopbarSearch = () => {
-    const query = topbarSearchText.trim()
-
-    if (!query) {
-      return
-    }
-
-    setTopbarSearchText('')
-    setOpenedTopbarPanel(null)
-    openPanel('search')
   }
 
   const formatCurrency = (value: number) =>
@@ -607,7 +586,7 @@ export default function BudgetPageStatusPanels({
                     onQuickAddIncome?.()
                   }}
                 >
-                  Przychód
+                  Dodaj przychód
                 </button>
                 <button
                   type="button"
@@ -617,45 +596,23 @@ export default function BudgetPageStatusPanels({
                     onQuickAddExpense?.()
                   }}
                 >
-                  Wydatek
+                  Dodaj wydatek
                 </button>
               </DropdownShell>
             </div>
 
             <div data-topbar-floating-action="true">
-              <DropdownShell
-                open={openedTopbarPanel === 'search'}
-                onOpenChange={(open) => setOpenedTopbarPanel(open ? 'search' : null)}
-                size="search"
-                trigger={(triggerProps) => (
-                  <button
-                    type="button"
-                    data-topbar-action="search"
-                    aria-label="Wyszukiwarka"
-                    title="Wyszukiwarka"
-                    {...triggerProps}
-                  >
-                    <Icon name="search" />
-                    <span>Szukaj...</span>
-                  </button>
-                )}
+              <button
+                type="button"
+                data-topbar-action="search"
+                aria-label="Otwórz wyszukiwarkę"
+                title="Otwórz wyszukiwarkę"
+                data-active={activeUtilityPanel === 'search' ? 'true' : 'false'}
+                onClick={() => openPanel('search')}
               >
-                <input
-                  ref={topbarSearchInputRef}
-                  className={uiInputApi.classNames.searchField}
-                  data-input-width={uiInputApi.width.full}
-                  data-input-density={uiInputApi.density.compact}
-                  value={topbarSearchText}
-                  onChange={(event) => setTopbarSearchText(event.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      submitTopbarSearch()
-                    }
-                  }}
-                  placeholder="Szukaj wpisu..."
-                  aria-label="Szukaj wpisu"
-                />
-              </DropdownShell>
+                <Icon name="search" />
+                <span>Szukaj...</span>
+              </button>
             </div>
 
             <div data-topbar-floating-action="true">

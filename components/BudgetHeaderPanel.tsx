@@ -1,6 +1,7 @@
 'use client'
 
 import { CSSProperties, useEffect, useRef, useState } from 'react'
+import { FoundationSegmentedControl, FoundationSwitch } from './ui/FoundationPrimitives'
 
 type HeatmapMode = 'normal' | 'balance'
 type CalendarHeatmapVariant = 'balance' | 'income' | 'expense'
@@ -223,7 +224,7 @@ export default function BudgetHeaderPanel(props: Props) {
               {isUpdatingSelectedMonthLock
                 ? 'Zapisywanie...'
                 : isSelectedMonthLocked
-                  ? 'Odblokuj miesiąc'
+                  ? 'Otwórz ponownie'
                   : 'Zamknij miesiąc'}
             </button>
 
@@ -235,7 +236,7 @@ export default function BudgetHeaderPanel(props: Props) {
               {isUpdatingSelectedMonthExclusion
                 ? 'Zapisywanie...'
                 : isSelectedMonthExcluded
-                  ? 'Przywróć do statystyk'
+                  ? 'Włącz do statystyk'
                   : 'Wyłącz ze statystyk'}
             </button>
           </div>
@@ -254,14 +255,15 @@ export default function BudgetHeaderPanel(props: Props) {
                 />
               </label>
 
-              <label style={styles.monthNavigationCheckboxLabel}>
-                <input
-                  type="checkbox"
-                  checked={monthNavigationFutureLocked}
-                  onChange={(event) => onMonthNavigationFutureLockedChange(event.target.checked)}
-                />
+              <div style={styles.monthNavigationCheckboxLabel}>
                 <span>Blokuj miesiące przyszłe</span>
-              </label>
+                <FoundationSwitch
+                  checked={monthNavigationFutureLocked}
+                  onChange={onMonthNavigationFutureLockedChange}
+                  ariaLabel="Blokuj miesiące przyszłe"
+                  size="sm"
+                />
+              </div>
 
               <button
                 onClick={onSaveMonthNavigationSettings}
@@ -281,41 +283,51 @@ export default function BudgetHeaderPanel(props: Props) {
           <details>
             <summary>Heatmapa</summary>
             <div data-budget-menu-grid="true">
-              <label style={styles.monthNavigationField}>
+              <div style={styles.monthNavigationField}>
                 <span style={styles.monthNavigationFieldLabel}>Widok</span>
-                <select
+                <FoundationSegmentedControl<HeatmapMode>
                   value={heatmapMode}
-                  onChange={(event) => onHeatmapModeChange(event.target.value as HeatmapMode)}
-                  style={styles.input}
-                >
-                  <option value="normal">zwykły</option>
-                  <option value="balance">heatmapa</option>
-                </select>
-              </label>
-
-              <label style={styles.monthNavigationField}>
-                <span style={styles.monthNavigationFieldLabel}>Tryb</span>
-                <select
-                  value={calendarHeatmapVariant}
-                  onChange={(event) =>
-                    onCalendarHeatmapVariantChange(event.target.value as CalendarHeatmapVariant)
-                  }
-                  style={styles.input}
-                >
-                  <option value="balance">bilans</option>
-                  <option value="income">przychody</option>
-                  <option value="expense">wydatki</option>
-                </select>
-              </label>
-
-              <label style={styles.monthNavigationCheckboxLabel}>
-                <input
-                  type="checkbox"
-                  checked={heatmapInverted}
-                  onChange={(event) => onHeatmapInvertedChange(event.target.checked)}
+                  ariaLabel="Widok kalendarza"
+                  density="compact"
+                  width="full"
+                  options={[
+                    { value: 'normal', label: 'Standard' },
+                    { value: 'balance', label: 'Heatmapa' },
+                  ]}
+                  onChange={onHeatmapModeChange}
                 />
-                <span>Odwróć kolory</span>
-              </label>
+              </div>
+
+              <div style={styles.monthNavigationField}>
+                <span style={styles.monthNavigationFieldLabel}>Zakres</span>
+                <FoundationSegmentedControl<CalendarHeatmapVariant>
+                  value={calendarHeatmapVariant}
+                  ariaLabel="Zakres heatmapy"
+                  density="compact"
+                  width="full"
+                  options={[
+                    { value: 'balance', label: 'Wszystkie' },
+                    { value: 'income', label: 'Przychody' },
+                    { value: 'expense', label: 'Wydatki' },
+                  ]}
+                  onChange={onCalendarHeatmapVariantChange}
+                />
+              </div>
+
+              <div style={styles.monthNavigationField}>
+                <span style={styles.monthNavigationFieldLabel}>Kolory</span>
+                <FoundationSegmentedControl<'standard' | 'inverted'>
+                  value={heatmapInverted ? 'inverted' : 'standard'}
+                  ariaLabel="Kolory heatmapy"
+                  density="compact"
+                  width="full"
+                  options={[
+                    { value: 'standard', label: 'Standard' },
+                    { value: 'inverted', label: 'Odwrócone' },
+                  ]}
+                  onChange={(value) => onHeatmapInvertedChange(value === 'inverted')}
+                />
+              </div>
 
               <button onClick={onResetHeatmapSettings} style={styles.secondaryButton}>
                 Reset
