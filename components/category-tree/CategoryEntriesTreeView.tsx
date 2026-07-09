@@ -914,6 +914,13 @@ export default function CategoryEntriesTreeView({
           </div>
         </section>
       )}
+
+      <footer data-entries-total-footer="true">
+        <span>Łącznie</span>
+        <strong data-financial-state={filteredEntriesTotal < 0 ? 'negative' : filteredEntriesTotal > 0 ? 'positive' : 'zero'}>
+          {formatMoney(filteredEntriesTotal)}
+        </strong>
+      </footer>
     </div>
   )
 }

@@ -56,6 +56,7 @@ export const buildMonthCalendarDayCells = ({
     const dayKey = String(day).padStart(2, '0')
     const dateText = `${selectedMonth}-${dayKey}`
     const stats = dayStats[dayKey]
+    const dayMetricValue = getDayMetricValue(stats)
     const isActive = selectedDay === dayKey
     const isBeforeBudgetStart = isDateBeforeBudgetStart(dateText, budgetStartDate)
     const isFuture = isFutureDate(dateText)
@@ -84,7 +85,8 @@ export const buildMonthCalendarDayCells = ({
         ? {
             ...calendarDayCellStyle,
             background: 'var(--ui-color-extra-light-blue)',
-            border: '1px solid var(--ui-border-divider)',
+            border: '1px solid var(--ui-day-accent-border-hover)',
+            boxShadow: '0 0 0 2px rgba(20, 84, 212, 0.12)',
           }
         : calendarDayCellStyle
     } else {
@@ -177,12 +179,22 @@ export const buildMonthCalendarDayCells = ({
                 fontWeight: 700,
               }}
               title={`${getDayMetricLabel()}: ${
-                heatmapVariant === 'balance' && getDayMetricValue(stats) > 0 ? '+' : ''
-              }${formatAmount(getDayMetricValue(stats))} zł`}
+                heatmapVariant === 'balance' && dayMetricValue > 0 ? '+' : ''
+              }${formatAmount(dayMetricValue)} zł`}
             >
-              <strong style={{ whiteSpace: 'nowrap' }}>
-                {heatmapVariant === 'balance' && getDayMetricValue(stats) > 0 ? '+' : ''}
-                {formatAmount(getDayMetricValue(stats))} zł
+              <strong
+                style={{
+                  whiteSpace: 'nowrap',
+                  color:
+                    heatmapMode === 'normal' && dayMetricValue > 0
+                      ? 'var(--ui-financial-income)'
+                      : heatmapMode === 'normal' && dayMetricValue < 0
+                        ? 'var(--ui-financial-expense)'
+                        : undefined,
+                }}
+              >
+                {heatmapVariant === 'balance' && dayMetricValue > 0 ? '+' : ''}
+                {formatAmount(dayMetricValue)} zł
               </strong>
             </div>
             <div

@@ -1,6 +1,7 @@
 'use client'
 
 import type { ReactNode } from 'react'
+import { FoundationIconButton } from '../ui/FoundationPrimitives'
 
 type CategoryEntriesPopupProps = {
   title: string
@@ -29,9 +30,23 @@ export default function CategoryEntriesPopup({
             <strong>{title}</strong>
             {subtitle && <span>{subtitle}</span>}
           </div>
-          <button type="button" onClick={onClose} aria-label="Zamknij listę wpisów">
-            Zamknij
-          </button>
+          <FoundationIconButton
+            ariaLabel="Zamknij listę wpisów"
+            title="Zamknij"
+            density="compact"
+            onClick={onClose}
+            icon={
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                <path
+                  d="M6 6l12 12M18 6 6 18"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeWidth="2"
+                />
+              </svg>
+            }
+          />
         </header>
         <div data-category-entries-popup-body="true">{children}</div>
       </section>

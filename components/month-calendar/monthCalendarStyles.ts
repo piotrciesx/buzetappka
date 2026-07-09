@@ -1,12 +1,12 @@
 import { uiControlPrimitives, uiTypographyTokens, uiZIndex } from '../../lib/uiFoundation'
 
 export const calendarPanelStyle = {
-  marginBottom: 'var(--ui-spacing-xl)',
+  marginBottom: 'var(--ui-space-6)',
   background: 'var(--ui-color-card-background)',
-  border: '1px solid var(--ui-color-divider-border)',
-  borderRadius: 14,
-  padding: 'var(--ui-spacing-card-padding)',
-  boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+  border: '1px solid rgba(20, 84, 212, 0.12)',
+  borderRadius: 8,
+  padding: 'var(--ui-space-6)',
+  boxShadow: 'none',
 } as const
 
 export const calendarWeekdaysStyle = {
@@ -32,11 +32,11 @@ export const calendarGridStyle = {
 } as const
 
 export const calendarDayCellStyle = {
-  minHeight: 70,
-  border: '1px solid var(--ui-color-divider-border)',
-  borderRadius: 10,
-  padding: 'var(--ui-spacing-sm) var(--ui-spacing-md)',
-  background: 'var(--ui-color-soft-section-background)',
+  minHeight: 68,
+  border: '1px solid rgba(20, 84, 212, 0.10)',
+  borderRadius: 8,
+  padding: '7px 8px',
+  background: 'var(--ui-color-card-background)',
   display: 'flex',
   flexDirection: 'column' as const,
   gap: 'var(--ui-spacing-xs)',
@@ -66,9 +66,9 @@ export const calendarExpandBadgeStyle = {
 } as const
 
 export const calendarEmptyCellStyle = {
-  minHeight: 70,
-  border: '1px dashed var(--ui-color-divider-border)',
-  borderRadius: 10,
+  minHeight: 68,
+  border: '1px dashed rgba(20, 84, 212, 0.10)',
+  borderRadius: 8,
   padding: 'var(--ui-spacing-md)',
   background: 'var(--ui-color-soft-section-background)',
 } as const
@@ -165,9 +165,9 @@ export const transactionsListStyle = {
 } as const
 
 export const transactionCardStyle = {
-  border: '1px solid var(--ui-color-divider-border)',
-  borderRadius: 12,
-  padding: 'var(--ui-spacing-card-padding)',
+  border: '1px solid rgba(20, 84, 212, 0.10)',
+  borderRadius: 8,
+  padding: '10px 12px',
   background: 'var(--ui-color-card-background)',
 } as const
 
