@@ -2,6 +2,7 @@
 
 import { CSSProperties, ReactNode } from 'react'
 import { uiInputApi } from '../lib/uiFoundation'
+import { FoundationSwitch } from './ui/FoundationPrimitives'
 import {
   AppModuleKey,
   AppModuleVisibility,
@@ -64,27 +65,6 @@ const moduleItems: Array<{ key: AppModuleKey; label: string; description: string
     description: 'Alerty i kontrola wydatków w kategoriach.',
   },
 ]
-
-type SwitchProps = {
-  checked: boolean
-  disabled?: boolean
-  onChange?: (value: boolean) => void
-}
-
-const SettingsSwitch = ({ checked, disabled = false, onChange }: SwitchProps) => (
-  <button
-    type="button"
-    role="switch"
-    aria-checked={checked}
-    disabled={disabled}
-    data-settings-switch="true"
-    data-state={checked ? 'on' : 'off'}
-    onClick={() => onChange?.(!checked)}
-  >
-    <span data-settings-switch-label="true">{checked ? 'Wł.' : 'Wył.'}</span>
-    <span data-settings-switch-knob="true" />
-  </button>
-)
 
 const getLastDateOfMonth = (monthText: string) => {
   const [year, month] = monthText.split('-').map(Number)
@@ -177,9 +157,10 @@ export default function AppSettingsPanel({
             <strong>Blokuj miesiące przyszłe</strong>
             <p>Po włączeniu nawigacja nie przejdzie poza bieżący miesiąc.</p>
           </div>
-          <SettingsSwitch
+          <FoundationSwitch
             checked={monthNavigationFutureLocked}
             onChange={onMonthNavigationFutureLockedChange}
+            ariaLabel="Blokuj miesiące przyszłe"
           />
         </div>
         <div data-settings-actions="true">
@@ -213,9 +194,10 @@ export default function AppSettingsPanel({
             <strong>Auto wyłączanie niepełnych miesięcy</strong>
             <p>Niepełne miesiące nie zaburzają statystyk i trendów.</p>
           </div>
-          <SettingsSwitch
+          <FoundationSwitch
             checked={effectiveAutoExcludePartialMonths}
             onChange={onAutoExcludePartialMonthsChange}
+            ariaLabel="Auto wyłączanie niepełnych miesięcy"
           />
         </div>
         <div data-settings-row="true">
@@ -223,7 +205,7 @@ export default function AppSettingsPanel({
             <strong>Tryb prosty</strong>
             <p>Po włączeniu wyłącza funkcje dodatkowe i blokuje ich przełączniki.</p>
           </div>
-          <SettingsSwitch checked={simpleMode} onChange={handleSimpleModeChange} />
+          <FoundationSwitch checked={simpleMode} onChange={handleSimpleModeChange} ariaLabel="Tryb prosty" />
         </div>
       </section>
 
@@ -244,10 +226,11 @@ export default function AppSettingsPanel({
                 <strong>{item.label}</strong>
                 <p>{item.description}</p>
               </div>
-              <SettingsSwitch
+              <FoundationSwitch
                 checked={!simpleMode && draftVisibleModules[item.key]}
                 disabled={simpleMode}
                 onChange={(value) => onChangeModuleVisibility(item.key, value)}
+                ariaLabel={item.label}
               />
             </article>
           ))}

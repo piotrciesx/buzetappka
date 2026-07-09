@@ -1,9 +1,8 @@
 import type { HeatmapMode } from './monthCalendarTypes'
+import { FoundationSegmentedControl, FoundationSwitch } from '../ui/FoundationPrimitives'
 import {
   heatmapBarStyle,
   heatmapSwitchRowStyle,
-  primaryButtonStyle,
-  secondaryButtonStyle,
 } from './monthCalendarStyles'
 
 type MonthCalendarHeatmapControlsProps = {
@@ -26,31 +25,27 @@ export default function MonthCalendarHeatmapControls({
       {showHeatmapControls && (
         <>
           <div style={heatmapBarStyle}>
-            <button
-              type="button"
-              style={heatmapMode === 'normal' ? primaryButtonStyle : secondaryButtonStyle}
-              onClick={() => onHeatmapModeChange('normal')}
-            >
-              zwykły
-            </button>
-
-            <button
-              type="button"
-              style={heatmapMode === 'balance' ? primaryButtonStyle : secondaryButtonStyle}
-              onClick={() => onHeatmapModeChange('balance')}
-            >
-              heatmapa
-            </button>
+            <FoundationSegmentedControl<HeatmapMode>
+              value={heatmapMode}
+              ariaLabel="Tryb kalendarza"
+              density="compact"
+              options={[
+                { value: 'normal', label: 'Standard' },
+                { value: 'balance', label: 'Heatmapa' },
+              ]}
+              onChange={onHeatmapModeChange}
+            />
           </div>
 
-          <label style={heatmapSwitchRowStyle}>
-            <input
-              type="checkbox"
+          <div style={heatmapSwitchRowStyle}>
+            <span>Odwrócone kolory</span>
+            <FoundationSwitch
               checked={heatmapInverted}
-              onChange={(event) => onHeatmapInvertedChange(event.target.checked)}
+              onChange={onHeatmapInvertedChange}
+              ariaLabel="Odwrócone kolory heatmapy"
+              size="sm"
             />
-            <span>Odwróć kierunek kolorów</span>
-          </label>
+          </div>
         </>
       )}
     </>

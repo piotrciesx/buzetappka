@@ -6,6 +6,7 @@ import PaymentSplitEditor from "./PaymentSplitEditor";
 import TransactionCreatorCategorySection from "./transaction-creator/TransactionCreatorCategorySection";
 import TransactionCreatorHeader from "./transaction-creator/TransactionCreatorHeader";
 import TransactionCreatorModeToggles from "./transaction-creator/TransactionCreatorModeToggles";
+import { FoundationCheckbox } from "./ui/FoundationPrimitives";
 import { getDayInputFromDate, normalizeDayInput } from "../lib/dateUtils";
 import { uiInputApi } from "../lib/uiFoundation";
 import { useDescriptionSuggestions } from "../lib/useDescriptionSuggestions";
@@ -405,31 +406,17 @@ export default function TransactionCreatorModal(
                     style={dayFieldShellStyle}
                     data-transaction-day-field="true"
                   >
-                    <label
+                    <FoundationCheckbox
                       data-transaction-today-toggle="true"
-                      data-ui-checkbox="true"
-                      data-checkbox-density="compact"
-                      data-checkbox-align="field"
-                      style={{
-                        color: isTodayAvailable
-                          ? "var(--ui-text-secondary)"
-                          : "var(--ui-text-muted)",
-                        cursor: isTodayAvailable ? "pointer" : "not-allowed",
+                      density="compact"
+                      align="field"
+                      checked={isTodaySelected}
+                      disabled={!isTodayAvailable}
+                      label="dziś"
+                      onCheckedChange={(value) => {
+                        setTransactionDate(value ? todayDate : "");
                       }}
-                    >
-                      <input
-                        className="ui-checkbox__input"
-                        type="checkbox"
-                        checked={isTodaySelected}
-                        disabled={!isTodayAvailable}
-                        onChange={(event) => {
-                          setTransactionDate(
-                            event.target.checked ? todayDate : "",
-                          );
-                        }}
-                      />
-                      dziś
-                    </label>
+                    />
 
                     <input
                       ref={dayInputRef}

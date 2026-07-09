@@ -428,9 +428,29 @@
   --ui-button-tone-danger-text: var(--ui-color-expense);
   --ui-button-tone-success-border: var(--ui-button-border);
   --ui-button-tone-success-text: var(--ui-color-income);
-  --ui-button-disabled-bg: var(--ui-color-soft-section-background);
-  --ui-button-disabled-border: var(--ui-color-disabled-border);
-  --ui-button-disabled-text: var(--ui-color-muted-text);
+  --ui-button-disabled-bg: color-mix(in srgb, var(--ui-day-accent) 12%, #ffffff);
+  --ui-button-disabled-border: color-mix(in srgb, var(--ui-day-accent) 18%, #ffffff);
+  --ui-button-disabled-text: color-mix(in srgb, var(--ui-day-accent) 52%, #ffffff);
+  --ui-button-primary-disabled-bg: color-mix(in srgb, var(--ui-day-accent) 18%, #ffffff);
+  --ui-button-primary-disabled-border: color-mix(in srgb, var(--ui-day-accent) 24%, #ffffff);
+  --ui-button-primary-disabled-text: color-mix(in srgb, var(--ui-day-accent) 58%, #ffffff);
+
+  /* Frozen-concept shared primitive aliases */
+  --foundation-radius-sm: var(--ui-radius-xs);
+  --foundation-radius-md: var(--ui-radius-sm);
+  --foundation-border-subtle: var(--ui-day-accent-border-subtle);
+  --foundation-surface: var(--ui-surface-card);
+  --foundation-surface-muted: var(--ui-surface-soft);
+  --foundation-blue: var(--ui-day-accent);
+  --foundation-danger: var(--ui-financial-expense);
+  --foundation-success: var(--ui-financial-income);
+  --foundation-shadow-dropdown: var(--ui-shadow-dropdown);
+  --foundation-shadow-modal: var(--ui-shadow-modal);
+  --foundation-control-height-sm: 32px;
+  --foundation-control-height-md: 38px;
+  --foundation-control-height-lg: 44px;
+  --foundation-switch-width-md: 62px;
+  --foundation-switch-width-sm: 52px;
 
   /* Full button primitive contracts */
   --ui-button-confirm-bg: var(--ui-day-accent);
@@ -2310,6 +2330,134 @@
 [data-ui-list-switch="true"] button[data-active="true"] {
   color: #ffffff;
   background: var(--ui-day-accent);
+}
+
+[data-ui-segmented-control="true"][data-ui-segmented-density="compact"] {
+  min-height: var(--foundation-control-height-sm);
+}
+
+[data-ui-segmented-control="true"][data-ui-segmented-density="compact"] button {
+  min-height: calc(var(--foundation-control-height-sm) - 2px);
+  padding-inline: var(--ui-space-6);
+  font-size: var(--ui-font-size-meta);
+}
+
+[data-ui-segmented-control="true"][data-ui-segmented-width="full"] {
+  width: 100%;
+}
+
+[data-ui-switch="true"] {
+  width: var(--foundation-switch-width-md);
+  min-width: var(--foundation-switch-width-md);
+  min-height: var(--foundation-control-height-sm);
+  display: inline-grid;
+  grid-template-columns: minmax(0, 1fr) 22px;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 5px;
+  border: 1px solid var(--ui-day-accent-border-strong);
+  border-radius: var(--foundation-radius-md);
+  background: #ffffff;
+  color: var(--ui-text-secondary);
+  font-size: var(--ui-font-size-caption);
+  font-weight: var(--ui-font-weight-bold);
+  line-height: 1;
+  box-shadow: none;
+  cursor: pointer;
+  transition:
+    background var(--ui-motion-fast) var(--ui-motion-ease-standard),
+    border-color var(--ui-motion-fast) var(--ui-motion-ease-standard),
+    color var(--ui-motion-fast) var(--ui-motion-ease-standard);
+}
+
+[data-ui-switch="true"][data-ui-switch-size="sm"] {
+  width: var(--foundation-switch-width-sm);
+  min-width: var(--foundation-switch-width-sm);
+  min-height: 28px;
+  grid-template-columns: minmax(0, 1fr) 18px;
+  padding: 3px 4px;
+}
+
+[data-ui-switch="true"]:hover:not(:disabled) {
+  border-color: var(--ui-day-accent-border-hover);
+  background: var(--ui-color-hover-background);
+}
+
+[data-ui-switch="true"][data-state="on"] {
+  border-color: var(--ui-day-accent);
+  background: var(--ui-day-accent);
+  color: #ffffff;
+}
+
+[data-ui-switch="true"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+[data-ui-switch-label="true"] {
+  min-width: 0;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-ui-switch-knob="true"] {
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--ui-day-accent-border-subtle);
+  border-radius: var(--foundation-radius-sm);
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.10);
+}
+
+[data-ui-switch="true"][data-ui-switch-size="sm"] [data-ui-switch-knob="true"] {
+  width: 18px;
+  height: 18px;
+}
+
+[data-ui-checkbox="true"] {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-checkbox-gap);
+  color: var(--ui-text-secondary);
+  font-size: var(--ui-font-size-body-sm);
+  font-weight: var(--ui-font-weight-medium);
+  line-height: var(--ui-line-height-compact);
+  cursor: pointer;
+}
+
+[data-ui-checkbox="true"][data-checkbox-align="field"] {
+  min-height: var(--ui-checkbox-field-height);
+  padding: var(--ui-checkbox-field-padding);
+  border: 1px solid var(--ui-border-soft);
+  border-radius: var(--foundation-radius-md);
+  background: #ffffff;
+}
+
+[data-ui-checkbox="true"] .ui-checkbox__input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--ui-day-accent);
+}
+
+[data-ui-checkbox="true"][data-checkbox-density="compact"] .ui-checkbox__input {
+  width: 16px;
+  height: 16px;
+}
+
+[data-ui-checkbox="true"][data-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+[data-ui-checkbox="true"] .ui-checkbox__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 [data-financial-goals-mode-controls="true"] {
@@ -4597,9 +4745,9 @@ button[aria-expanded="true"] [data-ui-picker-chevron="true"]::before {
   --mgmt-action-primary-bg-hover: var(--mgmt-blue-hover);
   --mgmt-action-primary-border: var(--mgmt-blue-hover);
   --mgmt-action-primary-text: #ffffff;
-  --mgmt-action-primary-disabled-bg: linear-gradient(0deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.24)), var(--mgmt-blue);
-  --mgmt-action-primary-disabled-border: var(--mgmt-blue-hover);
-  --mgmt-action-primary-disabled-text: #ffffff;
+  --mgmt-action-primary-disabled-bg: var(--ui-button-primary-disabled-bg);
+  --mgmt-action-primary-disabled-border: var(--ui-button-primary-disabled-border);
+  --mgmt-action-primary-disabled-text: var(--ui-button-primary-disabled-text);
 
   --mgmt-action-neutral-bg: #ffffff;
   --mgmt-action-neutral-bg-hover: #f7faff;

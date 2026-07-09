@@ -435,6 +435,182 @@ export function DangerAction({
   );
 }
 
+type FoundationButtonVariant = "primary" | "secondary" | "ghost" | "subtle" | "danger";
+
+type FoundationButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: FoundationButtonVariant;
+  width?: "auto" | "wide" | "full";
+  density?: FoundationDensity;
+};
+
+const getActionIntentForVariant = (variant: FoundationButtonVariant) => {
+  if (variant === "danger") return "danger";
+  if (variant === "subtle" || variant === "ghost") return "neutral";
+  return "neutral";
+};
+
+export function FoundationButton({
+  variant = "secondary",
+  width = "auto",
+  density = "regular",
+  type = "button",
+  children,
+  ...buttonProps
+}: FoundationButtonProps) {
+  const actionKind = variant === "primary" ? "primary" : variant === "danger" ? "danger" : "secondary";
+
+  return (
+    <button
+      {...buttonProps}
+      type={type}
+      data-ui-action={actionKind}
+      data-ui-action-variant={variant}
+      data-ui-action-intent={getActionIntentForVariant(variant)}
+      data-ui-action-width={width}
+      data-ui-density={density}
+    >
+      {children}
+    </button>
+  );
+}
+
+type FoundationSwitchProps = {
+  checked: boolean;
+  disabled?: boolean;
+  onChange?: (value: boolean) => void;
+  onLabel?: ReactNode;
+  offLabel?: ReactNode;
+  ariaLabel?: string;
+  size?: "sm" | "md";
+};
+
+export function FoundationSwitch({
+  checked,
+  disabled = false,
+  onChange,
+  onLabel = "Wł.",
+  offLabel = "Wył.",
+  ariaLabel,
+  size = "md",
+}: FoundationSwitchProps) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      aria-label={ariaLabel}
+      disabled={disabled}
+      data-ui-switch="true"
+      data-ui-switch-size={size}
+      data-state={checked ? "on" : "off"}
+      onClick={() => onChange?.(!checked)}
+    >
+      <span data-ui-switch-label="true">{checked ? onLabel : offLabel}</span>
+      <span data-ui-switch-knob="true" aria-hidden="true" />
+    </button>
+  );
+}
+
+type FoundationSegmentedOption<Value extends string = string> = {
+  value: Value;
+  label: ReactNode;
+  disabled?: boolean;
+};
+
+type FoundationSegmentedControlProps<Value extends string = string> = {
+  value: Value;
+  options: FoundationSegmentedOption<Value>[];
+  onChange: (value: Value) => void;
+  ariaLabel: string;
+  density?: "compact" | "normal";
+  width?: "auto" | "full";
+};
+
+export function FoundationSegmentedControl<Value extends string = string>({
+  value,
+  options,
+  onChange,
+  ariaLabel,
+  density = "normal",
+  width = "auto",
+}: FoundationSegmentedControlProps<Value>) {
+  return (
+    <div
+      data-ui-list-switch="true"
+      data-ui-segmented-control="true"
+      data-ui-segmented-density={density}
+      data-ui-segmented-width={width}
+      role="group"
+      aria-label={ariaLabel}
+    >
+      {options.map((option) => {
+        const isActive = option.value === value;
+
+        return (
+          <button
+            key={option.value}
+            type="button"
+            data-active={isActive ? "true" : undefined}
+            disabled={option.disabled}
+            aria-pressed={isActive}
+            onClick={() => onChange(option.value)}
+          >
+            {option.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+type FoundationCheckboxProps = Omit<HTMLAttributes<HTMLLabelElement>, "onChange"> & {
+  checked: boolean;
+  onCheckedChange?: (value: boolean) => void;
+  label: ReactNode;
+  supportIcon?: ReactNode;
+  variant?: "default" | "neutral-card";
+  density?: "compact" | "regular";
+  align?: "inline" | "field";
+  disabled?: boolean;
+  inputProps?: Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "checked" | "onChange" | "disabled">;
+};
+
+export function FoundationCheckbox({
+  checked,
+  onCheckedChange,
+  label,
+  supportIcon,
+  variant = "default",
+  density = "regular",
+  align = "inline",
+  disabled,
+  inputProps,
+  ...labelProps
+}: FoundationCheckboxProps) {
+  return (
+    <label
+      {...labelProps}
+      data-ui-checkbox="true"
+      data-checkbox-variant={variant}
+      data-checkbox-density={density}
+      data-checkbox-align={align}
+      data-checked={checked ? "true" : undefined}
+      data-disabled={disabled ? "true" : undefined}
+    >
+      {supportIcon}
+      <input
+        {...inputProps}
+        className="ui-checkbox__input"
+        type="checkbox"
+        checked={checked}
+        disabled={disabled}
+        onChange={(event) => onCheckedChange?.(event.target.checked)}
+      />
+      <span className="ui-checkbox__label">{label}</span>
+    </label>
+  );
+}
+
 type IconActionProps = Omit<ActionProps, "width"> &
   Omit<
     ButtonHTMLAttributes<HTMLButtonElement>,
@@ -469,6 +645,17 @@ export function IconAction({
       {children}
     </button>
   );
+}
+
+type FoundationIconButtonProps = Omit<IconActionProps, "children"> & {
+  icon: ReactNode;
+};
+
+export function FoundationIconButton({
+  icon,
+  ...buttonProps
+}: FoundationIconButtonProps) {
+  return <IconAction {...buttonProps}>{icon}</IconAction>;
 }
 
 
