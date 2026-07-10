@@ -13,6 +13,48 @@ import { useUserPublicProfile } from '../../lib/useUserPublicProfile'
 
 type BudgetAppControllerViewPropsContext = Record<string, any>
 
+type BudgetAlertLike = {
+  id?: unknown
+  planId?: unknown
+  plan_id?: unknown
+  limit_id?: unknown
+  categoryId?: unknown
+  category_id?: unknown
+  usageAmount?: unknown
+  usage_amount?: unknown
+  usagePercent?: unknown
+  usage_percent?: unknown
+  amount?: unknown
+  limitAmount?: unknown
+  limit_amount?: unknown
+  text?: unknown
+  alertState?: { text?: unknown } | null
+  limit?: {
+    id?: unknown
+    category_id?: unknown
+    amount?: unknown
+  } | null
+}
+
+const getStringFallback = (...values: unknown[]) => {
+  const value = values.find((candidate) => typeof candidate === 'string' && candidate.length > 0)
+  return typeof value === 'string' ? value : null
+}
+
+const getBudgetAlertId = (alert: BudgetAlertLike, index: number) =>
+  getStringFallback(
+    alert.limit?.id,
+    alert.planId,
+    alert.plan_id,
+    alert.limit_id,
+    alert.id,
+  ) || `budget-limit-alert-${index}`
+
+const getNumberFallback = (...values: unknown[]) => {
+  const value = values.find((candidate) => Number.isFinite(Number(candidate)))
+  return value === undefined ? 0 : Number(value)
+}
+
 const getSnoozeStorageKey = (profileId: string, month: string) =>
   `budget-recurring-snooze:${profileId}:${month}`
 const getScopedSnoozeStorageKey = (userId: string, profileId: string, month: string) =>
@@ -401,17 +443,34 @@ export function useBudgetAppControllerViewProps(ctx: BudgetAppControllerViewProp
   ])
 
   const rightRailBudgetAlerts = useMemo(
-    () =>
-      (effectiveVisibleModules.budgetLimits ? activeBudgetLimitAlerts : []).map((alert: any) => ({
-        id: alert.limit.id,
-        categoryLabel: alert.limit.category_id
-          ? categoriesById[alert.limit.category_id]?.name || 'Kategoria'
-          : 'Wydatki',
-        usageAmount: alert.usageAmount,
-        limitAmount: alert.limit.amount,
-        usagePercent: alert.usagePercent,
-        text: alert.alertState.text,
-      })),
+    () => {
+      const sourceAlerts = effectiveVisibleModules.budgetLimits && Array.isArray(activeBudgetLimitAlerts)
+        ? activeBudgetLimitAlerts
+        : []
+
+      return sourceAlerts.flatMap((rawAlert: unknown, index: number) => {
+        const alert = rawAlert as BudgetAlertLike
+        if (!alert) return []
+
+        if (process.env.NODE_ENV === 'development' && !alert.limit && !alert.planId && !alert.plan_id) {
+          console.warn('[budget-limits] Alert bez powiązanego limitu', alert)
+        }
+
+        const categoryId = getStringFallback(alert.limit?.category_id, alert.categoryId, alert.category_id)
+        const categoryLabel = categoryId
+          ? categoriesById[categoryId]?.name || 'Kategoria'
+          : 'Limit budżetowy'
+
+        return [{
+          id: getBudgetAlertId(alert, index),
+          categoryLabel,
+          usageAmount: getNumberFallback(alert.usageAmount, alert.usage_amount, alert.amount),
+          limitAmount: getNumberFallback(alert.limit?.amount, alert.amount, alert.limitAmount, alert.limit_amount),
+          usagePercent: getNumberFallback(alert.usagePercent, alert.usage_percent),
+          text: getStringFallback(alert.alertState?.text, alert.text) || 'Limit budżetowy wymaga uwagi',
+        }]
+      })
+    },
     [activeBudgetLimitAlerts, categoriesById, effectiveVisibleModules.budgetLimits]
   )
 
