@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useMemo, useState, type CSSProperties } from 'react'
+import { Component, useEffect, useMemo, useState, type CSSProperties, type ErrorInfo, type ReactNode } from 'react'
 import type { Category, Transaction } from '../lib/budgetPageTypes'
-import type { BudgetLimitPlanDraft } from '../lib/budget-limits/data'
+import type { BudgetLimitPlanDraft, BudgetLimitPlanRow, BudgetLimitVersionRow } from '../lib/budget-limits/data'
 import type { ReturnTypeOfUseBudgetLimitsData } from '../lib/budget-limits/useBudgetLimitsData'
 import type { BudgetLimitCreatorRequest } from '../lib/budget-limits/treeBridge'
 import {
@@ -39,6 +39,108 @@ const normalizeThresholds = (text: string) =>
     .filter((value) => Number.isInteger(value) && value > 0 && value < 100))]
     .sort((a, b) => a - b)
 
+const DEFAULT_ALERT_THRESHOLDS = [50, 80, 90]
+const MONTH_PATTERN = /^\d{4}-\d{2}$/
+
+const getSafeMonth = (month: string | null | undefined) =>
+  typeof month === 'string' && MONTH_PATTERN.test(month)
+    ? month
+    : new Date().toISOString().slice(0, 7)
+
+const normalizeThresholdList = (value: unknown) => {
+  if (value === null || value === undefined) return DEFAULT_ALERT_THRESHOLDS
+  const rawValues = Array.isArray(value)
+    ? value
+    : typeof value === 'string'
+      ? value.split(',')
+      : []
+  return [...new Set(rawValues
+    .map((item) => Number(typeof item === 'string' ? item.trim() : item))
+    .filter((item) => Number.isInteger(item) && item > 0 && item < 100))]
+    .sort((a, b) => a - b)
+}
+
+const normalizeLimitAmount = (value: unknown) => {
+  const amount = Number(value)
+  return Number.isFinite(amount) && amount > 0 ? amount : 0
+}
+
+const normalizeScopeType = (value: unknown): BudgetLimitPlanDraft['scope_type'] =>
+  value === 'global_expenses' || value === 'category_l2' || value === 'category_l3'
+    ? value
+    : 'category_l2'
+
+const normalizeDraft = (
+  draftValue: Partial<BudgetLimitPlanDraft> | null | undefined,
+  fallbackMonth: string,
+): BudgetLimitPlanDraft => {
+  const scopeType = normalizeScopeType(draftValue?.scope_type)
+
+  return {
+    id: typeof draftValue?.id === 'string' ? draftValue.id : undefined,
+    name: typeof draftValue?.name === 'string' ? draftValue.name : '',
+    scope_type: scopeType,
+    category_id: scopeType === 'global_expenses'
+      ? null
+      : typeof draftValue?.category_id === 'string'
+        ? draftValue.category_id
+        : null,
+    limit_amount: normalizeLimitAmount(draftValue?.limit_amount),
+    effective_month: getSafeMonth(draftValue?.effective_month || fallbackMonth),
+    alert_thresholds: normalizeThresholdList(draftValue?.alert_thresholds),
+    forecast_alert_enabled: draftValue?.forecast_alert_enabled !== false,
+    status: draftValue?.status === 'inactive' ? 'inactive' : 'active',
+  }
+}
+
+const buildSafeCreatorDraft = (
+  month: string,
+  plan?: BudgetLimitPlanRow,
+  version?: BudgetLimitVersionRow | null,
+) => {
+  const safeMonth = getSafeMonth(month)
+  const creator = buildBudgetLimitCreatorViewModel(safeMonth, plan, version || undefined)
+  return normalizeDraft(creator.draft, safeMonth)
+}
+
+class BudgetLimitsPanelErrorBoundary extends Component<
+  { children: ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false }
+
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('[budget-limits] Panel render failed.', error, errorInfo)
+  }
+
+  reset = () => {
+    this.setState({ hasError: false })
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <section data-budget-limits-view="fallback" data-ui-management-shell="true">
+          <div data-ui-empty-state="true">
+            <h3>Nie udało się otworzyć limitu</h3>
+            <p>Panel limitów napotkał błąd podczas otwierania formularza.</p>
+            <div data-ui-action-group="true">
+              <SecondaryAction onClick={this.reset}>Wróć do listy</SecondaryAction>
+              <PrimaryAction onClick={this.reset}>Spróbuj ponownie</PrimaryAction>
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    return this.props.children
+  }
+}
+
 const getRoot = (id: string, categories: Record<string, Category>) => {
   let current = categories[id]
   while (current?.parent_id) current = categories[current.parent_id]
@@ -58,6 +160,14 @@ const usageColor = (status: BudgetLimitCardViewModel['status']) => {
 }
 
 export default function BudgetLimitsV1Panel(props: Props) {
+  return (
+    <BudgetLimitsPanelErrorBoundary>
+      <BudgetLimitsV1PanelContent {...props} />
+    </BudgetLimitsPanelErrorBoundary>
+  )
+}
+
+function BudgetLimitsV1PanelContent(props: Props) {
   const { creatorRequest, data, onCreatorRequestHandled } = props
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [draft, setDraft] = useState<BudgetLimitPlanDraft | null>(null)
@@ -67,9 +177,20 @@ export default function BudgetLimitsV1Panel(props: Props) {
   const [levelFilter, setLevelFilter] = useState<BudgetLimitLevelFilter>('all')
   const [statusFilter, setStatusFilter] = useState<BudgetLimitStatusFilter>('all')
   const [sort, setSort] = useState<BudgetLimitSort>('manual')
+  const plans = useMemo(() => Array.isArray(data?.plans) ? data.plans : [], [data?.plans])
+  const versions = useMemo(() => Array.isArray(data?.versions) ? data.versions : [], [data?.versions])
+  const calculated = useMemo(() => Array.isArray(data?.calculated) ? data.calculated : [], [data?.calculated])
+  const alerts = useMemo(() => Array.isArray(data?.alerts) ? data.alerts : [], [data?.alerts])
 
   useEffect(() => {
-    const openCreate = () => setDraft(buildBudgetLimitCreatorViewModel(props.selectedMonth).draft)
+    const openCreate = () => {
+      try {
+        setDraft(buildSafeCreatorDraft(props.selectedMonth))
+      } catch (error) {
+        console.error('[budget-limits] Could not open creator.', error)
+        setNotice('Nie udało się otworzyć limitu')
+      }
+    }
     window.addEventListener('budget-open-budget-limit-create', openCreate)
     return () => window.removeEventListener('budget-open-budget-limit-create', openCreate)
   }, [props.selectedMonth])
@@ -79,26 +200,26 @@ export default function BudgetLimitsV1Panel(props: Props) {
     if (!request) return
 
     const plan = request.existingPlanId
-      ? data.plans.find((item) => item.id === request.existingPlanId)
+      ? plans.find((item) => item.id === request.existingPlanId)
       : undefined
     const version = plan
-      ? data.versions
+      ? versions
         .filter((item) => item.plan_id === plan.id && item.effective_from <= `${request.effectiveMonth}-01`)
         .at(-1)
       : undefined
-    const creator = buildBudgetLimitCreatorViewModel(request.effectiveMonth, plan, version)
+    const creatorDraft = buildSafeCreatorDraft(request.effectiveMonth, plan, version)
     const categoryName = request.categoryId ? props.categoriesById[request.categoryId]?.name : null
 
     setDraft({
-      ...creator.draft,
+      ...creatorDraft,
       name: categoryName || 'Wszystkie wydatki',
       scope_type: request.scopeType,
       category_id: request.categoryId,
-      effective_month: request.effectiveMonth,
+      effective_month: getSafeMonth(request.effectiveMonth),
     })
     setSelectedId(plan?.id ?? null)
     onCreatorRequestHandled()
-  }, [creatorRequest, data.plans, data.versions, onCreatorRequestHandled, props.categoriesById])
+  }, [creatorRequest, onCreatorRequestHandled, plans, props.categoriesById, versions])
 
   const getTechnicalName = (draftValue: BudgetLimitPlanDraft) =>
     draftValue.scope_type === 'global_expenses'
@@ -107,17 +228,20 @@ export default function BudgetLimitsV1Panel(props: Props) {
         ? props.categoriesById[draftValue.category_id]?.name || 'Limit kategorii'
         : 'Limit kategorii'
 
-  const selected = data.plans.find((plan) => plan.id === selectedId) || null
+  const selected = plans.find((plan) => plan.id === selectedId) || null
   const selectedVersion = selected
-    ? data.versions
+    ? versions
       .filter((version) => version.plan_id === selected.id && version.effective_from <= `${props.selectedMonth}-01` && (!version.effective_to || version.effective_to >= `${props.selectedMonth}-01`))
-      .at(-1) || data.versions.filter((version) => version.plan_id === selected.id).at(-1) || null
+      .at(-1) || versions.filter((version) => version.plan_id === selected.id).at(-1) || null
     : null
 
-  const currentItems = useMemo(() => data.plans.flatMap((plan) => {
-    const item = data.calculated.find((value) => value.period.plan_id === plan.id && value.period.period_start.slice(0, 7) === props.selectedMonth)
+  const currentItems = useMemo(() => plans.flatMap((plan) => {
+    const item = calculated.find((value) => {
+      const periodStart = value.period?.period_start
+      return value.period?.plan_id === plan.id && typeof periodStart === 'string' && periodStart.slice(0, 7) === props.selectedMonth
+    })
     return item ? [{ ...item, plan }] : []
-  }), [data.calculated, data.plans, props.selectedMonth])
+  }), [calculated, plans, props.selectedMonth])
 
   const allCards = useMemo(
     () => buildBudgetLimitListViewModel(currentItems, props.categoriesById),
@@ -135,8 +259,9 @@ export default function BudgetLimitsV1Panel(props: Props) {
 
   const attention = useMemo(() => buildBudgetLimitsAttentionViewModel(allCards), [allCards])
 
-  const categoryOptions = Object.values(props.categoriesById).filter(
-    (category) => (category.level === 2 || category.level === 3) && getRoot(category.id, props.categoriesById) === props.expenseLevel1Id,
+  const safeCategoriesById = props.categoriesById || {}
+  const categoryOptions = Object.values(safeCategoriesById).filter(
+    (category) => (category.level === 2 || category.level === 3) && getRoot(category.id, safeCategoriesById) === props.expenseLevel1Id,
   )
 
   const run = async (action: () => Promise<void>) => {
@@ -201,16 +326,16 @@ export default function BudgetLimitsV1Panel(props: Props) {
 
       <div data-ui-action-group="true" data-ui-action-stack="record" onClick={(event) => event.stopPropagation()}>
         <SecondaryAction onClick={() => {
-          const plan = data.plans.find((item) => item.id === card.id)
-          const version = plan ? data.versions.filter((item) => item.plan_id === plan.id).at(-1) : null
-          if (plan && version) setDraft(buildBudgetLimitCreatorViewModel(props.selectedMonth, plan, version).draft)
+          const plan = plans.find((item) => item.id === card.id)
+          const version = plan ? versions.filter((item) => item.plan_id === plan.id).at(-1) : null
+          if (plan && version) setDraft(buildSafeCreatorDraft(props.selectedMonth, plan, version))
         }}>Edytuj</SecondaryAction>
         <DangerAction disabled={busy} onClick={() => void run(() => data.setPlanActive(card.id, !card.active, props.selectedMonth))}>{card.active ? 'Wyłącz' : 'Włącz'}</DangerAction>
       </div>
     </article>
   )
 
-  if (data.error) {
+  if (data?.error) {
     return <div data-ui-empty-state="true">Moduł v1 wymaga migracji <code>budget_limits_stage_2.sql</code>. {data.error}</div>
   }
 
@@ -228,12 +353,12 @@ export default function BudgetLimitsV1Panel(props: Props) {
           {draft.scope_type !== 'global_expenses' && <label>Kategoria<select value={draft.category_id || ''} onChange={(event) => setDraft({ ...draft, category_id: event.target.value || null })}><option value="">Wybierz</option>{categoryOptions.filter((category) => category.level === (draft.scope_type === 'category_l2' ? 2 : 3)).map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select></label>}
           <label>Kwota limitu<input type="number" min="0.01" step="0.01" value={draft.limit_amount || ''} onChange={(event) => setDraft({ ...draft, limit_amount: Number(event.target.value) })} /></label>
           <label>Obowiązuje od miesiąca<input type="month" value={draft.effective_month} onChange={(event) => setDraft({ ...draft, effective_month: event.target.value })} /></label>
-          <label>Progi alertów (%)<input value={draft.alert_thresholds.join(',')} onChange={(event) => setDraft({ ...draft, alert_thresholds: normalizeThresholds(event.target.value) })} /></label>
+          <label>Progi alertów (%)<input value={(draft.alert_thresholds || []).join(',')} onChange={(event) => setDraft({ ...draft, alert_thresholds: normalizeThresholds(event.target.value) })} /></label>
           <label><input type="checkbox" checked={draft.forecast_alert_enabled} onChange={(event) => setDraft({ ...draft, forecast_alert_enabled: event.target.checked })} /> Alert ryzyka prognozy</label>
           <label>Status<select value={draft.status} onChange={(event) => setDraft({ ...draft, status: event.target.value as BudgetLimitPlanDraft['status'] })}><option value="active">Aktywny</option><option value="inactive">Nieaktywny</option></select></label>
           {notice && <p role="status" data-ui-management-inline-notice="true">{notice}</p>}
           <div data-ui-action-group="true">
-            <PrimaryAction disabled={busy || draft.limit_amount <= 0 || (draft.scope_type !== 'global_expenses' && !draft.category_id)} onClick={() => void run(async () => { const normalizedDraft = { ...draft, name: getTechnicalName(draft) }; await (draft.id ? data.updatePlan(normalizedDraft) : data.createPlan(normalizedDraft)); setDraft(null) })}>{draft.id ? 'Zapisz wersję' : 'Dodaj limit'}</PrimaryAction>
+            <PrimaryAction disabled={busy || draft.limit_amount <= 0 || (draft.scope_type !== 'global_expenses' && !draft.category_id)} onClick={() => void run(async () => { const normalizedDraft = { ...normalizeDraft(draft, props.selectedMonth), name: getTechnicalName(draft) }; await (draft.id ? data.updatePlan(normalizedDraft) : data.createPlan(normalizedDraft)); setDraft(null) })}>{draft.id ? 'Zapisz wersję' : 'Dodaj limit'}</PrimaryAction>
             <SecondaryAction onClick={() => setDraft(null)}>Anuluj</SecondaryAction>
           </div>
         </div>
@@ -242,16 +367,19 @@ export default function BudgetLimitsV1Panel(props: Props) {
   }
 
   const selectedCurrent = selected
-    ? data.calculated.find((item) => item.period.plan_id === selected.id && item.period.period_start.slice(0, 7) === props.selectedMonth)
+    ? calculated.find((item) => {
+      const periodStart = item.period?.period_start
+      return item.period?.plan_id === selected.id && typeof periodStart === 'string' && periodStart.slice(0, 7) === props.selectedMonth
+    })
     : null
   const details = selected && selectedVersion && selectedCurrent
     ? buildBudgetLimitDetailsViewModel({
       plan: selected,
       version: selectedVersion,
       current: selectedCurrent,
-      history: data.calculated.filter((item) => item.period.plan_id === selected.id),
-      versions: data.versions,
-      alerts: data.alerts,
+      history: calculated.filter((item) => item.period.plan_id === selected.id),
+      versions,
+      alerts,
       categories: props.categoriesById,
     })
     : null
@@ -411,7 +539,7 @@ export default function BudgetLimitsV1Panel(props: Props) {
             </section>
 
             <footer data-ui-action-group="true" data-ui-details-action-bar="true">
-              <SecondaryAction onClick={() => setDraft(buildBudgetLimitCreatorViewModel(props.selectedMonth, selected || undefined, selectedVersion || undefined).draft)}>Edytuj</SecondaryAction>
+              <SecondaryAction onClick={() => setDraft(buildSafeCreatorDraft(props.selectedMonth, selected || undefined, selectedVersion || undefined))}>Edytuj</SecondaryAction>
               {selected?.status === 'active'
                 ? <DangerAction disabled={busy} onClick={() => void run(() => data.setPlanActive(selected.id, false, props.selectedMonth))}>Wyłącz limit</DangerAction>
                 : selected && <PrimaryAction disabled={busy} onClick={() => void run(() => data.setPlanActive(selected.id, true, props.selectedMonth, selectedVersion?.limit_amount || 0))}>Włącz limit</PrimaryAction>}
@@ -426,7 +554,7 @@ export default function BudgetLimitsV1Panel(props: Props) {
     <section data-budget-limits-view="list" data-ui-management-shell="true" data-ui-utility-modal-size="xl">
       {topContent}
       <div data-ui-management-list="true" data-ui-large-record-list="true">
-        {data.loading ? <p>Ładowanie…</p> : cards.length === 0 ? <p data-ui-empty-block="true">Brak limitów w tym miesiącu.</p> : cards.map((card) => renderCard(card))}
+        {data?.loading ? <p>Ładowanie…</p> : cards.length === 0 ? <p data-ui-empty-block="true">Brak limitów w tym miesiącu.</p> : cards.map((card) => renderCard(card))}
       </div>
       <footer data-ui-management-footer="true">Łącznie: {cards.length} limitów</footer>
     </section>
