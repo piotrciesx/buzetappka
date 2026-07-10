@@ -10,7 +10,6 @@ import {
   calendarDayCountStyle,
   calendarDayMetaStyle,
   calendarDayNumberStyle,
-  calendarExpandBadgeStyle,
 } from './monthCalendarStyles'
 import { HeatmapMode, MonthCalendarPanelProps } from './monthCalendarTypes'
 import { CalendarCell } from '../reminder-calendar/reminderCalendarPrimitives'
@@ -84,9 +83,8 @@ export const buildMonthCalendarDayCells = ({
       cellStyle = isActive
         ? {
             ...calendarDayCellStyle,
-            background: 'var(--ui-color-extra-light-blue)',
+            background: 'rgba(255, 255, 255, 0.92)',
             border: '1px solid var(--ui-day-accent-border-hover)',
-            boxShadow: '0 0 0 2px rgba(20, 84, 212, 0.12)',
           }
         : calendarDayCellStyle
     } else {
@@ -117,7 +115,7 @@ export const buildMonthCalendarDayCells = ({
       if (isActive) {
         cellStyle = {
           ...cellStyle,
-          boxShadow: '0 0 0 2px rgba(37, 99, 235, 0.35)',
+          border: '1px solid var(--ui-day-accent-border-hover)',
         }
       }
     }
@@ -139,31 +137,6 @@ export const buildMonthCalendarDayCells = ({
         disabled={isBeforeBudgetStart}
         onClick={() => setSelectedDay(dayKey)}
       >
-        <div
-          style={{
-            ...calendarExpandBadgeStyle,
-            color: dynamicTextColor,
-            background:
-              dynamicTextColor === 'var(--ui-color-card-background)' ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.78)',
-            border:
-              dynamicTextColor === 'var(--ui-color-card-background)'
-                ? '1px solid rgba(255,255,255,0.28)'
-                : '1px solid rgba(203, 213, 225, 0.72)',
-            fontSize: 0,
-          }}
-        >
-          <svg viewBox="0 0 16 16" width="10" height="10" aria-hidden="true">
-            <path
-              d="M6 4h6v6M12 4 4 12"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="1.7"
-            />
-          </svg>
-        </div>
-
         <div style={{ ...calendarDayNumberStyle, color: dynamicTextColor }}>{day}</div>
 
         {isBeforeBudgetStart ? (

@@ -1,4 +1,4 @@
-import { uiListRowApi, uiSurfacePrimitives, uiTypographyTokens } from '../../lib/uiFoundation'
+import { uiListRowApi, uiTypographyTokens } from '../../lib/uiFoundation'
 
 export const panelStyle = {
   border: 0,
@@ -12,9 +12,9 @@ export const panelStyle = {
 
 export const filtersGridStyle = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(5, minmax(0, 1fr))',
-  gap: 10,
-  marginBottom: 14,
+  gridTemplateColumns: 'repeat(6, minmax(0, 1fr))',
+  gap: 8,
+  marginBottom: 0,
 } as const
 
 export const filterFieldStyle = {
@@ -25,12 +25,18 @@ export const filterFieldStyle = {
 
 export const wideFilterFieldStyle = {
   ...filterFieldStyle,
-  gridColumn: 'span 3',
+  gridColumn: 'span 2',
 } as const
 
 export const regularFilterFieldStyle = {
   ...filterFieldStyle,
   gridColumn: 'span 2',
+} as const
+
+export const typeFilterFieldStyle = {
+  ...filterFieldStyle,
+  gridColumn: 'span 4',
+  overflow: 'visible',
 } as const
 
 export const compactFilterFieldStyle = {
@@ -40,17 +46,17 @@ export const compactFilterFieldStyle = {
 
 export const actionFilterFieldStyle = {
   ...filterFieldStyle,
-  gridColumn: 'span 3',
+  gridColumn: 'span 2',
   alignSelf: 'end',
   justifyItems: 'end',
 } as const
 
 export const resetButtonStyle = {
-  minHeight: 34,
-  padding: '0 12px',
+  minHeight: 30,
+  padding: '0 10px',
   borderRadius: 999,
-  border: '1px solid var(--ui-border-soft)',
-  background: 'var(--ui-glass-surface-soft)',
+  border: '1px solid transparent',
+  background: 'transparent',
   color: 'var(--ui-text-secondary)',
   cursor: 'pointer',
   fontSize: uiTypographyTokens.role.metadata,
@@ -59,34 +65,35 @@ export const resetButtonStyle = {
 
 export const statsGridStyle = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
-  gap: 10,
-  marginBottom: 14,
+  gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+  gap: 0,
+  marginBottom: 0,
 } as const
 
 export const statCardStyle = {
-  border: uiSurfacePrimitives.surfaceCard.border,
-  borderRadius: uiSurfacePrimitives.surfaceCard.radius,
-  padding: '10px 11px',
-  background: uiSurfacePrimitives.surfaceCard.background,
+  border: 0,
+  borderBottom: '1px solid var(--ui-border-divider)',
+  borderRadius: 0,
+  padding: '9px 0',
+  background: 'transparent',
 } as const
 
 export const incomeStatCardStyle = {
   ...statCardStyle,
-  background: 'var(--ui-financial-income-soft)',
-  border: '1px solid var(--ui-financial-income-soft)',
+  background: 'transparent',
+  borderBottom: '1px solid var(--ui-border-divider)',
 } as const
 
 export const expenseStatCardStyle = {
   ...statCardStyle,
-  background: 'var(--ui-financial-expense-soft)',
-  border: '1px solid var(--ui-financial-expense-soft)',
+  background: 'transparent',
+  borderBottom: '1px solid var(--ui-border-divider)',
 } as const
 
 export const balanceStatCardStyle = {
   ...statCardStyle,
-  background: 'var(--ui-surface-active)',
-  border: '1px solid var(--ui-border-active)',
+  background: 'transparent',
+  borderBottom: '1px solid var(--ui-border-divider)',
 } as const
 
 export const statLabelStyle = {
@@ -96,7 +103,7 @@ export const statLabelStyle = {
 } as const
 
 export const statValueStyle = {
-  fontSize: uiTypographyTokens.hierarchy.t2,
+  fontSize: uiTypographyTokens.hierarchy.t3,
   fontWeight: uiTypographyTokens.weight.bold,
 } as const
 
@@ -108,7 +115,7 @@ export const tagsWrapStyle = {
 } as const
 
 export const tagButtonBaseStyle = {
-  padding: '8px 12px',
+  padding: '5px 9px',
   borderRadius: 999,
   border: '1px solid var(--ui-border-soft)',
   background: 'var(--ui-surface-card)',
@@ -117,19 +124,19 @@ export const tagButtonBaseStyle = {
 } as const
 
 export const historyWrapStyle = {
-  border: uiSurfacePrimitives.surfaceCard.border,
-  borderRadius: uiSurfacePrimitives.surfaceCard.radius,
+  border: 0,
+  borderRadius: 0,
   overflow: 'hidden',
-  background: uiSurfacePrimitives.surfaceCard.background,
+  background: 'transparent',
 } as const
 
 export const historyHeaderStyle = {
   display: 'grid',
-  gridTemplateColumns: '120px minmax(180px, 1.2fr) minmax(220px, 2fr) 130px',
+  gridTemplateColumns: '104px 112px minmax(260px, 1fr) 104px',
   gap: 'var(--ui-row-gap)',
   minHeight: 'var(--ui-row-height-sm)',
-  padding: 'var(--ui-row-padding-y) var(--ui-row-padding-x)',
-  background: 'var(--ui-surface-soft)',
+  padding: '6px 0',
+  background: 'transparent',
   color: 'var(--ui-text-secondary)',
   fontWeight: uiTypographyTokens.weight.bold,
   fontSize: uiTypographyTokens.role.metadata,
@@ -138,10 +145,10 @@ export const historyHeaderStyle = {
 
 export const historyRowStyle = {
   display: 'grid',
-  gridTemplateColumns: '120px minmax(180px, 1.2fr) minmax(220px, 2fr) 130px',
+  gridTemplateColumns: '104px 112px minmax(260px, 1fr) 104px',
   gap: 'var(--ui-row-gap)',
-  minHeight: 'var(--ui-row-height-md)',
-  padding: 'var(--ui-row-padding-y) var(--ui-row-padding-x)',
+  minHeight: 48,
+  padding: '8px 0',
   borderBottom: '1px solid var(--ui-row-divider)',
   alignItems: 'start',
   fontSize: uiTypographyTokens.role.label,
@@ -152,9 +159,27 @@ export const historyRowClassName = `${uiListRowApi.classNames.row} ${uiListRowAp
 
 export const responsiveSearchStyle = `
   [data-search-filter-field="wide"],
+  [data-search-filter-field="type"],
   [data-search-filter-field="regular"],
   [data-search-filter-field="compact"] {
     min-width: 0;
+  }
+
+  [data-bank-search-filter-panel="true"],
+  [data-bank-search-filters="true"],
+  [data-search-filter-field="type"] {
+    overflow: visible;
+  }
+
+  [data-search-filter-field="type"] [data-ui-segmented-control="true"] {
+    max-width: 100%;
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+
+  [data-search-filter-field="type"] [data-ui-segmented-control="true"] button {
+    flex: 1 1 max-content;
+    min-width: max-content;
   }
 
   @media (max-width: 920px) {
@@ -163,9 +188,14 @@ export const responsiveSearchStyle = `
     }
 
     [data-search-filter-field="wide"],
+    [data-search-filter-field="type"],
     [data-search-filter-field="regular"],
     [data-search-filter-field="compact"] {
       grid-column: span 1 !important;
+    }
+
+    [data-search-filter-field="type"] {
+      grid-column: span 2 !important;
     }
 
     [data-search-filter-field="actions"] {
@@ -210,16 +240,16 @@ export const transactionTagsStyle = {
 
 export const transactionTagBadgeStyle = {
   fontSize: uiTypographyTokens.role.metadata,
-  padding: '4px 8px',
+  padding: '3px 7px',
   borderRadius: 999,
-  background: 'var(--ui-surface-active)',
-  border: '1px solid var(--ui-border-active)',
+  background: 'transparent',
+  border: '1px solid var(--ui-border-soft)',
   color: 'var(--ui-text-link)',
   cursor: 'pointer',
 } as const
 
 export const emptyStateStyle = {
-  padding: 16,
-  fontSize: uiTypographyTokens.hierarchy.t3,
+  padding: '16px 0',
+  fontSize: uiTypographyTokens.role.label,
   opacity: 0.75,
 } as const

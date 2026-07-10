@@ -2,10 +2,10 @@ import { uiControlPrimitives, uiTypographyTokens, uiZIndex } from '../../lib/uiF
 
 export const calendarPanelStyle = {
   marginBottom: 'var(--ui-space-6)',
-  background: 'var(--ui-color-card-background)',
-  border: '1px solid rgba(20, 84, 212, 0.12)',
+  background: 'transparent',
+  border: 0,
   borderRadius: 8,
-  padding: 'var(--ui-space-6)',
+  padding: 0,
   boxShadow: 'none',
 } as const
 
@@ -33,10 +33,10 @@ export const calendarGridStyle = {
 
 export const calendarDayCellStyle = {
   minHeight: 68,
-  border: '1px solid rgba(20, 84, 212, 0.10)',
-  borderRadius: 8,
+  border: '1px solid rgba(20, 84, 212, 0.06)',
+  borderRadius: 6,
   padding: '7px 8px',
-  background: 'var(--ui-color-card-background)',
+  background: 'rgba(255, 255, 255, 0.68)',
   display: 'flex',
   flexDirection: 'column' as const,
   gap: 'var(--ui-spacing-xs)',
@@ -50,27 +50,27 @@ export const calendarExpandBadgeStyle = {
   position: 'absolute' as const,
   top: 6,
   right: 6,
-  width: 16,
-  height: 16,
+  width: 14,
+  height: 14,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   fontSize: uiTypographyTokens.role.widgetMeta,
   fontWeight: uiTypographyTokens.weight.semibold,
   color: 'var(--ui-color-secondary-text)',
-  border: '1px solid rgba(203, 213, 225, 0.72)',
+  border: '1px solid rgba(203, 213, 225, 0.44)',
   borderRadius: 999,
-  background: 'rgba(255, 255, 255, 0.76)',
+  background: 'rgba(255, 255, 255, 0.54)',
   lineHeight: uiTypographyTokens.lineHeight.compact,
   pointerEvents: 'none' as const,
 } as const
 
 export const calendarEmptyCellStyle = {
   minHeight: 68,
-  border: '1px dashed rgba(20, 84, 212, 0.10)',
-  borderRadius: 8,
+  border: '1px dashed rgba(20, 84, 212, 0.06)',
+  borderRadius: 6,
   padding: 'var(--ui-spacing-md)',
-  background: 'var(--ui-color-soft-section-background)',
+  background: 'rgba(248, 250, 252, 0.56)',
 } as const
 
 export const calendarDayNumberStyle = {
@@ -161,14 +161,15 @@ export const daySummaryCardStyle = {
 export const transactionsListStyle = {
   display: 'flex',
   flexDirection: 'column' as const,
-  gap: 'var(--ui-space-5)',
+  gap: 0,
 } as const
 
 export const transactionCardStyle = {
-  border: '1px solid rgba(20, 84, 212, 0.10)',
-  borderRadius: 8,
-  padding: '10px 12px',
-  background: 'var(--ui-color-card-background)',
+  border: 0,
+  borderBottom: '1px solid var(--ui-border-divider)',
+  borderRadius: 0,
+  padding: '9px 0',
+  background: 'transparent',
 } as const
 
 export const transactionTopRowStyle = {
@@ -176,17 +177,17 @@ export const transactionTopRowStyle = {
   alignItems: 'center',
   justifyContent: 'space-between',
   gap: 'var(--ui-spacing-card-section-gap)',
-  marginBottom: 'var(--ui-spacing-md)',
+  marginBottom: 4,
 } as const
 
 export const transactionAmountStyle = {
-  fontSize: uiTypographyTokens.hierarchy.t3,
+  fontSize: uiTypographyTokens.role.label,
   fontWeight: uiTypographyTokens.weight.semibold,
   color: 'var(--ui-color-primary-text)',
 } as const
 
 export const transactionDescriptionStyle = {
-  fontSize: uiTypographyTokens.hierarchy.t3,
+  fontSize: uiTypographyTokens.role.label,
   color: 'var(--ui-color-primary-text)',
 } as const
 
@@ -199,19 +200,20 @@ export const transactionTagsStyle = {
 
 export const transactionTagBadgeStyle = {
   fontSize: uiTypographyTokens.role.metadata,
-  padding: 'var(--ui-spacing-xs) var(--ui-spacing-md)',
+  padding: '3px 7px',
   borderRadius: 999,
-  background: 'var(--ui-surface-hover)',
-  border: '1px solid var(--ui-border-divider)',
+  background: 'transparent',
+  border: '1px solid var(--ui-border-soft)',
   color: 'var(--ui-color-primary-navy)',
   cursor: 'pointer',
 } as const
 
 export const emptyDayStyle = {
-  border: '1px dashed var(--ui-color-soft-border)',
-  borderRadius: 12,
-  padding: 'var(--ui-space-7)',
-  background: 'var(--ui-color-soft-section-background)',
+  border: 0,
+  borderTop: '1px solid var(--ui-border-divider)',
+  borderRadius: 0,
+  padding: '12px 0',
+  background: 'transparent',
   color: 'var(--ui-color-secondary-text)',
   fontSize: uiTypographyTokens.hierarchy.t3,
 } as const
@@ -220,7 +222,7 @@ export const transactionActionsStyle = {
   display: 'flex',
   flexWrap: 'wrap' as const,
   gap: 'var(--ui-spacing-action-gap)',
-  marginTop: 'var(--ui-space-5)',
+  marginTop: 'var(--ui-space-3)',
 } as const
 
 export const formRowStyle = {

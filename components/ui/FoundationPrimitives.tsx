@@ -931,6 +931,322 @@ export function CreatorModal({
   );
 }
 
+type FoundationWizardShellProps = HTMLAttributes<HTMLDivElement> & {
+  children: ReactNode;
+  density?: FoundationDensity;
+  variant?: "modal" | "workspace";
+};
+
+export function FoundationWizardShell({
+  children,
+  density = "comfort",
+  variant = "modal",
+  ...props
+}: FoundationWizardShellProps) {
+  return (
+    <div
+      {...props}
+      data-ui-foundation-wizard="true"
+      data-ui-foundation-wizard-variant={variant}
+      data-ui-density={density}
+    >
+      {children}
+    </div>
+  );
+}
+
+type FoundationWizardHeaderProps = HTMLAttributes<HTMLElement> & {
+  eyebrow?: ReactNode;
+  title: ReactNode;
+  description?: ReactNode;
+  icon?: ReactNode;
+  closeAction?: ReactNode;
+  actions?: ReactNode;
+};
+
+export function FoundationWizardHeader({
+  eyebrow,
+  title,
+  description,
+  icon,
+  closeAction,
+  actions,
+  children,
+  ...props
+}: FoundationWizardHeaderProps) {
+  return (
+    <header {...props} data-ui-foundation-wizard-header="true">
+      <div data-ui-foundation-wizard-header-main="true">
+        {icon && (
+          <span data-ui-foundation-wizard-header-icon="true" aria-hidden="true">
+            {icon}
+          </span>
+        )}
+        <div data-ui-foundation-wizard-header-copy="true">
+          {eyebrow && (
+            <span data-ui-foundation-wizard-eyebrow="true">{eyebrow}</span>
+          )}
+          <strong>{title}</strong>
+          {description && <span>{description}</span>}
+        </div>
+      </div>
+      {(children || actions || closeAction) && (
+        <div data-ui-foundation-wizard-header-actions="true">
+          {children}
+          {actions}
+          {closeAction}
+        </div>
+      )}
+    </header>
+  );
+}
+
+type FoundationStep = {
+  id: string;
+  title: ReactNode;
+  description?: ReactNode;
+  disabled?: boolean;
+};
+
+type FoundationStepTrackerProps = HTMLAttributes<HTMLDivElement> & {
+  steps: FoundationStep[];
+  activeStep: string;
+  onStepClick?: (stepId: string) => void;
+};
+
+export function FoundationStepTracker({
+  steps,
+  activeStep,
+  onStepClick,
+  ...props
+}: FoundationStepTrackerProps) {
+  const activeIndex = Math.max(
+    0,
+    steps.findIndex((step) => step.id === activeStep),
+  );
+
+  return (
+    <nav
+      {...props}
+      data-ui-foundation-step-tracker="true"
+      aria-label="Kroki kreatora"
+    >
+      {steps.map((step, index) => {
+        const isActive = step.id === activeStep;
+        const isComplete = index < activeIndex;
+        const isClickable = Boolean(onStepClick) && !step.disabled;
+        const isDisabled = Boolean(step.disabled);
+
+        return (
+          <button
+            key={step.id}
+            type="button"
+            data-ui-foundation-step="true"
+            data-active={isActive ? "true" : undefined}
+            data-complete={isComplete ? "true" : undefined}
+            data-clickable={isClickable ? "true" : undefined}
+            disabled={isDisabled}
+            aria-current={isActive ? "step" : undefined}
+            onClick={() => {
+              if (isClickable) {
+                onStepClick?.(step.id);
+              }
+            }}
+          >
+            <span data-ui-foundation-step-index="true" aria-hidden="true">
+              {isComplete ? "✓" : index + 1}
+            </span>
+            <span data-ui-foundation-step-copy="true">
+              <strong>{step.title}</strong>
+              {step.description && <small>{step.description}</small>}
+            </span>
+          </button>
+        );
+      })}
+    </nav>
+  );
+}
+
+type FoundationWizardBodyProps = HTMLAttributes<HTMLDivElement> & {
+  children: ReactNode;
+  hasSummary?: boolean;
+};
+
+export function FoundationWizardBody({
+  children,
+  hasSummary = false,
+  ...props
+}: FoundationWizardBodyProps) {
+  return (
+    <div
+      {...props}
+      data-ui-foundation-wizard-body="true"
+      data-has-summary={hasSummary ? "true" : "false"}
+    >
+      {children}
+    </div>
+  );
+}
+
+type FoundationWizardFooterProps = HTMLAttributes<HTMLElement> & {
+  children: ReactNode;
+};
+
+export function FoundationWizardFooter({
+  children,
+  ...props
+}: FoundationWizardFooterProps) {
+  return (
+    <footer {...props} data-ui-foundation-wizard-footer="true">
+      {children}
+    </footer>
+  );
+}
+
+type FoundationLiveSummaryProps = HTMLAttributes<HTMLElement> & {
+  title: ReactNode;
+  description?: ReactNode;
+  children: ReactNode;
+};
+
+export function FoundationLiveSummary({
+  title,
+  description,
+  children,
+  ...props
+}: FoundationLiveSummaryProps) {
+  return (
+    <aside {...props} data-ui-foundation-live-summary="true">
+      <header data-ui-foundation-live-summary-header="true">
+        <strong>{title}</strong>
+        {description && <span>{description}</span>}
+      </header>
+      <div data-ui-foundation-live-summary-body="true">{children}</div>
+    </aside>
+  );
+}
+
+type FoundationChoiceGridProps = HTMLAttributes<HTMLDivElement> & {
+  children: ReactNode;
+  columns?: 2 | 3 | "auto";
+};
+
+export function FoundationChoiceGrid({
+  children,
+  columns = "auto",
+  ...props
+}: FoundationChoiceGridProps) {
+  return (
+    <div
+      {...props}
+      data-ui-foundation-choice-grid="true"
+      data-columns={columns}
+    >
+      {children}
+    </div>
+  );
+}
+
+type FoundationChoiceCardProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  title: ReactNode;
+  description?: ReactNode;
+  icon?: ReactNode;
+  selected?: boolean;
+  tone?: FoundationTone;
+};
+
+export function FoundationChoiceCard({
+  title,
+  description,
+  icon,
+  selected = false,
+  tone = "neutral-blue",
+  children,
+  ...buttonProps
+}: FoundationChoiceCardProps) {
+  return (
+    <button
+      type="button"
+      {...buttonProps}
+      data-ui-foundation-choice-card="true"
+      data-selected={selected ? "true" : undefined}
+      data-ui-tone={tone}
+    >
+      {icon && (
+        <span data-ui-foundation-choice-card-icon="true" aria-hidden="true">
+          {icon}
+        </span>
+      )}
+      <span data-ui-foundation-choice-card-copy="true">
+        <strong>{title}</strong>
+        {description && <small>{description}</small>}
+        {children}
+      </span>
+    </button>
+  );
+}
+
+type FoundationHeroAmountInputProps = MoneyFieldProps & {
+  label?: ReactNode;
+};
+
+export function FoundationHeroAmountInput({
+  label,
+  ...inputProps
+}: FoundationHeroAmountInputProps) {
+  return (
+    <label data-ui-foundation-hero-amount="true">
+      {label && <span>{label}</span>}
+      <MoneyField {...inputProps} />
+    </label>
+  );
+}
+
+type FoundationIconGridProps = HTMLAttributes<HTMLDivElement> & {
+  children: ReactNode;
+};
+
+export function FoundationIconGrid({
+  children,
+  ...props
+}: FoundationIconGridProps) {
+  return (
+    <div {...props} data-ui-foundation-icon-grid="true">
+      {children}
+    </div>
+  );
+}
+
+type FoundationColorGridProps = HTMLAttributes<HTMLDivElement> & {
+  children: ReactNode;
+};
+
+export function FoundationColorGrid({
+  children,
+  ...props
+}: FoundationColorGridProps) {
+  return (
+    <div {...props} data-ui-foundation-color-grid="true">
+      {children}
+    </div>
+  );
+}
+
+type FoundationScheduleTableProps = HTMLAttributes<HTMLDivElement> & {
+  children: ReactNode;
+};
+
+export function FoundationScheduleTable({
+  children,
+  ...props
+}: FoundationScheduleTableProps) {
+  return (
+    <div {...props} data-ui-foundation-schedule-table="true">
+      {children}
+    </div>
+  );
+}
+
 type CreatorSectionProps = {
   step: number;
   title: ReactNode;

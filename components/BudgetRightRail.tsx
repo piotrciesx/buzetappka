@@ -28,18 +28,18 @@ export default function BudgetRightRail({
           </div>
           <div data-right-rail-row="true">
             <span>Status</span>
-            <strong>{isSelectedMonthLocked ? 'Zamkniety' : 'Otwarty'}</strong>
+            <strong>{isSelectedMonthLocked ? 'Zamknięty' : 'Otwarty'}</strong>
           </div>
         </div>
       </section>
 
       <section data-static-widget-area="right" data-static-widget="upcoming">
         <header data-right-rail-panel-header="true">
-          <h2>Nadchodzace</h2>
+          <h2>Nadchodzące</h2>
           <span>{recurringCount}</span>
         </header>
         <div data-right-rail-panel-body="true">
-          <p data-widget-placeholder="true">Placeholder widgetu prawego.</p>
+          <p data-widget-placeholder="true">Brak nadchodzących płatności do pokazania.</p>
         </div>
       </section>
 
@@ -49,7 +49,7 @@ export default function BudgetRightRail({
           <span>{budgetAlerts.length}</span>
         </header>
         <div data-right-rail-panel-body="true">
-          <p data-widget-placeholder="true">Placeholder widgetu prawego.</p>
+          <p data-widget-placeholder="true">Brak aktywnych alertów.</p>
         </div>
       </section>
     </aside>

@@ -1,10 +1,4 @@
-import {
-  useMemo,
-  useRef,
-  useState,
-  type FormEvent,
-  type KeyboardEvent,
-} from 'react'
+import { useMemo, useState } from 'react'
 import type { CSSProperties } from 'react'
 import type { HeatmapMode } from '../month-calendar/monthCalendarTypes'
 import type { Tag, TransactionPaymentSplit } from '../../lib/budgetPageTypes'
@@ -12,12 +6,7 @@ import type { PaymentSplitInput } from '../../lib/paymentSplitUtils'
 import type { DescriptionSuggestion } from '../../lib/suggestionUtils'
 import type { TransactionDraft } from '../../lib/draftUtils'
 import { uiInputApi } from '../../lib/uiFoundation'
-import { FoundationSegmentedControl } from '../ui/FoundationPrimitives'
-import {
-  buildDateFromDayInput,
-  getDayInputFromDate,
-  normalizeDayInput,
-} from '../../lib/dateUtils'
+import { FoundationButton, FoundationSegmentedControl } from '../ui/FoundationPrimitives'
 import { isDaylessTransaction } from '../../lib/transactionDomain'
 import type {
   CategoryEntriesPopupChildGroup,
@@ -119,13 +108,13 @@ type CategoryEntriesTreeViewProps = {
   styles: Record<string, CSSProperties>
 }
 
+type EntryScopeFilter = 'all' | 'income' | 'expense' | 'no-day'
+
 const formatMoney = (value: number) =>
   `${value.toLocaleString('pl-PL', {
     maximumFractionDigits: 2,
     minimumFractionDigits: Number.isInteger(value) ? 0 : 2,
   })} zł`
-
-type EntryScopeFilter = 'all' | 'income' | 'expense' | 'no-day'
 
 const groupTransactionsByDate = (transactions: Transaction[]) => {
   const grouped = new Map<string, Transaction[]>()
@@ -150,45 +139,19 @@ export default function CategoryEntriesTreeView({
   viewModel,
   selectedMonth,
   isSelectedMonthLocked,
-  getAmountNumber,
-  getMoveTargetsForTransaction,
   getSignedAmountForTransaction,
-  handleInlineSaveTransaction,
+  openTransactionCreator,
   handleHideCategory,
   handleRenameCategory,
   handleDeleteCategory,
   handleUndoScheduledHide,
   handleDeleteTransaction,
-  handleUpdateTransaction,
-  handleMoveTransaction,
   handleDuplicateTransaction,
   getPaymentSourceOptionsForCategoryId,
-  getRecurringOptionsForCategoryId,
   selectedTransactionIds,
   onToggleTransactionSelection,
-  transactionTagsMap,
   styles,
 }: CategoryEntriesTreeViewProps) {
-  const [inlineDay, setInlineDay] = useState('')
-  const [inlineDescription, setInlineDescription] = useState('')
-  const [inlineAmount, setInlineAmount] = useState('')
-  const [inlineTags, setInlineTags] = useState('')
-  const [inlinePaymentSourceId, setInlinePaymentSourceId] = useState('')
-  const [inlineRecurringTransactionId, setInlineRecurringTransactionId] = useState('')
-  const [isInlineSaving, setIsInlineSaving] = useState(false)
-  const inlineDayInputRef = useRef<HTMLInputElement | null>(null)
-  const inlineDescriptionInputRef = useRef<HTMLInputElement | null>(null)
-  const inlineAmountInputRef = useRef<HTMLInputElement | null>(null)
-
-  const [editingTransactionId, setEditingTransactionId] = useState<string | null>(null)
-  const [editDay, setEditDay] = useState('')
-  const [editDescription, setEditDescription] = useState('')
-  const [editAmount, setEditAmount] = useState('')
-  const [isUpdating, setIsUpdating] = useState(false)
-
-  const [movingTransactionId, setMovingTransactionId] = useState<string | null>(null)
-  const [moveTargetCategoryId, setMoveTargetCategoryId] = useState('')
-  const [isMoving, setIsMoving] = useState(false)
   const [openEntriesMenu, setOpenEntriesMenu] = useState<string | null>(null)
   const [entryScopeFilter, setEntryScopeFilter] = useState<EntryScopeFilter>('all')
   const [paymentSourceFilter, setPaymentSourceFilter] = useState('')
@@ -262,130 +225,7 @@ export default function CategoryEntriesTreeView({
     selectedYear && selectedMonthNumber ? new Date(selectedYear, selectedMonthNumber, 0).getDate() : 30
   const dailyAverage = daysInSelectedMonth > 0 ? filteredEntriesTotal / daysInSelectedMonth : 0
 
-  const startEditingTransaction = (transaction: Transaction) => {
-    setMovingTransactionId(null)
-    setMoveTargetCategoryId('')
-    setEditingTransactionId(transaction.id)
-    setEditDay(isDaylessTransaction(transaction) ? '' : getDayInputFromDate(transaction.date, selectedMonth))
-    setEditDescription(transaction.description || '')
-    setEditAmount(String(Math.abs(getAmountNumber(transaction.amount))))
-  }
-
-  const cancelEditingTransaction = () => {
-    setEditingTransactionId(null)
-    setEditDay('')
-    setEditDescription('')
-    setEditAmount('')
-    setIsUpdating(false)
-  }
-
-  const saveEditingTransaction = async (transaction: Transaction) => {
-    if (isUpdating) {
-      return
-    }
-
-    setIsUpdating(true)
-
-    try {
-      await handleUpdateTransaction(
-        transaction.id,
-        editAmount,
-        editDescription,
-        buildDateFromDayInput(selectedMonth, editDay),
-        (transactionTagsMap[transaction.id] || []).map((tag) => tag.name)
-      )
-      cancelEditingTransaction()
-    } catch {
-      setIsUpdating(false)
-    }
-  }
-
-  const startMovingTransaction = (transaction: Transaction) => {
-    setEditingTransactionId(null)
-    setMovingTransactionId(transaction.id)
-    setMoveTargetCategoryId('')
-  }
-
-  const cancelMovingTransaction = () => {
-    setMovingTransactionId(null)
-    setMoveTargetCategoryId('')
-    setIsMoving(false)
-  }
-
-  const saveMovingTransaction = async (transaction: Transaction) => {
-    if (isMoving || !moveTargetCategoryId) {
-      return
-    }
-
-    setIsMoving(true)
-
-    try {
-      await handleMoveTransaction(transaction.id, moveTargetCategoryId)
-      cancelMovingTransaction()
-    } catch {
-      setIsMoving(false)
-    }
-  }
-
-  const saveInlineEntry = async (event: FormEvent<HTMLFormElement>, categoryId: string) => {
-    event.preventDefault()
-
-    if (isInlineSaving || isSelectedMonthLocked) {
-      return
-    }
-
-    setIsInlineSaving(true)
-
-    try {
-      const tagNames = inlineTags
-        .split(',')
-        .map((tagName) => tagName.trim())
-        .filter(Boolean)
-
-      await handleInlineSaveTransaction(
-        categoryId,
-        inlineAmount,
-        inlineDescription,
-        inlineDay,
-        tagNames,
-        inlinePaymentSourceId || null,
-        undefined,
-        inlineRecurringTransactionId || null
-      )
-      setInlineDay('')
-      setInlineDescription('')
-      setInlineAmount('')
-      setInlineTags('')
-      setInlinePaymentSourceId('')
-      setInlineRecurringTransactionId('')
-    } finally {
-      setIsInlineSaving(false)
-    }
-  }
-
-  const handleInlineDayKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key !== 'Enter') {
-      return
-    }
-
-    event.preventDefault()
-    inlineDescriptionInputRef.current?.focus()
-  }
-
-  const handleInlineDescriptionKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key !== 'Enter') {
-      return
-    }
-
-    event.preventDefault()
-    inlineAmountInputRef.current?.focus()
-  }
-
-  const preventInlineMetaSubmit = (event: KeyboardEvent<HTMLInputElement | HTMLSelectElement>) => {
-    if (event.key === 'Enter') {
-      event.preventDefault()
-    }
-  }
+  const addTargetCategoryId = viewModel.inlineAddTargetCategoryId || viewModel.clickedCategory.id
 
   const closeEntriesMenuAndRun = (action: () => void) => {
     setOpenEntriesMenu(null)
@@ -462,6 +302,7 @@ export default function CategoryEntriesTreeView({
       </div>
     )
   }
+
   const renderGroupHeader = (category: Category) => (
     <div data-entries-group-header="true">
       <div>
@@ -470,108 +311,6 @@ export default function CategoryEntriesTreeView({
       {renderCategoryActions(category)}
     </div>
   )
-
-  const renderInlineComposer = (category: Category) => {
-    const paymentSourceOptions = getPaymentSourceOptionsForCategoryId?.(category.id) || []
-    const recurringOptions = getRecurringOptionsForCategoryId?.(category.id) || []
-    const isDisabled = isSelectedMonthLocked || isInlineSaving
-
-    return (
-      <form
-        data-entries-inline-composer="true"
-        onSubmit={(event) => void saveInlineEntry(event, category.id)}
-      >
-        <div data-entries-inline-main-row="true">
-          <input
-            ref={inlineDayInputRef}
-            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputS}`}
-            data-input-density={uiInputApi.density.compact}
-            data-input-width={uiInputApi.width.full}
-            value={inlineDay}
-            placeholder="dzień"
-            inputMode="numeric"
-            disabled={isDisabled}
-            onChange={(event) => setInlineDay(normalizeDayInput(event.target.value, selectedMonth))}
-            onKeyDown={handleInlineDayKeyDown}
-          />
-          <input
-            ref={inlineDescriptionInputRef}
-            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputS}`}
-            data-input-density={uiInputApi.density.compact}
-            data-input-width={uiInputApi.width.full}
-            value={inlineDescription}
-            placeholder="Opis"
-            disabled={isDisabled}
-            onChange={(event) => setInlineDescription(event.target.value)}
-            onKeyDown={handleInlineDescriptionKeyDown}
-          />
-          <input
-            ref={inlineAmountInputRef}
-            className={uiInputApi.classNames.amountField}
-            data-input-density={uiInputApi.density.compact}
-            data-input-width={uiInputApi.width.full}
-            value={inlineAmount}
-            placeholder="Kwota"
-            inputMode="decimal"
-            disabled={isDisabled}
-            onChange={(event) => setInlineAmount(event.target.value)}
-          />
-          <button type="submit" disabled={isDisabled}>
-            Zapisz
-          </button>
-        </div>
-
-        <div data-entries-inline-meta-row="true">
-          <input
-            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputS}`}
-            data-input-density={uiInputApi.density.compact}
-            data-input-width={uiInputApi.width.full}
-            value={inlineTags}
-            placeholder="Tagi"
-            disabled={isDisabled}
-            onChange={(event) => setInlineTags(event.target.value)}
-            onKeyDown={preventInlineMetaSubmit}
-          />
-          {paymentSourceOptions.length > 0 && (
-            <select
-              className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputS}`}
-              data-input-density={uiInputApi.density.compact}
-              data-input-width={uiInputApi.width.full}
-              value={inlinePaymentSourceId}
-              disabled={isDisabled}
-              onChange={(event) => setInlinePaymentSourceId(event.target.value)}
-              onKeyDown={preventInlineMetaSubmit}
-            >
-              <option value="">Źródło</option>
-              {paymentSourceOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.optionLabel || option.name}
-                </option>
-              ))}
-            </select>
-          )}
-          {recurringOptions.length > 0 && (
-            <select
-              className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputS}`}
-              data-input-density={uiInputApi.density.compact}
-              data-input-width={uiInputApi.width.full}
-              value={inlineRecurringTransactionId}
-              disabled={isDisabled}
-              onChange={(event) => setInlineRecurringTransactionId(event.target.value)}
-              onKeyDown={preventInlineMetaSubmit}
-            >
-              <option value="">Cykliczna</option>
-              {recurringOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          )}
-        </div>
-      </form>
-    )
-  }
 
   const renderTransactionActions = (transaction: Transaction) => {
     const menuKey = `transaction-${transaction.id}`
@@ -598,22 +337,6 @@ export default function CategoryEntriesTreeView({
             </button>
           )}
         >
-          <button
-            type="button"
-            className="ui-dropdown__item"
-            disabled={isSelectedMonthLocked}
-            onClick={() => closeEntriesMenuAndRun(() => startEditingTransaction(transaction))}
-          >
-            Edytuj
-          </button>
-          <button
-            type="button"
-            className="ui-dropdown__item"
-            disabled={isSelectedMonthLocked}
-            onClick={() => closeEntriesMenuAndRun(() => startMovingTransaction(transaction))}
-          >
-            Przenieś
-          </button>
           {handleDuplicateTransaction && (
             <button
               type="button"
@@ -636,95 +359,11 @@ export default function CategoryEntriesTreeView({
       </div>
     )
   }
+
   const renderTransactionRow = (transaction: Transaction) => {
     const signedAmount = getSignedAmountForTransaction(transaction)
     const transactionKind = signedAmount >= 0 ? 'income' : 'expense'
     const isSelected = selectedTransactionIds.includes(transaction.id)
-    const isEditing = editingTransactionId === transaction.id
-    const isMovingCurrent = movingTransactionId === transaction.id
-    const moveTargets = getMoveTargetsForTransaction(transaction)
-
-    if (isEditing) {
-      return (
-        <form
-          key={transaction.id}
-          data-entries-transaction-row="true"
-          data-entries-transaction-editing="true"
-          onSubmit={(event) => {
-            event.preventDefault()
-            void saveEditingTransaction(transaction)
-          }}
-        >
-          <input
-            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputS}`}
-            data-input-density={uiInputApi.density.compact}
-            data-input-width={uiInputApi.width.full}
-            value={editDay}
-            placeholder="dzień"
-            inputMode="numeric"
-            disabled={isUpdating}
-            onChange={(event) => setEditDay(normalizeDayInput(event.target.value, selectedMonth))}
-          />
-          <input
-            className={`${uiInputApi.classNames.input} ${uiInputApi.classNames.inputS}`}
-            data-input-density={uiInputApi.density.compact}
-            data-input-width={uiInputApi.width.full}
-            value={editDescription}
-            placeholder="Opis"
-            disabled={isUpdating}
-            onChange={(event) => setEditDescription(event.target.value)}
-          />
-          <input
-            className={uiInputApi.classNames.amountField}
-            data-input-density={uiInputApi.density.compact}
-            data-input-width={uiInputApi.width.full}
-            value={editAmount}
-            placeholder="Kwota"
-            inputMode="decimal"
-            disabled={isUpdating}
-            onChange={(event) => setEditAmount(event.target.value)}
-          />
-          <div data-entries-row-actions="true">
-            <button type="submit" disabled={isUpdating}>
-              Zapisz
-            </button>
-            <button type="button" onClick={cancelEditingTransaction}>
-              Anuluj
-            </button>
-          </div>
-        </form>
-      )
-    }
-
-    if (isMovingCurrent) {
-      return (
-        <div key={transaction.id} data-entries-transaction-row="true" data-entries-transaction-moving="true">
-          <select
-            className={`${uiInputApi.classNames.select} ${uiInputApi.classNames.inputS}`}
-            data-input-density={uiInputApi.density.compact}
-            data-input-width={uiInputApi.width.full}
-            value={moveTargetCategoryId}
-            disabled={isMoving}
-            onChange={(event) => setMoveTargetCategoryId(event.target.value)}
-          >
-            <option value="">Wybierz kategorię</option>
-            {moveTargets.map((target) => (
-              <option key={target.id} value={target.id}>
-                {target.label}
-              </option>
-            ))}
-          </select>
-          <div data-entries-row-actions="true">
-            <button type="button" disabled={isMoving || !moveTargetCategoryId} onClick={() => void saveMovingTransaction(transaction)}>
-              Przenieś
-            </button>
-            <button type="button" onClick={cancelMovingTransaction}>
-              Anuluj
-            </button>
-          </div>
-        </div>
-      )
-    }
 
     return (
       <div
@@ -742,6 +381,7 @@ export default function CategoryEntriesTreeView({
         </label>
         <div data-entries-transaction-copy="true">
           <span>{transaction.description || 'Bez opisu'}</span>
+          <small>{getTransactionDateLabel(transaction)}</small>
         </div>
         <strong>{formatMoney(signedAmount)}</strong>
         {renderTransactionActions(transaction)}
@@ -780,10 +420,7 @@ export default function CategoryEntriesTreeView({
     title: string | null,
     tone: 'direct' | 'subgroup' = 'subgroup'
   ) => {
-    const canAddHere =
-      viewModel.canInlineAdd && viewModel.inlineAddTargetCategoryId === category.id
-
-    if (transactions.length === 0 && !canAddHere) {
+    if (transactions.length === 0) {
       return null
     }
 
@@ -800,7 +437,6 @@ export default function CategoryEntriesTreeView({
             {renderCategoryActions(category)}
           </div>
         )}
-        {canAddHere && renderInlineComposer(category)}
         {renderTransactionFeed(transactions)}
       </section>
     )
@@ -829,8 +465,8 @@ export default function CategoryEntriesTreeView({
     )
   }
 
-  const shouldRenderDirectSection = viewModel.canInlineAdd || viewModel.directEntries.length > 0
-  const shouldShowEmptyState = filteredAllEntries.length === 0 && !viewModel.canInlineAdd
+  const shouldRenderDirectSection = viewModel.directEntries.length > 0
+  const shouldShowEmptyState = filteredAllEntries.length === 0
 
   return (
     <div
@@ -885,6 +521,15 @@ export default function CategoryEntriesTreeView({
               ))}
             </select>
           </label>
+        )}
+        {!isSelectedMonthLocked && addTargetCategoryId && (
+          <FoundationButton
+            variant="secondary"
+            density="compact"
+            onClick={() => openTransactionCreator(addTargetCategoryId)}
+          >
+            Dodaj wpis
+          </FoundationButton>
         )}
       </section>
 

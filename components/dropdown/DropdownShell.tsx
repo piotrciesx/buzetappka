@@ -15,6 +15,7 @@ import { createPortal } from 'react-dom'
 
 type DropdownSize = 'content' | 'action' | 'utility' | 'search'
 type DropdownAlign = 'start' | 'end'
+type DropdownOverlayLayer = 'dropdown' | 'popover' | 'modal-popover' | 'topbar'
 
 type TriggerProps = {
   ref: (node: HTMLElement | null) => void
@@ -39,6 +40,28 @@ type DropdownShellProps = {
 
 const VIEWPORT_PADDING = 12
 const GAP = 6
+
+const modalTriggerSelector = [
+  '[data-category-entries-popup="true"]',
+  '[data-budget-utility-panel="true"]',
+  '[data-ui-modal-shell="true"]',
+  '[data-ui-modal-surface="true"]',
+  '[data-ui-creator-modal="true"]',
+  '[role="dialog"]',
+].join(',')
+
+const topbarTriggerSelector = [
+  '[data-budget-header-row="true"]',
+  '[data-budget-mobile-nav="true"]',
+  '[data-topbar-floating-action="true"]',
+].join(',')
+
+const overlayLayerZIndex: Record<DropdownOverlayLayer, string> = {
+  dropdown: 'var(--z-dropdown)',
+  popover: 'var(--z-popover)',
+  'modal-popover': 'var(--z-modal-popover)',
+  topbar: 'var(--ui-z-topbar-dropdown)',
+}
 
 const sizeTokens: Record<DropdownSize, { minWidth: string; maxWidth: string }> = {
   content: {
@@ -73,6 +96,7 @@ export default function DropdownShell({
   const triggerRef = useRef<HTMLElement | null>(null)
   const panelRef = useRef<HTMLDivElement | null>(null)
   const [mounted, setMounted] = useState(false)
+  const [overlayLayer, setOverlayLayer] = useState<DropdownOverlayLayer>('dropdown')
   const [panelStyle, setPanelStyle] = useState<CSSProperties>({
     position: 'fixed',
     top: 0,
@@ -91,6 +115,18 @@ export default function DropdownShell({
     if (!triggerNode || !panelNode) {
       return
     }
+
+    const nextOverlayLayer: DropdownOverlayLayer = triggerNode.closest(modalTriggerSelector)
+      ? 'modal-popover'
+      : triggerNode.closest(topbarTriggerSelector)
+        ? 'topbar'
+        : size === 'content' || size === 'utility' || size === 'search'
+          ? 'popover'
+          : 'dropdown'
+
+    setOverlayLayer((currentLayer) =>
+      currentLayer === nextOverlayLayer ? currentLayer : nextOverlayLayer
+    )
 
     const triggerRect = triggerNode.getBoundingClientRect()
     const panelRect = panelNode.getBoundingClientRect()
@@ -118,8 +154,9 @@ export default function DropdownShell({
       maxWidth: `calc(100vw - ${VIEWPORT_PADDING * 2}px)`,
       maxHeight: `calc(100dvh - ${VIEWPORT_PADDING * 2}px)`,
       visibility: 'visible',
+      zIndex: overlayLayerZIndex[nextOverlayLayer],
     })
-  }, [align])
+  }, [align, size])
 
   useLayoutEffect(() => {
     if (!open) {
@@ -226,10 +263,12 @@ export default function DropdownShell({
       data-dropdown-shell="true"
       data-dropdown-size={size}
       data-dropdown-align={align}
+      data-overlay-layer={overlayLayer}
       style={{
         ...panelStyle,
         minWidth: sizeTokens[size].minWidth,
         maxWidth: sizeTokens[size].maxWidth,
+        zIndex: panelStyle.zIndex || overlayLayerZIndex[overlayLayer],
       }}
     >
       {children}

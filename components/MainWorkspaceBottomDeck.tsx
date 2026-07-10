@@ -32,24 +32,24 @@ export default function MainWorkspaceBottomDeck({
         <header data-workspace-panel-header="true">
           <h2>Kalendarz</h2>
           <button type="button" onClick={onOpenMonthCalendar}>
-            Otworz
+            Otwórz
           </button>
         </header>
         <div data-static-widget-body="true">
           <strong>{selectedMonth}</strong>
-          <p data-widget-placeholder="true">Placeholder widgetu dolnego.</p>
+          <p data-widget-placeholder="true">Otwórz pełny kalendarz, żeby zobaczyć wpisy miesiąca.</p>
         </div>
       </section>
 
       <section data-static-widget-area="bottom" data-static-widget="trash">
         <header data-workspace-panel-header="true">
-          <h2>Aktywnosc</h2>
+          <h2>Aktywność</h2>
           <button type="button" onClick={onOpenTrash}>
-            Otworz
+            Otwórz
           </button>
         </header>
         <div data-static-widget-body="true">
-          <p data-widget-placeholder="true">Placeholder widgetu dolnego.</p>
+          <p data-widget-placeholder="true">Ostatnie wpisy i kosz są dostępne z panelu akcji.</p>
         </div>
       </section>
     </section>

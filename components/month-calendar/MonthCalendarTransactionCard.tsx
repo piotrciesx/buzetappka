@@ -5,8 +5,10 @@ import {
   PointerEvent,
   RefObject,
   SetStateAction,
+  useState,
 } from 'react'
 import PaymentSplitEditor from '../PaymentSplitEditor'
+import DropdownShell from '../dropdown/DropdownShell'
 import { DescriptionSuggestion } from '../../lib/suggestionUtils'
 import { splitTagInput } from '../../lib/tagUtils'
 import { normalizeDayInput } from '../../lib/dateUtils'
@@ -163,6 +165,7 @@ export default function MonthCalendarTransactionCard({
   handleSuggestionPointerUp,
   handleSuggestionPointerLeave,
 }: Props) {
+  const [isActionMenuOpen, setIsActionMenuOpen] = useState(false)
   const isEditing = editingTransactionId === transaction.id
   const isMovingCurrent = movingTransactionId === transaction.id
   const moveTargets = getMoveTargetsForTransaction(transaction)
@@ -176,6 +179,10 @@ export default function MonthCalendarTransactionCard({
     splitItems: transactionPaymentSplitsMap[transaction.id] || [],
     paymentSourceOptions,
   })
+  const runMenuAction = (action: () => void) => {
+    setIsActionMenuOpen(false)
+    action()
+  }
 
   return (
     <CalendarEntryRow style={transactionCardStyle}>
@@ -383,7 +390,59 @@ export default function MonthCalendarTransactionCard({
         </ReminderStatusBadge>
       )}
 
-      {!isSelectedMonthLocked && (
+      {!isSelectedMonthLocked && context === 'day' && !isEditing && !isMovingCurrent && (
+        <ReminderActionRow data-calendar-entry-actions="true" style={transactionActionsStyle}>
+          <DropdownShell
+            open={isActionMenuOpen}
+            onOpenChange={setIsActionMenuOpen}
+            size="action"
+            trigger={(triggerProps) => (
+              <button
+                type="button"
+                style={secondaryButtonStyle}
+                aria-label="Akcje wpisu"
+                title="Akcje wpisu"
+                {...triggerProps}
+              >
+                ...
+              </button>
+            )}
+          >
+            <button
+              type="button"
+              className="ui-dropdown__item"
+              onClick={() => runMenuAction(() => startEditingTransaction(transaction))}
+            >
+              edytuj
+            </button>
+            <button
+              type="button"
+              className="ui-dropdown__item"
+              onClick={() => runMenuAction(() => startMovingTransaction(transaction))}
+            >
+              przenieś
+            </button>
+            {onDuplicateTransaction && (
+              <button
+                type="button"
+                className="ui-dropdown__item"
+                onClick={() => runMenuAction(() => onDuplicateTransaction(transaction))}
+              >
+                powiel wpis
+              </button>
+            )}
+            <button
+              type="button"
+              className="ui-dropdown__item"
+              onClick={() => runMenuAction(() => onDeleteTransaction(transaction.id))}
+            >
+              usuń
+            </button>
+          </DropdownShell>
+        </ReminderActionRow>
+      )}
+
+      {!isSelectedMonthLocked && context !== 'day' && (
         <ReminderActionRow data-calendar-entry-actions="true" style={transactionActionsStyle}>
           {isEditing ? (
             <>

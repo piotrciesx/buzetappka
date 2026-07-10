@@ -24,9 +24,9 @@ import type {
   Transaction,
 } from './month-calendar/monthCalendarTypes'
 import MonthCalendarContainer from './month-calendar/MonthCalendarContainer'
-import MonthCalendarDayModal from './month-calendar/MonthCalendarDayModal'
 import MonthCalendarNoDaySection from './month-calendar/MonthCalendarNoDaySection'
 import MonthCalendarTransactionCard from './month-calendar/MonthCalendarTransactionCard'
+import MonthCalendarTransactionList from './month-calendar/MonthCalendarTransactionList'
 import MonthCalendarToolbar from './month-calendar/MonthCalendarToolbar'
 import { buildMonthCalendarDayCells } from './month-calendar/buildMonthCalendarDayCells'
 import {
@@ -47,7 +47,7 @@ const quickFilterBarStyle: CSSProperties = {
   display: 'flex',
   flexWrap: 'wrap',
   gap: 8,
-  marginBottom: 12,
+  marginBottom: 8,
 }
 
 export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
@@ -269,10 +269,6 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
 
   const selectedDayTransactions = selectedDay ? transactionsByDay[selectedDay] || [] : []
 
-  const selectedDayRawSum = selectedDayTransactions.reduce((total, transaction) => {
-    return total + getAmountNumber(transaction.amount)
-  }, 0)
-
   const selectedDaySignedSum = selectedDayTransactions.reduce((total, transaction) => {
     return total + getSignedAmountForTransaction(transaction)
   }, 0)
@@ -289,8 +285,35 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
     return heatmapVariant === 'balance' ? stats.signedSum : stats.rawSum
   }
 
-  const selectedDayPrimaryValue =
-    heatmapVariant === 'balance' ? selectedDaySignedSum : selectedDayRawSum
+  const selectedDayIncomeTotal = selectedDayTransactions.reduce((total, transaction) => {
+    const signedAmount = getSignedAmountForTransaction(transaction)
+    return signedAmount > 0 ? total + signedAmount : total
+  }, 0)
+
+  const selectedDayExpenseTotal = selectedDayTransactions.reduce((total, transaction) => {
+    const signedAmount = getSignedAmountForTransaction(transaction)
+    return signedAmount < 0 ? total + Math.abs(signedAmount) : total
+  }, 0)
+
+  const monthIncomeTotal = filteredTransactions.reduce((total, transaction) => {
+    const signedAmount = getSignedAmountForTransaction(transaction)
+    return signedAmount > 0 ? total + signedAmount : total
+  }, 0)
+
+  const monthExpenseTotal = filteredTransactions.reduce((total, transaction) => {
+    const signedAmount = getSignedAmountForTransaction(transaction)
+    return signedAmount < 0 ? total + Math.abs(signedAmount) : total
+  }, 0)
+
+  const monthBalanceTotal = monthIncomeTotal - monthExpenseTotal
+
+  const topActiveDays = Object.entries(dayStats)
+    .sort(([, first], [, second]) => second.count - first.count)
+    .slice(0, 5)
+
+  const recentCalendarTransactions = [...transactionsWithDay]
+    .sort((first, second) => (second.date || '').localeCompare(first.date || ''))
+    .slice(0, 6)
 
   const noDayTransactionsSum = useMemo(() => {
     return transactionsWithoutDay.reduce((total, transaction) => {
@@ -580,6 +603,140 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
     />
   )
 
+  const selectedDayLabel = selectedDay
+    ? `${selectedDay}.${selectedMonth.slice(5, 7)}.${selectedMonth.slice(0, 4)}`
+    : ''
+
+  const rightPanel = selectedDay ? (
+    <div data-month-calendar-side-content="day">
+      <header data-month-calendar-side-header="true">
+        <div>
+          <span>Wybrany dzień</span>
+          <strong>{selectedDayLabel}</strong>
+        </div>
+        <button type="button" data-month-calendar-side-clear="true" onClick={closeModal}>
+          Miesiąc
+        </button>
+      </header>
+
+      <section data-month-calendar-side-metrics="true">
+        <div>
+          <span>Liczba wpisów</span>
+          <strong>{selectedDayTransactions.length}</strong>
+        </div>
+        <div>
+          <span>Bilans dnia</span>
+          <strong data-financial-state={selectedDaySignedSum < 0 ? 'negative' : selectedDaySignedSum > 0 ? 'positive' : 'zero'}>
+            {selectedDaySignedSum > 0 ? '+' : ''}
+            {formatAmount(selectedDaySignedSum)} zł
+          </strong>
+        </div>
+        <div>
+          <span>Przychody</span>
+          <strong data-financial-state="positive">{formatAmount(selectedDayIncomeTotal)} zł</strong>
+        </div>
+        <div>
+          <span>Wydatki</span>
+          <strong data-financial-state="negative">{formatAmount(selectedDayExpenseTotal)} zł</strong>
+        </div>
+      </section>
+
+      <section data-month-calendar-side-list="true">
+        <h3>Wpisy z dnia</h3>
+        {selectedDayTransactions.length === 0 ? (
+          <div data-month-calendar-side-empty="true">Brak wpisów w tym dniu.</div>
+        ) : (
+          <MonthCalendarTransactionList
+            transactions={selectedDayTransactions}
+            context="day"
+            renderTransactionCard={renderTransactionCard}
+          />
+        )}
+      </section>
+
+      {!isSelectedMonthLocked && onAddTransactionForDay && (
+        <button
+          type="button"
+          data-month-calendar-side-add="true"
+          onClick={() => onAddTransactionForDay(selectedDay)}
+        >
+          Dodaj wpis tego dnia
+        </button>
+      )}
+    </div>
+  ) : (
+    <div data-month-calendar-side-content="month">
+      <header data-month-calendar-side-header="true">
+        <div>
+          <span>Kalendarz</span>
+          <strong>{selectedMonth}</strong>
+        </div>
+      </header>
+
+      <section data-month-calendar-side-metrics="true">
+        <div>
+          <span>Przychody</span>
+          <strong data-financial-state="positive">{formatAmount(monthIncomeTotal)} zł</strong>
+        </div>
+        <div>
+          <span>Wydatki</span>
+          <strong data-financial-state="negative">{formatAmount(monthExpenseTotal)} zł</strong>
+        </div>
+        <div>
+          <span>Saldo</span>
+          <strong data-financial-state={monthBalanceTotal < 0 ? 'negative' : monthBalanceTotal > 0 ? 'positive' : 'zero'}>
+            {monthBalanceTotal > 0 ? '+' : ''}
+            {formatAmount(monthBalanceTotal)} zł
+          </strong>
+        </div>
+        <div>
+          <span>Liczba wpisów</span>
+          <strong>{transactionsWithDay.length}</strong>
+        </div>
+      </section>
+
+      <section data-month-calendar-side-list="true">
+        <h3>Najaktywniejsze dni</h3>
+        {topActiveDays.length === 0 ? (
+          <div data-month-calendar-side-empty="true">Brak wpisów w kalendarzu.</div>
+        ) : (
+          topActiveDays.map(([day, stats]) => (
+            <button
+              key={day}
+              type="button"
+              data-month-calendar-side-row="true"
+              onClick={() => setSelectedDay(day)}
+            >
+              <span>{day}.{selectedMonth.slice(5, 7)}</span>
+              <strong>{stats.count}</strong>
+            </button>
+          ))
+        )}
+      </section>
+
+      <section data-month-calendar-side-list="true">
+        <h3>Ostatnie wpisy</h3>
+        {recentCalendarTransactions.length === 0 ? (
+          <div data-month-calendar-side-empty="true">Brak ostatnich wpisów.</div>
+        ) : (
+          recentCalendarTransactions.map((transaction) => {
+            const signedAmount = getSignedAmountForTransaction(transaction)
+
+            return (
+              <div key={transaction.id} data-month-calendar-side-row="true">
+                <span>{transaction.description || 'Bez opisu'}</span>
+                <strong data-financial-state={signedAmount < 0 ? 'negative' : signedAmount > 0 ? 'positive' : 'zero'}>
+                  {signedAmount > 0 ? '+' : ''}
+                  {formatAmount(signedAmount)} zł
+                </strong>
+              </div>
+            )
+          })
+        )}
+      </section>
+    </div>
+  )
+
   const dayCells = buildMonthCalendarDayCells({
     daysInMonth,
     selectedMonth,
@@ -645,10 +802,9 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
             </div>
           )}
           {onToggleSelectedMonthExcluded && (
-            <div style={{ marginBottom: 10 }}>
+            <div data-month-calendar-subtle-action="true">
               <button
                 type="button"
-                style={isSelectedMonthExcluded ? styles.primaryButton : styles.secondaryButton}
                 disabled={isUpdatingSelectedMonthExclusion}
                 onClick={() => {
                   void onToggleSelectedMonthExcluded()
@@ -673,6 +829,7 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
           renderTransactionCard={renderTransactionCard}
         />
       }
+      rightPanel={rightPanel}
       suggestionMenu={
         <DescriptionSuggestionDeleteMenu
           isOpen={Boolean(suggestionToDelete)}
@@ -681,25 +838,6 @@ export default function MonthCalendarPanel(props: MonthCalendarPanelProps) {
           onConfirm={confirmDeleteSuggestion}
           onCancel={closeDeletePrompt}
         />
-      }
-      dayModal={
-        selectedDay ? (
-          <MonthCalendarDayModal
-            selectedDay={selectedDay}
-            selectedMonth={selectedMonth}
-            selectedDayTransactions={selectedDayTransactions}
-            selectedDayPrimaryValue={selectedDayPrimaryValue}
-            selectedDayRawSum={selectedDayRawSum}
-            heatmapVariant={heatmapVariant}
-            isSelectedMonthLocked={isSelectedMonthLocked}
-            styles={styles}
-            getDayMetricLabel={getDayMetricLabel}
-            formatAmount={formatAmount}
-            renderTransactionCard={renderTransactionCard}
-            onAddTransactionForDay={onAddTransactionForDay}
-            onClose={closeModal}
-          />
-        ) : null
       }
     />
   )

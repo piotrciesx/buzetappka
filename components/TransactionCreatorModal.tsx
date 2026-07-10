@@ -1,12 +1,27 @@
 "use client";
 
-import { KeyboardEvent, useEffect, useRef, useState } from "react";
+import {
+  CSSProperties,
+  KeyboardEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import DescriptionSuggestionDeleteMenu from "./DescriptionSuggestionDeleteMenu";
 import PaymentSplitEditor from "./PaymentSplitEditor";
+import CategoryIcon from "./CategoryIcon";
 import TransactionCreatorCategorySection from "./transaction-creator/TransactionCreatorCategorySection";
 import TransactionCreatorHeader from "./transaction-creator/TransactionCreatorHeader";
 import TransactionCreatorModeToggles from "./transaction-creator/TransactionCreatorModeToggles";
-import { FoundationCheckbox } from "./ui/FoundationPrimitives";
+import {
+  FoundationCheckbox,
+  FoundationChoiceCard,
+  FoundationChoiceGrid,
+  FoundationLiveSummary,
+  FoundationStepTracker,
+  FoundationWizardFooter,
+  FoundationWizardShell,
+} from "./ui/FoundationPrimitives";
 import { getDayInputFromDate, normalizeDayInput } from "../lib/dateUtils";
 import { uiInputApi } from "../lib/uiFoundation";
 import { useDescriptionSuggestions } from "../lib/useDescriptionSuggestions";
@@ -58,8 +73,9 @@ const entryTitleStyle = {
 
 const entryGridStyle = {
   display: "grid",
-  gridTemplateColumns: "auto minmax(64px, 78px) minmax(280px, 1fr) minmax(96px, 126px)",
-  alignItems: "center",
+  gridTemplateColumns: "minmax(82px, 104px) minmax(0, 1fr)",
+  gridTemplateAreas: `"day description" "amount amount"`,
+  alignItems: "end",
   gap: "var(--ui-space-5)",
 } as const;
 
@@ -71,7 +87,9 @@ const fieldShellStyle = {
 
 const dayFieldShellStyle = {
   minWidth: 0,
-  display: "contents",
+  display: "grid",
+  gridArea: "day",
+  gap: "var(--ui-space-2)",
 } as const;
 
 const extraGridStyle = {
@@ -89,6 +107,22 @@ const actionsStyle = {
   flexWrap: "wrap",
   marginTop: "var(--ui-space-7)",
 } as const;
+
+type TransactionWizardStep = "type" | "category" | "details" | "summary";
+
+const getLevel1Kind = (category?: Category | null) => {
+  const normalizedName = category?.name.toLocaleLowerCase("pl-PL") || "";
+
+  if (normalizedName.includes("przych") || normalizedName.includes("income")) {
+    return "income";
+  }
+
+  if (normalizedName.includes("wydat") || normalizedName.includes("expense")) {
+    return "expense";
+  }
+
+  return "neutral";
+};
 
 export default function TransactionCreatorModal(
   props: TransactionCreatorModalProps,
@@ -147,6 +181,9 @@ export default function TransactionCreatorModal(
 
   const [tagInputValue, setTagInputValue] = useState("");
   const [isDescriptionFocused, setIsDescriptionFocused] = useState(false);
+  const [wizardStepOverride, setWizardStepOverride] =
+    useState<TransactionWizardStep | null>(null);
+  const [hasVisitedTypeStep, setHasVisitedTypeStep] = useState(false);
   const tagInputRef = useRef<HTMLInputElement | null>(null);
   const dayInputRef = useRef<HTMLInputElement | null>(null);
   const saveButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -171,6 +208,70 @@ export default function TransactionCreatorModal(
   const effectiveCategoryLabel = effectiveCategoryId
     ? getCategoryPathLabel(effectiveCategoryId, categoriesById)
     : "";
+  const selectedLevel1Category = selectedLevel1Id
+    ? categoriesById[selectedLevel1Id] || null
+    : null;
+  const selectedCategory = effectiveCategoryId
+    ? categoriesById[effectiveCategoryId] || null
+    : null;
+  const selectedCategoryAppearance = selectedCategory as
+    | (Category & {
+        icon?: string | null;
+        icon_key?: string | null;
+        category_icon?: string | null;
+      })
+    | null;
+  const selectedCategoryIconKey =
+    selectedCategoryAppearance?.icon_key ||
+    selectedCategoryAppearance?.category_icon ||
+    selectedCategoryAppearance?.icon ||
+    null;
+  const entryKind = getLevel1Kind(selectedLevel1Category);
+  const entryKindLabel =
+    entryKind === "income"
+      ? "Przychód"
+      : entryKind === "expense"
+        ? "Wydatek"
+        : "Wpis";
+  const entryKindTone =
+    entryKind === "income"
+      ? "success"
+      : entryKind === "expense"
+        ? "danger"
+        : "neutral-blue";
+  const shouldShowTypeStep =
+    !lockedLevel1Id && (!selectedLevel1Id || hasVisitedTypeStep);
+  const wizardSteps = [
+    ...(shouldShowTypeStep
+      ? [{ id: "type", title: "Typ", description: "Przychód lub wydatek" }]
+      : []),
+    { id: "category", title: "Kategoria", description: "L2 i L3" },
+    { id: "details", title: "Szczegóły", description: "Kwota i opis" },
+    { id: "summary", title: "Zapis", description: "Podsumowanie" },
+  ];
+  const baseWizardStep: TransactionWizardStep = !selectedLevel1Id
+    ? "type"
+    : effectiveCategoryId
+      ? "details"
+      : "category";
+  const canUseWizardStep = (step: TransactionWizardStep) => {
+    if (step === "type") {
+      return shouldShowTypeStep;
+    }
+
+    if (step === "category") {
+      return Boolean(selectedLevel1Id);
+    }
+
+    return Boolean(effectiveCategoryId);
+  };
+  const activeWizardStep =
+    wizardStepOverride && canUseWizardStep(wizardStepOverride)
+      ? wizardStepOverride
+      : baseWizardStep;
+  const wizardStepStyle = {
+    "--ui-foundation-step-count": wizardSteps.length,
+  } as CSSProperties;
 
   const focusAmountInput = () => {
     window.setTimeout(() => {
@@ -180,6 +281,7 @@ export default function TransactionCreatorModal(
 
   const handleShortcutClick = (categoryId: string) => {
     onSelectShortcutCategory(categoryId);
+    setWizardStepOverride("details");
     focusAmountInput();
   };
 
@@ -192,7 +294,10 @@ export default function TransactionCreatorModal(
     setSelectedCategoryId(isFinalHere ? category.id : null);
 
     if (isFinalHere) {
+      setWizardStepOverride("details");
       focusAmountInput();
+    } else {
+      setWizardStepOverride("category");
     }
   };
 
@@ -204,12 +309,16 @@ export default function TransactionCreatorModal(
     setSelectedCategoryId(isFinalHere ? level2Category.id : null);
 
     if (isFinalHere) {
+      setWizardStepOverride("details");
       focusAmountInput();
+    } else {
+      setWizardStepOverride("category");
     }
   };
 
   const handleLevel3Click = (level3Category: Category) => {
     setSelectedCategoryId(level3Category.id);
+    setWizardStepOverride("details");
     focusAmountInput();
   };
 
@@ -263,6 +372,28 @@ export default function TransactionCreatorModal(
     ...recurringOptions,
     ...recurringSuggestions,
   ].find((item) => item.id === selectedRecurringTransactionId);
+  const selectedPaymentSourceLabel =
+    paymentSourceOptions.find((item) => item.id === selectedPaymentSourceId)
+      ?.optionLabel ||
+    paymentSourceOptions.find((item) => item.id === selectedPaymentSourceId)
+      ?.name ||
+    "Bez źródła";
+  const splitSummary =
+    paymentSplitItems.length > 1
+      ? paymentSplitItems
+          .map((item) => {
+            const sourceLabel =
+              paymentSourceOptions.find(
+                (option) => option.id === item.paymentSourceId,
+              )?.name || "Źródło";
+
+            return `${sourceLabel}: ${item.amount || "0"}`;
+          })
+          .join(", ")
+      : "Bez podziału";
+  const tagSummary =
+    selectedTagNames.length > 0 ? selectedTagNames.join(", ") : "Brak tagów";
+  const descriptionSummary = description.trim() || "Bez opisu";
   const {
     filteredSuggestions,
     activeSuggestionIndex,
@@ -332,6 +463,66 @@ export default function TransactionCreatorModal(
     }
   };
 
+  const handleWizardStepClick = (stepId: string) => {
+    const nextStep = stepId as TransactionWizardStep;
+
+    if (!canUseWizardStep(nextStep)) {
+      return;
+    }
+
+    setWizardStepOverride(nextStep);
+  };
+
+  const goToPreviousStep = () => {
+    if (activeWizardStep === "summary") {
+      setWizardStepOverride("details");
+      return;
+    }
+
+    if (activeWizardStep === "details") {
+      setWizardStepOverride("category");
+      return;
+    }
+
+    if (activeWizardStep === "category" && shouldShowTypeStep) {
+      setWizardStepOverride("type");
+    }
+  };
+
+  const selectTypeFromWizard = (category: Category) => {
+    const isFinalHere = (level2ByParentId[category.id] || []).length === 0;
+
+    setHasVisitedTypeStep(true);
+    handleLevel1Click(category);
+    setWizardStepOverride(isFinalHere ? "details" : "category");
+  };
+
+  const renderLiveSummary = () => (
+    <FoundationLiveSummary
+      title="Podsumowanie wpisu"
+      description="Spokojny podgląd tego, co zostanie zapisane."
+      aria-label="Podsumowanie wpisu"
+      data-transaction-live-summary="true"
+    >
+      <div data-transaction-live-summary-hero="true" data-ui-tone={entryKindTone}>
+        <span data-ui-icon-tile="true" data-ui-icon-role="creator-summary" data-ui-tone={entryKindTone} aria-hidden="true">
+          <CategoryIcon iconKey={selectedCategoryIconKey || "more"} size="large" />
+        </span>
+        <div data-transaction-live-summary-title="true">
+          <strong>{effectiveCategoryLabel || "Wybierz kategorię"}</strong>
+          <span>{entryKindLabel}</span>
+        </div>
+      </div>
+
+      <SummaryRow label="Kwota" value={amount || "0,00"} />
+      <SummaryRow label="Dzień" value={dayInputValue || "Bez dnia"} />
+      <SummaryRow label="Źródło płatności" value={selectedPaymentSourceLabel} />
+      <SummaryRow label="Split payment" value={splitSummary} />
+      <SummaryRow label="Tagi" value={tagSummary} />
+      <SummaryRow label="Opis" value={descriptionSummary} />
+    </FoundationLiveSummary>
+  );
+
   if (!isOpen) {
     return null;
   }
@@ -359,34 +550,87 @@ export default function TransactionCreatorModal(
           onClose={onClose}
         />
 
-        <div data-ui-form-shell="true" data-transaction-creator-body="true">
-          <TransactionCreatorCategorySection
-            level1Categories={level1Categories}
-            availableLevel2Categories={availableLevel2Categories}
-            availableLevel3Categories={availableLevel3Categories}
-            level2ByParentId={level2ByParentId}
-            level3ByParentId={level3ByParentId}
-            categoriesById={categoriesById}
-            lockedLevel1Id={lockedLevel1Id}
-            selectedLevel1Id={selectedLevel1Id}
-            selectedLevel2Id={selectedLevel2Id}
-            effectiveCategoryId={effectiveCategoryId}
-            effectiveCategoryLabel={effectiveCategoryLabel}
-            topShortcutCategories={topShortcutCategories}
-            pinnedShortcutCategories={pinnedShortcutCategories}
-            pinnedCategoryIds={pinnedCategoryIds}
-            recentShortcutCategories={recentShortcutCategories}
-            styles={styles}
-            handleShortcutClick={handleShortcutClick}
-            handleLevel1Click={handleLevel1Click}
-            handleLevel2Click={handleLevel2Click}
-            handleLevel3Click={handleLevel3Click}
-            onTogglePinnedCategory={onTogglePinnedCategory}
+        <FoundationWizardShell
+          variant="modal"
+          data-transaction-wizard="true"
+        >
+          <FoundationStepTracker
+            steps={wizardSteps}
+            activeStep={activeWizardStep}
+            onStepClick={handleWizardStepClick}
+            style={wizardStepStyle}
           />
 
-          {effectiveCategoryId && (
-            <>
-              <div data-ui-section-separator="true" />
+        <div data-ui-form-shell="true" data-transaction-creator-body="true">
+          {activeWizardStep === "type" && (
+            <section data-transaction-wizard-step="type">
+              <header data-transaction-wizard-step-header="true">
+                <strong>Wybierz typ wpisu</strong>
+                <span>Po wyborze przejdziesz do kategorii.</span>
+              </header>
+
+              <FoundationChoiceGrid columns={2}>
+                {level1Categories.map((level1Category) => {
+                  const kind = getLevel1Kind(level1Category);
+                  const tone =
+                    kind === "income"
+                      ? "success"
+                      : kind === "expense"
+                        ? "danger"
+                        : "neutral-blue";
+
+                  return (
+                    <FoundationChoiceCard
+                      key={level1Category.id}
+                      title={level1Category.name}
+                      description="Wybierz i przejdź do kategorii"
+                      tone={tone}
+                      selected={selectedLevel1Id === level1Category.id}
+                      icon={
+                        <CategoryIcon
+                          iconKey={kind === "expense" ? "expense_minus" : "income_plus"}
+                          size="summary"
+                        />
+                      }
+                      onClick={() => selectTypeFromWizard(level1Category)}
+                    />
+                  );
+                })}
+              </FoundationChoiceGrid>
+            </section>
+          )}
+
+          {activeWizardStep === "category" && (
+            <TransactionCreatorCategorySection
+              level1Categories={level1Categories}
+              availableLevel2Categories={availableLevel2Categories}
+              availableLevel3Categories={availableLevel3Categories}
+              level2ByParentId={level2ByParentId}
+              level3ByParentId={level3ByParentId}
+              categoriesById={categoriesById}
+              lockedLevel1Id={lockedLevel1Id}
+              selectedLevel1Id={selectedLevel1Id}
+              selectedLevel2Id={selectedLevel2Id}
+              effectiveCategoryId={null}
+              effectiveCategoryLabel={effectiveCategoryLabel}
+              topShortcutCategories={topShortcutCategories}
+              pinnedShortcutCategories={pinnedShortcutCategories}
+              pinnedCategoryIds={pinnedCategoryIds}
+              recentShortcutCategories={recentShortcutCategories}
+              styles={styles}
+              handleShortcutClick={handleShortcutClick}
+              handleLevel1Click={handleLevel1Click}
+              handleLevel2Click={handleLevel2Click}
+              handleLevel3Click={handleLevel3Click}
+              onTogglePinnedCategory={onTogglePinnedCategory}
+            />
+          )}
+
+          {effectiveCategoryId && activeWizardStep === "details" && (
+            <div
+              data-transaction-wizard-detail-layout="true"
+              data-ui-tone={entryKindTone}
+            >
               <section
                 style={entrySectionStyle}
                 data-ui-section="true"
@@ -708,6 +952,24 @@ export default function TransactionCreatorModal(
                 >
                   <button
                     type="button"
+                    data-ui-button-cancel="true"
+                    onClick={goToPreviousStep}
+                    disabled={isSaving}
+                  >
+                    Wstecz
+                  </button>
+                  <button
+                    type="button"
+                    data-ui-button-confirm="true"
+                    disabled={
+                      isSaving || !selectedLevel1Id || !effectiveCategoryId
+                    }
+                    onClick={() => setWizardStepOverride("summary")}
+                  >
+                    Podsumowanie
+                  </button>
+                  <button
+                    type="button"
                     data-ui-button-confirm="true"
                     disabled={
                       isSaving || !selectedLevel1Id || !effectiveCategoryId
@@ -716,7 +978,7 @@ export default function TransactionCreatorModal(
                       await onSave();
                     }}
                   >
-                    {isSaving ? "zapisywanie..." : "+ dodaj kolejny wpis"}
+                    {isSaving ? "zapisywanie..." : "Zapisz i dodaj kolejny"}
                   </button>
                   <button
                     ref={saveButtonRef}
@@ -734,9 +996,55 @@ export default function TransactionCreatorModal(
                 </span>
                 </footer>
               </section>
-            </>
+              {renderLiveSummary()}
+            </div>
+          )}
+
+          {effectiveCategoryId && activeWizardStep === "summary" && (
+            <div data-transaction-wizard-summary-layout="true">
+              <section data-ui-section="true" data-transaction-summary-step="true">
+                <header data-transaction-wizard-step-header="true">
+                  <strong>Gotowe do zapisu</strong>
+                  <span>Sprawdź dane i zapisz wpis albo dodaj kolejny.</span>
+                </header>
+
+                {renderLiveSummary()}
+
+                <FoundationWizardFooter data-transaction-summary-actions="true">
+                  <button
+                    type="button"
+                    data-ui-button-cancel="true"
+                    onClick={goToPreviousStep}
+                    disabled={isSaving}
+                  >
+                    Wstecz
+                  </button>
+                  <button
+                    type="button"
+                    data-ui-button-confirm="true"
+                    disabled={isSaving || !selectedLevel1Id || !effectiveCategoryId}
+                    onClick={async () => {
+                      await onSave();
+                    }}
+                  >
+                    {isSaving ? "zapisywanie..." : "Zapisz i dodaj kolejny"}
+                  </button>
+                  <button
+                    type="button"
+                    data-ui-button-confirm="true"
+                    disabled={isSaving || !selectedLevel1Id || !effectiveCategoryId}
+                    onClick={async () => {
+                      await onSaveAndClose();
+                    }}
+                  >
+                    {isSaving ? "zapisywanie..." : "Zapisz"}
+                  </button>
+                </FoundationWizardFooter>
+              </section>
+            </div>
           )}
         </div>
+        </FoundationWizardShell>
       </section>
 
       <DescriptionSuggestionDeleteMenu
@@ -746,6 +1054,15 @@ export default function TransactionCreatorModal(
         onConfirm={confirmDeleteSuggestion}
         onCancel={closeDeletePrompt}
       />
+    </div>
+  );
+}
+
+function SummaryRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div data-ui-foundation-summary-row="true">
+      <span>{label}</span>
+      <strong>{value}</strong>
     </div>
   );
 }

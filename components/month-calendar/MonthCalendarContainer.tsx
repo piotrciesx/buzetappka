@@ -16,8 +16,8 @@ type MonthCalendarContainerProps = {
   toolbar: ReactNode
   notices?: ReactNode
   noDaySection: ReactNode
+  rightPanel: ReactNode
   suggestionMenu: ReactNode
-  dayModal: ReactNode
 }
 
 export default function MonthCalendarContainer({
@@ -28,21 +28,25 @@ export default function MonthCalendarContainer({
   toolbar,
   notices,
   noDaySection,
+  rightPanel,
   suggestionMenu,
-  dayModal,
 }: MonthCalendarContainerProps) {
   return (
     <>
       <CalendarSurface data-month-calendar-panel="true" style={calendarPanelStyle}>
-        {toolbar}
-        {notices}
-        <MonthCalendarLegend heatmapMode={heatmapMode} legendLabels={legendLabels} />
-        <MonthCalendarGrid firstDayOffset={firstDayOffset}>{dayCells}</MonthCalendarGrid>
-        {noDaySection}
+        <div data-month-calendar-workspace="true">
+          <div data-month-calendar-left-pane="true">
+            {toolbar}
+            {notices}
+            <MonthCalendarLegend heatmapMode={heatmapMode} legendLabels={legendLabels} />
+            <MonthCalendarGrid firstDayOffset={firstDayOffset}>{dayCells}</MonthCalendarGrid>
+            {noDaySection}
+          </div>
+          <aside data-month-calendar-right-pane="true">{rightPanel}</aside>
+        </div>
       </CalendarSurface>
 
       {suggestionMenu}
-      {dayModal}
     </>
   )
 }
