@@ -484,6 +484,7 @@ export function useBudgetPageMainPanelsProps(ctx: BudgetPageMainPanelsPropsConte
           data: budgetLimitsData,
           creatorRequest: budgetLimitCreatorRequest,
           onCreatorRequestHandled: () => setBudgetLimitCreatorRequest(null),
+          onBackToBudget: () => setActiveUtilityPanel(null),
         },
     searchPanelProps: {
           ref: searchPanelRef,

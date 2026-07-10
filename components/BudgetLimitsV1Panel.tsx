@@ -30,6 +30,7 @@ type Props = {
   data: ReturnTypeOfUseBudgetLimitsData
   creatorRequest: BudgetLimitCreatorRequest | null
   onCreatorRequestHandled: () => void
+  onBackToBudget?: () => void
 }
 
 const normalizeThresholds = (text: string) =>
@@ -187,7 +188,9 @@ function BudgetLimitsV1PanelContent(props: Props) {
       try {
         setDraft(buildSafeCreatorDraft(props.selectedMonth))
       } catch (error) {
-        console.error('[budget-limits] Could not open creator.', error)
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn('[budget-limits] Could not open creator.', error)
+        }
         setNotice('Nie udało się otworzyć limitu')
       }
     }
@@ -336,7 +339,28 @@ function BudgetLimitsV1PanelContent(props: Props) {
   )
 
   if (data?.error) {
-    return <div data-ui-empty-state="true">Moduł v1 wymaga migracji <code>budget_limits_stage_2.sql</code>. {data.error}</div>
+    return (
+      <section data-budget-limits-view="load-error" data-ui-management-shell="true">
+        <div data-ui-empty-state="true">
+          <h3>Nie udało się przygotować okresu limitów dla tego miesiąca.</h3>
+          <p>{data.error}</p>
+          {data.errorDetails && (
+            <p>
+              Operacja: <code>{data.errorDetails.operation}</code>
+              {data.errorDetails.code ? <> · Kod: <code>{data.errorDetails.code}</code></> : null}
+            </p>
+          )}
+          <div data-ui-action-group="true">
+            <PrimaryAction disabled={data.loading} onClick={() => void data.load()}>
+              Spróbuj ponownie
+            </PrimaryAction>
+            {props.onBackToBudget && (
+              <SecondaryAction onClick={props.onBackToBudget}>Wróć do budżetu</SecondaryAction>
+            )}
+          </div>
+        </div>
+      </section>
+    )
   }
 
   if (draft) {
